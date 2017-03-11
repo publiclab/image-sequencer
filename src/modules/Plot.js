@@ -68,6 +68,7 @@ module.exports = function Plot(options) {
 
   return {
     options: options,
+    image: image,
     draw: draw
   }
 }

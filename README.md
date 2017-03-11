@@ -3,7 +3,7 @@ Image Sequencer
 
 aka "Consequencer"
 
-[![Build Status](https://travis-ci.org/jywarren/image-sequencer.svg?branch=master)](https://travis-ci.org/jywarren/image-sequencer)
+[![Build Status](https://travis-ci.org/publiclab/image-sequencer.svg?branch=master)](https://travis-ci.org/publiclab/image-sequencer)
 
 ## Why
 
@@ -25,8 +25,8 @@ It is also for prototyping some other related ideas:
 
 Examples:
 
-* [Basic example](https://jywarren.github.io/image-sequencer/)
-* [NDVI example](https://jywarren.github.io/image-sequencer/examples/ndvi/) - related to [Infragram.org](http://infragram.org)
+* [Basic example](https://publiclab.github.io/image-sequencer/)
+* [NDVI example](https://publiclab.github.io/image-sequencer/examples/ndvi/) - related to [Infragram.org](http://infragram.org)
 
 ## Contributing
 
@@ -62,7 +62,7 @@ For display in the web-based UI, each module may also have a title like `options
 
 #### Module example
 
-See existing module `green-channel` for an example: https://github.com/jywarren/image-sequencer/tree/master/src/modules/GreenChannel.js
+See existing module `green-channel` for an example: https://github.com/publiclab/image-sequencer/tree/master/src/modules/GreenChannel.js
 
 For help integrating, please open an issue.
 
@@ -71,6 +71,8 @@ For help integrating, please open an issue.
 ## Development
 
 Notes on development next steps:
+
+* use `Marty.isBrowser`
 
 ### UI
 
@@ -94,7 +96,7 @@ Notes on development next steps:
   * [ ] Make available as browserified OR `require()` includable...
 * [ ] standardize panel addition with submodule that offers Panel.display(image)
 * [ ] allow passing data as data-uri or Image object, or stream, or ndarray or ImageData array, if both of neighboring pair has ability?
-  * see https://github.com/jywarren/image-sequencer/issues/1
+  * see https://github.com/publiclab/image-sequencer/issues/1
 * [ ] ...could we directly include package.json for module descriptions? At least as a fallback.
 * [ ] (for node-and-line style UIs) non-linear sequences with Y-splitters
 * [ ] `sequencer.addModule('path/to/module.js')` style module addition -- also to avoid browserifying all of Plotly :-P
@@ -103,8 +105,13 @@ Notes on development next steps:
 ### Testing
 
 * [ ] tests - modules headless; unit tests
+  * some modules won't work headlessly; make this part of the required API
+  * plotly experimental headless:  https://gist.github.com/etpinard/bee7d62b43b6bb286950
 * [ ] comparisons with diff
   * [ ] testing a module's promised functionality: each module could offer before/after images as part of their API; by running the module on the before image, you should get exactly the after image, comparing with an image diff
+* lots of classic test images are problematic, objectifying and sexist: http://www.hlevkin.com/06testimages.htm
+  * more http://sipi.usc.edu/database/
+  * https://en.wikipedia.org/wiki/Standard_test_image
 
 ### Use cases
 

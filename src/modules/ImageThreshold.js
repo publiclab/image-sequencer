@@ -11,11 +11,15 @@ module.exports = function ImageThreshold(options) {
 
   function draw(inputImage) {
     $(inputImage).load(function(){
-      var canvas = document.createElement('canvas');
-      canvas.width = inputImage.naturalWidth;
-      canvas.height = inputImage.naturalHeight;
+      if (typeof window !== 'undefined') var canvas = document.createElement('canvas');
+      else {
+        var Canvas = require("canvas");
+        var canvas = new Canvas(inputImage.width, inputImage.height); 
+      }
+      canvas.width = inputImage.naturalWidth || inputImage.width; // node-canvas doesn't provide naturalWidth
+      canvas.height = inputImage.naturalHeight || inputImage.height;
       var context = canvas.getContext('2d');
-      context.drawImage(inputImage, 0, 0);
+      context.drawImage(inputImage, 0, 0 );
 
       var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
 
@@ -35,13 +39,9 @@ module.exports = function ImageThreshold(options) {
     });
   }
 
-  function get() {
-    return image;
-  }
-
   return {
     options: options,
-    draw: draw,
-    get: get
+    image: image,
+    draw: draw
   }
 }

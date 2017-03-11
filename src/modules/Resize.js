@@ -2,16 +2,18 @@
  * Resize image
  */
 module.exports = function Resize(options) {
+
+  options = options || {};
   options.title = "Resize image";
   options.description = "Resizes image to given width";
 
-  options = options || {};
+  var image;
 
   function setup() {
 
   }
 
-  function draw(image) {
+  function draw(_image) {
 
 
 
@@ -19,6 +21,7 @@ module.exports = function Resize(options) {
 
   return {
     options: options,
+    image: image,
     setup: setup,
     draw:  draw
   }

@@ -66,13 +66,15 @@ module.exports = function ImageSelect(options) {
   }
 
   // this module is unique because it creates the image
-  function draw(image) {
-    el.html(image);
+  function draw(_image) {
+    image = _image;
+    options.el.html(image);
     if (options.output) options.output(image);
   }
 
   return {
     options: options,
+    image: image,
     draw: draw,
     setup: setup
   }

@@ -28,6 +28,9 @@ module.exports = function(grunt) {
                   'src/ImageSequencer.js'
               ],
               dest: 'dist/image-sequencer.js'
+          },
+          options: {
+              exclude: [ 'canvas' ]
           }
       }
 

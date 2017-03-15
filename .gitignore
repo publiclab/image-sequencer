@@ -34,3 +34,6 @@ node_modules
 
 *.swp
 todo.txt
+
+# Distributio directory
+dist

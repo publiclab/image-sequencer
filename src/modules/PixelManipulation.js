@@ -22,7 +22,7 @@ module.exports = function PixelManipulation(image, options) {
     }
 
     // iterate through pixels;
-    // this could possibly be more efficient; see 
+    // this could possibly be more efficient; see
     // https://github.com/p-v-o-s/infragram-js/blob/master/public/infragram.js#L173-L181
     for(var x = 1; x < pixels.shape[0]; x++) {
       for(var y = 1; y < pixels.shape[1]; y++) {

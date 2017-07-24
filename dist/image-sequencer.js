@@ -34391,6 +34391,16 @@ function AddStep(ref, image, name, o) {
     o.container = o_.container || ref.options.selector;
     o.image = image;
 
+    var metadata = ref.images[image].metadata;
+    if(!metadata.hasOwnProperty(name)) {
+      metadata[name] = [];
+      metadata[name].last = function() {
+        return this[this.length-1];
+      }
+    }
+    metadata[name].push({});
+    o.metadata = metadata[name].last();
+
     var UI = ref.UI({
       stepName: o.name,
       stepID: o.number,
@@ -34782,6 +34792,16 @@ function InsertStep(ref, image, index, name, o) {
 
     if(index==-1) index = ref.images[image].steps.length;
 
+    var metadata = ref.images[image].metadata;
+    if(!metadata.hasOwnProperty(name)) {
+      metadata[name] = [];
+      metadata[name].last = function() {
+        return this[this.length-1];
+      }
+    }
+    metadata[name].push({});
+    o.metadata = metadata[name].last();
+
     var UI = ref.UI({
       stepName: o.name,
       stepID: o.number,
@@ -34811,6 +34831,7 @@ function LoadImage(ref, name, src) {
   function loadImage(name, src) {
     var image = {
       src: src,
+      metadata: {},
       steps: [{
         options: {
           id: ref.options.sequencerCounter++,
@@ -34837,6 +34858,14 @@ function LoadImage(ref, name, src) {
         output: CImage(src)
       }]
     };
+    image.metadata['load-image'] = [{
+      name: name,
+      src: src,
+      format: image.steps[0].output.format
+    }];
+    image.metadata['load-image'].last = function() {
+      return this[this.length-1];
+    }
     ref.images[name] = image;
     ref.images[name].steps[0].UI.onSetup();
     ref.images[name].steps[0].UI.onDraw();
@@ -35035,6 +35064,7 @@ module.exports = function Crop(input,options,callback) {
     var w = options.w || Math.floor(0.5*pixels.shape[0]);
     var h = options.h || Math.floor(0.5*pixels.shape[1]);
     var iw = pixels.shape[0]; //Width of Original Image
+    var ih = pixels.shape[1]; //Height of Original Image
     var newarray = new Uint8Array(4*w*h);
     for (var n = oy; n < oy + h; n++) {
       newarray.set(pixels.data.slice(n*4*iw + ox, n*4*iw + ox + 4*w),4*w*(n-oy));
@@ -35042,6 +35072,12 @@ module.exports = function Crop(input,options,callback) {
     pixels.data = newarray;
     pixels.shape = [w,h,4];
     pixels.stride[1] = 4*w;
+
+    Object.assign(options.metadata,{
+      x:ox,y:oy,w:w,h:h,original_w:iw,original_h:ih
+    });
+
+    options.format = input.format;
 
     var chunks = [];
     var totalLength = 0;
@@ -35081,7 +35117,7 @@ module.exports = function Crop(input,options,callback) {
    options = options || {};
    options.title = "Crop Image";
    UI.onSetup();
-   var output
+   var output;
 
    function draw(input,callback) {
 

@@ -8,6 +8,16 @@ function AddStep(ref, image, name, o) {
     o.container = o_.container || ref.options.selector;
     o.image = image;
 
+    var metadata = ref.images[image].metadata;
+    if(!metadata.hasOwnProperty(name)) {
+      metadata[name] = [];
+      metadata[name].last = function() {
+        return this[this.length-1];
+      }
+    }
+    metadata[name].push({});
+    o.metadata = metadata[name].last();
+
     var UI = ref.UI({
       stepName: o.name,
       stepID: o.number,

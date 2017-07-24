@@ -17,7 +17,7 @@
    options = options || {};
    options.title = "Crop Image";
    UI.onSetup();
-   var output
+   var output;
 
    function draw(input,callback) {
 

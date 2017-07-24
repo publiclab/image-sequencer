@@ -11,6 +11,7 @@ function LoadImage(ref, name, src) {
   function loadImage(name, src) {
     var image = {
       src: src,
+      metadata: {},
       steps: [{
         options: {
           id: ref.options.sequencerCounter++,
@@ -37,6 +38,14 @@ function LoadImage(ref, name, src) {
         output: CImage(src)
       }]
     };
+    image.metadata['load-image'] = [{
+      name: name,
+      src: src,
+      format: image.steps[0].output.format
+    }];
+    image.metadata['load-image'].last = function() {
+      return this[this.length-1];
+    }
     ref.images[name] = image;
     ref.images[name].steps[0].UI.onSetup();
     ref.images[name].steps[0].UI.onDraw();

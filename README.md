@@ -26,6 +26,14 @@ It is also for prototyping some other related ideas:
 * [Basic example](https://jywarren.github.io/image-sequencer/)
 * [NDVI example](https://jywarren.github.io/image-sequencer/examples/ndvi/) - related to [Infragram.org](http://infragram.org)
 
+## Jump to:
+
+* [Quick Usage](#quick-usage)
+* [Classic Usage](#classic-usage)
+* [Method Chaining](#method-chaining)
+* [Multiple Images](#multiple-images)
+* [Creating a User Interface](#creating-a-user-interface)
+
 ## Quick Usage
 
 Image Sequencer can be used to run modules on an HTML Image Element using the

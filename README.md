@@ -23,8 +23,8 @@ It is also for prototyping some other related ideas:
 
 ## Examples:
 
-* [Basic example](https://jywarren.github.io/image-sequencer/)
-* [NDVI example](https://jywarren.github.io/image-sequencer/examples/ndvi/) - related to [Infragram.org](http://infragram.org)
+* [Single Image example](https://publiclab.github.io/image-sequencer/examples/)
+* [FisheyeGl](https://publiclab.github.io/image-sequencer/examples/fisheye.html)
 
 ## Jump to:
 

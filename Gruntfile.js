@@ -1,6 +1,7 @@
 module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-browserify');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
 
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
@@ -27,6 +28,13 @@ module.exports = function(grunt) {
             src: ['src/ImageSequencer.js'],
             dest: 'dist/image-sequencer.js'
           }
+      },
+
+      uglify: {
+        dist: {
+          src: ['./dist/image-sequencer.js'],
+          dest: './dist/image-sequencer.min.js'
+        }
       }
 
     });
@@ -35,7 +43,8 @@ module.exports = function(grunt) {
     grunt.registerTask('default', ['watch']);
 
     grunt.registerTask('build', [
-        'browserify:dist'
+        'browserify:dist',
+        'uglify:dist'
     ]);
 
 };

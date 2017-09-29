@@ -39,6 +39,7 @@
     "grunt": "^0.4.5",
     "grunt-browserify": "^5.0.0",
     "grunt-contrib-concat": "^0.5.0",
+    "grunt-contrib-uglify": "git://github.com/gruntjs/grunt-contrib-uglify.git#harmony",
     "grunt-contrib-watch": "^0.6.1",
     "image-filter-core": "~1.0.0",
     "image-filter-threshold": "~1.0.0",

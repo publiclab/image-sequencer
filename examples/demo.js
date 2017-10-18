@@ -39,6 +39,7 @@ window.onload = function() {
           <p><i>'+(step.description || '')+'</i></p>\
         </div>\
         <div class="col-md-8">\
+          <div class="load"></div>\
           <img alt="" class="img-thumbnail"/>\
         </div>\
       </div>\
@@ -105,7 +106,13 @@ window.onload = function() {
       steps.appendChild(step.ui);
     },
 
+    onDraw: function(step) {
+      step.ui.querySelector('.load').className = "load loading";
+    },
+
     onComplete: function(step) {
+      step.ui.querySelector('.load').className = "load";
+
       step.imgElement.src = step.output;
       if(sequencer.modulesInfo().hasOwnProperty(step.name)) {
         var inputs = sequencer.modulesInfo(step.name).inputs;

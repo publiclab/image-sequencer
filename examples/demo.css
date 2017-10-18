@@ -45,7 +45,7 @@ h1 {
 }
 
 #dropzone input {
-  max-width: 100%;  
+  max-width: 100%;
 }
 
 .step {
@@ -54,6 +54,19 @@ h1 {
 
 .step .img-thumbnail {
   margin-bottom: 20px;
+}
+
+.load {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 200px;
+  background: url(images/load.gif) center no-repeat;
+}
+.load.loading {
+  display: block;
 }
 
 .details {

@@ -6,6 +6,8 @@ function setupFileHandling(_sequencer, dropzoneId, fileInputId) {
   fileInputId = fileInputId || "fileInput";
   var fileInput = $('#' + fileInputId);
 
+  var reader = new FileReader();
+
   function handleFile(e) {
 
     e.preventDefault();

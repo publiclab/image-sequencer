@@ -22,5 +22,8 @@ module.exports = {
   ],
   'fisheye-gl': [
     require('./modules/FisheyeGl/Module'),require('./modules/FisheyeGl/info')
+  ],
+  'dynamic': [
+    require('./modules/Dynamic/Module'),require('./modules/Dynamic/info')
   ]
 }

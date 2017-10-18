@@ -15,16 +15,15 @@ module.exports = function SegmentedColormap(options,UI) {
     var step = this;
 
     function changePixel(r, g, b, a) {
-      var ndvi = (b - r) / (r + b);
-      var normalized = (ndvi + 1) / 2;
-      var res = require('./SegmentedColormap')(normalized,options);
+      var combined = (r + g + b) / 3.000;
+      var res = require('./SegmentedColormap')(combined, options);
       return [res[0], res[1], res[2], 255];
     }
 
     function output(image,datauri,mimetype){
 
       // This output is accessible by Image Sequencer
-      step.output = {src:datauri,format:mimetype};
+      step.output = { src: datauri, format: mimetype };
 
       // This output is accessible by the UI
       options.step.output = datauri;

@@ -1,3 +1,4 @@
+// special module to load an image into the start of the sequence; used in the HTML UI
 function LoadImage(ref, name, src, main_callback) {
   function makeImage(datauri) {
     var image = {
@@ -46,6 +47,7 @@ function LoadImage(ref, name, src, main_callback) {
   function loadImage(name, src) {
     var step = {
       name: "load-image",
+      description: "This initial step loads and displays the original image without any modifications.",
       ID: ref.options.sequencerCounter++,
       imageName: name,
       inBrowser: ref.options.inBrowser,
@@ -58,6 +60,7 @@ function LoadImage(ref, name, src, main_callback) {
         options: {
           id: step.ID,
           name: "load-image",
+          description: "This initial step loads and displays the original image without any modifications.",
           title: "Load Image",
           step: step
         },

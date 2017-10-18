@@ -1,0 +1,25 @@
+{
+  "name": "Dynamic",
+  "inputs": {
+    "red": {
+      "type": "input",
+      "desc": "Expression to return for red channel with R, G, B, and A inputs",
+      "default": "r"
+    },
+    "green": {
+      "type": "input",
+      "desc": "Expression to return for green channel with R, G, B, and A inputs",
+      "default": "g"
+    },
+    "blue": {
+      "type": "input",
+      "desc": "Expression to return for blue channel with R, G, B, and A inputs",
+      "default": "b"
+    },
+    "monochrome (fallback)": {
+      "type": "input",
+      "desc": "Expression to return with R, G, B, and A inputs; fallback for other channels if none provided",
+      "default": "r + g + b"
+    }
+  }
+}

@@ -40,6 +40,16 @@ test('loadImages loads a DataURL image and creates a step.', function (t){
   t.end();
 });
 
+test('modulesInfo() returns info for each module', function (t){
+  var info = sequencer.modulesInfo();
+  t.equal(Object.keys(info).length, 8);
+  t.equal(Object.keys(info).length, Object.keys(sequencer.modules).length);
+  t.equal(info.hasOwnProperty(Object.keys(sequencer.modules)[0]), true);
+  t.equal(info[Object.keys(sequencer.modules)[0]].hasOwnProperty('name'), true);
+  t.equal(info[Object.keys(sequencer.modules)[0]].hasOwnProperty('inputs'), true);
+  t.end();
+});
+
 if(!sequencer.options.inBrowser)
   test('loadImage loads an image from URL and creates a step. (NodeJS)', function (t){
     require('dns').resolve('www.github.com', function(err) {

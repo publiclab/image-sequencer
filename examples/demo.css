@@ -31,13 +31,21 @@ h1 {
   margin: 0 !important;
 }
 
-#imageSelect {
+#dropzone {
   padding: 30px;
   margin: 0 20% 30px;
   border: 4px dashed #ccc;
   border-radius: 8px;
   text-align: center;
   color: #444;
+}
+
+.hover {
+  background: #eee;
+}
+
+#dropzone input {
+  max-width: 100%;  
 }
 
 .step {

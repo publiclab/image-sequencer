@@ -1,7 +1,7 @@
 /*
- * Display only the green channel
+ * Invert the image
  */
-module.exports = function GreenChannel(options,UI) {
+module.exports = function Invert(options,UI) {
 
   options = options || {};
   options.title = "Invert Colors";

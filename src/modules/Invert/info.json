@@ -1,5 +1,6 @@
 {
   "name": "Invert",
+  "description": "Inverts the image.",
   "inputs": {
   }
 }

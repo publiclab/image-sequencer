@@ -12,6 +12,8 @@ function InsertStep(ref, image, index, name, o) {
 
     o.step = {
       name: o.name,
+      description: o.description,
+      url: o.url,
       ID: o.number,
       imageName: o.image,
       inBrowser: ref.options.inBrowser,

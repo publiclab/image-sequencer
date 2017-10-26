@@ -1,5 +1,6 @@
 {
   "name": "Segmented Colormap",
+  "description": "Maps brightness values (average of red, green & blue) to a given color lookup table, made up of a set of one more color gradients.",
   "inputs": {
     "colormap": {
       "type": "select",

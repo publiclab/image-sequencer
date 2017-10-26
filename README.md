@@ -5,11 +5,14 @@ Image Sequencer
 
 ## Why
 
-Image Sequencer is different from other image processing systems in that it's non-destructive: instead of modifying the original image, it creates a new image at each step in a sequence. This is because it:
+Image Sequencer is different from other image processing systems in that it's _non-destructive_: instead of modifying the original image, it **creates a new image at each step in a sequence**. This is because it:
 
 * produces a legible trail of operations, to "show your work" for evidential, educational, or reproducibility reasons
 * makes the creation of new tools or "modules" simpler -- each must accept an input image, and produce an output image
 * allows many images to be run through the same sequence of steps
+* works identically in the browser, on Node.js, and on the commandline
+
+![workflow diagram](https://raw.githubusercontent.com/publiclab/image-sequencer/master/examples/images/diagram-workflows.png)
 
 It is also for prototyping some other related ideas:
 
@@ -19,9 +22,13 @@ It is also for prototyping some other related ideas:
 * cascading changes -- change an earlier step's settings, and see those changes affect later steps
 * "small modules"-based extensibility: see [Contributing](https://github.com/publiclab/image-sequencer/blob/master/CONTRIBUTING.md)
 
-## Examples:
+## Examples
 
-* [Single Image Demo](https://publiclab.github.io/image-sequencer/)
+* [Simple Demo](https://publiclab.github.io/image-sequencer/)
+
+A diagram of this running 5 steps on a single sample image may help explain how it works:
+
+![example workflow](https://raw.githubusercontent.com/publiclab/image-sequencer/master/examples/images/diagram-6-steps.png)
 
 ## Jump to:
 
@@ -37,9 +44,11 @@ It is also for prototyping some other related ideas:
 
 ## Installation
 
+This library works in the browser, in Node, and on the commandline (CLI), which we think is great. 
+
 ### Browser
 
-Just include [image-sequencer.js](https://publiclab.github.io/image-sequencer/dist/image-sequencer.js) in the Head section of your web page.
+Just include [image-sequencer.js](https://publiclab.github.io/image-sequencer/dist/image-sequencer.js) in the Head section of your web page. See the [demo here](https://publiclab.github.io/image-sequencer/)!
 
 ### Node (via NPM)
 
@@ -48,11 +57,13 @@ Add `image-sequencer` to your list of dependancies and run `$ npm install`
 
 ### CLI
 
-(You should have Node.JS and NPM for this.)
 Globally install Image Sequencer:
+
 ```
 $ npm install image-sequencer -g
 ```
+
+(You should have Node.JS and NPM for this.)
 
 
 ## Quick Usage

@@ -6,6 +6,8 @@ function setupFileHandling(_sequencer, dropzoneId, fileInputId) {
   fileInputId = fileInputId || "fileInput";
   var fileInput = $('#' + fileInputId);
 
+  var reader = new FileReader();
+
   function handleFile(e) {
 
     e.preventDefault();
@@ -15,6 +17,8 @@ function setupFileHandling(_sequencer, dropzoneId, fileInputId) {
     else var file = e.dataTransfer.files[0];
     if(!file) return;
 
+    var reader = new FileReader();
+    
     reader.onload = function onFileReaderLoad() {
       var loadStep = _sequencer.images.image1.steps[0];
       loadStep.output.src = reader.result;

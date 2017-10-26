@@ -38428,6 +38428,7 @@ module.exports = function Dynamic(options,UI) {
 },{"../_nomodule/PixelManipulation.js":148}],136:[function(require,module,exports){
 module.exports={
   "name": "Dynamic",
+  "description": "A module which accepts JavaScript math expressions to produce each color channel based on the original image's color. See <a href='https://publiclab.org/wiki/infragram-sandbox'>Infragrammar</a>.",
   "inputs": {
     "red": {
       "type": "input",
@@ -38936,6 +38937,7 @@ var colormaps = {
 },{}],147:[function(require,module,exports){
 module.exports={
   "name": "Segmented Colormap",
+  "description": "Maps brightness values (average of red, green & blue) to a given color lookup table, made up of a set of one more color gradients.",
   "inputs": {
     "colormap": {
       "type": "select",

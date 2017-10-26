@@ -45,7 +45,7 @@ h1 {
 }
 
 #dropzone input {
-  max-width: 100%;  
+  max-width: 100%;
 }
 
 .step {
@@ -74,6 +74,15 @@ h1 {
 
 .tools {
   margin: 10px 0;
+}
+
+.load {
+  padding: 30px;
+  background: #eee;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 2em;
+  color: #444;
 }
 
 #addStep {

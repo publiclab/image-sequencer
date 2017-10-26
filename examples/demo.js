@@ -39,6 +39,7 @@ window.onload = function() {
           <p><i>'+(step.description || '')+'</i></p>\
         </div>\
         <div class="col-md-8">\
+          <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
           <img alt="" class="img-thumbnail"/>\
         </div>\
       </div>\
@@ -60,12 +61,28 @@ window.onload = function() {
         var outputs = sequencer.modulesInfo(step.name).outputs;
         var io = Object.assign(inputs, outputs);
         for (var i in io) {
+          var isInput = inputs.hasOwnProperty(i);
+          var ioUI = "";
+          var inputDesc = (isInput)?inputs[i]:{};
+          if (!isInput) {
+            ioUI += "<span class=\"output\"></span>";
+          }
+          else if (inputDesc.type.toLowerCase() == "select") {
+            ioUI += "<select class=\"form-control\" name=\""+i+"\">";
+            for (var option in inputDesc.values) {
+              ioUI += "<option>"+inputDesc.values[option]+"</option>";
+            }
+            ioUI += "</select>";
+          }
+          else {
+            ioUI = "<input class=\"form-control\" type=\""+inputDesc.type+"\" name=\""+i+"\">";
+          }
           var div = document.createElement('div');
           div.className = "row";
           div.setAttribute('name', i);
           div.innerHTML = "<div class='det'>\
                              <label for='" + i + "'>" + i + "</label>\
-                             <input name=" + i + " class='form-control' style='width:50%' type='text' />\
+                             "+ioUI+"\
                            </div>";
           step.ui.querySelector('div.details').appendChild(div);
         }
@@ -73,7 +90,7 @@ window.onload = function() {
 
         // on clicking Save in the details pane of the step
         $(step.ui.querySelector('div.details .btn-save')).click(function saveOptions() {
-          $(step.ui.querySelector('div.details')).find('input').each(function(i, input) {
+          $(step.ui.querySelector('div.details')).find('input,select').each(function(i, input) {
             step.options[$(input).attr('name')] = input.value;
           });
           sequencer.run();
@@ -89,18 +106,30 @@ window.onload = function() {
       steps.appendChild(step.ui);
     },
 
+    onDraw: function(step) {
+      $(step.ui.querySelector('.load')).show();
+      $(step.ui.querySelector('img')).hide();
+    },
+
     onComplete: function(step) {
+      $(step.ui.querySelector('.load')).hide();
+      $(step.ui.querySelector('img')).show();
+
       step.imgElement.src = step.output;
       if(sequencer.modulesInfo().hasOwnProperty(step.name)) {
         var inputs = sequencer.modulesInfo(step.name).inputs;
         var outputs = sequencer.modulesInfo(step.name).outputs;
         for (var i in inputs) {
-          if (step.options[i] !== undefined) step.ui.querySelector('div[name="'+i+'"] input')
-                                                 .value = step.options[i];
+          if (step.options[i] !== undefined && 
+              inputs[i].type.toLowerCase() === "input") step.ui.querySelector('div[name="' + i + '"] input')
+                                                               .value = step.options[i];
+          if (step.options[i] !== undefined &&
+              inputs[i].type.toLowerCase() === "select") step.ui.querySelector('div[name="' + i + '"] select')
+                                                                .value = step.options[i];
         }
         for (var i in outputs) {
           if (step[i] !== undefined) step.ui.querySelector('div[name="'+i+'"] input')
-                                         .value = step[i];
+                                            .value = step[i];
         }
       }
     },
@@ -111,14 +140,18 @@ window.onload = function() {
 
   });
 
-  sequencer.loadImage('images/tulips.png', function loadImageUI(){
+  sequencer.loadImage('images/tulips.png', function loadImageUI() {
 
     // look up needed steps from Url Hash:
-    var stepsFromHash = getUrlHashParameter('steps').split(',')
-    stepsFromHash.forEach(function eachStep(step) {
-      sequencer.addSteps(step)
-    });
-    sequencer.run();
+    var hash = getUrlHashParameter('steps');
+
+    if (hash) {
+      var stepsFromHash = hash.split(',');
+      stepsFromHash.forEach(function eachStep(step) {
+        sequencer.addSteps(step);
+      });
+      sequencer.run();
+    }
 
   });
 
@@ -131,14 +164,25 @@ window.onload = function() {
     $('#options').html('');
     var m = $('#addStep select').val();
     for(var input in modulesInfo[m].inputs) {
+      var inputUI = "";
+      var inputDesc = modulesInfo[m].inputs[input];
+      if (inputDesc.type.toLowerCase() == "select") {
+        inputUI += "<select class=\"form-control\" name=\""+input+"\">";
+        for (var option in inputDesc.values) {
+          inputUI += "<option>"+inputDesc.values[option]+"</option>";
+        }
+        inputUI += "</select>";
+      }
+      else {
+        inputUI = "<input class=\"form-control\" type=\""+inputDesc.type+"\" name=\""+input+"\">";
+      }
       $('#options').append(
         '<div class="row">\
            <div class="col-md-5 labels">\
              '+input+':\
            </div>\
            <div class="col-md-5">\
-             <input class="form-control" type="text" name="'+input+'" value="" placeholder="'+
-             modulesInfo[m].inputs[input].default+'"/>\
+             '+inputUI+'\
            </div>\
          </div>'
       );
@@ -148,13 +192,15 @@ window.onload = function() {
 
   function addStepUI() {
     var options = {};
-    var inputs = $('#options input');
+    var inputs = $('#options input, #options select');
     $.each(inputs, function() {
       options[this.name] = $(this).val();
     });
-    if($('#addStep select').val()=="none") return;
+    if($('#addStep select').val() == "none") return;
     // add to URL hash too
-    setUrlHashParameter('steps', getUrlHashParameter('steps') + ',' + $('#addStep select').val())
+    var hash = getUrlHashParameter('steps') || '';
+    if (hash != '') hash += ',';
+    setUrlHashParameter('steps', hash + $('#addStep select').val())
     sequencer.addSteps($('#addStep select').val(),options).run();
   }
 

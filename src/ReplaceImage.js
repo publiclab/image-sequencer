@@ -1,13 +1,15 @@
 function ReplaceImage(ref,selector,steps,options) {
   if(!ref.options.inBrowser) return false; // This isn't for Node.js
+  var tempSequencer = ImageSequencer({ui: false});
   var this_ = ref;
   var input = document.querySelectorAll(selector);
   var images = [];
-  for (var i = 0; i < input.length; i++)
+  for (var i = 0; i < input.length; i++) {
     if (input[i] instanceof HTMLImageElement) images.push(input[i]);
-  for (var i in images) {
-    var the_image = images[i];
-    var url = images[i].src;
+  }
+
+  function replaceImage (img, steps) {
+    var url = img.src;
     var ext = url.split('.').pop();
 
     var xmlHTTP = new XMLHttpRequest();
@@ -25,10 +27,16 @@ function ReplaceImage(ref,selector,steps,options) {
     else make(url);
 
     function make(url) {
-      this_.loadImage('default',url).addSteps('default',steps).run(function(out){
-        the_image.src = out;
+      tempSequencer.loadImage(url, function(){
+        this.addSteps(steps).run(function(out){
+          img.src = out;
+        });
       });
     }
+  }
+
+  for (var i in images) {
+    replaceImage(images[i],steps);
   }
 }
 

@@ -4,7 +4,7 @@
   "description": "A modular JavaScript image manipulation library modeled on a storyboard.",
   "main": "src/ImageSequencer.js",
   "scripts": {
-    "test": "tape test/*.js | tap-spec; browserify test/image-sequencer.js test/chain.js | tape-run --render=\"tap-spec\""
+    "test": "tape test/*.js | tap-spec; browserify test/image-sequencer.js test/chain.js test/replace.js | tape-run --render=\"tap-spec\""
   },
   "repository": {
     "type": "git",

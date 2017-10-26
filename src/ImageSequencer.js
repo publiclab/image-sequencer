@@ -169,7 +169,8 @@ ImageSequencer = function ImageSequencer(options) {
 
   function replaceImage(selector,steps,options) {
     options = options || {};
-    return require('./ReplaceImage')(this,selector,steps);
+    options.callback = options.callback || function() {};
+    return require('./ReplaceImage')(this,selector,steps,options);
   }
 
   function setUI(UI) {

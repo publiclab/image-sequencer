@@ -35,8 +35,10 @@ function ReplaceImage(ref,selector,steps,options) {
     }
   }
 
-  for (var i in images) {
+  for (var i = 0; i < images.length; i++) {
     replaceImage(images[i],steps);
+    if (i == images.length-1)
+      options.callback();
   }
 }
 

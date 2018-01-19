@@ -55,6 +55,7 @@ sequencer.setUI({
 
 // Finally, if everything is alright, load the image, add the steps and run the sequencer.
 sequencer.loadImages(program.image,function(){
+    console.warn('\x1b[33m%s\x1b[0m', "The execution will be async\nYou may not see the output for a few seconds or minutes")
 
   // Iterate through the steps and retrieve their inputs.
   program.step.forEach(function(step){

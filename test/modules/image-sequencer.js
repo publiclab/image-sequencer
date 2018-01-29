@@ -6,7 +6,7 @@ var test = require('tape');
 // We should only test headless code here.
 // http://stackoverflow.com/questions/21358015/error-jquery-requires-a-window-with-a-document#25622933
 
-require('../src/ImageSequencer.js');
+require('../../src/ImageSequencer.js');
 
 // This function is used to test whether or not any additional global variables are being created
 function copy(g,a) {

@@ -5,6 +5,9 @@ module.exports = {
   'green-channel': [
     require('./modules/GreenChannel/Module'),require('./modules/GreenChannel/info')
   ],
+  'brightness': [
+    require('./modules/Brightness/Module'),require('./modules/Brightness/info')
+  ],
   'ndvi-red': [
     require('./modules/NdviRed/Module'),require('./modules/NdviRed/info')
   ],

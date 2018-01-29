@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "debug": "node index.js -i ../imgs/back.png -s invert",
-    "test": "tape test/*.js | tap-spec; browserify test/image-sequencer.js test/chain.js test/replace.js | tape-run --render=\"tap-spec\""
+    "test": "tape test/*.js | tap-spec; browserify test/modules/image-sequencer.js test/modules/chain.js test/modules/replace.js | tape-run --render=\"tap-spec\""
   },
   "repository": {
     "type": "git",

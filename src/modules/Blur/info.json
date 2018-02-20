@@ -1,0 +1,11 @@
+{
+    "name": "Blur",
+    "description": "Blur an image by a given value",
+    "inputs": {
+        "blur": {
+            "type": "integer",
+            "desc": "amount of gaussian blur(Less blur gives more detail, typically 0-5)",
+            "default": 2
+          }
+    }
+}

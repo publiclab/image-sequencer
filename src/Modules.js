@@ -31,5 +31,8 @@ module.exports = {
   ],
   'dynamic': [
     require('./modules/Dynamic/Module'),require('./modules/Dynamic/info')
+  ],
+  'blur': [
+    require('./modules/Blur/Module'),require('./modules/Blur/info')
   ]
 }

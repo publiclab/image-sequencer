@@ -122,8 +122,15 @@ $ ./index.js -i [PATH] -s "brightness" -d '{"brightness":50}'
 
 ```
 Or the values can be given through terminal prompt like
-
+ 
 <img width="1436" alt="screen shot 2018-02-14 at 5 18 50 pm" src="https://user-images.githubusercontent.com/25617855/36202790-3c6e8204-11ab-11e8-9e17-7f3387ab0158.png">
+
+
+The CLI is also chainable with other commands using `&&`
+
+```
+sequencer -i <Image Path> -s <steps> && mv <Output Image Path> <New path>
+```
 
 ## Classic Usage
 

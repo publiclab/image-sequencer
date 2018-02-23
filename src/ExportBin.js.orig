@@ -2,7 +2,11 @@ var fs = require('fs');
 var getDirectories = function(rootDir, cb) {
   fs.readdir(rootDir, function(err, files) {
       var dirs = [];
+<<<<<<< HEAD
+      if(typeof(files)==0) {
+=======
       if(typeof(files)=="undefined" || files.length == 0) {
+>>>>>>> upstream/master
         cb(dirs);
         return [];
       }

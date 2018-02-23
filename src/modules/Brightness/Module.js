@@ -44,6 +44,7 @@ module.exports = function Brightness(options,UI){
             changePixel: changePixel,
             format: input.format,
             image: options.image,
+            inBrowser: options.inBrowser,
             callback: callback
         });
         

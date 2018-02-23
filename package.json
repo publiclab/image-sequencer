@@ -4,7 +4,7 @@
   "description": "A modular JavaScript image manipulation library modeled on a storyboard.",
   "main": "src/ImageSequencer.js",
   "scripts": {
-    "debug": "node index.js -i ../imgs/back.png -s invert",
+    "debug": "node ./index.js -i ./examples/images/monarch.png -s",
     "test": "tape test/**/*.js test/*.js | tap-spec; browserify test/modules/image-sequencer.js test/modules/chain.js test/modules/replace.js | tape-run --render=\"tap-spec\""
   },
   "repository": {
@@ -32,6 +32,7 @@
     "jsqr": "^0.2.2",
     "lodash": "^4.17.5",
     "ndarray-gaussian-filter": "^1.0.0",
+    "pace": "0.0.4",
     "readline-sync": "^1.4.7",
     "save-pixels": "~2.3.4",
     "urify": "^2.1.0"

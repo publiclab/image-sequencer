@@ -1,4 +1,5 @@
 const _ = require('lodash')
+var pace = require('pace')
 
 //define kernels for the sobel filter
 const kernelx = [[-1,0,1],[-2,0,2],[-1,0,1]],
@@ -8,9 +9,10 @@ let angles = []
 let mags = []
 let strongEdgePixels = []
 let weakEdgePixels = []
-
-module.exports = exports =  function(pixels,highThresholdRatio,lowThresholdRatio){
-    
+let notInUI
+module.exports = exports =  function(pixels,highThresholdRatio,lowThresholdRatio,inBrowser){
+    notInUI = !inBrowser
+    if(notInUI) var progressbar1 = pace((pixels.shape[0] * pixels.shape[1]))
     for(var x = 0; x < pixels.shape[0]; x++) {
         angles.push([])
         mags.push([])
@@ -31,6 +33,7 @@ module.exports = exports =  function(pixels,highThresholdRatio,lowThresholdRatio
             
             mags.slice(-1)[0].push(pixel[3])
             angles.slice(-1)[0].push(result.angle)  
+            if(notInUI)progressbar1.op()
         }
     }
     
@@ -72,6 +75,7 @@ function changePixel(pixels,val,a,x,y){
 function nonMaxSupress(pixels) { 
     angles = angles.map((arr)=>arr.map(convertToDegrees))
     
+    if(notInUI) var progressbar2 = pace((pixels.shape[0] * pixels.shape[1]))
     for(let i = 1;i<pixels.shape[0]-1;i++){
         for(let j=1;j<pixels.shape[1]-1;j++){
             
@@ -113,11 +117,13 @@ function nonMaxSupress(pixels) {
             pixels.set(i,j,3,mags[i][j])
             else
             pixels.set(i,j,3,0)  
+
+            if(notInUI) progressbar2.op()
         }
     }
     return pixels
 }
-//Converts rasians to degrees
+//Converts radians to degrees
 var convertToDegrees = radians => (radians * 180)/Math.PI
 
 //Finds the max value in a 2d array like mags
@@ -127,7 +133,8 @@ var findMaxInMatrix = arr => Math.max(...arr.map(el=>el.map(val=>!!val?val:0)).m
 function doubleThreshold(pixels,highThresholdRatio,lowThresholdRatio){
     const highThreshold = findMaxInMatrix(mags) * 0.2
     const lowThreshold = highThreshold * lowThresholdRatio
-    
+    if(notInUI) var progressbar3 = pace((pixels.shape[0] * pixels.shape[1]))
+
     for(let i =0;i<pixels.shape[0];i++){
         for(let j=0;j<pixels.shape[1];j++){
             let pixelPos = [i,j]
@@ -137,7 +144,7 @@ function doubleThreshold(pixels,highThresholdRatio,lowThresholdRatio){
             ?strongEdgePixels.push(pixelPos)
             :weakEdgePixels.push(pixelPos)
             :pixels.set(i,j,3,0)
-            
+            if(notInUI) progressbar3.op()
         }
     }
 

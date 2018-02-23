@@ -32,7 +32,7 @@ module.exports = {
   'dynamic': [
     require('./modules/Dynamic/Module'),require('./modules/Dynamic/info')
   ],
-  'blur':[
+  'blur': [
     require('./modules/Blur/Module'),require('./modules/Blur/info')
   ]
 }

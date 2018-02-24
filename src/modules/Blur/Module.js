@@ -1,5 +1,4 @@
 /*
-<<<<<<< HEAD
  * Blur an Image
  */
  module.exports = function Blur(options,UI){

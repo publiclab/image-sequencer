@@ -1,5 +1,5 @@
 {
-    "name": "Blur",
+    "name": "blur",
     "description": "Blur an image by a given value",
     "inputs": {
         "blur": {

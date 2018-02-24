@@ -34,5 +34,8 @@ module.exports = {
   ],
   'blur': [
     require('./modules/Blur/Module'),require('./modules/Blur/info')
+  ],
+  'saturation': [
+    require('./modules/Saturation/Module'),require('./modules/Saturation/info')
   ]
 }

@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
     "name": "Blur",
-=======
-    "name": "blur",
->>>>>>> upstream/master
     "description": "Blur an image by a given value",
     "inputs": {
         "blur": {

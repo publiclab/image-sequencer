@@ -1,0 +1,11 @@
+{
+    "name": "Saturation",
+    "description": "Change the saturation of the image by given value",
+    "inputs": {
+        "saturation": {
+            "type": "integer",
+            "desc": "saturation for the new image between 0 and 2, 0 being black and white and 2 being fully saturated",
+            "default": 0
+        }
+    }
+}

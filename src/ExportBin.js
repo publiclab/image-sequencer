@@ -7,11 +7,6 @@ var getDirectories = function(rootDir, cb) {
         return [];
       }
 
-      if(files.length === 0){
-        cb(dirs);
-        return [];
-      }
-      
       for (var index = 0; index < files.length; ++index) {
           var file = files[index];
           if (file[0] !== '.') {

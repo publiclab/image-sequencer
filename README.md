@@ -66,6 +66,11 @@ $ npm install image-sequencer -g
 
 (You should have Node.JS and NPM for this.)
 
+### To run the debug script
+
+```
+$ npm run debug invert
+```
 
 ## Quick Usage
 

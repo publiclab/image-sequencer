@@ -57345,10 +57345,13 @@ module.exports = {
   ],
   'blur': [
     require('./modules/Blur/Module'),require('./modules/Blur/info')
+  ],
+  'saturation': [
+    require('./modules/Saturation/Module'),require('./modules/Saturation/info')
   ]
 }
 
-},{"./modules/Blur/Module":144,"./modules/Blur/info":145,"./modules/Brightness/Module":146,"./modules/Brightness/info":147,"./modules/Crop/Module":149,"./modules/Crop/info":150,"./modules/DecodeQr/Module":151,"./modules/DecodeQr/info":152,"./modules/Dynamic/Module":153,"./modules/Dynamic/info":154,"./modules/EdgeDetect/Module":156,"./modules/EdgeDetect/info":157,"./modules/FisheyeGl/Module":158,"./modules/FisheyeGl/info":159,"./modules/GreenChannel/Module":160,"./modules/GreenChannel/info":161,"./modules/Invert/Module":162,"./modules/Invert/info":163,"./modules/NdviRed/Module":164,"./modules/NdviRed/info":165,"./modules/SegmentedColormap/Module":166,"./modules/SegmentedColormap/info":168}],140:[function(require,module,exports){
+},{"./modules/Blur/Module":144,"./modules/Blur/info":145,"./modules/Brightness/Module":146,"./modules/Brightness/info":147,"./modules/Crop/Module":149,"./modules/Crop/info":150,"./modules/DecodeQr/Module":151,"./modules/DecodeQr/info":152,"./modules/Dynamic/Module":153,"./modules/Dynamic/info":154,"./modules/EdgeDetect/Module":156,"./modules/EdgeDetect/info":157,"./modules/FisheyeGl/Module":158,"./modules/FisheyeGl/info":159,"./modules/GreenChannel/Module":160,"./modules/GreenChannel/info":161,"./modules/Invert/Module":162,"./modules/Invert/info":163,"./modules/NdviRed/Module":164,"./modules/NdviRed/info":165,"./modules/Saturation/Module":166,"./modules/Saturation/info":167,"./modules/SegmentedColormap/Module":168,"./modules/SegmentedColormap/info":170}],140:[function(require,module,exports){
 function ReplaceImage(ref,selector,steps,options) {
   if(!ref.options.inBrowser) return false; // This isn't for Node.js
   var tempSequencer = ImageSequencer({ui: false});
@@ -57666,7 +57669,7 @@ module.exports = function Blur(options,UI){
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":169,"./Blur":143}],145:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":171,"./Blur":143}],145:[function(require,module,exports){
 module.exports={
     "name": "blur",
     "description": "Blur an image by a given value",
@@ -57738,7 +57741,7 @@ module.exports = function Brightness(options,UI){
         UI: UI
     }
 }
-},{"../_nomodule/PixelManipulation.js":169}],147:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":171}],147:[function(require,module,exports){
 module.exports={
     "name": "Brightness",
     "description": "Change the brightness of the image by given value",
@@ -58032,7 +58035,7 @@ module.exports = function Dynamic(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":169}],154:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":171}],154:[function(require,module,exports){
 module.exports={
   "name": "Dynamic",
   "description": "A module which accepts JavaScript math expressions to produce each color channel based on the original image's color. See <a href='https://publiclab.org/wiki/infragram-sandbox'>Infragrammar</a>.",
@@ -58315,7 +58318,7 @@ module.exports = function edgeDetect(options,UI) {
       UI: UI
     }
   }
-},{"../_nomodule/PixelManipulation.js":169,"./EdgeUtils":155,"ndarray-gaussian-filter":64}],157:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":171,"./EdgeUtils":155,"ndarray-gaussian-filter":64}],157:[function(require,module,exports){
 module.exports={
     "name": "Detect Edges",
     "description": "this module detects edges using the Canny method, which first Gaussian blurs the image to reduce noise (amount of blur configurable in settings as `options.blur`), then applies a number of steps to highlight edges, resulting in a greyscale image where the brighter the pixel, the stronger the detected edge. Read more at: https://en.wikipedia.org/wiki/Canny_edge_detector",
@@ -58543,7 +58546,7 @@ module.exports = function GreenChannel(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":169}],161:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":171}],161:[function(require,module,exports){
 module.exports={
   "name": "Green Channel",
   "inputs": {
@@ -58607,7 +58610,7 @@ module.exports = function Invert(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":169}],163:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":171}],163:[function(require,module,exports){
 module.exports={
   "name": "Invert",
   "description": "Inverts the image.",
@@ -58672,7 +58675,7 @@ module.exports = function NdviRed(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":169}],165:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":171}],165:[function(require,module,exports){
 module.exports={
   "name": "NDVI Red",
   "inputs": {
@@ -58680,6 +58683,87 @@ module.exports={
 }
 
 },{}],166:[function(require,module,exports){
+/*
+ * Saturate an image
+ */
+module.exports = function Saturation(options,UI) {
+
+  options = options || {};
+  options.title = "Saturation";
+  options.description = "Saturate an image";
+
+  // Tell UI that a step has been set up
+  UI.onSetup(options.step);
+  var output;
+
+  function draw(input,callback) {
+
+    // Tell UI that a step is being drawn
+    UI.onDraw(options.step);
+    var step = this;
+
+    function changePixel(r, g, b, a) {
+
+      var cR = 0.299;
+      var cG = 0.587;
+      var cB = 0.114;
+
+      var p = Math.sqrt((cR * (r*r)) + (cG * (g*g)) + (cB * (g*g)));
+
+      r = p+(r-p)*(options.saturation);
+      g = p+(g-p)*(options.saturation);
+      b = p+(b-p)*(options.saturation);
+
+
+      return [Math.round(r), Math.round(g), Math.round(b), a];
+    }
+
+    function output(image,datauri,mimetype){
+
+      // This output is accesible by Image Sequencer
+      step.output = {src:datauri,format:mimetype};
+
+      // This output is accessible by UI
+      options.step.output = datauri;
+
+      // Tell UI that step ahs been drawn
+      UI.onComplete(options.step);
+    }
+
+    return require('../_nomodule/PixelManipulation.js')(input, {
+      output: output,
+      changePixel: changePixel,
+      format: input.format,
+      image: options.image,
+      inBrowser: options.inBrowser,
+      callback: callback
+    });
+
+  }
+
+  return {
+    options: options,
+    //setup: setup, // optional
+    draw:  draw,
+    output: output,
+    UI: UI
+  }
+}
+
+},{"../_nomodule/PixelManipulation.js":171}],167:[function(require,module,exports){
+module.exports={
+    "name": "Saturation",
+    "description": "Change the saturation of the image by given value",
+    "inputs": {
+        "saturation": {
+            "type": "integer",
+            "desc": "saturation for the new image between 0 and 2, 0 being black and white and 2 being fully saturated",
+            "default": 0
+        }
+    }
+}
+
+},{}],168:[function(require,module,exports){
 module.exports = function SegmentedColormap(options,UI) {
 
   options = options || {};
@@ -58733,7 +58817,7 @@ module.exports = function SegmentedColormap(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":169,"./SegmentedColormap":167}],167:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":171,"./SegmentedColormap":169}],169:[function(require,module,exports){
 /*
  * Accepts a value from 0-255 and returns the new color-mapped pixel 
  * from a lookup table, which can be specified as an array of [begin, end] 
@@ -58822,7 +58906,7 @@ var colormaps = {
              ])
 }
 
-},{}],168:[function(require,module,exports){
+},{}],170:[function(require,module,exports){
 module.exports={
   "name": "Segmented Colormap",
   "description": "Maps brightness values (average of red, green & blue) to a given color lookup table, made up of a set of one more color gradients.",
@@ -58836,7 +58920,7 @@ module.exports={
   }
 }
 
-},{}],169:[function(require,module,exports){
+},{}],171:[function(require,module,exports){
 (function (Buffer){
 /*
 * General purpose per-pixel manipulation

@@ -57,7 +57,7 @@ sequencer.setUI({
 
 // Finally, if everything is alright, load the image, add the steps and run the sequencer.
 sequencer.loadImages(program.image,function(){
-  console.warn('\x1b[33m%s\x1b[0m', "The execution will be async\nYou may not see the output for a few seconds or minutes")
+  console.warn('\x1b[33m%s\x1b[0m', "Please wait \n output directory generated will be empty until the execution is complete")
   
   //Generate the Output Directory
   require('./src/CliUtils').makedir(program.output,()=>{

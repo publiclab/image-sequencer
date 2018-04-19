@@ -29,8 +29,11 @@ window.onload = function() {
   sequencer.setUI({
 
     onSetup: function(step) {
-
-      if (step.options && step.options.description) step.description = step.options.description
+      if(modulesInfo[step.name]){
+        console.log(modulesInfo[step.name]);
+        step.description = modulesInfo[step.name].description;
+      }
+      else if (step.options && step.options.description) step.description = step.options.description
 
       step.ui = '\
       <div class="row step">\

@@ -4,8 +4,6 @@
 module.exports = function GreenChannel(options,UI) {
 
   options = options || {};
-  options.title = "Green channel only";
-  options.description = "Displays only the green channel of an image";
 
   // Tell UI that a step has been set up
   UI.onSetup(options.step);

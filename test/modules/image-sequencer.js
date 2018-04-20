@@ -85,6 +85,7 @@ test('addSteps("image","name") adds a step', function (t) {
   sequencer.addSteps('test','green-channel');
   t.equal(sequencer.images.test.steps.length, 2, "Length of steps increased")
   t.equal(sequencer.images.test.steps[1].options.name, "green-channel", "Correct Step Added");
+  t.equal(sequencer.images.test.steps[1].options.description, "Displays only the green channel of an image", "Step description shown");
   t.end();
 });
 

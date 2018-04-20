@@ -1,3 +1,4 @@
+// insert one or more steps at a given index in the sequencer
 function InsertStep(ref, image, index, name, o) {
 
   function insertStep(image, index, name, o_) {

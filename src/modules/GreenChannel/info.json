@@ -1,5 +1,6 @@
 {
   "name": "Green Channel",
+  "description": "Displays only the green channel of an image",
   "inputs": {
   }
 }

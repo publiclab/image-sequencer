@@ -118,7 +118,7 @@ window.onload = function() {
 
       step.imgElement.src = step.output;
       step.linkElement.href = step.output;
-      step.linkElement.download = step.name + ".png"
+      step.linkElement.download = step.name + step.output.split('/')[1].split(';')[0];
       step.linkElement.target = "_blank"
 
       if(sequencer.modulesInfo().hasOwnProperty(step.name)) {

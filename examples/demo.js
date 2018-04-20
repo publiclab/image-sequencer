@@ -120,10 +120,10 @@ window.onload = function() {
       step.linkElement.href = step.output;
 
       function fileExtension(output) {
-        imageOutput = output.split('/')[1].split(';')[0];
+        return output.split('/')[1].split(';')[0];
       }
 
-      step.linkElement.download = step.name + step.imageOutput;
+      step.linkElement.download = step.name + "." + fileExtension(step.output);
       step.linkElement.target = "_blank";
 
       if(sequencer.modulesInfo().hasOwnProperty(step.name)) {

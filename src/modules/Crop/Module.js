@@ -13,47 +13,61 @@
  *          y = options.y
  *          y = options.y + options.h
  */
- module.exports = function CropModule(options,UI) {
+module.exports = function CropModule(options, UI) {
 
-   // TODO: we could also set this to {} if nil in AddModule.js to avoid this line:
-   options = options || {};
+  // TODO: we could also set this to {} if nil in AddModule.js to avoid this line:
+  options = options || {};
 
-   // Tell the UI that a step has been added
-   UI.onSetup(options.step);
-   var output;
+  // Tell the UI that a step has been added
+  UI.onSetup(options.step); // we should get UI to return the image thumbnail so we can attach our own UI extensions
+  // add our custom in-module html ui:
+  var ui = require('./Ui.js')(options.step, UI);
+  var output,
+      setupComplete = false;
 
-   // This function is caled everytime the step has to be redrawn
-   function draw(input,callback) {
+  // This function is caled everytime the step has to be redrawn
+  function draw(input,callback) {
 
-     // Tell the UI that the step has been triggered
-     UI.onDraw(options.step);
-     var step = this;
+    // Tell the UI that the step has been triggered
+    UI.onDraw(options.step);
+    var step = this;
 
-     require('./Crop')(input,options,function(out,format){
+    // save the input image; 
+    // TODO: this should be moved to module API to persist the input image
+    options.step.input = input.src;
 
-       // This output is accessible to Image Sequencer
-       step.output = {
-         src: out,
-         format: format
-       }
+    require('./Crop')(input, options, function(out, format){
 
-       // This output is accessible to the UI
-       options.step.output = out;
+      // This output is accessible to Image Sequencer
+      step.output = {
+        src: out,
+        format: format
+      }
 
-       // Tell the UI that the step has been drawn
-       UI.onComplete(options.step);
+      // This output is accessible to the UI
+      options.step.output = out;
 
-       // Tell Image Sequencer that step has been drawn
-       callback();
+      // Tell the UI that the step has been drawn
+      UI.onComplete(options.step);
 
-     });
+      // start custom UI setup (draggable UI)
+      // only once we have an input image
+      if (setupComplete === false && options.step.inBrowser) {
+        setupComplete = true;
+        ui.setup();
+      }
 
-   }
+      // Tell Image Sequencer that step has been drawn
+      callback();
 
-   return {
-     options: options,
-     draw: draw,
-     output: output,
-     UI: UI
-   }
- }
+    });
+
+  }
+
+  return {
+    options: options,
+    draw: draw,
+    output: output,
+    UI: UI
+  }
+}

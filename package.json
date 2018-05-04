@@ -36,7 +36,8 @@
     "pace": "0.0.4",
     "readline-sync": "^1.4.7",
     "save-pixels": "~2.3.4",
-    "urify": "^2.1.0"
+    "urify": "^2.1.0",
+    "imgareaselect": "git://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2"
   },
   "devDependencies": {
     "browserify": "13.0.0",

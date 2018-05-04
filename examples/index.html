@@ -3,76 +3,93 @@
 <html>
 
 
-  <head>
+<head>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="content-type" content="text/html; charset=UTF8">
-    <link rel="icon" sizes="192x192" href="../icons/ic_192.png">
-
-
-    <title>Image Sequencer</title>
-
-    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="../dist/image-sequencer.js" charset="utf-8"></script>
-    <script src="lib/urlHash.js" charset="utf-8"></script>
-    <script src="lib/imageSelection.js" charset="utf-8"></script>
-    <script src="demo.js" charset="utf-8"></script>
-
-  </head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="content-type" content="text/html; charset=UTF8">
+  <link rel="icon" sizes="192x192" href="../icons/ic_192.png">
 
 
-  <body>
+  <title>Image Sequencer</title>
 
-    <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="demo.css">
+  <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="../dist/image-sequencer.js" charset="utf-8"></script>
+  <script src="lib/urlHash.js" charset="utf-8"></script>
+  <script src="lib/imageSelection.js" charset="utf-8"></script>
+  <script src="lib/defaultHtmlStepUi.js" charset="utf-8"></script>
+  <script src="lib/defaultHtmlSequencerUi.js" charset="utf-8"></script>
+  <script src="demo.js" charset="utf-8"></script>
+  <!-- for crop module: -->
+  <script src="../node_modules/imgareaselect/jquery.imgareaselect.dev.js"></script>
 
-    <div class="container-fluid">
+</head>
 
-      <header class="text-center">
-        <h1>Image Sequencer</h1>
-        <p>
-          A pure JavaScript sequential image processing system, inspired by storyboards. Instead of modifying the original image, it creates a new image at each step in a sequence. 
-          <a href="https://publiclab.org/image-sequencer">Learn more</a>
-        </p>
-        <p>
-          Open Source <a href="https://github.com/publiclab/image-sequencer"><i class="fa fa-github"></i></a> by <a href="https://publiclab.org">Public Lab</a>
-        </p>
-      </header>
 
-      <div id="dropzone">
-        <p><i>Select or drag in an image to start!</i></p>
-        <center><input type="file" id="fileInput" value=""></center>
-      </div>
+<body>
 
-      <section id="steps" class="row"></section>
+  <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <!-- for crop module: -->
+  <link href="../node_modules/imgareaselect/distfiles/css/imgareaselect-default.css" rel="stylesheet">
+  <link rel="stylesheet" href="demo.css">
 
-      <hr />
+  <div class="container-fluid">
 
-      <section id="addStep" class="panel panel-primary">
-        <div class="form-inline">
-          <div class="panel-body">
-            <div style="text-align:center;">
-              <select class="form-control input-lg">
-                <option value="none" disabled selected>Select a new step...</option>
-              </select>
-              <button class="btn btn-success btn-lg" name="add">Add Step</button>
-            </div>
-            <br />
-	    <p class="info" style="padding:8px;">Select a new module to add to your sequence.</p>
-	  </div>
-        </div>
-      </section>
+    <header class="text-center">
+      <h1>Image Sequencer</h1>
+      <p>
+        A pure JavaScript sequential image processing system, inspired by storyboards. Instead of modifying the original image, it
+        creates a new image at each step in a sequence.
+        <a href="https://publiclab.org/image-sequencer">Learn more</a>
+      </p>
+      <p>
+        Open Source
+        <a href="https://github.com/publiclab/image-sequencer">
+          <i class="fa fa-github"></i>
+        </a> by
+        <a href="https://publiclab.org">Public Lab</a>
+      </p>
+    </header>
 
+    <div id="dropzone">
+      <p>
+        <i>Select or drag in an image to start!</i>
+      </p>
+      <center>
+        <input type="file" id="fileInput" value="">
+      </center>
     </div>
 
-    <script type="text/javascript">
+    <section id="steps" class="row"></section>
 
+    <hr />
+
+    <section id="addStep" class="panel panel-primary">
+      <div class="form-inline">
+        <div class="panel-body">
+          <div style="text-align:center;">
+            <select class="form-control input-lg" id="selectStep">
+              <option value="none" disabled selected>Select a new step...</option>
+            </select>
+            <button class="btn btn-success btn-lg" name="add">Add Step</button>
+          </div>
+          <br />
+          <p class="info" style="padding:8px;">Select a new module to add to your sequence.</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script type="text/javascript">
+    $(function () {
       var sequencer;
+    })
+  </script>
 
-    </script>
-
-  </body>
+</body>
 
 </html>

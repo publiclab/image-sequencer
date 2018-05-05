@@ -6,6 +6,7 @@ var Spinner = require('ora')
 
 var program = require('commander');
 var readlineSync = require('readline-sync');
+var metaModules = require('./src/config/MetaModules')
 
 function exit(message) {
   console.error(message);
@@ -33,9 +34,14 @@ require('fs').access(program.image, function(err){
   if(err) exit("Can't read file.")
 });
 
+//Expand the metamodules in steps
+program.step = expandMetaModules(program.step);
+
 // User must input a step. If steps exist, check that every step is a valid step.
 if(!program.step || !validateSteps(program.step))
 exit("Please ensure all steps are valid.");
+
+
 
 // If there's no user defined output directory, select a default directory.
 program.output = program.output || "./output/";
@@ -162,4 +168,17 @@ function validateConfig(config_,options_){
     return false;
     else
     return true;
+  }
+  function expandMetaModules(steps){
+    let result = steps.slice(0);
+    for(let step in steps){
+      for(module in metaModules){
+        if(metaModules[module].name == steps[step]){
+          let temp = result.splice(0,step);
+          temp.push(...metaModules[module].steps,...result.slice(step+1));
+          result = temp;
+        }
+      }
+    }
+    return result;
   }

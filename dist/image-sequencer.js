@@ -46567,7 +46567,7 @@ ImageSequencer = function ImageSequencer(options) {
 }
 module.exports = ImageSequencer;
 
-},{"./AddStep":132,"./ExportBin":133,"./FormatInput":134,"./InsertStep":136,"./Modules":137,"./ReplaceImage":138,"./Run":139,"./ui/LoadImage":172,"./ui/SetInputStep":173,"./ui/UserInterface":174,"fs":7}],136:[function(require,module,exports){
+},{"./AddStep":132,"./ExportBin":133,"./FormatInput":134,"./InsertStep":136,"./Modules":137,"./ReplaceImage":138,"./Run":139,"./ui/LoadImage":175,"./ui/SetInputStep":176,"./ui/UserInterface":177,"fs":7}],136:[function(require,module,exports){
 // insert one or more steps at a given index in the sequencer
 function InsertStep(ref, image, index, name, o) {
 
@@ -46645,10 +46645,13 @@ module.exports = {
   ],
   'average': [
     require('./modules/Average/Module'),require('./modules/Average/info')
+  ],
+  'import-image': [
+    require('./modules/ImportImage/Module'),require('./modules/ImportImage/info')
   ]
 }
 
-},{"./modules/Average/Module":140,"./modules/Average/info":141,"./modules/Blur/Module":143,"./modules/Blur/info":144,"./modules/Brightness/Module":145,"./modules/Brightness/info":146,"./modules/Channel/Module":147,"./modules/Channel/info":148,"./modules/Colormap/Module":150,"./modules/Colormap/info":151,"./modules/Crop/Module":153,"./modules/Crop/info":155,"./modules/DecodeQr/Module":156,"./modules/DecodeQr/info":157,"./modules/Dynamic/Module":158,"./modules/Dynamic/info":159,"./modules/EdgeDetect/Module":161,"./modules/EdgeDetect/info":162,"./modules/FisheyeGl/Module":163,"./modules/FisheyeGl/info":164,"./modules/Invert/Module":165,"./modules/Invert/info":166,"./modules/Ndvi/Module":167,"./modules/Ndvi/info":168,"./modules/Saturation/Module":169,"./modules/Saturation/info":170}],138:[function(require,module,exports){
+},{"./modules/Average/Module":140,"./modules/Average/info":141,"./modules/Blur/Module":143,"./modules/Blur/info":144,"./modules/Brightness/Module":145,"./modules/Brightness/info":146,"./modules/Channel/Module":147,"./modules/Channel/info":148,"./modules/Colormap/Module":150,"./modules/Colormap/info":151,"./modules/Crop/Module":153,"./modules/Crop/info":155,"./modules/DecodeQr/Module":156,"./modules/DecodeQr/info":157,"./modules/Dynamic/Module":158,"./modules/Dynamic/info":159,"./modules/EdgeDetect/Module":161,"./modules/EdgeDetect/info":162,"./modules/FisheyeGl/Module":163,"./modules/FisheyeGl/info":164,"./modules/ImportImage/Module":165,"./modules/ImportImage/info":167,"./modules/Invert/Module":168,"./modules/Invert/info":169,"./modules/Ndvi/Module":170,"./modules/Ndvi/info":171,"./modules/Saturation/Module":172,"./modules/Saturation/info":173}],138:[function(require,module,exports){
 // Uses a given image as input and replaces it with the output.
 // Works only in the browser. 
 function ReplaceImage(ref,selector,steps,options) {
@@ -46857,7 +46860,7 @@ module.exports = function Average(options, UI){
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":171}],141:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":174}],141:[function(require,module,exports){
 module.exports={
     "name": "Average",
     "description": "Average all pixel color",
@@ -47012,7 +47015,7 @@ module.exports = function Blur(options,UI){
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":171,"./Blur":142}],144:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":174,"./Blur":142}],144:[function(require,module,exports){
 module.exports={
     "name": "Blur",
     "description": "Gaussian blur an image by a given value, typically 0-5",
@@ -47092,7 +47095,7 @@ module.exports = function Brightness(options,UI){
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":171}],146:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":174}],146:[function(require,module,exports){
 module.exports={
     "name": "Brightness",
     "description": "Change the brightness of the image by given percent value",
@@ -47165,7 +47168,7 @@ module.exports = function Channel(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":171}],148:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":174}],148:[function(require,module,exports){
 module.exports={
   "name": "Channel",
   "description": "Displays only one color channel of an image -- default is green",
@@ -47324,7 +47327,7 @@ module.exports = function Colormap(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":171,"./Colormap":149}],151:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":174,"./Colormap":149}],151:[function(require,module,exports){
 module.exports={
   "name": "Colormap",
   "description": "Maps brightness values (average of red, green & blue) to a given color lookup table, made up of a set of one more color gradients.\n\nFor example, 'cooler' colors like blue could represent low values, while 'hot' colors like red could represent high values.",
@@ -47756,7 +47759,7 @@ module.exports = function Dynamic(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":171}],159:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":174}],159:[function(require,module,exports){
 module.exports={
   "name": "Dynamic",
   "description": "A module which accepts JavaScript math expressions to produce each color channel based on the original image's color. See <a href='https://publiclab.org/wiki/infragram-sandbox'>Infragrammar</a>.",
@@ -48034,7 +48037,7 @@ module.exports = function edgeDetect(options,UI) {
     }
   }
 
-},{"../_nomodule/PixelManipulation.js":171,"./EdgeUtils":160,"ndarray-gaussian-filter":62}],162:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":174,"./EdgeUtils":160,"ndarray-gaussian-filter":62}],162:[function(require,module,exports){
 module.exports={
     "name": "Detect Edges",
     "description": "this module detects edges using the Canny method, which first Gaussian blurs the image to reduce noise (amount of blur configurable in settings as `options.blur`), then applies a number of steps to highlight edges, resulting in a greyscale image where the brighter the pixel, the stronger the detected edge. Read more at: https://en.wikipedia.org/wiki/Canny_edge_detector",
@@ -48209,6 +48212,144 @@ module.exports={
 
 },{}],165:[function(require,module,exports){
 /*
+ * Import Image module; this fetches a given remote or local image via URL 
+ * or data-url, and overwrites the current one. It saves the original as 
+ * step.metadata.input for use in future modules such as blending.
+ * TODO: we could accept an operation for blending like "screen" or "overlay",
+ * or a function with blend(r1,g1,b1,a1,r2,g2,b2,a2), OR we could simply allow
+ * subsequent modules to do this blending and keep this one simple. 
+ */
+module.exports = function ImportImageModule(options, UI) {
+
+  options = options || {};
+  options.imageUrl = options.imageUrl || "/examples/images/monarch.png";
+
+  var output,
+      imgObj = new Image();
+
+  // Tell the UI that a step has been added
+  UI.onSetup(options.step); // we should get UI to return the image thumbnail so we can attach our own UI extensions
+
+  // add our custom in-module html ui:
+  if (options.step.inBrowser) {
+    var ui = require('./Ui.js')(options.step, UI);
+    ui.setup();
+  }
+
+  // This function is caled everytime the step has to be redrawn
+  function draw(input,callback) {
+
+    // Tell the UI that the step has been triggered
+    UI.onDraw(options.step);
+    var step = this;
+
+    step.metadata = step.metadata || {};
+    // TODO: develop a standard API method for saving each input state,
+    // for reference in future steps (for blending, for example)
+    step.metadata.input = input;
+
+    function onLoad() {
+
+      // This output is accessible to Image Sequencer
+      step.output = {
+        src: imgObj.src,
+        format: options.format
+      }
+
+      // This output is accessible to the UI
+      options.step.output = imgObj.src;
+ 
+      // Tell the UI that the step has been drawn
+      UI.onComplete(options.step);
+
+      // Tell Image Sequencer that step has been drawn
+      callback();
+    }
+
+    options.format = require('../../util/GetFormat')(options.imageUrl);
+    imgObj.onload = onLoad;
+    imgObj.src = options.imageUrl;
+
+  }
+
+  return {
+    options: options,
+    draw: draw,
+    output: output,
+    UI: UI
+  }
+}
+
+},{"../../util/GetFormat":178,"./Ui.js":166}],166:[function(require,module,exports){
+// hide on save
+module.exports = function ImportImageModuleUi(step, ui) {
+
+  function setup(setImage, onLoad) {
+
+    // generate a unique timestamp based id for the dropzone
+    var dropzoneId = 'dropzone-import-image-' + step.ID;
+
+    // add a file input listener
+    var dropZone ='\
+    <div style="padding: 30px;margin: 10px 20% 30px;border: 4px dashed #ccc;border-radius: 8px;text-align: center;color: #444;" id="' + dropzoneId + '">\
+      <p>\
+        <i>Select or drag in an image to overlay.</i>\
+      </p>\
+      <center>\
+        <input type="file" class="file-input" value="">\
+      </center>\
+    </div>';
+
+    // insert into .details area
+    // TODO: develop API-based consistent way to add UI elements
+    $(step.ui)
+      .find('.details')
+      .prepend(dropZone);
+
+    // setup file input listener
+    sequencer.setInputStep({
+      dropZoneSelector: "#" + dropzoneId,
+      fileInputSelector: "#" + dropzoneId + " .file-input",
+      onLoad: function onLoadFromInput(progress) {
+        var reader = progress.target;
+        step.options.imageUrl = reader.result;
+        sequencer.run();
+      }
+    });
+
+    $(step.ui)
+      .find('.btn-save').on('click', function onClickSave() {
+
+        var src = $(step.ui)
+          .find('.det input').val();
+        step.options.imageUrl = src;
+        sequencer.run();
+
+    });
+
+  }
+
+  return {
+    setup: setup
+  }
+}
+
+},{}],167:[function(require,module,exports){
+module.exports={
+  "name": "Import Image",
+  "description": "Import a new image and replace the original with it. Future versions may enable a blend mode. Specify an image by URL or by file selector.",
+  "url": "https://github.com/publiclab/image-sequencer/tree/master/MODULES.md",
+  "inputs": {
+    "url": {
+      "type": "string",
+      "desc": "URL of image to import",
+      "default": "/examples/images/monarch.png"
+    }
+  }
+}
+
+},{}],168:[function(require,module,exports){
+/*
  * Invert the image
  */
 module.exports = function Invert(options,UI) {
@@ -48264,7 +48405,7 @@ module.exports = function Invert(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":171}],166:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":174}],169:[function(require,module,exports){
 module.exports={
   "name": "Invert",
   "description": "Inverts the image.",
@@ -48272,7 +48413,7 @@ module.exports={
   }
 }
 
-},{}],167:[function(require,module,exports){
+},{}],170:[function(require,module,exports){
 /*
  * NDVI with red filter (blue channel is infrared)
  */
@@ -48333,7 +48474,7 @@ module.exports = function Ndvi(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":171}],168:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":174}],171:[function(require,module,exports){
 module.exports={
   "name": "NDVI",
   "description": "Normalized Difference Vegetation Index, or NDVI, is an image analysis technique used with aerial photography. It's a way to visualize the amounts of infrared and other wavelengths of light reflected from vegetation by comparing ratios of blue and red light absorbed versus green and IR light reflected. NDVI is used to evaluate the health of vegetation in satellite imagery, where it correlates with how much photosynthesis is happening. This is helpful in assessing vegetative health or stress. <a href='https://publiclab.org/ndvi'>Read more</a>.<br /><br/>This is designed for use with red-filtered single camera <a href='http://publiclab.org/infragram'>DIY Infragram cameras</a>; change to 'blue' for blue filters",
@@ -48347,7 +48488,7 @@ module.exports={
   }
 }
 
-},{}],169:[function(require,module,exports){
+},{}],172:[function(require,module,exports){
 /*
  * Saturate an image with a value from 0 to 1
  */
@@ -48416,7 +48557,7 @@ module.exports = function Saturation(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":171}],170:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":174}],173:[function(require,module,exports){
 module.exports={
     "name": "Saturation",
     "description": "Change the saturation of the image by given value, from 0-1, with 1 being 100% saturated.",
@@ -48429,7 +48570,7 @@ module.exports={
     }
 }
 
-},{}],171:[function(require,module,exports){
+},{}],174:[function(require,module,exports){
 (function (Buffer){
 /*
 * General purpose per-pixel manipulation
@@ -48520,7 +48661,7 @@ module.exports = function PixelManipulation(image, options) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":8,"get-pixels":38,"pace":69,"save-pixels":120}],172:[function(require,module,exports){
+},{"buffer":8,"get-pixels":38,"pace":69,"save-pixels":120}],175:[function(require,module,exports){
 // special module to load an image into the start of the sequence; used in the HTML UI
 function LoadImage(ref, name, src, main_callback) {
   function makeImage(datauri) {
@@ -48627,8 +48768,9 @@ function LoadImage(ref, name, src, main_callback) {
 
 module.exports = LoadImage;
 
-},{"urify":127}],173:[function(require,module,exports){
-function setInputStepInit(_sequencer) {
+},{"urify":127}],176:[function(require,module,exports){
+// TODO: potentially move this into ImportImage module
+function setInputStepInit() {
 
   return function setInputStep(options) {
 
@@ -48678,7 +48820,7 @@ function setInputStepInit(_sequencer) {
 }
 module.exports = setInputStepInit;
 
-},{}],174:[function(require,module,exports){
+},{}],177:[function(require,module,exports){
 /*
  * User Interface Handling Module
  */
@@ -48735,6 +48877,37 @@ module.exports = function UserInterface(events = {}) {
   }
 
   return events;
+
+}
+
+},{}],178:[function(require,module,exports){
+/*
+* Determine format from a URL or data-url, return "jpg" "png" "gif" etc
+* TODO: write a test for this using the examples
+*/
+module.exports = function GetFormat(src) {
+
+  var format = undefined; // haha default
+
+  // EXAMPLE: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAQABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAABgj/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABykX//Z";
+  // EXAMPLE: "http://example.com/example.png" 
+  // EXAMPLE: "/example.png" 
+ 
+  if (isDataUrl(src)) {
+    format = src.split(';')[0].split('/').pop();
+  } else {
+    format = src.split('.').pop();
+  }
+
+  function isDataUrl(src) {
+    return src.substr(0, 10) === "data:image"
+  }
+
+  format = format.toLowerCase();
+
+  if (format === "jpeg") format = "jpg";
+
+  return format;
 
 }
 

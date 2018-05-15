@@ -40,5 +40,8 @@ module.exports = {
   ],
   'average': [
     require('./modules/Average/Module'),require('./modules/Average/info')
+  ],
+  'import-image': [
+    require('./modules/ImportImage/Module'),require('./modules/ImportImage/info')
   ]
 }

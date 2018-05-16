@@ -40,5 +40,8 @@ module.exports = {
   ],
   'average': [
     require('./modules/Average/Module'),require('./modules/Average/info')
+  ],
+  'blend': [
+    require('./modules/Blend/Module'),require('./modules/Blend/info')
   ]
 }

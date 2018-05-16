@@ -49,7 +49,9 @@ module.exports = function PixelManipulation(image, options) {
             pixels.get(x, y, 0),
             pixels.get(x, y, 1),
             pixels.get(x, y, 2),
-            pixels.get(x, y, 3)
+            pixels.get(x, y, 3),
+            x,
+            y
           );
         
         pixels.set(x, y, 0, pixel[0]);

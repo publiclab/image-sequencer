@@ -47665,7 +47665,7 @@ ImageSequencer = function ImageSequencer(options) {
 }
 module.exports = ImageSequencer;
 
-},{"./AddStep":132,"./ExportBin":133,"./FormatInput":134,"./InsertStep":136,"./Modules":137,"./ReplaceImage":138,"./Run":139,"./ui/LoadImage":174,"./ui/SetInputStep":175,"./ui/UserInterface":176,"fs":39}],136:[function(require,module,exports){
+},{"./AddStep":132,"./ExportBin":133,"./FormatInput":134,"./InsertStep":136,"./Modules":137,"./ReplaceImage":138,"./Run":139,"./ui/LoadImage":177,"./ui/SetInputStep":178,"./ui/UserInterface":179,"fs":39}],136:[function(require,module,exports){
 // insert one or more steps at a given index in the sequencer
 function InsertStep(ref, image, index, name, o) {
 
@@ -47709,50 +47709,53 @@ module.exports = InsertStep;
 */
 module.exports = {
   'channel': [
-    require('./modules/Channel/Module'),require('./modules/Channel/info')
+    require('./modules/Channel/Module'), require('./modules/Channel/info')
   ],
   'brightness': [
-    require('./modules/Brightness/Module'),require('./modules/Brightness/info')
+    require('./modules/Brightness/Module'), require('./modules/Brightness/info')
   ],
-  'edge-detect':[
-    require('./modules/EdgeDetect/Module'),require('./modules/EdgeDetect/info')
+  'edge-detect': [
+    require('./modules/EdgeDetect/Module'), require('./modules/EdgeDetect/info')
   ],
   'ndvi': [
-    require('./modules/Ndvi/Module'),require('./modules/Ndvi/info')
+    require('./modules/Ndvi/Module'), require('./modules/Ndvi/info')
   ],
   'invert': [
-    require('./modules/Invert/Module'),require('./modules/Invert/info')
+    require('./modules/Invert/Module'), require('./modules/Invert/info')
   ],
   'crop': [
-    require('./modules/Crop/Module'),require('./modules/Crop/info')
+    require('./modules/Crop/Module'), require('./modules/Crop/info')
   ],
   'colormap': [
-    require('./modules/Colormap/Module'),require('./modules/Colormap/info')
+    require('./modules/Colormap/Module'), require('./modules/Colormap/info')
   ],
   'decode-qr': [
-    require('./modules/DecodeQr/Module'),require('./modules/DecodeQr/info')
+    require('./modules/DecodeQr/Module'), require('./modules/DecodeQr/info')
   ],
   'fisheye-gl': [
-    require('./modules/FisheyeGl/Module'),require('./modules/FisheyeGl/info')
+    require('./modules/FisheyeGl/Module'), require('./modules/FisheyeGl/info')
   ],
   'dynamic': [
-    require('./modules/Dynamic/Module'),require('./modules/Dynamic/info')
+    require('./modules/Dynamic/Module'), require('./modules/Dynamic/info')
   ],
   'blur': [
-    require('./modules/Blur/Module'),require('./modules/Blur/info')
+    require('./modules/Blur/Module'), require('./modules/Blur/info')
   ],
   'saturation': [
-    require('./modules/Saturation/Module'),require('./modules/Saturation/info')
+    require('./modules/Saturation/Module'), require('./modules/Saturation/info')
   ],
   'average': [
-    require('./modules/Average/Module'),require('./modules/Average/info')
+    require('./modules/Average/Module'), require('./modules/Average/info')
   ],
   'blend': [
-    require('./modules/Blend/Module'),require('./modules/Blend/info')
+    require('./modules/Blend/Module'), require('./modules/Blend/info')
+  ],
+  'import-image': [
+    require('./modules/ImportImage/Module'), require('./modules/ImportImage/info')
   ]
 }
 
-},{"./modules/Average/Module":140,"./modules/Average/info":141,"./modules/Blend/Module":142,"./modules/Blend/info":143,"./modules/Blur/Module":145,"./modules/Blur/info":146,"./modules/Brightness/Module":147,"./modules/Brightness/info":148,"./modules/Channel/Module":149,"./modules/Channel/info":150,"./modules/Colormap/Module":152,"./modules/Colormap/info":153,"./modules/Crop/Module":155,"./modules/Crop/info":157,"./modules/DecodeQr/Module":158,"./modules/DecodeQr/info":159,"./modules/Dynamic/Module":160,"./modules/Dynamic/info":161,"./modules/EdgeDetect/Module":163,"./modules/EdgeDetect/info":164,"./modules/FisheyeGl/Module":165,"./modules/FisheyeGl/info":166,"./modules/Invert/Module":167,"./modules/Invert/info":168,"./modules/Ndvi/Module":169,"./modules/Ndvi/info":170,"./modules/Saturation/Module":171,"./modules/Saturation/info":172}],138:[function(require,module,exports){
+},{"./modules/Average/Module":140,"./modules/Average/info":141,"./modules/Blend/Module":142,"./modules/Blend/info":143,"./modules/Blur/Module":145,"./modules/Blur/info":146,"./modules/Brightness/Module":147,"./modules/Brightness/info":148,"./modules/Channel/Module":149,"./modules/Channel/info":150,"./modules/Colormap/Module":152,"./modules/Colormap/info":153,"./modules/Crop/Module":155,"./modules/Crop/info":157,"./modules/DecodeQr/Module":158,"./modules/DecodeQr/info":159,"./modules/Dynamic/Module":160,"./modules/Dynamic/info":161,"./modules/EdgeDetect/Module":163,"./modules/EdgeDetect/info":164,"./modules/FisheyeGl/Module":165,"./modules/FisheyeGl/info":166,"./modules/ImportImage/Module":167,"./modules/ImportImage/info":169,"./modules/Invert/Module":170,"./modules/Invert/info":171,"./modules/Ndvi/Module":172,"./modules/Ndvi/info":173,"./modules/Saturation/Module":174,"./modules/Saturation/info":175}],138:[function(require,module,exports){
 // Uses a given image as input and replaces it with the output.
 // Works only in the browser. 
 function ReplaceImage(ref,selector,steps,options) {
@@ -47968,7 +47971,7 @@ module.exports = function Average(options, UI){
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":173}],141:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":176}],141:[function(require,module,exports){
 module.exports={
     "name": "Average",
     "description": "Average all pixel color",
@@ -48052,7 +48055,7 @@ module.exports = function Dynamic(options, UI, util) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":173,"get-pixels":23}],143:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":176,"get-pixels":23}],143:[function(require,module,exports){
 module.exports={
   "name": "Blend",
   "description": "Blend the past two image steps with the given function. Defaults to using the red channel from image 1 and the green and blue and alpha channels of image 2. Easier to use interfaces coming soon!",
@@ -48212,7 +48215,7 @@ module.exports = function Blur(options,UI){
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":173,"./Blur":144}],146:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":176,"./Blur":144}],146:[function(require,module,exports){
 module.exports={
     "name": "Blur",
     "description": "Gaussian blur an image by a given value, typically 0-5",
@@ -48292,7 +48295,7 @@ module.exports = function Brightness(options,UI){
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":173}],148:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":176}],148:[function(require,module,exports){
 module.exports={
     "name": "Brightness",
     "description": "Change the brightness of the image by given percent value",
@@ -48365,7 +48368,7 @@ module.exports = function Channel(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":173}],150:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":176}],150:[function(require,module,exports){
 module.exports={
   "name": "Channel",
   "description": "Displays only one color channel of an image -- default is green",
@@ -48524,7 +48527,7 @@ module.exports = function Colormap(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":173,"./Colormap":151}],153:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":176,"./Colormap":151}],153:[function(require,module,exports){
 module.exports={
   "name": "Colormap",
   "description": "Maps brightness values (average of red, green & blue) to a given color lookup table, made up of a set of one more color gradients.\n\nFor example, 'cooler' colors like blue could represent low values, while 'hot' colors like red could represent high values.",
@@ -48956,7 +48959,7 @@ module.exports = function Dynamic(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":173}],161:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":176}],161:[function(require,module,exports){
 module.exports={
   "name": "Dynamic",
   "description": "A module which accepts JavaScript math expressions to produce each color channel based on the original image's color. See <a href='https://publiclab.org/wiki/infragram-sandbox'>Infragrammar</a>.",
@@ -49234,7 +49237,7 @@ module.exports = function edgeDetect(options,UI) {
     }
   }
 
-},{"../_nomodule/PixelManipulation.js":173,"./EdgeUtils":162,"ndarray-gaussian-filter":63}],164:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":176,"./EdgeUtils":162,"ndarray-gaussian-filter":63}],164:[function(require,module,exports){
 module.exports={
     "name": "Detect Edges",
     "description": "this module detects edges using the Canny method, which first Gaussian blurs the image to reduce noise (amount of blur configurable in settings as `options.blur`), then applies a number of steps to highlight edges, resulting in a greyscale image where the brighter the pixel, the stronger the detected edge. Read more at: https://en.wikipedia.org/wiki/Canny_edge_detector",
@@ -49409,6 +49412,144 @@ module.exports={
 
 },{}],167:[function(require,module,exports){
 /*
+ * Import Image module; this fetches a given remote or local image via URL 
+ * or data-url, and overwrites the current one. It saves the original as 
+ * step.metadata.input for use in future modules such as blending.
+ * TODO: we could accept an operation for blending like "screen" or "overlay",
+ * or a function with blend(r1,g1,b1,a1,r2,g2,b2,a2), OR we could simply allow
+ * subsequent modules to do this blending and keep this one simple. 
+ */
+module.exports = function ImportImageModule(options, UI) {
+
+  options = options || {};
+  options.imageUrl = options.imageUrl || "/examples/images/monarch.png";
+
+  var output,
+      imgObj = new Image();
+
+  // Tell the UI that a step has been added
+  UI.onSetup(options.step); // we should get UI to return the image thumbnail so we can attach our own UI extensions
+
+  // add our custom in-module html ui:
+  if (options.step.inBrowser) {
+    var ui = require('./Ui.js')(options.step, UI);
+    ui.setup();
+  }
+
+  // This function is caled everytime the step has to be redrawn
+  function draw(input,callback) {
+
+    // Tell the UI that the step has been triggered
+    UI.onDraw(options.step);
+    var step = this;
+
+    step.metadata = step.metadata || {};
+    // TODO: develop a standard API method for saving each input state,
+    // for reference in future steps (for blending, for example)
+    step.metadata.input = input;
+
+    function onLoad() {
+
+      // This output is accessible to Image Sequencer
+      step.output = {
+        src: imgObj.src,
+        format: options.format
+      }
+
+      // This output is accessible to the UI
+      options.step.output = imgObj.src;
+ 
+      // Tell the UI that the step has been drawn
+      UI.onComplete(options.step);
+
+      // Tell Image Sequencer that step has been drawn
+      callback();
+    }
+
+    options.format = require('../../util/GetFormat')(options.imageUrl);
+    imgObj.onload = onLoad;
+    imgObj.src = options.imageUrl;
+
+  }
+
+  return {
+    options: options,
+    draw: draw,
+    output: output,
+    UI: UI
+  }
+}
+
+},{"../../util/GetFormat":180,"./Ui.js":168}],168:[function(require,module,exports){
+// hide on save
+module.exports = function ImportImageModuleUi(step, ui) {
+
+  function setup(setImage, onLoad) {
+
+    // generate a unique timestamp based id for the dropzone
+    var dropzoneId = 'dropzone-import-image-' + step.ID;
+
+    // add a file input listener
+    var dropZone ='\
+    <div style="padding: 30px;margin: 10px 20% 30px;border: 4px dashed #ccc;border-radius: 8px;text-align: center;color: #444;" id="' + dropzoneId + '">\
+      <p>\
+        <i>Select or drag in an image to overlay.</i>\
+      </p>\
+      <center>\
+        <input type="file" class="file-input" value="">\
+      </center>\
+    </div>';
+
+    // insert into .details area
+    // TODO: develop API-based consistent way to add UI elements
+    $(step.ui)
+      .find('.details')
+      .prepend(dropZone);
+
+    // setup file input listener
+    sequencer.setInputStep({
+      dropZoneSelector: "#" + dropzoneId,
+      fileInputSelector: "#" + dropzoneId + " .file-input",
+      onLoad: function onLoadFromInput(progress) {
+        var reader = progress.target;
+        step.options.imageUrl = reader.result;
+        sequencer.run();
+      }
+    });
+
+    $(step.ui)
+      .find('.btn-save').on('click', function onClickSave() {
+
+        var src = $(step.ui)
+          .find('.det input').val();
+        step.options.imageUrl = src;
+        sequencer.run();
+
+    });
+
+  }
+
+  return {
+    setup: setup
+  }
+}
+
+},{}],169:[function(require,module,exports){
+module.exports={
+  "name": "Import Image",
+  "description": "Import a new image and replace the original with it. Future versions may enable a blend mode. Specify an image by URL or by file selector.",
+  "url": "https://github.com/publiclab/image-sequencer/tree/master/MODULES.md",
+  "inputs": {
+    "url": {
+      "type": "string",
+      "desc": "URL of image to import",
+      "default": "/examples/images/monarch.png"
+    }
+  }
+}
+
+},{}],170:[function(require,module,exports){
+/*
  * Invert the image
  */
 module.exports = function Invert(options, UI) {
@@ -49467,7 +49608,7 @@ module.exports = function Invert(options, UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":173}],168:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":176}],171:[function(require,module,exports){
 module.exports={
   "name": "Invert",
   "description": "Inverts the image.",
@@ -49475,7 +49616,7 @@ module.exports={
   }
 }
 
-},{}],169:[function(require,module,exports){
+},{}],172:[function(require,module,exports){
 /*
  * NDVI with red filter (blue channel is infrared)
  */
@@ -49536,7 +49677,7 @@ module.exports = function Ndvi(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":173}],170:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":176}],173:[function(require,module,exports){
 module.exports={
   "name": "NDVI",
   "description": "Normalized Difference Vegetation Index, or NDVI, is an image analysis technique used with aerial photography. It's a way to visualize the amounts of infrared and other wavelengths of light reflected from vegetation by comparing ratios of blue and red light absorbed versus green and IR light reflected. NDVI is used to evaluate the health of vegetation in satellite imagery, where it correlates with how much photosynthesis is happening. This is helpful in assessing vegetative health or stress. <a href='https://publiclab.org/ndvi'>Read more</a>.<br /><br/>This is designed for use with red-filtered single camera <a href='http://publiclab.org/infragram'>DIY Infragram cameras</a>; change to 'blue' for blue filters",
@@ -49550,7 +49691,7 @@ module.exports={
   }
 }
 
-},{}],171:[function(require,module,exports){
+},{}],174:[function(require,module,exports){
 /*
  * Saturate an image with a value from 0 to 1
  */
@@ -49619,7 +49760,7 @@ module.exports = function Saturation(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":173}],172:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":176}],175:[function(require,module,exports){
 module.exports={
     "name": "Saturation",
     "description": "Change the saturation of the image by given value, from 0-1, with 1 being 100% saturated.",
@@ -49632,7 +49773,7 @@ module.exports={
     }
 }
 
-},{}],173:[function(require,module,exports){
+},{}],176:[function(require,module,exports){
 (function (process,Buffer){
 /*
 * General purpose per-pixel manipulation
@@ -49725,7 +49866,7 @@ module.exports = function PixelManipulation(image, options) {
 };
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"_process":94,"buffer":4,"get-pixels":23,"pace":70,"save-pixels":107}],174:[function(require,module,exports){
+},{"_process":94,"buffer":4,"get-pixels":23,"pace":70,"save-pixels":107}],177:[function(require,module,exports){
 // special module to load an image into the start of the sequence; used in the HTML UI
 function LoadImage(ref, name, src, main_callback) {
   function makeImage(datauri) {
@@ -49832,8 +49973,9 @@ function LoadImage(ref, name, src, main_callback) {
 
 module.exports = LoadImage;
 
-},{"urify":127}],175:[function(require,module,exports){
-function setInputStepInit(_sequencer) {
+},{"urify":127}],178:[function(require,module,exports){
+// TODO: potentially move this into ImportImage module
+function setInputStepInit() {
 
   return function setInputStep(options) {
 
@@ -49883,7 +50025,7 @@ function setInputStepInit(_sequencer) {
 }
 module.exports = setInputStepInit;
 
-},{}],176:[function(require,module,exports){
+},{}],179:[function(require,module,exports){
 /*
  * User Interface Handling Module
  */
@@ -49940,6 +50082,37 @@ module.exports = function UserInterface(events = {}) {
   }
 
   return events;
+
+}
+
+},{}],180:[function(require,module,exports){
+/*
+* Determine format from a URL or data-url, return "jpg" "png" "gif" etc
+* TODO: write a test for this using the examples
+*/
+module.exports = function GetFormat(src) {
+
+  var format = undefined; // haha default
+
+  // EXAMPLE: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAQABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAABgj/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABykX//Z";
+  // EXAMPLE: "http://example.com/example.png" 
+  // EXAMPLE: "/example.png" 
+ 
+  if (isDataUrl(src)) {
+    format = src.split(';')[0].split('/').pop();
+  } else {
+    format = src.split('.').pop();
+  }
+
+  function isDataUrl(src) {
+    return src.substr(0, 10) === "data:image"
+  }
+
+  format = format.toLowerCase();
+
+  if (format === "jpeg") format = "jpg";
+
+  return format;
 
 }
 

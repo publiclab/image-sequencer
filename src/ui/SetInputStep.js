@@ -1,4 +1,5 @@
-function setInputStepInit(_sequencer) {
+// TODO: potentially move this into ImportImage module
+function setInputStepInit() {
 
   return function setInputStep(options) {
 

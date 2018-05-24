@@ -29,7 +29,7 @@ window.onload = function() {
     fileInputSelector: "#fileInput",
     onLoad: function onFileReaderLoad(progress) {
       var reader = progress.target;
-      step = sequencer.images.image1.steps[0];
+      var step = sequencer.images.image1.steps[0];
       step.output.src = reader.result;
       sequencer.run(0);
       step.options.step.imgElement.src = reader.result;

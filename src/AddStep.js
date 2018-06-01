@@ -32,5 +32,6 @@ function AddStep(_sequencer, image, name, o) {
   }
 
   addStep(image, name, o);
+  _sequencer.steps = _sequencer.images[image].steps;
 }
 module.exports = AddStep;

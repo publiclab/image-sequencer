@@ -13,12 +13,12 @@ function copy(g, a) {
   var b = {};
   var i = 0;
   for (var v in a)
-    if (g) {
-      if (v != "sequencer") b[v] = a[v];
-    }
-    else {
-      if (v != "sequencer" && v != "global1" && v != "global2" && !global1.hasOwnProperty(v)) i++;
-    }
+  if (g) {
+    if (v != "sequencer") b[v] = a[v];
+  }
+  else {
+    if (v != "sequencer" && v != "global1" && v != "global2" && !global1.hasOwnProperty(v)) i++;
+  }
   if (g) return b;
   else return i;
 }
@@ -50,29 +50,29 @@ test('modulesInfo() returns info for each module', function (t) {
 });
 
 if (!sequencer.options.inBrowser)
-  test('loadImage loads an image from URL and creates a step. (NodeJS)', function (t) {
-    require('dns').resolve('www.github.com', function (err) {
-      if (err) {
-        console.log("Test aborted due to no internet");
-        t.end();
-      }
-      else {
-        sequencer.loadImage('URL', 'https://ccpandhare.github.io/image-sequencer/examples/images/red.jpg', function () {
-          t.equal(sequencer.images.URL.steps.length, 1, "Initial Step Created");
-          t.equal(typeof (sequencer.images.URL.steps[0].output.src), "string", "Initial output exists");
-          t.end();
-        });
-      }
+test('loadImage loads an image from URL and creates a step. (NodeJS)', function (t) {
+  require('dns').resolve('www.github.com', function (err) {
+    if (err) {
+      console.log("Test aborted due to no internet");
+      t.end();
+    }
+    else {
+      sequencer.loadImage('URL', 'https://ccpandhare.github.io/image-sequencer/examples/images/red.jpg', function () {
+      t.equal(sequencer.images.URL.steps.length, 1, "Initial Step Created");
+      t.equal(typeof (sequencer.images.URL.steps[0].output.src), "string", "Initial output exists");
+      t.end();
     });
-  });
+  }
+});
+});
 
 if (!sequencer.options.inBrowser)
-  test('loadImages loads an image from PATH and creates a step. (NodeJS)', function (t) {
-    sequencer.loadImages('examples/images/red.jpg');
-    t.equal(sequencer.images.image1.steps.length, 1, "Initial Step Created");
-    t.equal(typeof (sequencer.images.image1.steps[0].output.src), "string", "Initial output exists");
-    t.end();
-  });
+test('loadImages loads an image from PATH and creates a step. (NodeJS)', function (t) {
+  sequencer.loadImages('examples/images/red.jpg');
+  t.equal(sequencer.images.image1.steps.length, 1, "Initial Step Created");
+  t.equal(typeof (sequencer.images.image1.steps[0].output.src), "string", "Initial output exists");
+  t.end();
+});
 
 test('loadImage works too.', function (t) {
   sequencer.loadImage('test2', red);
@@ -161,6 +161,12 @@ test('insertSteps({image: {index: index, name: "module", o: options} }) inserts 
   sequencer.insertSteps({ test: { index: 1, name: 'channel', o: {} } });
   t.equal(sequencer.images.test.steps.length, 6, "Length of Steps increased");
   t.equal(sequencer.images.test.steps[1].options.name, "channel", "Correct Step Inserted");
+  t.end();
+});
+
+test('toString() and stepToString() return the step/steps in string format',function(t){
+  t.equal(sequencer.toString(),"channel(channel:green),channel(channel:green),channel(channel:green),channel(channel:green),channel(channel:green)","toString works");
+  t.equal(sequencer.stepToString(sequencer.steps[1]),"channel(channel:green)","stepToString works");
   t.end();
 });
 

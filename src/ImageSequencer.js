@@ -223,16 +223,22 @@ ImageSequencer = function ImageSequencer(options) {
 
   // Coverts stringified sequence into JSON
   function importStringtoJson(str){
-    let steps = str.split('),');
-    steps.push(steps.splice(-1)[0].slice(0,-1));
+    let steps = str.split(',');
     return steps.map(importStringtoJsonStep);
   }
   // Converts one stringified step into JSON
   function importStringtoJsonStep(str){
-    str = [
+    if(str.indexOf('(') === -1) {
+      str = [
+        str.substr(0),
+        ""
+      ]
+    } else {
+      str = [
       str.substr(0,str.indexOf('(')),
-      str.slice(str.indexOf('(')+1)
+      str.slice(str.indexOf('(')+1,-1)
     ];
+    }
 
     str[1] = str[1].split(',').reduce(function(acc,cur,i){
       cur = [

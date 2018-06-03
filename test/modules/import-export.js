@@ -18,6 +18,6 @@ test('importStringtoJson() and importStringtoJsonStep() return the step/steps fr
     { name: 'invert', options: {} },
     { name: 'blend', options: { blend: 'function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] }' } }
   ]);
-  t.deepEqual(sequencer.importStringtoJsonStep("channel(channel:green)"),{ name: 'channel', options: { channel: 'green)' } });
+  t.deepEqual(sequencer.importStringtoJsonStep("channel(channel:green)"),{ name: 'channel', options: { channel: 'green' } });
   t.end();
 });

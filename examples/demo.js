@@ -18,9 +18,17 @@ window.onload = function() {
   var ui = DefaultHtmlSequencerUi(sequencer);
 
   sequencer.loadImage("images/tulips.png", ui.onLoad);
+  let enableAddStepButtonAndSelectNewStep = function(){
+    $('#selectStep').siblings().removeClass('disabled');
+    ui.selectNewStepUi();
+  }
+  let disableAddStepButtonAndAddStepUi = function(){
+      $('#selectStep').siblings().addClass('disabled');
+    ui.addStepUi();
+  } 
 
-  $("#addStep select").on("change", ui.selectNewStepUi);
-  $("#addStep button").on("click", ui.addStepUi);
+  $("#addStep select").on("change", enableAddStepButtonAndSelectNewStep);
+  $("#addStep button").on("click", disableAddStepButtonAndAddStepUi);
   $('body').on('click', 'button.remove', ui.removeStepUi);
 
   // image selection and drag/drop handling from examples/lib/imageSelection.js

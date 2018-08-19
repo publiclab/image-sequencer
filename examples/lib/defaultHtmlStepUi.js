@@ -60,14 +60,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
         if (!isInput) {
           html += '<span class="output"></span>';
         } else if (inputDesc.type.toLowerCase() == "select") {
-          html += '<select class="form-control" name="' + paramName + '">';
+          html += '<select class="form-control target" name="' + paramName + '">';
           for (var option in inputDesc.values) {
             html += "<option>" + inputDesc.values[option] + "</option>";
           }
           html += "</select>";
         } else {
           html =
-            '<input class="form-control" type="' +
+            '<input class="form-control target" type="' +
             inputDesc.type +
             '" name="' +
             paramName +
@@ -91,8 +91,15 @@ function DefaultHtmlStepUi(_sequencer, options) {
                          </div>";
         step.ui.querySelector("div.details").appendChild(div);
       }
+
+      function toggleSaveButton(){
+        $(step.ui.querySelector("div.details .btn-save")).prop("disabled",false);
+      }
+
+      $(step.ui.querySelector(".target")).change(toggleSaveButton);
+
       $(step.ui.querySelector("div.details")).append(
-        "<p><button class='btn btn-default btn-save'>Save</button></p>"
+        "<p><button class='btn btn-default btn-save' disabled = 'true' >Save</button></p>"
       );
 
       function saveOptions() {
@@ -105,6 +112,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
         // modify the url hash
         setUrlHashParameter("steps", _sequencer.toString());
+        // disable the save button
+        $(step.ui.querySelector("div.details .btn-save")).prop("disabled",true);
       }
 
       // on clicking Save in the details pane of the step

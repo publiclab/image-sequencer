@@ -19,6 +19,7 @@ module.exports = function CropModuleUi(step, ui) {
             var yPos = e.pageY - offset.top;
             var ndvi = canvas.getContext('2d').getImageData(xPos, yPos, 1, 1).data[0];
             ndvi = ndvi/127.5 - 1 ;
+            ndvi = ndvi.toFixed(2);
             ndviImage[0].title = "NDVI: " + ndvi;
         });
     }

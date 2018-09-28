@@ -40,7 +40,10 @@ function DefaultHtmlStepUi(_sequencer, options) {
        <button confirm="Are you sure?" class="remove btn btn btn-default">\
          <i class="fa fa-trash"></i>\
        </button>\
-    </div>';
+       <div id="msg">Step Removing\
+       </div>\
+    </div>\
+    ';
 
     var parser = new DOMParser();
     step.ui = parser.parseFromString(step.ui, "text/html");
@@ -177,8 +180,16 @@ function DefaultHtmlStepUi(_sequencer, options) {
   }
 
   function onRemove(step) {
-    step.ui.remove();
+    var x = step.ui.querySelector('#msg');
+    x.className = "show";
+    setTimeout(
+      function(){
+        x.className = x.className.replace("show", "");
+        step.ui.remove();}, 3000
+        );
   }
+    
+  
 
   function getPreview() {
     return step.imgElement;

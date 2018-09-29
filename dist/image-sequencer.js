@@ -48111,7 +48111,7 @@ module.exports = {
   'ndvi-colormap': require('./modules/NdviColormap'),
   'colorbar': require('./modules/Colorbar'),
 }
-},{"./modules/Average":147,"./modules/Blend":150,"./modules/Blur":154,"./modules/Brightness":157,"./modules/Channel":160,"./modules/Colorbar":163,"./modules/Colormap":167,"./modules/Crop":172,"./modules/DecodeQr":175,"./modules/Dynamic":178,"./modules/EdgeDetect":182,"./modules/FisheyeGl":185,"./modules/Gradient":188,"./modules/ImportImage":192,"./modules/Ndvi":199,"./modules/NdviColormap":195,"./modules/Overlay":202,"./modules/Saturation":205,"image-sequencer-invert":56}],142:[function(require,module,exports){
+},{"./modules/Average":147,"./modules/Blend":150,"./modules/Blur":154,"./modules/Brightness":157,"./modules/Channel":160,"./modules/Colorbar":163,"./modules/Colormap":167,"./modules/Crop":172,"./modules/DecodeQr":175,"./modules/Dynamic":178,"./modules/EdgeDetect":182,"./modules/FisheyeGl":185,"./modules/Gradient":188,"./modules/ImportImage":192,"./modules/Ndvi":196,"./modules/NdviColormap":199,"./modules/Overlay":202,"./modules/Saturation":205,"image-sequencer-invert":56}],142:[function(require,module,exports){
 // Uses a given image as input and replaces it with the output.
 // Works only in the browser.
 function ReplaceImage(ref,selector,steps,options) {
@@ -49975,25 +49975,6 @@ module.exports={
 }
 },{}],194:[function(require,module,exports){
 /*
- * Sample Meta Module for demonstration purpose only
- */
-module.exports = function NdviColormapfunction() {
-    this.expandSteps([{ 'name': 'ndvi', 'options': {} }, { 'name': 'colormap', options: {} }]);
-    return {
-        isMeta: true
-    }
-}
-},{}],195:[function(require,module,exports){
-arguments[4][147][0].apply(exports,arguments)
-},{"./Module":194,"./info.json":196,"dup":147}],196:[function(require,module,exports){
-module.exports={
-    "name": "NDVI-Colormap",
-    "description": "Sequentially Applies NDVI and Colormap steps",
-    "inputs": {},
-    "length": 2
-}
-},{}],197:[function(require,module,exports){
-/*
  * NDVI with red filter (blue channel is infrared)
  */
 module.exports = function Ndvi(options, UI) {
@@ -50052,7 +50033,7 @@ module.exports = function Ndvi(options, UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":207,"./Ui.js":198}],198:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":207,"./Ui.js":195}],195:[function(require,module,exports){
 // hide on save
 module.exports = function CropModuleUi(step, ui) {
 
@@ -50088,9 +50069,9 @@ module.exports = function CropModuleUi(step, ui) {
     }
 }
 
-},{}],199:[function(require,module,exports){
+},{}],196:[function(require,module,exports){
 arguments[4][147][0].apply(exports,arguments)
-},{"./Module":197,"./info.json":200,"dup":147}],200:[function(require,module,exports){
+},{"./Module":194,"./info.json":197,"dup":147}],197:[function(require,module,exports){
 module.exports={
   "name": "NDVI",
   "description": "Normalized Difference Vegetation Index, or NDVI, is an image analysis technique used with aerial photography. It's a way to visualize the amounts of infrared and other wavelengths of light reflected from vegetation by comparing ratios of blue and red light absorbed versus green and IR light reflected. NDVI is used to evaluate the health of vegetation in satellite imagery, where it correlates with how much photosynthesis is happening. This is helpful in assessing vegetative health or stress. <a href='https://publiclab.org/ndvi'>Read more</a>.<br /><br/>This is designed for use with red-filtered single camera <a href='http://publiclab.org/infragram'>DIY Infragram cameras</a>; change to 'blue' for blue filters",
@@ -50104,6 +50085,25 @@ module.exports={
   }
 }
 
+},{}],198:[function(require,module,exports){
+/*
+ * Sample Meta Module for demonstration purpose only
+ */
+module.exports = function NdviColormapfunction() {
+    this.expandSteps([{ 'name': 'ndvi', 'options': {} }, { 'name': 'colormap', options: {} }]);
+    return {
+        isMeta: true
+    }
+}
+},{}],199:[function(require,module,exports){
+arguments[4][147][0].apply(exports,arguments)
+},{"./Module":198,"./info.json":200,"dup":147}],200:[function(require,module,exports){
+module.exports={
+    "name": "NDVI-Colormap",
+    "description": "Sequentially Applies NDVI and Colormap steps",
+    "inputs": {},
+    "length": 2
+}
 },{}],201:[function(require,module,exports){
 module.exports = function Dynamic(options, UI, util) {
 

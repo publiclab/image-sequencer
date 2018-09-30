@@ -32,8 +32,14 @@ h1 {
 }
 
 #dropzone {
+  width: 75%;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   padding: 30px;
-  margin: 0 20% 30px;
+  margin: 10px auto 30px auto;
   border: 4px dashed #ccc;
   border-radius: 8px;
   text-align: center;
@@ -45,7 +51,8 @@ h1 {
 }
 
 #dropzone input {
-  max-width: 100%;
+  max-width: 75%;
+  margin: 0 auto;
 }
 
 .step {

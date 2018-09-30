@@ -8,7 +8,7 @@ module.exports = function ImportImageModuleUi(step, ui) {
 
     // add a file input listener
     var dropZone ='\
-    <div style="padding: 30px;margin: 10px 20% 30px;border: 4px dashed #ccc;border-radius: 8px;text-align: center;color: #444;" id="' + dropzoneId + '">\
+    <div style="width: 75%; padding: 30px;margin: 10px auto 30px auto;border: 4px dashed #ccc;border-radius: 8px;text-align: center;color: #444;" id="' + dropzoneId + '">\
       <p>\
         <i>Select or drag in an image to overlay.</i>\
       </p>\

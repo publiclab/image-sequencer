@@ -1,4 +1,4 @@
-module.exports = function Convulation(pixels, kernelValues){
+module.exports = function Convolution(pixels, kernelValues){
 	let kernel = kernelGenerator(kernelValues), oldpix = pixels;
 	kernel = flipKernel(kernel);
 

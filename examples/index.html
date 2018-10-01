@@ -66,7 +66,8 @@
     <section id="steps" class="row"></section>
 
     <hr />
-
+  <div class="row">
+    <div class="col-sm-8">
     <section id="addStep" class="panel panel-primary">
       <div class="form-inline">
         <div class="panel-body">
@@ -75,17 +76,28 @@
               <option value="none" disabled selected>Select a new step...</option>
             </select>
             <button class="btn btn-success btn-lg" name="add" id="add-step-btn">Add Step</button>
-            <button class="btn btn-success btn-lg" id="download-btn" name="download">Download</button>
           </div>
           <br />
           <p class="info" style="padding:8px;">Select a new module to add to your sequence.</p>
         </div>
       </div>
     </section>
-    <button class="btn btn-primary btn-lg" name="save-sequence" id="save-seq">Save Sequence</button>
-    <button class="btn btn-primary btn-lg" onclick="create_gif()" id="gif">Download as Gif</button>
+    </div>
+    <div class="col-sm-4">
+    <section id="dwnld" class="panel panel-primary">
+      <div class="form-inline">
+        <div class="panel-body">
+          <div style="text-align:center;">
+            <button class="btn btn-success btn-lg" id="download-btn" name="download">Download</button>
+            <button class="btn btn-success btn-lg" onclick="create_gif()" id="gif">Download as Gif</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    </div>
   </div>
-
+    <button class="btn btn-primary btn-lg" name="save-sequence" id="save-seq">Save Sequence</button>
+</div>
   <script type="text/javascript">
     $(function() {
       var sequencer;
@@ -101,6 +113,8 @@
       }
     
       gifshot.createGIF({
+        'gifWidth': 400,
+        'gifHeight': 350,
         'images': imgSrcs,
         'frameDuration': 7,
       },
@@ -109,6 +123,7 @@
           var image = obj.image,
           animatedImage = document.createElement('img');
           animatedImage.src = image;
+          animatedImage.id = "gif_element";
           var link = document.createElement('a');
           var att1 = document.createAttribute("href");
           att1.value = animatedImage.src;

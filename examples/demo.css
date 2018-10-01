@@ -88,6 +88,7 @@ h1 {
 #addStep {
   max-width: 500px;
   margin: 20px auto;
+  margin-right: 5px;
 }
 
 #addStep .labels {
@@ -115,4 +116,16 @@ h1 {
   display: block;
   margin: 0 auto;
   margin-top: 4px;
+}
+#dwnld {
+  max-width: 200px;
+  margin: 20px auto;
+  margin-left: 5px;
+}
+
+#gif_element {
+  display: block;
+  padding: 50px;
+  margin: 0 auto;
+
 }

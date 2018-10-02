@@ -91,6 +91,10 @@ h1 {
   margin-right: 5px;
 }
 
+#add-step-btn{
+  margin: 10px;
+}
+
 #addStep .labels {
   text-align: right;
   padding: 6px;
@@ -112,6 +116,7 @@ h1 {
   display: block;
   margin: 0 auto;
 }
+
 #gif {
   display: block;
   margin: 0 auto;
@@ -129,3 +134,4 @@ h1 {
   margin: 0 auto;
 
 }
+

@@ -5,7 +5,7 @@
       "brightness": {
           "type": "number",
           "desc": "% brightness for the new image",
-          "placeholder": "0%",
+          "placeholder": "0",
           "default": 0 
       }
   } 

@@ -1,0 +1,11 @@
+{
+    "name": "Gamma",
+    "description": "Apply gamma correction on the image",
+    "inputs": {
+        "adjustment": {
+            "type": "float",
+            "desc": "gamma correction for the new image",
+            "default": 0.2
+        }
+    } 
+}

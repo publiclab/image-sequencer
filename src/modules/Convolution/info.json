@@ -3,12 +3,9 @@
     "description": "Image Convolution using a given 3x3 kernel matrix",
     "inputs": {
         "kernelValues": {
-            "type": "an array of 9 number values",
+            "type": "a string of space separated numbers",
             "desc": "values of the kernel which is used as mask for Convolution",
-        },
-        "pixels": {
-            "type": "a ndarray of number values",
-            "desc": "matrix representation of pixels of an image",
+            "default": "0 0 0 0 0 0 0 0 0"
         }
     }
 }

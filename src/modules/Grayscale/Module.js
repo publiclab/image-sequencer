@@ -2,14 +2,9 @@
  * Average all pixel colors
  */
 module.exports = function Average(options, UI) {
-
-    options.blur = options.blur || 2
     var output;
-
-    options.step.metadata = options.step.metadata || {};
-
+    
     function draw(input, callback, progressObj) {
-
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
@@ -18,11 +13,9 @@ module.exports = function Average(options, UI) {
         function changePixel(r, g, b, a) {
             return [r, g, b, a]
         }
-
+        
         // do the averaging
         function extraManipulation(pixels) {
-
-
             for (var i = 0; i < pixels.data.length; i += 1) {
                 var avg = (pixels.data[i].getRed() + pixels.data[i].getGreen() + pixels.data[i].getBlue()) / 3;
                 pixels.data[i].setRed(avg);

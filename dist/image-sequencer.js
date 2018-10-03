@@ -48946,8 +48946,8 @@ module.exports={
 }
 
 },{}],169:[function(require,module,exports){
-module.exports = exports = function(pixels, kernelValues){
-	let kernel = kernelGenerator(kernelValues), oldpix = pixels;
+module.exports = exports = function(pixels, constantFactor, kernelValues){
+	let kernel = kernelGenerator(constantFactor, kernelValues), oldpix = pixels;
 	kernel = flipKernel(kernel);
 
 	for (let i = 0; i < pixels.shape[0]; i++) {
@@ -48970,10 +48970,10 @@ module.exports = exports = function(pixels, kernelValues){
     return pixels;
 
 
-	function kernelGenerator(kernelValues){
+	function kernelGenerator(constantFactor, kernelValues){
 		kernelValues = kernelValues.split(" ");
         for(i = 0 ; i < 9; i++){
-            kernelValues[i] = Number(kernelValues[i]);
+            kernelValues[i] = Number(kernelValues[i]) * constantFactor;
         }
         let k = 0;
 		let arr = [];
@@ -49016,7 +49016,8 @@ module.exports = exports = function(pixels, kernelValues){
 },{}],170:[function(require,module,exports){
 module.exports = function Convolution(options, UI) {
 
-    options.kernelValues = options.kernelValues || '0 0 0 0 0 0 0 0 0'
+    options.kernelValues = options.kernelValues || '0 0 0 0 0 0 0 0 0';
+    options.constantFactor = options.constantFactor || 1;
     var output;
 
     function draw(input, callback, progressObj) {
@@ -49031,7 +49032,7 @@ module.exports = function Convolution(options, UI) {
         }
 
         function extraManipulation(pixels) {
-            pixels = require('./Convolution')(pixels, options.kernelValues)
+            pixels = require('./Convolution')(pixels, options.constantFactor, options.kernelValues)
             return pixels
         }
 
@@ -49066,9 +49067,14 @@ module.exports={
     "name": "Convolution",
     "description": "Image Convolution using a given 3x3 kernel matrix",
     "inputs": {
+  		"constantFactor":{
+  			"type": "Float",
+  			"desc": "a constant factor, multiplies all the kernel values by that factor",
+  			"default": 1
+  		},
         "kernelValues": {
-            "type": "a string of space separated numbers",
-            "desc": "values of the kernel which is used as mask for Convolution",
+            "type": "String",
+            "desc": "nine space separated numbers representing the kernel values in left to right and top to bottom format.",
             "default": "0 0 0 0 0 0 0 0 0"
         }
     }

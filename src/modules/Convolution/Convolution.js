@@ -1,5 +1,5 @@
-module.exports = exports = function(pixels, kernelValues){
-	let kernel = kernelGenerator(kernelValues), oldpix = pixels;
+module.exports = exports = function(pixels, constantFactor, kernelValues){
+	let kernel = kernelGenerator(constantFactor, kernelValues), oldpix = pixels;
 	kernel = flipKernel(kernel);
 
 	for (let i = 0; i < pixels.shape[0]; i++) {
@@ -22,10 +22,10 @@ module.exports = exports = function(pixels, kernelValues){
     return pixels;
 
 
-	function kernelGenerator(kernelValues){
+	function kernelGenerator(constantFactor, kernelValues){
 		kernelValues = kernelValues.split(" ");
         for(i = 0 ; i < 9; i++){
-            kernelValues[i] = Number(kernelValues[i]);
+            kernelValues[i] = Number(kernelValues[i]) * constantFactor;
         }
         let k = 0;
 		let arr = [];

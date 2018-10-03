@@ -2,9 +2,14 @@
     "name": "Convolution",
     "description": "Image Convolution using a given 3x3 kernel matrix",
     "inputs": {
+  		"constantFactor":{
+  			"type": "Float",
+  			"desc": "a constant factor, multiplies all the kernel values by that factor",
+  			"default": 1
+  		},
         "kernelValues": {
-            "type": "a string of space separated numbers",
-            "desc": "values of the kernel which is used as mask for Convolution",
+            "type": "String",
+            "desc": "nine space separated numbers representing the kernel values in left to right and top to bottom format.",
             "default": "0 0 0 0 0 0 0 0 0"
         }
     }

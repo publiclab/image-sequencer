@@ -22,7 +22,6 @@ module.exports = function Average(options, UI) {
                 pixels.data[i].setGreen(avg);
                 pixels.data[i].setBlue(avg);
             }
-            // TODO: Convert image to grayscale as per https://github.com/publiclab/image-sequencer/issues/369
 
             return pixels;
         }

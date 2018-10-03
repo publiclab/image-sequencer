@@ -48110,9 +48110,9 @@ module.exports = {
   'invert': require('image-sequencer-invert'),
   'ndvi-colormap': require('./modules/NdviColormap'),
   'colorbar': require('./modules/Colorbar'),
-  'gamma': require('./modules/Gamma'),
+  'gamma-correction': require('./modules/GammaCorrection'),
 }
-},{"./modules/Average":147,"./modules/Blend":150,"./modules/Blur":154,"./modules/Brightness":157,"./modules/Channel":160,"./modules/Colorbar":163,"./modules/Colormap":167,"./modules/Crop":172,"./modules/DecodeQr":175,"./modules/Dynamic":178,"./modules/EdgeDetect":182,"./modules/FisheyeGl":185,"./modules/Gamma":188,"./modules/Gradient":191,"./modules/ImportImage":195,"./modules/Ndvi":202,"./modules/NdviColormap":198,"./modules/Overlay":205,"./modules/Saturation":208,"image-sequencer-invert":56}],142:[function(require,module,exports){
+},{"./modules/Average":147,"./modules/Blend":150,"./modules/Blur":154,"./modules/Brightness":157,"./modules/Channel":160,"./modules/Colorbar":163,"./modules/Colormap":167,"./modules/Crop":172,"./modules/DecodeQr":175,"./modules/Dynamic":178,"./modules/EdgeDetect":182,"./modules/FisheyeGl":185,"./modules/GammaCorrection":188,"./modules/Gradient":191,"./modules/ImportImage":195,"./modules/Ndvi":202,"./modules/NdviColormap":198,"./modules/Overlay":205,"./modules/Saturation":208,"image-sequencer-invert":56}],142:[function(require,module,exports){
 // Uses a given image as input and replaces it with the output.
 // Works only in the browser.
 function ReplaceImage(ref,selector,steps,options) {
@@ -49819,12 +49819,12 @@ module.exports = function Gamma(options,UI){
 arguments[4][147][0].apply(exports,arguments)
 },{"./Module":187,"./info.json":189,"dup":147}],189:[function(require,module,exports){
 module.exports={
-    "name": "Gamma",
-    "description": "Apply gamma correction on the image",
+    "name": "Gamma Correction",
+    "description": "Apply gamma correction on the image <a href='https://en.wikipedia.org/wiki/Gamma_correction'>Read more</a>",
     "inputs": {
         "adjustment": {
             "type": "float",
-            "desc": "gamma correction for the new image",
+            "desc": "gamma correction (inverse of actual gamma factor) for the new image",
             "default": 0.2
         }
     } 

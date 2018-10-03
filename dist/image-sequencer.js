@@ -48946,8 +48946,9 @@ module.exports={
 }
 
 },{}],169:[function(require,module,exports){
+var _ = require('lodash');
 module.exports = exports = function(pixels, constantFactor, kernelValues){
-	let kernel = kernelGenerator(constantFactor, kernelValues), oldpix = pixels;
+	let kernel = kernelGenerator(constantFactor, kernelValues), oldpix = _.cloneDeep(pixels);
 	kernel = flipKernel(kernel);
 
 	for (let i = 0; i < pixels.shape[0]; i++) {
@@ -49013,7 +49014,7 @@ module.exports = exports = function(pixels, constantFactor, kernelValues){
         return result;
     }
 }
-},{}],170:[function(require,module,exports){
+},{"lodash":62}],170:[function(require,module,exports){
 module.exports = function Convolution(options, UI) {
 
     options.kernelValues = options.kernelValues || '0 0 0 0 0 0 0 0 0';

@@ -5,12 +5,12 @@
   		"constantFactor":{
   			"type": "Float",
   			"desc": "a constant factor, multiplies all the kernel values by that factor",
-  			"default": 1
+  			"default": 0.1111
   		},
         "kernelValues": {
             "type": "String",
             "desc": "nine space separated numbers representing the kernel values in left to right and top to bottom format.",
-            "default": "0 0 0 0 0 0 0 0 0"
+            "default": "1 1 1 1 1 1 1 1 1"
         }
     }
 }

@@ -48963,6 +48963,9 @@ module.exports = exports = function(pixels, constantFactor, kernelValues){
                     acc[3] += (oldpix.get(neighboutPos[a][b][0], neighboutPos[a][b][1], 3) * kernel[a][b]);
                 }
             }
+            acc[0] = acc[0]%255;
+            acc[1] = acc[1]%255;
+            acc[2] = acc[2]%255;
             pixels.set(i, j, 0, acc[0]);
             pixels.set(i, j, 1, acc[1]);
             pixels.set(i, j, 2, acc[2]);
@@ -49017,8 +49020,8 @@ module.exports = exports = function(pixels, constantFactor, kernelValues){
 },{"lodash":62}],170:[function(require,module,exports){
 module.exports = function Convolution(options, UI) {
 
-    options.kernelValues = options.kernelValues || '0 0 0 0 0 0 0 0 0';
-    options.constantFactor = options.constantFactor || 1;
+    options.kernelValues = options.kernelValues || '1 1 1 1 1 1 1 1 1';
+    options.constantFactor = options.constantFactor || 1/9;
     var output;
 
     function draw(input, callback, progressObj) {
@@ -49071,12 +49074,12 @@ module.exports={
   		"constantFactor":{
   			"type": "Float",
   			"desc": "a constant factor, multiplies all the kernel values by that factor",
-  			"default": 1
+  			"default": 0.1111
   		},
         "kernelValues": {
             "type": "String",
             "desc": "nine space separated numbers representing the kernel values in left to right and top to bottom format.",
-            "default": "0 0 0 0 0 0 0 0 0"
+            "default": "1 1 1 1 1 1 1 1 1"
         }
     }
 }

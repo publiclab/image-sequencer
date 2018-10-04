@@ -1,7 +1,7 @@
 module.exports = function Convolution(options, UI) {
 
-    options.kernelValues = options.kernelValues || '0 0 0 0 0 0 0 0 0';
-    options.constantFactor = options.constantFactor || 1;
+    options.kernelValues = options.kernelValues || '1 1 1 1 1 1 1 1 1';
+    options.constantFactor = options.constantFactor || 1/9;
     var output;
 
     function draw(input, callback, progressObj) {

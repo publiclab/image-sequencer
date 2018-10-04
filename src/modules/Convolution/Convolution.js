@@ -15,6 +15,9 @@ module.exports = exports = function(pixels, constantFactor, kernelValues){
                     acc[3] += (oldpix.get(neighboutPos[a][b][0], neighboutPos[a][b][1], 3) * kernel[a][b]);
                 }
             }
+            acc[0] = acc[0]%255;
+            acc[1] = acc[1]%255;
+            acc[2] = acc[2]%255;
             pixels.set(i, j, 0, acc[0]);
             pixels.set(i, j, 1, acc[1]);
             pixels.set(i, j, 2, acc[2]);

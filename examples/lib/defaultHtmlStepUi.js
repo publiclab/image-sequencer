@@ -71,6 +71,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
             inputDesc.type +
             '" name="' +
             paramName +
+            '" placeholder ="' +
+            (inputDesc.placeholder || "") +
             '">';
         }
 
@@ -155,18 +157,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
       var inputs = _sequencer.modulesInfo(step.name).inputs;
       var outputs = _sequencer.modulesInfo(step.name).outputs;
       for (var i in inputs) {
-        if (
-          step.options[i] !== undefined &&
-          inputs[i].type.toLowerCase() === "input"
-        )
-          step.ui.querySelector('div[name="' + i + '"] input').value =
-            step.options[i];
-        if (
-          step.options[i] !== undefined &&
-          inputs[i].type.toLowerCase() === "select"
-        )
-          step.ui.querySelector('div[name="' + i + '"] select').value =
-            step.options[i];
+        if (step.options[i] !== undefined) {
+            if (inputs[i].type.toLowerCase() === "input")
+                step.ui.querySelector('div[name="' + i + '"] input').value =
+                step.options[i];
+            if (inputs[i].type.toLowerCase() === "select")
+                step.ui.querySelector('div[name="' + i + '"] select').value =
+                step.options[i];
+}
       }
       for (var i in outputs) {
         if (step[i] !== undefined)

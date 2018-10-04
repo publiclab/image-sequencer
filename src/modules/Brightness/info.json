@@ -1,11 +1,12 @@
 {
-    "name": "Brightness",
-    "description": "Change the brightness of the image by given percent value",
-    "inputs": {
-        "brightness": {
-            "type": "integer",
-            "desc": "% brightness for the new image",
-            "default": 0 
-        }
-    } 
+  "name": "Brightness",
+  "description": "Change the brightness of the image by given percent value",
+  "inputs": {
+      "brightness": {
+          "type": "number",
+          "desc": "% brightness for the new image",
+          "placeholder": "0",
+          "default": 0 
+      }
+  } 
 }

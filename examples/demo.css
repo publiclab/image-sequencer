@@ -90,6 +90,10 @@ h1 {
   margin: 20px auto;
 }
 
+#add-step-btn{
+  margin: 10px;
+}
+
 #addStep .labels {
   text-align: right;
   padding: 6px;

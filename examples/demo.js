@@ -68,4 +68,15 @@ window.onload = function() {
         console.log('Service worker registration failed, error:', error);
       });
   }
+
+  $("#clear-cache").click(function() {
+      if ('serviceWorker' in navigator) {
+        caches.keys().then(function(cacheNames) {
+          cacheNames.forEach(function(cacheName) {
+            caches.delete(cacheName);
+          });
+        });
+      }
+  });
+
 };

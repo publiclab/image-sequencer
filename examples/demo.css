@@ -115,3 +115,7 @@ h1 {
   display: block;
   margin: 0 auto;
 }
+#info {
+  padding: 8px;
+  text-align: center;
+}

@@ -69,6 +69,14 @@ window.onload = function() {
       });
   }
 
+  if ('serviceWorker' in navigator) {
+        caches.keys().then(function(cacheNames) {
+          cacheNames.forEach(function(cacheName) {
+            $("#clear-cache").append(" " + cacheName);
+          });
+        });
+      }
+
   $("#clear-cache").click(function() {
       if ('serviceWorker' in navigator) {
         caches.keys().then(function(cacheNames) {
@@ -77,6 +85,6 @@ window.onload = function() {
           });
         });
       }
+  location.reload();
   });
-
 };

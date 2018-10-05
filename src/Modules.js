@@ -21,4 +21,6 @@ module.exports = {
   'invert': require('image-sequencer-invert'),
   'ndvi-colormap': require('./modules/NdviColormap'),
   'colorbar': require('./modules/Colorbar'),
+  'gamma-correction': require('./modules/GammaCorrection'),
+  'convolution': require('./modules/Convolution'),
 }

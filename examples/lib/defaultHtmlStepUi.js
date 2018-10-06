@@ -100,7 +100,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         $(step.ui.querySelector("div.details .btn-save")).prop("disabled",false);
       }
 
-      $(step.ui.querySelector(".target")).change(toggleSaveButton);
+      $(step.ui.querySelectorAll(".target")).focus(toggleSaveButton);
 
       $(step.ui.querySelector("div.details")).append(
         "<p><button class='btn btn-default btn-save' disabled = 'true' >Save</button><span> Press save to see changes</span></p>"

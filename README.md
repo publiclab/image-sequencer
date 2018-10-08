@@ -586,3 +586,28 @@ not specified, the name of a loaded image defaults to a name like "image1",
 
 Details of all modules can be sought using `sequencer.modulesInfo()`.
 This method returns an object which defines the name and inputs of the modules. If a module name (hyphenated) is passed in the method, then only the details of that module are returned.
+
+## Modules
+
+The following modules are currently availabe in the image sequencer library:
+* `channel`
+* `brightness` 
+* `edge-detect` 
+* `ndvi`
+* `crop`
+* `colormap`
+* `decode-qr` 
+* `fisheye-gl` 
+* `dynamic`
+* `blur`
+* `saturation` 
+* `average` 
+* `blend`
+* `import-image`
+* `overlay`
+* `gradient`
+* `invert` 
+* `ndvi-colormap` 
+* `colorbar`
+* `onSetup`
+

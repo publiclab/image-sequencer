@@ -45,6 +45,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     * and since loadImage is not a part of the drawarray the step lies at current
     * length - 2 of the drawarray
     */
+
     var sequenceLength = 1;
     if (sequencer.sequences[newStepName]) {
       sequenceLength = sequencer.sequences[newStepName].length;
@@ -53,7 +54,31 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     }
     _sequencer
       .addSteps(newStepName, options)
-      .run({ index: _sequencer.images.image1.steps.length - sequenceLength - 1 });
+      // .run({ index: _sequencer.images.image1.steps.length - sequenceLength - 1 });
+    var cache = [];
+    var images = JSON.stringify(_sequencer.images, function(key, value) {
+        if (typeof value === 'object' && value !== null) {
+            if (cache.indexOf(value) !== -1) {
+                try {
+                    return JSON.parse(JSON.stringify(value));
+                } catch (error) {
+                    return;
+                }
+            }
+            cache.push(value);
+        }
+        return value;
+    });
+    cache = null;
+    var images = JSON.parse(images);
+    var _psequencer = JSON.parse(JSON.stringify(_sequencer)); 
+    const worker = new Worker('task.js');
+    worker.postMessage({'_sequencer':_psequencer,'images':images,'sequenceLength':sequenceLength});
+
+    worker.addEventListener('message', function(e) {
+      console.log(e.data);
+      _sequencer  = e.data;
+    }, false);
 
     // add to URL hash too
     setUrlHashParameter("steps", _sequencer.toString());

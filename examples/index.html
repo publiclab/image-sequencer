@@ -22,7 +22,7 @@
   <script src="demo.js" charset="utf-8"></script>
   <!-- for crop module: -->
   <script src="../node_modules/imgareaselect/jquery.imgareaselect.dev.js"></script>
-
+  <script src="gifshot.js" type="text/javascript"></script>
 </head>
 
 
@@ -66,7 +66,8 @@
     <section id="steps" class="row"></section>
 
     <hr />
-
+  <div class="row">
+    <div class="col-sm-8">
     <section id="addStep" class="panel panel-primary">
       <div class="form-inline">
         <div class="panel-body">
@@ -75,21 +76,72 @@
               <option value="none" disabled selected>Select a new step...</option>
             </select>
             <button class="btn btn-success btn-lg" name="add" id="add-step-btn">Add Step</button>
-            <button class="btn btn-success btn-lg" id="download-btn" name="download">Download</button>
           </div>
           <br />
           <p class="info">Select a new module to add to your sequence.</p>
         </div>
       </div>
     </section>
-    <button class="btn btn-primary btn-lg" name="save-sequence" id="save-seq">Save Sequence</button>
-
+    </div>
+    <div class="col-sm-4">
+    <section id="dwnld" class="panel panel-primary">
+      <div class="form-inline">
+        <div class="panel-body">
+          <div style="text-align:center;">
+            <button class="btn btn-success btn-lg" id="download-btn" name="download">Download</button>
+            <button class="btn btn-success btn-lg" onclick="create_gif()" id="gif">Download as Gif</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    </div>
   </div>
-
+    <button class="btn btn-primary btn-lg" name="save-sequence" id="save-seq">Save Sequence</button>
+</div>
   <script type="text/javascript">
     $(function() {
       var sequencer;
     })
+
+    function create_gif(){
+         
+      var imgs = document.getElementsByTagName("img");
+      var imgSrcs = [];
+
+      for (var i = 0; i < imgs.length; i++) {
+          imgSrcs.push(imgs[i].src);
+      }
+    
+      gifshot.createGIF({
+        'gifWidth': 400,
+        'gifHeight': 350,
+        'images': imgSrcs,
+        'frameDuration': 7,
+      },
+      function(obj) {
+        if(!obj.error) {
+          var image = obj.image,
+          animatedImage = document.createElement('img');
+          animatedImage.src = image;
+          animatedImage.id = "gif_element";
+          var link = document.createElement('a');
+          var att1 = document.createAttribute("href");
+          att1.value = animatedImage.src;
+          var att2 = document.createAttribute("download");
+          att2.value = "index.gif";
+          link.setAttributeNode(att1);
+          link.setAttributeNode(att2);
+          link.appendChild(animatedImage);
+          document.body.appendChild(link);
+          link.click();
+        }
+      });
+
+   }
+    
+    
+
+    
   </script>
 
 </body>

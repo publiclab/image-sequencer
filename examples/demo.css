@@ -119,3 +119,21 @@ h1 {
   padding: 8px;
   text-align: center;
 }
+#gif {
+  display: block;
+  margin: 0 auto;
+  margin-top: 4px;
+}
+#dwnld {
+  max-width: 200px;
+  margin: 20px auto;
+  margin-left: 5px;
+}
+
+#gif_element {
+  display: block;
+  padding: 50px;
+  margin: 0 auto;
+
+}
+

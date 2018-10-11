@@ -10,7 +10,6 @@ Most contribution (we imagine) would be in the form of API-compatible modules, w
 * [README.md](https://github.com/publiclab/image-sequencer)
 * [Contributing Modules](#contributing-modules)
 * [Info File](#info-file)
-* [Ideas](#ideas)
 
 ****
 

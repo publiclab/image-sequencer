@@ -6,7 +6,8 @@
   "scripts": {
     "debug": "TEST=true node ./index.js -i ./examples/images/monarch.png -s invert",
     "test": "TEST=true tape test/**/*.js test/*.js | tap-spec; browserify test/modules/image-sequencer.js test/modules/chain.js test/modules/meta-modules.js test/modules/replace.js test/modules/import-export.js test/modules/run.js test/modules/dynamic-imports.js | tape-run --render=\"tap-spec\"",
-    "start": "npm i\nnpm i -g grunt grunt-cli\ngrunt serve"
+    "setup": "npm i\nnpm i -g grunt grunt-cli",
+    "start": "grunt serve"
   },
   "repository": {
     "type": "git",

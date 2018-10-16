@@ -54,7 +54,7 @@
     },
     "fragmentSrc": {
       "type": "PATH",
-      "desc": "Path to a WebGL fragment shader file", 
+      "desc": "Path to a WebGL fragment shader file",
       "default": "(inbuilt)"
     },
     "vertexSrc": {

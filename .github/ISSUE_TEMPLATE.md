@@ -10,7 +10,7 @@
 
 ### Please show us where to look
 
-https://publiclab.org/ ...
+http://sequencer.publiclab.org...
 
 
 ### What's your PublicLab.org username?

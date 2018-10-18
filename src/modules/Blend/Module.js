@@ -1,6 +1,7 @@
 module.exports = function Dynamic(options, UI, util) {
 
   options.func = options.func || "function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] }";
+  options.offset = options.offset || -2;
 
   var output;
 
@@ -15,10 +16,15 @@ module.exports = function Dynamic(options, UI, util) {
     // convert to runnable code:
     if (typeof options.func === "string") eval('options.func = ' + options.func);
 
+    // convert to number
+    if (typeof options.offset === "string") options.offset = parseInt(options.offset);
+
+    var offset = options.offset;
+
     var getPixels = require('get-pixels');
 
     // save first image's pixels
-    var priorStep = this.getStep(-2);
+    var priorStep = this.getStep(offset);
 
     getPixels(priorStep.output.src, function(err, pixels) {
       options.firstImagePixels = pixels;

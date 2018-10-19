@@ -16,12 +16,10 @@ module.exports = function Dynamic(options, UI, util) {
     // convert to runnable code:
     if (typeof options.func === "string") eval('options.func = ' + options.func);
 
-    // convert to number
-    if (typeof options.offset === "string") options.offset = parseInt(options.offset);
-
-    var offset = options.offset;
-
     var getPixels = require('get-pixels');
+
+    // change offset from string to int
+    var offset = parseInt(options.offset);
 
     // save first image's pixels
     var priorStep = this.getStep(offset);

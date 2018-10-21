@@ -75,8 +75,20 @@ function DefaultHtmlStepUi(_sequencer, options) {
             '" value="' +
             paramVal +
             '" placeholder ="' +
-            (inputDesc.placeholder || "") +
-            '">';
+            (inputDesc.placeholder || "");
+            
+           if(inputDesc.type.toLowerCase() == "range")
+           {
+             html+=
+              '"min="'+
+              inputDesc.min +
+              '"max="'+
+              inputDesc.max +
+              '"step="' +
+              inputDesc.step + '">'+'<span>'+paramVal+'</span>';
+
+           }
+           else html+= '">';
         }
 
         var div = document.createElement("div");
@@ -133,6 +145,12 @@ function DefaultHtmlStepUi(_sequencer, options) {
         );
 
     stepsEl.appendChild(step.ui);
+    
+    var inputs = document.querySelectorAll('input[type="range"]')
+    for(i in inputs)
+    inputs[i].oninput = function(e) {
+      e.target.nextSibling.innerHTML = e.target.value;
+    }
   }
 
   function onDraw(step) {

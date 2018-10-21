@@ -3,10 +3,12 @@
   "description": "Change the brightness of the image by given percent value",
   "inputs": {
       "brightness": {
-          "type": "number",
+          "type": "range",
           "desc": "% brightness for the new image",
-          "placeholder": "0",
-          "default": 0 
+          "default": "0",
+          "min": "0",
+          "max": "100",
+          "step": "1"
       }
   } 
 }

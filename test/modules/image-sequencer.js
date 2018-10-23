@@ -196,6 +196,7 @@ test('blend returns different output depending on the set offset', function(t) {
     sequencer.run({ mode: 'test' }, function(out) {
         blend_2 = out;
     });
+    sequencer.images.test.steps[sequencer.images.test.steps.length - 1].options.offset = -3;
     sequencer.run({ mode: 'test' }, function(out) {
         t.notEqual(out, blend_2, 'different offsets give different results');
     });

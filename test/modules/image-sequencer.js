@@ -188,6 +188,20 @@ test('toCliString() returns the CLI command for the sequence', function(t) {
   t.end();
 });
 
+test('blend returns different output depending on the set offset', function(t) {
+    var blend_2;
+    sequencer.addSteps('test', 'invert', {});
+    sequencer.addSteps('test', 'invert', {});
+    sequencer.addSteps('test', 'blend', {});
+    sequencer.run({ mode: 'test' }, function(out) {
+        blend_2 = out;
+    });
+    sequencer.run({ mode: 'test' }, function(out) {
+        t.notEqual(out, blend_2, 'different offsets give different results');
+    });
+    t.end();
+});
+
 test('replaceImage returns false in NodeJS', function(t) {
   var returnvalue = (sequencer.options.inBrowser) ? false : sequencer.replaceImage("#selector", "test");
   t.equal(returnvalue, false, "It does.");

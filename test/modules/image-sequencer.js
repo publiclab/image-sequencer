@@ -193,14 +193,12 @@ test('blend returns different output depending on the set offset', function(t) {
     sequencer.addSteps('test', 'invert', {});
     sequencer.addSteps('test', 'invert', {});
     sequencer.addSteps('test', 'blend', {});
+    // because we've added blend before, so instead of -3 we set it to -4
+    sequencer.addSteps('test', 'blend', {'offset': -4});
     sequencer.run({ mode: 'test' }, function(out) {
-        blend_2 = out;
+        t.notStrictEqual(out, sequencer.images.test.steps[sequencer.images.test.steps.length - 2].output.src, 'different offsets give different output');
+        t.end();
     });
-    sequencer.images.test.steps[sequencer.images.test.steps.length - 1].options.offset = -3;
-    sequencer.run({ mode: 'test' }, function(out) {
-        t.notEqual(out, blend_2, 'different offsets give different results');
-    });
-    t.end();
 });
 
 test('replaceImage returns false in NodeJS', function(t) {

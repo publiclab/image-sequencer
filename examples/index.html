@@ -90,6 +90,24 @@
           <div style="text-align:center;">
             <button class="btn btn-success btn-lg" id="download-btn" name="download">Download</button>
             <button class="btn btn-success btn-lg" onclick="create_gif()" id="gif">Download as Gif</button>
+            <div class="modal fade" id="download-gif-modal" tabindex="-1" role="dialog">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Your gif is ready</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div id="download-modal-gif-container">
+                      <!-- Gif should appear here -->
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -103,15 +121,15 @@
       var sequencer;
     })
 
+
     function create_gif(){
-         
       var imgs = document.getElementsByTagName("img");
       var imgSrcs = [];
 
       for (var i = 0; i < imgs.length; i++) {
           imgSrcs.push(imgs[i].src);
       }
-    
+
       gifshot.createGIF({
         'gifWidth': 400,
         'gifHeight': 350,
@@ -132,16 +150,27 @@
           link.setAttributeNode(att1);
           link.setAttributeNode(att2);
           link.appendChild(animatedImage);
-          document.body.appendChild(link);
+
+
+          var gifContainer = document.getElementById("download-modal-gif-container")
+
+          // Clear previous results
+          gifContainer.innerHTML = ''
+
+          // Insert image
+          gifContainer.appendChild(link);
+
+          // Trigger modal
+          $('#download-gif-modal').modal()
           link.click();
         }
       });
 
    }
-    
-    
 
-    
+
+
+
   </script>
 
 </body>

@@ -17,7 +17,10 @@ module.exports = function CropModuleUi(step, ui) {
             var offset = $(this).offset();
             var xPos = e.pageX - offset.left;
             var yPos = e.pageY - offset.top;
-            ndviImage[0].title = "NDVI: " + canvas.getContext('2d').getImageData(xPos, yPos, 1, 1).data[0];
+            var ndvi = canvas.getContext('2d').getImageData(xPos, yPos, 1, 1).data[0];
+            ndvi = ndvi/127.5 - 1 ;
+            ndvi = ndvi.toFixed(2);
+            ndviImage[0].title = "NDVI: " + ndvi;
         });
     }
     // step.imgSelector is not defined, imgElement is:

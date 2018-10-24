@@ -45,7 +45,20 @@ A diagram of this running 5 steps on a single sample image may help explain how 
 
 ## Installation
 
-This library works in the browser, in Node, and on the commandline (CLI), which we think is great. You can start a local environement to test the UI with `npm start`
+This library works in the browser, in Node, and on the commandline (CLI), which we think is great.
+
+### Unix based platforms
+You can setup a local environement to test the UI with `sudo npm setup` followed by `npm start` 
+
+### Windows
+Our npm scripts do not support windows shells, please run the following snippet in powershell.
+```powershell
+npm i ; npm i -g grunt grunt-cli ; grunt serve
+```
+In case of a port conflict please run the folowing
+```powershell
+npm i -g http-server ; http-server -p 3000
+```
 
 ### Browser
 

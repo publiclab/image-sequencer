@@ -26,7 +26,12 @@ window.onload = function() {
   sequencer.loadImage("images/tulips.png", ui.onLoad);
 
   $("#addStep select").on("change", ui.selectNewStepUi);
-  $("#addStep button").on("click", ui.addStepUi);
+  $("#addStep #add-step-btn").on("click", ui.addStepUi);
+  $('#addStep #download-btn').click(function() {
+    $('img:last()').trigger( "click" );
+ 
+    return false;
+    });
   $('body').on('click', 'button.remove', ui.removeStepUi);
   $('#save-seq').click(() => {
     sequencer.saveSequence(window.prompt("Please give a name to your sequence..."), sequencer.toString());

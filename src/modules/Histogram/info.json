@@ -1,0 +1,15 @@
+{
+    "name": "Histogram",
+    "description": "Calculates the histogram for the image",
+    "inputs": {
+        "gradient": {
+            "type": "select",
+            "desc": "Toggle the gradient along x-axis",
+            "default": "true",
+            "values": [
+                "true",
+                "false"
+            ]
+        }
+    }
+}

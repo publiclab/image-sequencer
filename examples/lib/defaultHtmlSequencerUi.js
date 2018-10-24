@@ -8,7 +8,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
   function onLoad() {
     importStepsFromUrlHash();
     if (!$('#selectStep').val())
-      $(addStepSel + " button").prop("disabled", true);
+      $(addStepSel + " #add-step-btn").prop("disabled", true);
   }
 
   // look up needed steps from Url Hash:
@@ -25,7 +25,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
   function selectNewStepUi() {
     var m = $(addStepSel + " select").val();
     $(addStepSel + " .info").html(_sequencer.modulesInfo(m).description);
-    $(addStepSel + " button").prop("disabled", false);
+    $(addStepSel + " #add-step-btn").prop("disabled", false);
   }
 
   function removeStepUi() {

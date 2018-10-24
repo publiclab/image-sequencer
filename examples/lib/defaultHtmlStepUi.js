@@ -45,7 +45,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     var parser = new DOMParser();
     step.ui = parser.parseFromString(step.ui, "text/html");
     step.ui = step.ui.querySelector("div.row");
-    step.linkElement = step.ui.querySelector("a");
+    step.linkElements = step.ui.querySelectorAll("a");
     step.imgElement = step.ui.querySelector("a img");
 
     if (_sequencer.modulesInfo().hasOwnProperty(step.name)) {
@@ -66,12 +66,29 @@ function DefaultHtmlStepUi(_sequencer, options) {
           }
           html += "</select>";
         } else {
+	  let paramVal = step.options[paramName] || inputDesc.default;
           html =
             '<input class="form-control target" type="' +
             inputDesc.type +
             '" name="' +
             paramName +
-            '">';
+            '" value="' +
+            paramVal +
+            '" placeholder ="' +
+            (inputDesc.placeholder || "");
+            
+           if(inputDesc.type.toLowerCase() == "range")
+           {
+             html+=
+              '"min="'+
+              inputDesc.min +
+              '"max="'+
+              inputDesc.max +
+              '"step="' +
+              inputDesc.step + '">'+'<span>'+paramVal+'</span>';
+
+           }
+           else html+= '">';
         }
 
         var div = document.createElement("div");
@@ -96,7 +113,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         $(step.ui.querySelector("div.details .btn-save")).prop("disabled",false);
       }
 
-      $(step.ui.querySelector(".target")).change(toggleSaveButton);
+      $(step.ui.querySelectorAll(".target")).focus(toggleSaveButton);
 
       $(step.ui.querySelector("div.details")).append(
         "<p><button class='btn btn-default btn-save' disabled = 'true' >Save</button><span> Press save to see changes</span></p>"
@@ -128,6 +145,12 @@ function DefaultHtmlStepUi(_sequencer, options) {
         );
 
     stepsEl.appendChild(step.ui);
+    
+    var inputs = document.querySelectorAll('input[type="range"]')
+    for(i in inputs)
+    inputs[i].oninput = function(e) {
+      e.target.nextSibling.innerHTML = e.target.value;
+    }
   }
 
   function onDraw(step) {
@@ -140,33 +163,35 @@ function DefaultHtmlStepUi(_sequencer, options) {
     $(step.ui.querySelector("img")).show();
 
     step.imgElement.src = step.output;
-    step.linkElement.href = step.output;
+    var imgthumbnail = step.ui.querySelector(".img-thumbnail");
+    for(let index=0; index < step.linkElements.length; index++) {
+      if(step.linkElements[index].contains(imgthumbnail))
+        step.linkElements[index].href = step.output;
+    }
 
     // TODO: use a generalized version of this
     function fileExtension(output) {
       return output.split("/")[1].split(";")[0];
     }
 
-    step.linkElement.download = step.name + "." + fileExtension(step.output);
-    step.linkElement.target = "_blank";
+    for(let index=0; index < step.linkElements.length; index++) {
+      step.linkElements[index].download = step.name + "." + fileExtension(step.output);
+      step.linkElements[index].target = "_blank";
+    }
 
     // fill inputs with stored step options
     if (_sequencer.modulesInfo().hasOwnProperty(step.name)) {
       var inputs = _sequencer.modulesInfo(step.name).inputs;
       var outputs = _sequencer.modulesInfo(step.name).outputs;
       for (var i in inputs) {
-        if (
-          step.options[i] !== undefined &&
-          inputs[i].type.toLowerCase() === "input"
-        )
-          step.ui.querySelector('div[name="' + i + '"] input').value =
-            step.options[i];
-        if (
-          step.options[i] !== undefined &&
-          inputs[i].type.toLowerCase() === "select"
-        )
-          step.ui.querySelector('div[name="' + i + '"] select').value =
-            step.options[i];
+        if (step.options[i] !== undefined) {
+            if (inputs[i].type.toLowerCase() === "input")
+                step.ui.querySelector('div[name="' + i + '"] input').value =
+                step.options[i];
+            if (inputs[i].type.toLowerCase() === "select")
+                step.ui.querySelector('div[name="' + i + '"] select').value =
+                step.options[i];
+}
       }
       for (var i in outputs) {
         if (step[i] !== undefined)

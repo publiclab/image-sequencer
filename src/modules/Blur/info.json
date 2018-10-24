@@ -1,11 +1,14 @@
 {
     "name": "Blur",
-    "description": "Gaussian blur an image by a given value, typically 0-5",
+    "description": "Applies a Gaussian blur given by the intensity value",
     "inputs": {
         "blur": {
-            "type": "integer",
-            "desc": "amount of gaussian blur(Less blur gives more detail, typically 0-5)",
-            "default": 2
+            "type": "range",
+            "desc": "Amount of gaussian blur(Less blur gives more detail, typically 0-5)",
+            "default": "2",
+            "min": "0",
+            "max": "5",
+            "step": "0.25"
         }
     }
 }

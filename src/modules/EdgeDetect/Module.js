@@ -1,16 +1,16 @@
 /*
 * Detect Edges in an Image
 */
-module.exports = function edgeDetect(options,UI) {
+module.exports = function edgeDetect(options, UI) {
 
   options.blur = options.blur || 2;
-  options.highThresholdRatio = options.highThresholdRatio||0.2;
-  options.lowThresholdRatio = options.lowThresholdRatio||0.15;
+  options.highThresholdRatio = options.highThresholdRatio || 0.2;
+  options.lowThresholdRatio = options.lowThresholdRatio || 0.15;
 
   var output;
 
   // The function which is called on every draw.
-  function draw(input,callback,progressObj) {
+  function draw(input, callback, progressObj) {
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;
@@ -19,19 +19,20 @@ module.exports = function edgeDetect(options,UI) {
 
 
     //   Extra Manipulation function used as an enveloper for applying gaussian blur and Convolution
-    function extraManipulation(pixels){
-      pixels = require('ndarray-gaussian-filter')(pixels,options.blur);
-      return require('./EdgeUtils')(pixels,options.highThresholdRatio,options.lowThresholdRatio,options.inBrowser);
+    function extraManipulation(pixels) {
+      pixels = require('ndarray-gaussian-filter')(pixels, options.blur);
+      pixels = require('./EdgeUtils')(pixels, options.highThresholdRatio, options.lowThresholdRatio, options.inBrowser);
+      return pixels;
     }
 
     function changePixel(r, g, b, a) {
-      return [(r+g+b)/3, (r+g+b)/3, (r+g+b)/3, a];
+      return [(r + g + b) / 3, (r + g + b) / 3, (r + g + b) / 3, a];
     }
 
-    function output(image,datauri,mimetype){
+    function output(image, datauri, mimetype) {
 
       // This output is accessible by Image Sequencer
-      step.output = {src:datauri,format:mimetype};
+      step.output = { src: datauri, format: mimetype };
 
     }
 
@@ -49,7 +50,7 @@ module.exports = function edgeDetect(options,UI) {
 
   return {
     options: options,
-    draw:  draw,
+    draw: draw,
     output: output,
     UI: UI
   }

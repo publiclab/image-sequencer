@@ -59,7 +59,7 @@
         <i>Select or drag in an image to start!</i>
       </p>
       <center>
-        <input type="file" id="fileInput" value="" accept="image/*" onchange="validate()">
+        <input type="file" id="fileInput" value="" accept="image/*">
       </center>
     </div>
 
@@ -102,15 +102,6 @@
     $(function() {
       var sequencer;
     })
-    function validate(){
-        var fileName = document.getElementById("fileInput").value;
-        var idxDot = fileName.lastIndexOf(".") + 1;
-        var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
-        if (!(extFile=="jpg" || extFile=="jpeg" || extFile=="png")){
-            alert("Only jpg/jpeg and png files are allowed!");
-        }   
-    }
-
     function create_gif(){
          
       var imgs = document.getElementsByTagName("img");

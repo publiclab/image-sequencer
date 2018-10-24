@@ -54,12 +54,12 @@
     },
     "fragmentSrc": {
       "type": "PATH",
-      "desc": "Patht to a WebGL fragment shader file",
+      "desc": "Path to a WebGL fragment shader file",
       "default": "(inbuilt)"
     },
     "vertexSrc": {
       "type": "PATH",
-      "desc": "Patht to a WebGL vertex shader file",
+      "desc": "Path to a WebGL vertex shader file",
       "default": "(inbuilt)"
     }
   }

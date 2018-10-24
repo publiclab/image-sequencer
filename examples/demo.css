@@ -90,6 +90,10 @@ h1 {
   margin: 20px auto;
 }
 
+#add-step-btn{
+  margin: 10px;
+}
+
 #addStep .labels {
   text-align: right;
   padding: 6px;
@@ -111,3 +115,25 @@ h1 {
   display: block;
   margin: 0 auto;
 }
+.info {
+  padding: 8px;
+  text-align: center;
+}
+#gif {
+  display: block;
+  margin: 0 auto;
+  margin-top: 4px;
+}
+#dwnld {
+  max-width: 200px;
+  margin: 20px auto;
+  margin-left: 5px;
+}
+
+#gif_element {
+  display: block;
+  padding: 50px;
+  margin: 0 auto;
+
+}
+

@@ -1,7 +1,7 @@
 /*
 * Core modules and their info files
 */
-module.exports = 
+module.exports = {
   'average': require('./modules/Average'),
   'blend': require('./modules/Blend'),
   'blur': require('./modules/Blur'),
@@ -23,3 +23,4 @@ module.exports =
   'ndvi': require('./modules/Ndvi'),
   'overlay': require('./modules/Overlay'),
   'saturation': require('./modules/Saturation'),
+}

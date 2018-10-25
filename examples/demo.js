@@ -53,9 +53,11 @@ window.onload = function() {
       imgSrcs.push(imgs[i].src);
     }
 
+
+
     var options = {
-      'gifWidth': 400,
-      'gifHeight': 350,
+      'gifWidth': imgs[0].width,
+      'gifHeight': imgs[0].height,
       'images': imgSrcs,
       'frameDuration': 7,
     }

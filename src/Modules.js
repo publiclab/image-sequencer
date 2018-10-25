@@ -1,41 +1,25 @@
 /*
 * Core modules and their info files
 */
-module.exports = {
-  'channel': [
-    require('./modules/Channel/Module'),require('./modules/Channel/info')
-  ],
-  'brightness': [
-    require('./modules/Brightness/Module'),require('./modules/Brightness/info')
-  ],
-  'edge-detect':[
-    require('./modules/EdgeDetect/Module'),require('./modules/EdgeDetect/info')
-  ],
-  'ndvi': [
-    require('./modules/Ndvi/Module'),require('./modules/Ndvi/info')
-  ],
-  'invert': [
-    require('./modules/Invert/Module'),require('./modules/Invert/info')
-  ],
-  'crop': [
-    require('./modules/Crop/Module'),require('./modules/Crop/info')
-  ],
-  'colormap': [
-    require('./modules/Colormap/Module'),require('./modules/Colormap/info')
-  ],
-  'decode-qr': [
-    require('./modules/DecodeQr/Module'),require('./modules/DecodeQr/info')
-  ],
-  'fisheye-gl': [
-    require('./modules/FisheyeGl/Module'),require('./modules/FisheyeGl/info')
-  ],
-  'dynamic': [
-    require('./modules/Dynamic/Module'),require('./modules/Dynamic/info')
-  ],
-  'blur': [
-    require('./modules/Blur/Module'),require('./modules/Blur/info')
-  ],
-  'saturation': [
-    require('./modules/Saturation/Module'),require('./modules/Saturation/info')
-  ]
-}
+module.exports = 
+  'average': require('./modules/Average'),
+  'blend': require('./modules/Blend'),
+  'blur': require('./modules/Blur'),
+  'brightness': require('./modules/Brightness'),
+  'channel': require('./modules/Channel'),
+  'colorbar': require('./modules/Colorbar'),
+  'colormap': require('./modules/Colormap'),
+  'convolution': require('./modules/Convolution'),
+  'crop': require('./modules/Crop'),
+  'decode-qr': require('./modules/DecodeQr'),
+  'dynamic': require('./modules/Dynamic'),
+  'edge-detect': require('./modules/EdgeDetect'),
+  'fisheye-gl': require('./modules/FisheyeGl'),
+  'gamma-correction': require('./modules/GammaCorrection'),
+  'gradient': require('./modules/Gradient'),
+  'import-image': require('./modules/ImportImage'),
+  'invert': require('image-sequencer-invert'),
+  'ndvi-colormap': require('./modules/NdviColormap'),
+  'ndvi': require('./modules/Ndvi'),
+  'overlay': require('./modules/Overlay'),
+  'saturation': require('./modules/Saturation'),

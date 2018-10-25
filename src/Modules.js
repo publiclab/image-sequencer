@@ -23,4 +23,3 @@ module.exports = {
   'ndvi': require('./modules/Ndvi'),
   'overlay': require('./modules/Overlay'),
   'saturation': require('./modules/Saturation'),
-

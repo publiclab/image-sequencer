@@ -29,7 +29,7 @@ window.onload = function() {
   $("#addStep #add-step-btn").on("click", ui.addStepUi);
   $('#addStep #download-btn').click(function() {
     $('img:last()').trigger( "click" );
- 
+
     return false;
     });
   $('body').on('click', 'button.remove', ui.removeStepUi);
@@ -38,6 +38,71 @@ window.onload = function() {
     sequencer.loadModules();
     refreshOptions();
   });
+
+  $('.js-view-as-gif').on('click', function(event) {
+    var button = event.target
+    button.disabled = true
+
+    // Select all images from previous steps
+    var imgs = document.getElementsByClassName("img-thumbnail")
+
+
+    var imgSrcs = [];
+
+    for (var i = 0; i < imgs.length; i++) {
+      imgSrcs.push(imgs[i].src);
+    }
+
+    var options = {
+      'gifWidth': 400,
+      'gifHeight': 350,
+      'images': imgSrcs,
+      'frameDuration': 7,
+    }
+
+    gifshot.createGIF(options, function(obj) {
+      if(!obj.error) {
+        var image = obj.image,
+        animatedImage = document.createElement('img');
+        animatedImage.src = image;
+        animatedImage.id = "gif_element";
+        var link = document.createElement('a');
+        var att1 = document.createAttribute("href");
+
+        var options = { type: 'image/gif' }
+
+        // Can't just set href attribute. Most gifs data are too big.
+        var gifBlob = new Blob([animatedImage.src], options)
+        var dataUrl = window.URL.createObjectURL(gifBlob, options)
+
+        att1.value = dataUrl;
+
+        var att2 = document.createAttribute("download");
+        att2.value = "index.gif";
+        link.setAttributeNode(att1);
+        link.setAttributeNode(att2);
+        link.appendChild(animatedImage);
+
+
+        var gifContainer = document.getElementById("js-download-modal-gif-container")
+        var gifButton = document.getElementById("js-download-as-gif-button")
+
+
+        gifButton.href = dataUrl
+
+        // Clear previous results
+        gifContainer.innerHTML = ''
+
+        // Insert image
+        gifContainer.appendChild(link);
+
+        // Trigger modal
+        $('#js-download-gif-modal').modal()
+        button.disabled = false
+
+      }
+    });
+  })
 
   // image selection and drag/drop handling from examples/lib/imageSelection.js
   sequencer.setInputStep({

@@ -57,15 +57,6 @@ window.onload = function() {
     previewSequencer.loadImage("images/tulips.png", ui.onLoad);
   }
 
-  $("#addStep select").on("change", function(){
-    $(".radio-group").find('.radio').removeClass('selected');
-    ui.selectNewStepUi;
-  });
-  $("#addStep #add-step-btn").on("click", function(){
-    //TODO: Get step option from either buttons or dropdown
-    ui.addStepUi;
-  });
-
   //Module button radio selection
   $('.radio-group .radio').on("click", function(){
     $(this).parent().find('.radio').removeClass('selected');

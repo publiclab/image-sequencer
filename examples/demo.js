@@ -39,72 +39,80 @@ window.onload = function() {
     refreshOptions();
   });
 
+  var isWorkingOnGifGeneration = false;
+
   $('.js-view-as-gif').on('click', function(event) {
-    var button = event.target
-    button.disabled = true
+    // Prevent user from triggering generation multiple times
+    if (isWorkingOnGifGeneration) return;
 
-    // Select all images from previous steps
-    var imgs = document.getElementsByClassName("img-thumbnail")
+    isWorkingOnGifGeneration = true;
 
-
-    var imgSrcs = [];
-
-    for (var i = 0; i < imgs.length; i++) {
-      imgSrcs.push(imgs[i].src);
-    }
+    var button = event.target;
+    button.disabled = true;
 
 
+    try {
+      // Select all images from previous steps
+      var imgs = document.getElementsByClassName("img-thumbnail");
 
-    var options = {
-      'gifWidth': imgs[0].width,
-      'gifHeight': imgs[0].height,
-      'images': imgSrcs,
-      'frameDuration': 7,
-    }
+      var imgSrcs = [];
 
-    gifshot.createGIF(options, function(obj) {
-      if(!obj.error) {
-        var image = obj.image,
-        animatedImage = document.createElement('img');
-        animatedImage.src = image;
-        animatedImage.id = "gif_element";
-        var link = document.createElement('a');
-        var att1 = document.createAttribute("href");
-
-        var options = { type: 'image/gif' }
-
-        // Can't just set href attribute. Most gifs data are too big.
-        var gifBlob = new Blob([animatedImage.src], options)
-        var dataUrl = window.URL.createObjectURL(gifBlob, options)
-
-        att1.value = dataUrl;
-
-        var att2 = document.createAttribute("download");
-        att2.value = "index.gif";
-        link.setAttributeNode(att1);
-        link.setAttributeNode(att2);
-        link.appendChild(animatedImage);
-
-
-        var gifContainer = document.getElementById("js-download-modal-gif-container")
-        var gifButton = document.getElementById("js-download-as-gif-button")
-
-
-        gifButton.href = dataUrl
-
-        // Clear previous results
-        gifContainer.innerHTML = ''
-
-        // Insert image
-        gifContainer.appendChild(link);
-
-        // Trigger modal
-        $('#js-download-gif-modal').modal()
-        button.disabled = false
-
+      for (var i = 0; i < imgs.length; i++) {
+        imgSrcs.push(imgs[i].src);
       }
-    });
-  })
+
+      var options = {
+        'gifWidth': imgs[0].width,
+        'gifHeight': imgs[0].height,
+        'images': imgSrcs,
+        'frameDuration': 7,
+      }
+
+      gifshot.createGIF(options, function(obj) {
+        if(!obj.error) {
+          // Final gif encoded with base64 format
+          var image = obj.image;
+          var animatedImage = document.createElement('img');
+
+          animatedImage.id = "gif_element";
+          animatedImage.src = image;
+
+
+          var modal = $('#js-download-gif-modal');
+
+          $("#js-download-as-gif-button").one("click", function() {
+            // Trigger download
+            download(image, "index.gif", "image/gif");
+
+            // Close modal
+            modal.modal('hide');
+          })
+
+          var gifContainer = document.getElementById("js-download-modal-gif-container");
+
+          // Clear previous results
+          gifContainer.innerHTML = '';
+
+          // Insert image
+          gifContainer.appendChild(animatedImage);
+
+
+          // Open modal
+          modal.modal();
+
+          button.disabled = false;
+          isWorkingOnGifGeneration = false;
+        }
+      });
+    }
+    catch(e) {
+      console.error(e);
+      button.disabled = false;
+      isWorkingOnGifGeneration = false;
+
+    }
+  });
+
 
   // image selection and drag/drop handling from examples/lib/imageSelection.js
   sequencer.setInputStep({

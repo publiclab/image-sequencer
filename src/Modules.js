@@ -24,4 +24,5 @@ module.exports = {
   'histogram': require('./modules/Histogram'),
   'gamma-correction': require('./modules/GammaCorrection'),
   'convolution': require('./modules/Convolution'),
+  'resize': require('./modules/Resize')
 }

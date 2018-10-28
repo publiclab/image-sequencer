@@ -19,7 +19,7 @@ body {
 }
 /* The CSS I have coded starts from here */
  span#scroll_to_top {    
-  transform: rotate(-45deg);
+  transform: rotate(-1deg);
   position: fixed;
   right: 100px;
   bottom: 60px;
@@ -37,7 +37,7 @@ body {
  }
 
  #elem_1  {
-  transform: rotate(45deg);
+  transform: rotate(1deg);
   display: inline-block;
   font-size: 20px;
   font-family: Arial, Helvetica, sans-serif;
@@ -49,8 +49,8 @@ body {
     border-radius: 6px;
     padding: 5px 0;
     position: fixed;
-    right: 20px;
-    top: 45px;
+    right: -20px;
+    top: 60px;
   ;
  }
 

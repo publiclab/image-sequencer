@@ -1,0 +1,140 @@
+/* https://github.com/theleagueof/league-spartan */
+@font-face {
+    font-family: 'League Spartan';
+    src: url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.eot');
+    src: url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.eot?#iefix') format('embedded-opentype'),
+         url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.woff2') format('woff2'),
+         url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.woff') format('woff'),
+         url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.ttf') format('truetype'),
+         url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.svg#league_spartanbold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+
+body {
+  padding: 20px;
+  margin: 0 auto 200px;
+  max-width: 1000px;
+  background: #f8f8fa;
+}
+/* The CSS I have coded starts from here */
+ span#scroll_to_top {    
+  transform: rotate(-45deg);
+  position: fixed;
+  right: 100px;
+  bottom: 60px;
+  display: inline-block;
+  
+ }
+
+ #scroll_to_top :hover {
+   color: red;
+   
+ }
+
+ #scroll_to_top :active {
+   color: blue;
+ }
+
+ #elem_1  {
+  transform: rotate(45deg);
+  display: inline-block;
+  font-size: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+  visibility: ;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: fixed;
+    right: 20px;
+    top: 45px;
+  ;
+ }
+
+ #scroll_to_top:hover  {
+   visibility: visible;
+ }
+ 
+ /*And Ends Here */
+
+
+
+h1 {
+  font-family: 'League Spartan';
+  color: #445;
+}
+
+.header {
+  text-align: center;
+}
+
+.nomargin {
+  margin: 0 !important;
+}
+
+#imageSelect {
+  padding: 30px;
+  margin: 0 20% 30px;
+  border: 4px dashed #ccc;
+  border-radius: 8px;
+  text-align: center;
+  color: #444;
+}
+
+#imageSelect input {
+  max-width: 100%;  
+}
+
+.step {
+  margin-bottom: 20px;
+}
+
+.step .img-thumbnail {
+  margin-bottom: 20px;
+}
+
+.details {
+  border-top: 3px solid #444;
+  padding-left: 6px;
+}
+
+.details h3 {
+  font-family: monospace;
+  margin-top: 12px;
+  font-size: 1.3em;
+}
+
+.det {
+  padding: 10px 16px;
+  text-decoration: italic;
+}
+
+.tools {
+  margin: 10px 0;
+}
+
+#addStep {
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+#addStep .labels {
+  text-align: right;
+  padding: 6px;
+  margin: 2px;
+  font-weight: bold;
+}
+
+@media (max-width:768px) {
+  #addStep .labels {
+    text-align: left;
+  }
+}
+
+#addStep .add {
+  text-align: center;
+  margin: 10px;
+}

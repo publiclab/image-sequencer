@@ -201,7 +201,7 @@ test('blend returns different output depending on the set offset', function(t) {
 });
 
 test('resize changes the width and height of the image', function(t) {
-  sequencer.addSteps('text', 'resize', {});
+  sequencer.addSteps('test', 'resize', {});
   sequencer.run({mode: 'test'}, function() {
     var width_before = sequencer.images.test.steps[sequencer.images.test.steps.length - 2].options.step.imgElement.naturalWidth,
       height_before = sequencer.images.test.steps[sequencer.images.test.steps.length - 2].options.step.imgElement.naturalHeight,

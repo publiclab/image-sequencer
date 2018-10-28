@@ -200,21 +200,6 @@ test('blend returns different output depending on the set offset', function(t) {
   });
 });
 
-test('resize changes the width and height of the image', function(t) {
-  sequencer.addSteps('test', 'resize', {});
-
-  sequencer.run({mode: 'test'}, function() {
-    var width_before = sequencer.images.test.steps[sequencer.images.test.steps.length - 2].options.step.imgElement.naturalWidth,
-      height_before = sequencer.images.test.steps[sequencer.images.test.steps.length - 2].options.step.imgElement.naturalHeight,
-      width_now = sequencer.images.test.steps[sequencer.images.test.steps.length - 1].options.step.imgElement.naturalWidth,
-      height_now = sequencer.images.test.steps[sequencer.images.test.steps.length - 1].options.step.imgElement.naturalHeight;
-
-      t.notEqual(width_before, width_now, 'width is changed');
-      t.notEqual(height_before, height_now, 'height is changed');
-      t.end();
-  });
-});
-
 test('replaceImage returns false in NodeJS', function(t) {
   var returnvalue = (sequencer.options.inBrowser) ? false : sequencer.replaceImage("#selector", "test");
   t.equal(returnvalue, false, "It does.");

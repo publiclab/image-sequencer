@@ -40,8 +40,7 @@ body {
   transform: rotate(1deg);
   display: inline-block;
   font-size: 20px;
-  font-family: Arial, Helvetica, sans-serif;
-  visibility: ;
+  font-family: Arial, Helvetica, sans-serif; 
     width: 120px;
     background-color: black;
     color: #fff;

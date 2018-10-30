@@ -8,16 +8,19 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
   function onLoad() {
     importStepsFromUrlHash();
     if (!$('#selectStep').val())
-      $(addStepSel + " #add-step-btn").prop("disabled", true);
+      $(addStepSel + " #add-step-btn").prop("disabled", true);     
   }
 
   // look up needed steps from Url Hash:
   function importStepsFromUrlHash() {
     var hash = getUrlHashParameter("steps");
-
+  
     if (hash) {
       _sequencer.importString(hash);
       _sequencer.run({ index: 0 });
+    }
+    else{
+      $(" #save-seq").prop("disabled", true);
     }
     setUrlHashParameter("steps", sequencer.toString());
   }
@@ -33,12 +36,16 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     sequencer.removeSteps(index).run({ index: index - 1 });
     // remove from URL hash too
     setUrlHashParameter("steps", sequencer.toString());
+    var hash = getUrlHashParameter("steps");
+    if(!hash)
+    $(" #save-seq").prop("disabled", true);
   }
 
   function addStepUi() {
     if ($(addStepSel + " select").val() == "none") return;
 
     var newStepName = $(addStepSel + " select").val();
+    $("#save-seq").prop("disabled", false);
 
     /*
     * after adding the step we run the sequencer from defined step
@@ -54,7 +61,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     _sequencer
       .addSteps(newStepName, options)
       .run({ index: _sequencer.images.image1.steps.length - sequenceLength - 1 });
-
+      
     // add to URL hash too
     setUrlHashParameter("steps", _sequencer.toString());
   }

@@ -7,7 +7,7 @@ module.exports = function Resize(options, UI) {
 
     function draw(input, callback, progressObj) {
 
-        options.resize = options.resize || "25%";
+        options.resize = options.resize || "125%";
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;
@@ -21,22 +21,14 @@ module.exports = function Resize(options, UI) {
         }
 
         function extraManipulation(pixels) {
+            // value above 100% scales up, and below 100% scales down
             var resize_value = parseInt(options.resize.slice(0, -1));
 
             var new_width,
                 new_height;
 
-            // scaling up
-            if(resize_value >= 0) {
-                new_width = Math.round(pixels.shape[0] * (1 + resize_value / 100));
-                new_height = Math.round(pixels.shape[1] * (1 + resize_value / 100));
-            }
-
-            // scaling down
-            if(resize_value < 0) {
-                new_width = Math.round(pixels.shape[0] / (1 - resize_value / 100));
-                new_height = Math.round(pixels.shape[1] / (1 - resize_value / 100));
-            }
+            new_width = Math.round(pixels.shape[0] * (resize_value / 100));
+            new_height = Math.round(pixels.shape[1] * (resize_value / 100));
 
             var bitmap = new imagejs.Bitmap({width: pixels.shape[0], height: pixels.shape[1]});
             bitmap._data.data = pixels.data;

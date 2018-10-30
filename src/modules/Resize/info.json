@@ -5,7 +5,7 @@
     "resize": {
       "type": "string",
       "desc": "Percentage value of the resize",
-      "default": "25%"
+      "default": "125%"
     }
   }
 }

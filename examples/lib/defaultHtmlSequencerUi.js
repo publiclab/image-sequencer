@@ -8,7 +8,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
   function onLoad() {
     importStepsFromUrlHash();
     if (!$('#selectStep').val())
-      $(addStepSel + " #add-step-btn").prop("disabled", true);     
+      $(addStepSel + " #add-step-btn").prop("disabled", true);
   }
 
   // look up needed steps from Url Hash:
@@ -61,7 +61,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     _sequencer
       .addSteps(newStepName, options)
       .run({ index: _sequencer.images.image1.steps.length - sequenceLength - 1 });
-      
+
     // add to URL hash too
     setUrlHashParameter("steps", _sequencer.toString());
   }

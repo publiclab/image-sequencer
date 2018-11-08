@@ -1,0 +1,11 @@
+{
+    "name": "Rotate",
+    "description": "Rotates image by specified degrees",
+    "inputs": {
+      "rotate": {
+        "type": "integer",
+        "desc": "Angular value for rotation in degrees",
+        "default": 0
+      }
+    }
+  }

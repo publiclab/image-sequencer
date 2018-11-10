@@ -58333,7 +58333,7 @@ module.exports = {
   'resize': require('./modules/Resize'),
   'rotate': require('./modules/Rotate')
 }
-},{"./modules/Average":162,"./modules/Blend":165,"./modules/Blur":169,"./modules/Brightness":172,"./modules/Channel":175,"./modules/Colorbar":178,"./modules/Colormap":182,"./modules/Convolution":186,"./modules/Crop":191,"./modules/DecodeQr":194,"./modules/Dynamic":197,"./modules/EdgeDetect":201,"./modules/FisheyeGl":204,"./modules/GammaCorrection":207,"./modules/Gradient":210,"./modules/Histogram":213,"./modules/ImportImage":217,"./modules/Ndvi":221,"./modules/NdviColormap":224,"./modules/Overlay":227,"./modules/Resize":230,"./modules/Rotate":233,"./modules/Saturation":236,"image-sequencer-invert":61}],157:[function(require,module,exports){
+},{"./modules/Average":162,"./modules/Blend":165,"./modules/Blur":169,"./modules/Brightness":172,"./modules/Channel":175,"./modules/Colorbar":178,"./modules/Colormap":182,"./modules/Convolution":186,"./modules/Crop":191,"./modules/DecodeQr":194,"./modules/Dynamic":197,"./modules/EdgeDetect":201,"./modules/FisheyeGl":204,"./modules/GammaCorrection":207,"./modules/Gradient":210,"./modules/Histogram":213,"./modules/ImportImage":217,"./modules/Ndvi":224,"./modules/NdviColormap":220,"./modules/Overlay":227,"./modules/Resize":230,"./modules/Rotate":233,"./modules/Saturation":236,"image-sequencer-invert":61}],157:[function(require,module,exports){
 // Uses a given image as input and replaces it with the output.
 // Works only in the browser.
 function ReplaceImage(ref,selector,steps,options) {
@@ -58905,9 +58905,9 @@ module.exports={
       "brightness": {
           "type": "range",
           "desc": "% brightness for the new image",
-          "default": "0",
+          "default": "100",
           "min": "0",
-          "max": "100",
+          "max": "200",
           "step": "1"
       }
   } 
@@ -60545,6 +60545,25 @@ module.exports={
 }
 },{}],219:[function(require,module,exports){
 /*
+ * Sample Meta Module for demonstration purpose only
+ */
+module.exports = function NdviColormapfunction() {
+    this.expandSteps([{ 'name': 'ndvi', 'options': {} }, { 'name': 'colormap', options: {} }]);
+    return {
+        isMeta: true
+    }
+}
+},{}],220:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":219,"./info.json":221,"dup":162}],221:[function(require,module,exports){
+module.exports={
+    "name": "NDVI-Colormap",
+    "description": "Sequentially Applies NDVI and Colormap steps",
+    "inputs": {},
+    "length": 2
+}
+},{}],222:[function(require,module,exports){
+/*
  * NDVI with red filter (blue channel is infrared)
  */
 module.exports = function Ndvi(options, UI) {
@@ -60603,7 +60622,7 @@ module.exports = function Ndvi(options, UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":238,"./Ui.js":220}],220:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":238,"./Ui.js":223}],223:[function(require,module,exports){
 // hide on save
 module.exports = function CropModuleUi(step, ui) {
 
@@ -60639,9 +60658,9 @@ module.exports = function CropModuleUi(step, ui) {
     }
 }
 
-},{}],221:[function(require,module,exports){
+},{}],224:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
-},{"./Module":219,"./info.json":222,"dup":162}],222:[function(require,module,exports){
+},{"./Module":222,"./info.json":225,"dup":162}],225:[function(require,module,exports){
 module.exports={
   "name": "NDVI",
   "description": "Normalized Difference Vegetation Index, or NDVI, is an image analysis technique used with aerial photography. It's a way to visualize the amounts of infrared and other wavelengths of light reflected from vegetation by comparing ratios of blue and red light absorbed versus green and IR light reflected. NDVI is used to evaluate the health of vegetation in satellite imagery, where it correlates with how much photosynthesis is happening. This is helpful in assessing vegetative health or stress. <a href='https://publiclab.org/ndvi'>Read more</a>.<br /><br/>This is designed for use with red-filtered single camera <a href='http://publiclab.org/infragram'>DIY Infragram cameras</a>; change to 'blue' for blue filters",
@@ -60655,25 +60674,6 @@ module.exports={
   }
 }
 
-},{}],223:[function(require,module,exports){
-/*
- * Sample Meta Module for demonstration purpose only
- */
-module.exports = function NdviColormapfunction() {
-    this.expandSteps([{ 'name': 'ndvi', 'options': {} }, { 'name': 'colormap', options: {} }]);
-    return {
-        isMeta: true
-    }
-}
-},{}],224:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":223,"./info.json":225,"dup":162}],225:[function(require,module,exports){
-module.exports={
-    "name": "NDVI-Colormap",
-    "description": "Sequentially Applies NDVI and Colormap steps",
-    "inputs": {},
-    "length": 2
-}
 },{}],226:[function(require,module,exports){
 module.exports = function Dynamic(options, UI, util) {
 

@@ -48194,7 +48194,7 @@ module.exports = {
   'gamma-correction': require('./modules/GammaCorrection'),
   'convolution': require('./modules/Convolution'),
 }
-},{"./modules/Average":147,"./modules/Blend":150,"./modules/Blur":154,"./modules/Brightness":157,"./modules/Channel":160,"./modules/Colorbar":163,"./modules/Colormap":167,"./modules/Convolution":171,"./modules/Crop":176,"./modules/DecodeQr":179,"./modules/Dynamic":182,"./modules/EdgeDetect":186,"./modules/FisheyeGl":189,"./modules/GammaCorrection":192,"./modules/Gradient":195,"./modules/Histogram":198,"./modules/ImportImage":202,"./modules/Ndvi":209,"./modules/NdviColormap":205,"./modules/Overlay":212,"./modules/Saturation":215,"image-sequencer-invert":56}],142:[function(require,module,exports){
+},{"./modules/Average":147,"./modules/Blend":150,"./modules/Blur":154,"./modules/Brightness":157,"./modules/Channel":160,"./modules/Colorbar":163,"./modules/Colormap":167,"./modules/Convolution":171,"./modules/Crop":176,"./modules/DecodeQr":179,"./modules/Dynamic":182,"./modules/EdgeDetect":186,"./modules/FisheyeGl":189,"./modules/GammaCorrection":192,"./modules/Gradient":195,"./modules/Histogram":198,"./modules/ImportImage":202,"./modules/Ndvi":206,"./modules/NdviColormap":209,"./modules/Overlay":212,"./modules/Saturation":215,"image-sequencer-invert":56}],142:[function(require,module,exports){
 // Uses a given image as input and replaces it with the output.
 // Works only in the browser.
 function ReplaceImage(ref,selector,steps,options) {
@@ -48461,66 +48461,70 @@ module.exports={
 },{}],149:[function(require,module,exports){
 module.exports = function Dynamic(options, UI, util) {
 
-  options.func = options.func || "function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] }";
+    options.func = options.func || "function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] }";
+    options.offset = options.offset || -2;
 
-  var output;
+    var output;
 
-  // This function is called on every draw.
-  function draw(input, callback, progressObj) {
+    // This function is called on every draw.
+    function draw(input, callback, progressObj) {
 
-    progressObj.stop(true);
-    progressObj.overrideFlag = true;
+        progressObj.stop(true);
+        progressObj.overrideFlag = true;
 
-    var step = this;
+        var step = this;
 
-    // convert to runnable code:
-    if (typeof options.func === "string") eval('options.func = ' + options.func);
+        // convert to runnable code:
+        if (typeof options.func === "string") eval('options.func = ' + options.func);
 
-    var getPixels = require('get-pixels');
+        var getPixels = require('get-pixels');
 
-    // save first image's pixels
-    var priorStep = this.getStep(-2);
+        // convert offset as string to int
+        if(typeof options.offset === "string") options.offset = parseInt(options.offset);
 
-    getPixels(priorStep.output.src, function(err, pixels) {
-      options.firstImagePixels = pixels;
+        // save first image's pixels
+        var priorStep = this.getStep(options.offset);
 
-      function changePixel(r2, g2, b2, a2, x, y) {
-        // blend!
-        var p = options.firstImagePixels;
-        return options.func(
-          r2, g2, b2, a2,
-          p.get(x, y, 0),
-          p.get(x, y, 1),
-          p.get(x, y, 2),
-          p.get(x, y, 3)
-        )
-      }
+        getPixels(priorStep.output.src, function(err, pixels) {
+            options.firstImagePixels = pixels;
 
-      function output(image, datauri, mimetype) {
+            function changePixel(r2, g2, b2, a2, x, y) {
+                // blend!
+                var p = options.firstImagePixels;
+                return options.func(
+                    r2, g2, b2, a2,
+                    p.get(x, y, 0),
+                    p.get(x, y, 1),
+                    p.get(x, y, 2),
+                    p.get(x, y, 3)
+                )
+            }
 
-        // This output is accessible by Image Sequencer
-        step.output = { src: datauri, format: mimetype };
+            function output(image, datauri, mimetype) {
 
-      }
+                // This output is accessible by Image Sequencer
+                step.output = { src: datauri, format: mimetype };
 
-      // run PixelManipulatin on second image's pixels
-      return require('../_nomodule/PixelManipulation.js')(input, {
+            }
+
+            // run PixelManipulatin on second image's pixels
+            return require('../_nomodule/PixelManipulation.js')(input, {
+                output: output,
+                changePixel: changePixel,
+                format: input.format,
+                image: options.image,
+                inBrowser: options.inBrowser,
+                callback: callback
+            });
+        });
+    }
+
+    return {
+        options: options,
+        draw: draw,
         output: output,
-        changePixel: changePixel,
-        format: input.format,
-        image: options.image,
-        inBrowser: options.inBrowser,
-        callback: callback
-      });
-    });
-  }
-
-  return {
-    options: options,
-    draw: draw,
-    output: output,
-    UI: UI
-  }
+        UI: UI
+    }
 }
 
 },{"../_nomodule/PixelManipulation.js":217,"get-pixels":23}],150:[function(require,module,exports){
@@ -48528,8 +48532,13 @@ arguments[4][147][0].apply(exports,arguments)
 },{"./Module":149,"./info.json":151,"dup":147}],151:[function(require,module,exports){
 module.exports={
   "name": "Blend",
-  "description": "Blend the past two image steps with the given function. Defaults to using the red channel from image 1 and the green and blue and alpha channels of image 2. Easier to use interfaces coming soon!",
+  "description": "Blend two chosen image steps with the given function. Defaults to using the red channel from image 1 and the green and blue and alpha channels of image 2. Easier to use interfaces coming soon!",
   "inputs": {
+    "offset": {
+      "type": "integer",
+      "desc": "Choose which image to blend the current image with. Two steps back is -2, three steps back is -3 etc.",
+      "default": -2
+    },
     "blend": {
       "type": "input",
       "desc": "Function to use to blend the two images.",
@@ -49835,7 +49844,7 @@ arguments[4][147][0].apply(exports,arguments)
 },{"./Module":185,"./info.json":187,"dup":147}],187:[function(require,module,exports){
 module.exports={
     "name": "Detect Edges",
-    "description": "this module detects edges using the Canny method, which first Gaussian blurs the image to reduce noise (amount of blur configurable in settings as `options.blur`), then applies a number of steps to highlight edges, resulting in a greyscale image where the brighter the pixel, the stronger the detected edge. Read more at: https://en.wikipedia.org/wiki/Canny_edge_detector",
+    "description": "this module detects edges using the Canny method, which first Gaussian blurs the image to reduce noise (amount of blur configurable in settings as `options.blur`), then applies a number of steps to highlight edges, resulting in a greyscale image where the brighter the pixel, the stronger the detected edge.<a href='https://en.wikipedia.org/wiki/Canny_edge_detector'> Read more. </a>",
     "inputs": {
         "blur": {
             "type": "integer",
@@ -50381,25 +50390,6 @@ module.exports={
 }
 },{}],204:[function(require,module,exports){
 /*
- * Sample Meta Module for demonstration purpose only
- */
-module.exports = function NdviColormapfunction() {
-    this.expandSteps([{ 'name': 'ndvi', 'options': {} }, { 'name': 'colormap', options: {} }]);
-    return {
-        isMeta: true
-    }
-}
-},{}],205:[function(require,module,exports){
-arguments[4][147][0].apply(exports,arguments)
-},{"./Module":204,"./info.json":206,"dup":147}],206:[function(require,module,exports){
-module.exports={
-    "name": "NDVI-Colormap",
-    "description": "Sequentially Applies NDVI and Colormap steps",
-    "inputs": {},
-    "length": 2
-}
-},{}],207:[function(require,module,exports){
-/*
  * NDVI with red filter (blue channel is infrared)
  */
 module.exports = function Ndvi(options, UI) {
@@ -50458,7 +50448,7 @@ module.exports = function Ndvi(options, UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":217,"./Ui.js":208}],208:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":217,"./Ui.js":205}],205:[function(require,module,exports){
 // hide on save
 module.exports = function CropModuleUi(step, ui) {
 
@@ -50494,9 +50484,9 @@ module.exports = function CropModuleUi(step, ui) {
     }
 }
 
-},{}],209:[function(require,module,exports){
+},{}],206:[function(require,module,exports){
 arguments[4][147][0].apply(exports,arguments)
-},{"./Module":207,"./info.json":210,"dup":147}],210:[function(require,module,exports){
+},{"./Module":204,"./info.json":207,"dup":147}],207:[function(require,module,exports){
 module.exports={
   "name": "NDVI",
   "description": "Normalized Difference Vegetation Index, or NDVI, is an image analysis technique used with aerial photography. It's a way to visualize the amounts of infrared and other wavelengths of light reflected from vegetation by comparing ratios of blue and red light absorbed versus green and IR light reflected. NDVI is used to evaluate the health of vegetation in satellite imagery, where it correlates with how much photosynthesis is happening. This is helpful in assessing vegetative health or stress. <a href='https://publiclab.org/ndvi'>Read more</a>.<br /><br/>This is designed for use with red-filtered single camera <a href='http://publiclab.org/infragram'>DIY Infragram cameras</a>; change to 'blue' for blue filters",
@@ -50510,6 +50500,25 @@ module.exports={
   }
 }
 
+},{}],208:[function(require,module,exports){
+/*
+ * Sample Meta Module for demonstration purpose only
+ */
+module.exports = function NdviColormapfunction() {
+    this.expandSteps([{ 'name': 'ndvi', 'options': {} }, { 'name': 'colormap', options: {} }]);
+    return {
+        isMeta: true
+    }
+}
+},{}],209:[function(require,module,exports){
+arguments[4][147][0].apply(exports,arguments)
+},{"./Module":208,"./info.json":210,"dup":147}],210:[function(require,module,exports){
+module.exports={
+    "name": "NDVI-Colormap",
+    "description": "Sequentially Applies NDVI and Colormap steps",
+    "inputs": {},
+    "length": 2
+}
 },{}],211:[function(require,module,exports){
 module.exports = function Dynamic(options, UI, util) {
 

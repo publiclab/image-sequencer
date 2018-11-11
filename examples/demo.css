@@ -132,8 +132,29 @@ h1 {
 
 #gif_element {
   display: block;
-  padding: 50px;
   margin: 0 auto;
-
+  width: 100%;
+  height: auto;
 }
 
+.move-up {
+    position: fixed;
+    bottom: 50px;
+    right: 40px;
+    z-index: 3;
+    display: none;
+    z-index:1000;
+}
+.move-up button {
+    background:transparent;
+    border:none;
+}
+.move-up button:active:hover {
+    padding-right:4px !important;
+    margin-right:2px;
+}
+.move-up i {
+    font-size:60px;
+    opacity:0.5;
+    color:#BABABA;
+}

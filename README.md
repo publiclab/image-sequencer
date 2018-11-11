@@ -16,7 +16,7 @@ Image Sequencer is different from other image processing systems in that it's _n
 
 It is also for prototyping some other related ideas:
 
-* filter-like image processing -- applying a transform to any image from a given source, like a proxy. I.e. every image tile of a satellite imagery web map
+* filter-like image processing -- applying a transform to any image from a given source, like a proxy. I.e. [every image tile of a satellite imagery web map](https://publiclab.org/notes/warren/05-10-2018/prototype-filter-map-tiles-in-real-time-in-a-browser-with-imagesequencer-ndvi-landsat)
 * test-based image processing -- the ability to create a sequence of steps that do the same task as some other image processing tool, provable with example before/after images to compare with
 * logging of each step to produce an evidentiary record of modifications to an original image
 * cascading changes -- change an earlier step's settings, and see those changes affect later steps
@@ -107,6 +107,14 @@ For example:
   sequencer.replaceImage('#photo','invert');
   sequencer.replaceImage('#photo',['invert','ndvi-red']);
 ```
+
+### Data URL usage
+
+Since Image Sequencer uses data-urls, you can initiate a new sequence by providing an image in the [data URL format](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs), which will import into the demo and run:
+
+[Try this example link with a very small Data URL](http://sequencer.publiclab.org/examples/#src=data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAQABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAABgj/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABykX//Z&steps=invert{})
+
+To produce a data URL from an HTML image, see [this nice blog post with example code](https://davidwalsh.name/convert-image-data-uri-javascript).
 
 ## CLI Usage
 

@@ -27,6 +27,11 @@ if (program.saveSequence) {
   var params = program.saveSequence.split(' ');
   sequencer.saveSequence(params[0], params[1]);
 } else if (program.installModule) {
+  console.log(
+    "\x1b[33m%s\x1b[0m",
+    "Please wait while your Module is being Installed...\nThis may take a while!"
+  );
+  
   var params = program.installModule.split(' ');
   var spinner = Spinner("Now Installing...").start();
   require('child_process').execSync(`npm i ${params[1]}`)
@@ -202,4 +207,3 @@ if (program.saveSequence) {
     else return true;
   }
 }
-

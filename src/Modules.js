@@ -15,6 +15,7 @@ module.exports = {
   'dynamic': require('./modules/Dynamic'),
   'edge-detect': require('./modules/EdgeDetect'),
   'fisheye-gl': require('./modules/FisheyeGl'),
+  'histogram': require('./modules/Histogram'),
   'gamma-correction': require('./modules/GammaCorrection'),
   'gradient': require('./modules/Gradient'),
   'import-image': require('./modules/ImportImage'),
@@ -22,5 +23,7 @@ module.exports = {
   'ndvi': require('./modules/Ndvi'),
   'ndvi-colormap': require('./modules/NdviColormap'),
   'overlay': require('./modules/Overlay'),
-  'saturation': require('./modules/Saturation'),
+  'resize': require('./modules/Resize'),
+  'rotate': require('./modules/Rotate'),
+  'saturation': require('./modules/Saturation')
 }

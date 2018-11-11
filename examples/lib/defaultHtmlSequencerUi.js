@@ -36,7 +36,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     // remove from URL hash too
     setUrlHashParameter("steps", sequencer.toString());
     var hash = getUrlHashParameter("steps");
-    
+
     //disable save-sequence button if all steps are removed
     handleSaveSequence();
   }
@@ -45,7 +45,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     if ($(addStepSel + " select").val() == "none") return;
 
     var newStepName = $(addStepSel + " select").val();
-    
+
 
     /*
     * after adding the step we run the sequencer from defined step
@@ -61,7 +61,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     _sequencer
       .addSteps(newStepName, options)
       .run({ index: _sequencer.images.image1.steps.length - sequenceLength - 1 });
-       
+      
     //enable save-sequence button if disabled initially
     handleSaveSequence(); 
 

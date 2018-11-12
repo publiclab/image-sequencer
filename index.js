@@ -26,6 +26,7 @@ program
 if (program.saveSequence) {
   var params = program.saveSequence.split(' ');
   sequencer.saveSequence(params[0], params[1]);
+  console.log("\x1b[32m", "Your sequence was saved successfully!!");
 } else if (program.installModule) {
   console.log(
     "\x1b[33m%s\x1b[0m",

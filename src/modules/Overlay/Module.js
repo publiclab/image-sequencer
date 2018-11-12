@@ -2,18 +2,20 @@ module.exports = function Dynamic(options, UI, util) {
 
     options.x = options.x || 0;
     options.y = options.y || 0;
+    options.offset = options.offset || -2;
 
     var output;
 
     // This function is called on every draw.
     function draw(input, callback, progressObj) {
 
-        options.offset = options.offset || -2;
-
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
         var step = this;
+
+        // convert offset as string to int
+        if(typeof options.offset === "string") options.offset = parseInt(options.offset);
 
         // save the pixels of the base image
         var baseStepImage = this.getStep(options.offset).image;

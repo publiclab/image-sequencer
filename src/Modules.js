@@ -9,6 +9,7 @@ module.exports = {
   'channel': require('./modules/Channel'),
   'colorbar': require('./modules/Colorbar'),
   'colormap': require('./modules/Colormap'),
+  'contrast': require('./modules/Contrast'),
   'convolution': require('./modules/Convolution'),
   'crop': require('./modules/Crop'),
   'decode-qr': require('./modules/DecodeQr'),

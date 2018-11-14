@@ -8,9 +8,9 @@
 // output values, step information.
 // See documetation for more details.\
 
-function stepRemovedNotify (){
-  if ($('#stepRemovedNotification').length == 0){
-  var notificationStyle = '\
+function stepRemovedNotify() {
+  if ($('#stepRemovedNotification').length == 0) {
+    var notificationStyle = '\
     background-color: #808b96;\
     padding:4px;\
     color:white;\
@@ -24,12 +24,12 @@ function stepRemovedNotify (){
     display:none;\
   ';
 
-  var notification = document.createElement('span');
-  notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> Step Removed ';
-  notification.style = notificationStyle;
-  notification.id = 'stepRemovedNotification';
+    var notification = document.createElement('span');
+    notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> Step Removed ';
+    notification.style = notificationStyle;
+    notification.id = 'stepRemovedNotification';
 
-  $('body').append(notification);
+    $('body').append(notification);
   }
 
   var DOMNotification = $('#stepRemovedNotification');
@@ -47,18 +47,18 @@ function DefaultHtmlStepUi(_sequencer, options) {
   function onSetup(step) {
 
     if (step.options && step.options.description)
-    step.description = step.options.description;
+      step.description = step.options.description;
 
     step.ui =
-    '\
+      '\
     <div class="row step">\
     <div class="col-md-4 details">\
     <h3>' +
-    step.name +
-    "</h3>\
+      step.name +
+      "</h3>\
     <p><i>" +
-    (step.description || "") +
-    '</i></p>\
+      (step.description || "") +
+      '</i></p>\
     </div>\
     <div class="col-md-8">\
     <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
@@ -68,7 +68,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     ';
 
     var tools =
-    '<div class="tools btn-group">\
+      '<div class="tools btn-group">\
        <button confirm="Are you sure?" onclick="stepRemovedNotify()" class="stepRemoveButton remove btn btn btn-default">\
          <i class="fa fa-trash"></i>\
        </button>\
@@ -99,7 +99,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
           }
           html += "</select>";
         } else {
-	  let paramVal = step.options[paramName] || inputDesc.default;
+          let paramVal = step.options[paramName] || inputDesc.default;
           html =
             '<input class="form-control target" type="' +
             inputDesc.type +
@@ -110,18 +110,16 @@ function DefaultHtmlStepUi(_sequencer, options) {
             '" placeholder ="' +
             (inputDesc.placeholder || "");
 
-           if(inputDesc.type.toLowerCase() == "range")
-           {
-             html+=
-              '"min="'+
+          if (inputDesc.type.toLowerCase() == "range") {
+            html +=
+              '"min="' +
               inputDesc.min +
-              '"max="'+
+              '"max="' +
               inputDesc.max +
               '"step="' +
-              inputDesc.step + '">'+'<span>'+paramVal+'</span>';
+              inputDesc.step + '">' + '<span>' + paramVal + '</span>';
 
-           }
-           else html+= '">';
+          } else html += '">';
         }
 
         var div = document.createElement("div");
@@ -142,8 +140,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
         step.ui.querySelector("div.details").appendChild(div);
       }
 
-      function toggleSaveButton(){
-        $(step.ui.querySelector("div.details .btn-save")).prop("disabled",false);
+      function toggleSaveButton() {
+        $(step.ui.querySelector("div.details .btn-save")).prop("disabled", false);
       }
 
       $(step.ui.querySelectorAll(".target")).focus(toggleSaveButton);
@@ -155,15 +153,17 @@ function DefaultHtmlStepUi(_sequencer, options) {
       function saveOptions() {
         $(step.ui.querySelector("div.details"))
           .find("input,select")
-          .each(function(i, input) {
+          .each(function (i, input) {
             step.options[$(input).attr("name")] = input.value;
           });
-        _sequencer.run({ index: step.index - 1 });
+        _sequencer.run({
+          index: step.index - 1
+        });
 
         // modify the url hash
         setUrlHashParameter("steps", _sequencer.toString());
         // disable the save button
-        $(step.ui.querySelector("div.details .btn-save")).prop("disabled",true);
+        $(step.ui.querySelector("div.details .btn-save")).prop("disabled", true);
       }
 
       // on clicking Save in the details pane of the step
@@ -172,26 +172,26 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     if (step.name != "load-image")
       step.ui
-        .querySelector("div.details")
-        .appendChild(
-          parser.parseFromString(tools, "text/html").querySelector("div")
-        );
+      .querySelector("div.details")
+      .appendChild(
+        parser.parseFromString(tools, "text/html").querySelector("div")
+      );
 
-        stepsEl.appendChild(step.ui);
+    stepsEl.appendChild(step.ui);
 
 
-        var inputs = document.querySelectorAll('input[type="range"]')
-        for(i in inputs)
-        inputs[i].oninput = function(e) {
-          e.target.nextSibling.innerHTML = e.target.value;
-        }
+    var inputs = document.querySelectorAll('input[type="range"]')
+    for (i in inputs)
+      inputs[i].oninput = function (e) {
+        e.target.nextSibling.innerHTML = e.target.value;
+      }
   }
 
-      function onDraw(step) {
+  function onDraw(step) {
     $(step.ui.querySelector(".load")).show();
     $(step.ui.querySelector("img")).hide();
 
-    if(step.name != "load-image"){
+    if (step.name != "load-image") {
 
     }
 
@@ -203,8 +203,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     step.imgElement.src = step.output;
     var imgthumbnail = step.ui.querySelector(".img-thumbnail");
-    for(let index=0; index < step.linkElements.length; index++) {
-      if(step.linkElements[index].contains(imgthumbnail))
+    for (let index = 0; index < step.linkElements.length; index++) {
+      if (step.linkElements[index].contains(imgthumbnail))
         step.linkElements[index].href = step.output;
     }
 
@@ -213,7 +213,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       return output.split("/")[1].split(";")[0];
     }
 
-    for(let index=0; index < step.linkElements.length; index++) {
+    for (let index = 0; index < step.linkElements.length; index++) {
       step.linkElements[index].download = step.name + "." + fileExtension(step.output);
       step.linkElements[index].target = "_blank";
     }
@@ -224,18 +224,18 @@ function DefaultHtmlStepUi(_sequencer, options) {
       var outputs = _sequencer.modulesInfo(step.name).outputs;
       for (var i in inputs) {
         if (step.options[i] !== undefined) {
-            if (inputs[i].type.toLowerCase() === "input")
-                step.ui.querySelector('div[name="' + i + '"] input').value =
-                step.options[i];
-            if (inputs[i].type.toLowerCase() === "select")
-                step.ui.querySelector('div[name="' + i + '"] select').value =
-                step.options[i];
-}
+          if (inputs[i].type.toLowerCase() === "input")
+            step.ui.querySelector('div[name="' + i + '"] input').value =
+            step.options[i];
+          if (inputs[i].type.toLowerCase() === "select")
+            step.ui.querySelector('div[name="' + i + '"] select').value =
+            step.options[i];
+        }
       }
       for (var i in outputs) {
         if (step[i] !== undefined)
           step.ui.querySelector('div[name="' + i + '"] input').value =
-            step[i];
+          step[i];
       }
     }
   }

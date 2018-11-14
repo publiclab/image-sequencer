@@ -6,27 +6,59 @@
 // onRemove : Called everytime a step is removed
 // The variable 'step' stores useful data like input and
 // output values, step information.
-// See documetation for more details.
+// See documetation for more details.\
+
+function stepRemovedNotify (){
+  if ($('#stepRemovedNotification').length == 0){
+  var notificationStyle = '\
+    background-color: #808b96;\
+    padding:4px;\
+    color:white;\
+    border-radius:3px;\
+    font-size:2rem;\
+    position:fixed;\
+    bottom:8px;\
+    left:45%;\
+    min-width:14rem;\
+    text-align:center;\
+    display:none;\
+  ';
+
+  var notification = document.createElement('span');
+  notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> Step Removed ';
+  notification.style = notificationStyle;
+  notification.id = 'stepRemovedNotification';
+
+  $('body').append(notification);
+  }
+
+  var DOMNotification = $('#stepRemovedNotification');
+
+  DOMNotification.fadeIn(500).delay(200).fadeOut(500);
+}
+
 function DefaultHtmlStepUi(_sequencer, options) {
 
   options = options || {};
   var stepsEl = options.stepsEl || document.querySelector("#steps");
   var selectStepSel = options.selectStepSel = options.selectStepSel || "#selectStep";
 
+
   function onSetup(step) {
+
     if (step.options && step.options.description)
-      step.description = step.options.description;
+    step.description = step.options.description;
 
     step.ui =
-      '\
+    '\
     <div class="row step">\
     <div class="col-md-4 details">\
     <h3>' +
-      step.name +
-      "</h3>\
+    step.name +
+    "</h3>\
     <p><i>" +
-      (step.description || "") +
-      '</i></p>\
+    (step.description || "") +
+    '</i></p>\
     </div>\
     <div class="col-md-8">\
     <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
@@ -36,11 +68,12 @@ function DefaultHtmlStepUi(_sequencer, options) {
     ';
 
     var tools =
-      '<div class="tools btn-group">\
-       <button confirm="Are you sure?" class="remove btn btn btn-default">\
+    '<div class="tools btn-group">\
+       <button confirm="Are you sure?" onclick="stepRemovedNotify()" class="stepRemoveButton remove btn btn btn-default">\
          <i class="fa fa-trash"></i>\
        </button>\
     </div>';
+
 
     var parser = new DOMParser();
     step.ui = parser.parseFromString(step.ui, "text/html");
@@ -76,7 +109,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
             paramVal +
             '" placeholder ="' +
             (inputDesc.placeholder || "");
-            
+
            if(inputDesc.type.toLowerCase() == "range")
            {
              html+=
@@ -144,18 +177,24 @@ function DefaultHtmlStepUi(_sequencer, options) {
           parser.parseFromString(tools, "text/html").querySelector("div")
         );
 
-    stepsEl.appendChild(step.ui);
-    
-    var inputs = document.querySelectorAll('input[type="range"]')
-    for(i in inputs)
-    inputs[i].oninput = function(e) {
-      e.target.nextSibling.innerHTML = e.target.value;
-    }
+        stepsEl.appendChild(step.ui);
+
+
+        var inputs = document.querySelectorAll('input[type="range"]')
+        for(i in inputs)
+        inputs[i].oninput = function(e) {
+          e.target.nextSibling.innerHTML = e.target.value;
+        }
   }
 
-  function onDraw(step) {
+      function onDraw(step) {
     $(step.ui.querySelector(".load")).show();
     $(step.ui.querySelector("img")).hide();
+
+    if(step.name != "load-image"){
+
+    }
+
   }
 
   function onComplete(step) {
@@ -208,6 +247,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
   function getPreview() {
     return step.imgElement;
   }
+
 
   return {
     getPreview: getPreview,

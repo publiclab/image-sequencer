@@ -26,9 +26,9 @@
 
   <!-- Download.js for large files -->
   <script src="../node_modules/downloadjs/download.min.js" type="text/javascript"/>
-  
+
   <script src="lib/scrollToTop.js"></script>
-  
+
 </head>
 
 
@@ -36,8 +36,7 @@
 
   <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="../node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-  <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="../node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
   <!-- for crop module: -->
   <link href="../node_modules/imgareaselect/distfiles/css/imgareaselect-default.css" rel="stylesheet">
   <link rel="stylesheet" href="demo.css">
@@ -73,23 +72,31 @@
 
     <hr />
   <div class="row">
-    <div class="col-sm-8">
+    <div class="col-sm-12">
     <section id="addStep" class="panel panel-primary">
       <div class="form-inline">
         <div class="panel-body">
+          <p class="info">Select a new module to add to your sequence.</p>
+          <div class="row">
+            <i class="fa fa-sun fa-4x">1</i>
+            <i class="fa fa-adjust fa-4x">2</i>
+            <i class="fa fa-tint fa-4x">3</i>
+            <i class="fa fa-redo fa-4x">4</i>
+            <i class="fa fa-crop-alt fa-4x">5</i>
+          </div>
           <div style="text-align:center;">
             <select class="form-control input-lg" id="selectStep">
               <option value="none" disabled selected>Select a new step...</option>
             </select>
             <button class="btn btn-success btn-lg" name="add" id="add-step-btn">Add Step</button>
           </div>
-          <br />
-          <p class="info">Select a new module to add to your sequence.</p>
         </div>
       </div>
     </section>
     </div>
-    <div class="col-sm-4">
+  </div>
+  <div class="row">
+    <div class="col-sm-6">
     <section id="dwnld" class="panel panel-primary">
       <div class="form-inline">
         <div class="panel-body">
@@ -123,8 +130,8 @@
       </div>
     </section>
     </div>
-  </div>
     <button class="btn btn-primary btn-lg" name="save-sequence" id="save-seq">Save Sequence</button>
+  </div>
 </div>
 <form class="move-up" action="#up">
     <button><i class="fa fa-arrow-circle-o-up"></i></button>

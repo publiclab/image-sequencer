@@ -27,6 +27,11 @@ h1 {
   text-align: center;
 }
 
+.panel {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
 .nomargin {
   margin: 0 !important;
 }

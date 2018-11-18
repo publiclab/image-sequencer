@@ -25,7 +25,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
   var selectStepSel = options.selectStepSel = options.selectStepSel || "#selectStep";
 
   function onSetup(step) {
-    if(step.options && step.options.description)
+    if (step.options && step.options.description)
       step.description = step.options.description;
 
     step.ui =
@@ -77,7 +77,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
           }
           html += "</select>";
         } else {
-          let paramVal = step.options[paramName] || inputDesc.default;
+        let paramVal = step.options[paramName] || inputDesc.default;
           html =
             '<input class="form-control target" type="' +
             inputDesc.type +
@@ -88,7 +88,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
             '" placeholder ="' +
             (inputDesc.placeholder || "");
 
-          if (inputDesc.type.toLowerCase() == "range") {
+          if (inputDesc.type.toLowerCase() == "range")
+          {
             html +=
               '"min="'+
               inputDesc.min +
@@ -97,7 +98,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
               '"step="' +
               inputDesc.step + '">'+'<span>'+paramVal+'</span>';
 
-          } else html += '">';
+          } 
+          else html += '">';
         }
 
         var div = document.createElement("div");
@@ -119,7 +121,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       }
 
       function toggleSaveButton(){
-        $(step.ui.querySelector("div.details .btn-save")).prop("disabled", false);
+        $(step.ui.querySelector("div.details .btn-save")).prop("disabled",false);
       }
 
       $(step.ui.querySelectorAll(".target")).focus(toggleSaveButton);
@@ -134,14 +136,12 @@ function DefaultHtmlStepUi(_sequencer, options) {
           .each(function(i, input) {
             step.options[$(input).attr("name")] = input.value;
           });
-        _sequencer.run({
-          index: step.index - 1
-        });
+        _sequencer.run({index: step.index - 1});
 
         // modify the url hash
         setUrlHashParameter("steps", _sequencer.toString());
         // disable the save button
-        $(step.ui.querySelector("div.details .btn-save")).prop("disabled", true);
+        $(step.ui.querySelector("div.details .btn-save")).prop("disabled",true);
       }
 
       // on clicking Save in the details pane of the step
@@ -150,10 +150,10 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     if (step.name != "load-image")
       step.ui
-      .querySelector("div.details")
-      .appendChild(
-        parser.parseFromString(tools, "text/html").querySelector("div")
-      );
+        .querySelector("div.details")
+        .appendChild(
+          parser.parseFromString(tools, "text/html").querySelector("div")
+        );
 
     stepsEl.appendChild(step.ui);
 
@@ -178,14 +178,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
     for(let index=0; index < step.linkElements.length; index++) {
       if(step.linkElements[index].contains(imgthumbnail))
         step.linkElements[index].href = step.output;
-}
+    }
 
     // TODO: use a generalized version of this
     function fileExtension(output) {
       return output.split("/")[1].split(";")[0];
     }
 
-    for (let index = 0; index < step.linkElements.length; index++) {
+    for(let index=0; index < step.linkElements.length; index++) {
       step.linkElements[index].download = step.name + "." + fileExtension(step.output);
       step.linkElements[index].target = "_blank";
     }
@@ -196,18 +196,18 @@ function DefaultHtmlStepUi(_sequencer, options) {
       var outputs = _sequencer.modulesInfo(step.name).outputs;
       for (var i in inputs) {
         if (step.options[i] !== undefined) {
-          if (inputs[i].type.toLowerCase() === "input")
-            step.ui.querySelector('div[name="' + i + '"] input').value =
-            step.options[i];
-          if (inputs[i].type.toLowerCase() === "select")
-            step.ui.querySelector('div[name="' + i + '"] select').value =
-            step.options[i];
-        }
+            if (inputs[i].type.toLowerCase() === "input")
+                step.ui.querySelector('div[name="' + i + '"] input').value =
+                step.options[i];
+            if (inputs[i].type.toLowerCase() === "select")
+                step.ui.querySelector('div[name="' + i + '"] select').value =
+                step.options[i];
+}
       }
       for (var i in outputs) {
         if (step[i] !== undefined)
           step.ui.querySelector('div[name="' + i + '"] input').value =
-          step[i];
+            step[i];
       }
     }
   }

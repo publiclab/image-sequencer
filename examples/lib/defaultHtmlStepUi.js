@@ -7,10 +7,8 @@
 // The variable 'step' stores useful data like input and
 // output values, step information.
 // See documetation for more details.
-
 function stepRemovedNotify() {
   if ($('#stepRemovedNotification').length == 0) {
-
     var notification = document.createElement('span');
     notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> Step Removed ';
     notification.id = 'stepRemovedNotification';
@@ -18,9 +16,7 @@ function stepRemovedNotify() {
     $('body').append(notification);
   }
 
-  var DOMNotification = $('#stepRemovedNotification');
-
-  DOMNotification.fadeIn(500).delay(200).fadeOut(500);
+  $('#stepRemovedNotification').DOMNotification.fadeIn(500).delay(200).fadeOut(500);
 }
 
 function DefaultHtmlStepUi(_sequencer, options) {
@@ -171,7 +167,6 @@ function DefaultHtmlStepUi(_sequencer, options) {
   function onDraw(step) {
     $(step.ui.querySelector(".load")).show();
     $(step.ui.querySelector("img")).hide();
-
   }
 
   function onComplete(step) {

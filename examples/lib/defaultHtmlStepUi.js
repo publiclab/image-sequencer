@@ -18,8 +18,8 @@ function stepRemovedNotify() {
 
   $('#stepRemovedNotification').DOMNotification.fadeIn(500).delay(200).fadeOut(500);
 }
-
 function DefaultHtmlStepUi(_sequencer, options) {
+
   options = options || {};
   var stepsEl = options.stepsEl || document.querySelector("#steps");
   var selectStepSel = options.selectStepSel = options.selectStepSel || "#selectStep";
@@ -48,7 +48,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     var tools =
       '<div class="tools btn-group">\
-       <button confirm="Are you sure?" onclick="stepRemovedNotify()" class="stepRemoveButton remove btn btn btn-default">\
+       <button confirm="Are you sure?" onclick="stepRemovedNotify()" class="remove btn btn btn-default">\
          <i class="fa fa-trash"></i>\
        </button>\
     </div>';
@@ -77,7 +77,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
           }
           html += "</select>";
         } else {
-        let paramVal = step.options[paramName] || inputDesc.default;
+	  let paramVal = step.options[paramName] || inputDesc.default;
           html =
             '<input class="form-control target" type="' +
             inputDesc.type +
@@ -87,10 +87,10 @@ function DefaultHtmlStepUi(_sequencer, options) {
             paramVal +
             '" placeholder ="' +
             (inputDesc.placeholder || "");
-
-          if (inputDesc.type.toLowerCase() == "range")
-          {
-            html +=
+            
+           if(inputDesc.type.toLowerCase() == "range")
+           {
+             html+=
               '"min="'+
               inputDesc.min +
               '"max="'+
@@ -98,8 +98,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
               '"step="' +
               inputDesc.step + '">'+'<span>'+paramVal+'</span>';
 
-          } 
-          else html += '">';
+           }
+           else html+= '">';
         }
 
         var div = document.createElement("div");
@@ -136,7 +136,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
           .each(function(i, input) {
             step.options[$(input).attr("name")] = input.value;
           });
-        _sequencer.run({index: step.index - 1});
+        _sequencer.run({ index: step.index - 1 });
 
         // modify the url hash
         setUrlHashParameter("steps", _sequencer.toString());
@@ -156,7 +156,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         );
 
     stepsEl.appendChild(step.ui);
-
+    
     var inputs = document.querySelectorAll('input[type="range"]')
     for(i in inputs)
     inputs[i].oninput = function(e) {

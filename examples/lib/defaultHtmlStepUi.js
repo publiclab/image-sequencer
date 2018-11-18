@@ -10,23 +10,9 @@
 
 function stepRemovedNotify() {
   if ($('#stepRemovedNotification').length == 0) {
-    var notificationStyle = '\
-    background-color: #808b96;\
-    padding:4px;\
-    color:white;\
-    border-radius:3px;\
-    font-size:2rem;\
-    position:fixed;\
-    bottom:8px;\
-    left:45%;\
-    min-width:14rem;\
-    text-align:center;\
-    display:none;\
-  ';
 
     var notification = document.createElement('span');
     notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> Step Removed ';
-    notification.style = notificationStyle;
     notification.id = 'stepRemovedNotification';
 
     $('body').append(notification);

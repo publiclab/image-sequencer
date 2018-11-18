@@ -58034,16 +58034,19 @@ ImageSequencer = function ImageSequencer(options) {
   }
 
   // Stringifies one step of the sequence
-  function stepToString(step) {
-    let inputs = copy(modulesInfo(step.options.name).inputs);
-    inputs = inputs || {};
+   function stepToString(step) {
+    let inputs = modulesInfo(step.options.name).inputs || {}, op = {};
 
     for (let input in inputs) {
-      inputs[input] = step.options[input] || inputs[input].default;
-      inputs[input] = encodeURIComponent(inputs[input]);
+
+      if (!!step.options[input] && step.options[input] != inputs[input].default) {
+        op[input] = step.options[input];
+        op[input] = encodeURIComponent(op[input]);
+      }
+
     }
 
-    var configurations = Object.keys(inputs).map(key => key + ':' + inputs[key]).join('|');
+    var configurations = Object.keys(op).map(key => key + ':' + op[key]).join('|');
     return `${step.options.name}{${configurations}}`;
   }
 

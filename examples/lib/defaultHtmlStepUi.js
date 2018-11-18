@@ -25,7 +25,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
   var selectStepSel = options.selectStepSel = options.selectStepSel || "#selectStep";
 
   function onSetup(step) {
-    if (step.options && step.options.description)
+    if(step.options && step.options.description)
       step.description = step.options.description;
 
     step.ui =
@@ -90,12 +90,12 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
           if (inputDesc.type.toLowerCase() == "range") {
             html +=
-              '"min="' +
+              '"min="'+
               inputDesc.min +
-              '"max="' +
+              '"max="'+
               inputDesc.max +
               '"step="' +
-              inputDesc.step + '">' + '<span>' + paramVal + '</span>';
+              inputDesc.step + '">'+'<span>'+paramVal+'</span>';
 
           } else html += '">';
         }
@@ -118,7 +118,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         step.ui.querySelector("div.details").appendChild(div);
       }
 
-      function toggleSaveButton() {
+      function toggleSaveButton(){
         $(step.ui.querySelector("div.details .btn-save")).prop("disabled", false);
       }
 
@@ -131,7 +131,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       function saveOptions() {
         $(step.ui.querySelector("div.details"))
           .find("input,select")
-          .each(function (i, input) {
+          .each(function(i, input) {
             step.options[$(input).attr("name")] = input.value;
           });
         _sequencer.run({
@@ -158,10 +158,10 @@ function DefaultHtmlStepUi(_sequencer, options) {
     stepsEl.appendChild(step.ui);
 
     var inputs = document.querySelectorAll('input[type="range"]')
-    for (i in inputs)
-      inputs[i].oninput = function (e) {
-        e.target.nextSibling.innerHTML = e.target.value;
-      }
+    for(i in inputs)
+    inputs[i].oninput = function(e) {
+      e.target.nextSibling.innerHTML = e.target.value;
+    }
   }
 
   function onDraw(step) {
@@ -175,10 +175,10 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     step.imgElement.src = step.output;
     var imgthumbnail = step.ui.querySelector(".img-thumbnail");
-    for (let index = 0; index < step.linkElements.length; index++) {
-      if (step.linkElements[index].contains(imgthumbnail))
+    for(let index=0; index < step.linkElements.length; index++) {
+      if(step.linkElements[index].contains(imgthumbnail))
         step.linkElements[index].href = step.output;
-    }
+}
 
     // TODO: use a generalized version of this
     function fileExtension(output) {

@@ -6,7 +6,7 @@
 // onRemove : Called everytime a step is removed
 // The variable 'step' stores useful data like input and
 // output values, step information.
-// See documetation for more details.\
+// See documetation for more details.
 
 function stepRemovedNotify() {
   if ($('#stepRemovedNotification').length == 0) {
@@ -38,14 +38,11 @@ function stepRemovedNotify() {
 }
 
 function DefaultHtmlStepUi(_sequencer, options) {
-
   options = options || {};
   var stepsEl = options.stepsEl || document.querySelector("#steps");
   var selectStepSel = options.selectStepSel = options.selectStepSel || "#selectStep";
 
-
   function onSetup(step) {
-
     if (step.options && step.options.description)
       step.description = step.options.description;
 
@@ -73,7 +70,6 @@ function DefaultHtmlStepUi(_sequencer, options) {
          <i class="fa fa-trash"></i>\
        </button>\
     </div>';
-
 
     var parser = new DOMParser();
     step.ui = parser.parseFromString(step.ui, "text/html");
@@ -179,7 +175,6 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     stepsEl.appendChild(step.ui);
 
-
     var inputs = document.querySelectorAll('input[type="range"]')
     for (i in inputs)
       inputs[i].oninput = function (e) {
@@ -190,10 +185,6 @@ function DefaultHtmlStepUi(_sequencer, options) {
   function onDraw(step) {
     $(step.ui.querySelector(".load")).show();
     $(step.ui.querySelector("img")).hide();
-
-    if (step.name != "load-image") {
-
-    }
 
   }
 
@@ -247,7 +238,6 @@ function DefaultHtmlStepUi(_sequencer, options) {
   function getPreview() {
     return step.imgElement;
   }
-
 
   return {
     getPreview: getPreview,

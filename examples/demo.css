@@ -23,6 +23,12 @@ h1 {
   color: #445;
 }
 
+.center-align {
+  display: flex;
+  justify-content: center;
+  text-align:center;
+}
+
 .header {
   text-align: center;
 }
@@ -162,4 +168,14 @@ h1 {
     font-size:60px;
     opacity:0.5;
     color:#BABABA;
+}
+
+.radio {
+  cursor:pointer;
+}
+.radio.selected{
+  color: #fff;
+  background-color: #5cb85c;
+  border-color: #5cb85c;
+  outline: none;
 }

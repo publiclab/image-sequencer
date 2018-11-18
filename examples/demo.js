@@ -30,12 +30,17 @@ window.onload = function() {
     sequencer.loadImage("images/tulips.png", ui.onLoad);
   }
 
-  $("#addStep select").on("change", ui.selectNewStepUi);
-  $("#addStep #add-step-btn").on("click", ui.addStepUi);
+  $("#addStep select").on("change", function(){
+    $(".radio-group").find('.radio').removeClass('selected');
+    ui.selectNewStepUi;
+  });
+  $("#addStep #add-step-btn").on("click", function(){
+    //TODO: Get step option from either buttons or dropdown
+    ui.addStepUi;
+  });
 
   $('#download-btn').click(function() {
     $('.img-thumbnail:last()').trigger("click");
-
     return false;
   });
 
@@ -131,5 +136,14 @@ window.onload = function() {
       sequencer.run({ index: 0 });
       step.options.step.imgElement.src = reader.result;
     }
+  });
+
+  //Module button radio selection
+  $('.radio-group .radio').click(function(){
+    $(this).parent().find('.radio').removeClass('selected');
+    $(this).addClass('selected');
+    newStep = $(this).attr('data-value');
+    $(this).parent().find('input').val(newStep);
+    //TODO: Deselects dropdown option if button pressed
   });
 };

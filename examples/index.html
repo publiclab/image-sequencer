@@ -72,21 +72,36 @@
 
     <hr />
   <div class="row">
-    <div class="col-sm-12">
+    <div class="col-sm-8">
     <section id="addStep" class="panel panel-primary">
       <div class="form-inline">
         <div class="panel-body">
           <p class="info">Select a new module to add to your sequence.</p>
-          <div class="row">
-            <i class="fa fa-sun fa-4x">1</i>
-            <i class="fa fa-adjust fa-4x">2</i>
-            <i class="fa fa-tint fa-4x">3</i>
-            <i class="fa fa-redo fa-4x">4</i>
-            <i class="fa fa-crop-alt fa-4x">5</i>
+          <div class="row center-align radio-group">
+            <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="brightness">
+              <i class="fa fa-sun-o fa-4x"></i>
+              <p>Brightness</p>
+            </button>
+            <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="contrast">
+              <i class="fa fa-adjust fa-4x"></i>
+              <p>Contrast</p>
+            </button>
+            <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="saturation">
+              <i class="fa fa-tint fa-4x"></i>
+              <p>Saturation</p>
+            </button>
+            <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="rotate">
+              <i class="fa fa-rotate-right fa-4x"></i>
+              <p>Rotate</p>
+            </button>
+            <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="crop">
+              <i class="fa fa-crop fa-4x"></i>
+              <p>Crop</p>
+            </button>
           </div>
           <div style="text-align:center;">
             <select class="form-control input-lg" id="selectStep">
-              <option value="none" disabled selected>Select a new step...</option>
+              <option disabled selected value>More modules...</option>
             </select>
             <button class="btn btn-success btn-lg" name="add" id="add-step-btn">Add Step</button>
           </div>
@@ -94,9 +109,7 @@
       </div>
     </section>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-4">
     <section id="dwnld" class="panel panel-primary">
       <div class="form-inline">
         <div class="panel-body">
@@ -130,6 +143,8 @@
       </div>
     </section>
     </div>
+  </div>
+  <div class="row">
     <button class="btn btn-primary btn-lg" name="save-sequence" id="save-seq">Save Sequence</button>
   </div>
 </div>

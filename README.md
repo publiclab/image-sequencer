@@ -10,7 +10,7 @@ Image Sequencer is different from other image processing systems in that it's _n
 * produces a legible trail of operations, to "show your work" for evidential, educational, or reproducibility reasons
 * makes the creation of new tools or "modules" simpler -- each must accept an input image, and produce an output image
 * allows many images to be run through the same sequence of steps
-* works identically in the browser, on Node.js, and on the commandline
+* works identically in the browser, on Node.js, and on the command line
 
 ![workflow diagram](https://raw.githubusercontent.com/publiclab/image-sequencer/master/examples/images/diagram-workflows.png)
 
@@ -48,14 +48,14 @@ A diagram of this running 5 steps on a single sample image may help explain how 
 This library works in the browser, in Node, and on the commandline (CLI), which we think is great.
 
 ### Unix based platforms
-You can setup a local environement to test the UI with `sudo npm setup` followed by `npm start` 
+You can setup a local environment to test the UI with `sudo npm setup` followed by `npm start` 
 
 ### Windows
 Our npm scripts do not support windows shells, please run the following snippet in powershell.
 ```powershell
 npm i ; npm i -g grunt grunt-cli ; grunt serve
 ```
-In case of a port conflict please run the folowing
+In case of a port conflict please run the following
 ```powershell
 npm i -g http-server ; http-server -p 3000
 ```
@@ -67,7 +67,7 @@ Just include [image-sequencer.js](https://publiclab.github.io/image-sequencer/di
 ### Node (via NPM)
 
 (You must have NPM for this)
-Add `image-sequencer` to your list of dependancies and run `$ npm install`
+Add `image-sequencer` to your list of dependencies and run `$ npm install`
 
 ### CLI
 
@@ -93,7 +93,7 @@ Image Sequencer can be used to run modules on an HTML Image Element using the
 modified. `steps` may be the name of a module or array of names of modules.
 
 Note: Browser CORS Restrictions apply. Some browsers may not allow local images
-form other folders, and throw a Security Error instead.
+from other folders, and throw a Security Error instead.
 
 ```js
   sequencer.replaceImage(selector,steps,optional_options);
@@ -158,7 +158,7 @@ Or the values can be given through terminal prompt like
 sequencer --save-sequence "invert-colormap invert(),colormap()"
 ```
 
-`install-module` option can be used to install new modules from npm. You can register this module in your sequencer with a custom name space sepated with the npm package name. Below is an example for the `image-sequencer-invert` module.
+`install-module` option can be used to install new modules from npm. You can register this module in your sequencer with a custom name space separated with the npm package name. Below is an example for the `image-sequencer-invert` module.
 ```shell
 sequencer --install-module "invert image-sequencer-invert"
 ```
@@ -196,7 +196,7 @@ CORS Restrictions). To sum up, these are accepted:
 * DataURLs
 
 return value: **none** (A callback should be used to ensure the image gets loaded)
-The callback is called within the scope of a the sequencer. For example:
+The callback is called within the scope of a sequencer. For example:
 (addSteps is defined later)
 
 ```js
@@ -474,7 +474,7 @@ return value: **`sequencer`** (To allow method chaining)
 ### Inserting steps on an image
 
 The `insertSteps` method can also accept an `image_name` parameter. `image_name`
-may be an array. Everything else remains the same. JSON Inout is acceptable too.
+may be an array. Everything else remains the same. JSON Input is acceptable too.
 
 ```js
 sequencer.insertSteps("image",index,"module_name",o);

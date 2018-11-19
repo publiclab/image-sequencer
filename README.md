@@ -16,7 +16,7 @@ Image Sequencer is different from other image processing systems in that it's _n
 
 It is also for prototyping some other related ideas:
 
-* filter-like image processing -- applying a transform to any image from a given source, like a proxy. I.e. [every image tile of a satellite imagery web map](https://publiclab.org/notes/warren/05-10-2018/prototype-filter-map-tiles-in-real-time-in-a-browser-with-imagesequencer-ndvi-landsat)
+* filter-like image processing -- applying a transform to an image from a given source, like a proxy. I.e. [every image tile of a satellite imagery web map](https://publiclab.org/notes/warren/05-10-2018/prototype-filter-map-tiles-in-real-time-in-a-browser-with-imagesequencer-ndvi-landsat)
 * test-based image processing -- the ability to create a sequence of steps that do the same task as some other image processing tool, provable with example before/after images to compare with
 * logging of each step to produce an evidentiary record of modifications to an original image
 * cascading changes -- change an earlier step's settings, and see those changes affect later steps
@@ -45,13 +45,13 @@ A diagram of this running 5 steps on a single sample image may help explain how 
 
 ## Installation
 
-This library works in the browser, in Node, and on the commandline (CLI), which we think is great.
+This library works in the browser, in Node, and on the command line (CLI), which we think is great.
 
 ### Unix based platforms
-You can setup a local environment to test the UI with `sudo npm setup` followed by `npm start` 
+You can set up a local environment to test the UI with `sudo npm setup` followed by `npm start` 
 
 ### Windows
-Our npm scripts do not support windows shells, please run the following snippet in powershell.
+Our npm scripts do not support windows shells, please run the following snippet in PowerShell.
 ```powershell
 npm i ; npm i -g grunt grunt-cli ; grunt serve
 ```
@@ -99,7 +99,7 @@ from other folders, and throw a Security Error instead.
   sequencer.replaceImage(selector,steps,optional_options);
 ```
 
-`optional_options` allows to pass additional arguments to the module itself.
+`optional_options` allows passing additional arguments to the module itself.
 
 For example:
 
@@ -144,7 +144,7 @@ The CLI also can take multiple steps at once, like so:
 
 But for this, double quotes must wrap the space-separated steps.
 
-Options for the steps can be passed in one line as json in the details option like
+Options for the steps can be passed in one line as JSON in the details option like
 ```
 $ ./index.js -i [PATH] -s "brightness" -c '{"brightness":50}'
 
@@ -158,7 +158,7 @@ Or the values can be given through terminal prompt like
 sequencer --save-sequence "invert-colormap invert(),colormap()"
 ```
 
-`install-module` option can be used to install new modules from npm. You can register this module in your sequencer with a custom name space separated with the npm package name. Below is an example for the `image-sequencer-invert` module.
+`install-module` option can be used to install new modules from npm. You can register this module in your sequencer with a custom namespace separated with the npm package name. Below is an example of the `image-sequencer-invert` module.
 ```shell
 sequencer --install-module "invert image-sequencer-invert"
 ```
@@ -210,7 +210,7 @@ In this case, only `'SRC'`.
 
 ### Adding steps to the image
 
-The `addSteps` method is used to add steps on the image. One or more steps can
+The `addSteps` method is used to add steps to the image. One or more steps can
 be added at a time. Each step is called a module.
 
 ```js
@@ -236,10 +236,10 @@ modules.
 sequencer.run();
 ```
 
-Sequencer can be run with a custom config object
+The Sequencer can be run with a custom config object
 
 ```js
-// The config object enables custom progress bars in node environment and
+// The config object enables custom progress bars in a node environment and
 // ability to run the sequencer from a particular index(of the steps array)
 
 sequencer.run(config);
@@ -263,7 +263,7 @@ sequencer.run(function callback(out){
   // "out" is the DataURL of the final image.
 });
 sequencer.run(config,function callback(out){
-  // the callback is supported with all types of invocations
+  // the callback is supported by all types of invocations
 });
 ```
 
@@ -273,7 +273,7 @@ return value: **`sequencer`** (To allow method chaining)
 ### Removing a step from the sequencer
 
 The `removeSteps` method is used to remove unwanted steps from the sequencer.
-It accepts the index of the step as an input, or an array of the unwanted indices
+It accepts the index of the step as an input or an array of the unwanted indices
 if there are more than one.
 
 For example, if the modules ['ndvi-red','crop','invert'] were added in this order,
@@ -293,7 +293,7 @@ return value: **`sequencer`** (To allow method chaining)
 ### Inserting a step in between the sequencer
 
 The `insertSteps` method can be used to insert one or more steps at a given index
-in the sequencer. It accepts the index where the module is to be inserted, name of
+in the sequencer. It accepts the index where the module is to be inserted, the name of
 the module, and an optional options parameter. `index` is the index of the inserted
 step. Only one step can be inserted at a time. `optional_options` plays the same
 role it played in `addSteps`.
@@ -311,7 +311,7 @@ return value: **`sequencer`** (To allow method chaining)
 
 ### Importing an independent module
 
-The `loadNewModule` method can be used to import a new module inside sequencer. Modules can be downloaded via npm, yarn or cdn and are imported with a custom name. If you wish to load a new module at runtime, it will need to avoid using `require()` -- unless it is compiled with a system like browserify or webpack.
+The `loadNewModule` method can be used to import a new module inside the sequencer. Modules can be downloaded via npm, yarn or CDN and are imported with a custom name. If you wish to load a new module at runtime, it will need to avoid using `require()` -- unless it is compiled with a system like browserify or webpack.
 
 ```js
 const module = require('sequencer-moduleName')
@@ -327,7 +327,7 @@ Methods can be chained on the Image Sequencer:
 * If the chain starts with loadImage() or loadImages(), the following methods are
 applied only to the newly loaded images.
 * If no name is provided to the image, a name will be generated for it. The name will
-be of the form "image<number>". For ex: "image1", "image2", "image3", etc.
+be of the form "image<number>". For Ex: "image1", "image2", "image3", etc.
 
 Valid Chains:
 ```js
@@ -384,7 +384,7 @@ return value: **none**
 ### Adding Steps on Multiple Images
 
 The same method `addSteps` is used for this. There's just a slight obvious change
-in the syntax that the image name has to be supplied too. `image_name` as well as
+in the syntax that the image name has to be supplied too. `image_name` as well as,
 `module_name` in the following examples can be either strings or arrays of strings.
 
 ```js
@@ -495,7 +495,7 @@ return value: **`sequencer`** (To allow method chaining)
 
 ## Saving Sequences
 
-IMAGE SEQUENCER supports saving a sequence of modules and their associated settings in a simple string syntax. These sequences can be saved in the local storage inside the browser and inside a json file in node.js. sequences can be saved in node context using the CLI option
+IMAGE SEQUENCER supports saving a sequence of modules and their associated settings in a simple string syntax. These sequences can be saved in the local storage inside the browser and inside a JSON file in node.js. sequences can be saved in node context using the CLI option
 
 ```shell
 --save-sequence "name stringified-sequence"
@@ -516,7 +516,7 @@ Image sequencer supports stringifying a sequence which is appended to the url an
 channel{channel:green},invert{}
 ```
 
-Sequencer also supports use of `()` in place of `{}` for backwards compatibility with older links.(This syntax is deprecated and should be avoided as far as possible)
+Sequencer also supports the use of `()` in place of `{}` for backward compatibility with older links. (This syntax is deprecated and should be avoided as far as possible)
 ```
 channel(channel:green),invert()
 ```

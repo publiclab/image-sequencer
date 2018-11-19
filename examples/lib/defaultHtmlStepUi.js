@@ -71,7 +71,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         if (!isInput) {
           html += '<span class="output"></span>';
         } else if (inputDesc.type.toLowerCase() == "select") {
-          html += '<select class="form-control target" name="' + paramName + '" autofocus>';
+          html += '<select class="form-control target" name="' + paramName + '">';
           for (var option in inputDesc.values) {
             html += "<option>" + inputDesc.values[option] + "</option>";
           }

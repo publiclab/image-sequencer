@@ -71,7 +71,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         if (!isInput) {
           html += '<span class="output"></span>';
         } else if (inputDesc.type.toLowerCase() == "select") {
-          html += '<select class="form-control target" name="' + paramName + '">';
+          html += '<select class="form-control target" name="' + paramName + '" autofocus>';
           for (var option in inputDesc.values) {
             html += "<option>" + inputDesc.values[option] + "</option>";
           }
@@ -108,6 +108,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         var description = inputs[paramName].desc || paramName;
         div.innerHTML =
           "<div class='det'>\
+          <form class='input-form'>\
                            <label for='" +
           paramName +
           "'>" +
@@ -116,21 +117,28 @@ function DefaultHtmlStepUi(_sequencer, options) {
                            " +
           html +
           "\
+          </form>\
                          </div>";
         step.ui.querySelector("div.details").appendChild(div);
       }
 
       function toggleSaveButton(){
         $(step.ui.querySelector("div.details .btn-save")).prop("disabled",false);
+        focusInput();
       }
 
-      $(step.ui.querySelectorAll(".target")).focus(toggleSaveButton);
+      $(step.ui.querySelectorAll(".target")).on('change',toggleSaveButton);
 
       $(step.ui.querySelector("div.details")).append(
         "<p><button class='btn btn-default btn-save' disabled = 'true' >Save</button><span> Press save to see changes</span></p>"
       );
 
-      function saveOptions() {
+      function focusInput(){
+        $(step.ui.querySelector("div.details .target")).focus();
+      }
+
+      function saveOptions(e) {
+        e.preventDefault();
         $(step.ui.querySelector("div.details"))
           .find("input,select")
           .each(function(i, input) {
@@ -146,6 +154,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
       // on clicking Save in the details pane of the step
       $(step.ui.querySelector("div.details .btn-save")).click(saveOptions);
+      $(step.ui.querySelector("div.details .input-form")).on('submit', saveOptions);
     }
 
     if (step.name != "load-image")

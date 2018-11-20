@@ -236,7 +236,7 @@ modules.
 sequencer.run();
 ```
 
-The Sequencer can be run with a custom config object
+Sequencer can be run with a custom config object
 
 ```js
 // The config object enables custom progress bars in a node environment and
@@ -435,7 +435,7 @@ The `run` method also accepts an optional callback just like before:
   });
 ```
 
-JSON Input is also acceptable.
+JSON input is also acceptable.
 
 ```js
 sequencer.run({

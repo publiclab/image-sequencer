@@ -30,13 +30,19 @@ window.onload = function() {
     sequencer.loadImage("images/tulips.png", ui.onLoad);
   }
 
-  $("#addStep select").on("change", function(){
-    $(".radio-group").find('.radio').removeClass('selected');
-    ui.selectNewStepUi;
-  });
-  $("#addStep #add-step-btn").on("click", function(){
-    //TODO: Get step option from either buttons or dropdown
-    ui.addStepUi;
+  $("#addStep select").on("change", ui.selectNewStepUi);
+  $("#addStep #add-step-btn").on("click", ui.addStepUi);
+
+  //Module button radio selection
+  $('.radio-group .radio').on("click", function(){
+    $(this).parent().find('.radio').removeClass('selected');
+    $(this).addClass('selected');
+    newStep = $(this).attr('data-value');
+    console.log(newStep);
+    //$("#addStep option[value=" + newStep + "]").attr('selected', 'selected');
+    $("#addStep select").val(newStep);
+    ui.selectNewStepUi();
+    ui.addStepUi();
   });
 
   $('#download-btn').click(function() {
@@ -138,12 +144,4 @@ window.onload = function() {
     }
   });
 
-  //Module button radio selection
-  $('.radio-group .radio').click(function(){
-    $(this).parent().find('.radio').removeClass('selected');
-    $(this).addClass('selected');
-    newStep = $(this).attr('data-value');
-    $(this).parent().find('input').val(newStep);
-    //TODO: Deselects dropdown option if button pressed
-  });
 };

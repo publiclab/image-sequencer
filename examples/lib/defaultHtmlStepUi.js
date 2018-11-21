@@ -7,6 +7,17 @@
 // The variable 'step' stores useful data like input and
 // output values, step information.
 // See documetation for more details.
+function stepRemovedNotify() {
+  if ($('#stepRemovedNotification').length == 0) {
+    var notification = document.createElement('span');
+    notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> Step Removed ';
+    notification.id = 'stepRemovedNotification';
+
+    $('body').append(notification);
+  }
+
+  $('#stepRemovedNotification').fadeIn(500).delay(200).fadeOut(500);
+}
 function DefaultHtmlStepUi(_sequencer, options) {
 
   options = options || {};
@@ -37,7 +48,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     var tools =
       '<div class="tools btn-group">\
-       <button confirm="Are you sure?" class="remove btn btn btn-default">\
+       <button confirm="Are you sure?" onclick="stepRemovedNotify()" class="remove btn btn btn-default">\
          <i class="fa fa-trash"></i>\
        </button>\
     </div>';
@@ -97,6 +108,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         var description = inputs[paramName].desc || paramName;
         div.innerHTML =
           "<div class='det'>\
+          <form class='input-form'>\
                            <label for='" +
           paramName +
           "'>" +
@@ -105,21 +117,28 @@ function DefaultHtmlStepUi(_sequencer, options) {
                            " +
           html +
           "\
+          </form>\
                          </div>";
         step.ui.querySelector("div.details").appendChild(div);
       }
 
       function toggleSaveButton(){
         $(step.ui.querySelector("div.details .btn-save")).prop("disabled",false);
+        focusInput();
       }
 
-      $(step.ui.querySelectorAll(".target")).focus(toggleSaveButton);
+      $(step.ui.querySelectorAll(".target")).on('change',toggleSaveButton);
 
       $(step.ui.querySelector("div.details")).append(
         "<p><button class='btn btn-default btn-save' disabled = 'true' >Save</button><span> Press save to see changes</span></p>"
       );
 
-      function saveOptions() {
+      function focusInput(){
+        $(step.ui.querySelector("div.details .target")).focus();
+      }
+
+      function saveOptions(e) {
+        e.preventDefault();
         $(step.ui.querySelector("div.details"))
           .find("input,select")
           .each(function(i, input) {
@@ -135,6 +154,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
       // on clicking Save in the details pane of the step
       $(step.ui.querySelector("div.details .btn-save")).click(saveOptions);
+      $(step.ui.querySelector("div.details .input-form")).on('submit', saveOptions);
     }
 
     if (step.name != "load-image")

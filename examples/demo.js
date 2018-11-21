@@ -14,6 +14,8 @@ window.onload = function() {
         '<option value="' + m + '">' + modulesInfo[m].name + "</option>"
       );
     }
+    // Null option
+    addStepSelect.append('<option value="none" disabled selected>More modules...</option>');
   }
   refreshOptions();
 

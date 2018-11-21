@@ -111,7 +111,8 @@
           </div>
           <div class="center-align">
             <select class="form-control input-lg" id="selectStep">
-              <option disabled selected value>More modules...</option>
+              <!-- The default null selection has been appended manually in demo.js
+              This is because the options in select are overritten when options are appended.-->
             </select>
             <button class="btn btn-success btn-lg" name="add" id="add-step-btn">Add Step</button>
           </div>

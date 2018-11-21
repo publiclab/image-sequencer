@@ -43,6 +43,7 @@ window.onload = function() {
     $("#addStep select").val(newStep);
     ui.selectNewStepUi();
     ui.addStepUi();
+    $(this).removeClass('selected');
   });
 
   $('#download-btn').click(function() {

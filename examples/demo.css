@@ -170,14 +170,28 @@ h1 {
     color:#BABABA;
 }
 
-.radio {
+.btn-circle{
+  width: 80px;
+  height: 80px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.42;
+  border-radius: 40px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.radio button{
   cursor:pointer;
 }
-.radio.selected {
+.radio.selected button{
   color: #fff;
   background-color: #5cb85c;
   border-color: #5cb85c;
   outline: none;
+}
+.radio-group {
+  margin-bottom: 20px;
 }
 
 #stepRemovedNotification {

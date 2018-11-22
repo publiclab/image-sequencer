@@ -7,8 +7,9 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="content-type" content="text/html; charset=UTF8">
+  <meta name="theme-color" content="#428bca">
   <link rel="icon" sizes="192x192" href="../icons/ic_192.png">
-
+  <link rel="manifest" href="manifest.json">
 
   <title>Image Sequencer</title>
 
@@ -158,10 +159,15 @@
   <div class="row">
     <button class="btn btn-primary btn-lg" name="save-sequence" id="save-seq">Save Sequence</button>
   </div>
-</div>
-<form class="move-up" action="#up">
+
+  <form class="move-up" action="#up">
     <button><i class="fa fa-arrow-circle-o-up"></i></button>
-</form>
+  </form>
+  
+  <footer>
+    <hr style="margin:20px;"><center><a class="color:grey;" id="clear-cache">Clear offline cache</a></center>
+  </footer>
+
   <script type="text/javascript">
     $(function() {
       var sequencer;

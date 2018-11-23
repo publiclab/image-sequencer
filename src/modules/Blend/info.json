@@ -1,7 +1,12 @@
 {
   "name": "Blend",
-  "description": "Blend the past two image steps with the given function. Defaults to using the red channel from image 1 and the green and blue and alpha channels of image 2. Easier to use interfaces coming soon!",
+  "description": "Blend two chosen image steps with the given function. Defaults to using the red channel from image 1 and the green and blue and alpha channels of image 2. Easier to use interfaces coming soon!",
   "inputs": {
+    "offset": {
+      "type": "integer",
+      "desc": "Choose which image to blend the current image with. Two steps back is -2, three steps back is -3 etc.",
+      "default": -2
+    },
     "blend": {
       "type": "input",
       "desc": "Function to use to blend the two images.",

@@ -184,8 +184,20 @@ test('getStep(offset) returns the step at offset distance relative to current st
 });
 
 test('toCliString() returns the CLI command for the sequence', function(t) {
-  t.deepEqual(sequencer.toCliString(), `sequencer -i [PATH] -s "channel channel channel channel channel invert blend" -d '{"channel":"green"}'`, "works correctly");
+  t.deepEqual(sequencer.toCliString(), `sequencer -i [PATH] -s "channel channel channel channel channel invert blend" -d '{"channel":"green","offset":-2}'`, "works correctly");
   t.end();
+});
+
+test('blend returns different output depending on the set offset', function(t) {
+  sequencer.addSteps('test', 'invert', {});
+  sequencer.addSteps('test', 'invert', {});
+  sequencer.addSteps('test', 'blend', {});
+  // because we've added blend before, so instead of -3 we set it to -4
+  sequencer.addSteps('test', 'blend', {'offset': -4});
+  sequencer.run({ mode: 'test' }, function(out) {
+    t.notStrictEqual(out, sequencer.images.test.steps[sequencer.images.test.steps.length - 2].output.src, 'different offsets give different output');
+    t.end();
+  });
 });
 
 test('replaceImage returns false in NodeJS', function(t) {

@@ -7,6 +7,17 @@
 // The variable 'step' stores useful data like input and
 // output values, step information.
 // See documetation for more details.
+function stepRemovedNotify() {
+  if ($('#stepRemovedNotification').length == 0) {
+    var notification = document.createElement('span');
+    notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> Step Removed ';
+    notification.id = 'stepRemovedNotification';
+
+    $('body').append(notification);
+  }
+
+  $('#stepRemovedNotification').fadeIn(500).delay(200).fadeOut(500);
+}
 function DefaultHtmlStepUi(_sequencer, options) {
 
   options = options || {};
@@ -37,7 +48,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     var tools =
       '<div class="tools btn-group">\
-       <button confirm="Are you sure?" class="remove btn btn btn-default">\
+       <button confirm="Are you sure?" onclick="stepRemovedNotify()" class="remove btn btn btn-default">\
          <i class="fa fa-trash"></i>\
        </button>\
     </div>';
@@ -45,7 +56,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     var parser = new DOMParser();
     step.ui = parser.parseFromString(step.ui, "text/html");
     step.ui = step.ui.querySelector("div.row");
-    step.linkElement = step.ui.querySelector("a");
+    step.linkElements = step.ui.querySelectorAll("a");
     step.imgElement = step.ui.querySelector("a img");
 
     if (_sequencer.modulesInfo().hasOwnProperty(step.name)) {
@@ -66,12 +77,29 @@ function DefaultHtmlStepUi(_sequencer, options) {
           }
           html += "</select>";
         } else {
+	  let paramVal = step.options[paramName] || inputDesc.default;
           html =
             '<input class="form-control target" type="' +
             inputDesc.type +
             '" name="' +
             paramName +
-            '">';
+            '" value="' +
+            paramVal +
+            '" placeholder ="' +
+            (inputDesc.placeholder || "");
+            
+           if(inputDesc.type.toLowerCase() == "range")
+           {
+             html+=
+              '"min="'+
+              inputDesc.min +
+              '"max="'+
+              inputDesc.max +
+              '"step="' +
+              inputDesc.step + '">'+'<span>'+paramVal+'</span>';
+
+           }
+           else html+= '">';
         }
 
         var div = document.createElement("div");
@@ -80,6 +108,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         var description = inputs[paramName].desc || paramName;
         div.innerHTML =
           "<div class='det'>\
+          <form class='input-form'>\
                            <label for='" +
           paramName +
           "'>" +
@@ -88,21 +117,28 @@ function DefaultHtmlStepUi(_sequencer, options) {
                            " +
           html +
           "\
+          </form>\
                          </div>";
         step.ui.querySelector("div.details").appendChild(div);
       }
 
       function toggleSaveButton(){
         $(step.ui.querySelector("div.details .btn-save")).prop("disabled",false);
+        focusInput();
       }
 
-      $(step.ui.querySelector(".target")).change(toggleSaveButton);
+      $(step.ui.querySelectorAll(".target")).on('change',toggleSaveButton);
 
       $(step.ui.querySelector("div.details")).append(
         "<p><button class='btn btn-default btn-save' disabled = 'true' >Save</button><span> Press save to see changes</span></p>"
       );
 
-      function saveOptions() {
+      function focusInput(){
+        $(step.ui.querySelector("div.details .target")).focus();
+      }
+
+      function saveOptions(e) {
+        e.preventDefault();
         $(step.ui.querySelector("div.details"))
           .find("input,select")
           .each(function(i, input) {
@@ -118,6 +154,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
       // on clicking Save in the details pane of the step
       $(step.ui.querySelector("div.details .btn-save")).click(saveOptions);
+      $(step.ui.querySelector("div.details .input-form")).on('submit', saveOptions);
     }
 
     if (step.name != "load-image")
@@ -128,6 +165,12 @@ function DefaultHtmlStepUi(_sequencer, options) {
         );
 
     stepsEl.appendChild(step.ui);
+    
+    var inputs = document.querySelectorAll('input[type="range"]')
+    for(i in inputs)
+    inputs[i].oninput = function(e) {
+      e.target.nextSibling.innerHTML = e.target.value;
+    }
   }
 
   function onDraw(step) {
@@ -140,33 +183,35 @@ function DefaultHtmlStepUi(_sequencer, options) {
     $(step.ui.querySelector("img")).show();
 
     step.imgElement.src = step.output;
-    step.linkElement.href = step.output;
+    var imgthumbnail = step.ui.querySelector(".img-thumbnail");
+    for(let index=0; index < step.linkElements.length; index++) {
+      if(step.linkElements[index].contains(imgthumbnail))
+        step.linkElements[index].href = step.output;
+    }
 
     // TODO: use a generalized version of this
     function fileExtension(output) {
       return output.split("/")[1].split(";")[0];
     }
 
-    step.linkElement.download = step.name + "." + fileExtension(step.output);
-    step.linkElement.target = "_blank";
+    for(let index=0; index < step.linkElements.length; index++) {
+      step.linkElements[index].download = step.name + "." + fileExtension(step.output);
+      step.linkElements[index].target = "_blank";
+    }
 
     // fill inputs with stored step options
     if (_sequencer.modulesInfo().hasOwnProperty(step.name)) {
       var inputs = _sequencer.modulesInfo(step.name).inputs;
       var outputs = _sequencer.modulesInfo(step.name).outputs;
       for (var i in inputs) {
-        if (
-          step.options[i] !== undefined &&
-          inputs[i].type.toLowerCase() === "input"
-        )
-          step.ui.querySelector('div[name="' + i + '"] input').value =
-            step.options[i];
-        if (
-          step.options[i] !== undefined &&
-          inputs[i].type.toLowerCase() === "select"
-        )
-          step.ui.querySelector('div[name="' + i + '"] select').value =
-            step.options[i];
+        if (step.options[i] !== undefined) {
+            if (inputs[i].type.toLowerCase() === "input")
+                step.ui.querySelector('div[name="' + i + '"] input').value =
+                step.options[i];
+            if (inputs[i].type.toLowerCase() === "select")
+                step.ui.querySelector('div[name="' + i + '"] select').value =
+                step.options[i];
+}
       }
       for (var i in outputs) {
         if (step[i] !== undefined)

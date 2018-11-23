@@ -1,0 +1,11 @@
+{
+    "name": "Gamma Correction",
+    "description": "Apply gamma correction on the image <a href='https://en.wikipedia.org/wiki/Gamma_correction'>Read more</a>",
+    "inputs": {
+        "adjustment": {
+            "type": "float",
+            "desc": "gamma correction (inverse of actual gamma factor) for the new image",
+            "default": 0.2
+        }
+    } 
+}

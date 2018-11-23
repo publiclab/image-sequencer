@@ -6,6 +6,7 @@
   "scripts": {
     "debug": "TEST=true node ./index.js -i ./examples/images/monarch.png -s invert",
     "test": "TEST=true tape test/**/*.js test/*.js | tap-spec; browserify test/modules/image-sequencer.js test/modules/chain.js test/modules/meta-modules.js test/modules/replace.js test/modules/import-export.js test/modules/run.js test/modules/dynamic-imports.js | tape-run --render=\"tap-spec\"",
+    "setup": "npm i && npm i -g grunt grunt-cli",
     "start": "grunt serve"
   },
   "repository": {
@@ -26,12 +27,14 @@
     "buffer": "~5.0.2",
     "commander": "^2.11.0",
     "data-uri-to-buffer": "^2.0.0",
+    "downloadjs": "^1.4.7",
     "fisheyegl": "^0.1.2",
     "font-awesome": "~4.5.0",
     "get-pixels": "~3.3.0",
     "image-sequencer-invert": "^1.0.0",
+    "imagejs": "0.0.9",
     "imgareaselect": "git://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2",
-    "jquery": "~2",
+    "jquery": "^3.3.1",
     "jsqr": "^0.2.2",
     "lodash": "^4.17.5",
     "ndarray-gaussian-filter": "^1.0.0",
@@ -39,21 +42,21 @@
     "pace": "0.0.4",
     "readline-sync": "^1.4.7",
     "save-pixels": "~2.3.4",
-    "urify": "^2.1.0"
+    "urify": "^2.1.1"
   },
   "devDependencies": {
     "browserify": "13.0.0",
-    "grunt": "^0.4.5",
+    "grunt": "^1.0.3",
     "grunt-browser-sync": "^2.2.0",
     "grunt-browserify": "^5.0.0",
     "grunt-contrib-concat": "^0.5.0",
     "grunt-contrib-uglify-es": "^3.3.0",
-    "grunt-contrib-watch": "^0.6.1",
+    "grunt-contrib-watch": "^1.1.0",
     "image-filter-core": "~1.0.0",
     "image-filter-threshold": "~1.0.0",
     "looks-same": "^3.2.1",
-    "matchdep": "^0.3.0",
-    "tap-spec": "^4.1.1",
+    "matchdep": "^2.0.0",
+    "tap-spec": "^5.0.0",
     "tape": ">=4.7.0",
     "tape-run": "^3.0.0",
     "uglify-es": "^3.3.7"

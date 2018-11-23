@@ -23,8 +23,19 @@ h1 {
   color: #445;
 }
 
+.center-align {
+  display: flex;
+  justify-content: center;
+  text-align:center;
+}
+
 .header {
   text-align: center;
+}
+
+.panel {
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 .nomargin {
@@ -90,6 +101,10 @@ h1 {
   margin: 20px auto;
 }
 
+#add-step-btn{
+  margin: 10px;
+}
+
 #addStep .labels {
   text-align: right;
   padding: 6px;
@@ -110,4 +125,85 @@ h1 {
 #save-seq {
   display: block;
   margin: 0 auto;
+}
+.info {
+  padding: 8px;
+  text-align: center;
+}
+#gif {
+  display: block;
+  margin: 0 auto;
+  margin-top: 4px;
+}
+#dwnld {
+  max-width: 200px;
+  margin: 20px auto;
+  margin-left: 5px;
+}
+
+#gif_element {
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+  height: auto;
+}
+
+.move-up {
+    position: fixed;
+    bottom: 50px;
+    right: 40px;
+    z-index: 3;
+    display: none;
+    z-index:1000;
+}
+.move-up button {
+    background:transparent;
+    border:none;
+}
+.move-up button:active:hover {
+    padding-right:4px !important;
+    margin-right:2px;
+}
+.move-up i {
+    font-size:60px;
+    opacity:0.5;
+    color:#BABABA;
+}
+
+.btn-circle{
+  width: 80px;
+  height: 80px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.42;
+  border-radius: 40px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.radio button{
+  cursor:pointer;
+}
+.radio.selected button{
+  color: #fff;
+  background-color: #5cb85c;
+  border-color: #5cb85c;
+  outline: none;
+}
+.radio-group {
+  margin-bottom: 20px;
+}
+
+#stepRemovedNotification {
+  background-color: #808b96;
+  padding:4px;
+  color:white;
+  border-radius:3px;
+  font-size:2rem;
+  position:fixed;
+  bottom:8px;
+  left:45%;
+  min-width:14rem;
+  text-align:center;
+  display:none;
 }

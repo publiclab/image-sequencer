@@ -9,6 +9,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     importStepsFromUrlHash();
     if (!$('#selectStep').val())
       $(addStepSel + " #add-step-btn").prop("disabled", true);
+      handleSaveSequence();
   }
 
   // look up needed steps from Url Hash:
@@ -33,6 +34,8 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     sequencer.removeSteps(index).run({ index: index - 1 });
     // remove from URL hash too
     setUrlHashParameter("steps", sequencer.toString());
+    //disable save-sequence button if all steps are removed
+    handleSaveSequence();
   }
 
   function addStepUi() {
@@ -55,8 +58,19 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
       .addSteps(newStepName, options)
       .run({ index: _sequencer.images.image1.steps.length - sequenceLength - 1 });
 
+    //enable save-sequence button if disabled initially
+    handleSaveSequence();
+
     // add to URL hash too
     setUrlHashParameter("steps", _sequencer.toString());
+  }
+
+  function handleSaveSequence(){
+    var stepCount=sequencer.images.image1.steps.length;
+    if(stepCount<2)
+    $(" #save-seq").prop("disabled", true);
+    else
+    $(" #save-seq").prop("disabled", false);
   }
 
   return {

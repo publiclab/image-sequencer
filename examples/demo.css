@@ -137,8 +137,9 @@ h1 {
 }
 #dwnld {
   max-width: 200px;
-  margin: 20px auto;
   margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 20px
 }
 
 #gif_element {

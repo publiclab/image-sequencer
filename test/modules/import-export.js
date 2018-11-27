@@ -8,8 +8,8 @@ test('toString() and stepToString() return the step/steps in string format', fun
   sequencer.loadImages('image1', red);
   sequencer.addSteps('channel');
   sequencer.addSteps('invert');
-  t.equal(sequencer.toString(), "channel{channel:green},invert{}", "toString works");
-  t.equal(sequencer.stepToString(sequencer.steps[1]), "channel{channel:green}", "stepToString works");
+  t.equal(sequencer.toString(), "channel{},invert{}", "toString works");
+  t.equal(sequencer.stepToString(sequencer.steps[1]), "channel{}", "stepToString works");
   t.end();
 });
 
@@ -36,7 +36,7 @@ test('stringToJSON() and stringToJSONstep() return the step/steps from a string 
 
 test('toJSON() returns the right sequence of steps', function(t) {
   t.deepEqual(sequencer.toJSON(), [
-    { name: 'channel', options: { channel: 'green' } },
+    { name: 'channel', options: {} },
     { name: 'invert', options: {} }
   ]);
   t.end();
@@ -44,7 +44,7 @@ test('toJSON() returns the right sequence of steps', function(t) {
 
 test('importString() imports a string of steps into the sequencer', function(t) {
   sequencer.importString('brightness{brightness:50},invert');
-  t.equal(sequencer.toString(), "channel{channel:green},invert{},brightness{brightness:50},invert{}");
+  t.equal(sequencer.toString(), "channel{},invert{},brightness{brightness:50},invert{}");
   t.end();
 });
 
@@ -52,7 +52,7 @@ test('importJSON() imports a JSON array of steps into the sequencer', function(t
   sequencer.importJSON([
     { name: 'blur', options: {} }
   ]);
-  t.equal(sequencer.toString(), "channel{channel:green},invert{},brightness{brightness:50},invert{},blur{blur:2}")
+  t.equal(sequencer.toString(), "channel{},invert{},brightness{brightness:50},invert{},blur{}")
   t.end();
 });
 

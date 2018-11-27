@@ -207,3 +207,9 @@ h1 {
   text-align:center;
   display:none;
 }
+
+.preview{
+  width: 80px;
+  height: 80px;
+  background-color: red;
+}

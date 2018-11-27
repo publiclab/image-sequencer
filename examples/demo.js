@@ -51,8 +51,10 @@ window.onload = function() {
   // find any `src` parameters in URL hash and attempt to source image from them and run the sequencer
   if (getUrlHashParameter('src')) {
     sequencer.loadImage(getUrlHashParameter('src'), ui.onLoad);
+    previewSequencer.loadImage(getUrlHashParameter('src'), ui.onLoad);
   } else {
     sequencer.loadImage("images/tulips.png", ui.onLoad);
+    previewSequencer.loadImage("images/tulips.png", ui.onLoad);
   }
 
   $("#addStep select").on("change", function(){

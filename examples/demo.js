@@ -1,5 +1,6 @@
 window.onload = function() {
-  sequencer = ImageSequencer();
+  var sequencer = ImageSequencer();
+  var previewSequencer = ImageSequencer();
 
   function refreshOptions() {
     // Load information of all modules (Name, Inputs, Outputs)
@@ -25,11 +26,35 @@ window.onload = function() {
   // UI for the overall demo:
   var ui = DefaultHtmlSequencerUi(sequencer);
 
+  // UI for the preview sequencer:
+  previewSequencer.setUI({
+    onSetup: function(step){
+      // Create new property "step.image"
+      step.image = document.createElement('img');
+      if($("#" + step).length() > 0){
+        $("#" + step).append(step.image);
+        console.log(step + " element exists");
+      } else {
+        console.log(step + " element does not exist");
+      }
+    },
+    onComplete: function(step){
+      // Access predefined "step.output" and user-defined "step.image"
+      step.image.src = step.output;
+    },
+    onRemove: function(step){
+      // Access user-defined "step.image"
+      step.image.remove();
+    }
+  });
+
   // find any `src` parameters in URL hash and attempt to source image from them and run the sequencer
   if (getUrlHashParameter('src')) {
     sequencer.loadImage(getUrlHashParameter('src'), ui.onLoad);
+    previewSequencer.loadImage(getUrlHashParameter('src'), ui.onLoad);
   } else {
     sequencer.loadImage("images/tulips.png", ui.onLoad);
+    previewSequencer.loadImage("images/tulips.png", ui.onLoad);
   }
 
   $("#addStep select").on("change", ui.selectNewStepUi);

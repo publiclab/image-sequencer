@@ -1,6 +1,5 @@
 window.onload = function() {
   var sequencer = ImageSequencer();
-  var previewSequencer = ImageSequencer();
 
   function refreshOptions() {
     // Load information of all modules (Name, Inputs, Outputs)
@@ -26,36 +25,24 @@ window.onload = function() {
   // UI for the overall demo:
   var ui = DefaultHtmlSequencerUi(sequencer);
 
-  // UI for the preview sequencer:
-  previewSequencer.setUI({
-    onSetup: function(step){
-      // Create new property "step.image"
-      step.image = document.createElement('img');
-      if($("#" + step).length() > 0){
-        $("#" + step).append(step.image);
-        console.log(step + " element exists");
-      } else {
-        console.log(step + " element does not exist");
-      }
-    },
-    onComplete: function(step){
-      // Access predefined "step.output" and user-defined "step.image"
-      step.image.src = step.output;
-    },
-    onRemove: function(step){
-      // Access user-defined "step.image"
-      step.image.remove();
-    }
-  });
-
   // find any `src` parameters in URL hash and attempt to source image from them and run the sequencer
+  imageSource = "images/tulips.png";
   if (getUrlHashParameter('src')) {
-    sequencer.loadImage(getUrlHashParameter('src'), ui.onLoad);
-    previewSequencer.loadImage(getUrlHashParameter('src'), ui.onLoad);
-  } else {
-    sequencer.loadImage("images/tulips.png", ui.onLoad);
-    previewSequencer.loadImage("images/tulips.png", ui.onLoad);
+    imageSource = getUrlHashParameter('src');
   }
+  sequencer.loadImage(imageSource, ui.onLoad);
+
+  //Inserting previews
+  function generatePreview(element, source, filter, steps) {
+    function insertImage(src) {
+      var img = document.createElement('img');
+      img.src = src;
+      $(element).append(img); // maybe append img to the element passed in as a parameter?
+    }
+    var previewSequencer = new ImageSequencer();
+    previewSequencer.loadImage(source).addSteps(filter + "," + steps).run(insertImage);
+  }
+  generatePreview("#saturation", imageSource, "resize:{x: 100, y: 100}", 1);
 
   //Module button radio selection
   $('.radio-group .radio').on("click", function(){

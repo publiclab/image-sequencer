@@ -40,7 +40,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
 
   function addStepUi() {
     if ($(addStepSel + " select").val() == "none") return;
-   
+
     var newStepName = $(addStepSel + " select").val();
 
     /*
@@ -57,9 +57,9 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     _sequencer
       .addSteps(newStepName, options)
       .run({ index: _sequencer.images.image1.steps.length - sequenceLength - 1 });
-    
+
     //enable save-sequence button if disabled initially
-    handleSaveSequence(); 
+    handleSaveSequence();
 
     // add to URL hash too
     setUrlHashParameter("steps", _sequencer.toString());

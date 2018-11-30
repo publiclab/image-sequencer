@@ -7,8 +7,9 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="content-type" content="text/html; charset=UTF8">
+  <meta name="theme-color" content="#428bca">
   <link rel="icon" sizes="192x192" href="../icons/ic_192.png">
-
+  <link rel="manifest" href="manifest.json">
 
   <title>Image Sequencer</title>
 
@@ -78,30 +79,41 @@
         <div class="panel-body">
           <p class="info">Select a new module to add to your sequence.</p>
           <div class="row center-align radio-group">
-            <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="brightness">
-              <i class="fa fa-sun-o fa-4x"></i>
+            <div>
+              <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="brightness">
+                <i class="fa fa-sun-o fa-4x"></i>
+              </button>
               <p>Brightness</p>
-            </button>
-            <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="contrast">
-              <i class="fa fa-adjust fa-4x"></i>
+            </div>
+            <div>
+              <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="contrast">
+                <i class="fa fa-adjust fa-4x"></i>
+              </button>
               <p>Contrast</p>
-            </button>
-            <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="saturation">
-              <i class="fa fa-tint fa-4x"></i>
+            </div>
+            <div>
+              <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="saturation">
+                <i class="fa fa-tint fa-4x"></i>
+              </button>
               <p>Saturation</p>
-            </button>
-            <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="rotate">
-              <i class="fa fa-rotate-right fa-4x"></i>
+            </div>
+            <div>
+              <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="rotate">
+                <i class="fa fa-rotate-right fa-4x"></i>
+              </button>
               <p>Rotate</p>
-            </button>
-            <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="crop">
-              <i class="fa fa-crop fa-4x"></i>
+            </div>
+            <div>
+              <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="crop">
+                <i class="fa fa-crop fa-4x"></i>
+              </button>
               <p>Crop</p>
-            </button>
+            </div>
           </div>
-          <div style="text-align:center;">
+          <div class="center-align">
             <select class="form-control input-lg" id="selectStep">
-              <option disabled selected value>More modules...</option>
+              <!-- The default null selection has been appended manually in demo.js
+              This is because the options in select are overritten when options are appended.-->
             </select>
             <button class="btn btn-success btn-lg" name="add" id="add-step-btn">Add Step</button>
           </div>
@@ -115,7 +127,7 @@
         <div class="panel-body">
           <div style="text-align:center;">
             <button class="btn btn-success btn-lg" id="download-btn" name="download">Download PNG</button>
-            <button class="btn btn-success btn-lg js-view-as-gif" id="gif">View Gif</button>
+            <button class="btn btn-success btn-lg js-view-as-gif" id="gif">View GIF</button>
 
             <div class="modal fade" id="js-download-gif-modal" tabindex="-1" role="dialog">
               <div class="modal-dialog" role="document">
@@ -147,10 +159,15 @@
   <div class="row">
     <button class="btn btn-primary btn-lg" name="save-sequence" id="save-seq">Save Sequence</button>
   </div>
-</div>
-<form class="move-up" action="#up">
+
+  <form class="move-up" action="#up">
     <button><i class="fa fa-arrow-circle-o-up"></i></button>
-</form>
+  </form>
+
+  <footer>
+    <hr style="margin:20px;"><center><a class="color:grey;" id="clear-cache">Clear offline cache</a></center>
+  </footer>
+
   <script type="text/javascript">
     $(function() {
       var sequencer;

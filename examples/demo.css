@@ -63,6 +63,10 @@ h1 {
   margin-bottom: 20px;
 }
 
+.form-control {
+  padding: 0px 0px;
+}
+
 .step .img-thumbnail {
   margin-bottom: 20px;
 }

@@ -42,6 +42,10 @@ h1 {
   margin: 0 !important;
 }
 
+.form-control {
+  padding: 0px 0px;
+}
+
 #dropzone {
   padding: 30px;
   margin: 0 20% 30px;

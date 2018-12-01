@@ -40,7 +40,9 @@ window.onload = function() {
       $(element).append(img); // maybe append img to the element passed in as a parameter?
     }
     var previewSequencer = new ImageSequencer();
-    previewSequencer.loadImage(source).addSteps(filter + "," + steps).run(insertImage);
+    previewSequencer.loadImage(source);
+    previewSequencer.addSteps(filter + "," + steps);
+    insertImage($('.step:last img')[0].src);
   }
   generatePreview("#saturation", imageSource, "resize:{x: 100, y: 100}", 1);
 

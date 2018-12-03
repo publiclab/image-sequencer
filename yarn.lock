@@ -400,6 +400,11 @@ blob@0.0.4:
   resolved "https://registry.yarnpkg.com/blob/-/blob-0.0.4.tgz#bcf13052ca54463f30f9fc7e95b9a47630a94921"
   integrity sha1-vPEwUspURj8w+fx+lbmkdjCpSSE=
 
+bluebird@*:
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.3.tgz#7d01c6f9616c9a51ab0f8c549a79dfe6ec33efa7"
+  integrity sha512-/qKPUQlaW1OyR51WeCPBvRnAlnZFUJkCSG5HzGnuIqhgyJtF+T94lFnn33eiazjRm2LAHVy2guNnaq48X9SJuw==
+
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   version "4.11.8"
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
@@ -1537,6 +1542,11 @@ domain-browser@~1.1.0:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/domain-browser/-/domain-browser-1.1.7.tgz#867aa4b093faa05f1de08c06f4d7b21fdf8698bc"
   integrity sha1-hnqksJP6oF8d4IwG9NeyH9+GmLw=
+
+downloadjs@^1.4.7:
+  version "1.4.7"
+  resolved "https://registry.yarnpkg.com/downloadjs/-/downloadjs-1.4.7.tgz#f69f96f940e0d0553dac291139865a3cd0101e3c"
+  integrity sha1-9p+W+UDg0FU9rCkROYZaPNAQHjw=
 
 dup@^1.0.0:
   version "1.0.0"
@@ -2860,6 +2870,16 @@ image-sequencer-invert@^1.0.0:
   resolved "https://registry.yarnpkg.com/image-sequencer-invert/-/image-sequencer-invert-1.0.0.tgz#bb5c0cc2f50ed9ff4cd8d89a7929188f381a5dd4"
   integrity sha512-LL9jwCnSbUy676q9ULJ6M04mp1TVOxpjlckMGN2SyFOgPE4SGL2/IRcO33BDwafmFiupqDdgs7gUHEbsFcCqgQ==
 
+imagejs@0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/imagejs/-/imagejs-0.0.9.tgz#2680645900f6d75fbf0f67bbc0063e6888ae7ebe"
+  integrity sha1-JoBkWQD211+/D2e7wAY+aIiufr4=
+  dependencies:
+    bluebird "*"
+    jpeg-js "0.1.1"
+    node-png "0.4.3"
+    underscore "1.4.4"
+
 "imgareaselect@git://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2":
   version "0.9.11-rc.1"
   resolved "git://github.com/jywarren/imgareaselect.git#db8ae869ca0fcb289252678cebd17d6f40711f61"
@@ -3214,6 +3234,11 @@ jpeg-js@0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/jpeg-js/-/jpeg-js-0.0.4.tgz#06aaf47efec7af0b1924a59cd695a6d2b5ed870e"
   integrity sha1-Bqr0fv7HrwsZJKWc1pWm0rXthw4=
+
+jpeg-js@0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/jpeg-js/-/jpeg-js-0.1.1.tgz#2a5ff19636fe27e3b665ad9423475cb6b698698d"
+  integrity sha1-Kl/xljb+J+O2Za2UI0dctraYaY0=
 
 jpeg-js@^0.3.2:
   version "0.3.4"
@@ -3836,6 +3861,11 @@ node-bitmap@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/node-bitmap/-/node-bitmap-0.0.1.tgz#180eac7003e0c707618ef31368f62f84b2a69091"
   integrity sha1-GA6scAPgxwdhjvMTaPYvhLKmkJE=
+
+node-png@0.4.3:
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/node-png/-/node-png-0.4.3.tgz#450223796b82d3cca0ffe4a5d5c7fa97485974e7"
+  integrity sha1-RQIjeWuC08yg/+Sl1cf6l0hZdOc=
 
 node-pre-gyp@^0.10.0:
   version "0.10.3"
@@ -5504,10 +5534,10 @@ tap-spec@^5.0.0:
     tap-out "^2.1.0"
     through2 "^2.0.0"
 
-tape-run@^3.0.0:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/tape-run/-/tape-run-3.0.4.tgz#7f68be0c494ccc8736a9c98636badb204e6590d1"
-  integrity sha512-nMj/zeUshHQzm0DCsyX/XIsfKUxsvJAEw2yMHuWNB5a0KlvBjzjIpwwEFHo73stUPBReGzEVE1NnS17fF6CIDQ==
+tape-run@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/tape-run/-/tape-run-4.0.0.tgz#3ab23de7e4064d11144eec9abec92c2e6cc239d4"
+  integrity sha512-FIHUNYhvLSv7h/lxWgej9642h3ZSHNoSBPZOqbCAU9qi4o2CXJbi5wArmrgvPrwoiEIOsF0EWy7Ho7n51Oj7Xg==
   dependencies:
     "@juliangruber/tap-finished" "0.0.2"
     browser-run "^4.1.1"
@@ -5800,6 +5830,11 @@ underscore.string@~3.3.4:
   dependencies:
     sprintf-js "^1.0.3"
     util-deprecate "^1.0.2"
+
+underscore@1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.4.4.tgz#61a6a32010622afa07963bf325203cf12239d604"
+  integrity sha1-YaajIBBiKvoHljvzJSA88SI51gQ=
 
 union-value@^1.0.0:
   version "1.0.0"

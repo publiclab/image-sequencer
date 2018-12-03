@@ -58,7 +58,7 @@
     "matchdep": "^2.0.0",
     "tap-spec": "^5.0.0",
     "tape": ">=4.7.0",
-    "tape-run": "^3.0.0",
+    "tape-run": "^4.0.0",
     "uglify-es": "^3.3.7"
   },
   "homepage": "https://github.com/publiclab/image-sequencer",

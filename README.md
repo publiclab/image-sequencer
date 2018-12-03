@@ -48,7 +48,7 @@ A diagram of this running 5 steps on a single sample image may help explain how 
 This library works in the browser, in Node, and on the command line (CLI), which we think is great.
 
 ### Unix based platforms
-You can set up a local environment to test the UI with `sudo npm setup` followed by `npm start` 
+You can set up a local environment to test the UI with `sudo npm run setup` followed by `npm start` 
 
 ### Windows
 Our npm scripts do not support windows shells, please run the following snippet in PowerShell.

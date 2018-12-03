@@ -130,7 +130,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $(step.ui.querySelectorAll(".target")).on('change',toggleSaveButton);
 
       $(step.ui.querySelector("div.details")).append(
-        "<p><button class='btn btn-default btn-save' disabled = 'true' >Apply</button><span> Press save to see changes</span></p>"
+        "<p><button class='btn btn-default btn-save' disabled = 'true' >Apply</button><span> Press apply to see changes</span></p>"
       );
 
       function focusInput(){

@@ -33,18 +33,19 @@ window.onload = function() {
   sequencer.loadImage(imageSource, ui.onLoad);
 
   //Inserting previews
-  function generatePreview(element, source, filter, steps) {
+  function generatePreview(element, source, filter, options) {
     function insertImage(src) {
       var img = document.createElement('img');
       img.src = src;
       $(element).append(img); // maybe append img to the element passed in as a parameter?
     }
     var previewSequencer = new ImageSequencer();
-    previewSequencer.loadImage(source);
-    previewSequencer.addSteps(filter + "," + steps);
-    insertImage($('.step:last img')[0].src);
+    previewSequencer.loadImage(source)
+      .addSteps(filter + "," + options);
+    console.log(previewSequencer.images);
+    insertImage(previewSequencer.images.image1.steps[0].output.src;
   }
-  generatePreview("#saturation", imageSource, "resize:{x: 100, y: 100}", 1);
+  generatePreview("#saturation", imageSource, "crop", "{x: 100, y: 100}");
 
   //Module button radio selection
   $('.radio-group .radio').on("click", function(){

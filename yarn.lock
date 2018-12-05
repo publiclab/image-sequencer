@@ -2822,20 +2822,12 @@ ignore-walk@^3.0.1:
   dependencies:
     minimatch "^3.0.4"
 
-image-filter-core@^2.0.0:
+image-filter-core@^2.0.0, image-filter-core@~2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/image-filter-core/-/image-filter-core-2.0.2.tgz#1b994c9b9e34476530de9ca8450e85f87a81bd10"
   integrity sha1-G5lMm540R2Uw3pyoRQ6F+HqBvRA=
   dependencies:
     es6-promise "^4.0.5"
-
-image-filter-core@~1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/image-filter-core/-/image-filter-core-1.0.0.tgz#7a81477b299cc910db67ff7c2c000ca1da44aa4f"
-  integrity sha1-eoFHeymcyRDbZ/98LAAModpEqk8=
-  dependencies:
-    es6-promise "^4.0.5"
-    webworkify "^1.2.1"
 
 image-filter-threshold@~2.0.1:
   version "2.0.1"
@@ -5976,11 +5968,6 @@ websocket-extensions@>=0.1.1:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/websocket-extensions/-/websocket-extensions-0.1.3.tgz#5d2ff22977003ec687a4b87073dfbbac146ccf29"
   integrity sha512-nqHUnMXmBzT0w570r2JpJxfiSD1IzoI+HGVdd3aZ0yNi3ngvQ4jv1dtHt5VGxfI2yj5yqImPhOK4vmIh2xMbGg==
-
-webworkify@^1.2.1:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/webworkify/-/webworkify-1.5.0.tgz#734ad87a774de6ebdd546e1d3e027da5b8f4a42c"
-  integrity sha512-AMcUeyXAhbACL8S2hqqdqOLqvJ8ylmIbNwUIqQujRSouf4+eUFaXbG6F1Rbu+srlJMmxQWsiU7mOJi0nMBfM1g==
 
 which-module@^1.0.0:
   version "1.0.0"

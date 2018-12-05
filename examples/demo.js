@@ -43,7 +43,7 @@ window.onload = function() {
     previewSequencer.loadImage(source)
       .addSteps(filter + "," + options);
     console.log(previewSequencer.images);
-    insertImage(previewSequencer.images.image1.steps[0].output.src;
+    insertImage(previewSequencer.images.image1.steps[0].output.src);
   }
   generatePreview("#saturation", imageSource, "crop", "{x: 100, y: 100}");
 

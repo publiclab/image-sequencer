@@ -31,8 +31,12 @@ function DefaultHtmlStepUi(_sequencer, options) {
     step.ui =
       '\
     <div class="row step">\
+    <div class="collapse-step"></div>\
     <div class="col-md-4 details">\
-    <h3>' +
+    <h3>\
+      <span class="caret-holder">\
+        <i class="fa fa-caret-up"></i>\
+      </span>' +
       step.name +
       "</h3>\
     <p><i>" +
@@ -87,7 +91,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
             paramVal +
             '" placeholder ="' +
             (inputDesc.placeholder || "");
-            
+
            if(inputDesc.type.toLowerCase() == "range")
            {
              html+=
@@ -165,7 +169,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         );
 
     stepsEl.appendChild(step.ui);
-    
+
     var inputs = document.querySelectorAll('input[type="range"]')
     for(i in inputs)
     inputs[i].oninput = function(e) {

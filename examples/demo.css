@@ -65,6 +65,7 @@ h1 {
 
 .step {
   margin-bottom: 20px;
+  display: flex;
 }
 
 .step .img-thumbnail {
@@ -73,13 +74,18 @@ h1 {
 
 .details {
   border-top: 3px solid #444;
-  padding-left: 6px;
+  padding-left: 16px;
 }
 
 .details h3 {
   font-family: monospace;
   margin-top: 12px;
   font-size: 1.3em;
+  cursor: pointer;
+}
+
+.details h3:hover {
+  color: darkgray;
 }
 
 .det {
@@ -210,4 +216,42 @@ h1 {
   min-width:14rem;
   text-align:center;
   display:none;
+}
+
+.collapse-step {
+  visibility: hidden;
+  position: relative;
+  width: 4px;
+  background-color: red;
+  left: 7px;
+  top: 35px;
+  opacity: 0;
+}
+
+.collapse-step::after {
+  content: "";
+  position: absolute;
+  width: 4px;
+  height: 70px;
+  background-color: #f8f8fa;
+  bottom: 0px;
+}
+
+.collapse-step.show {
+  visibility: visible;
+  background-color: darkgray;
+  opacity: 0.4;
+  transition: visibility 0s, opacity 0.5s linear;
+}
+
+.hide {
+  display: none;
+}
+
+.details.collapsed {
+  border-bottom: 3px solid #444;
+}
+.caret-holder {
+  position: absolute;
+  left: 0px;
 }

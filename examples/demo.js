@@ -184,55 +184,71 @@ window.onload = function() {
   });
   console.log($('.step h3'));
 
-  $('body').on('mouseenter', '.step', function(e) {
+  $('body').on('mouseenter click', '.step', function(e) {
     console.log("i just entered");
     var stepDiv = $(e.target).parents('.step') ;
     stepDiv = (stepDiv.length) ? stepDiv : $(e.target);
+    var hoverDiv = true;
     console.log("StepDiv:",stepDiv);
-    var hoverDiv = true, clicked = stepDiv.hasClass('clicked'), hoverHeader = false;
-    formatStep(stepDiv, hoverHeader, hoverDiv, clicked);
+    var clicked = stepDiv.hasClass('clicked'), hoverHeader = false;
 
     stepDiv.find('h3').off('mouseenter').on('mouseenter', function() {
       hoverHeader = true;
-      formatStep(stepDiv, hoverHeader, hoverDiv, clicked);
+      formatStep(stepDiv, hoverHeader, clicked, hoverDiv);
     });
     stepDiv.find('h3').off('mouseleave').on('mouseleave', function() {
       hoverHeader = false;
-      formatStep(stepDiv, hoverHeader, hoverDiv, clicked);
+      formatStep(stepDiv, hoverHeader, clicked, hoverDiv);
     })
-    stepDiv.find('h3').off('click').on('click', function() {
-      clicked = !clicked;
-      console.log("I JUST CLICKED IT", clicked);
-      stepDiv.toggleClass('clicked');
-      formatStep(stepDiv, hoverHeader, hoverDiv, clicked, true);
+
+    stepDiv.off('click').on('click', function(e) {
+      console.log($(e.target).prop('tagName'));
+      var notClickedButH = !clicked && ($(e.target).prop('tagName') === 'H3' || $(e.target).parents('h3').length);
+      console.log('not clicked but h3', notClickedButH);
+      if(clicked || !clicked && ($(e.target).prop('tagName') === 'H3' || $(e.target).parents('h3').length)) {
+        console.log("successful click");
+        clicked = !clicked;
+      }
+
+      stepDiv.toggleClass('clicked', clicked);
+      formatStep(stepDiv, hoverHeader, clicked, hoverDiv);
     });
+
+    formatStep(stepDiv, hoverHeader, clicked, hoverDiv);
+  });
+
+  $('body').on('click', '.step .clicked', function(e) {
+    var stepDiv = $(e.target).parents('.step') ;
+    stepDiv = (stepDiv.length) ? stepDiv : $(e.target);
   });
 
   $('body').on('mouseleave', '.step', function(e) {
     console.log('leaving step');
-    stepDiv = $(e.target).parents('.step');
+    var stepDiv = $(e.target).parents('.step');
+    stepDiv = (stepDiv.length) ? stepDiv : $(e.target);
     var clicked = stepDiv.hasClass('clicked');
-    formatStep(stepDiv, false, false, clicked);
+    formatStep(stepDiv, false, clicked, false);
   });
 
-  function formatStep(stepDiv, hoverHeader, hoverDiv, clicked, forceClose) {
-    forceClose = forceClose || false;
-
+  function formatStep(stepDiv, hoverHeader, clicked, hoverDiv) {
     console.log('hoverHeader:', hoverHeader);
-    console.log('hoverDiv:', hoverDiv);
     console.log('clicked', clicked);
-    console.log("will show sidebar:", hoverHeader);
-    stepDiv.find('.collapse-step').toggleClass('show', hoverHeader);
+    console.log("will show sidebar:", hoverHeader && !clicked);
+    stepDiv.find('.collapse-step').toggleClass('show', hoverHeader && !clicked);
 
-    console.log("will put caret down:", (!clicked && hoverHeader) || (clicked && !hoverHeader));
-    stepDiv.find('.caret-holder').toggleClass('down', (!clicked && hoverHeader) || (clicked && !hoverHeader));
+    console.log("will put caret down:", (!clicked && hoverHeader) || clicked );
+    stepDiv.find('.caret-holder').toggleClass('down', !clicked && hoverHeader || clicked);
 
-    var collapseContent = clicked && !hoverDiv || forceClose;
+    var collapseContent = clicked;
 
     console.log("will dissappear content:", collapseContent);
     stepDiv.toggleClass('collapsed',  collapseContent);
     stepDiv.find('.col-md-8').toggleClass('hide', collapseContent);
     stepDiv.find('.details').children().not('h3').toggleClass('hide', collapseContent);
+
+    console.log('hovered: ', clicked && hoverDiv)
+    stepDiv.find('h3').toggleClass('hovered', clicked && hoverDiv);
+
     console.log("---------------------");
   }
 };

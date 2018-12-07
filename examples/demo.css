@@ -245,13 +245,28 @@ h1 {
 }
 
 .hide {
-  display: none;
+  visiblity: hidden;
 }
 
-.details.collapsed {
+.collapsed  {
+  border-top: 3px solid #444;
   border-bottom: 3px solid #444;
 }
+
+.collapsed .details {
+  border-width: 0px;
+}
+
 .caret-holder {
   position: absolute;
   left: 0px;
+  -webkit-transition: -webkit-transform .2s ease-in-out;
+  -ms-transition: -ms-transform .2s ease-in-out;
+  transition: transform .2s ease-in-out;
+}
+
+.caret-holder.down {
+  transition: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
 }

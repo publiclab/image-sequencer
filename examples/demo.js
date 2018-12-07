@@ -183,22 +183,56 @@ window.onload = function() {
   location.reload();
   });
   console.log($('.step h3'));
-  $('body').on('mouseenter', '.step h3', function(e) {
-    console.log(e.target);
-    console.log("hovered");
-    $(e.target).parents('.step').find('.collapse-step').toggleClass('show', true);
+
+  $('body').on('mouseenter', '.step', function(e) {
+    console.log("i just entered");
+    var stepDiv = $(e.target).parents('.step') ;
+    stepDiv = (stepDiv.length) ? stepDiv : $(e.target);
+    console.log("StepDiv:",stepDiv);
+    var hoverDiv = true, clicked = stepDiv.hasClass('clicked'), hoverHeader = false;
+    formatStep(stepDiv, hoverHeader, hoverDiv, clicked);
+
+    stepDiv.find('h3').off('mouseenter').on('mouseenter', function() {
+      hoverHeader = true;
+      formatStep(stepDiv, hoverHeader, hoverDiv, clicked);
+    });
+    stepDiv.find('h3').off('mouseleave').on('mouseleave', function() {
+      hoverHeader = false;
+      formatStep(stepDiv, hoverHeader, hoverDiv, clicked);
+    })
+    stepDiv.find('h3').off('click').on('click', function() {
+      clicked = !clicked;
+      console.log("I JUST CLICKED IT", clicked);
+      stepDiv.toggleClass('clicked');
+      formatStep(stepDiv, hoverHeader, hoverDiv, clicked, true);
+    });
   });
-  $('body').on('mouseleave', '.step h3', function(e) {
-    console.log(e.target);
-    console.log("hovered");
-    $(e.target).parents('.step').find('.collapse-step').toggleClass('show', false);
+
+  $('body').on('mouseleave', '.step', function(e) {
+    console.log('leaving step');
+    stepDiv = $(e.target).parents('.step');
+    var clicked = stepDiv.hasClass('clicked');
+    formatStep(stepDiv, false, false, clicked);
   });
-  $('body').on('click', '.step h3', function(e) {
-    console.log('clicked');
-    var stepDiv = $(e.target).parents('.step');
-    stepDiv.find('.col-md-8').toggleClass('hide');
-    stepDiv.find('.details').children().not('h3').toggleClass('hide');
-    stepDiv.find('.details').toggleClass('collapsed');
-    stepDiv.find('i').toggleClass('fa-caret-down fa-caret-up');
-  });
+
+  function formatStep(stepDiv, hoverHeader, hoverDiv, clicked, forceClose) {
+    forceClose = forceClose || false;
+
+    console.log('hoverHeader:', hoverHeader);
+    console.log('hoverDiv:', hoverDiv);
+    console.log('clicked', clicked);
+    console.log("will show sidebar:", hoverHeader);
+    stepDiv.find('.collapse-step').toggleClass('show', hoverHeader);
+
+    console.log("will put caret down:", (!clicked && hoverHeader) || (clicked && !hoverHeader));
+    stepDiv.find('.caret-holder').toggleClass('down', (!clicked && hoverHeader) || (clicked && !hoverHeader));
+
+    var collapseContent = clicked && !hoverDiv || forceClose;
+
+    console.log("will dissappear content:", collapseContent);
+    stepDiv.toggleClass('collapsed',  collapseContent);
+    stepDiv.find('.col-md-8').toggleClass('hide', collapseContent);
+    stepDiv.find('.details').children().not('h3').toggleClass('hide', collapseContent);
+    console.log("---------------------");
+  }
 };

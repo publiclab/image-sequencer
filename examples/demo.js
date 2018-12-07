@@ -182,14 +182,11 @@ window.onload = function() {
       }
   location.reload();
   });
-  console.log($('.step h3'));
 
   $('body').on('mouseenter click', '.step', function(e) {
-    console.log("i just entered");
     var stepDiv = $(e.target).parents('.step') ;
     stepDiv = (stepDiv.length) ? stepDiv : $(e.target);
     var hoverDiv = true;
-    console.log("StepDiv:",stepDiv);
     var clicked = stepDiv.hasClass('clicked'), hoverHeader = false;
 
     stepDiv.find('h3').off('mouseenter').on('mouseenter', function() {
@@ -202,11 +199,8 @@ window.onload = function() {
     })
 
     stepDiv.off('click').on('click', function(e) {
-      console.log($(e.target).prop('tagName'));
       var notClickedButH = !clicked && ($(e.target).prop('tagName') === 'H3' || $(e.target).parents('h3').length);
-      console.log('not clicked but h3', notClickedButH);
       if(clicked || !clicked && ($(e.target).prop('tagName') === 'H3' || $(e.target).parents('h3').length)) {
-        console.log("successful click");
         clicked = !clicked;
       }
 
@@ -223,7 +217,6 @@ window.onload = function() {
   });
 
   $('body').on('mouseleave', '.step', function(e) {
-    console.log('leaving step');
     var stepDiv = $(e.target).parents('.step');
     stepDiv = (stepDiv.length) ? stepDiv : $(e.target);
     var clicked = stepDiv.hasClass('clicked');
@@ -231,24 +224,17 @@ window.onload = function() {
   });
 
   function formatStep(stepDiv, hoverHeader, clicked, hoverDiv) {
-    console.log('hoverHeader:', hoverHeader);
-    console.log('clicked', clicked);
-    console.log("will show sidebar:", hoverHeader && !clicked);
     stepDiv.find('.collapse-step').toggleClass('show', hoverHeader && !clicked);
 
-    console.log("will put caret down:", (!clicked && hoverHeader) || clicked );
     stepDiv.find('.caret-holder').toggleClass('down', !clicked && hoverHeader || clicked);
 
     var collapseContent = clicked;
 
-    console.log("will dissappear content:", collapseContent);
     stepDiv.toggleClass('collapsed',  collapseContent);
     stepDiv.find('.col-md-8').toggleClass('hide', collapseContent);
     stepDiv.find('.details').children().not('h3').toggleClass('hide', collapseContent);
 
-    console.log('hovered: ', clicked && hoverDiv)
     stepDiv.find('h3').toggleClass('hovered', clicked && hoverDiv);
 
-    console.log("---------------------");
   }
 };

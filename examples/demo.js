@@ -199,8 +199,7 @@ window.onload = function() {
     })
 
     stepDiv.off('click').on('click', function(e) {
-      var notClickedButH = !clicked && ($(e.target).prop('tagName') === 'H3' || $(e.target).parents('h3').length);
-      if(clicked || !clicked && ($(e.target).prop('tagName') === 'H3' || $(e.target).parents('h3').length)) {
+      if(clicked || !clicked && hoverHeader) {
         clicked = !clicked;
       }
 
@@ -209,11 +208,6 @@ window.onload = function() {
     });
 
     formatStep(stepDiv, hoverHeader, clicked, hoverDiv);
-  });
-
-  $('body').on('click', '.step .clicked', function(e) {
-    var stepDiv = $(e.target).parents('.step') ;
-    stepDiv = (stepDiv.length) ? stepDiv : $(e.target);
   });
 
   $('body').on('mouseleave', '.step', function(e) {
@@ -227,12 +221,9 @@ window.onload = function() {
     stepDiv.find('.collapse-step').toggleClass('show', hoverHeader && !clicked);
 
     stepDiv.find('.caret-holder').toggleClass('down', !clicked && hoverHeader || clicked);
-
-    var collapseContent = clicked;
-
-    stepDiv.toggleClass('collapsed',  collapseContent);
-    stepDiv.find('.col-md-8').toggleClass('hide', collapseContent);
-    stepDiv.find('.details').children().not('h3').toggleClass('hide', collapseContent);
+    stepDiv.toggleClass('collapsed',  clicked);
+    stepDiv.find('.col-md-8').toggleClass('hide', clicked);
+    stepDiv.find('.details').children().not('h3').toggleClass('hide', clicked);
 
     stepDiv.find('h3').toggleClass('hovered', clicked && hoverDiv);
 

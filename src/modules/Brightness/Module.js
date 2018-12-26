@@ -4,6 +4,8 @@
 
 module.exports = function Brightness(options,UI){
 
+    options.brightness = parseInt(options.brightness) || 100
+    var val = (options.brightness)/100.0
     var output;
 
     function draw(input,callback,progressObj){
@@ -20,13 +22,10 @@ module.exports = function Brightness(options,UI){
         var step = this;
 
         function changePixel(r, g, b, a){
-	  options.brightness = 
-	  options.brightness || 100
-            var val = (options.brightness)/100.0
 
-            r = val*r<255?val*r:255
-            g = val*g<255?val*g:255
-            b = val*b<255?val*b:255
+            r = 255 * Math.min(val, 1)
+            g = 255 * Math.min(val, 1)
+            b = 255 * Math.min(val, 1)
             return [r, g, b, a]
         }
 

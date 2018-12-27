@@ -127,19 +127,6 @@ function DefaultHtmlStepUi(_sequencer, options) {
         step.ui.querySelector("div.details").appendChild(div);
       }
 
-      function handleInputValueChange(currentValue, initValue) {
-        $(step.ui.querySelector('div.details .btn-save')).prop('disabled', initValue === currentValue);
-      };
-
-      step.ui.querySelectorAll('div.details .target').forEach(function(input) {
-        $(input)
-          .data('initValue', $(input).val())
-          .on('keyup change', function(e) {
-            $(e.target).focus();
-            handleInputValueChange($(e.target).val(), $(e.target).data('initValue'));
-          });
-      });
-
       $(step.ui.querySelector("div.details")).append(
         "<p><button class='btn btn-default btn-save' disabled = 'true' >Apply</button><span> Press apply to see changes</span></p>"
       );
@@ -240,6 +227,20 @@ function DefaultHtmlStepUi(_sequencer, options) {
             step[i];
       }
     }
+
+
+    function handleInputValueChange(currentValue, initValue) {
+      $(step.ui.querySelector('.btn-save')).prop('disabled', initValue === currentValue);
+    };
+
+    step.ui.querySelectorAll('.target').forEach(function(input) {
+      $(input)
+        .data('initValue', $(input).val())
+        .on('keyup change', function(e) {
+          $(e.target).focus();
+          handleInputValueChange($(e.target).val(), $(e.target).data('initValue'));
+        });
+    });
   }
 
   function onRemove(step) {

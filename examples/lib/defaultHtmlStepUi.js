@@ -128,26 +128,17 @@ function DefaultHtmlStepUi(_sequencer, options) {
       }
 
       function handleInputValueChange(currentValue, initValue) {
-        if (currentValue != initValue) {
-          $(step.ui.querySelector('div.details .btn-save')).prop('disabled', false);
-        }
-        else {
-          $(step.ui.querySelector('div.details .btn-save')).prop('disabled', true);
-        }
+        $(step.ui.querySelector('div.details .btn-save')).prop('disabled', initValue === currentValue);
       };
-
-      function focusInput(input) {
-        $(input).focus();
-      }
-
+      
       step.ui.querySelectorAll('div.details .target').forEach(function(input) {
-        $(input).data('initValue', $(input).val());
+        $(input)
+          .data('initValue', $(input).val())
+          .on('keyup change', function(e) {
+            $(e.target).focus();
+            handleInputValueChange($(e.target).val(), $(e.target).data('initValue'));
+          });
       });
-
-      $(step.ui.querySelectorAll('div.details .target')).on('keyup change', function(e) {
-        focusInput(e.target);
-        handleInputValueChange(e.target.value, $(e.target).data('initValue'));
-      })
 
       $(step.ui.querySelector("div.details")).append(
         "<p><button class='btn btn-default btn-save' disabled = 'true' >Apply</button><span> Press apply to see changes</span></p>"

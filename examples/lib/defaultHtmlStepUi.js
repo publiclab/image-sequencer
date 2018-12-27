@@ -127,20 +127,31 @@ function DefaultHtmlStepUi(_sequencer, options) {
         step.ui.querySelector("div.details").appendChild(div);
       }
 
-      function toggleSaveButton() {
-        $(step.ui.querySelector("div.details .btn-save")).prop("disabled", false);
-        focusInput();
+      function handleInputValueChange(currentValue, initValue) {
+        if (currentValue != initValue) {
+          $(step.ui.querySelector('div.details .btn-save')).prop('disabled', false);
+        }
+        else {
+          $(step.ui.querySelector('div.details .btn-save')).prop('disabled', true);
+        }
+      };
+
+      function focusInput(input) {
+        $(input).focus();
       }
 
-      $(step.ui.querySelectorAll(".target")).on('change', toggleSaveButton);
+      step.ui.querySelectorAll('div.details .target').forEach(function(input) {
+        $(input).data('initValue', $(input).val());
+      });
+
+      $(step.ui.querySelectorAll('div.details .target')).on('keyup change', function(e) {
+        focusInput(e.target);
+        handleInputValueChange(e.target.value, $(e.target).data('initValue'));
+      })
 
       $(step.ui.querySelector("div.details")).append(
         "<p><button class='btn btn-default btn-save' disabled = 'true' >Apply</button><span> Press apply to see changes</span></p>"
       );
-
-      function focusInput() {
-        $(step.ui.querySelector("div.details .target")).focus();
-      }
 
       function saveOptions(e) {
         e.preventDefault();

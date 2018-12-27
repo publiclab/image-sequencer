@@ -130,7 +130,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       function handleInputValueChange(currentValue, initValue) {
         $(step.ui.querySelector('div.details .btn-save')).prop('disabled', initValue === currentValue);
       };
-      
+
       step.ui.querySelectorAll('div.details .target').forEach(function(input) {
         $(input)
           .data('initValue', $(input).val())
@@ -149,6 +149,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         $(step.ui.querySelector("div.details"))
           .find("input,select")
           .each(function(i, input) {
+            $(input).data('initValue', $(input).val());
             step.options[$(input).attr("name")] = input.value;
           });
         _sequencer.run({ index: step.index - 1 });

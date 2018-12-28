@@ -230,7 +230,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
 
     function handleInputValueChange(currentValue, initValue) {
-      $(step.ui.querySelector('.btn-save')).prop('disabled', initValue === currentValue);
+      $(step.ui.querySelector('.btn-save')).prop('disabled', parseInt(initValue) == NaN ? initValue === currentValue : currentValue - initValue == 0);
     };
 
     step.ui.querySelectorAll('.target').forEach(function(input) {

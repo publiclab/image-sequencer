@@ -59818,7 +59818,7 @@ module.exports={
     },
     "backgroundColor": {
       "type": "String",
-      "desc": "four space separated numbers representing the RGBA values of the desired color.",
+      "desc": "Background Color (Four space separated RGBA values)",
       "default": "255 255 255 255",
       "placeholder": "255 255 255 255"
     }

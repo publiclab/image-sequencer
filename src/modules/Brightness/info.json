@@ -10,5 +10,6 @@
           "max": "200",
           "step": "1"
       }
-  } 
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }

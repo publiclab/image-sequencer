@@ -8,5 +8,6 @@
       "desc": "URL of image to import",
       "default": "./images/monarch.png"
     }
-  }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }

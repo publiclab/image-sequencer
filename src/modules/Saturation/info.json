@@ -7,5 +7,6 @@
             "desc": "saturation for the new image between 0 and 2, 0 being black and white and 2 being highly saturated",
             "default": 0
         }
-    }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }

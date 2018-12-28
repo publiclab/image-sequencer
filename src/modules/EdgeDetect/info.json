@@ -17,5 +17,6 @@
             "desc": "The low threshold value for the image",
             "default": 0.15
         }
-    }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }

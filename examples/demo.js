@@ -82,7 +82,7 @@ window.onload = function() {
   });
 
   $('#download-btn').click(function() {
-    $('.img-thumbnail:last()').trigger("click");
+    $('.step-thumbnail:last()').trigger("click");
     return false;
   });
 
@@ -107,7 +107,7 @@ window.onload = function() {
 
     try {
       // Select all images from previous steps
-      var imgs = document.getElementsByClassName("img-thumbnail");
+      var imgs = document.getElementsByClassName("step-thumbnail");
 
       var imgSrcs = [];
 

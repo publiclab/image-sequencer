@@ -58606,7 +58606,8 @@ module.exports={
     "name": "Average",
     "description": "Average all pixel color",
     "inputs": {
-    }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
 },{}],164:[function(require,module,exports){
@@ -58695,7 +58696,8 @@ module.exports={
       "desc": "Function to use to blend the two images.",
       "default": "function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] }"
     }
-  }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
 },{}],167:[function(require,module,exports){
@@ -58848,7 +58850,8 @@ module.exports={
             "max": "5",
             "step": "0.25"
         }
-    }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
 },{}],171:[function(require,module,exports){
@@ -58924,7 +58927,8 @@ module.exports={
           "max": "200",
           "step": "1"
       }
-  } 
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
 },{}],174:[function(require,module,exports){
@@ -58990,7 +58994,8 @@ module.exports={
       "default": "green",
       "values": ["red", "green", "blue"]
     }
-  }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
 },{}],177:[function(require,module,exports){
@@ -59044,7 +59049,8 @@ module.exports={
             "default": 10
         }
     },
-    "length": 4
+    "length": 4,
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 },{}],180:[function(require,module,exports){
 /*
@@ -59301,7 +59307,8 @@ module.exports={
       "default": "default",
       "values": ["default","greyscale","stretched","fastie","brntogrn","blutoredjet","colors16"]
     }
-  }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
 },{}],184:[function(require,module,exports){
@@ -59415,7 +59422,8 @@ module.exports={
             "desc": "contrast for the new image, typically -100 to 100",
             "default": 70 
         }
-    } 
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
 },{}],188:[function(require,module,exports){
@@ -59557,7 +59565,8 @@ module.exports={
         "default": "1 1 1 1 1 1 1 1 1",
         "placeholder": "1 1 1 1 1 1 1 1 1"
       }
-    }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
 },{}],192:[function(require,module,exports){
@@ -59822,7 +59831,8 @@ module.exports={
       "default": "255 255 255 255",
       "placeholder": "255 255 255 255"
     }
-  }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 },{}],197:[function(require,module,exports){
 /*
@@ -59879,7 +59889,8 @@ module.exports={
     "qrval": {
       "type": "text"
     }
-  }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
 },{}],200:[function(require,module,exports){
@@ -60010,7 +60021,8 @@ module.exports={
       "desc": "Expression to return with R, G, B, and A inputs; fallback for other channels if none provided",
       "default": "r + g + b"
     }
-  }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
 },{}],203:[function(require,module,exports){
@@ -60270,7 +60282,8 @@ module.exports={
             "desc": "The low threshold value for the image",
             "default": 0.15
         }
-    }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
 },{}],207:[function(require,module,exports){
@@ -60412,7 +60425,8 @@ module.exports={
       "desc": "Path to a WebGL vertex shader file",
       "default": "(inbuilt)"
     }
-  }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
 },{}],210:[function(require,module,exports){
@@ -60473,7 +60487,8 @@ module.exports={
             "desc": "gamma correction (inverse of actual gamma factor) for the new image",
             "default": 0.2
         }
-    } 
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
 },{}],213:[function(require,module,exports){
@@ -60548,7 +60563,8 @@ arguments[4][162][0].apply(exports,arguments)
 module.exports={
     "name": "Gradient",
     "description": "Gives a gradient of the image",
-    "inputs": {}
+    "inputs": {},
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 },{}],216:[function(require,module,exports){
 /*
@@ -60664,7 +60680,8 @@ module.exports={
                 "false"
             ]
         }
-    }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 },{}],219:[function(require,module,exports){
 /*
@@ -60795,7 +60812,8 @@ module.exports={
       "desc": "URL of image to import",
       "default": "./images/monarch.png"
     }
-  }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 },{}],223:[function(require,module,exports){
 /*
@@ -60814,7 +60832,8 @@ module.exports={
     "name": "NDVI-Colormap",
     "description": "Sequentially Applies NDVI and Colormap steps",
     "inputs": {},
-    "length": 2
+    "length": 2,
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 },{}],226:[function(require,module,exports){
 /*
@@ -60925,7 +60944,8 @@ module.exports={
       "default": "red",
       "values": ["red", "blue"]
     }
-  }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
 },{}],230:[function(require,module,exports){
@@ -61022,7 +61042,8 @@ module.exports={
             "desc": "offset to the output of the step on which the output of the last step is overlayed",
             "default": -2
         }
-    }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 },{}],233:[function(require,module,exports){
 /*
@@ -61109,7 +61130,8 @@ module.exports={
       "desc": "Percentage value of the resize",
       "default": "125%"
     }
-  }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 },{}],236:[function(require,module,exports){
 /*
@@ -61187,7 +61209,8 @@ module.exports={
         "desc": "Angular value for rotation in degrees",
         "default": 0
       }
-    }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
   }
 },{}],239:[function(require,module,exports){
 /*
@@ -61259,7 +61282,8 @@ module.exports={
             "desc": "saturation for the new image between 0 and 2, 0 being black and white and 2 being highly saturated",
             "default": 0
         }
-    }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
 },{}],242:[function(require,module,exports){

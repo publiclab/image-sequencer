@@ -8,5 +8,6 @@
       "default": "default",
       "values": ["default","greyscale","stretched","fastie","brntogrn","blutoredjet","colors16"]
     }
-  }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }

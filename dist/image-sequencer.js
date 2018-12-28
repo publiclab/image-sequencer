@@ -58858,12 +58858,13 @@ module.exports={
 
 module.exports = function Brightness(options,UI){
 
-    options.brightness = parseInt(options.brightness) || 100
-    var val = (options.brightness)/100.0
+
     var output;
 
     function draw(input,callback,progressObj){
 
+        options.brightness = parseInt(options.brightness) || 100;
+        var val = (options.brightness)/100.0;
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
@@ -58877,9 +58878,9 @@ module.exports = function Brightness(options,UI){
 
         function changePixel(r, g, b, a){
 
-            r = 255 * Math.min(val, 1)
-            g = 255 * Math.min(val, 1)
-            b = 255 * Math.min(val, 1)
+            r = Math.min(val*r, 255)
+            g = Math.min(val*g, 255)
+            b = Math.min(val*b, 255)
             return [r, g, b, a]
         }
 

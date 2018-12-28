@@ -129,6 +129,7 @@ h1 {
 #save-seq {
   display: block;
   margin: 0 auto;
+  min-width: 250px;
 }
 .info {
   padding: 8px;
@@ -137,10 +138,10 @@ h1 {
 #gif {
   display: block;
   margin: 0 auto;
-  margin-top: 4px;
+  min-width: 250px;
 }
 #dwnld {
-  max-width: 200px;
+  max-width: 500px;
   margin: 20px auto;
   margin-left: 5px;
 }

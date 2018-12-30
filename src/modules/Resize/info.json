@@ -1,10 +1,20 @@
 {
   "name": "Resize",
-  "description": "Resize image by given percentage value",
+  "description": "Resize image by given percentage value (to scale or custom)",
   "inputs": {
     "resize": {
       "type": "string",
-      "desc": "Percentage value of the resize",
+      "desc": "Percentage value of the resize (to scale)",
+      "default": "125%"
+    },
+    "resizeWidth": {
+      "type": "string",
+      "desc": "Percentage value of the width (custom)",
+      "default": "125%"
+    },
+    "resizeHeight": {
+      "type": "string",
+      "desc": "Percentage value of the height (custom)",
       "default": "125%"
     }
   },

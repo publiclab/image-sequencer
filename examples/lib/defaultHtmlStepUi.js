@@ -26,20 +26,18 @@ function DefaultHtmlStepUi(_sequencer, options) {
   function onSetup(step, stepOptions) {
     if (step.options && step.options.description)
       step.description = step.options.description;
-
     step.ui =
       '\
       <div class="container">\
     <div class="row step">\
     <div class="col-md-4 details">\
     <h3>' +
-      step.name +
-      "</h3>\
-    <p><i>" +
+      step.name + ' <label class="switch"><input type="checkbox" class="toggle" ><span class="slider round"></span></label>' +
+      '</h3><div class="colapse"><p><i>"' +
       (step.description || "") +
-      '</i></p>\
+      '</i></p></div>\
     </div>\
-    <div class="col-md-8">\
+    <div class="col-md-8 colapse">\
     <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
     <a><img alt="" style="max-width=100%" class="img-thumbnail step-thumbnail"/></a>\
     </div>\
@@ -48,13 +46,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
     </div>';
 
     var tools =
-      '<div class="tools btn-group">\
+      '<div class="colapse"><div class="tools btn-group">\
        <button confirm="Are you sure?" onclick="stepRemovedNotify()" class="remove btn btn btn-default">\
          <i class="fa fa-trash"></i>\
        </button>\
        <button class="btn  insert-step" style="margin-left:10px;border-radius:6px;background-color:#fff;border:solid #bababa 1.1px;" >\
          <i class="fa fa-plus"></i> Add\
        </button>\
+       </div>\
        </div>';
 
     var util = IntermediateHtmlStepUi(_sequencer, step);
@@ -112,7 +111,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         div.setAttribute("name", paramName);
         var description = inputs[paramName].desc || paramName;
         div.innerHTML =
-          "<div class='det'>\
+          "<div class='det colapse'>\
           <form class='input-form'>\
                            <label for='" +
           paramName +
@@ -135,7 +134,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $(step.ui.querySelectorAll(".target")).on('change', toggleSaveButton);
 
       $(step.ui.querySelector("div.details")).append(
-        "<p><button class='btn btn-default btn-save' disabled = 'true' >Apply</button><span> Press apply to see changes</span></p>"
+        '<div class="colapse"><p><button class="btn btn-default btn-save" disabled = "true" >Apply</button><span> Press apply to see changes</span></p></div>'
       );
 
       function focusInput() {
@@ -183,6 +182,17 @@ function DefaultHtmlStepUi(_sequencer, options) {
     else {
       $("#load-image").append(step.ui);
     }
+    $(step.ui.querySelector(".toggle")).on("click", (e) => {
+        const {checked} = e.target
+        if(checked === true){
+          $(step.ui.querySelectorAll(".colapse")).hide();
+        }
+        else{
+          $(step.ui.querySelectorAll(".colapse")).show();
+        }
+    });
+
+    $(step.ui.querySelector(".toggle")).change(displayContent);
   }
 
   var inputs = document.querySelectorAll('input[type="range"]')

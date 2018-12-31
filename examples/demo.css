@@ -129,7 +129,7 @@ h1 {
 #save-seq {
   display: block;
   margin: 0 auto;
-  min-width: 250px;
+  width: 250px;
 }
 .info {
   padding: 8px;
@@ -138,7 +138,7 @@ h1 {
 #gif {
   display: block;
   margin: 0 auto;
-  min-width: 250px;
+  width: 250px;
 }
 #dwnld {
   max-width: 500px;
@@ -236,3 +236,15 @@ h1 {
 .i-small {
   left: 25px;
 }
+
+@media all and (max-width: 768px) {
+  #gif {
+    width: 150px;
+    margin-left: 10px;
+  }
+  #save-seq {
+    width: 150px;
+    margin-right: 10px;
+  }
+}
+

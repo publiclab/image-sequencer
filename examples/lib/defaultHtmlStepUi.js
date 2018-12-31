@@ -230,12 +230,12 @@ function DefaultHtmlStepUi(_sequencer, options) {
     function handleInputValueChange(currentValue, initValue) {
       var isChanged = !(parseInt(initValue) != NaN && parseInt(currentValue) != NaN ? parseFloat(currentValue) - parseFloat(initValue) === 0 : initValue === currentValue);
       var inputForm = $(step.ui.querySelector('.input-form'));
-      // var submitFunc = isChanged ?
-      // function() {inputForm.on('submit', saveOptions)} :
-      // function() {inputForm.on('submit', function(e) {e.preventDefault()})};
+      var submitFunc = isChanged ?
+      function() {inputForm.on('submit', saveOptions)} :
+      function() {inputForm.on('submit', function(e) {e.preventDefault()})};
 
       $(step.ui.querySelector('.btn-save')).prop('disabled', !isChanged);
-      // submitFunc();
+      submitFunc();
     };
 
     $(step.ui.querySelector('.btn-save')).on('click', saveOptions);

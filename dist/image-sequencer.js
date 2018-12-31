@@ -58087,8 +58087,7 @@ ImageSequencer = function ImageSequencer(options) {
     stepSettings = stepSettings.split('|').reduce(function formatSettings(accumulator, current, i) {
       var settingName = current.substr(0, current.indexOf(':')),
         settingValue = current.substr(current.indexOf(':') + 1);
-      settingValue = settingValue.replace(/^\(/, '').replace(/^\)$/, ''); // strip () at start/end
-      settingValue = settingValue.replace(/^\{/, '').replace(/^\}$/, ''); // strip {} at start/end
+      settingValue = settingValue.replace(/^\{/, '') // strip {} at start/end
       settingValue = decodeURIComponent(settingValue);
       current = [
         settingName,

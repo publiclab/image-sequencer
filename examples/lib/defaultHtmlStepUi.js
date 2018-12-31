@@ -224,7 +224,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       setUrlHashParameter("steps", _sequencer.toString());
       // disable the save button
       $(step.ui.querySelector('.btn-save')).prop('disabled', true);
-      $(step.ui.querySelector('.input-form')).off('submit');
+      $(step.ui.querySelector('.input-form')).on('submit', function(e) {e.preventDefault()});
     }
 
     function handleInputValueChange(currentValue, initValue) {
@@ -232,15 +232,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
       var inputForm = $(step.ui.querySelector('.input-form'));
       var submitFunc = isChanged ?
       function() {inputForm.on('submit', saveOptions)} :
-      function() {inputForm.off('submit')};
-      console.log(isChanged);
+      function() {inputForm.on('submit', function(e) {e.preventDefault()})};
 
       $(step.ui.querySelector('.btn-save')).prop('disabled', !isChanged);
       submitFunc();
     };
 
     $(step.ui.querySelector('.btn-save')).on('click', saveOptions);
-    $(step.ui.querySelector('.input-form')).off('submit');
+    $(step.ui.querySelector('.input-form')).on('submit', function(e) {e.preventDefault()});
     step.ui.querySelectorAll('.target').forEach(function(input) {
       $(input)
         .data('initValue', $(input).val())

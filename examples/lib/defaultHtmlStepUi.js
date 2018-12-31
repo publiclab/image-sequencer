@@ -131,25 +131,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         "<p><button class='btn btn-default btn-save' disabled = 'true' >Apply</button><span> Press apply to see changes</span></p>"
       );
 
-      function saveOptions(e) {
-        e.preventDefault();
-        $(step.ui.querySelector("div.details"))
-          .find("input,select")
-          .each(function(i, input) {
-            $(input).data('initValue', $(input).val());
-            step.options[$(input).attr("name")] = input.value;
-          });
-        _sequencer.run({ index: step.index - 1 });
-
-        // modify the url hash
-        setUrlHashParameter("steps", _sequencer.toString());
-        // disable the save button
-        $(step.ui.querySelector("div.details .btn-save")).prop("disabled", true);
-      }
-
-      // on clicking Save in the details pane of the step
-      $(step.ui.querySelector("div.details .btn-save")).click(saveOptions);
-      $(step.ui.querySelector("div.details .input-form")).on('submit', saveOptions);
+      
     }
 
     if (step.name != "load-image") {
@@ -228,17 +210,46 @@ function DefaultHtmlStepUi(_sequencer, options) {
       }
     }
 
+    function saveOptions(e) {
+      e.preventDefault();
+      $(step.ui.querySelector("div.details"))
+        .find("input,select")
+        .each(function(i, input) {
+          $(input).data('initValue', $(input).val());
+          step.options[$(input).attr("name")] = input.value;
+        });
+      _sequencer.run({ index: step.index - 1 });
+
+      // modify the url hash
+      setUrlHashParameter("steps", _sequencer.toString());
+      // disable the save button
+      $(step.ui.querySelector('.btn-save')).prop('disabled', true);
+      $(step.ui.querySelector('.input-form')).off('submit');
+    }
 
     function handleInputValueChange(currentValue, initValue) {
-      $(step.ui.querySelector('.btn-save')).prop('disabled', parseInt(initValue) == NaN && parseInt(currentValue) == NaN ? initValue === currentValue : parseFloat(currentValue) - parseFloat(initValue) === 0);
+      var isChanged = !(parseInt(initValue) != NaN && parseInt(currentValue) != NaN ? parseFloat(currentValue) - parseFloat(initValue) === 0 : initValue === currentValue);
+      var inputForm = $(step.ui.querySelector('.input-form'));
+      var submitFunc = isChanged ?
+      function() {inputForm.on('submit', saveOptions)} :
+      function() {inputForm.off('submit')};
+      console.log(isChanged);
+
+      $(step.ui.querySelector('.btn-save')).prop('disabled', !isChanged);
+      submitFunc();
     };
 
+    $(step.ui.querySelector('.btn-save')).on('click', saveOptions);
+    $(step.ui.querySelector('.input-form')).off('submit');
     step.ui.querySelectorAll('.target').forEach(function(input) {
       $(input)
         .data('initValue', $(input).val())
         .on('keyup change', function(e) {
           $(e.target).focus();
-          handleInputValueChange($(e.target).val(), $(e.target).data('initValue'));
+          handleInputValueChange(
+            $(e.target).val(),
+            $(e.target).data('initValue')
+          );
         });
     });
   }

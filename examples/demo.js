@@ -86,10 +86,22 @@ window.onload = function() {
     return false;
   });
 
+  function displayMessageOnSaveSequence(){
+      console.log("called");
+      $(".savesequencemsg").fadeIn();
+      setTimeout(function() {
+          $(".savesequencemsg").fadeOut();
+      }, 5000);
+    }
+
   $('body').on('click', 'button.remove', ui.removeStepUi);
   $('#save-seq').click(() => {
-    sequencer.saveSequence(window.prompt("Please give a name to your sequence..."), sequencer.toString());
+    var result = window.prompt("Please give a name to your sequence...");
+    sequencer.saveSequence(result, sequencer.toString());
     sequencer.loadModules();
+    if(result){
+      displayMessageOnSaveSequence();
+    }
     refreshOptions();
   });
 

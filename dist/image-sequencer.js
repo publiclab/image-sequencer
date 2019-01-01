@@ -61277,6 +61277,8 @@ module.exports = function Balance(options, UI) {
 
     function draw (input, callback, progressObj) {
 
+      options.temperature = options.temperature
+
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
@@ -61288,43 +61290,41 @@ module.exports = function Balance(options, UI) {
 
         function extraManipulation(pixels) {
 
-            let r = g = b = 0;
-            let count = 0;
+            let temp = parseInt(options.temperature)
+            temp /= 100
 
-            for(let i=0; i<pixels.shape[0]; i++) {
-              for (let j=0; j<pixels.shape[1]; j++) {
-                  r += pixels.get(i,j,0)
-                  g += pixels.get(i,j,1)
-                  b += pixels.get(i,j,2)
-                  count++
-              }
+            let r, g, b;
+
+            if (temp <= 66) {
+                r = 255;
+                g = Math.min(Math.max(99.4708025861 * Math.log(temp) - 161.1195681661, 0), 255);
+            } else {
+                r = Math.min(Math.max(329.698727446 * Math.pow(temp - 60, -0.1332047592), 0), 255);
+                g = Math.min(Math.max(288.1221695283 * Math.pow(temp - 60, -0.0755148492), 0), 255);
             }
-            let avg_r = r/count
-            let avg_g = g/count
-            let avg_b = b/count
 
-            let average = [avg_r, avg_g, avg_b]
-            let max = Math.max(...average)
-            let balance = average.map( channel => (255*channel)/max )
-            console.log(balance)
-
-            let red_balance = balance[0]
-            let green_balance = balance[1]
-            let blue_balance = balance[2]
+            if (temp >= 66) {
+                b = 255;
+            } else if (temp <= 19) {
+                b = 0;
+            } else {
+                b = temp - 10;
+                b = Math.min(Math.max(138.5177312231 * Math.log(b) - 305.0447927307, 0), 255);
+            }
 
             for(let i=0; i<pixels.shape[0]; i++) {
               for (let j=0; j<pixels.shape[1]; j++) {
 
                   r_data = pixels.get(i,j,0)
-                  r_new_data = (255/red_balance) * r_data
+                  r_new_data = (255/r) * r_data
                   pixels.set(i,j,0,r_new_data)
 
                   g_data = pixels.get(i,j,1)
-                  g_new_data = (255/green_balance) * g_data
+                  g_new_data = (255/g) * g_data
                   pixels.set(i,j,1,g_new_data)
 
                   b_data = pixels.get(i,j,2)
-                  b_new_data = (255/blue_balance) * b_data
+                  b_new_data = (255/b) * b_data
                   pixels.set(i,j,2,b_new_data)
               }
             }
@@ -61364,7 +61364,11 @@ module.exports={
     "name": "White Balance",
     "description": "Change the colour balance of the image by adjusting the colour temperature.",
     "inputs": {
-
+      "temperature": {
+        "type": "string",
+        "desc": "Temperature between 0 - 40,000 Kelvin",
+        "default": "6000"
+      }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }

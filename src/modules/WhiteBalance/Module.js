@@ -4,7 +4,7 @@ module.exports = function Balance(options, UI) {
 
     function draw (input, callback, progressObj) {
 
-      options.temperature = options.temperature
+      options.temperature = (options.temperature > "40000") ? "40000" : options.temperature
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;

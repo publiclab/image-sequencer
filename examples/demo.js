@@ -91,7 +91,7 @@ window.onload = function() {
       $(".savesequencemsg").fadeIn();
       setTimeout(function() {
           $(".savesequencemsg").fadeOut();
-      }, 5000);
+      }, 1000);
     }
 
   $('body').on('click', 'button.remove', ui.removeStepUi);

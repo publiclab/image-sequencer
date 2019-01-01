@@ -88,7 +88,7 @@ window.onload = function() {
 
   $('body').on('click', 'button.remove', ui.removeStepUi);
   $('#save-seq').click(() => {
-    sequencer.saveSequence(window.prompt("Please give a name to your sequence..."), sequencer.toString());
+    sequencer.saveSequence(window.prompt("Please give a name to your sequence... (Saved sequence will only be available in this browser.)"), sequencer.toString());
     sequencer.loadModules();
     refreshOptions();
   });

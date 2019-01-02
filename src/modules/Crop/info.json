@@ -1,6 +1,6 @@
 {
   "name": "Crop",
-  "description": "Crop image to given x, y, w, h in pixels, measured from top left",
+  "description": "Crop image to given x, y, w, h in pixels or % , measured from top left",
   "url": "https://github.com/publiclab/image-sequencer/tree/master/MODULES.md",
   "inputs": {
     "x": {

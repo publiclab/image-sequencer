@@ -4,6 +4,7 @@ module.exports = function Dynamic(options, UI, util) {
     options.y = options.y || 0;
 
     var output;
+    var sequencer = require('../../ImageSequencer.js')(options);
 
     // This function is called on every draw.
     function draw(input, callback, progressObj) {
@@ -14,6 +15,15 @@ module.exports = function Dynamic(options, UI, util) {
         progressObj.overrideFlag = true;
 
         var step = this;
+
+        sequencer.parseInputCoordinates({
+            src: input.src,
+            x: { valInp: options.x, type: 'horizontal' },
+            y: { valInp: options.y, type: 'vertical' },
+        }, function (options, input) {
+            options.x = parseInt(input.x.valInp);
+            options.y = parseInt(input.y.valInp);
+        });
 
         // save the pixels of the base image
         var baseStepImage = this.getStep(options.offset).image;

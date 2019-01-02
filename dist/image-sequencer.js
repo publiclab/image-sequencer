@@ -57866,6 +57866,31 @@ ImageSequencer = function ImageSequencer(options) {
     }
   }
 
+  function parseInputCoordinates(coord, callback) {
+    var getPixels = require('get-pixels');
+    getPixels(coord.src, function(err, pixels) {
+      var iw = pixels.shape[0],
+        ih = pixels.shape[1];
+      if (!coord.x.valInp) {
+        return
+      }
+      else {
+        Object.keys(coord).forEach(convert);
+        function convert(key) {
+          var val = coord[key];
+          if (val.valInp && val.valInp.slice(-1) === "%") {
+            val.valInp = parseInt(val.valInp, 10);
+            if (val.type === 'horizontal')
+              val.valInp = val.valInp * iw / 100;
+            else
+              val.valInp = val.valInp * ih / 100;
+          }
+        }
+      }
+      callback(options, coord);
+    })
+  }
+
   function copy(a) {
     if (!typeof (a) == "object") return a;
     if (objTypeOf(a) == "Array") return a.slice();
@@ -58301,7 +58326,7 @@ ImageSequencer = function ImageSequencer(options) {
     createMetaModule: createMetaModule,
     saveSequence: saveSequence,
     loadModules: loadModules,
-
+    parseInputCoordinates: parseInputCoordinates,
     //other functions
     log: log,
     objTypeOf: objTypeOf,
@@ -58313,7 +58338,7 @@ ImageSequencer = function ImageSequencer(options) {
 }
 module.exports = ImageSequencer;
 
-},{"./AddStep":153,"./ExportBin":154,"./FormatInput":155,"./InsertStep":157,"./Modules":158,"./ReplaceImage":159,"./Run":160,"./SavedSequences.json":162,"./ui/LoadImage":245,"./ui/SetInputStep":246,"./ui/UserInterface":247,"./util/getStep.js":249,"fs":11}],157:[function(require,module,exports){
+},{"./AddStep":153,"./ExportBin":154,"./FormatInput":155,"./InsertStep":157,"./Modules":158,"./ReplaceImage":159,"./Run":160,"./SavedSequences.json":162,"./ui/LoadImage":245,"./ui/SetInputStep":246,"./ui/UserInterface":247,"./util/getStep.js":249,"fs":11,"get-pixels":32}],157:[function(require,module,exports){
 const getStepUtils = require('./util/getStep.js');
 
 // insert one or more steps at a given index in the sequencer
@@ -59704,7 +59729,7 @@ module.exports = function CropModule(options, UI) {
   // add our custom in-module html ui:
   if (options.step.inBrowser && !options.noUI) var ui = require('./Ui.js')(options.step, UI);
   var output,
-      setupComplete = false;
+    setupComplete = false;
 
   // This function is caled everytime the step has to be redrawn
   function draw(input,callback) {
@@ -59714,8 +59739,23 @@ module.exports = function CropModule(options, UI) {
     // save the input image;
     // TODO: this should be moved to module API to persist the input image
     options.step.input = input.src;
+    var sequencer = require('../../ImageSequencer.js')(options);
 
-    require('./Crop')(input, options, function(out, format){
+    //parse the inputs 
+    sequencer.parseInputCoordinates({
+      src: input.src,
+      x: { valInp: options.x, type: 'horizontal' },
+      y: { valInp: options.y, type: 'vertical' },
+      w: { valInp: options.w, type: 'horizontal' },
+      h: { valInp: options.h, type: 'vertical' },
+    }, function (options, coord) {
+      options.x = parseInt(coord.x.valInp);
+      options.y = parseInt(coord.y.valInp);
+      options.w = coord.w.valInp;
+      options.h = coord.h.valInp;
+    });
+
+    require('./Crop')(input, options, function (out, format) {
 
       // This output is accessible to Image Sequencer
       step.output = {
@@ -59754,7 +59794,7 @@ module.exports = function CropModule(options, UI) {
   }
 }
 
-},{"./Crop":194,"./Ui.js":196}],196:[function(require,module,exports){
+},{"../../ImageSequencer.js":156,"./Crop":194,"./Ui.js":196}],196:[function(require,module,exports){
 // hide on save
 module.exports = function CropModuleUi(step, ui) {
 
@@ -59858,7 +59898,7 @@ arguments[4][164][0].apply(exports,arguments)
 },{"./Module":195,"./info.json":198,"dup":164}],198:[function(require,module,exports){
 module.exports={
   "name": "Crop",
-  "description": "Crop image to given x, y, w, h in pixels, measured from top left",
+  "description": "Crop image to given x, y, w, h in pixels or % , measured from top left",
   "url": "https://github.com/publiclab/image-sequencer/tree/master/MODULES.md",
   "inputs": {
     "x": {
@@ -61005,6 +61045,7 @@ module.exports = function Dynamic(options, UI, util) {
     options.y = options.y || 0;
 
     var output;
+    var sequencer = require('../../ImageSequencer.js')(options);
 
     // This function is called on every draw.
     function draw(input, callback, progressObj) {
@@ -61015,6 +61056,15 @@ module.exports = function Dynamic(options, UI, util) {
         progressObj.overrideFlag = true;
 
         var step = this;
+
+        sequencer.parseInputCoordinates({
+            src: input.src,
+            x: { valInp: options.x, type: 'horizontal' },
+            y: { valInp: options.y, type: 'vertical' },
+        }, function (options, input) {
+            options.x = parseInt(input.x.valInp);
+            options.y = parseInt(input.y.valInp);
+        });
 
         // save the pixels of the base image
         var baseStepImage = this.getStep(options.offset).image;
@@ -61070,12 +61120,12 @@ module.exports = function Dynamic(options, UI, util) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":244,"get-pixels":32}],233:[function(require,module,exports){
+},{"../../ImageSequencer.js":156,"../_nomodule/PixelManipulation.js":244,"get-pixels":32}],233:[function(require,module,exports){
 arguments[4][164][0].apply(exports,arguments)
 },{"./Module":232,"./info.json":234,"dup":164}],234:[function(require,module,exports){
 module.exports={
     "name": "Overlay",
-    "description": "Overlays an Image over another at a given position(x,y)",
+    "description": "Overlays an Image over another at a given position(x,y) in pixels or in %",
     "inputs": {
         "x": {
             "type": "integer",

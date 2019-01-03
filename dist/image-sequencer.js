@@ -59305,7 +59305,7 @@ module.exports={
       "type": "select",
       "desc": "Name of the Colormap",
       "default": "default",
-      "values": ["default","greyscale","stretched","fastie","brntogrn","blutoredjet","colors16"]
+      "values": ["default","greyscale","bluwhtgrngis","stretched","fastie","brntogrn","blutoredjet","colors16"]
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

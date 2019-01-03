@@ -4,7 +4,6 @@ module.exports = function Dynamic(options, UI, util) {
     options.y = options.y || 0;
 
     var output;
-    var sequencer = require('../../ImageSequencer.js')(options);
 
     // This function is called on every draw.
     function draw(input, callback, progressObj) {
@@ -16,7 +15,10 @@ module.exports = function Dynamic(options, UI, util) {
 
         var step = this;
 
-        sequencer.parseInputCoordinates({
+        var parseCoordInputs = require('../../util/ParseInputCoordinates');
+
+        //parse the inputs 
+        parseCoordInputs.parseCornerCoordinateInputs(options, {
             src: input.src,
             x: { valInp: options.x, type: 'horizontal' },
             y: { valInp: options.y, type: 'vertical' },
@@ -31,7 +33,7 @@ module.exports = function Dynamic(options, UI, util) {
 
         var getPixels = require('get-pixels');
 
-        getPixels(input.src, function(err, pixels) {
+        getPixels(input.src, function (err, pixels) {
             options.secondImagePixels = pixels;
 
             function changePixel(r1, g1, b1, a1, x, y) {

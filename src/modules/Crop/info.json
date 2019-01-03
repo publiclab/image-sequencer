@@ -22,6 +22,12 @@
       "type": "integer",
       "desc": "Height of crop",
       "default": "(100%)"
+    },
+    "backgroundColor": {
+      "type": "String",
+      "desc": "Background Color (Four space separated RGBA values)",
+      "default": "255 255 255 255",
+      "placeholder": "255 255 255 255"
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

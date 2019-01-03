@@ -97,11 +97,12 @@ window.onload = function() {
   $('body').on('click', 'button.remove', ui.removeStepUi);
   $('#save-seq').click(() => {
     var result = window.prompt("Please give a name to your sequence...");
+    if(result)
+      result = result + " (local)";
     sequencer.saveSequence(result, sequencer.toString());
     sequencer.loadModules();
-    if(result){
+    if(result)
       displayMessageOnSaveSequence();
-    }
     refreshOptions();
   });
 

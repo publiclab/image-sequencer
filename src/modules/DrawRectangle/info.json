@@ -24,6 +24,12 @@
         "type": "integer",
         "desc": "last y position of the rectangle",
         "default": "height"
+      },
+
+      "thickness":{
+        "type": "integer",
+        "desc": "thickness of border",
+        "default": 1
       }
     },
 }

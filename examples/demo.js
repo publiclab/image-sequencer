@@ -107,7 +107,7 @@ window.onload = function() {
 
     try {
       // Select all images from previous steps
-      var imgs = document.getElementsByClassName("img-thumbnail");
+      var imgs = document.getElementsByClassName("step-thumbnail");
 
       var imgSrcs = [];
 

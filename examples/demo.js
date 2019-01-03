@@ -91,10 +91,10 @@ window.onload = function() {
     var result = window.prompt("Please give a name to your sequence... (Saved sequence will only be available in this browser).");
     if(result){
       result = result + " (local)";
+      sequencer.saveSequence(result, sequencer.toString());
+      sequencer.loadModules();
+      refreshOptions();
     }
-    sequencer.saveSequence(result, sequencer.toString());
-    sequencer.loadModules();
-    refreshOptions();
   });
 
   var isWorkingOnGifGeneration = false;

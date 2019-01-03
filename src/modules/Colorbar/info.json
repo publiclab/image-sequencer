@@ -29,5 +29,6 @@
             "default": 10
         }
     },
-    "length": 4
+    "length": 4,
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }

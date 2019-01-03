@@ -26,6 +26,7 @@ program
 if (program.saveSequence) {
   var params = program.saveSequence.split(' ');
   sequencer.saveSequence(params[0], params[1]);
+  console.log("\x1b[32m", "Your sequence was saved successfully!!");
 } else if (program.installModule) {
   console.log(
     "\x1b[33m%s\x1b[0m",
@@ -38,6 +39,7 @@ if (program.saveSequence) {
   sequencer.saveNewModule(params[0], params[1]);
   sequencer.loadNewModule(params[0], require(params[1]));
   spinner.stop();
+  console.log("\x1b[32m%s\x1b[0m", "Your module was installed successfully!!");
 } else {
   // Parse step into an array to allow for multiple steps.
   if (!program.step) exit("No steps passed");

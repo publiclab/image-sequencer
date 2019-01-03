@@ -1,0 +1,12 @@
+{
+    "name": "Contrast",
+    "description": "Change the contrast of the image by given value",
+    "inputs": {
+        "contrast": {
+            "type": "Number",
+            "desc": "contrast for the new image, typically -100 to 100",
+            "default": 70 
+        }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+}

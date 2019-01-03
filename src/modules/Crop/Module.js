@@ -17,7 +17,7 @@ module.exports = function CropModule(options, UI) {
 
   // we should get UI to return the image thumbnail so we can attach our own UI extensions
   // add our custom in-module html ui:
-  if (options.step.inBrowser) var ui = require('./Ui.js')(options.step, UI);
+  if (options.step.inBrowser && !options.noUI) var ui = require('./Ui.js')(options.step, UI);
   var output,
       setupComplete = false;
 
@@ -49,7 +49,7 @@ module.exports = function CropModule(options, UI) {
 
       // start custom UI setup (draggable UI)
       // only once we have an input image
-      if (setupComplete === false && options.step.inBrowser) {
+      if (setupComplete === false && options.step.inBrowser && !options.noUI) {
         setupComplete = true;
         ui.setup();
       }

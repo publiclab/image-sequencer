@@ -8,5 +8,6 @@
       "default": "green",
       "values": ["red", "green", "blue"]
     }
-  }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }

@@ -10,13 +10,13 @@ Most contribution (we imagine) would be in the form of API-compatible modules, w
 * [README.md](https://github.com/publiclab/image-sequencer)
 * [Contributing Modules](#contributing-modules)
 * [Info File](#info-file)
-* [Ideas](#ideas)
+* [Ideas](#Contribution-ideas)
 
 ****
 
-## Contribution ideas
+## Contribution-ideas
 
-See [this issue](https://github.com/publiclab/image-sequencer/issues/118) for a range of ideas for new contributions, and links to possibly helpful libraries. Also see the [new features issues list](https://github.com/publiclab/image-sequencer/labels/new-feature).
+See [this issue](https://github.com/publiclab/image-sequencer/issues/118) for a range of ideas for new contributions and links to possibly helpful libraries, or you can solve an [existing issue](https://github.com/publiclab/image-sequencer/labels/module). Also see the [new features issues list](https://github.com/publiclab/image-sequencer/labels/new-feature).
 
 ### Bugs
 

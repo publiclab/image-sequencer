@@ -1,19 +1,54 @@
 window.onload = function() {
+  function generatePreview(previewStepName, customValues, path) {
+    var previewSequencer = ImageSequencer();
+
+    function insertPreview(src) {
+      var img = document.createElement('img');
+      img.classList.add('img-thumbnail')
+      img.classList.add('no-border');
+      img.src = src;
+      $(img).css("max-width", "200%");
+      $(img).css("transform", "translateX(-20%)");
+      var stepDiv = $('#addStep .row').find('div').each(function() {
+        if ($(this).find('div').attr('data-value') === previewStepName) {
+          $(this).find('div').append(img);
+        }
+      });
+    }
+    function loadPreview() {
+      previewSequencer = previewSequencer.addSteps('resize', { resize: "40%" });
+
+      if (previewStepName === "crop") {
+        console.log(customValues);
+        previewSequencer.addSteps(previewStepName, customValues).run(insertPreview);
+      }
+      else {
+        previewSequencer.addSteps(previewStepName, { [previewStepName]: customValues }).run(insertPreview);
+      }
+    }
+    previewSequencer.loadImage(path, loadPreview);
+  }
+
+
   sequencer = ImageSequencer();
 
   function refreshOptions() {
     // Load information of all modules (Name, Inputs, Outputs)
     var modulesInfo = sequencer.modulesInfo();
+    console.log(modulesInfo)
 
     var addStepSelect = $("#addStep select");
     addStepSelect.html("");
 
     // Add modules to the addStep dropdown
     for (var m in modulesInfo) {
-      addStepSelect.append(
-        '<option value="' + m + '">' + modulesInfo[m].name + "</option>"
-      );
+      if (modulesInfo[m] && modulesInfo[m].name)
+        addStepSelect.append(
+          '<option value="' + m + '">' + modulesInfo[m].name + "</option>"
+        );
     }
+    // Null option
+    addStepSelect.append('<option value="none" disabled selected>More modules...</option>');
   }
   refreshOptions();
 
@@ -33,9 +68,21 @@ window.onload = function() {
   $("#addStep select").on("change", ui.selectNewStepUi);
   $("#addStep #add-step-btn").on("click", ui.addStepUi);
 
-  $('#download-btn').click(function() {
-    $('.img-thumbnail:last()').trigger("click");
+  //Module button radio selection
+  $('.radio-group .radio').on("click", function() {
+    $(this).parent().find('.radio').removeClass('selected');
+    $(this).addClass('selected');
+    newStep = $(this).attr('data-value');
+    console.log(newStep);
+    //$("#addStep option[value=" + newStep + "]").attr('selected', 'selected');
+    $("#addStep select").val(newStep);
+    ui.selectNewStepUi();
+    ui.addStepUi();
+    $(this).removeClass('selected');
+  });
 
+  $('#download-btn').click(function() {
+    $('.step-thumbnail:last()').trigger("click");
     return false;
   });
 
@@ -60,7 +107,7 @@ window.onload = function() {
 
     try {
       // Select all images from previous steps
-      var imgs = document.getElementsByClassName("img-thumbnail");
+      var imgs = document.getElementsByClassName("step-thumbnail");
 
       var imgSrcs = [];
 
@@ -76,7 +123,7 @@ window.onload = function() {
       }
 
       gifshot.createGIF(options, function(obj) {
-        if(!obj.error) {
+        if (!obj.error) {
           // Final gif encoded with base64 format
           var image = obj.image;
           var animatedImage = document.createElement('img');
@@ -112,7 +159,7 @@ window.onload = function() {
         }
       });
     }
-    catch(e) {
+    catch (e) {
       console.error(e);
       button.disabled = false;
       isWorkingOnGifGeneration = false;
@@ -124,12 +171,84 @@ window.onload = function() {
   sequencer.setInputStep({
     dropZoneSelector: "#dropzone",
     fileInputSelector: "#fileInput",
+    takePhotoSelector: "#take-photo",
     onLoad: function onFileReaderLoad(progress) {
       var reader = progress.target;
       var step = sequencer.images.image1.steps[0];
       step.output.src = reader.result;
       sequencer.run({ index: 0 });
       step.options.step.imgElement.src = reader.result;
+      updatePreviews(reader.result);
+    },
+    onTakePhoto: function (url) {
+      var step = sequencer.images.image1.steps[0];
+      step.output.src = url;
+      sequencer.run({ index: 0 });
+      step.options.step.imgElement.src = url;
     }
   });
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js', { scope: '/examples/' })
+      .then(function(registration) {
+        const installingWorker = registration.installing;
+        installingWorker.onstatechange = () => {
+          console.log(installingWorker)
+          if (installingWorker.state === 'installed') {
+            location.reload();
+          }
+        }
+        console.log('Registration successful, scope is:', registration.scope);
+      })
+      .catch(function(error) {
+        console.log('Service worker registration failed, error:', error);
+      });
+  }
+
+  if ('serviceWorker' in navigator) {
+    caches.keys().then(function(cacheNames) {
+      cacheNames.forEach(function(cacheName) {
+        $("#clear-cache").append(" " + cacheName);
+      });
+    });
+  }
+
+  $("#clear-cache").click(function() {
+    if ('serviceWorker' in navigator) {
+      caches.keys().then(function(cacheNames) {
+        cacheNames.forEach(function(cacheName) {
+          caches.delete(cacheName);
+        });
+      });
+    }
+    location.reload();
+  });
+
+  function updatePreviews(src) {
+    $('#addStep img').remove();
+
+    var previewSequencerSteps = {
+      "brightness": "20",
+      "saturation": "5",
+      "rotate": 90,
+      "contrast": 90,
+      "crop": {
+        "x": 0,
+        "y": 0,
+        "w": "(50%)",
+        "h": "(50%)",
+        "noUI": true
+      }
+    }
+
+    Object.keys(previewSequencerSteps).forEach(function(step, index) {
+      generatePreview(step, Object.values(previewSequencerSteps)[index], src);
+    });
+  }
+
+  if (getUrlHashParameter('src')) {
+    updatePreviews(getUrlHashParameter('src'));
+  } else {
+    updatePreviews("images/tulips.png");
+  }
 };

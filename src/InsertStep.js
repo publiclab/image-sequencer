@@ -34,15 +34,22 @@ function InsertStep(ref, image, index, name, o) {
     };
     var UI = ref.events;
 
-    // Tell UI that a step has been set up.
-    o = o || {};
+    // define the expandSteps function for sequencer
     ref.modules[name].expandSteps = function expandSteps(stepsArray) {
-      for (var step of stepsArray) {
-        ref.addSteps(step['name'], step['options']);
+      for (var i in stepsArray) {
+        let step = stepsArray[i];
+        console.log(step['name'])
+        console.log(step['options'])
+        ref.insertSteps(index + Number.parseInt(i), step['name'], step['options']);
+        // ref.addSteps(step['name'], step['options']);
       }
     }
+
+    // Tell UI that a step has been set up.
+    o = o || {};
+
     if (!ref.modules[name][1].length) {
-      UI.onSetup(o.step);
+      UI.onSetup(o.step, { index: index });
       ref.images[image].steps.splice(index, 0, ref.modules[name][0](o, UI));
     } else {
       ref.modules[name][0](o, UI);

@@ -5,9 +5,11 @@ function setInputStepInit() {
 
     var dropzone = $(options.dropZoneSelector);
     var fileInput = $(options.fileInputSelector);
+    var takePhoto = $(options.takePhotoSelector);
  
     var onLoad = options.onLoad;
- 
+    var onTakePhoto = options.onTakePhoto;
+
     var reader = new FileReader();
  
     function handleFile(e) {
@@ -25,8 +27,53 @@ function setInputStepInit() {
  
       reader.readAsDataURL(file);
     }
+
+    function runVideo(){
+      /* event handler for Take-Photo */
+      document.getElementById('video').style.display='inline';
+      document.getElementById('capture').style.display='inline';
+      document.getElementById('close').style.display='inline';
+      
+      var video = document.getElementById('video');
+      canvas = document.getElementById('canvas'),
+      context = canvas.getContext('2d'),
+      vendorUrl = window.URL || window.webkitURL;
+
+  navigator.getMedia = navigator.getUserMedia || navigator.wekitGetUserMedia ||
+                        navigator.mozGetUserMedia || navigator.msGetUserMedia;
+
+  navigator.getMedia({
+    video: true,
+    audio: false
+  }, function(stream){ // success callback
+    video.srcObject = stream;
+    video.onloadedmetadata = function(e) {
+       video.play();
+     };
+    document.getElementById('close').addEventListener('click', function () {
+      stopStream(stream);
+     });
+  }, function(error){ // error
+    console.log("error");
+  });
+
+  document.getElementById('capture').addEventListener('click', function(stream){
+    context.drawImage(video, 0, 0, 400, 300);
+    options.onTakePhoto(canvas.toDataURL());
+  });
+
+  function stopStream(stream) {
+    stream.getVideoTracks().forEach(function (track) {
+        track.stop();
+    });
+    document.getElementById('video').style.display='none';
+    document.getElementById('capture').style.display='none';
+    document.getElementById('close').style.display='none';
+  }
+}
  
     fileInput.on('change', handleFile);
+    takePhoto.on('click', runVideo);
  
     dropzone[0].addEventListener('drop', handleFile, false);
  

@@ -23,12 +23,27 @@ h1 {
   color: #445;
 }
 
+.center-align {
+  display: flex;
+  justify-content: center;
+  text-align:center;
+}
+
 .header {
   text-align: center;
 }
 
+.panel {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
 .nomargin {
   margin: 0 !important;
+}
+
+.form-control {
+  padding: 0px 0px;
 }
 
 #dropzone {
@@ -91,7 +106,7 @@ h1 {
 }
 
 #add-step-btn{
-  margin: 10px;
+  margin-left: 10px;
 }
 
 #addStep .labels {
@@ -114,6 +129,7 @@ h1 {
 #save-seq {
   display: block;
   margin: 0 auto;
+  min-width: 250px;
 }
 .info {
   padding: 8px;
@@ -122,10 +138,10 @@ h1 {
 #gif {
   display: block;
   margin: 0 auto;
-  margin-top: 4px;
+  min-width: 250px;
 }
 #dwnld {
-  max-width: 200px;
+  max-width: 500px;
   margin: 20px auto;
   margin-left: 5px;
 }
@@ -157,4 +173,60 @@ h1 {
     font-size:60px;
     opacity:0.5;
     color:#BABABA;
+}
+
+.btn-circle{
+  min-width: 80px;
+  min-height: 80px;
+  text-align: center;
+  display: flex !important;
+  flex-direction: column;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.42;
+  border-radius: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.radio{
+  cursor:pointer;
+  overflow: hidden;
+  height: 80px;
+  width: 80px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.radio-group {
+  margin-bottom: 20px;
+}
+
+#stepRemovedNotification {
+  background-color: #808b96;
+  padding:4px;
+  color:white;
+  border-radius:3px;
+  font-size:2rem;
+  position:fixed;
+  bottom:8px;
+  left:45%;
+  min-width:14rem;
+  text-align:center;
+  display:none;
+}
+
+.no-border {
+  border: 0px;
+}
+
+.i-over {
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  z-index: 2;
+  color: white;
+}
+
+.i-small {
+  left: 25px;
 }

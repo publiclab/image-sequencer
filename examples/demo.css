@@ -230,3 +230,7 @@ h1 {
 .i-small {
   left: 25px;
 }
+a.name-header{
+  text-decoration: none;
+  color: #445;
+}

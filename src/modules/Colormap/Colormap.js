@@ -53,7 +53,7 @@ function colormap(segments) {
 
 var colormaps = {
   greyscale: colormap([
-               [0,     [0,   0,   0],   [220, 20, 60] ],
+               [0,     [0,   0,   0],   [255, 255, 255] ],
                [1,     [255, 255, 255], [255, 255, 255] ]
              ]),
 

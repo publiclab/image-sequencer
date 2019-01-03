@@ -30,6 +30,12 @@
         "type": "integer",
         "desc": "thickness of border",
         "default": 1
+      },
+
+      "color":{
+        "type": "String",
+        "desc": "RGBA values separated by a space",
+        "default": "0 0 0 255"
       }
     },
 }

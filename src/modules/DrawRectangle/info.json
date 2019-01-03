@@ -1,6 +1,6 @@
 {
-    "name": "Drawing Rectangles",
-    "description": "It draws rectangles on an image",
+    "name": "Draw Rectangle",
+    "description": "It draws a rectangle on the image",
     "inputs": {
   		"startingX":{
   			"type": "Number",

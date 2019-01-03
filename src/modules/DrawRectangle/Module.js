@@ -1,4 +1,4 @@
-module.exports = function DrawingRectangles(options, UI) {
+module.exports = function DrawRectangle(options, UI) {
 
     
     var output;
@@ -15,7 +15,7 @@ module.exports = function DrawingRectangles(options, UI) {
         }
 
         function extraManipulation(pixels) {
-            pixels = require('./DrawingRectangles')(pixels, options)
+            pixels = require('./DrawRectangle')(pixels, options)
             return pixels
         }
 

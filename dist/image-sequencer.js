@@ -58329,7 +58329,7 @@ module.exports = {
   'convolution': require('./modules/Convolution'),
   'crop': require('./modules/Crop'),
   'decode-qr': require('./modules/DecodeQr'),
-  'drawing-rectangles': require('./modules/DrawingRectangles'),
+  'draw-rectangle': require('./modules/DrawRectangle'),
   'dynamic': require('./modules/Dynamic'),
   'edge-detect': require('./modules/EdgeDetect'),
   'fisheye-gl': require('./modules/FisheyeGl'),
@@ -58346,7 +58346,7 @@ module.exports = {
   'saturation': require('./modules/Saturation')
 }
 
-},{"./modules/Average":162,"./modules/Blend":165,"./modules/Blur":169,"./modules/Brightness":172,"./modules/Channel":175,"./modules/Colorbar":178,"./modules/Colormap":182,"./modules/Contrast":186,"./modules/Convolution":190,"./modules/Crop":195,"./modules/DecodeQr":198,"./modules/DrawingRectangles":202,"./modules/Dynamic":205,"./modules/EdgeDetect":209,"./modules/FisheyeGl":212,"./modules/GammaCorrection":215,"./modules/Gradient":218,"./modules/Histogram":221,"./modules/ImportImage":225,"./modules/Ndvi":232,"./modules/NdviColormap":228,"./modules/Overlay":235,"./modules/Resize":238,"./modules/Rotate":241,"./modules/Saturation":244,"image-sequencer-invert":61}],157:[function(require,module,exports){
+},{"./modules/Average":162,"./modules/Blend":165,"./modules/Blur":169,"./modules/Brightness":172,"./modules/Channel":175,"./modules/Colorbar":178,"./modules/Colormap":182,"./modules/Contrast":186,"./modules/Convolution":190,"./modules/Crop":195,"./modules/DecodeQr":198,"./modules/DrawRectangle":202,"./modules/Dynamic":205,"./modules/EdgeDetect":209,"./modules/FisheyeGl":212,"./modules/GammaCorrection":215,"./modules/Gradient":218,"./modules/Histogram":221,"./modules/ImportImage":225,"./modules/Ndvi":232,"./modules/NdviColormap":228,"./modules/Overlay":235,"./modules/Resize":238,"./modules/Rotate":241,"./modules/Saturation":244,"image-sequencer-invert":61}],157:[function(require,module,exports){
 // Uses a given image as input and replaces it with the output.
 // Works only in the browser.
 function ReplaceImage(ref,selector,steps,options) {
@@ -59916,7 +59916,7 @@ module.exports = exports = function(pixels, options){
     return pixels;
 }
 },{}],201:[function(require,module,exports){
-module.exports = function DrawingRectangles(options, UI) {
+module.exports = function DrawRectangle(options, UI) {
 
     
     var output;
@@ -59933,7 +59933,7 @@ module.exports = function DrawingRectangles(options, UI) {
         }
 
         function extraManipulation(pixels) {
-            pixels = require('./DrawingRectangles')(pixels, options)
+            pixels = require('./DrawRectangle')(pixels, options)
             return pixels
         }
 
@@ -59961,12 +59961,12 @@ module.exports = function DrawingRectangles(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":246,"./DrawingRectangles":200}],202:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":246,"./DrawRectangle":200}],202:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":201,"./info.json":203,"dup":162}],203:[function(require,module,exports){
 module.exports={
-    "name": "Drawing Rectangles",
-    "description": "It draws rectangles on an image",
+    "name": "Draw Rectangle",
+    "description": "It draws a rectangle on the image",
     "inputs": {
   		"startingX":{
   			"type": "Number",

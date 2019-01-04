@@ -57653,6 +57653,7 @@ function formatInput(args,format,images) {
     format = ['o_string_a', 'o_number'];
   else if (format == "l")
     format = ['o_string','string','o_function'];
+<<<<<<< 522aa979fa1cdb457b3e27288399cbfcb1d1ddbd
 
   /*
     formats:
@@ -57773,6 +57774,128 @@ function formatInput(args,format,images) {
 
   return json_q;
 
+=======
+
+  /*
+    formats:
+      addSteps :: o_image_a, name_a, o_o
+        o_string_a, string_a, o_object => { image: [{name,o}] }
+      removeSteps :: o_image_a, index_a
+        o_string_a, number_a => { image: [index] }
+      insertSteps :: o_image_a, index, name, o_o
+        o_string_a, number, string, o_object => { image: [{index,name,o}] }
+      run :: o_image_a, o_from
+        o_string_a, o_number => { image: index }
+      loadImages :: image, src, o_function
+        string, string, o_function => { images: [{image:src}], callback }
+
+    optionals:
+      image: o_string_a
+      options: o_object
+      from: o_number
+      callback: o_function
+  */
+
+  if(format[format.length-1] == "o_object") {
+    if(objTypeOf(args[args.length-1]) != "Object")
+      args.push({});
+  }
+  else if (format[format.length-1] == "o_number") {
+    if(typeof(args[args.length-1]) != "number" && objTypeOf(args[0])!="Object")
+      args.push(1);
+  }
+  else if (format[format.length-1] == "o_function") {
+    if(objTypeOf(args[args.length-1]) != "Function" && objTypeOf(args[0])!="Object")
+      args.push(function(){});
+  }
+
+  if(format[0] == "o_string_a") {
+    if(args.length == format.length - 1) {
+      var insert = false;
+      for (var i in args) {
+        if (format[parseInt(i)+1].includes( typeof(getPrimitive(args[i])) )){
+          insert = true;
+        }
+        else {insert = false; break;}
+      }
+      if(insert)
+        args.splice(0,0,copy(images));
+    }
+  }
+  else if (format[0] == "o_string" && format_i == "l" && args.length == 2) {
+    if (typeof(args[0]) == "string") {
+      var identifier = "image";
+      var number = 1;
+      while (this.images.hasOwnProperty(identifier+number)) number++;
+      args.splice(0,0,identifier+number);
+    }
+  }
+
+  if(args.length == format.length) {
+    for (var i in format) {
+      if (format[i].substr(format[i].length-2,2)=="_a")
+        args[i] = makeArray(args[i]);
+    }
+  }
+
+  if (args.length == 1) {
+    json_q = copy(args[0]);
+    if(!(format_i == "r" || format_i == "l")) {
+      for (var img in json_q)
+        json_q[img] = makeArray(json_q[img]);
+    }
+  }
+  else if (format_i == "r") {
+    for (var img in args[0]) json_q[args[0][img]] = args[1];
+  }
+  else if (format_i == "l") {
+    json_q = {
+      images: {},
+      callback: args[2]
+    }
+    json_q.images[args[0]] = args[1];
+  }
+  else {
+    for (var img in args[0]) {
+      var image = args[0][img];
+      json_q[image] = [];
+
+      if(format_i == "+") {
+        for(var s in args[1]) {
+          json_q[image].push({
+            name: args[1][s],
+            o: args[2]
+          });
+        }
+      }
+
+      if(format_i == "-") {
+        json_q[image] = args[1];
+      }
+
+      if(format_i == "^") {
+        var size = this.images[image].steps.length;
+        var index = args[1];
+        index = (index==size)?index:index%size;
+        if (index<0) index += size+1;
+        json_q[image].push({
+          index: index,
+          name: args[2],
+          o: args[3]
+        });
+      }
+
+    }
+  }
+
+  if(format_i == "l") {
+    json_q.loadedimages = [];
+    for (var i in json_q.images) json_q.loadedimages.push(i);
+  }
+
+  return json_q;
+
+>>>>>>> easy fix
 }
 module.exports = formatInput;
 
@@ -58863,13 +58986,19 @@ module.exports={
 
 module.exports = function Brightness(options,UI){
 
+<<<<<<< 522aa979fa1cdb457b3e27288399cbfcb1d1ddbd
 
+=======
+>>>>>>> easy fix
     var output;
 
     function draw(input,callback,progressObj){
 
+<<<<<<< 522aa979fa1cdb457b3e27288399cbfcb1d1ddbd
         options.brightness = parseInt(options.brightness) || 100;
         var val = (options.brightness)/100.0;
+=======
+>>>>>>> easy fix
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
@@ -58882,10 +59011,20 @@ module.exports = function Brightness(options,UI){
         var step = this;
 
         function changePixel(r, g, b, a){
+<<<<<<< 522aa979fa1cdb457b3e27288399cbfcb1d1ddbd
 
             r = Math.min(val*r, 255)
             g = Math.min(val*g, 255)
             b = Math.min(val*b, 255)
+=======
+	  options.brightness = 
+	  options.brightness || 100
+            var val = (options.brightness)/100.0
+
+            r = val*r<255?val*r:255
+            g = val*g<255?val*g:255
+            b = val*b<255?val*b:255
+>>>>>>> easy fix
             return [r, g, b, a]
         }
 
@@ -58924,7 +59063,11 @@ module.exports={
       "brightness": {
           "type": "range",
           "desc": "% brightness for the new image",
+<<<<<<< 522aa979fa1cdb457b3e27288399cbfcb1d1ddbd
           "default": "175",
+=======
+          "default": "100",
+>>>>>>> easy fix
           "min": "0",
           "max": "200",
           "step": "1"
@@ -59234,7 +59377,11 @@ var colormaps = {
   fastie:    colormap([
                [0,     [255, 255, 255], [0,   0,   0]   ],
                [0.167, [0,   0,   0],   [255, 255, 255] ],
+<<<<<<< 522aa979fa1cdb457b3e27288399cbfcb1d1ddbd
                [0.33,  [255, 255, 255],   [0,   0,   0] ],
+=======
+               [0.33,  [2,   0, 226],   [2,   0,   226] ],
+>>>>>>> easy fix
                [0.5,   [0,   0,   0],   [140, 140, 255] ],
                [0.55,  [140, 140, 255], [0,   255, 0]   ],
                [0.63,  [0,   255, 0],   [255, 255, 0]   ],
@@ -59307,7 +59454,11 @@ module.exports={
       "type": "select",
       "desc": "Name of the Colormap",
       "default": "default",
+<<<<<<< 522aa979fa1cdb457b3e27288399cbfcb1d1ddbd
       "values": ["default","greyscale","bluwhtgrngis","stretched","fastie","brntogrn","blutoredjet","colors16"]
+=======
+      "values": ["default","greyscale","stretched","fastie","brntogrn","blutoredjet","colors16"]
+>>>>>>> easy fix
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -59420,12 +59571,18 @@ module.exports={
     "description": "Change the contrast of the image by given value",
     "inputs": {
         "contrast": {
+<<<<<<< 522aa979fa1cdb457b3e27288399cbfcb1d1ddbd
             "type": "range",
             "desc": "contrast for the new image, typically -100 to 100",
             "default": "70",
             "min": "-100",
             "max": "100",
             "step": "1"
+=======
+            "type": "Number",
+            "desc": "contrast for the new image, typically -100 to 100",
+            "default": 70 
+>>>>>>> easy fix
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -59527,11 +59684,19 @@ module.exports = function Convolution(options, UI) {
         }
 
         function output(image, datauri, mimetype) {
+<<<<<<< 522aa979fa1cdb457b3e27288399cbfcb1d1ddbd
 
             step.output = { src: datauri, format: mimetype };
 
         }
 
+=======
+
+            step.output = { src: datauri, format: mimetype };
+
+        }
+
+>>>>>>> easy fix
         return require('../_nomodule/PixelManipulation.js')(input, {
             output: output,
             changePixel: changePixel,
@@ -59663,10 +59828,17 @@ module.exports = function CropModule(options, UI) {
     // save the input image;
     // TODO: this should be moved to module API to persist the input image
     options.step.input = input.src;
+<<<<<<< 522aa979fa1cdb457b3e27288399cbfcb1d1ddbd
     var parseCornerCoordinateInputs = require('../../util/ParseInputCoordinates');
 
     //parse the inputs
     parseCornerCoordinateInputs(options,{
+=======
+    var parseCoordInputs = require('../../util/ParseInputCoordinates');
+
+    //parse the inputs 
+    parseCoordInputs.parseCornerCoordinateInputs(options,{
+>>>>>>> easy fix
       src: input.src,
       x: { valInp: options.x, type: 'horizontal' },
       y: { valInp: options.y, type: 'vertical' },
@@ -59838,12 +60010,20 @@ module.exports={
     "w": {
       "type": "integer",
       "desc": "Width of crop",
+<<<<<<< 522aa979fa1cdb457b3e27288399cbfcb1d1ddbd
       "default": "(50%)"
+=======
+      "default": "(100%)"
+>>>>>>> easy fix
     },
     "h": {
       "type": "integer",
       "desc": "Height of crop",
+<<<<<<< 522aa979fa1cdb457b3e27288399cbfcb1d1ddbd
       "default": "(50%)"
+=======
+      "default": "(100%)"
+>>>>>>> easy fix
     },
     "backgroundColor": {
       "type": "String",
@@ -60426,6 +60606,7 @@ arguments[4][162][0].apply(exports,arguments)
 },{"./Module":208,"./info.json":210,"dup":162}],210:[function(require,module,exports){
 module.exports={
     "name": "Detect Edges",
+<<<<<<< 522aa979fa1cdb457b3e27288399cbfcb1d1ddbd
     "description": "This module detects edges using the Canny method, which first Gaussian blurs the image to reduce noise (amount of blur configurable in settings as `options.blur`), then applies a number of steps to highlight edges, resulting in a greyscale image where the brighter the pixel, the stronger the detected edge.<a href='https://en.wikipedia.org/wiki/Canny_edge_detector'> Read more. </a>",
     "inputs": {
         "blur": {
@@ -60435,6 +60616,14 @@ module.exports={
             "min": "0",
             "max": "5",
             "step": "0.25"
+=======
+    "description": "this module detects edges using the Canny method, which first Gaussian blurs the image to reduce noise (amount of blur configurable in settings as `options.blur`), then applies a number of steps to highlight edges, resulting in a greyscale image where the brighter the pixel, the stronger the detected edge.<a href='https://en.wikipedia.org/wiki/Canny_edge_detector'> Read more. </a>",
+    "inputs": {
+        "blur": {
+            "type": "integer",
+            "desc": "amount of gaussian blur(Less blur gives more detail, typically 0-5)",
+            "default": 2
+>>>>>>> easy fix
         },
         "highThresholdRatio":{
             "type": "float",
@@ -61130,10 +61319,17 @@ module.exports = function Dynamic(options, UI, util) {
 
         var step = this;
 
+<<<<<<< 522aa979fa1cdb457b3e27288399cbfcb1d1ddbd
         var parseCornerCoordinateInputs = require('../../util/ParseInputCoordinates');
 
         //parse the inputs
         parseCornerCoordinateInputs(options, {
+=======
+        var parseCoordInputs = require('../../util/ParseInputCoordinates');
+
+        //parse the inputs 
+        parseCoordInputs.parseCornerCoordinateInputs(options, {
+>>>>>>> easy fix
             src: input.src,
             x: { valInp: options.x, type: 'horizontal' },
             y: { valInp: options.y, type: 'vertical' },
@@ -61381,12 +61577,18 @@ module.exports={
     "description": "Rotates image by specified degrees",
     "inputs": {
       "rotate": {
+<<<<<<< 522aa979fa1cdb457b3e27288399cbfcb1d1ddbd
         "type": "range",
         "desc": "Angular value for rotation in degrees",
         "default": "0",
         "min": "0",
         "max": "360",
         "step": "1"
+=======
+        "type": "integer",
+        "desc": "Angular value for rotation in degrees",
+        "default": 0
+>>>>>>> easy fix
       }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -61457,12 +61659,18 @@ module.exports={
     "description": "Change the saturation of the image by given value, from 0-1, with 1 being 100% saturated.",
     "inputs": {
         "saturation": {
+<<<<<<< 522aa979fa1cdb457b3e27288399cbfcb1d1ddbd
             "type": "range",
             "desc": "saturation for the new image between 0 and 2, 0 being black and white and 2 being highly saturated",
             "default": "0.5",
             "min": "0",
             "max": "2",
             "step": "0.1"
+=======
+            "type": "integer",
+            "desc": "saturation for the new image between 0 and 2, 0 being black and white and 2 being highly saturated",
+            "default": 0
+>>>>>>> easy fix
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

@@ -128,7 +128,7 @@ h1 {
 }
 #save-seq {
   display: block;
-  margin: 0 auto;
+  margin: 0px 10px 0px 0px;
   width: 250px;
 }
 .info {
@@ -137,7 +137,7 @@ h1 {
 }
 #gif {
   display: block;
-  margin: 0 auto;
+  margin: 0px 0px 0px 10px;
   width: 250px;
 }
 #dwnld {
@@ -236,15 +236,3 @@ h1 {
 .i-small {
   left: 25px;
 }
-
-@media all and (max-width: 768px) {
-  #gif {
-    width: 150px;
-    margin-left: 10px;
-  }
-  #save-seq {
-    width: 150px;
-    margin-right: 10px;
-  }
-}
-

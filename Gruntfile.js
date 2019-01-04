@@ -20,6 +20,16 @@ module.exports = function(grunt) {
       }
     },
 
+    watch: {
+      options: {
+        livereload: true
+      },
+      ui: {
+        files: ["examples/lib/*", "Gruntfile.js"],
+        tasks: ["build:js"]
+      }
+    }
+
     browserify: {
       dist: {
         src: ["src/ImageSequencer.js"],

@@ -27,5 +27,6 @@ module.exports = {
   'overlay': require('./modules/Overlay'),
   'resize': require('./modules/Resize'),
   'rotate': require('./modules/Rotate'),
-  'saturation': require('./modules/Saturation')
+  'saturation': require('./modules/Saturation'),
+  'white-balance': require('./modules/WhiteBalance')
 }

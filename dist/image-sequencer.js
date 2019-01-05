@@ -58234,7 +58234,7 @@ ImageSequencer = function ImageSequencer(options) {
     createMetaModule: createMetaModule,
     saveSequence: saveSequence,
     loadModules: loadModules,
-
+    
     //other functions
     log: log,
     objTypeOf: objTypeOf,
@@ -58246,7 +58246,7 @@ ImageSequencer = function ImageSequencer(options) {
 }
 module.exports = ImageSequencer;
 
-},{"./AddStep":151,"./ExportBin":152,"./FormatInput":153,"./InsertStep":155,"./Modules":156,"./ReplaceImage":157,"./Run":158,"./SavedSequences.json":160,"./ui/LoadImage":250,"./ui/SetInputStep":251,"./ui/UserInterface":252,"./util/getStep.js":254,"fs":46}],155:[function(require,module,exports){
+},{"./AddStep":151,"./ExportBin":152,"./FormatInput":153,"./InsertStep":155,"./Modules":156,"./ReplaceImage":157,"./Run":158,"./SavedSequences.json":160,"./ui/LoadImage":250,"./ui/SetInputStep":251,"./ui/UserInterface":252,"./util/getStep.js":255,"fs":46}],155:[function(require,module,exports){
 const getStepUtils = require('./util/getStep.js');
 
 // insert one or more steps at a given index in the sequencer
@@ -58313,7 +58313,7 @@ function InsertStep(ref, image, index, name, o) {
 }
 module.exports = InsertStep;
 
-},{"./util/getStep.js":254}],156:[function(require,module,exports){
+},{"./util/getStep.js":255}],156:[function(require,module,exports){
 /*
 * Core modules and their info files
 */
@@ -58503,7 +58503,7 @@ function Run(ref, json_q, callback, ind, progressObj) {
 }
 module.exports = Run;
 
-},{"./RunToolkit":159,"./util/getStep.js":254}],159:[function(require,module,exports){
+},{"./RunToolkit":159,"./util/getStep.js":255}],159:[function(require,module,exports){
 const getPixels = require('get-pixels');
 const pixelManipulation = require('./modules/_nomodule/PixelManipulation');
 const lodash = require('lodash');
@@ -58863,10 +58863,13 @@ module.exports={
 
 module.exports = function Brightness(options,UI){
 
+
     var output;
 
     function draw(input,callback,progressObj){
 
+        options.brightness = parseInt(options.brightness) || 100;
+        var val = (options.brightness)/100.0;
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
@@ -58879,13 +58882,10 @@ module.exports = function Brightness(options,UI){
         var step = this;
 
         function changePixel(r, g, b, a){
-	  options.brightness = 
-	  options.brightness || 100
-            var val = (options.brightness)/100.0
 
-            r = val*r<255?val*r:255
-            g = val*g<255?val*g:255
-            b = val*b<255?val*b:255
+            r = Math.min(val*r, 255)
+            g = Math.min(val*g, 255)
+            b = Math.min(val*b, 255)
             return [r, g, b, a]
         }
 
@@ -58924,7 +58924,7 @@ module.exports={
       "brightness": {
           "type": "range",
           "desc": "% brightness for the new image",
-          "default": "100",
+          "default": "175",
           "min": "0",
           "max": "200",
           "step": "1"
@@ -59234,7 +59234,7 @@ var colormaps = {
   fastie:    colormap([
                [0,     [255, 255, 255], [0,   0,   0]   ],
                [0.167, [0,   0,   0],   [255, 255, 255] ],
-               [0.33,  [2,   0, 226],   [2,   0,   226] ],
+               [0.33,  [255, 255, 255],   [0,   0,   0] ],
                [0.5,   [0,   0,   0],   [140, 140, 255] ],
                [0.55,  [140, 140, 255], [0,   255, 0]   ],
                [0.63,  [0,   255, 0],   [255, 255, 0]   ],
@@ -59307,7 +59307,7 @@ module.exports={
       "type": "select",
       "desc": "Name of the Colormap",
       "default": "default",
-      "values": ["default","greyscale","stretched","fastie","brntogrn","blutoredjet","colors16"]
+      "values": ["default","greyscale","bluwhtgrngis","stretched","fastie","brntogrn","blutoredjet","colors16"]
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -59420,9 +59420,12 @@ module.exports={
     "description": "Change the contrast of the image by given value",
     "inputs": {
         "contrast": {
-            "type": "Number",
+            "type": "range",
             "desc": "contrast for the new image, typically -100 to 100",
-            "default": 70 
+            "default": "70",
+            "min": "-100",
+            "max": "100",
+            "step": "1"
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -59650,7 +59653,7 @@ module.exports = function CropModule(options, UI) {
   // add our custom in-module html ui:
   if (options.step.inBrowser && !options.noUI) var ui = require('./Ui.js')(options.step, UI);
   var output,
-      setupComplete = false;
+    setupComplete = false;
 
   // This function is caled everytime the step has to be redrawn
   function draw(input,callback) {
@@ -59660,8 +59663,23 @@ module.exports = function CropModule(options, UI) {
     // save the input image;
     // TODO: this should be moved to module API to persist the input image
     options.step.input = input.src;
+    var parseCoordInputs = require('../../util/ParseInputCoordinates');
 
-    require('./Crop')(input, options, function(out, format){
+    //parse the inputs 
+    parseCoordInputs.parseCornerCoordinateInputs(options,{
+      src: input.src,
+      x: { valInp: options.x, type: 'horizontal' },
+      y: { valInp: options.y, type: 'vertical' },
+      w: { valInp: options.w, type: 'horizontal' },
+      h: { valInp: options.h, type: 'vertical' },
+    }, function (options, coord) {
+      options.x = parseInt(coord.x.valInp);
+      options.y = parseInt(coord.y.valInp);
+      options.w = coord.w.valInp;
+      options.h = coord.h.valInp;
+    });
+
+    require('./Crop')(input, options, function (out, format) {
 
       // This output is accessible to Image Sequencer
       step.output = {
@@ -59700,7 +59718,7 @@ module.exports = function CropModule(options, UI) {
   }
 }
 
-},{"./Crop":192,"./Ui.js":194}],194:[function(require,module,exports){
+},{"../../util/ParseInputCoordinates":254,"./Crop":192,"./Ui.js":194}],194:[function(require,module,exports){
 // hide on save
 module.exports = function CropModuleUi(step, ui) {
 
@@ -59804,7 +59822,7 @@ arguments[4][162][0].apply(exports,arguments)
 },{"./Module":193,"./info.json":196,"dup":162}],196:[function(require,module,exports){
 module.exports={
   "name": "Crop",
-  "description": "Crop image to given x, y, w, h in pixels, measured from top left",
+  "description": "Crop image to given x, y, w, h in pixels or % , measured from top left",
   "url": "https://github.com/publiclab/image-sequencer/tree/master/MODULES.md",
   "inputs": {
     "x": {
@@ -59820,12 +59838,12 @@ module.exports={
     "w": {
       "type": "integer",
       "desc": "Width of crop",
-      "default": "(100%)"
+      "default": "(50%)"
     },
     "h": {
       "type": "integer",
       "desc": "Height of crop",
-      "default": "(100%)"
+      "default": "(50%)"
     },
     "backgroundColor": {
       "type": "String",
@@ -59836,6 +59854,7 @@ module.exports={
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
+
 },{}],197:[function(require,module,exports){
 /*
  * Decodes QR from a given image.
@@ -59907,30 +59926,41 @@ module.exports = exports = function(pixels, options){
 	options.endY = Number(options.endY) || ih - 1;
 	var ex = options.endX;
 	var ey = options.endY;
-    for(var n = oy*4*iw + 4*ox ; n < oy*4*iw + 4*(ex); n = n+4){
-       pixels.data[n] = 0;
-       pixels.data[n+1] = 0;
-       pixels.data[n+2] = 0;
-       pixels.data[n+3] = 255;
+  var thickness = Number(options.thickness) || 1;
+  var color = options.color || "0 0 0 255";
+  color = color.split(" ");
+  for(var i = 0; i<thickness; i++){
+    for(var n = (oy+i)*4*iw + 4*ox ; n < (oy+i)*4*iw + 4*(ex); n = n+4){
+       pixels.data[n] = color[0];
+       pixels.data[n+1] = color[1];
+       pixels.data[n+2] = color[2];
+       pixels.data[n+3] = color[3];
     } 
-    for(var n = ey*4*iw + 4*ox ; n < ey*4*iw + 4*(ex); n = n+4){
-       pixels.data[n] = 0;
-       pixels.data[n+1] = 0;
-       pixels.data[n+2] = 0;
-       pixels.data[n+3] = 255;
+  }
+  for(var i = 0; i<thickness; i++){
+    for(var n = (ey-i)*4*iw + 4*ox ; n < (ey-i)*4*iw + 4*(ex); n = n+4){
+       pixels.data[n] = color[0];
+       pixels.data[n+1] = color[1];
+       pixels.data[n+2] = color[2];
+       pixels.data[n+3] = color[3];
     }
-    for(var n = oy*4*iw + 4*ox ; n < ey*4*iw + 4*ox; n = n+ 4*iw){
-       pixels.data[n] = 0;
-       pixels.data[n+1] = 0;
-       pixels.data[n+2] = 0;
-       pixels.data[n+3] = 255;
+  }
+  for(var i = 0; i < thickness; i++){  
+    for(var n = oy*4*iw + 4*(ox+i) ; n < ey*4*iw + 4*(ox+i); n = n+ 4*iw){
+       pixels.data[n] = color[0];
+       pixels.data[n+1] = color[1];
+       pixels.data[n+2] = color[2];
+       pixels.data[n+3] = color[3];
     }
-    for(var n = oy*4*iw + 4*ex ; n < ey*4*iw + 4*ex; n = n+ 4*iw){
-       pixels.data[n] = 0;
-       pixels.data[n+1] = 0;
-       pixels.data[n+2] = 0;
-       pixels.data[n+3] = 255;
+  }
+  for(var i = 0; i < thickness; i++){
+    for(var n = oy*4*iw + 4*(ex - i) ; n < ey*4*iw + 4*(ex - i); n = n+ 4*iw){
+       pixels.data[n] = color[0];
+       pixels.data[n+1] = color[1];
+       pixels.data[n+2] = color[2];
+       pixels.data[n+3] = color[3];
     }
+  }
     return pixels;
 }
 },{}],201:[function(require,module,exports){
@@ -60008,6 +60038,18 @@ module.exports={
         "type": "integer",
         "desc": "last y position of the rectangle",
         "default": "height"
+      },
+
+      "thickness":{
+        "type": "integer",
+        "desc": "thickness of border",
+        "default": 1
+      },
+
+      "color":{
+        "type": "String",
+        "desc": "RGBA values separated by a space",
+        "default": "0 0 0 255"
       }
     },
 }
@@ -60384,12 +60426,15 @@ arguments[4][162][0].apply(exports,arguments)
 },{"./Module":208,"./info.json":210,"dup":162}],210:[function(require,module,exports){
 module.exports={
     "name": "Detect Edges",
-    "description": "this module detects edges using the Canny method, which first Gaussian blurs the image to reduce noise (amount of blur configurable in settings as `options.blur`), then applies a number of steps to highlight edges, resulting in a greyscale image where the brighter the pixel, the stronger the detected edge.<a href='https://en.wikipedia.org/wiki/Canny_edge_detector'> Read more. </a>",
+    "description": "This module detects edges using the Canny method, which first Gaussian blurs the image to reduce noise (amount of blur configurable in settings as `options.blur`), then applies a number of steps to highlight edges, resulting in a greyscale image where the brighter the pixel, the stronger the detected edge.<a href='https://en.wikipedia.org/wiki/Canny_edge_detector'> Read more. </a>",
     "inputs": {
         "blur": {
-            "type": "integer",
-            "desc": "amount of gaussian blur(Less blur gives more detail, typically 0-5)",
-            "default": 2
+            "type": "range",
+            "desc": "Amount of gaussian blur(Less blur gives more detail, typically 0-5)",
+            "default": "2",
+            "min": "0",
+            "max": "5",
+            "step": "0.25"
         },
         "highThresholdRatio":{
             "type": "float",
@@ -61085,13 +61130,25 @@ module.exports = function Dynamic(options, UI, util) {
 
         var step = this;
 
+        var parseCoordInputs = require('../../util/ParseInputCoordinates');
+
+        //parse the inputs 
+        parseCoordInputs.parseCornerCoordinateInputs(options, {
+            src: input.src,
+            x: { valInp: options.x, type: 'horizontal' },
+            y: { valInp: options.y, type: 'vertical' },
+        }, function (options, input) {
+            options.x = parseInt(input.x.valInp);
+            options.y = parseInt(input.y.valInp);
+        });
+
         // save the pixels of the base image
         var baseStepImage = this.getStep(options.offset).image;
         var baseStepOutput = this.getOutput(options.offset);
 
         var getPixels = require('get-pixels');
 
-        getPixels(input.src, function(err, pixels) {
+        getPixels(input.src, function (err, pixels) {
             options.secondImagePixels = pixels;
 
             function changePixel(r1, g1, b1, a1, x, y) {
@@ -61139,12 +61196,12 @@ module.exports = function Dynamic(options, UI, util) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":249,"get-pixels":29}],235:[function(require,module,exports){
+},{"../../util/ParseInputCoordinates":254,"../_nomodule/PixelManipulation.js":249,"get-pixels":29}],235:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":234,"./info.json":236,"dup":162}],236:[function(require,module,exports){
 module.exports={
     "name": "Overlay",
-    "description": "Overlays an Image over another at a given position(x,y)",
+    "description": "Overlays an Image over another at a given position(x,y) in pixels or in %",
     "inputs": {
         "x": {
             "type": "integer",
@@ -61324,9 +61381,12 @@ module.exports={
     "description": "Rotates image by specified degrees",
     "inputs": {
       "rotate": {
-        "type": "integer",
+        "type": "range",
         "desc": "Angular value for rotation in degrees",
-        "default": 0
+        "default": "0",
+        "min": "0",
+        "max": "360",
+        "step": "1"
       }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -61397,9 +61457,12 @@ module.exports={
     "description": "Change the saturation of the image by given value, from 0-1, with 1 being 100% saturated.",
     "inputs": {
         "saturation": {
-            "type": "integer",
+            "type": "range",
             "desc": "saturation for the new image between 0 and 2, 0 being black and white and 2 being highly saturated",
-            "default": 0
+            "default": "0.5",
+            "min": "0",
+            "max": "2",
+            "step": "0.1"
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -61917,6 +61980,31 @@ module.exports = function GetFormat(src) {
 }
 
 },{}],254:[function(require,module,exports){
+module.exports = function parseCornerCoordinateInputs(options,coord,callback) {
+    var getPixels = require('get-pixels');
+    getPixels(coord.src, function(err, pixels) {
+      var iw = pixels.shape[0],
+        ih = pixels.shape[1];
+      if (!coord.x.valInp) {
+        return
+      }
+      else {
+        Object.keys(coord).forEach(convert);
+        function convert(key) {
+          var val = coord[key];
+          if (val.valInp && val.valInp.slice(-1) === "%") {
+            val.valInp = parseInt(val.valInp, 10);
+            if (val.type === 'horizontal')
+              val.valInp = val.valInp * iw / 100;
+            else
+              val.valInp = val.valInp * ih / 100;
+          }
+        }
+      }
+      callback(options, coord);
+    })
+  }
+},{"get-pixels":29}],255:[function(require,module,exports){
 module.exports = {
     getPreviousStep: function() {
         return this.getStep(-1);

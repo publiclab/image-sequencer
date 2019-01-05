@@ -455,7 +455,7 @@ ImageSequencer = function ImageSequencer(options) {
     createMetaModule: createMetaModule,
     saveSequence: saveSequence,
     loadModules: loadModules,
-
+    
     //other functions
     log: log,
     objTypeOf: objTypeOf,

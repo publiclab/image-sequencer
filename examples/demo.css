@@ -204,14 +204,7 @@ h1 {
 
 .savesequencemsg{
   display: none;
-  background-color: green;
-  padding: 10px;
-  color: white;
   text-align: center;
-  border-radius: 20%;
-  width: 500px;
-  opacity: 0.6;
-  margin: auto;
   }
 
 #stepRemovedNotification {

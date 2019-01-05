@@ -87,7 +87,6 @@ window.onload = function() {
   });
 
   function displayMessageOnSaveSequence(){
-      console.log("called");
       $(".savesequencemsg").fadeIn();
       setTimeout(function() {
           $(".savesequencemsg").fadeOut();

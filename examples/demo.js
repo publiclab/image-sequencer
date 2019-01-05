@@ -192,7 +192,7 @@ window.onload = function() {
     }
   });
 
-  cache();
+  setupCache();
   
   function updatePreviews(src) {
     $('#addStep img').remove();

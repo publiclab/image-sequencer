@@ -1,4 +1,4 @@
-var cache = function() {
+var setupCache = function() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js', { scope: '/examples/' })
       .then(function(registration) {

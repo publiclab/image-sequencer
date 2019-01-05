@@ -88,9 +88,13 @@ window.onload = function() {
 
   $('body').on('click', 'button.remove', ui.removeStepUi);
   $('#save-seq').click(() => {
-    sequencer.saveSequence(window.prompt("Please give a name to your sequence..."), sequencer.toString());
-    sequencer.loadModules();
-    refreshOptions();
+    var result = window.prompt("Please give a name to your sequence... (Saved sequence will only be available in this browser).");
+    if(result){
+      result = result + " (local)";
+      sequencer.saveSequence(result, sequencer.toString());
+      sequencer.loadModules();
+      refreshOptions();
+    }
   });
 
   var isWorkingOnGifGeneration = false;
@@ -228,8 +232,8 @@ window.onload = function() {
     $('#addStep img').remove();
 
     var previewSequencerSteps = {
-      "brightness": "20",
-      "saturation": "5",
+      "brightness": "175",
+      "saturation": "0.5",
       "rotate": 90,
       "contrast": 90,
       "crop": {

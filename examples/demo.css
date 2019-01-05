@@ -201,6 +201,12 @@ h1 {
   margin-bottom: 20px;
 }
 
+
+.savesequencemsg{
+  display: none;
+  text-align: center;
+  }
+
 #stepRemovedNotification {
   background-color: #808b96;
   padding:4px;

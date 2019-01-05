@@ -86,6 +86,13 @@ window.onload = function() {
     return false;
   });
 
+  function displayMessageOnSaveSequence(){
+      $(".savesequencemsg").fadeIn();
+      setTimeout(function() {
+          $(".savesequencemsg").fadeOut();
+      }, 1000);
+    }
+
   $('body').on('click', 'button.remove', ui.removeStepUi);
   $('#save-seq').click(() => {
     var result = window.prompt("Please give a name to your sequence... (Saved sequence will only be available in this browser).");
@@ -93,6 +100,7 @@ window.onload = function() {
       result = result + " (local)";
       sequencer.saveSequence(result, sequencer.toString());
       sequencer.loadModules();
+      displayMessageOnSaveSequence();
       refreshOptions();
     }
   });

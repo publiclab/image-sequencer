@@ -57,6 +57,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     _sequencer
       .addSteps(newStepName, options)
       .run({ index: _sequencer.images.image1.steps.length - sequenceLength - 1 });
+      $(addStepSel + " .info").html("Select a new module to add to your sequence.");
 
     //enable save-sequence button if disabled initially
     handleSaveSequence();

@@ -1,0 +1,41 @@
+{
+    "name": "Draw Rectangle",
+    "description": "It draws a rectangle on the image",
+    "inputs": {
+  		"startingX":{
+  			"type": "Number",
+  			"desc": "starting x position of the rectangle",
+  			"default": 0
+  		},
+        
+      "startingY": {
+        "type": "Number",
+        "desc": "starting y position of the rectangle",
+        "default": 0
+      },
+
+      "endX":{
+        "type": "integer",
+        "desc": "last x position of the rectangle",
+        "default": "width"
+      },
+
+      "endY":{
+        "type": "integer",
+        "desc": "last y position of the rectangle",
+        "default": "height"
+      },
+
+      "thickness":{
+        "type": "integer",
+        "desc": "thickness of border",
+        "default": 1
+      },
+
+      "color":{
+        "type": "String",
+        "desc": "RGBA values separated by a space",
+        "default": "0 0 0 255"
+      }
+    },
+}

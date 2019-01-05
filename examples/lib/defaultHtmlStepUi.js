@@ -31,6 +31,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       '\
       <div class="container">\
     <div class="row step">\
+    <form class="input-form">\
     <div class="col-md-4 details">\
     <h3>' +
       step.name +
@@ -38,8 +39,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
     <p><i>" +
       (step.description || "") +
       '</i></p>\
-    <form class=".input-form" action="">\
     </div>\
+    </form>\
     </form>\
     <div class="col-md-8">\
     <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
@@ -128,7 +129,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       }
 
       $(step.ui.querySelector("div.details")).append(
-        "<p><button class='btn btn-default btn-save' disabled = 'true' >Apply</button></form><span> Press apply to see changes</span></p>"
+        "<p><button type='submit' class='btn btn-default btn-save' disabled = 'true' >Apply</button><span> Press apply to see changes</span></p>"
       );
 
       

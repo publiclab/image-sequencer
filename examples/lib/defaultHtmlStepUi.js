@@ -41,7 +41,6 @@ function DefaultHtmlStepUi(_sequencer, options) {
       '</i></p>\
     </div>\
     </form>\
-    </form>\
     <div class="col-md-8">\
     <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
     <a><img alt="" style="max-width=100%" class="img-thumbnail step-thumbnail"/></a>\

@@ -15,10 +15,10 @@ module.exports = function Dynamic(options, UI, util) {
 
         var step = this;
 
-        var parseCoordInputs = require('../../util/ParseInputCoordinates');
+        var parseCornerCoordinateInputs = require('../../util/ParseInputCoordinates');
 
-        //parse the inputs 
-        parseCoordInputs.parseCornerCoordinateInputs(options, {
+        //parse the inputs
+        parseCornerCoordinateInputs(options, {
             src: input.src,
             x: { valInp: options.x, type: 'horizontal' },
             y: { valInp: options.y, type: 'vertical' },

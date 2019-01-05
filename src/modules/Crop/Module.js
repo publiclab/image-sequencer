@@ -29,10 +29,10 @@ module.exports = function CropModule(options, UI) {
     // save the input image;
     // TODO: this should be moved to module API to persist the input image
     options.step.input = input.src;
-    var parseCoordInputs = require('../../util/ParseInputCoordinates');
+    var parseCornerCoordinateInputs = require('../../util/ParseInputCoordinates');
 
-    //parse the inputs 
-    parseCoordInputs.parseCornerCoordinateInputs(options,{
+    //parse the inputs
+    parseCornerCoordinateInputs(options,{
       src: input.src,
       x: { valInp: options.x, type: 'horizontal' },
       y: { valInp: options.y, type: 'vertical' },

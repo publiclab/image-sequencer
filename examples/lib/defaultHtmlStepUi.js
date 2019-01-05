@@ -180,7 +180,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     }
 
     function handleInputValueChange(currentValue, initValue, hasChangedBefore) {
-      var inputChanged = !(isNaN(initValue) || isNaN(currentValue) ? initValue === currentValue : parseFloat(currentValue) - parseFloat(initValue) === 0);
+      var inputChanged = !(isNaN(initValue) || isNaN(currentValue) ? initValue === currentValue : currentValue - initValue === 0);
       changedInputs += hasChangedBefore ? inputChanged ? 0 : -1 : inputChanged ? 1 : 0;
       optionsChanged = changedInputs > 0;
 

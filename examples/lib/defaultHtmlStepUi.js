@@ -165,7 +165,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
             $(input)
               .data('initValue', $(input).val())
               .data('hasChangedBefore', false);
-            step.options[$(input).attr("name")] = input.value;
+            step.options[$(input).attr("name")] = $(input).val();
           });
         _sequencer.run({ index: step.index - 1 });
 
@@ -180,7 +180,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     }
 
     function handleInputValueChange(currentValue, initValue, hasChangedBefore) {
-      var inputChanged = !(parseInt(initValue).toString() != 'NaN' && parseInt(currentValue).toString() != 'NaN' ? parseFloat(currentValue) - parseFloat(initValue) === 0 : initValue === currentValue);
+      var inputChanged = !(isNaN(initValue) || isNaN(currentValue) ? initValue === currentValue : parseFloat(currentValue) - parseFloat(initValue) === 0);
       changedInputs += hasChangedBefore ? inputChanged ? 0 : -1 : inputChanged ? 1 : 0;
       optionsChanged = changedInputs > 0;
 

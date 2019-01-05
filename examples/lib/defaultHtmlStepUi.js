@@ -38,7 +38,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
     <p><i>" +
       (step.description || "") +
       '</i></p>\
+    <form class=".input-form" action="">\
     </div>\
+    </form>\
     <div class="col-md-8">\
     <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
     <a><img alt="" style="max-width=100%" class="img-thumbnail step-thumbnail"/></a>\
@@ -113,7 +115,6 @@ function DefaultHtmlStepUi(_sequencer, options) {
         var description = inputs[paramName].desc || paramName;
         div.innerHTML =
           "<div class='det'>\
-          <form class='input-form'>\
                            <label for='" +
           paramName +
           "'>" +
@@ -122,13 +123,12 @@ function DefaultHtmlStepUi(_sequencer, options) {
                            " +
           html +
           "\
-          </form>\
                          </div>";
         step.ui.querySelector("div.details").appendChild(div);
       }
 
       $(step.ui.querySelector("div.details")).append(
-        "<p><button class='btn btn-default btn-save' disabled = 'true' >Apply</button><span> Press apply to see changes</span></p>"
+        "<p><button class='btn btn-default btn-save' disabled = 'true' >Apply</button></form><span> Press apply to see changes</span></p>"
       );
 
       
@@ -155,6 +155,57 @@ function DefaultHtmlStepUi(_sequencer, options) {
     else {
       $("#load-image").append(step.ui);
     }
+    
+    function saveOptions(e) {
+      e.preventDefault();
+      if (optionsChanged){
+        $(step.ui.querySelector("div.details"))
+          .find("input,select")
+          .each(function(i, input) {
+            $(input)
+              .data('initValue', $(input).val())
+              .data('hasChangedBefore', false);
+            step.options[$(input).attr("name")] = input.value;
+          });
+        _sequencer.run({ index: step.index - 1 });
+
+        // modify the url hash
+        setUrlHashParameter("steps", _sequencer.toString());
+
+        // disable the save button
+        $(step.ui.querySelector('.btn-save')).prop('disabled', true);
+        optionsChanged = false;
+        changedInputs = 0;
+      }
+    }
+
+    function handleInputValueChange(currentValue, initValue, hasChangedBefore) {
+      var inputChanged = !(parseInt(initValue).toString() != 'NaN' && parseInt(currentValue).toString() != 'NaN' ? parseFloat(currentValue) - parseFloat(initValue) === 0 : initValue === currentValue);
+      changedInputs += hasChangedBefore ? inputChanged ? 0 : -1 : inputChanged ? 1 : 0;
+      optionsChanged = changedInputs > 0;
+
+      $(step.ui.querySelector('.btn-save')).prop('disabled', !optionsChanged);
+      return inputChanged;
+    }
+
+    var changedInputs = 0;
+    var optionsChanged = false;
+    $(step.ui.querySelector('.input-form')).on('submit', saveOptions);
+    step.ui.querySelectorAll('.target').forEach(function(input) {
+      $(input)
+        .data('initValue', $(input).val())
+        .data('hasChangedBefore', false)
+        .on('keyup change', function(e) {
+          $(e.target).focus();
+          $(e.target).data('hasChangedBefore',
+            handleInputValueChange(
+              $(e.target).val(),
+              $(e.target).data('initValue'),
+              $(e.target).data('hasChangedBefore')
+            )
+          )
+        })
+    })
   }
 
   var inputs = document.querySelectorAll('input[type="range"]')
@@ -196,57 +247,22 @@ function DefaultHtmlStepUi(_sequencer, options) {
       for (var i in inputs) {
         if (step.options[i] !== undefined) {
           if (inputs[i].type.toLowerCase() === "input")
-            step.ui.querySelector('div[name="' + i + '"] input').value =
-              step.options[i];
+            $(step.ui.querySelector('div[name="' + i + '"] input'))
+              .val(step.options[i])
+              .data('initValue', step.options[i]);
           if (inputs[i].type.toLowerCase() === "select")
-            step.ui.querySelector('div[name="' + i + '"] select').value =
-              step.options[i];
+            $(step.ui.querySelector('div[name="' + i + '"] select'))
+            .val(step.options[i])
+            .data('initValue', step.options[i]);
         }
       }
       for (var i in outputs) {
         if (step[i] !== undefined)
-          step.ui.querySelector('div[name="' + i + '"] input').value =
-            step[i];
+          $(step.ui.querySelector('div[name="' + i + '"] input'))
+          .val(step[i])
+          .data('initValue', step[i])
       }
     }
-
-    function saveOptions(e) {
-      e.preventDefault();
-      if (optionsChanged){
-        $(step.ui.querySelector("div.details"))
-          .find("input,select")
-          .each(function(i, input) {
-            $(input).data('initValue', $(input).val());
-            step.options[$(input).attr("name")] = input.value;
-          });
-        _sequencer.run({ index: step.index - 1 });
-
-        // modify the url hash
-        setUrlHashParameter("steps", _sequencer.toString());
-        // disable the save button
-        $(step.ui.querySelector('.btn-save')).prop('disabled', true);
-      }
-    }
-
-    function handleInputValueChange(currentValue, initValue) {
-      optionsChanged = !(parseInt(initValue) != NaN && parseInt(currentValue) != NaN ? parseFloat(currentValue) - parseFloat(initValue) === 0 : initValue === currentValue);
-      $(step.ui.querySelector('.btn-save')).prop('disabled', !optionsChanged);
-    };
-
-    var optionsChanged = false;
-    $(step.ui.querySelector('.btn-save')).on('click', saveOptions);
-    $(step.ui.querySelector('.input-form')).on('submit', saveOptions);
-    step.ui.querySelectorAll('.target').forEach(function(input) {
-      $(input)
-        .data('initValue', $(input).val())
-        .on('keyup change', function(e) {
-          $(e.target).focus();
-          handleInputValueChange(
-            $(e.target).val(),
-            $(e.target).data('initValue')
-          );
-        });
-    });
   }
 
   function onRemove(step) {

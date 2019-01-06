@@ -215,11 +215,12 @@ h1 {
   border-radius:3px;
   font-size:2rem;
   position:fixed;
-  bottom:8px;
-  left:45%;
+  bottom:2px;
+  left:50%;
   min-width:14rem;
   text-align:center;
   display:none;
+  transform: translate(-50%, -50%);
 }
 
 .no-border {

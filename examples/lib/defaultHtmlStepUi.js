@@ -183,13 +183,12 @@ function DefaultHtmlStepUi(_sequencer, options) {
     else {
       $("#load-image").append(step.ui);
     }
+    
+    $('input[type="range"]').on('input', function() {
+        $(this).next().html($(this).val());
+    })
   }
 
-  var inputs = document.querySelectorAll('input[type="range"]')
-  for (i in inputs)
-    inputs[i].oninput = function(e) {
-      e.target.nextSibling.innerHTML = e.target.value;
-    }
 
   function onDraw(step) {
     $(step.ui.querySelector(".load")).show();

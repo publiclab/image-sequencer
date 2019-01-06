@@ -8,7 +8,8 @@
             "default": "70",
             "min": "-100",
             "max": "100",
-            "step": "1"
+            "step": "1",
+            "htmlType": "range"
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

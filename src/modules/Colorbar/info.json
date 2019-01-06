@@ -11,22 +11,26 @@
                 "greyscale",
                 "stretched",
                 "fastie"
-            ]
+            ],
+            "htmlType": "select"
         },
         "x": {
             "type": "integer",
             "desc": "X-position of the image on which the new image is overlayed",
-            "default": 0
+            "default": 0,
+            "htmlType": "number"
         },
         "y": {
             "type": "integer",
             "desc": "Y-position of the image on which the new image is overlayed",
-            "default": 0
+            "default": 0,
+            "htmlType": "number"
         },
         "h": {
-            "type": "iinteger",
+            "type": "integer",
             "desc": "height of the colorbar",
-            "default": 10
+            "default": 10,
+            "htmlType": "number"
         }
     },
     "length": 4,

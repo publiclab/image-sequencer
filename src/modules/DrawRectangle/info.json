@@ -5,37 +5,43 @@
   		"startingX":{
   			"type": "Number",
   			"desc": "starting x position of the rectangle",
-  			"default": 0
+  			"default": 0,
+        "htmlType": "number"
   		},
         
       "startingY": {
         "type": "Number",
         "desc": "starting y position of the rectangle",
-        "default": 0
+        "default": 0,
+        "htmlType": "number"
       },
 
       "endX":{
         "type": "integer",
         "desc": "last x position of the rectangle",
-        "default": "width"
+        "default": "width",
+        "htmlType": "number"
       },
 
       "endY":{
         "type": "integer",
         "desc": "last y position of the rectangle",
-        "default": "height"
+        "default": "height",
+        "htmlType": "number"
       },
 
       "thickness":{
         "type": "integer",
         "desc": "thickness of border",
-        "default": 1
+        "default": 1,
+        "htmlType": "number"
       },
 
       "color":{
         "type": "String",
         "desc": "RGBA values separated by a space",
-        "default": "0 0 0 255"
+        "default": "0 0 0 255",
+        "htmlType": "text"
       }
     },
 }

@@ -6,14 +6,16 @@
   			"type": "Float",
   			"desc": "a constant factor, multiplies all the kernel values by that factor",
   			"default": 0.1111,
-        "placeholder": 0.1111
+        "placeholder": 0.1111,
+        "htmlType": "Float"
   		},
         
       "kernelValues": {
         "type": "String",
         "desc": "nine space separated numbers representing the kernel values in left to right and top to bottom format.",
         "default": "1 1 1 1 1 1 1 1 1",
-        "placeholder": "1 1 1 1 1 1 1 1 1"
+        "placeholder": "1 1 1 1 1 1 1 1 1",
+        "htmlType": "text"
       }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

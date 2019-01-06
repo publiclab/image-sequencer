@@ -6,7 +6,8 @@
         "type": "select",
         "desc": "Name of the Dithering Algorithm",
         "default": "none",
-        "values": ["none","floydsteinberg","bayer","Atkinson"]
+        "values": ["none","floydsteinberg","bayer","Atkinson"],
+        "htmlType": "select"
       }
     }
 }

@@ -6,28 +6,33 @@
     "x": {
       "type": "integer",
       "desc": "X-position (measured from left) from where cropping starts",
-      "default": 0
+      "default": 0,
+      "htmlType": "Number"
     },
     "y": {
       "type": "integer",
       "desc": "Y-position (measured from top) from where cropping starts",
-      "default": 0
+      "default": 0,
+      "htmlType": "Number"
     },
     "w": {
       "type": "integer",
       "desc": "Width of crop",
-      "default": "(50%)"
+      "default": "(50%)",
+      "htmlType": "Number"
     },
     "h": {
       "type": "integer",
       "desc": "Height of crop",
-      "default": "(50%)"
+      "default": "(50%)",
+      "htmlType": "Number"
     },
     "backgroundColor": {
       "type": "String",
       "desc": "Background Color (Four space separated RGBA values)",
       "default": "255 255 255 255",
-      "placeholder": "255 255 255 255"
+      "placeholder": "255 255 255 255",
+      "htmlType": "text"
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

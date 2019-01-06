@@ -128,8 +128,8 @@ h1 {
 }
 #save-seq {
   display: block;
-  margin: 0 auto;
-  min-width: 250px;
+  margin: 0px 10px 0px 0px;
+  width: 250px;
 }
 .info {
   padding: 8px;
@@ -137,8 +137,8 @@ h1 {
 }
 #gif {
   display: block;
-  margin: 0 auto;
-  min-width: 250px;
+  margin: 0px 0px 0px 10px;
+  width: 250px;
 }
 #dwnld {
   max-width: 500px;
@@ -199,7 +199,14 @@ h1 {
 
 .radio-group {
   margin-bottom: 20px;
+  overflow: scroll;
 }
+
+
+.savesequencemsg{
+  display: none;
+  text-align: center;
+  }
 
 #stepRemovedNotification {
   background-color: #808b96;
@@ -229,4 +236,10 @@ h1 {
 
 .i-small {
   left: 25px;
+}
+
+@media all and (max-width: 767px) {
+  .center-align {
+    justify-content: space-between;
+  }
 }

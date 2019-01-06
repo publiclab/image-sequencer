@@ -86,6 +86,13 @@ window.onload = function() {
     return false;
   });
 
+  function displayMessageOnSaveSequence(){
+      $(".savesequencemsg").fadeIn();
+      setTimeout(function() {
+          $(".savesequencemsg").fadeOut();
+      }, 1000);
+    }
+
   $('body').on('click', 'button.remove', ui.removeStepUi);
   $('#save-seq').click(() => {
     var result = window.prompt("Please give a name to your sequence... (Saved sequence will only be available in this browser).");
@@ -93,6 +100,7 @@ window.onload = function() {
       result = result + " (local)";
       sequencer.saveSequence(result, sequencer.toString());
       sequencer.loadModules();
+      displayMessageOnSaveSequence();
       refreshOptions();
     }
   });
@@ -192,42 +200,8 @@ window.onload = function() {
     }
   });
 
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js', { scope: '/examples/' })
-      .then(function(registration) {
-        const installingWorker = registration.installing;
-        installingWorker.onstatechange = () => {
-          console.log(installingWorker)
-          if (installingWorker.state === 'installed') {
-            location.reload();
-          }
-        }
-        console.log('Registration successful, scope is:', registration.scope);
-      })
-      .catch(function(error) {
-        console.log('Service worker registration failed, error:', error);
-      });
-  }
-
-  if ('serviceWorker' in navigator) {
-    caches.keys().then(function(cacheNames) {
-      cacheNames.forEach(function(cacheName) {
-        $("#clear-cache").append(" " + cacheName);
-      });
-    });
-  }
-
-  $("#clear-cache").click(function() {
-    if ('serviceWorker' in navigator) {
-      caches.keys().then(function(cacheNames) {
-        cacheNames.forEach(function(cacheName) {
-          caches.delete(cacheName);
-        });
-      });
-    }
-    location.reload();
-  });
-
+  setupCache();
+  
   function updatePreviews(src) {
     $('#addStep img').remove();
 

@@ -66161,10 +66161,13 @@ module.exports={
 
 module.exports = function Brightness(options,UI){
 
+
     var output;
 
     function draw(input,callback,progressObj){
 
+        options.brightness = parseInt(options.brightness) || 100;
+        var val = (options.brightness)/100.0;
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
@@ -66177,13 +66180,10 @@ module.exports = function Brightness(options,UI){
         var step = this;
 
         function changePixel(r, g, b, a){
-	  options.brightness = 
-	  options.brightness || 100
-            var val = (options.brightness)/100.0
 
-            r = val*r<255?val*r:255
-            g = val*g<255?val*g:255
-            b = val*b<255?val*b:255
+            r = Math.min(val*r, 255)
+            g = Math.min(val*g, 255)
+            b = Math.min(val*b, 255)
             return [r, g, b, a]
         }
 
@@ -66961,10 +66961,10 @@ module.exports = function CropModule(options, UI) {
     // save the input image;
     // TODO: this should be moved to module API to persist the input image
     options.step.input = input.src;
-    var parseCoordInputs = require('../../util/ParseInputCoordinates');
+    var parseCornerCoordinateInputs = require('../../util/ParseInputCoordinates');
 
-    //parse the inputs 
-    parseCoordInputs.parseCornerCoordinateInputs(options,{
+    //parse the inputs
+    parseCornerCoordinateInputs(options,{
       src: input.src,
       x: { valInp: options.x, type: 'horizontal' },
       y: { valInp: options.y, type: 'vertical' },
@@ -68428,10 +68428,10 @@ module.exports = function Dynamic(options, UI, util) {
 
         var step = this;
 
-        var parseCoordInputs = require('../../util/ParseInputCoordinates');
+        var parseCornerCoordinateInputs = require('../../util/ParseInputCoordinates');
 
-        //parse the inputs 
-        parseCoordInputs.parseCornerCoordinateInputs(options, {
+        //parse the inputs
+        parseCornerCoordinateInputs(options, {
             src: input.src,
             x: { valInp: options.x, type: 'horizontal' },
             y: { valInp: options.y, type: 'vertical' },

@@ -16,7 +16,7 @@ function stepRemovedNotify() {
     $('body').append(notification);
   }
 
-  $('#stepRemovedNotification').fadeIn(500).delay(200000).fadeOut(500);
+  $('#stepRemovedNotification').fadeIn(500).delay(200).fadeOut(500);
 }
 function DefaultHtmlStepUi(_sequencer, options) {
 

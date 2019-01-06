@@ -174,7 +174,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       if (stepOptions.index == _sequencer.images.image1.steps.length) {
         stepsEl.appendChild(step.ui);
         $("#steps .container:nth-last-child(1) .insert-step").prop('disabled',true);
-        if($("#steps .container:nth-last-child(2)")) 
+        if($("#steps .container:nth-last-child(2)"))
         $("#steps .container:nth-last-child(2) .insert-step").prop('disabled',false);
       } else {
         stepsEl.insertBefore(step.ui, $(stepsEl).children()[stepOptions.index]);
@@ -242,6 +242,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
   function onRemove(step) {
     step.ui.remove();
     $("#steps .container:nth-last-child(1) .insert-step").prop('disabled',true);
+    $('div[class^=imgareaselect-]').remove();
   }
 
   function getPreview() {

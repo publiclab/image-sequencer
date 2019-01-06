@@ -206,10 +206,10 @@ function DefaultHtmlStepUi(_sequencer, options) {
             )
           )
         })
+    })
 
     $('input[type="range"]').on('input', function() {
         $(this).next().html($(this).val());
-
     })
   }
 

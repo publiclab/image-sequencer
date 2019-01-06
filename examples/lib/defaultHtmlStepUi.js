@@ -189,20 +189,23 @@ function DefaultHtmlStepUi(_sequencer, options) {
       return inputChanged;
     }
 
-    var changedInputs = 0;
-    var optionsChanged = false;
+    var 
+      changedInputs = 0,
+      optionsChanged = false;
+    
     $(step.ui.querySelector('.input-form')).on('submit', saveOptions);
     step.ui.querySelectorAll('.target').forEach(function(input) {
       $(input)
         .data('initValue', $(input).val())
         .data('hasChangedBefore', false)
-        .on('input', function(e) {
-          $(e.target).focus();
-          $(e.target).data('hasChangedBefore',
-            handleInputValueChange(
-              $(e.target).val(),
-              $(e.target).data('initValue'),
-              $(e.target).data('hasChangedBefore')
+        .on('input', function() {
+          $(this)
+            .focus()
+            .data('hasChangedBefore',
+              handleInputValueChange(
+                $(this).val(),
+                $(this).data('initValue'),
+                $(this).data('hasChangedBefore')
             )
           )
         })

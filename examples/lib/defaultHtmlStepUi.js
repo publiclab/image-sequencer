@@ -261,8 +261,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       for (var i in outputs) {
         if (step[i] !== undefined)
           $(step.ui.querySelector('div[name="' + i + '"] input'))
-          .val(step[i])
-          .data('initValue', step[i])
+            .val(step[i]);
       }
     }
   }

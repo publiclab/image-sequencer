@@ -181,7 +181,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     }
 
     function handleInputValueChange(currentValue, initValue, hasChangedBefore) {
-      var inputChanged = !(isNaN(initValue) || isNaN(currentValue) ? initValue === currentValue : currentValue - initValue === 0);
+      var inputChanged = !(isNaN(initValue) || isNaN(currentValue) ? currentValue === initValue : currentValue - initValue === 0);
       changedInputs += hasChangedBefore ? inputChanged ? 0 : -1 : inputChanged ? 1 : 0;
       optionsChanged = changedInputs > 0;
 
@@ -192,9 +192,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
     var 
       changedInputs = 0,
       optionsChanged = false;
-    
     $(step.ui.querySelector('.input-form')).on('submit', saveOptions);
-    step.ui.querySelectorAll('.target').forEach(function(input) {
+    $(step.ui.querySelectorAll('.target')).each(function(i, input) {
       $(input)
         .data('initValue', $(input).val())
         .data('hasChangedBefore', false)

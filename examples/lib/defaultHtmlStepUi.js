@@ -254,8 +254,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
               .data('initValue', step.options[i]);
           if (inputs[i].type.toLowerCase() === "select")
             $(step.ui.querySelector('div[name="' + i + '"] select'))
-            .val(step.options[i])
-            .data('initValue', step.options[i]);
+              .val(step.options[i])
+              .data('initValue', step.options[i]);
         }
       }
       for (var i in outputs) {

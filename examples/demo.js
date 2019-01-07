@@ -69,7 +69,7 @@ window.onload = function() {
     var r=confirm("Do you want to reset the sequence?");
     if (r)
     {
-        location.reload();
+        window.location = "/";
     }
   }
 

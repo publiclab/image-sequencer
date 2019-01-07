@@ -223,11 +223,6 @@ h1 {
   transform: translate(-50%, -50%);
 }
 
-#resetSequence {
-  color: inherit;
-  text-decoration: none;
-}
-
 #resetButton {
   margin-top: 20px;
 }

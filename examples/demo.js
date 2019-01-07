@@ -65,8 +65,17 @@ window.onload = function() {
     sequencer.loadImage("images/tulips.png", ui.onLoad);
   }
 
+  var resetSequence = function (e){
+    var r=confirm("Do you want to reset the sequence?");
+    if (r)
+    {
+        location.reload();
+    }
+  }
+
   $("#addStep select").on("change", ui.selectNewStepUi);
   $("#addStep #add-step-btn").on("click", ui.addStepUi);
+  $("#resetButton").on("click",resetSequence);
 
   //Module button radio selection
   $('.radio-group .radio').on("click", function() {

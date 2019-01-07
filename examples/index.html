@@ -21,6 +21,7 @@
   <script src="lib/defaultHtmlStepUi.js" charset="utf-8"></script>
   <script src="lib/defaultHtmlSequencerUi.js" charset="utf-8"></script>
   <script src="lib/intermediateHtmlStepUi.js" charset="utf-8"></script>
+  <script src="lib/cache.js" charset="utf-8"></script>
   <script src="demo.js" charset="utf-8"></script>
   <!-- for crop module: -->
   <script src="../node_modules/imgareaselect/jquery.imgareaselect.dev.js"></script>
@@ -80,6 +81,7 @@
     </section>
 
     <hr />
+  <p class = "alert alert-success savesequencemsg">Saved Sequence Success. Sequence can be found among other modules.</p>
   <div class="row">
     <div class="col-sm-8">
     <section id="addStep" class="panel panel-primary">
@@ -133,8 +135,8 @@
       <div class="panel-body">
 
         <div class="row center-align">
-          <button class="btn btn-primary btn-lg" name="save-sequence" id="save-seq">Save Sequence</button>
-          <button class="btn btn-primary btn-lg js-view-as-gif" id="gif">View GIF</button>
+          <button class="btn btn-primary btn-block btn-lg" name="save-sequence" id="save-seq">Save Sequence</button>
+          <button class="btn btn-primary btn-block btn-lg js-view-as-gif" id="gif">View GIF</button>
         </div>
 
 
@@ -177,13 +179,13 @@
     </div>
   </div>
 
+  <footer>
+    <hr style="margin:20px;"><center><a class="color:grey;" id="clear-cache">Clear offline cache</a></center>
+  </footer>
   <form class="move-up" action="#up">
     <button><i class="fa fa-arrow-circle-o-up"></i></button>
   </form>
 
-  <footer>
-    <hr style="margin:20px;"><center><a class="color:grey;" id="clear-cache">Clear offline cache</a></center>
-  </footer>
   <script type="text/javascript">
     $(function() {
       var sequencer;

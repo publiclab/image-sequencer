@@ -3185,10 +3185,10 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
-jsqr@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/jsqr/-/jsqr-0.2.2.tgz#8c1f0279fb7c94542aaa9e8aeb7c722d523ea092"
-  integrity sha1-jB8Ceft8lFQqqp6K63xyLVI+oJI=
+jsqr@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/jsqr/-/jsqr-1.1.1.tgz#a0d7f95e6c3b0bec913dfef2ca64a877f28ed05f"
+  integrity sha512-FVoMU2ncTyjaOqN/vwvDnZ7jaAVvFzM3LK3vG3jvQZFWJQlAwJ1XTCOgAEKo+4Rkd6ydMXTTvqGV/4w5VunmTw==
 
 kind-of@^3.0.2, kind-of@^3.0.3, kind-of@^3.2.0:
   version "3.2.2"
@@ -3313,10 +3313,10 @@ longest@^1.0.1:
   resolved "https://registry.yarnpkg.com/longest/-/longest-1.0.1.tgz#30a0b2da38f73770e8294a0d22e6625ed77d0097"
   integrity sha1-MKCy2jj3N3DoKUoNIuZiXtd9AJc=
 
-looks-same@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/looks-same/-/looks-same-4.1.0.tgz#fa9593350dcddc79999fe130689860f9fb6afff2"
-  integrity sha512-9dvYQrWpMhQzyyR25xRtFMq6TSXhduTcKKvYtlMf9IHzb+r/fvF+MQG6+hChC4MrLVlA+MRTOt6fhvUkbZ9IpA==
+looks-same@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/looks-same/-/looks-same-5.0.1.tgz#60c283a65d24240c407d0fa737db51b1f2981a07"
+  integrity sha512-BkQ0wWh+tRehLdP2DiQ4xLwjGd/OCnX0D5SZg7y7ViFnQOR2EOxGkcRS63Vw7RZdczGdpPYR/8RFRhEOGVNN5Q==
   dependencies:
     color-diff "^1.1.0"
     concat-stream "^1.6.2"
@@ -5345,9 +5345,9 @@ tape-run@^5.0.0:
     throughout "0.0.0"
 
 tape@>=4.7.0:
-  version "4.9.1"
-  resolved "https://registry.yarnpkg.com/tape/-/tape-4.9.1.tgz#1173d7337e040c76fbf42ec86fcabedc9b3805c9"
-  integrity sha512-6fKIXknLpoe/Jp4rzHKFPpJUHDHDqn8jus99IfPnHIjyz78HYlefTGD3b5EkbQzuLfaEvmfPK3IolLgq2xT3kw==
+  version "4.9.2"
+  resolved "https://registry.yarnpkg.com/tape/-/tape-4.9.2.tgz#f233e40f09dc7e00fcf9b26755453c3822ad28c0"
+  integrity sha512-lPXKRKILZ1kZaUy5ynWKs8ATGSUO7HAFHCFnBam6FaGSqPdOwMWbxXHq4EXFLE8WRTleo/YOMXkaUTRmTB1Fiw==
   dependencies:
     deep-equal "~1.0.1"
     defined "~1.0.0"

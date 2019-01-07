@@ -86,11 +86,23 @@ window.onload = function() {
     return false;
   });
 
+  function displayMessageOnSaveSequence(){
+      $(".savesequencemsg").fadeIn();
+      setTimeout(function() {
+          $(".savesequencemsg").fadeOut();
+      }, 1000);
+    }
+
   $('body').on('click', 'button.remove', ui.removeStepUi);
   $('#save-seq').click(() => {
-    sequencer.saveSequence(window.prompt("Please give a name to your sequence..."), sequencer.toString());
-    sequencer.loadModules();
-    refreshOptions();
+    var result = window.prompt("Please give a name to your sequence... (Saved sequence will only be available in this browser).");
+    if(result){
+      result = result + " (local)";
+      sequencer.saveSequence(result, sequencer.toString());
+      sequencer.loadModules();
+      displayMessageOnSaveSequence();
+      refreshOptions();
+    }
   });
 
   var isWorkingOnGifGeneration = false;
@@ -188,48 +200,14 @@ window.onload = function() {
     }
   });
 
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js', { scope: '/examples/' })
-      .then(function(registration) {
-        const installingWorker = registration.installing;
-        installingWorker.onstatechange = () => {
-          console.log(installingWorker)
-          if (installingWorker.state === 'installed') {
-            location.reload();
-          }
-        }
-        console.log('Registration successful, scope is:', registration.scope);
-      })
-      .catch(function(error) {
-        console.log('Service worker registration failed, error:', error);
-      });
-  }
-
-  if ('serviceWorker' in navigator) {
-    caches.keys().then(function(cacheNames) {
-      cacheNames.forEach(function(cacheName) {
-        $("#clear-cache").append(" " + cacheName);
-      });
-    });
-  }
-
-  $("#clear-cache").click(function() {
-    if ('serviceWorker' in navigator) {
-      caches.keys().then(function(cacheNames) {
-        cacheNames.forEach(function(cacheName) {
-          caches.delete(cacheName);
-        });
-      });
-    }
-    location.reload();
-  });
-
+  setupCache();
+  
   function updatePreviews(src) {
     $('#addStep img').remove();
 
     var previewSequencerSteps = {
-      "brightness": "20",
-      "saturation": "5",
+      "brightness": "175",
+      "saturation": "0.5",
       "rotate": 90,
       "contrast": 90,
       "crop": {

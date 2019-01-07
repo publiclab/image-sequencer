@@ -199,7 +199,7 @@ h1 {
 
 .radio-group {
   margin-bottom: 20px;
-  overflow: scroll;
+  overflow: auto;
 }
 
 

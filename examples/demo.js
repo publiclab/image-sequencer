@@ -65,7 +65,7 @@ window.onload = function() {
     sequencer.loadImage("images/tulips.png", ui.onLoad);
   }
 
-  var resetSequence = function (e){
+  var resetSequence = function(){
     var r=confirm("Do you want to reset the sequence?");
     if (r)
       window.location = "/";

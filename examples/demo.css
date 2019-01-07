@@ -215,9 +215,13 @@ h1 {
   display:none;
 }
 
-#startANewSequence {
+#resetSequence {
   color: inherit;
   text-decoration: none;
+}
+
+#resetButton {
+  margin-top: 20px;
 }
 
 .no-border {

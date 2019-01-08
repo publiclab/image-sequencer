@@ -6,7 +6,8 @@
       "type": "select",
       "desc": "Filter color",
       "default": "red",
-      "values": ["red", "blue"]
+      "values": ["red", "blue"],
+      "htmlType": "select"
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

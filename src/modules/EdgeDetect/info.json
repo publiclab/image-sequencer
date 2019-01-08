@@ -8,17 +8,20 @@
             "default": "2",
             "min": "0",
             "max": "5",
-            "step": "0.25"
+            "step": "0.25",
+            "htmlType": "range"
         },
         "highThresholdRatio":{
             "type": "float",
             "desc": "The high threshold ratio for the image",
-            "default": 0.2
+            "default": 0.2,
+            "htmlType": "float"
         },
         "lowThresholdRatio": {
             "type": "float",
             "desc": "The low threshold value for the image",
-            "default": 0.15
+            "default": 0.15,
+            "htmlType": "float"
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

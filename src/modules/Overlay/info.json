@@ -5,17 +5,20 @@
         "x": {
             "type": "integer",
             "desc": "X-position of the image on which the new image is overlayed",
-            "default": 0
+            "default": 0,
+            "htmlType": "number"
         },
         "y": {
             "type": "integer",
             "desc": "Y-position of the image on which the new image is overlayed",
-            "default": 0
+            "default": 0,
+            "htmlType": "number"
         },
         "offset": {
             "type": "integer",
             "desc": "offset to the output of the step on which the output of the last step is overlayed",
-            "default": -2
+            "default": -2,
+            "htmlType": "number"
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

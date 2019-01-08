@@ -5,7 +5,8 @@
         "adjustment": {
             "type": "float",
             "desc": "gamma correction (inverse of actual gamma factor) for the new image",
-            "default": 0.2
+            "default": 0.2,
+            "htmlType": "float"
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

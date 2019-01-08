@@ -8,59 +8,68 @@
       "desc": "a parameter",
       "default": 1,
       "min": 1,
-      "max": 4
+      "max": 4,
+      "htmlType": "float"
     },
     "b": {
       "type": "float",
       "desc": "b parameter",
       "default": 1,
       "min": 1,
-      "max": 4
+      "max": 4,
+      "htmlType": "float"
     },
     "Fx": {
       "type": "float",
       "desc": "Fx parameter",
       "default": 0,
       "min": 0,
-      "max": 4
+      "max": 4,
+      "htmlType": "float"
     },
     "Fy": {
       "type": "float",
       "desc": "Fy parameter",
       "default": 0,
       "min": 0,
-      "max": 4
+      "max": 4,
+      "htmlType": "float"
     },
     "scale": {
       "type": "float",
       "desc": "Image Scaling",
       "default": 1.5,
       "min": 0,
-      "max": 20
+      "max": 20,
+      "htmlType": "float"
     },
     "x": {
       "type": "float",
       "desc": "FOV x parameter",
       "default": 1.5,
       "min": 0,
-      "max": 20
+      "max": 20,
+      "htmlType": "float"
     },
     "y": {
       "type": "float",
       "desc": "FOV y parameter",
       "default": 1.5,
       "min": 0,
-      "max": 20
+      "max": 20,
+      "htmlType": "float"
     },
     "fragmentSrc": {
       "type": "PATH",
       "desc": "Path to a WebGL fragment shader file",
-      "default": "(inbuilt)"
+      "default": "(inbuilt)",
+      "htmlType": "text"
     },
     "vertexSrc": {
       "type": "PATH",
       "desc": "Path to a WebGL vertex shader file",
-      "default": "(inbuilt)"
+      "default": "(inbuilt)",
+      "htmlType": "text"
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

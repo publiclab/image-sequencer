@@ -4,6 +4,7 @@
   "inputs": {
     "channel": {
       "type": "select",
+      "htmlType": "select",
       "desc": "Color channel",
       "default": "green",
       "values": ["red", "green", "blue"]

@@ -5,26 +5,31 @@
   "inputs": {
     "x": {
       "type": "integer",
+      "htmlType": "number",
       "desc": "X-position (measured from left) from where cropping starts",
       "default": 0
     },
     "y": {
       "type": "integer",
+      "htmlType": "number",
       "desc": "Y-position (measured from top) from where cropping starts",
       "default": 0
     },
     "w": {
       "type": "integer",
+      "htmlType": "number",
       "desc": "Width of crop",
-      "default": "(50%)"
+      "default": 100
     },
     "h": {
       "type": "integer",
+      "htmlType": "number",
       "desc": "Height of crop",
-      "default": "(50%)"
+      "default": 100
     },
     "backgroundColor": {
-      "type": "String",
+      "type": "string",
+      "htmlType": "text",
       "desc": "Background Color (Four space separated RGBA values)",
       "default": "255 255 255 255",
       "placeholder": "255 255 255 255"

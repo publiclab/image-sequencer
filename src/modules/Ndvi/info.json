@@ -4,6 +4,7 @@
   "inputs": {
     "filter": {
       "type": "select",
+      "htmlType": "select",
       "desc": "Filter color",
       "default": "red",
       "values": ["red", "blue"]

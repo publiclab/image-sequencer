@@ -78,7 +78,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         var inputDesc = isInput ? inputs[paramName] : {};
         if (!isInput) {
           html += '<span class="output"></span>';
-        } else if (inputDesc.type.toLowerCase() == "select") {
+        } else if (inputDesc.htmlType.toLowerCase() == "select") {
           html += '<select class="form-control target" name="' + paramName + '">';
           for (var option in inputDesc.values) {
             html += "<option>" + inputDesc.values[option] + "</option>";
@@ -88,7 +88,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
           let paramVal = step.options[paramName] || inputDesc.default;
           html =
             '<input class="form-control target" type="' +
-            inputDesc.type +
+            inputDesc.htmlType +
             '" name="' +
             paramName +
             '" value="' +
@@ -96,14 +96,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
             '" placeholder ="' +
             (inputDesc.placeholder || "");
 
-          if (inputDesc.type.toLowerCase() == "range") {
+          if (inputDesc.htmlType.toLowerCase() == "range") {
             html +=
               '"min="' +
               inputDesc.min +
               '"max="' +
               inputDesc.max +
               '"step="' +
-              inputDesc.step + '">' + '<span>' + paramVal + '</span>';
+              (inputDesc.step ? inputDesc.step : '1') + '">' + '<span>' + paramVal + '</span>';
 
           }
           else html += '">';
@@ -251,11 +251,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       var outputs = _sequencer.modulesInfo(step.name).outputs;
       for (var i in inputs) {
         if (step.options[i] !== undefined) {
-          if (inputs[i].type.toLowerCase() === "input")
-            $(step.ui.querySelector('div[name="' + i + '"] input'))
-              .val(step.options[i])
-              .data('initValue', step.options[i]);
-          if (inputs[i].type.toLowerCase() === "select")
+          if (inputs[i].htmlType.toLowerCase() === "select")
             $(step.ui.querySelector('div[name="' + i + '"] select'))
               .val(step.options[i])
               .data('initValue', step.options[i]);

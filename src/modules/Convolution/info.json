@@ -3,14 +3,19 @@
     "description": "Image Convolution using a given 3x3 kernel matrix <a href='https://en.wikipedia.org/wiki/Kernel_(image_processing)'>Read more</a>",
     "inputs": {
   		"constantFactor":{
-  			"type": "Float",
-  			"desc": "a constant factor, multiplies all the kernel values by that factor",
+        "type": "float",
+        "htmlType": "range",
+        "desc": "a constant factor, multiplies all the kernel values by that factor",
+        "min": 0,
+        "max": 1,
+        "step": 0.001,
   			"default": 0.1111,
         "placeholder": 0.1111
   		},
         
       "kernelValues": {
-        "type": "String",
+        "type": "string",
+        "htmlType": "text",
         "desc": "nine space separated numbers representing the kernel values in left to right and top to bottom format.",
         "default": "1 1 1 1 1 1 1 1 1",
         "placeholder": "1 1 1 1 1 1 1 1 1"

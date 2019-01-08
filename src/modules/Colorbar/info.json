@@ -4,6 +4,7 @@
     "inputs": {
         "colormap": {
             "type": "select",
+            "htmlType": "select",
             "desc": "Name of the Colormap",
             "default": "default",
             "values": [
@@ -15,16 +16,19 @@
         },
         "x": {
             "type": "integer",
+            "htmlType": "number",
             "desc": "X-position of the image on which the new image is overlayed",
             "default": 0
         },
         "y": {
             "type": "integer",
+            "htmlType": "number",
             "desc": "Y-position of the image on which the new image is overlayed",
             "default": 0
         },
         "h": {
-            "type": "iinteger",
+            "type": "integer",
+            "htmlType": "number",
             "desc": "height of the colorbar",
             "default": 10
         }

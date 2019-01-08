@@ -4,6 +4,7 @@
     "inputs": {
         "gradient": {
             "type": "select",
+            "htmlType": "select",
             "desc": "Toggle the gradient along x-axis",
             "default": "true",
             "values": [

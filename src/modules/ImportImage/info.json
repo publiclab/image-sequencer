@@ -4,7 +4,8 @@
   "url": "https://github.com/publiclab/image-sequencer/tree/master/MODULES.md",
   "inputs": {
     "url": {
-      "type": "string",
+      "type": "URL",
+      "htmlType": "text",
       "desc": "URL of image to import",
       "default": "./images/monarch.png"
     }

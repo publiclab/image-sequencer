@@ -5,7 +5,8 @@
   },
   "outputs": {
     "qrval": {
-      "type": "text"
+      "type": "string",
+      "htmlType": "text"
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

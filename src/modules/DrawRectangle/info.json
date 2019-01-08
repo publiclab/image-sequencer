@@ -3,39 +3,45 @@
     "description": "It draws a rectangle on the image",
     "inputs": {
   		"startingX":{
-  			"type": "Number",
+        "type": "integer",
+        "htmlType": "number",
   			"desc": "starting x position of the rectangle",
   			"default": 0
   		},
         
       "startingY": {
-        "type": "Number",
+        "type": "integer",
+        "htmlType": "number",
         "desc": "starting y position of the rectangle",
         "default": 0
       },
 
       "endX":{
         "type": "integer",
+        "htmlType": "number",
         "desc": "last x position of the rectangle",
-        "default": "width"
+        "default": 0
       },
 
       "endY":{
         "type": "integer",
+        "htmlType": "number",
         "desc": "last y position of the rectangle",
-        "default": "height"
+        "default": 0
       },
 
       "thickness":{
         "type": "integer",
+        "htmlType": "number",
         "desc": "thickness of border",
         "default": 1
       },
 
       "color":{
-        "type": "String",
+        "type": "string",
+        "htmlType": "text",
         "desc": "RGBA values separated by a space",
         "default": "0 0 0 255"
       }
-    },
+    }
 }

@@ -1,6 +1,6 @@
 {
     "name": "Overlay",
-    "description": "Overlays an Image over another at a given position(x,y)",
+    "description": "Overlays an Image over another at a given position(x,y) in pixels or in %",
     "inputs": {
         "x": {
             "type": "integer",

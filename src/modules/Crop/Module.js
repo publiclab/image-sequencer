@@ -19,7 +19,7 @@ module.exports = function CropModule(options, UI) {
   // add our custom in-module html ui:
   if (options.step.inBrowser && !options.noUI) var ui = require('./Ui.js')(options.step, UI);
   var output,
-      setupComplete = false;
+    setupComplete = false;
 
   // This function is caled everytime the step has to be redrawn
   function draw(input,callback) {
@@ -29,8 +29,23 @@ module.exports = function CropModule(options, UI) {
     // save the input image;
     // TODO: this should be moved to module API to persist the input image
     options.step.input = input.src;
+    var parseCornerCoordinateInputs = require('../../util/ParseInputCoordinates');
 
-    require('./Crop')(input, options, function(out, format){
+    //parse the inputs
+    parseCornerCoordinateInputs(options,{
+      src: input.src,
+      x: { valInp: options.x, type: 'horizontal' },
+      y: { valInp: options.y, type: 'vertical' },
+      w: { valInp: options.w, type: 'horizontal' },
+      h: { valInp: options.h, type: 'vertical' },
+    }, function (options, coord) {
+      options.x = parseInt(coord.x.valInp);
+      options.y = parseInt(coord.y.valInp);
+      options.w = coord.w.valInp;
+      options.h = coord.h.valInp;
+    });
+
+    require('./Crop')(input, options, function (out, format) {
 
       // This output is accessible to Image Sequencer
       step.output = {

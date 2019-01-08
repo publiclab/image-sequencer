@@ -61757,7 +61757,7 @@ module.exports={
     "description": "Change the colour balance of the image by adjusting the colour temperature.",
     "inputs": {
       "temperature": {
-        "type": "string",
+        "type": "integer",
         "htmlType": "number",
         "desc": "Temperature between 0 - 40,000 Kelvin",
         "default": 6000

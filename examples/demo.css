@@ -199,7 +199,7 @@ h1 {
 
 .radio-group {
   margin-bottom: 20px;
-  overflow: scroll;
+  overflow: auto;
 }
 
 
@@ -221,6 +221,10 @@ h1 {
   text-align:center;
   display:none;
   transform: translate(-50%, -50%);
+}
+
+#resetButton {
+  margin-top: 20px;
 }
 
 .no-border {

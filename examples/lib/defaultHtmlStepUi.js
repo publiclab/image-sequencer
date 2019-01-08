@@ -7,22 +7,25 @@
 // The variable 'step' stores useful data like input and
 // output values, step information.
 // See documetation for more details.
-function stepRemovedNotify() {
-  if ($('#stepRemovedNotification').length == 0) {
-    var notification = document.createElement('span');
-    notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> Step Removed ';
-    notification.id = 'stepRemovedNotification';
 
-    $('body').append(notification);
+function stepRemovedNotify() {
+    if ($('#stepRemovedNotification').length == 0) {
+      var notification = document.createElement('span');
+      notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> Step Removed ';
+      notification.id = 'stepRemovedNotification';
+
+      $('body').append(notification);
+    }
+
+    $('#stepRemovedNotification').fadeIn(500).delay(200).fadeOut(500);
   }
 
-  $('#stepRemovedNotification').fadeIn(500).delay(200).fadeOut(500);
-}
 function DefaultHtmlStepUi(_sequencer, options) {
 
   options = options || {};
   var stepsEl = options.stepsEl || document.querySelector("#steps");
   var selectStepSel = options.selectStepSel = options.selectStepSel || "#selectStep";
+
   function onSetup(step, stepOptions) {
     if (step.options && step.options.description)
       step.description = step.options.description;
@@ -287,3 +290,6 @@ function DefaultHtmlStepUi(_sequencer, options) {
     onDraw: onDraw
   }
 }
+
+module.exports = DefaultHtmlStepUi;
+

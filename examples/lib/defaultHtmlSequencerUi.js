@@ -82,3 +82,6 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     addStepUi: addStepUi
   }
 }
+
+module.exports = DefaultHtmlSequencerUi;
+

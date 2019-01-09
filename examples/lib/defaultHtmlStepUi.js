@@ -157,7 +157,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     }
     $(step.ui.querySelector(".toggle")).on("click", (e) => {
       $(e.target.querySelector('.fa')).toggleClass('fa-caret-up').toggleClass('fa-caret-down');
-      $(step.ui.querySelector('.collapse')).collapse('toggle');
+      $(step.ui.querySelectorAll('.collapse')).collapse('toggle');
     });
     
 

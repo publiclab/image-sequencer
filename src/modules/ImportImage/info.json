@@ -5,9 +5,12 @@
   "inputs": {
     "url": {
       "type": "URL",
-      "htmlType": "text",
       "desc": "URL of image to import",
-      "default": "./images/monarch.png"
+      "htmlType":
+      {
+        "type": "text",
+        "default": "./images/monarch.png"
+      }
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

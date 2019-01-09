@@ -4,10 +4,12 @@
     "inputs": {
       "dither": {
         "type": "select",
-        "htmlType": "select",
         "desc": "Name of the Dithering Algorithm",
-        "default": "none",
-        "values": ["none","floydsteinberg","bayer","Atkinson"]
+        "htmlType":{
+          "type": "select",
+          "default": "none",
+          "values": ["none","floydsteinberg","bayer","Atkinson"]
+        }
       }
     }
 }

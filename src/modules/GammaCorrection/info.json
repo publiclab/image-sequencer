@@ -4,12 +4,14 @@
     "inputs": {
         "adjustment": {
             "type": "float",
-            "htmlType": "range",
             "desc": "gamma correction (inverse of actual gamma factor) for the new image",
-            "min": 0,
-            "max": 1,
-            "default": 0.1,
-            "step": 0.01
+            "htmlType":{
+                "type": "range",
+                "min": 0,
+                "max": 1,
+                "default": 0.1,
+                "step": 0.01
+            }
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

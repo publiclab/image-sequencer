@@ -5,78 +5,105 @@
   "inputs": {
     "a": {
       "type": "float",
-      "htmlType": "range",
       "desc": "a parameter",
-      "default": 1,
-      "min": 1,
-      "max": 4,
-      "step": 0.2
+      "htmlType":
+      {
+        "type": "range",
+        "default": 1,
+        "min": 1,
+        "max": 4,
+        "step": 0.2
+      }
     },
     "b": {
       "type": "float",
-      "htmlType": "range",
       "desc": "b parameter",
-      "default": 1,
-      "min": 1,
-      "max": 4,
-      "step": 0.2
+      "htmlType":
+      {
+        "type": "range",
+        "default": 1,
+        "min": 1,
+        "max": 4,
+        "step": 0.2
+      }
     },
     "Fx": {
       "type": "float",
-      "htmlType": "range",
       "desc": "Fx parameter",
-      "default": 0,
-      "min": 0,
-      "max": 4,
-      "step": 0.2
+      "htmlType":
+      {
+        "type": "range",
+        "default": 1,
+        "min": 1,
+        "max": 4,
+        "step": 0.2
+      }
     },
     "Fy": {
       "type": "float",
-      "htmlType": "range",
       "desc": "Fy parameter",
-      "default": 0,
-      "min": 0,
-      "max": 4,
-      "step": 0.2
+      "htmlType":
+      {
+        "type": "range",
+        "default": 1,
+        "min": 1,
+        "max": 4,
+        "step": 0.2
+      }
     },
     "scale": {
       "type": "float",
-      "htmlType": "range",
       "desc": "Image Scaling",
-      "default": 1.5,
-      "min": 0,
-      "max": 20,
-      "step": 0.5
+      "htmlType":
+      {
+        "type": "range",
+        "default": 1.5,
+        "min": 0,
+        "max": 20,
+        "step": 0.5
+      }
     },
     "x": {
       "type": "float",
-      "htmlType": "range",
       "desc": "FOV x parameter",
-      "default": 1.5,
-      "min": 0,
-      "max": 20,
-      "step": 0.5
+      "htmlType":
+      {
+        "type": "range",
+        "default": 1.5,
+        "min": 0,
+        "max": 20,
+        "step": 0.5
+      }
     },
     "y": {
       "type": "float",
-      "htmlType": "range",
       "desc": "FOV y parameter",
-      "default": 1.5,
-      "min": 0,
-      "max": 20,
-      "step": 0.5
+      "htmlType":
+      {
+        "type": "range",
+        "default": 1.5,
+        "min": 0,
+        "max": 20,
+        "step": 0.5
+      }
     },
     "fragmentSrc": {
       "type": "PATH",
-      "htmlType": "text",
       "desc": "Path to a WebGL fragment shader file",
-      "default": "(inbuilt)"
+      "htmlType":
+      {
+        "type": "text",
+        "default": "(inbuilt)"
+      }
     },
     "vertexSrc": {
       "type": "PATH",
-      "htmlType": "text",
       "desc": "Path to a WebGL vertex shader file",
-      "default": "(inbuilt)"
+      "htmlType":
+      {
+        "type": "text",
+        "default": "(inbuilt)"
+      }
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

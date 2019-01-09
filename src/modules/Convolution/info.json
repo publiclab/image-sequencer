@@ -4,21 +4,27 @@
     "inputs": {
   		"constantFactor":{
         "type": "float",
-        "htmlType": "range",
         "desc": "a constant factor, multiplies all the kernel values by that factor",
-        "min": 0,
-        "max": 1,
-        "step": 0.001,
-  			"default": 0.1111,
-        "placeholder": 0.1111
+        "htmlType":
+        {
+          "type": "range",
+          "min": 0,
+          "max": 1,
+          "step": 0.001,
+          "default": 0.1111,
+          "placeholder": 0.1111
+        }
   		},
-        
+
       "kernelValues": {
         "type": "string",
-        "htmlType": "text",
         "desc": "nine space separated numbers representing the kernel values in left to right and top to bottom format.",
-        "default": "1 1 1 1 1 1 1 1 1",
-        "placeholder": "1 1 1 1 1 1 1 1 1"
+        "htmlType":
+        {
+          "type": "text",
+          "default": "1 1 1 1 1 1 1 1 1",
+          "placeholder": "1 1 1 1 1 1 1 1 1"
+        }
       }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

@@ -4,27 +4,39 @@
   "inputs": {
     "red": {
       "type": "string",
-      "htmlType": "text",
       "desc": "Expression to return for red channel with R, G, B, and A inputs",
-      "default": "r"
+      "htmlType":
+      {
+        "type": "text",
+        "default": "r"
+      }
     },
     "green": {
       "type": "string",
-      "htmlType": "text",
       "desc": "Expression to return for green channel with R, G, B, and A inputs",
-      "default": "g"
+      "htmlType":
+      {
+        "type": "text",
+        "default": "g"
+      }
     },
     "blue": {
       "type": "string",
-      "htmlType": "text",
       "desc": "Expression to return for blue channel with R, G, B, and A inputs",
-      "default": "b"
+      "htmlType":
+      {
+        "type": "text",
+        "default": "b"
+      }
     },
     "monochrome (fallback)": {
       "type": "string",
-      "htmlType": "text",
       "desc": "Expression to return with R, G, B, and A inputs; fallback for other channels if none provided",
-      "default": "r + g + b"
+      "htmlType":
+      {
+        "type": "text",
+        "default": "r + g + b"
+      }
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

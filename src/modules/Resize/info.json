@@ -4,9 +4,12 @@
   "inputs": {
     "resize": {
       "type": "percentage",
-      "htmlType": "text",
       "desc": "Percentage value of the resize",
-      "default": "125%"
+      "htmlType":
+      {
+        "type": "text",
+        "default": "125%"
+      }
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

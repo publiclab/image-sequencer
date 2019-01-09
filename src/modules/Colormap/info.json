@@ -4,10 +4,13 @@
   "inputs": {
     "colormap": {
       "type": "select",
-      "htmlType": "select",
       "desc": "Name of the Colormap",
-      "default": "default",
-      "values": ["default","greyscale","bluwhtgrngis","stretched","fastie","brntogrn","blutoredjet","colors16"]
+      "htmlType":
+      {
+        "type": "select",
+        "default": "default",
+        "values": ["default","greyscale","bluwhtgrngis","stretched","fastie","brntogrn","blutoredjet","colors16"]
+      }
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

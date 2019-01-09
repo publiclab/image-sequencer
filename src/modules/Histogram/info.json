@@ -4,13 +4,16 @@
     "inputs": {
         "gradient": {
             "type": "select",
-            "htmlType": "select",
             "desc": "Toggle the gradient along x-axis",
-            "default": "true",
-            "values": [
-                "true",
-                "false"
-            ]
+            "htmlType":
+            {
+                "type": "select",
+                "default": "true",
+                "values": [
+                    "true",
+                    "false"
+                ]
+            }
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

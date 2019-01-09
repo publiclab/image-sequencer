@@ -4,10 +4,13 @@
   "inputs": {
     "filter": {
       "type": "select",
-      "htmlType": "select",
       "desc": "Filter color",
-      "default": "red",
-      "values": ["red", "blue"]
+      "htmlType":
+      {
+        "type": "select",
+        "default": "red",
+        "values": ["red", "blue"]
+      }
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

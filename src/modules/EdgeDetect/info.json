@@ -4,30 +4,39 @@
     "inputs": {
         "blur": {
             "type": "float",
-            "htmlType": "range",
             "desc": "Amount of gaussian blur(Less blur gives more detail, typically 0-5)",
-            "default": "2",
-            "min": 0,
-            "max": 2,
-            "step": 0.25
+            "htmlType":
+            {
+                "type": "range",
+                "default": "2",
+                "min": 0,
+                "max": 2,
+                "step": 0.25
+            }
         },
         "highThresholdRatio":{
             "type": "float",
-            "htmlType": "range",
             "desc": "The high threshold ratio for the image",
-            "min": 0,
-            "max": 1,
-            "step": 0.01,
-            "default": 0.15
+            "htmlType":
+            {
+                "type": "range",
+                "min": 0,
+                "max": 1,
+                "step": 0.01,
+                "default": 0.15
+            }
         },
         "lowThresholdRatio": {
             "type": "float",
-            "htmlType": "range",
             "desc": "The low threshold value for the image",
-            "min": 0,
-            "max": 1,
-            "step": 0.01,
-            "default": 0.15
+            "htmlType":
+            {
+                "type": "range",
+                "min": 0,
+                "max": 1,
+                "step": 0.01,
+                "default": 0.15
+            }
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

@@ -200,32 +200,32 @@ function DefaultHtmlStepUi(_sequencer, options) {
         var inputDesc = isInput ? inputs[paramName] : {};
         if (!isInput) {
           html += '<span class="output"></span>';
-        } else if (inputDesc.type.toLowerCase() == "select") {
+        } else if (inputDesc.htmlType.type.toLowerCase() == "select") {
           html += '<select class="form-control target" name="' + paramName + '">';
-          for (var option in inputDesc.values) {
-            html += "<option>" + inputDesc.values[option] + "</option>";
+          for (var option in inputDesc.htmlType.values) {
+            html += "<option>" + inputDesc.htmlType.values[option] + "</option>";
           }
           html += "</select>";
         } else {
-          let paramVal = step.options[paramName] || inputDesc.default;
-          html =
+          let paramVal = step.options[paramName] || inputDesc.htmlType.default;
+            html += 
             '<input class="form-control target" type="' +
-            inputDesc.type +
+            inputDesc.htmlType.type +
             '" name="' +
             paramName +
             '" value="' +
             paramVal +
             '" placeholder ="' +
-            (inputDesc.placeholder || "");
+            (inputDesc.htmlType.placeholder || "");
 
-          if (inputDesc.type.toLowerCase() == "range") {
+          if (inputDesc.htmlType.type.toLowerCase() == "range") {
             html +=
               '"min="' +
-              inputDesc.min +
+              inputDesc.htmlType.min +
               '"max="' +
-              inputDesc.max +
+              inputDesc.htmlType.max +
               '"step="' +
-              inputDesc.step + '">' + '<span>' + paramVal + '</span>';
+              (inputDesc.htmlType.step ? inputDesc.htmlType.step : '1') + '">' + '<span>' + paramVal + '</span>';
 
           }
           else html += '">';
@@ -279,7 +279,6 @@ function DefaultHtmlStepUi(_sequencer, options) {
     }
     $(step.ui.querySelector(".toggle")).on("click", (e) => {
       var className = e.target.className;
-      console.log("ele "+element)
       if(className=="fa fa-caret-up"){
         $(step.ui.querySelectorAll(".collapse")).show();
         e.target.className="fa fa-caret-down";
@@ -385,11 +384,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       var outputs = _sequencer.modulesInfo(step.name).outputs;
       for (var i in inputs) {
         if (step.options[i] !== undefined) {
-          if (inputs[i].type.toLowerCase() === "input")
-            $(step.ui.querySelector('div[name="' + i + '"] input'))
-              .val(step.options[i])
-              .data('initValue', step.options[i]);
-          if (inputs[i].type.toLowerCase() === "select")
+          if (inputs[i].htmlType.type.toLowerCase() === "select")
             $(step.ui.querySelector('div[name="' + i + '"] select'))
               .val(step.options[i])
               .data('initValue', step.options[i]);

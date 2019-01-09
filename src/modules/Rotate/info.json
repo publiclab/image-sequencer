@@ -4,11 +4,13 @@
     "inputs": {
       "rotate": {
         "type": "integer",
-        "htmlType": "range",
         "desc": "Angular value for rotation in degrees",
-        "default": 0,
-        "min": 0,
-        "max": 360
+        "htmlType":{
+          "type": "range",
+          "default": 0,
+          "min": 0,
+          "max": 360
+        }
       }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

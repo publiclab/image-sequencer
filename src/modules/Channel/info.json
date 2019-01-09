@@ -4,10 +4,13 @@
   "inputs": {
     "channel": {
       "type": "select",
-      "htmlType": "select",
       "desc": "Color channel",
-      "default": "green",
-      "values": ["red", "green", "blue"]
+      "htmlType":
+      {
+        "type": "select",
+        "default": "green",
+        "values": ["red", "green", "blue"]
+      }
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

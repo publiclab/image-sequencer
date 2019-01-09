@@ -58691,9 +58691,12 @@ module.exports={
   "inputs": {
     "offset": {
       "type": "integer",
-      "htmlType": "number",
       "desc": "Choose which image to blend the current image with. Two steps back is -2, three steps back is -3 etc.",
-      "default": -2
+      "htmlType":
+      {
+        "type": "number",
+        "default": -2
+      }
     },
     "blend": {
       "type": "string",
@@ -58849,12 +58852,15 @@ module.exports={
     "inputs": {
         "blur": {
             "type": "float",
-            "htmlType": "range",
             "desc": "Amount of gaussian blur(Less blur gives more detail, typically 0-5)",
-            "default": 2,
-            "min": 0,
-            "max": 5,
-            "step": 0.25
+            "htmlType":
+            {
+                "type": "range",
+                "default": 2,
+                "min": 0,
+                "max": 5,
+                "step": 0.25
+            }
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -58927,11 +58933,14 @@ module.exports={
   "inputs": {
       "brightness": {
           "type": "float",
-          "htmlType": "range",
           "desc": "% brightness for the new image",
-          "default": 175,
-          "min": 0,
-          "max": 200
+          "htmlType":
+          { 
+            "type": "range",
+            "default": 175,
+            "min": 0,
+            "max": 200
+          }
       }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -58996,10 +59005,13 @@ module.exports={
   "inputs": {
     "channel": {
       "type": "select",
-      "htmlType": "select",
       "desc": "Color channel",
-      "default": "green",
-      "values": ["red", "green", "blue"]
+      "htmlType":
+      {
+        "type": "select",
+        "default": "green",
+        "values": ["red", "green", "blue"]
+      }
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -59031,33 +59043,45 @@ module.exports={
     "inputs": {
         "colormap": {
             "type": "select",
-            "htmlType": "select",
             "desc": "Name of the Colormap",
-            "default": "default",
-            "values": [
-                "default",
-                "greyscale",
-                "stretched",
-                "fastie"
-            ]
+            "htmlType":
+            {
+                "type": "select",
+                "default": "default",
+                "values": [
+                    "default",
+                    "greyscale",
+                    "stretched",
+                    "fastie"
+                ]
+            }
         },
         "x": {
             "type": "integer",
-            "htmlType": "number",
             "desc": "X-position of the image on which the new image is overlayed",
-            "default": 0
+            "htmlType":
+            {
+                "type": "number",
+                "default": 0
+            }
         },
         "y": {
             "type": "integer",
-            "htmlType": "number",
             "desc": "Y-position of the image on which the new image is overlayed",
-            "default": 0
+            "htmlType":
+            {
+                "type": "number",
+                "default": 0
+            }
         },
         "h": {
             "type": "integer",
-            "htmlType": "number",
             "desc": "height of the colorbar",
-            "default": 10
+            "htmlType":
+            {
+                "type": "number",
+                "default": 10
+            }
         }
     },
     "length": 4,
@@ -59314,10 +59338,13 @@ module.exports={
   "inputs": {
     "colormap": {
       "type": "select",
-      "htmlType": "select",
       "desc": "Name of the Colormap",
-      "default": "default",
-      "values": ["default","greyscale","bluwhtgrngis","stretched","fastie","brntogrn","blutoredjet","colors16"]
+      "htmlType":
+      {
+        "type": "select",
+        "default": "default",
+        "values": ["default","greyscale","bluwhtgrngis","stretched","fastie","brntogrn","blutoredjet","colors16"]
+      }
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -59431,11 +59458,14 @@ module.exports={
     "inputs": {
         "contrast": {
             "type": "float",
-            "htmlType": "range",
             "desc": "contrast for the new image, typically -100 to 100",
-            "default": 70,
-            "min": -100,
-            "max": 100
+            "htmlType":
+            {
+                "type": "range",
+                "default": 70,
+                "min": -100,
+                "max": 100
+            }
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -59569,21 +59599,27 @@ module.exports={
     "inputs": {
   		"constantFactor":{
         "type": "float",
-        "htmlType": "range",
         "desc": "a constant factor, multiplies all the kernel values by that factor",
-        "min": 0,
-        "max": 1,
-        "step": 0.001,
-  			"default": 0.1111,
-        "placeholder": 0.1111
+        "htmlType":
+        {
+          "type": "range",
+          "min": 0,
+          "max": 1,
+          "step": 0.001,
+          "default": 0.1111,
+          "placeholder": 0.1111
+        }
   		},
-        
+
       "kernelValues": {
         "type": "string",
-        "htmlType": "text",
         "desc": "nine space separated numbers representing the kernel values in left to right and top to bottom format.",
-        "default": "1 1 1 1 1 1 1 1 1",
-        "placeholder": "1 1 1 1 1 1 1 1 1"
+        "htmlType":
+        {
+          "type": "text",
+          "default": "1 1 1 1 1 1 1 1 1",
+          "placeholder": "1 1 1 1 1 1 1 1 1"
+        }
       }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -59842,34 +59878,49 @@ module.exports={
   "inputs": {
     "x": {
       "type": "integer",
-      "htmlType": "number",
       "desc": "X-position (measured from left) from where cropping starts",
-      "default": 0
+      "htmlType":
+      {
+        "type": "number",
+        "default": 0
+      }
     },
     "y": {
       "type": "integer",
-      "htmlType": "number",
       "desc": "Y-position (measured from top) from where cropping starts",
-      "default": 0
+      "htmlType":
+      {
+        "type": "number",
+        "default": 0
+      }
     },
     "w": {
       "type": "integer",
-      "htmlType": "number",
       "desc": "Width of crop",
-      "default": 100
+      "htmlType":
+      {
+        "type": "number",
+        "default": 100
+      }
     },
     "h": {
       "type": "integer",
-      "htmlType": "number",
       "desc": "Height of crop",
-      "default": 100
+      "htmlType":
+      {
+        "type": "number",
+        "default": 100
+      }
     },
     "backgroundColor": {
       "type": "string",
-      "htmlType": "text",
       "desc": "Background Color (Four space separated RGBA values)",
-      "default": "255 255 255 255",
-      "placeholder": "255 255 255 255"
+      "htmlType":
+      {
+        "type": "text",
+        "default": "255 255 255 255",
+        "placeholder": "255 255 255 255"
+      }
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -59929,7 +59980,10 @@ module.exports={
   "outputs": {
     "qrval": {
       "type": "string",
-      "htmlType": "text"
+      "htmlType":
+      {
+        "type": "text"
+      }
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -60053,10 +60107,12 @@ module.exports={
     "inputs": {
       "dither": {
         "type": "select",
-        "htmlType": "select",
         "desc": "Name of the Dithering Algorithm",
-        "default": "none",
-        "values": ["none","floydsteinberg","bayer","Atkinson"]
+        "htmlType":{
+          "type": "select",
+          "default": "none",
+          "values": ["none","floydsteinberg","bayer","Atkinson"]
+        }
       }
     }
 }
@@ -60165,44 +60221,57 @@ module.exports={
     "inputs": {
   		"startingX":{
         "type": "integer",
-        "htmlType": "number",
   			"desc": "starting x position of the rectangle",
-  			"default": 0
+        "htmlType":{
+          "type": "number",
+          "default": 0
+        }
   		},
         
       "startingY": {
         "type": "integer",
-        "htmlType": "number",
         "desc": "starting y position of the rectangle",
-        "default": 0
+        "htmlType":{
+          "type": "number",
+          "default": 0
+        }
       },
 
       "endX":{
         "type": "integer",
-        "htmlType": "number",
         "desc": "last x position of the rectangle",
-        "default": 0
+        "htmlType":{
+          "type": "number",
+          "default": 0
+        }
       },
 
       "endY":{
         "type": "integer",
-        "htmlType": "number",
         "desc": "last y position of the rectangle",
-        "default": 0
+        "htmlType":{
+          "type": "number",
+          "default": 0
+        }
       },
 
       "thickness":{
         "type": "integer",
-        "htmlType": "number",
         "desc": "thickness of border",
-        "default": 1
+        "htmlType":{
+          "type": "number",
+          "default": 1
+        }
       },
 
       "color":{
         "type": "string",
-        "htmlType": "text",
         "desc": "RGBA values separated by a space",
-        "default": "0 0 0 255"
+        "htmlType":
+        {
+          "type": "text",
+          "default": "0 0 0 255"
+        }
       }
     }
 }
@@ -60317,27 +60386,39 @@ module.exports={
   "inputs": {
     "red": {
       "type": "string",
-      "htmlType": "text",
       "desc": "Expression to return for red channel with R, G, B, and A inputs",
-      "default": "r"
+      "htmlType":
+      {
+        "type": "text",
+        "default": "r"
+      }
     },
     "green": {
       "type": "string",
-      "htmlType": "text",
       "desc": "Expression to return for green channel with R, G, B, and A inputs",
-      "default": "g"
+      "htmlType":
+      {
+        "type": "text",
+        "default": "g"
+      }
     },
     "blue": {
       "type": "string",
-      "htmlType": "text",
       "desc": "Expression to return for blue channel with R, G, B, and A inputs",
-      "default": "b"
+      "htmlType":
+      {
+        "type": "text",
+        "default": "b"
+      }
     },
     "monochrome (fallback)": {
       "type": "string",
-      "htmlType": "text",
       "desc": "Expression to return with R, G, B, and A inputs; fallback for other channels if none provided",
-      "default": "r + g + b"
+      "htmlType":
+      {
+        "type": "text",
+        "default": "r + g + b"
+      }
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -60587,30 +60668,39 @@ module.exports={
     "inputs": {
         "blur": {
             "type": "float",
-            "htmlType": "range",
             "desc": "Amount of gaussian blur(Less blur gives more detail, typically 0-5)",
-            "default": "2",
-            "min": 0,
-            "max": 2,
-            "step": 0.25
+            "htmlType":
+            {
+                "type": "range",
+                "default": "2",
+                "min": 0,
+                "max": 2,
+                "step": 0.25
+            }
         },
         "highThresholdRatio":{
             "type": "float",
-            "htmlType": "range",
             "desc": "The high threshold ratio for the image",
-            "min": 0,
-            "max": 1,
-            "step": 0.01,
-            "default": 0.15
+            "htmlType":
+            {
+                "type": "range",
+                "min": 0,
+                "max": 1,
+                "step": 0.01,
+                "default": 0.15
+            }
         },
         "lowThresholdRatio": {
             "type": "float",
-            "htmlType": "range",
             "desc": "The low threshold value for the image",
-            "min": 0,
-            "max": 1,
-            "step": 0.01,
-            "default": 0.15
+            "htmlType":
+            {
+                "type": "range",
+                "min": 0,
+                "max": 1,
+                "step": 0.01,
+                "default": 0.15
+            }
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -60698,78 +60788,105 @@ module.exports={
   "inputs": {
     "a": {
       "type": "float",
-      "htmlType": "range",
       "desc": "a parameter",
-      "default": 1,
-      "min": 1,
-      "max": 4,
-      "step": 0.2
+      "htmlType":
+      {
+        "type": "range",
+        "default": 1,
+        "min": 1,
+        "max": 4,
+        "step": 0.2
+      }
     },
     "b": {
       "type": "float",
-      "htmlType": "range",
       "desc": "b parameter",
-      "default": 1,
-      "min": 1,
-      "max": 4,
-      "step": 0.2
+      "htmlType":
+      {
+        "type": "range",
+        "default": 1,
+        "min": 1,
+        "max": 4,
+        "step": 0.2
+      }
     },
     "Fx": {
       "type": "float",
-      "htmlType": "range",
       "desc": "Fx parameter",
-      "default": 0,
-      "min": 0,
-      "max": 4,
-      "step": 0.2
+      "htmlType":
+      {
+        "type": "range",
+        "default": 1,
+        "min": 1,
+        "max": 4,
+        "step": 0.2
+      }
     },
     "Fy": {
       "type": "float",
-      "htmlType": "range",
       "desc": "Fy parameter",
-      "default": 0,
-      "min": 0,
-      "max": 4,
-      "step": 0.2
+      "htmlType":
+      {
+        "type": "range",
+        "default": 1,
+        "min": 1,
+        "max": 4,
+        "step": 0.2
+      }
     },
     "scale": {
       "type": "float",
-      "htmlType": "range",
       "desc": "Image Scaling",
-      "default": 1.5,
-      "min": 0,
-      "max": 20,
-      "step": 0.5
+      "htmlType":
+      {
+        "type": "range",
+        "default": 1.5,
+        "min": 0,
+        "max": 20,
+        "step": 0.5
+      }
     },
     "x": {
       "type": "float",
-      "htmlType": "range",
       "desc": "FOV x parameter",
-      "default": 1.5,
-      "min": 0,
-      "max": 20,
-      "step": 0.5
+      "htmlType":
+      {
+        "type": "range",
+        "default": 1.5,
+        "min": 0,
+        "max": 20,
+        "step": 0.5
+      }
     },
     "y": {
       "type": "float",
-      "htmlType": "range",
       "desc": "FOV y parameter",
-      "default": 1.5,
-      "min": 0,
-      "max": 20,
-      "step": 0.5
+      "htmlType":
+      {
+        "type": "range",
+        "default": 1.5,
+        "min": 0,
+        "max": 20,
+        "step": 0.5
+      }
     },
     "fragmentSrc": {
       "type": "PATH",
-      "htmlType": "text",
       "desc": "Path to a WebGL fragment shader file",
-      "default": "(inbuilt)"
+      "htmlType":
+      {
+        "type": "text",
+        "default": "(inbuilt)"
+      }
     },
     "vertexSrc": {
       "type": "PATH",
-      "htmlType": "text",
       "desc": "Path to a WebGL vertex shader file",
-      "default": "(inbuilt)"
+      "htmlType":
+      {
+        "type": "text",
+        "default": "(inbuilt)"
+      }
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -60830,12 +60947,14 @@ module.exports={
     "inputs": {
         "adjustment": {
             "type": "float",
-            "htmlType": "range",
             "desc": "gamma correction (inverse of actual gamma factor) for the new image",
-            "min": 0,
-            "max": 1,
-            "default": 0.1,
-            "step": 0.01
+            "htmlType":{
+                "type": "range",
+                "min": 0,
+                "max": 1,
+                "default": 0.1,
+                "step": 0.01
+            }
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -61023,13 +61142,16 @@ module.exports={
     "inputs": {
         "gradient": {
             "type": "select",
-            "htmlType": "select",
             "desc": "Toggle the gradient along x-axis",
-            "default": "true",
-            "values": [
-                "true",
-                "false"
-            ]
+            "htmlType":
+            {
+                "type": "select",
+                "default": "true",
+                "values": [
+                    "true",
+                    "false"
+                ]
+            }
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -61160,9 +61282,12 @@ module.exports={
   "inputs": {
     "url": {
       "type": "URL",
-      "htmlType": "text",
       "desc": "URL of image to import",
-      "default": "./images/monarch.png"
+      "htmlType":
+      {
+        "type": "text",
+        "default": "./images/monarch.png"
+      }
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -61272,10 +61397,13 @@ module.exports={
   "inputs": {
     "filter": {
       "type": "select",
-      "htmlType": "select",
       "desc": "Filter color",
-      "default": "red",
-      "values": ["red", "blue"]
+      "htmlType":
+      {
+        "type": "select",
+        "default": "red",
+        "values": ["red", "blue"]
+      }
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -61394,21 +61522,27 @@ module.exports={
     "inputs": {
         "x": {
             "type": "integer",
-            "htmlType": "number",
             "desc": "X-position of the image on which the new image is overlayed",
-            "default": 0
+            "htmlType":
+            {
+                "type": "number",
+                "default": 0
+            }
         },
         "y": {
             "type": "integer",
-            "htmlType": "number",
             "desc": "Y-position of the image on which the new image is overlayed",
+            "htmlType": "number",
             "default": 0
         },
         "offset": {
             "type": "integer",
-            "htmlType": "number",
             "desc": "offset to the output of the step on which the output of the last step is overlayed",
-            "default": -2
+            "htmlType":
+            {
+                "type": "number",
+                "default": 0
+            }
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -61495,9 +61629,12 @@ module.exports={
   "inputs": {
     "resize": {
       "type": "percentage",
-      "htmlType": "text",
       "desc": "Percentage value of the resize",
-      "default": "125%"
+      "htmlType":
+      {
+        "type": "text",
+        "default": "125%"
+      }
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -61575,11 +61712,13 @@ module.exports={
     "inputs": {
       "rotate": {
         "type": "integer",
-        "htmlType": "range",
         "desc": "Angular value for rotation in degrees",
-        "default": 0,
-        "min": 0,
-        "max": 360
+        "htmlType":{
+          "type": "range",
+          "default": 0,
+          "min": 0,
+          "max": 360
+        }
       }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -61651,12 +61790,14 @@ module.exports={
     "inputs": {
         "saturation": {
             "type": "float",
-            "htmlType": "range",
             "desc": "saturation for the new image between 0 and 2, 0 being black and white and 2 being highly saturated",
-            "default": 0.5,
-            "min": 0,
-            "max": 2,
-            "step": 0.1
+            "htmlType":{
+                "type": "range",
+                "default": 0.5,
+                "min": 0,
+                "max": 2,
+                "step": 0.1
+            }
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -61758,9 +61899,11 @@ module.exports={
     "inputs": {
       "temperature": {
         "type": "integer",
-        "htmlType": "number",
         "desc": "Temperature between 0 - 40,000 Kelvin",
-        "default": 6000
+        "htmlType":{
+          "type": "number",
+          "default": 6000
+        }
       }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

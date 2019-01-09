@@ -4,11 +4,14 @@
   "inputs": {
       "brightness": {
           "type": "float",
-          "htmlType": "range",
           "desc": "% brightness for the new image",
-          "default": 175,
-          "min": 0,
-          "max": 200
+          "htmlType":
+          { 
+            "type": "range",
+            "default": 175,
+            "min": 0,
+            "max": 200
+          }
       }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

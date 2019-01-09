@@ -4,21 +4,27 @@
     "inputs": {
         "x": {
             "type": "integer",
-            "htmlType": "number",
             "desc": "X-position of the image on which the new image is overlayed",
-            "default": 0
+            "htmlType":
+            {
+                "type": "number",
+                "default": 0
+            }
         },
         "y": {
             "type": "integer",
-            "htmlType": "number",
             "desc": "Y-position of the image on which the new image is overlayed",
+            "htmlType": "number",
             "default": 0
         },
         "offset": {
             "type": "integer",
-            "htmlType": "number",
             "desc": "offset to the output of the step on which the output of the last step is overlayed",
-            "default": -2
+            "htmlType":
+            {
+                "type": "number",
+                "default": 0
+            }
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

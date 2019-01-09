@@ -235,7 +235,7 @@ e.g:
 ```json
   {
     "name": "Average",
-    "description": "description": "Average all pixel color",
+    "description": "Average all pixel color",
   }
 ```
 

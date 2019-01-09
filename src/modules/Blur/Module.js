@@ -1,9 +1,11 @@
 /*
 * Blur an Image
 */
+const getDefaults = require('./../../util/getDefaults.js');
 module.exports = function Blur(options, UI) {
 
-    options.blur = options.blur || 2
+    const defaults = getDefaults('Blur');
+    options.blur = options.blur || defaults.blur.default;
     var output;
 
     function draw(input, callback, progressObj) {

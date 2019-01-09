@@ -5,7 +5,8 @@
   		"startingX":{
         "type": "integer",
   			"desc": "starting x position of the rectangle",
-        "htmlType":{
+        "htmlType":
+        {
           "type": "number",
           "default": 0
         }
@@ -14,7 +15,8 @@
       "startingY": {
         "type": "integer",
         "desc": "starting y position of the rectangle",
-        "htmlType":{
+        "htmlType":
+        {
           "type": "number",
           "default": 0
         }
@@ -23,7 +25,8 @@
       "endX":{
         "type": "integer",
         "desc": "last x position of the rectangle",
-        "htmlType":{
+        "htmlType":
+        {
           "type": "number",
           "default": 0
         }
@@ -32,7 +35,8 @@
       "endY":{
         "type": "integer",
         "desc": "last y position of the rectangle",
-        "htmlType":{
+        "htmlType":
+        {
           "type": "number",
           "default": 0
         }
@@ -41,7 +45,8 @@
       "thickness":{
         "type": "integer",
         "desc": "thickness of border",
-        "htmlType":{
+        "htmlType":
+        {
           "type": "number",
           "default": 1
         }

@@ -5,7 +5,8 @@
         "adjustment": {
             "type": "float",
             "desc": "gamma correction (inverse of actual gamma factor) for the new image",
-            "htmlType":{
+            "htmlType":
+            {
                 "type": "range",
                 "min": 0,
                 "max": 1,

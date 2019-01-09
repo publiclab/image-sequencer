@@ -58700,9 +58700,12 @@ module.exports={
     },
     "blend": {
       "type": "string",
-      "htmlType": "text",
       "desc": "Function to use to blend the two images.",
-      "default": "function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] }"
+      "htmlType":
+      {
+        "type": "text",
+        "default": "function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] }"
+      }
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -60222,7 +60225,8 @@ module.exports={
   		"startingX":{
         "type": "integer",
   			"desc": "starting x position of the rectangle",
-        "htmlType":{
+        "htmlType":
+        {
           "type": "number",
           "default": 0
         }
@@ -60231,7 +60235,8 @@ module.exports={
       "startingY": {
         "type": "integer",
         "desc": "starting y position of the rectangle",
-        "htmlType":{
+        "htmlType":
+        {
           "type": "number",
           "default": 0
         }
@@ -60240,7 +60245,8 @@ module.exports={
       "endX":{
         "type": "integer",
         "desc": "last x position of the rectangle",
-        "htmlType":{
+        "htmlType":
+        {
           "type": "number",
           "default": 0
         }
@@ -60249,7 +60255,8 @@ module.exports={
       "endY":{
         "type": "integer",
         "desc": "last y position of the rectangle",
-        "htmlType":{
+        "htmlType":
+        {
           "type": "number",
           "default": 0
         }
@@ -60258,7 +60265,8 @@ module.exports={
       "thickness":{
         "type": "integer",
         "desc": "thickness of border",
-        "htmlType":{
+        "htmlType":
+        {
           "type": "number",
           "default": 1
         }
@@ -60948,7 +60956,8 @@ module.exports={
         "adjustment": {
             "type": "float",
             "desc": "gamma correction (inverse of actual gamma factor) for the new image",
-            "htmlType":{
+            "htmlType":
+            {
                 "type": "range",
                 "min": 0,
                 "max": 1,
@@ -61532,8 +61541,11 @@ module.exports={
         "y": {
             "type": "integer",
             "desc": "Y-position of the image on which the new image is overlayed",
-            "htmlType": "number",
-            "default": 0
+            "htmlType":
+            {
+                "type": "number",
+                "default": 0
+            }
         },
         "offset": {
             "type": "integer",
@@ -61713,7 +61725,8 @@ module.exports={
       "rotate": {
         "type": "integer",
         "desc": "Angular value for rotation in degrees",
-        "htmlType":{
+        "htmlType":
+        {
           "type": "range",
           "default": 0,
           "min": 0,
@@ -61791,7 +61804,8 @@ module.exports={
         "saturation": {
             "type": "float",
             "desc": "saturation for the new image between 0 and 2, 0 being black and white and 2 being highly saturated",
-            "htmlType":{
+            "htmlType":
+            {
                 "type": "range",
                 "default": 0.5,
                 "min": 0,
@@ -61900,7 +61914,8 @@ module.exports={
       "temperature": {
         "type": "integer",
         "desc": "Temperature between 0 - 40,000 Kelvin",
-        "htmlType":{
+        "htmlType":
+        {
           "type": "number",
           "default": 6000
         }

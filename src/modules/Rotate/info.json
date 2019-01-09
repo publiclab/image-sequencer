@@ -5,7 +5,8 @@
       "rotate": {
         "type": "integer",
         "desc": "Angular value for rotation in degrees",
-        "htmlType":{
+        "htmlType":
+        {
           "type": "range",
           "default": 0,
           "min": 0,

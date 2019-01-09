@@ -155,8 +155,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
     <div class="row step">\
     <form class="input-form">\
     <div class="col-md-4 details">\
-    <h3>' 
-    ' <span class="toggle">'+step.name+'<i class="fa fa-caret-up" aria-hidden="true"></i></span>' +
+    <h3>\
+    <span class="toggle">'+step.name+' <i class="fa fa-caret-down" aria-hidden="true"></i></span>' +
       '</h3><div class="collapse"><p><i>"'+
       (step.description || "") +
       '</i></p></div>\
@@ -278,16 +278,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $("#load-image").append(step.ui);
     }
     $(step.ui.querySelector(".toggle")).on("click", (e) => {
-      var className = e.target.className;
-      if(className=="fa fa-caret-up"){
-        $(step.ui.querySelectorAll(".collapse")).show();
-        e.target.className="fa fa-caret-down";
-      }
-      else{ 
-        $(step.ui.querySelectorAll(".collapse")).hide();
-        //e.target.localName.toggleClass('fa-caret-up');
-        e.target.className="fa fa-caret-up";
-      }
+      $(e.target.querySelector('.fa')).toggleClass('fa-caret-up').toggleClass('fa-caret-down');
+      $(step.ui.querySelectorAll('.collapse')).collapse('toggle');
     });
     
 

@@ -14,8 +14,11 @@
         "y": {
             "type": "integer",
             "desc": "Y-position of the image on which the new image is overlayed",
-            "htmlType": "number",
-            "default": 0
+            "htmlType":
+            {
+                "type": "number",
+                "default": 0
+            }
         },
         "offset": {
             "type": "integer",

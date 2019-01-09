@@ -5,7 +5,8 @@
         "saturation": {
             "type": "float",
             "desc": "saturation for the new image between 0 and 2, 0 being black and white and 2 being highly saturated",
-            "htmlType":{
+            "htmlType":
+            {
                 "type": "range",
                 "default": 0.5,
                 "min": 0,

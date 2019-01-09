@@ -191,33 +191,239 @@ All module folders must have an `info.json` file which looks like the following:
   "url": "Optional link to module's source code or documentation",
   "inputs": {
     "var1": {
-      "type": "text",
-      "default": "default value"
+      "type": "string",
+      "htmlType":
+      {
+        "type": "text",
+        "default": "default value"
+      }
     }
   },
   "outputs": {
     "out1": {
-      "type": "text"
+      "type": "integer",
+      "htmlType":
+      {
+        "type": "text"
+      }
     }
   }
 }
 ```
 
-Types may be one of "text", "integer", "float", "select".
-Integer and Float types should also specify minimum and maximum values like this:
+#### Contains:
+- `name`
+- `description`
+- `url`
+- `inputs`
+- `outputs`
 
+##### `name`(*string*)(required):
+The name of the module
+
+e.g:
 ```json
-"var1": {
-  "type": "integer",
-  "min": 0,
-  "max": 4,
-  "default": 1
+  {
+    "name": "Average"
+  }
+```
+
+##### `description`(*string*)(required):
+Description for the module
+
+e.g:
+```json
+  {
+    "name": "Average",
+    "description": "description": "Average all pixel color",
+  }
+```
+
+##### `url`(*string*)(optional):
+URL linking to docs for the module in `docs/MOULES.md`
+
+e.g:
+```json
+  {
+    "name": "Average"
+  }
+```
+
+##### `inputs`(*object*)(optional):
+Contains objects with keys equal to the input names.
+
+Each object has:
+- `type`
+- `desc` (optional)
+- `htmlType`
+
+e.g:
+```json
+{
+  "inputs":
+  {
+    "type": "string",
+    "input1":
+    {
+      "type": "string",
+      "htmlType":
+      {
+        "type": "text"
+      }
+    }
+  }
 }
 ```
 
-Similarly, "Select" type inputs should have a `values` array.
+######  `type`(*string*)(required) 
+May be one of `integer`, `float`, `percentage`, `string`, `PATH`, `URL`, `select`.
 
-Also, A module may have output values. These must be defined as shown above.
+```json
+{
+  "var1": {
+    "type": "percentage",
+  }
+}
+```
+
+######  `desc`(*string*)(optional) 
+Optional description for the input. Defaults to input name.
+
+```json
+{
+  "var1": {
+    "type": "percentage",
+  }
+}
+```
+
+###### `htmlType`(*object*)(required)
+Can contain:
+- `type`
+- `default`
+- `min`
+- `max`
+- `step`
+- `values`
+- `placeholder`
+
+e.g:
+```json
+{
+  "htmlType":
+  {
+    "type": "range",
+    "min": 0,
+    "max": 1,
+    "step": 0.1,
+    "default": 0.5
+  }
+}
+```
+
+###### `type`(*string*)(required)
+Any valid html type. Can be `range`, `select`, `number`, `text`.
+
+e.g:
+```json
+{
+  "type": "text"
+}
+```
+
+###### `default`(*string*|*number*)(optional)
+Default value for the input.
+
+e.g:
+```json
+{
+  "type": "text",
+  "default": "default value"
+}
+```
+
+###### `min`(*number*)(optional*)
+Minimum value for `range` type inputs. Required for `range` type inputs.
+
+e.g:
+```json
+{
+  "type": "range",
+  "min": 0,
+  "max": 1
+}
+```
+
+###### `max`(*number*)(optional*)
+Maximum value for `range` type inputs. Required for `range` type inputs.
+
+e.g:
+```json
+{
+  "type": "range",
+  "min": 0,
+  "max": 1
+}
+```
+
+###### `step`(*number*)(optional)
+Step value for `range` type inputs. Defaults to `1` for `range` type inputs.
+
+e.g:
+```json
+{
+  "type": "range",
+  "min": 0,
+  "max": 1,
+  "step": 0.1
+}
+```
+
+###### `values`(*array*)(optional*)
+Array of string values for `select` type inputs. Required for `select` type inputs.
+
+e.g:
+```json
+{
+  "type": "select",
+  "values": ["val1", "val2", "val3"]
+}
+```
+
+###### `placeholder`(*string*)(optional)
+A placeholder for the input.
+
+e.g:
+```json
+{
+  "type": "text",
+  "placeholder": "example placeholder"
+}
+```
+##### `outputs`(*object*)(optional):
+Contains objects with keys equal to the output names. Similar to the inputs object.
+
+Each object has:
+- `type`
+- `desc` (optional)
+- `htmlType`
+
+e.g:
+```json
+{
+  "outputs":
+  {
+    "output1":{
+      "type": "string",
+      "htmlType":
+      {
+        "type": "text"
+      }
+    }
+  }
+}
+```
+
 
 ### Progress reporting
 

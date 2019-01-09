@@ -34,7 +34,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     <form class="input-form">\
     <div class="col-md-4 details">\
     <h3>\
-    <span class="toggle">'+step.name+' <i class="fa fa-caret-up" aria-hidden="true"></i></span>' +
+    <span class="toggle">'+step.name+' <i class="fa fa-caret-down" aria-hidden="true"></i></span>' +
       '</h3><div class="collapse"><p><i>"'+
       (step.description || "") +
       '</i></p></div>\

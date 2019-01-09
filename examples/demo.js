@@ -52,6 +52,23 @@ window.onload = function() {
   }
   refreshOptions();
 
+  window.onscroll = function() {scrollFunction()};
+
+  function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      document.getElementById("move-up").style.display = "block";
+    } else {
+      document.getElementById("move-up").style.display = "none";
+    }
+  }
+
+  function topFunction() {
+    document.body.scrollTop = 0; 
+    document.documentElement.scrollTop = 0; 
+  }
+
+  $('#move-up').on("click",topFunction);
+
   // UI for each step:
   sequencer.setUI(DefaultHtmlStepUi(sequencer));
 

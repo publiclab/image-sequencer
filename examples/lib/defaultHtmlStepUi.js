@@ -157,7 +157,6 @@ function DefaultHtmlStepUi(_sequencer, options) {
     }
     $(step.ui.querySelector(".toggle")).on("click", (e) => {
       var className = e.target.className;
-      console.log("ele "+element)
       if(className=="fa fa-caret-up"){
         $(step.ui.querySelectorAll(".collapse")).show();
         e.target.className="fa fa-caret-down";

@@ -217,6 +217,10 @@ h1 {
   transform: translate(-50%, -50%);
 }
 
+#resetButton {
+  margin-top: 20px;
+}
+
 .no-border {
   border: 0px;
 }
@@ -237,4 +241,8 @@ h1 {
   .center-align {
     justify-content: space-between;
   }
+}
+a.name-header{
+  text-decoration: none;
+  color: #445;
 }

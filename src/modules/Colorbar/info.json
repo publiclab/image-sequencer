@@ -5,10 +5,10 @@
         "colormap": {
             "type": "select",
             "desc": "Name of the Colormap",
+            "default": "default",
             "htmlType":
             {
                 "type": "select",
-                "default": "default",
                 "values": [
                     "default",
                     "greyscale",
@@ -20,28 +20,28 @@
         "x": {
             "type": "integer",
             "desc": "X-position of the image on which the new image is overlayed",
+            "default": 0,
             "htmlType":
             {
-                "type": "number",
-                "default": 0
+                "type": "number"
             }
         },
         "y": {
             "type": "integer",
             "desc": "Y-position of the image on which the new image is overlayed",
+            "default": 0,
             "htmlType":
             {
-                "type": "number",
-                "default": 0
+                "type": "number"
             }
         },
         "h": {
             "type": "integer",
             "desc": "height of the colorbar",
+            "default": 10,
             "htmlType":
             {
-                "type": "number",
-                "default": 10
+                "type": "number"
             }
         }
     },

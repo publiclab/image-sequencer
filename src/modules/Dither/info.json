@@ -5,9 +5,9 @@
       "dither": {
         "type": "select",
         "desc": "Name of the Dithering Algorithm",
+        "default": "none",
         "htmlType":{
           "type": "select",
-          "default": "none",
           "values": ["none","floydsteinberg","bayer","Atkinson"]
         }
       }

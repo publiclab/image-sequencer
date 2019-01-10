@@ -5,10 +5,10 @@
       "brightness": {
           "type": "float",
           "desc": "% brightness for the new image",
+          "default": 175,
           "htmlType":
           { 
             "type": "range",
-            "default": 175,
             "min": 0,
             "max": 200
           }

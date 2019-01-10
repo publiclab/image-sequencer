@@ -5,28 +5,28 @@
         "x": {
             "type": "integer",
             "desc": "X-position of the image on which the new image is overlayed",
+            "default": 0,
             "htmlType":
             {
-                "type": "number",
-                "default": 0
+                "type": "number"
             }
         },
         "y": {
             "type": "integer",
             "desc": "Y-position of the image on which the new image is overlayed",
+            "default": 0,
             "htmlType":
             {
-                "type": "number",
-                "default": 0
+                "type": "number"
             }
         },
         "offset": {
             "type": "integer",
             "desc": "offset to the output of the step on which the output of the last step is overlayed",
+            "default": 0,
             "htmlType":
             {
-                "type": "number",
-                "default": 0
+                "type": "number"
             }
         }
     },

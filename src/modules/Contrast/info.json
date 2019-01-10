@@ -5,10 +5,10 @@
         "contrast": {
             "type": "float",
             "desc": "contrast for the new image, typically -100 to 100",
+            "default": 70,
             "htmlType":
             {
                 "type": "range",
-                "default": 70,
                 "min": -100,
                 "max": 100
             }

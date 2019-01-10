@@ -6,10 +6,10 @@
     "a": {
       "type": "float",
       "desc": "a parameter",
+      "default": 1,
       "htmlType":
       {
         "type": "range",
-        "default": 1,
         "min": 1,
         "max": 4,
         "step": 0.2
@@ -18,10 +18,10 @@
     "b": {
       "type": "float",
       "desc": "b parameter",
+      "default": 1,
       "htmlType":
       {
         "type": "range",
-        "default": 1,
         "min": 1,
         "max": 4,
         "step": 0.2
@@ -30,10 +30,10 @@
     "Fx": {
       "type": "float",
       "desc": "Fx parameter",
+      "default": 1,
       "htmlType":
       {
         "type": "range",
-        "default": 1,
         "min": 1,
         "max": 4,
         "step": 0.2
@@ -42,10 +42,10 @@
     "Fy": {
       "type": "float",
       "desc": "Fy parameter",
+      "default": 1,
       "htmlType":
       {
         "type": "range",
-        "default": 1,
         "min": 1,
         "max": 4,
         "step": 0.2
@@ -54,10 +54,10 @@
     "scale": {
       "type": "float",
       "desc": "Image Scaling",
+      "default": 1.5,
       "htmlType":
       {
         "type": "range",
-        "default": 1.5,
         "min": 0,
         "max": 20,
         "step": 0.5
@@ -66,10 +66,10 @@
     "x": {
       "type": "float",
       "desc": "FOV x parameter",
+      "default": 1.5,
       "htmlType":
       {
         "type": "range",
-        "default": 1.5,
         "min": 0,
         "max": 20,
         "step": 0.5
@@ -78,10 +78,10 @@
     "y": {
       "type": "float",
       "desc": "FOV y parameter",
+      "default": 1.5,
       "htmlType":
       {
         "type": "range",
-        "default": 1.5,
         "min": 0,
         "max": 20,
         "step": 0.5
@@ -90,19 +90,19 @@
     "fragmentSrc": {
       "type": "PATH",
       "desc": "Path to a WebGL fragment shader file",
+      "default": "(inbuilt)",
       "htmlType":
       {
-        "type": "text",
-        "default": "(inbuilt)"
+        "type": "text"
       }
     },
     "vertexSrc": {
       "type": "PATH",
       "desc": "Path to a WebGL vertex shader file",
+      "default": "(inbuilt)",
       "htmlType":
       {
-        "type": "text",
-        "default": "(inbuilt)"
+        "type": "text"
       }
     }
   },

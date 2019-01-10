@@ -5,10 +5,10 @@
     "colormap": {
       "type": "select",
       "desc": "Name of the Colormap",
+      "default": "default",
       "htmlType":
       {
         "type": "select",
-        "default": "default",
         "values": ["default","greyscale","bluwhtgrngis","stretched","fastie","brntogrn","blutoredjet","colors16"]
       }
     }

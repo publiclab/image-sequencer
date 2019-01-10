@@ -5,10 +5,10 @@
         "blur": {
             "type": "float",
             "desc": "Amount of gaussian blur(Less blur gives more detail, typically 0-5)",
+            "default": "2",
             "htmlType":
             {
                 "type": "range",
-                "default": "2",
                 "min": 0,
                 "max": 2,
                 "step": 0.25
@@ -17,25 +17,25 @@
         "highThresholdRatio":{
             "type": "float",
             "desc": "The high threshold ratio for the image",
+            "default": 0.15,
             "htmlType":
             {
                 "type": "range",
                 "min": 0,
                 "max": 1,
-                "step": 0.01,
-                "default": 0.15
+                "step": 0.01
             }
         },
         "lowThresholdRatio": {
             "type": "float",
             "desc": "The low threshold value for the image",
+            "default": 0.15,
             "htmlType":
             {
                 "type": "range",
                 "min": 0,
                 "max": 1,
-                "step": 0.01,
-                "default": 0.15
+                "step": 0.01
             }
         }
     },

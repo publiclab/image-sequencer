@@ -5,10 +5,10 @@
     "channel": {
       "type": "select",
       "desc": "Color channel",
+      "default": "green",
       "htmlType":
       {
         "type": "select",
-        "default": "green",
         "values": ["red", "green", "blue"]
       }
     }

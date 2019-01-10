@@ -5,10 +5,10 @@
         "gradient": {
             "type": "select",
             "desc": "Toggle the gradient along x-axis",
+            "default": "true",
             "htmlType":
             {
                 "type": "select",
-                "default": "true",
                 "values": [
                     "true",
                     "false"

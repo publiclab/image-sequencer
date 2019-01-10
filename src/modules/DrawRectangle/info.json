@@ -5,60 +5,60 @@
   		"startingX":{
         "type": "integer",
   			"desc": "starting x position of the rectangle",
+        "default": 0,
         "htmlType":
         {
-          "type": "number",
-          "default": 0
+          "type": "number"
         }
   		},
         
       "startingY": {
         "type": "integer",
         "desc": "starting y position of the rectangle",
+        "default": 0,
         "htmlType":
         {
-          "type": "number",
-          "default": 0
+          "type": "number"
         }
       },
 
       "endX":{
         "type": "integer",
         "desc": "last x position of the rectangle",
+        "default": 0,
         "htmlType":
         {
-          "type": "number",
-          "default": 0
+          "type": "number"
         }
       },
 
       "endY":{
         "type": "integer",
         "desc": "last y position of the rectangle",
+        "default": 0,
         "htmlType":
         {
-          "type": "number",
-          "default": 0
+          "type": "number"
         }
       },
 
       "thickness":{
         "type": "integer",
         "desc": "thickness of border",
+        "default": 1,
         "htmlType":
         {
-          "type": "number",
-          "default": 1
+          "type": "number"
         }
       },
 
       "color":{
         "type": "string",
         "desc": "RGBA values separated by a space",
+        "default": "0 0 0 255",
         "htmlType":
         {
-          "type": "text",
-          "default": "0 0 0 255"
+          "type": "text"
         }
       }
     }

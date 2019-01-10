@@ -5,10 +5,10 @@
       "temperature": {
         "type": "integer",
         "desc": "Temperature between 0 - 40,000 Kelvin",
+        "default": 6000,
         "htmlType":
         {
-          "type": "number",
-          "default": 6000
+          "type": "number"
         }
       }
     },

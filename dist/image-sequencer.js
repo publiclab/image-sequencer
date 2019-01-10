@@ -58692,19 +58692,19 @@ module.exports={
     "offset": {
       "type": "integer",
       "desc": "Choose which image to blend the current image with. Two steps back is -2, three steps back is -3 etc.",
+      "default": -2,
       "htmlType":
       {
-        "type": "number",
-        "default": -2
+        "type": "number"
       }
     },
     "blend": {
       "type": "string",
       "desc": "Function to use to blend the two images.",
+      "default": "function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] }",
       "htmlType":
       {
-        "type": "text",
-        "default": "function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] }"
+        "type": "text"
       }
     }
   },
@@ -58856,10 +58856,10 @@ module.exports={
         "blur": {
             "type": "float",
             "desc": "Amount of gaussian blur(Less blur gives more detail, typically 0-5)",
+            "default": 2,
             "htmlType":
             {
                 "type": "range",
-                "default": 2,
                 "min": 0,
                 "max": 5,
                 "step": 0.25
@@ -58937,10 +58937,10 @@ module.exports={
       "brightness": {
           "type": "float",
           "desc": "% brightness for the new image",
+          "default": 175,
           "htmlType":
           { 
             "type": "range",
-            "default": 175,
             "min": 0,
             "max": 200
           }
@@ -59009,10 +59009,10 @@ module.exports={
     "channel": {
       "type": "select",
       "desc": "Color channel",
+      "default": "green",
       "htmlType":
       {
         "type": "select",
-        "default": "green",
         "values": ["red", "green", "blue"]
       }
     }
@@ -59047,10 +59047,10 @@ module.exports={
         "colormap": {
             "type": "select",
             "desc": "Name of the Colormap",
+            "default": "default",
             "htmlType":
             {
                 "type": "select",
-                "default": "default",
                 "values": [
                     "default",
                     "greyscale",
@@ -59062,28 +59062,28 @@ module.exports={
         "x": {
             "type": "integer",
             "desc": "X-position of the image on which the new image is overlayed",
+            "default": 0,
             "htmlType":
             {
-                "type": "number",
-                "default": 0
+                "type": "number"
             }
         },
         "y": {
             "type": "integer",
             "desc": "Y-position of the image on which the new image is overlayed",
+            "default": 0,
             "htmlType":
             {
-                "type": "number",
-                "default": 0
+                "type": "number"
             }
         },
         "h": {
             "type": "integer",
             "desc": "height of the colorbar",
+            "default": 10,
             "htmlType":
             {
-                "type": "number",
-                "default": 10
+                "type": "number"
             }
         }
     },
@@ -59342,10 +59342,10 @@ module.exports={
     "colormap": {
       "type": "select",
       "desc": "Name of the Colormap",
+      "default": "default",
       "htmlType":
       {
         "type": "select",
-        "default": "default",
         "values": ["default","greyscale","bluwhtgrngis","stretched","fastie","brntogrn","blutoredjet","colors16"]
       }
     }
@@ -59462,10 +59462,10 @@ module.exports={
         "contrast": {
             "type": "float",
             "desc": "contrast for the new image, typically -100 to 100",
+            "default": 70,
             "htmlType":
             {
                 "type": "range",
-                "default": 70,
                 "min": -100,
                 "max": 100
             }
@@ -59603,24 +59603,24 @@ module.exports={
   		"constantFactor":{
         "type": "float",
         "desc": "a constant factor, multiplies all the kernel values by that factor",
+        "default": 0.1111,
         "htmlType":
         {
           "type": "range",
           "min": 0,
           "max": 1,
           "step": 0.001,
-          "default": 0.1111,
-          "placeholder": 0.1111
+          "placeholder": "0.1111"
         }
   		},
 
       "kernelValues": {
         "type": "string",
         "desc": "nine space separated numbers representing the kernel values in left to right and top to bottom format.",
+        "default": "1 1 1 1 1 1 1 1 1",
         "htmlType":
         {
           "type": "text",
-          "default": "1 1 1 1 1 1 1 1 1",
           "placeholder": "1 1 1 1 1 1 1 1 1"
         }
       }
@@ -59882,46 +59882,46 @@ module.exports={
     "x": {
       "type": "integer",
       "desc": "X-position (measured from left) from where cropping starts",
+      "default": 0,
       "htmlType":
       {
-        "type": "number",
-        "default": 0
+        "type": "number"
       }
     },
     "y": {
       "type": "integer",
       "desc": "Y-position (measured from top) from where cropping starts",
+      "default": 0,
       "htmlType":
       {
-        "type": "number",
-        "default": 0
+        "type": "number"
       }
     },
     "w": {
       "type": "integer",
       "desc": "Width of crop",
+      "default": 100,
       "htmlType":
       {
-        "type": "number",
-        "default": 100
+        "type": "number"
       }
     },
     "h": {
       "type": "integer",
       "desc": "Height of crop",
+      "default": 100,
       "htmlType":
       {
-        "type": "number",
-        "default": 100
+        "type": "number"
       }
     },
     "backgroundColor": {
       "type": "string",
       "desc": "Background Color (Four space separated RGBA values)",
+      "default": "255 255 255 255",
       "htmlType":
       {
         "type": "text",
-        "default": "255 255 255 255",
         "placeholder": "255 255 255 255"
       }
     }
@@ -60111,9 +60111,9 @@ module.exports={
       "dither": {
         "type": "select",
         "desc": "Name of the Dithering Algorithm",
+        "default": "none",
         "htmlType":{
           "type": "select",
-          "default": "none",
           "values": ["none","floydsteinberg","bayer","Atkinson"]
         }
       }
@@ -60225,60 +60225,60 @@ module.exports={
   		"startingX":{
         "type": "integer",
   			"desc": "starting x position of the rectangle",
+        "default": 0,
         "htmlType":
         {
-          "type": "number",
-          "default": 0
+          "type": "number"
         }
   		},
         
       "startingY": {
         "type": "integer",
         "desc": "starting y position of the rectangle",
+        "default": 0,
         "htmlType":
         {
-          "type": "number",
-          "default": 0
+          "type": "number"
         }
       },
 
       "endX":{
         "type": "integer",
         "desc": "last x position of the rectangle",
+        "default": 0,
         "htmlType":
         {
-          "type": "number",
-          "default": 0
+          "type": "number"
         }
       },
 
       "endY":{
         "type": "integer",
         "desc": "last y position of the rectangle",
+        "default": 0,
         "htmlType":
         {
-          "type": "number",
-          "default": 0
+          "type": "number"
         }
       },
 
       "thickness":{
         "type": "integer",
         "desc": "thickness of border",
+        "default": 1,
         "htmlType":
         {
-          "type": "number",
-          "default": 1
+          "type": "number"
         }
       },
 
       "color":{
         "type": "string",
         "desc": "RGBA values separated by a space",
+        "default": "0 0 0 255",
         "htmlType":
         {
-          "type": "text",
-          "default": "0 0 0 255"
+          "type": "text"
         }
       }
     }
@@ -60395,37 +60395,37 @@ module.exports={
     "red": {
       "type": "string",
       "desc": "Expression to return for red channel with R, G, B, and A inputs",
+      "default": "r",
       "htmlType":
       {
-        "type": "text",
-        "default": "r"
+        "type": "text"
       }
     },
     "green": {
       "type": "string",
       "desc": "Expression to return for green channel with R, G, B, and A inputs",
+      "default": "g",
       "htmlType":
       {
-        "type": "text",
-        "default": "g"
+        "type": "text"
       }
     },
     "blue": {
       "type": "string",
       "desc": "Expression to return for blue channel with R, G, B, and A inputs",
+      "default": "b",
       "htmlType":
       {
-        "type": "text",
-        "default": "b"
+        "type": "text"
       }
     },
     "monochrome (fallback)": {
       "type": "string",
       "desc": "Expression to return with R, G, B, and A inputs; fallback for other channels if none provided",
+      "default": "r + g + b",
       "htmlType":
       {
-        "type": "text",
-        "default": "r + g + b"
+        "type": "text"
       }
     }
   },
@@ -60677,10 +60677,10 @@ module.exports={
         "blur": {
             "type": "float",
             "desc": "Amount of gaussian blur(Less blur gives more detail, typically 0-5)",
+            "default": "2",
             "htmlType":
             {
                 "type": "range",
-                "default": "2",
                 "min": 0,
                 "max": 2,
                 "step": 0.25
@@ -60689,25 +60689,25 @@ module.exports={
         "highThresholdRatio":{
             "type": "float",
             "desc": "The high threshold ratio for the image",
+            "default": 0.15,
             "htmlType":
             {
                 "type": "range",
                 "min": 0,
                 "max": 1,
-                "step": 0.01,
-                "default": 0.15
+                "step": 0.01
             }
         },
         "lowThresholdRatio": {
             "type": "float",
             "desc": "The low threshold value for the image",
+            "default": 0.15,
             "htmlType":
             {
                 "type": "range",
                 "min": 0,
                 "max": 1,
-                "step": 0.01,
-                "default": 0.15
+                "step": 0.01
             }
         }
     },
@@ -60797,10 +60797,10 @@ module.exports={
     "a": {
       "type": "float",
       "desc": "a parameter",
+      "default": 1,
       "htmlType":
       {
         "type": "range",
-        "default": 1,
         "min": 1,
         "max": 4,
         "step": 0.2
@@ -60809,10 +60809,10 @@ module.exports={
     "b": {
       "type": "float",
       "desc": "b parameter",
+      "default": 1,
       "htmlType":
       {
         "type": "range",
-        "default": 1,
         "min": 1,
         "max": 4,
         "step": 0.2
@@ -60821,10 +60821,10 @@ module.exports={
     "Fx": {
       "type": "float",
       "desc": "Fx parameter",
+      "default": 1,
       "htmlType":
       {
         "type": "range",
-        "default": 1,
         "min": 1,
         "max": 4,
         "step": 0.2
@@ -60833,10 +60833,10 @@ module.exports={
     "Fy": {
       "type": "float",
       "desc": "Fy parameter",
+      "default": 1,
       "htmlType":
       {
         "type": "range",
-        "default": 1,
         "min": 1,
         "max": 4,
         "step": 0.2
@@ -60845,10 +60845,10 @@ module.exports={
     "scale": {
       "type": "float",
       "desc": "Image Scaling",
+      "default": 1.5,
       "htmlType":
       {
         "type": "range",
-        "default": 1.5,
         "min": 0,
         "max": 20,
         "step": 0.5
@@ -60857,10 +60857,10 @@ module.exports={
     "x": {
       "type": "float",
       "desc": "FOV x parameter",
+      "default": 1.5,
       "htmlType":
       {
         "type": "range",
-        "default": 1.5,
         "min": 0,
         "max": 20,
         "step": 0.5
@@ -60869,10 +60869,10 @@ module.exports={
     "y": {
       "type": "float",
       "desc": "FOV y parameter",
+      "default": 1.5,
       "htmlType":
       {
         "type": "range",
-        "default": 1.5,
         "min": 0,
         "max": 20,
         "step": 0.5
@@ -60881,19 +60881,19 @@ module.exports={
     "fragmentSrc": {
       "type": "PATH",
       "desc": "Path to a WebGL fragment shader file",
+      "default": "(inbuilt)",
       "htmlType":
       {
-        "type": "text",
-        "default": "(inbuilt)"
+        "type": "text"
       }
     },
     "vertexSrc": {
       "type": "PATH",
       "desc": "Path to a WebGL vertex shader file",
+      "default": "(inbuilt)",
       "htmlType":
       {
-        "type": "text",
-        "default": "(inbuilt)"
+        "type": "text"
       }
     }
   },
@@ -60956,12 +60956,12 @@ module.exports={
         "adjustment": {
             "type": "float",
             "desc": "gamma correction (inverse of actual gamma factor) for the new image",
+            "default": 0.1,
             "htmlType":
             {
                 "type": "range",
                 "min": 0,
                 "max": 1,
-                "default": 0.1,
                 "step": 0.01
             }
         }
@@ -61152,10 +61152,10 @@ module.exports={
         "gradient": {
             "type": "select",
             "desc": "Toggle the gradient along x-axis",
+            "default": "true",
             "htmlType":
             {
                 "type": "select",
-                "default": "true",
                 "values": [
                     "true",
                     "false"
@@ -61292,10 +61292,10 @@ module.exports={
     "url": {
       "type": "URL",
       "desc": "URL of image to import",
+      "default": "./images/monarch.png",
       "htmlType":
       {
-        "type": "text",
-        "default": "./images/monarch.png"
+        "type": "text"
       }
     }
   },
@@ -61407,10 +61407,10 @@ module.exports={
     "filter": {
       "type": "select",
       "desc": "Filter color",
+      "default": "red",
       "htmlType":
       {
         "type": "select",
-        "default": "red",
         "values": ["red", "blue"]
       }
     }
@@ -61532,28 +61532,28 @@ module.exports={
         "x": {
             "type": "integer",
             "desc": "X-position of the image on which the new image is overlayed",
+            "default": 0,
             "htmlType":
             {
-                "type": "number",
-                "default": 0
+                "type": "number"
             }
         },
         "y": {
             "type": "integer",
             "desc": "Y-position of the image on which the new image is overlayed",
+            "default": 0,
             "htmlType":
             {
-                "type": "number",
-                "default": 0
+                "type": "number"
             }
         },
         "offset": {
             "type": "integer",
             "desc": "offset to the output of the step on which the output of the last step is overlayed",
+            "default": 0,
             "htmlType":
             {
-                "type": "number",
-                "default": 0
+                "type": "number"
             }
         }
     },
@@ -61642,10 +61642,10 @@ module.exports={
     "resize": {
       "type": "percentage",
       "desc": "Percentage value of the resize",
+      "default": "125%",
       "htmlType":
       {
-        "type": "text",
-        "default": "125%"
+        "type": "text"
       }
     }
   },
@@ -61725,10 +61725,10 @@ module.exports={
       "rotate": {
         "type": "integer",
         "desc": "Angular value for rotation in degrees",
+        "default": 0,
         "htmlType":
         {
           "type": "range",
-          "default": 0,
           "min": 0,
           "max": 360
         }
@@ -61804,10 +61804,10 @@ module.exports={
         "saturation": {
             "type": "float",
             "desc": "saturation for the new image between 0 and 2, 0 being black and white and 2 being highly saturated",
+            "default": 0.5,
             "htmlType":
             {
                 "type": "range",
-                "default": 0.5,
                 "min": 0,
                 "max": 2,
                 "step": 0.1
@@ -61914,10 +61914,10 @@ module.exports={
       "temperature": {
         "type": "integer",
         "desc": "Temperature between 0 - 40,000 Kelvin",
+        "default": 6000,
         "htmlType":
         {
-          "type": "number",
-          "default": 6000
+          "type": "number"
         }
       }
     },

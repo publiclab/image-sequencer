@@ -6,46 +6,46 @@
     "x": {
       "type": "integer",
       "desc": "X-position (measured from left) from where cropping starts",
+      "default": 0,
       "htmlType":
       {
-        "type": "number",
-        "default": 0
+        "type": "number"
       }
     },
     "y": {
       "type": "integer",
       "desc": "Y-position (measured from top) from where cropping starts",
+      "default": 0,
       "htmlType":
       {
-        "type": "number",
-        "default": 0
+        "type": "number"
       }
     },
     "w": {
       "type": "integer",
       "desc": "Width of crop",
+      "default": 100,
       "htmlType":
       {
-        "type": "number",
-        "default": 100
+        "type": "number"
       }
     },
     "h": {
       "type": "integer",
       "desc": "Height of crop",
+      "default": 100,
       "htmlType":
       {
-        "type": "number",
-        "default": 100
+        "type": "number"
       }
     },
     "backgroundColor": {
       "type": "string",
       "desc": "Background Color (Four space separated RGBA values)",
+      "default": "255 255 255 255",
       "htmlType":
       {
         "type": "text",
-        "default": "255 255 255 255",
         "placeholder": "255 255 255 255"
       }
     }

@@ -5,10 +5,10 @@
     "filter": {
       "type": "select",
       "desc": "Filter color",
+      "default": "red",
       "htmlType":
       {
         "type": "select",
-        "default": "red",
         "values": ["red", "blue"]
       }
     }

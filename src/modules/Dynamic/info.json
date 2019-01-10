@@ -5,37 +5,37 @@
     "red": {
       "type": "string",
       "desc": "Expression to return for red channel with R, G, B, and A inputs",
+      "default": "r",
       "htmlType":
       {
-        "type": "text",
-        "default": "r"
+        "type": "text"
       }
     },
     "green": {
       "type": "string",
       "desc": "Expression to return for green channel with R, G, B, and A inputs",
+      "default": "g",
       "htmlType":
       {
-        "type": "text",
-        "default": "g"
+        "type": "text"
       }
     },
     "blue": {
       "type": "string",
       "desc": "Expression to return for blue channel with R, G, B, and A inputs",
+      "default": "b",
       "htmlType":
       {
-        "type": "text",
-        "default": "b"
+        "type": "text"
       }
     },
     "monochrome (fallback)": {
       "type": "string",
       "desc": "Expression to return with R, G, B, and A inputs; fallback for other channels if none provided",
+      "default": "r + g + b",
       "htmlType":
       {
-        "type": "text",
-        "default": "r + g + b"
+        "type": "text"
       }
     }
   },

@@ -192,10 +192,10 @@ All module folders must have an `info.json` file which looks like the following:
   "inputs": {
     "var1": {
       "type": "string",
+      "default": "default value",
       "htmlType":
       {
         "type": "text",
-        "default": "default value"
       }
     }
   },
@@ -214,7 +214,7 @@ All module folders must have an `info.json` file which looks like the following:
 #### Contains:
 - `name`
 - `description`
-- `url`
+- `url` (optional)
 - `inputs`
 - `outputs`
 
@@ -245,7 +245,8 @@ URL linking to docs for the module in `docs/MOULES.md`
 e.g:
 ```json
   {
-    "name": "Average"
+    "name": "Brightness",
+    "url": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
   }
 ```
 
@@ -254,7 +255,8 @@ Contains objects with keys equal to the input names.
 
 Each object has:
 - `type`
-- `desc` (optional)
+- `desc`
+- `default`
 - `htmlType`
 
 e.g:
@@ -262,7 +264,6 @@ e.g:
 {
   "inputs":
   {
-    "type": "string",
     "input1":
     {
       "type": "string",
@@ -276,7 +277,7 @@ e.g:
 ```
 
 ######  `type`(*string*)(required) 
-May be one of `integer`, `float`, `percentage`, `string`, `PATH`, `URL`, `select`.
+May be one of `integer`, `float`, `percentage`, `string`, `PATH`, `URL`, `select` etc.
 
 ```json
 {
@@ -286,26 +287,37 @@ May be one of `integer`, `float`, `percentage`, `string`, `PATH`, `URL`, `select
 }
 ```
 
-######  `desc`(*string*)(optional) 
-Optional description for the input. Defaults to input name.
+######  `desc`(*string*)(required) 
+Description for the input.
 
 ```json
 {
   "var1": {
     "type": "percentage",
+    "desc": "Module Description"
   }
+}
+```
+
+###### `default`(*string*|*number*)(required)
+Default value for the input.
+
+e.g:
+```json
+{
+  "type": "text",
+  "default": "default value"
 }
 ```
 
 ###### `htmlType`(*object*)(required)
 Can contain:
 - `type`
-- `default`
-- `min`
-- `max`
 - `step`
 - `values`
 - `placeholder`
+- `min` (optional*)
+- `max` (optional*)
 
 e.g:
 ```json
@@ -316,7 +328,6 @@ e.g:
     "min": 0,
     "max": 1,
     "step": 0.1,
-    "default": 0.5
   }
 }
 ```
@@ -328,41 +339,6 @@ e.g:
 ```json
 {
   "type": "text"
-}
-```
-
-###### `default`(*string*|*number*)(optional)
-Default value for the input.
-
-e.g:
-```json
-{
-  "type": "text",
-  "default": "default value"
-}
-```
-
-###### `min`(*number*)(optional*)
-Minimum value for `range` type inputs. Required for `range` type inputs.
-
-e.g:
-```json
-{
-  "type": "range",
-  "min": 0,
-  "max": 1
-}
-```
-
-###### `max`(*number*)(optional*)
-Maximum value for `range` type inputs. Required for `range` type inputs.
-
-e.g:
-```json
-{
-  "type": "range",
-  "min": 0,
-  "max": 1
 }
 ```
 
@@ -400,12 +376,37 @@ e.g:
   "placeholder": "example placeholder"
 }
 ```
+
+###### `min`(*number*)(optional*)
+Minimum value for `range` type inputs. Required for `range` type inputs.
+
+e.g:
+```json
+{
+  "type": "range",
+  "min": 0,
+  "max": 1
+}
+```
+
+###### `max`(*number*)(optional*)
+Maximum value for `range` htmlType inputs. Required for `range` type inputs.
+
+e.g:
+```json
+{
+  "type": "range",
+  "min": 0,
+  "max": 1
+}
+```
+
 ##### `outputs`(*object*)(optional):
 Contains objects with keys equal to the output names. Similar to the inputs object.
 
 Each object has:
 - `type`
-- `desc` (optional)
+- `desc`
 - `htmlType`
 
 e.g:

@@ -11,7 +11,26 @@ module.exports = function Dynamic(options, UI, util) {
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
+        function offsetUnavailableNotify() {
+            if ($('#offsetUnavailableNotification').length == 0) {
+              var notification = document.createElement('span');
+              notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i>Offset Unavailable';
+              notification.id = 'offsetUnavailableNotification';
+          
+              $('body').append(notification);
+            }
+          
+            $('#offsetUnavailableNotification').fadeIn(500).delay(200).fadeOut(500);
+          }
+ 
         var step = this;
+
+        if (Math.abs(options.offset) > options.number) {
+            this.output = input;
+            if(options.inBrowser)
+            offsetUnavailableNotify()
+            callback();
+        }
 
         // convert to runnable code:
         if (typeof options.func === "string") eval('options.func = ' + options.func);
@@ -19,12 +38,12 @@ module.exports = function Dynamic(options, UI, util) {
         var getPixels = require('get-pixels');
 
         // convert offset as string to int
-        if(typeof options.offset === "string") options.offset = parseInt(options.offset);
+        if (typeof options.offset === "string") options.offset = parseInt(options.offset);
 
         // save first image's pixels
         var priorStep = this.getStep(options.offset);
 
-        getPixels(priorStep.output.src, function(err, pixels) {
+        getPixels(priorStep.output.src, function (err, pixels) {
             options.firstImagePixels = pixels;
 
             function changePixel(r2, g2, b2, a2, x, y) {

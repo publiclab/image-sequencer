@@ -65,15 +65,8 @@ window.onload = function() {
     sequencer.loadImage("images/tulips.png", ui.onLoad);
   }
 
-  var resetSequence = function(){
-    var r=confirm("Do you want to reset the sequence?");
-    if (r)
-      window.location = "/";
-  }
-
   $("#addStep select").on("change", ui.selectNewStepUi);
   $("#addStep #add-step-btn").on("click", ui.addStepUi);
-  $("#resetButton").on("click",resetSequence);
 
   //Module button radio selection
   $('.radio-group .radio').on("click", function() {
@@ -93,23 +86,11 @@ window.onload = function() {
     return false;
   });
 
-  function displayMessageOnSaveSequence(){
-      $(".savesequencemsg").fadeIn();
-      setTimeout(function() {
-          $(".savesequencemsg").fadeOut();
-      }, 1000);
-    }
-
   $('body').on('click', 'button.remove', ui.removeStepUi);
   $('#save-seq').click(() => {
-    var result = window.prompt("Please give a name to your sequence... (Saved sequence will only be available in this browser).");
-    if(result){
-      result = result + " (local)";
-      sequencer.saveSequence(result, sequencer.toString());
-      sequencer.loadModules();
-      displayMessageOnSaveSequence();
-      refreshOptions();
-    }
+    sequencer.saveSequence(window.prompt("Please give a name to your sequence..."), sequencer.toString());
+    sequencer.loadModules();
+    refreshOptions();
   });
 
   var isWorkingOnGifGeneration = false;
@@ -194,10 +175,12 @@ window.onload = function() {
     onLoad: function onFileReaderLoad(progress) {
       var reader = progress.target;
       var step = sequencer.images.image1.steps[0];
+      var util=IntermediateHtmlStepUi(sequencer);
       step.output.src = reader.result;
       sequencer.run({ index: 0 });
       step.options.step.imgElement.src = reader.result;
       updatePreviews(reader.result);
+      util.updateThumbnails();
     },
     onTakePhoto: function (url) {
       var step = sequencer.images.image1.steps[0];
@@ -207,14 +190,48 @@ window.onload = function() {
     }
   });
 
-  setupCache();
-  
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js', { scope: '/examples/' })
+      .then(function(registration) {
+        const installingWorker = registration.installing;
+        installingWorker.onstatechange = () => {
+          console.log(installingWorker)
+          if (installingWorker.state === 'installed') {
+            location.reload();
+          }
+        }
+        console.log('Registration successful, scope is:', registration.scope);
+      })
+      .catch(function(error) {
+        console.log('Service worker registration failed, error:', error);
+      });
+  }
+
+  if ('serviceWorker' in navigator) {
+    caches.keys().then(function(cacheNames) {
+      cacheNames.forEach(function(cacheName) {
+        $("#clear-cache").append(" " + cacheName);
+      });
+    });
+  }
+
+  $("#clear-cache").click(function() {
+    if ('serviceWorker' in navigator) {
+      caches.keys().then(function(cacheNames) {
+        cacheNames.forEach(function(cacheName) {
+          caches.delete(cacheName);
+        });
+      });
+    }
+    location.reload();
+  });
+
   function updatePreviews(src) {
     $('#addStep img').remove();
 
     var previewSequencerSteps = {
-      "brightness": "175",
-      "saturation": "0.5",
+      "brightness": "20",
+      "saturation": "5",
       "rotate": 90,
       "contrast": 90,
       "crop": {
@@ -237,3 +254,4 @@ window.onload = function() {
     updatePreviews("images/tulips.png");
   }
 };
+

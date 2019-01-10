@@ -52,22 +52,24 @@ window.onload = function() {
   }
   refreshOptions();
 
-  window.onscroll = function() {scrollFunction()};
+  $(window).on('scroll', scrollFunction);
 
   function scrollFunction() {
-    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-      document.getElementById("move-up").style.display = "block";
-    } else {
-      document.getElementById("move-up").style.display = "none";
-    }
+    var shouldDisplay = $('body').scrollTop() > 20 || $(':root').scrollTop() > 20;
+
+    $('#move-up').css({
+       display: shouldDisplay ? 'block' : 'none'
+    });
   }
 
+
   function topFunction() {
-    document.body.scrollTop = 0; 
-    document.documentElement.scrollTop = 0; 
+    $('body').animate({scrollTop: 0});
+    $(':root').animate({scrollTop: 0});
   }
 
   $('#move-up').on("click",topFunction);
+
 
   // UI for each step:
   sequencer.setUI(DefaultHtmlStepUi(sequencer));

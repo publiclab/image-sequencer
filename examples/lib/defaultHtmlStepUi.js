@@ -156,7 +156,12 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $("#load-image").append(step.ui);
     }
     $(step.ui.querySelector(".toggle")).on("click", (e) => {
-      $(e.target.querySelector('.fa')).toggleClass('fa-caret-up').toggleClass('fa-caret-down');
+      if ($(e.target).hasClass('fa')){
+        $(e.target).toggleClass('fa-caret-up').toggleClass('fa-caret-down');
+      }
+      else {
+        $(e.target.querySelector('.fa')).toggleClass('fa-caret-up').toggleClass('fa-caret-down');
+      }
       $(step.ui.querySelectorAll('.collapse')).collapse('toggle');
     });
     

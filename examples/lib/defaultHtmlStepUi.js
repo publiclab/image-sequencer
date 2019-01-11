@@ -130,7 +130,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         .appendChild(
           parser.parseFromString(tools, "text/html").querySelector("div")
         );
-      $(step.ui.querySelectorAll(".remove")).on('click', function() { produceNotification(" Step Removed") });  
+      $(step.ui.querySelectorAll(".remove")).on('click', function() { produceNotification(" Step Removed","step-remove") });  
       $(step.ui.querySelectorAll(".insert-step")).on('click', function() { util.insertStep(step.ID) });
 
       // Insert the step's UI in the right place

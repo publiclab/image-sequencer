@@ -205,7 +205,7 @@ h1 {
   text-align: center;
   }
 
-#notification-styles {
+.notification-styles {
   background-color: #808b96;
   padding:4px;
   color:white;

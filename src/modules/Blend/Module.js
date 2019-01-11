@@ -11,6 +11,19 @@ module.exports = function Dynamic(options, UI, util) {
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
+       
+        function offsetUnavailableNotify() {
+            if ($('#offsetUnavailableNotification').length == 0) {
+              var notification = document.createElement('span');
+              notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i>Offset Unavailable';
+              notification.id = 'offsetUnavailableNotification';
+          
+              $('body').append(notification);
+            }
+          
+            $('#offsetUnavailableNotification').fadeIn(500).delay(200).fadeOut(500);
+          }
+ 
         var step = this;
 
         // convert to runnable code:
@@ -23,6 +36,13 @@ module.exports = function Dynamic(options, UI, util) {
 
         // save first image's pixels
         var priorStep = this.getStep(options.offset);
+
+        if (priorStep.output === undefined) {
+            this.output = input;
+            if(options.inBrowser)
+            offsetUnavailableNotify()
+            callback();
+        } 
 
         getPixels(priorStep.output.src, function(err, pixels) {
             options.firstImagePixels = pixels;

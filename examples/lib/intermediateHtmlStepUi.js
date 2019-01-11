@@ -117,12 +117,6 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       .insertAdjacentElement('afterend',
         addStepUI
       );
-      console.log(sequencer);
-    // if (getUrlHashParameter('src')) {
-    //   updatePreviews(getUrlHashParameter('src'));
-    // } else {
-    //   updatePreviews("images/tulips.png");
-    // }
     updateThumbnails();
     var insertStepSelect = $("#insertStep select");
     insertStepSelect.html("");

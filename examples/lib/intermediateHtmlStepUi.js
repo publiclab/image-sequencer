@@ -3,8 +3,13 @@ var urlHash = require('./urlHash.js'),
 
 function IntermediateHtmlStepUi(_sequencer, step, options) {
   function stepUI() {
+<<<<<<< ac57b32ec636b7b38bae5d9b53a5d0dd6c3feadd
     return '<div class="row insertDiv">\
         <div class="col-md-6 col-md-offset-2" style="margin-top:5%">\
+=======
+    return '<div class="row insertDiv" style="display:none;">\
+        <div class="col-md-6" style="margin-top:5%">\
+>>>>>>> fix insert step button
         <section id="insertStep" class="panel panel-primary">\
           <div class="form-inline">\
             <div class="panel-body">\
@@ -71,12 +76,33 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     var parser = new DOMParser();
     var addStepUI = stepUI();
     addStepUI = parser.parseFromString(addStepUI, "text/html").querySelector("div")
-    step.ui
+
+    var toggleDiv = () => {
+      $(step.ui.querySelector('.insertDiv')).fadeToggle(200).collapse('toggle')
+      if ($(step.ui.querySelector('.insert-text')).css('display') != "none"){
+        $(step.ui.querySelector('.insert-text')).fadeToggle(200, () => {$(step.ui.querySelector('.no-insert-text')).fadeToggle(200)})
+      }
+      else {
+        $(step.ui.querySelector('.no-insert-text')).fadeToggle(200, () => {$(step.ui.querySelector('.insert-text')).fadeToggle(200)})
+      }
+    }
+
+    if ($(step.ui.querySelector('.insertDiv')).length > 0){
+      toggleDiv();
+    }
+    else {
+      step.ui
       .querySelector("div.step")
       .insertAdjacentElement('afterend',
         addStepUI
       );
+<<<<<<< ac57b32ec636b7b38bae5d9b53a5d0dd6c3feadd
     insertPreview.updatePreviews(step.output,'insertStep');
+=======
+      toggleDiv();
+    }
+    
+>>>>>>> fix insert step button
     var insertStepSelect = $("#insertStep select");
     insertStepSelect.html("");
     // Add modules to the insertStep dropdown

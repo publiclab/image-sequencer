@@ -156,17 +156,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $("#load-image").append(step.ui);
     }
     $(step.ui.querySelector("#toggle")).on("click", (e) => {
-      var className = e.target.className;
-      // console.log("ele "+className);
-      if(className=="fa fa-caret-up"){
-        $(step.ui.querySelectorAll(".cal")).toggleClass("collapse");
-        e.target.className="fa fa-caret-down";
-      }
-      else{ 
-        $(step.ui.querySelectorAll(".cal")).toggleClass("collapse");
-        //e.target.localName.toggleClass('fa-caret-up');
-        e.target.className="fa fa-caret-up";
-      }
+      $(e.target).toggleClass('fa-caret-up').toggleClass('fa-caret-down');
+      $(step.ui.querySelectorAll(".cal")).toggleClass("collapse");
     });
     
 

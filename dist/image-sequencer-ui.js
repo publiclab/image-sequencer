@@ -175,8 +175,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
        <button confirm="Are you sure?" onclick="stepRemovedNotify()" class="remove btn btn btn-default">\
          <i class="fa fa-trash"></i>\
        </button>\
-       <button class="btn  insert-step" style="margin-left:10px;border-radius:6px;background-color:#fff;border:solid #bababa 1.1px;" >\
-         <i class="fa fa-plus"></i> Add\
+       <button class="btn insert-step" style="margin-left:10px;border-radius:6px;background-color:#fff;border:solid #bababa 1.1px;" >\
+         <span class="insert-text"><i class="fa fa-plus"></i> Add</span><span class="no-insert-text" style="display:none;">Close</span>\
        </button>\
        </div>\
        </div>';
@@ -279,7 +279,6 @@ function DefaultHtmlStepUi(_sequencer, options) {
     }
     $(step.ui.querySelector(".toggle")).on("click", (e) => {
       var className = e.target.className;
-      console.log("ele "+element)
       if(className=="fa fa-caret-up"){
         $(step.ui.querySelectorAll(".collapse")).show();
         e.target.className="fa fa-caret-down";
@@ -424,7 +423,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
 function IntermediateHtmlStepUi(_sequencer, step, options) {
   function stepUI() {
-    return '<div class="row insertDiv">\
+    return '<div class="row insertDiv" style="display:none;">\
         <div class="col-md-6" style="margin-top:5%">\
         <section id="insertStep" class="panel panel-primary">\
           <div class="form-inline">\
@@ -484,11 +483,29 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     var parser = new DOMParser();
     var addStepUI = stepUI();
     addStepUI = parser.parseFromString(addStepUI, "text/html").querySelector("div")
-    step.ui
+
+    var toggleDiv = () => {
+      $(step.ui.querySelector('.insertDiv')).fadeToggle(200).collapse('toggle')
+      if ($(step.ui.querySelector('.insert-text')).css('display') != "none"){
+        $(step.ui.querySelector('.insert-text')).fadeToggle(200, () => {$(step.ui.querySelector('.no-insert-text')).fadeToggle(200)})
+      }
+      else {
+        $(step.ui.querySelector('.no-insert-text')).fadeToggle(200, () => {$(step.ui.querySelector('.insert-text')).fadeToggle(200)})
+      }
+    }
+
+    if ($(step.ui.querySelector('.insertDiv')).length > 0){
+      toggleDiv();
+    }
+    else {
+      step.ui
       .querySelector("div.step")
       .insertAdjacentElement('afterend',
         addStepUI
       );
+      toggleDiv();
+    }
+    
     var insertStepSelect = $("#insertStep select");
     insertStepSelect.html("");
     // Add modules to the insertStep dropdown

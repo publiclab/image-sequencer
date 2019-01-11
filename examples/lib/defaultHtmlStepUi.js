@@ -54,7 +54,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
          <i class="fa fa-trash"></i>\
        </button>\
        <button class="btn insert-step" style="margin-left:10px;border-radius:6px;background-color:#fff;border:solid #bababa 1.1px;" >\
-         <span class="insert-text"><i class="fa fa-plus"></i> Add</span><span class="no-insert-text" style="display:none;">Close</span>\
+         <span class="insert-text"><i class="fa fa-plus"></i> Add</span><span class="no-insert-text" style="display:none;"><i class="fa fa-times" aria-hidden="true"></i> Close</span>\
        </button>\
        </div>\
        </div>';

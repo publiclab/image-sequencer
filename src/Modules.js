@@ -13,6 +13,8 @@ module.exports = {
   'convolution': require('./modules/Convolution'),
   'crop': require('./modules/Crop'),
   'decode-qr': require('./modules/DecodeQr'),
+  'dither': require('./modules/Dither'),
+  'draw-rectangle': require('./modules/DrawRectangle'),
   'dynamic': require('./modules/Dynamic'),
   'edge-detect': require('./modules/EdgeDetect'),
   'fisheye-gl': require('./modules/FisheyeGl'),
@@ -26,5 +28,6 @@ module.exports = {
   'overlay': require('./modules/Overlay'),
   'resize': require('./modules/Resize'),
   'rotate': require('./modules/Rotate'),
-  'saturation': require('./modules/Saturation')
+  'saturation': require('./modules/Saturation'),
+  'white-balance': require('./modules/WhiteBalance')
 }

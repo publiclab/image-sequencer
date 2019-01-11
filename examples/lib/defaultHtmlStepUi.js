@@ -21,15 +21,16 @@ function DefaultHtmlStepUi(_sequencer, options) {
       '\
       <div class="container">\
     <div class="row step">\
+    <form class="input-form">\
     <div class="col-md-4 details">\
-    <h3>' +
-      step.name +
-      "</h3>\
-    <p><i>" +
+    <h3>' +step.name + 
+    ' <span class="toggle"><i class="fa fa-caret-up" aria-hidden="true"></i></span>' +
+      '</h3><div class="collapse"><p><i>"'+
       (step.description || "") +
-      '</i></p>\
+      '</i></p></div>\
     </div>\
-    <div class="col-md-8">\
+    </form>\
+    <div class="col-md-8 collapse">\
     <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
     <a><img alt="" style="max-width=100%" class="img-thumbnail step-thumbnail"/></a>\
     </div>\
@@ -38,13 +39,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
     </div>';
 
     var tools =
-      '<div class="tools btn-group">\
+      '<div class="collapse"><div class="tools btn-group">\
        <button confirm="Are you sure?" class="remove btn btn btn-default">\
          <i class="fa fa-trash"></i>\
        </button>\
        <button class="btn  insert-step" style="margin-left:10px;border-radius:6px;background-color:#fff;border:solid #bababa 1.1px;" >\
          <i class="fa fa-plus"></i> Add\
        </button>\
+       </div>\
        </div>';
 
     var util = IntermediateHtmlStepUi(_sequencer, step);
@@ -102,8 +104,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         div.setAttribute("name", paramName);
         var description = inputs[paramName].desc || paramName;
         div.innerHTML =
-          "<div class='det'>\
-          <form class='input-form'>\
+          "<div class='det collapse'>\
                            <label for='" +
           paramName +
           "'>" +
@@ -112,44 +113,15 @@ function DefaultHtmlStepUi(_sequencer, options) {
                            " +
           html +
           "\
-          </form>\
                          </div>";
         step.ui.querySelector("div.details").appendChild(div);
       }
 
-      function toggleSaveButton() {
-        $(step.ui.querySelector("div.details .btn-save")).prop("disabled", false);
-        focusInput();
-      }
-
-      $(step.ui.querySelectorAll(".target")).on('change', toggleSaveButton);
-
       $(step.ui.querySelector("div.details")).append(
-        "<p><button class='btn btn-default btn-save' disabled = 'true' >Apply</button><span> Press apply to see changes</span></p>"
+        '<div class="collapse"><p><button type="submit" class="btn btn-default btn-save" disabled = "true" >Apply</button><span> Press apply to see changes</span></p></div>'
       );
 
-      function focusInput() {
-        $(step.ui.querySelector("div.details .target")).focus();
-      }
-
-      function saveOptions(e) {
-        e.preventDefault();
-        $(step.ui.querySelector("div.details"))
-          .find("input,select")
-          .each(function(i, input) {
-            step.options[$(input).attr("name")] = input.value;
-          });
-        _sequencer.run({ index: step.index - 1 });
-
-        // modify the url hash
-        setUrlHashParameter("steps", _sequencer.toString());
-        // disable the save button
-        $(step.ui.querySelector("div.details .btn-save")).prop("disabled", true);
-      }
-
-      // on clicking Save in the details pane of the step
-      $(step.ui.querySelector("div.details .btn-save")).click(saveOptions);
-      $(step.ui.querySelector("div.details .input-form")).on('submit', saveOptions);
+      
     }
 
     if (step.name != "load-image") {
@@ -165,7 +137,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       if (stepOptions.index == _sequencer.images.image1.steps.length) {
         stepsEl.appendChild(step.ui);
         $("#steps .container:nth-last-child(1) .insert-step").prop('disabled',true);
-        if($("#steps .container:nth-last-child(2)")) 
+        if($("#steps .container:nth-last-child(2)"))
         $("#steps .container:nth-last-child(2) .insert-step").prop('disabled',false);
       } else {
         stepsEl.insertBefore(step.ui, $(stepsEl).children()[stepOptions.index]);
@@ -174,13 +146,81 @@ function DefaultHtmlStepUi(_sequencer, options) {
     else {
       $("#load-image").append(step.ui);
     }
+    $(step.ui.querySelector(".toggle")).on("click", (e) => {
+      var className = e.target.className;
+      console.log("ele "+element)
+      if(className=="fa fa-caret-up"){
+        $(step.ui.querySelectorAll(".collapse")).show();
+        e.target.className="fa fa-caret-down";
+      }
+      else{ 
+        $(step.ui.querySelectorAll(".collapse")).hide();
+        //e.target.localName.toggleClass('fa-caret-up');
+        e.target.className="fa fa-caret-up";
+      }
+    });
+    
+
+    function saveOptions(e) {
+      e.preventDefault();
+      if (optionsChanged){
+        $(step.ui.querySelector("div.details"))
+          .find("input,select")
+          .each(function(i, input) {
+            $(input)
+              .data('initValue', $(input).val())
+              .data('hasChangedBefore', false);
+            step.options[$(input).attr("name")] = $(input).val();
+          });
+        _sequencer.run({ index: step.index - 1 });
+
+        // modify the url hash
+        setUrlHashParameter("steps", _sequencer.toString());
+
+        // disable the save button
+        $(step.ui.querySelector('.btn-save')).prop('disabled', true);
+        optionsChanged = false;
+        changedInputs = 0;
+      }
+    }
+
+    function handleInputValueChange(currentValue, initValue, hasChangedBefore) {
+      var inputChanged = !(isNaN(initValue) || isNaN(currentValue) ? currentValue === initValue : currentValue - initValue === 0);
+      changedInputs += hasChangedBefore ? inputChanged ? 0 : -1 : inputChanged ? 1 : 0;
+      optionsChanged = changedInputs > 0;
+
+      $(step.ui.querySelector('.btn-save')).prop('disabled', !optionsChanged);
+      return inputChanged;
+    }
+
+    var 
+      changedInputs = 0,
+      optionsChanged = false;
+    $(step.ui.querySelector('.input-form')).on('submit', saveOptions);
+    $(step.ui.querySelectorAll('.target')).each(function(i, input) {
+      $(input)
+        .data('initValue', $(input).val())
+        .data('hasChangedBefore', false)
+        .on('input', function() {
+          $(this)
+            .focus()
+            .data('hasChangedBefore',
+              handleInputValueChange(
+                $(this).val(),
+                $(this).data('initValue'),
+                $(this).data('hasChangedBefore')
+            )
+          )
+        })
+    })
+
+
+
+    $('input[type="range"]').on('input', function() {
+        $(this).next().html($(this).val());
+    })
   }
 
-  var inputs = document.querySelectorAll('input[type="range"]')
-  for (i in inputs)
-    inputs[i].oninput = function(e) {
-      e.target.nextSibling.innerHTML = e.target.value;
-    }
 
   function onDraw(step) {
     $(step.ui.querySelector(".load")).show();
@@ -215,17 +255,19 @@ function DefaultHtmlStepUi(_sequencer, options) {
       for (var i in inputs) {
         if (step.options[i] !== undefined) {
           if (inputs[i].type.toLowerCase() === "input")
-            step.ui.querySelector('div[name="' + i + '"] input').value =
-              step.options[i];
+            $(step.ui.querySelector('div[name="' + i + '"] input'))
+              .val(step.options[i])
+              .data('initValue', step.options[i]);
           if (inputs[i].type.toLowerCase() === "select")
-            step.ui.querySelector('div[name="' + i + '"] select').value =
-              step.options[i];
+            $(step.ui.querySelector('div[name="' + i + '"] select'))
+              .val(step.options[i])
+              .data('initValue', step.options[i]);
         }
       }
       for (var i in outputs) {
         if (step[i] !== undefined)
-          step.ui.querySelector('div[name="' + i + '"] input').value =
-            step[i];
+          $(step.ui.querySelector('div[name="' + i + '"] input'))
+            .val(step[i]);
       }
     }
   }
@@ -233,6 +275,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
   function onRemove(step) {
     step.ui.remove();
     $("#steps .container:nth-last-child(1) .insert-step").prop('disabled',true);
+    $('div[class^=imgareaselect-]').remove();
   }
 
   function getPreview() {

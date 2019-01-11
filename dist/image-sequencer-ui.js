@@ -390,7 +390,6 @@ function DefaultHtmlStepUi(_sequencer, options) {
     </div>';
 
     var tools =
-<<<<<<< ac57b32ec636b7b38bae5d9b53a5d0dd6c3feadd
     '<div class="cal"><div class="tools btn-group">\
     <button confirm="Are you sure?" class="remove btn btn btn-default">\
       <i class="fa fa-trash"></i>\
@@ -402,19 +401,6 @@ function DefaultHtmlStepUi(_sequencer, options) {
     </div>';
 
     var util = intermediateHtmlStepUi(_sequencer, step);
-=======
-      '<div class="collapse"><div class="tools btn-group">\
-       <button confirm="Are you sure?" onclick="stepRemovedNotify()" class="remove btn btn btn-default">\
-         <i class="fa fa-trash"></i>\
-       </button>\
-       <button class="btn insert-step" style="margin-left:10px;border-radius:6px;background-color:#fff;border:solid #bababa 1.1px;" >\
-         <span class="insert-text"><i class="fa fa-plus"></i> Add</span><span class="no-insert-text" style="display:none;">Close</span>\
-       </button>\
-       </div>\
-       </div>';
-
-    var util = IntermediateHtmlStepUi(_sequencer, step);
->>>>>>> fix insert step button
 
     var parser = new DOMParser();
     step.ui = parser.parseFromString(step.ui, "text/html");
@@ -511,23 +497,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
     else {
       $("#load-image").append(step.ui);
     }
-<<<<<<< ac57b32ec636b7b38bae5d9b53a5d0dd6c3feadd
     $(step.ui.querySelector(".toggle")).on("click", () => {
       $(step.ui.querySelector('.toggleIcon')).toggleClass('fa-caret-up').toggleClass('fa-caret-down');
       $(step.ui.querySelectorAll(".cal")).toggleClass("collapse");
-=======
-    $(step.ui.querySelector(".toggle")).on("click", (e) => {
-      var className = e.target.className;
-      if(className=="fa fa-caret-up"){
-        $(step.ui.querySelectorAll(".collapse")).show();
-        e.target.className="fa fa-caret-down";
-      }
-      else{ 
-        $(step.ui.querySelectorAll(".collapse")).hide();
-        //e.target.localName.toggleClass('fa-caret-up');
-        e.target.className="fa fa-caret-up";
-      }
->>>>>>> fix insert step button
     });
     
     $(step.imgElement).on("mousemove", _.debounce(() => imageHover(step), 150));
@@ -701,63 +673,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
   }
 }
 
-<<<<<<< ac57b32ec636b7b38bae5d9b53a5d0dd6c3feadd
 if(typeof window === "undefined"){
   module.exports={
     DefaultHtmlStepUi: DefaultHtmlStepUi
-=======
-function IntermediateHtmlStepUi(_sequencer, step, options) {
-  function stepUI() {
-    return '<div class="row insertDiv" style="display:none;">\
-        <div class="col-md-6" style="margin-top:5%">\
-        <section id="insertStep" class="panel panel-primary">\
-          <div class="form-inline">\
-            <div class="panel-body">\
-              <p class="info">Select a new module to add to your sequence.</p>\
-              <div class="row center-align radio-group">\
-                <div>\
-                  <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="brightness">\
-                    <i class="fa fa-sun-o fa-4x"></i>\
-                  </button>\
-                  <p>Brightness</p>\
-                </div>\
-                <div>\
-                  <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="contrast">\
-                    <i class="fa fa-adjust fa-4x"></i>\
-                  </button>\
-                  <p>Contrast</p>\
-                </div>\
-                <div>\
-                  <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="saturation">\
-                    <i class="fa fa-tint fa-4x"></i>\
-                  </button>\
-                  <p>Saturation</p>\
-                </div>\
-                <div>\
-                  <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="rotate">\
-                    <i class="fa fa-rotate-right fa-4x"></i>\
-                  </button>\
-                  <p>Rotate</p>\
-                </div>\
-                <div>\
-                  <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="crop">\
-                    <i class="fa fa-crop fa-4x"></i>\
-                  </button>\
-                  <p>Crop</p>\
-                </div>\
-              </div>\
-              <div class="center-align">\
-                <select class="form-control input-lg" id="selectStep">\
-                  <!-- The default null selection has been appended manually in demo.js\
-                  This is because the options in select are overritten when options are appended.-->\
-                </select>\
-                <button class="btn btn-success btn-lg" name="add" id="add-step-btn">Add Step</button>\
-              </div>\
-            </div>\
-          </div>\
-        </section>\
-        </div>';
->>>>>>> fix insert step button
   }
 }
 
@@ -895,33 +813,12 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     var parser = new DOMParser();
     var addStepUI = stepUI();
     addStepUI = parser.parseFromString(addStepUI, "text/html").querySelector("div")
-
-    var toggleDiv = () => {
-      $(step.ui.querySelector('.insertDiv')).fadeToggle(200).collapse('toggle')
-      if ($(step.ui.querySelector('.insert-text')).css('display') != "none"){
-        $(step.ui.querySelector('.insert-text')).fadeToggle(200, () => {$(step.ui.querySelector('.no-insert-text')).fadeToggle(200)})
-      }
-      else {
-        $(step.ui.querySelector('.no-insert-text')).fadeToggle(200, () => {$(step.ui.querySelector('.insert-text')).fadeToggle(200)})
-      }
-    }
-
-    if ($(step.ui.querySelector('.insertDiv')).length > 0){
-      toggleDiv();
-    }
-    else {
-      step.ui
+    step.ui
       .querySelector("div.step")
       .insertAdjacentElement('afterend',
         addStepUI
       );
-<<<<<<< ac57b32ec636b7b38bae5d9b53a5d0dd6c3feadd
     insertPreview.updatePreviews(step.output,'insertStep');
-=======
-      toggleDiv();
-    }
-    
->>>>>>> fix insert step button
     var insertStepSelect = $("#insertStep select");
     insertStepSelect.html("");
     // Add modules to the insertStep dropdown

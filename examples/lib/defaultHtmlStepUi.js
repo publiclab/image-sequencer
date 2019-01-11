@@ -155,7 +155,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     else {
       $("#load-image").append(step.ui);
     }
-    $(step.ui.querySelector(".toggle")).on("click", (e) => {
+    $(step.ui.querySelector(".toggle")).on("click", function(e){
       var className = e.target.className;
       if(className=="fa fa-caret-up"){
         $(step.ui.querySelectorAll(".collapse")).show();

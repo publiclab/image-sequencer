@@ -7,17 +7,7 @@
 // The variable 'step' stores useful data like input and
 // output values, step information.
 // See documetation for more details.
-function stepRemovedNotify() {
-  if ($('#stepRemovedNotification').length == 0) {
-    var notification = document.createElement('span');
-    notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> Step Removed ';
-    notification.id = 'stepRemovedNotification';
 
-    $('body').append(notification);
-  }
-
-  $('#stepRemovedNotification').fadeIn(500).delay(200).fadeOut(500);
-}
 function DefaultHtmlStepUi(_sequencer, options) {
 
   options = options || {};
@@ -49,7 +39,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     var tools =
       '<div class="tools btn-group">\
-       <button confirm="Are you sure?" onclick="stepRemovedNotify()" class="remove btn btn btn-default">\
+       <button confirm="Are you sure?" class="remove btn btn btn-default">\
          <i class="fa fa-trash"></i>\
        </button>\
        <button class="btn  insert-step" style="margin-left:10px;border-radius:6px;background-color:#fff;border:solid #bababa 1.1px;" >\
@@ -168,6 +158,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         .appendChild(
           parser.parseFromString(tools, "text/html").querySelector("div")
         );
+      $(step.ui.querySelectorAll(".remove")).on('click', function() { produceNotification(" Step Removed") });  
       $(step.ui.querySelectorAll(".insert-step")).on('click', function() { util.insertStep(step.ID) });
 
       // Insert the step's UI in the right place

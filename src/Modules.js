@@ -30,5 +30,4 @@ module.exports = {
   'rotate': require('./modules/Rotate'),
   'saturation': require('./modules/Saturation'),
   'white-balance': require('./modules/WhiteBalance')
-}  'invert': require('image-sequencer-invert'),
 }

@@ -61,13 +61,13 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     var addStepUI = stepUI();
     addStepUI = parser.parseFromString(addStepUI, "text/html").querySelector("div")
 
-    var toggleDiv = () => {
+    var toggleDiv = function(){
       $(step.ui.querySelector('.insertDiv')).fadeToggle(200).collapse('toggle')
       if ($(step.ui.querySelector('.insert-text')).css('display') != "none"){
-        $(step.ui.querySelector('.insert-text')).fadeToggle(200, () => {$(step.ui.querySelector('.no-insert-text')).fadeToggle(200)})
+        $(step.ui.querySelector('.insert-text')).fadeToggle(200, function(){$(step.ui.querySelector('.no-insert-text')).fadeToggle(200)})
       }
       else {
-        $(step.ui.querySelector('.no-insert-text')).fadeToggle(200, () => {$(step.ui.querySelector('.insert-text')).fadeToggle(200)})
+        $(step.ui.querySelector('.no-insert-text')).fadeToggle(200, function(){$(step.ui.querySelector('.insert-text')).fadeToggle(200)})
       }
     }
 

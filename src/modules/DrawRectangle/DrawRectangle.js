@@ -12,37 +12,27 @@ module.exports = exports = function(pixels, options){
   var thickness = Number(options.thickness) || 1;
   var color = options.color || "0 0 0 255";
   color = color.split(" ");
-  for(var i = 0; i<thickness; i++){
-    for(var n = (oy+i)*4*iw + 4*ox ; n < (oy+i)*4*iw + 4*(ex); n = n+4){
-       pixels.data[n] = color[0];
-       pixels.data[n+1] = color[1];
-       pixels.data[n+2] = color[2];
-       pixels.data[n+3] = color[3];
-    } 
-  }
-  for(var i = 0; i<thickness; i++){
-    for(var n = (ey-i)*4*iw + 4*ox ; n < (ey-i)*4*iw + 4*(ex); n = n+4){
-       pixels.data[n] = color[0];
-       pixels.data[n+1] = color[1];
-       pixels.data[n+2] = color[2];
-       pixels.data[n+3] = color[3];
+
+  var drawSide = function(startY, startX, endY, endX, yIncrement, xIncrement, sign, incrementFactor = 1){
+    for(var i = 0; i<thickness; i++){
+      for(
+        var n = (startY + i*yIncrement*sign)*4*iw + 4*(startX + i*xIncrement*sign);
+        n <= (endY + i*yIncrement*sign)*4*iw + 4*(endX + i*xIncrement*sign);
+        n = n+4*(incrementFactor)
+      )
+      {
+        pixels.data[n] = color[0];
+        pixels.data[n+1] = color[1];
+        pixels.data[n+2] = color[2];
+        pixels.data[n+3] = color[3];
+      }
     }
   }
-  for(var i = 0; i < thickness; i++){  
-    for(var n = oy*4*iw + 4*(ox+i) ; n < ey*4*iw + 4*(ox+i); n = n+ 4*iw){
-       pixels.data[n] = color[0];
-       pixels.data[n+1] = color[1];
-       pixels.data[n+2] = color[2];
-       pixels.data[n+3] = color[3];
-    }
-  }
-  for(var i = 0; i < thickness; i++){
-    for(var n = oy*4*iw + 4*(ex - i) ; n < ey*4*iw + 4*(ex - i); n = n+ 4*iw){
-       pixels.data[n] = color[0];
-       pixels.data[n+1] = color[1];
-       pixels.data[n+2] = color[2];
-       pixels.data[n+3] = color[3];
-    }
-  }
-    return pixels;
+
+  drawSide(oy, ox, oy, ex, 1, 0, 1); // Top
+  drawSide(ey, ox, ey, ex, 1, 0, -1); // Bottom
+  drawSide(oy, ox, ey, ox, 0, 1, 1, iw); // Left
+  drawSide(oy, ex, ey, ex, 0, 1, -1, iw); // Right
+
+  return pixels;
 }

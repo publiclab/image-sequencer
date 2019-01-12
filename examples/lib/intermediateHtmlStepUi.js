@@ -1,3 +1,4 @@
+var urlHash = require('./urlHash.js');
 function IntermediateHtmlStepUi(_sequencer, step, options) {
   function stepUI() {
     return '<div class="row insertDiv">\
@@ -109,10 +110,12 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       .insertSteps(id + 1, newStepName).run({ index: id });
 
     // add to URL hash too
-    setUrlHashParameter("steps", _sequencer.toString());
+    urlHash.setUrlHashParameter("steps", _sequencer.toString());
 
   }
   return {
     insertStep
   }
 }
+
+module.exports = IntermediateHtmlStepUi;

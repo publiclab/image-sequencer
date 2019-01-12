@@ -8,6 +8,9 @@
 // output values, step information.
 // See documetation for more details.
 
+var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js');
+var urlHash = require('./urlHash.js');
+
 function stepRemovedNotify() {
     if ($('#stepRemovedNotification').length == 0) {
       var notification = document.createElement('span');
@@ -62,7 +65,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
        </button>\
        </div>';
 
-    var util = IntermediateHtmlStepUi(_sequencer, step);
+    var util = intermediateHtmlStepUi(_sequencer, step);
 
     var parser = new DOMParser();
     step.ui = parser.parseFromString(step.ui, "text/html");
@@ -175,7 +178,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         _sequencer.run({ index: step.index - 1 });
 
         // modify the url hash
-        setUrlHashParameter("steps", _sequencer.toString());
+        urlHash.setUrlHashParameter("steps", _sequencer.toString());
 
         // disable the save button
         $(step.ui.querySelector('.btn-save')).prop('disabled', true);

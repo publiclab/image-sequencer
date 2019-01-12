@@ -1,3 +1,8 @@
+var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js');
+var setupCache = require('./lib/cache.js');
+var DefaultHtmlStepUi = require('./lib/defaultHtmlStepUi.js');
+var urlHash = require('./lib/urlHash.js');
+
 window.onload = function() {
   function generatePreview(previewStepName, customValues, path) {
     var previewSequencer = ImageSequencer();
@@ -56,11 +61,11 @@ window.onload = function() {
   sequencer.setUI(DefaultHtmlStepUi(sequencer));
 
   // UI for the overall demo:
-  var ui = DefaultHtmlSequencerUi(sequencer);
+  var ui = defaultHtmlSequencerUi(sequencer);
 
   // find any `src` parameters in URL hash and attempt to source image from them and run the sequencer
-  if (getUrlHashParameter('src')) {
-    sequencer.loadImage(getUrlHashParameter('src'), ui.onLoad);
+  if (urlHash.getUrlHashParameter('src')) {
+    sequencer.loadImage(urlHash.getUrlHashParameter('src'), ui.onLoad);
   } else {
     sequencer.loadImage("images/tulips.png", ui.onLoad);
   }
@@ -231,8 +236,8 @@ window.onload = function() {
     });
   }
 
-  if (getUrlHashParameter('src')) {
-    updatePreviews(getUrlHashParameter('src'));
+  if (urlHash.getUrlHashParameter('src')) {
+    updatePreviews(urlHash.getUrlHashParameter('src'));
   } else {
     updatePreviews("images/tulips.png");
   }

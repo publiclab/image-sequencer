@@ -1,4 +1,4 @@
-const Spinner = require('ora');
+var Spinner = require('ora');
 var readlineSync = require('readline-sync');
 
 module.exports = function (program, sequencer, outputFilename) {

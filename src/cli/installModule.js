@@ -1,5 +1,5 @@
-const childProcess = require('child_process')
-const Spinner = require('ora');
+var childProcess = require('child_process')
+var Spinner = require('ora');
 
 module.exports = function (program, sequencer) {
     console.log(

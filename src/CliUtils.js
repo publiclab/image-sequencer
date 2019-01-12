@@ -1,6 +1,4 @@
-const fs = require('fs')
-
-
+var fs = require('fs')
 
 /*
 * This function checks if the directory exists, if not it creates one on the given path

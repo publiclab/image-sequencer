@@ -60043,17 +60043,16 @@ module.exports={
 },{}],204:[function(require,module,exports){
 module.exports = exports = function(pixels, options){
 	options.startingX = options.startingX || 0;
-    options.startingY = options.startingY || 0;
-	var ox = Number(options.startingX);
-	var oy = Number(options.startingY);
-	var iw = pixels.shape[0];
-	var ih = pixels.shape[1];
-	options.endX = Number(options.endX) || iw - 1;
-	options.endY = Number(options.endY) || ih - 1;
-	var ex = options.endX;
-	var ey = options.endY;
-  var thickness = Number(options.thickness) || 1;
-  var color = options.color || "0 0 0 255";
+  options.startingY = options.startingY || 0;
+	var ox = Number(options.startingX),
+	  oy = Number(options.startingY),
+	  iw = pixels.shape[0],
+	  ih = pixels.shape[1],
+	  ex =  options.endX = Number(options.endX) || iw - 1,
+	  ey = options.endY = Number(options.endY) || ih - 1,
+    thickness = Number(options.thickness) || 1,
+    color = options.color || "0 0 0 255";
+
   color = color.split(" ");
 
   var drawSide = function(startY, startX, endY, endX, yIncrement, xIncrement, sign, incrementFactor = 1){

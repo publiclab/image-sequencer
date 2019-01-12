@@ -67475,7 +67475,7 @@ module.exports={
         "desc": "RGBA values separated by a space",
         "default": "0 0 0 255"
       }
-    },
+    }
 }
 
 },{}],208:[function(require,module,exports){
@@ -69244,23 +69244,23 @@ function setInputStepInit() {
       context = canvas.getContext('2d'),
       vendorUrl = window.URL || window.webkitURL;
 
-  navigator.getMedia = navigator.getUserMedia || navigator.wekitGetUserMedia ||
-                        navigator.mozGetUserMedia || navigator.msGetUserMedia;
+      const constraints = { audio: false,video: true};
 
-  navigator.getMedia({
-    video: true,
-    audio: false
-  }, function(stream){ // success callback
-    video.srcObject = stream;
-    video.onloadedmetadata = function(e) {
-       video.play();
-     };
-    document.getElementById('close').addEventListener('click', function () {
-      stopStream(stream);
-     });
-  }, function(error){ // error
-    console.log("error");
-  });
+      function handleSuccess(stream) {
+        window.stream = stream; // make stream available to browser console
+        video.srcObject = stream;
+        video.onloadedmetadata = function(e) {
+          video.play();
+        };
+        document.getElementById('close').addEventListener('click', function () {
+          stopStream(stream);
+         });
+      }
+      function handleError(error) {
+        console.log('navigator.getUserMedia error: ', error);
+      }
+  navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError);
+  
 
   document.getElementById('capture').addEventListener('click', function(stream){
     context.drawImage(video, 0, 0, 400, 300);

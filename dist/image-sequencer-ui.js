@@ -58,6 +58,25 @@ window.onload = function() {
   }
   refreshOptions();
 
+  $(window).on('scroll', scrollFunction);
+
+  function scrollFunction() {
+    var shouldDisplay = $('body').scrollTop() > 20 || $(':root').scrollTop() > 20;
+
+    $('#move-up').css({
+       display: shouldDisplay ? 'block' : 'none'
+    });
+  }
+
+
+  function topFunction() {
+    $('body').animate({scrollTop: 0});
+    $(':root').animate({scrollTop: 0});
+  }
+
+  $('#move-up').on("click",topFunction);
+
+
   // UI for each step:
   sequencer.setUI(DefaultHtmlStepUi(sequencer));
 
@@ -416,15 +435,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
     <div class="row step">\
     <form class="input-form">\
     <div class="col-md-4 details">\
-    <h3>' +
-      step.name +
-      "</h3>\
-    <p><i>" +
+    <h3>' +step.name + 
+    ' <span class="toggle"><i class="fa fa-caret-up" aria-hidden="true"></i></span>' +
+      '</h3><div class="collapse"><p><i>"'+
       (step.description || "") +
-      '</i></p>\
+      '</i></p></div>\
     </div>\
     </form>\
-    <div class="col-md-8">\
+    <div class="col-md-8 collapse">\
     <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
     <a><img alt="" style="max-width=100%" class="img-thumbnail step-thumbnail"/></a>\
     </div>\
@@ -433,13 +451,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
     </div>';
 
     var tools =
-      '<div class="tools btn-group">\
+      '<div class="collapse"><div class="tools btn-group">\
        <button confirm="Are you sure?" onclick="stepRemovedNotify()" class="remove btn btn btn-default">\
          <i class="fa fa-trash"></i>\
        </button>\
        <button class="btn  insert-step" style="margin-left:10px;border-radius:6px;background-color:#fff;border:solid #bababa 1.1px;" >\
          <i class="fa fa-plus"></i> Add\
        </button>\
+       </div>\
        </div>';
 
     var util = intermediateHtmlStepUi(_sequencer, step);
@@ -497,7 +516,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         div.setAttribute("name", paramName);
         var description = inputs[paramName].desc || paramName;
         div.innerHTML =
-          "<div class='det'>\
+          "<div class='det collapse'>\
                            <label for='" +
           paramName +
           "'>" +
@@ -511,7 +530,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       }
 
       $(step.ui.querySelector("div.details")).append(
-        "<p><button type='submit' class='btn btn-default btn-save' disabled = 'true' >Apply</button><span> Press apply to see changes</span></p>"
+        '<div class="collapse"><p><button type="submit" class="btn btn-default btn-save" disabled = "true" >Apply</button><span> Press apply to see changes</span></p></div>'
       );
 
       
@@ -538,7 +557,19 @@ function DefaultHtmlStepUi(_sequencer, options) {
     else {
       $("#load-image").append(step.ui);
     }
-
+    $(step.ui.querySelector(".toggle")).on("click", (e) => {
+      var className = e.target.className;
+      console.log("ele "+element)
+      if(className=="fa fa-caret-up"){
+        $(step.ui.querySelectorAll(".collapse")).show();
+        e.target.className="fa fa-caret-down";
+      }
+      else{ 
+        $(step.ui.querySelectorAll(".collapse")).hide();
+        //e.target.localName.toggleClass('fa-caret-up');
+        e.target.className="fa fa-caret-up";
+      }
+    });
     
 
     function saveOptions(e) {

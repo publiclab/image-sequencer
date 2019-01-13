@@ -1,12 +1,15 @@
-module.exports = function(steps, modulesInfo, addSteps, copy) {
+module.exports = function(steps, images, modulesInfo, addSteps, copy) {
   // Genates a CLI string for the current sequence
+  var steps = steps
+  var images = images || {}
+
   function toCliString() {
     var cliStringSteps = `"`, cliOptions = {};
-    for (var step in steps) {
-      if (steps[step].options.name !== "load-image")
-        cliStringSteps += `${steps[step].options.name} `;
-      for (var inp in modulesInfo(steps[step].options.name).inputs) {
-        cliOptions[inp] = steps[step].options[inp];
+    for (var step in this.steps) {
+      if (this.steps[step].options.name !== "load-image")
+        cliStringSteps += `${this.steps[step].options.name} `;
+      for (var inp in modulesInfo(this.steps[step].options.name).inputs) {
+        cliOptions[inp] = this.steps[step].options[inp];
       }
     }
     cliStringSteps = cliStringSteps.substr(0, cliStringSteps.length - 1) + `"`;

@@ -130,7 +130,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         .appendChild(
           parser.parseFromString(tools, "text/html").querySelector("div")
         );
-      $(step.ui.querySelectorAll(".remove")).on('click', function() {onNotify('Step Removed','remove-notification')});  
+      $(step.ui.querySelectorAll(".remove")).on('click', function() {notify('Step Removed','remove-notification')});  
       $(step.ui.querySelectorAll(".insert-step")).on('click', function() { util.insertStep(step.ID) });
 
       // Insert the step's UI in the right place
@@ -281,11 +281,12 @@ function DefaultHtmlStepUi(_sequencer, options) {
     return step.imgElement;
   }
 
-  function onNotify(msg,id){
+  function notify(msg,id){
     if ($('#'+id).length == 0) {
       var notification = document.createElement('span');
       notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> ' + msg ;
       notification.id = id;
+      notification.classList.add("notification");
   
       $('body').append(notification);
     }
@@ -299,6 +300,6 @@ function DefaultHtmlStepUi(_sequencer, options) {
     onComplete: onComplete,
     onRemove: onRemove,
     onDraw: onDraw, 
-    onNotify: onNotify
+    notify: notify
   }
 }

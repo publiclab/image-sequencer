@@ -70,7 +70,7 @@ if (program.saveSequence) {
         console.log("[" + program.step + "]: " + output + " = " + step[output]);
       }
     },
-    onNotify: function(msg) {
+    notify: function(msg) {
       console.log('\x1b[36m%s\x1b[0m','🌟  '+msg);
     }
   });

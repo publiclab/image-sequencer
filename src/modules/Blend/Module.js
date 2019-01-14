@@ -26,7 +26,7 @@ module.exports = function Dynamic(options, UI, util) {
 
         if (priorStep.output === undefined) {
             this.output = input;
-            UI.onNotify('Offset Unavailable','offset-notification');
+            UI.notify('Offset Unavailable','offset-notification');
             callback();
         } 
 

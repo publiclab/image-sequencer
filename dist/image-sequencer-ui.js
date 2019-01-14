@@ -129,17 +129,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
 // The variable 'step' stores useful data like input and
 // output values, step information.
 // See documetation for more details.
-function stepRemovedNotify() {
-  if ($('#stepRemovedNotification').length == 0) {
-    var notification = document.createElement('span');
-    notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> Step Removed ';
-    notification.id = 'stepRemovedNotification';
 
-    $('body').append(notification);
-  }
-
-  $('#stepRemovedNotification').fadeIn(500).delay(200).fadeOut(500);
-}
 function DefaultHtmlStepUi(_sequencer, options) {
 
   options = options || {};
@@ -172,7 +162,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     var tools =
       '<div class="collapse"><div class="tools btn-group">\
-       <button confirm="Are you sure?" onclick="stepRemovedNotify()" class="remove btn btn btn-default">\
+       <button confirm="Are you sure?" class="remove btn btn btn-default">\
          <i class="fa fa-trash"></i>\
        </button>\
        <button class="btn  insert-step" style="margin-left:10px;border-radius:6px;background-color:#fff;border:solid #bababa 1.1px;" >\
@@ -262,6 +252,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         .appendChild(
           parser.parseFromString(tools, "text/html").querySelector("div")
         );
+      $(step.ui.querySelectorAll(".remove")).on('click', function() {notify('Step Removed','remove-notification')});  
       $(step.ui.querySelectorAll(".insert-step")).on('click', function() { util.insertStep(step.ID) });
 
       // Insert the step's UI in the right place
@@ -279,7 +270,6 @@ function DefaultHtmlStepUi(_sequencer, options) {
     }
     $(step.ui.querySelector(".toggle")).on("click", (e) => {
       var className = e.target.className;
-      console.log("ele "+element)
       if(className=="fa fa-caret-up"){
         $(step.ui.querySelectorAll(".collapse")).show();
         e.target.className="fa fa-caret-down";
@@ -413,12 +403,26 @@ function DefaultHtmlStepUi(_sequencer, options) {
     return step.imgElement;
   }
 
+  function notify(msg,id){
+    if ($('#'+id).length == 0) {
+      var notification = document.createElement('span');
+      notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> ' + msg ;
+      notification.id = id;
+      notification.classList.add("notification");
+  
+      $('body').append(notification);
+    }
+  
+    $('#'+id).fadeIn(500).delay(200).fadeOut(500);
+  }
+
   return {
     getPreview: getPreview,
     onSetup: onSetup,
     onComplete: onComplete,
     onRemove: onRemove,
-    onDraw: onDraw
+    onDraw: onDraw, 
+    notify: notify
   }
 }
 

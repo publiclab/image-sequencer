@@ -1,4 +1,6 @@
 function IntermediateHtmlStepUi(_sequencer, step, options) {
+  console.log(step)
+  console.log(_sequencer)
   function stepUI() {
     return '<div class="row insertDiv">\
         <div class="col-md-6 col-md-offset-2" style="margin-top:5%">\
@@ -67,7 +69,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       .insertAdjacentElement('afterend',
         addStepUI
       );
-      updatePreviews(_sequencer.images.image1.steps[0].options.step.imgElement.src,'insertStep');
+      updatePreviews(step.output,'insertStep');
     var insertStepSelect = $("#insertStep select");
     insertStepSelect.html("");
     // Add modules to the insertStep dropdown

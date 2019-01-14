@@ -130,7 +130,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         .appendChild(
           parser.parseFromString(tools, "text/html").querySelector("div")
         );
-      $(step.ui.querySelectorAll(".remove")).on('click', function() { produceNotification(" Step Removed","step-remove") });  
+      $(step.ui.querySelectorAll(".remove")).on('click', function() {onNotify('Step Removed','remove-notification')});  
       $(step.ui.querySelectorAll(".insert-step")).on('click', function() { util.insertStep(step.ID) });
 
       // Insert the step's UI in the right place
@@ -148,7 +148,6 @@ function DefaultHtmlStepUi(_sequencer, options) {
     }
     $(step.ui.querySelector(".toggle")).on("click", (e) => {
       var className = e.target.className;
-      console.log("ele "+element)
       if(className=="fa fa-caret-up"){
         $(step.ui.querySelectorAll(".collapse")).show();
         e.target.className="fa fa-caret-down";
@@ -282,11 +281,24 @@ function DefaultHtmlStepUi(_sequencer, options) {
     return step.imgElement;
   }
 
+  function onNotify(msg,id){
+    if ($('#'+id).length == 0) {
+      var notification = document.createElement('span');
+      notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> ' + msg ;
+      notification.id = id;
+  
+      $('body').append(notification);
+    }
+  
+    $('#'+id).fadeIn(500).delay(200).fadeOut(500);
+  }
+
   return {
     getPreview: getPreview,
     onSetup: onSetup,
     onComplete: onComplete,
     onRemove: onRemove,
-    onDraw: onDraw
+    onDraw: onDraw, 
+    onNotify: onNotify
   }
 }

@@ -53,6 +53,10 @@ module.exports = function UserInterface(events = {}) {
     }
   }
 
+  events.onNotify = events.onNotify || function(msg) {
+     console.log(msg);
+  }
+
   return events;
 
 }

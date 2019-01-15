@@ -21,10 +21,10 @@ function DefaultHtmlStepUi(_sequencer, options) {
       '\
     <div class="row step">\
     <div class="col-md-4 details">\
-    <h3>' +
-      step.name +
-      "</h3>\
-    <p><i>" +
+    <h3>\
+    <span class = "toggle">' +step.name + ' <i class="fa fa-caret-up toggleIcon" aria-hidden="true"></i></span>' +
+    '<span class="load-spin" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></span>' + 
+      '</h3><div class="cal"><p><i>"'+
       (step.description || "") +
       '</i></p>\
     </div>\
@@ -133,10 +133,15 @@ function DefaultHtmlStepUi(_sequencer, options) {
   function onDraw(step) {
     $(step.ui.querySelector(".load")).show();
     $(step.ui.querySelector("img")).hide();
+    if( $(step.ui.querySelector(".toggleIcon")).attr("class").includes("fa-caret-down") )
+    {
+      $(step.ui.querySelector(".load-spin")).show();
+    }
   }
 
   function onComplete(step) {
     $(step.ui.querySelector(".load")).hide();
+    $(step.ui.querySelector(".load-spin")).hide();
     $(step.ui.querySelector("img")).show();
 
     step.imgElement.src = step.output;

@@ -12719,6 +12719,3610 @@ function inflate(strm, flush) {
           state.check = crc32(state.check, hbuf, 2, 0);
           //===//
 
+        // valid lead
+        leadSurrogate = codePoint
+
+        continue
+      }
+
+      // 2 leads in a row
+      if (codePoint < 0xDC00) {
+        if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+        leadSurrogate = codePoint
+        continue
+      }
+
+      // valid surrogate pair
+      codePoint = (leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00) + 0x10000
+    } else if (leadSurrogate) {
+      // valid bmp char, but last char was a lead
+      if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+    }
+
+    leadSurrogate = null
+
+    // encode utf8
+    if (codePoint < 0x80) {
+      if ((units -= 1) < 0) break
+      bytes.push(codePoint)
+    } else if (codePoint < 0x800) {
+      if ((units -= 2) < 0) break
+      bytes.push(
+        codePoint >> 0x6 | 0xC0,
+        codePoint & 0x3F | 0x80
+      )
+    } else if (codePoint < 0x10000) {
+      if ((units -= 3) < 0) break
+      bytes.push(
+        codePoint >> 0xC | 0xE0,
+        codePoint >> 0x6 & 0x3F | 0x80,
+        codePoint & 0x3F | 0x80
+      )
+    } else if (codePoint < 0x110000) {
+      if ((units -= 4) < 0) break
+      bytes.push(
+        codePoint >> 0x12 | 0xF0,
+        codePoint >> 0xC & 0x3F | 0x80,
+        codePoint >> 0x6 & 0x3F | 0x80,
+        codePoint & 0x3F | 0x80
+      )
+    } else {
+      throw new Error('Invalid code point')
+    }
+  }
+
+  return bytes
+}
+
+function asciiToBytes (str) {
+  var byteArray = []
+  for (var i = 0; i < str.length; ++i) {
+    // Node's code seems to be doing this and not & 0x7F..
+    byteArray.push(str.charCodeAt(i) & 0xFF)
+  }
+  return byteArray
+}
+
+function utf16leToBytes (str, units) {
+  var c, hi, lo
+  var byteArray = []
+  for (var i = 0; i < str.length; ++i) {
+    if ((units -= 2) < 0) break
+
+    c = str.charCodeAt(i)
+    hi = c >> 8
+    lo = c % 256
+    byteArray.push(lo)
+    byteArray.push(hi)
+  }
+
+  return byteArray
+}
+
+function base64ToBytes (str) {
+  return base64.toByteArray(base64clean(str))
+}
+
+function blitBuffer (src, dst, offset, length) {
+  for (var i = 0; i < length; ++i) {
+    if ((i + offset >= dst.length) || (i >= src.length)) break
+    dst[i + offset] = src[i]
+  }
+  return i
+}
+
+// ArrayBuffers from another context (i.e. an iframe) do not pass the `instanceof` check
+// but they should be treated as valid. See: https://github.com/feross/buffer/issues/166
+function isArrayBuffer (obj) {
+  return obj instanceof ArrayBuffer ||
+    (obj != null && obj.constructor != null && obj.constructor.name === 'ArrayBuffer' &&
+      typeof obj.byteLength === 'number')
+}
+
+// Node 0.10 supports `ArrayBuffer` but lacks `ArrayBuffer.isView`
+function isArrayBufferView (obj) {
+  return (typeof ArrayBuffer.isView === 'function') && ArrayBuffer.isView(obj)
+}
+
+function numberIsNaN (obj) {
+  return obj !== obj // eslint-disable-line no-self-compare
+}
+
+},{"base64-js":1,"ieee754":60}],48:[function(require,module,exports){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+var objectCreate = Object.create || objectCreatePolyfill
+var objectKeys = Object.keys || objectKeysPolyfill
+var bind = Function.prototype.bind || functionBindPolyfill
+
+function EventEmitter() {
+  if (!this._events || !Object.prototype.hasOwnProperty.call(this, '_events')) {
+    this._events = objectCreate(null);
+    this._eventsCount = 0;
+  }
+
+  this._maxListeners = this._maxListeners || undefined;
+}
+module.exports = EventEmitter;
+
+// Backwards-compat with node 0.10.x
+EventEmitter.EventEmitter = EventEmitter;
+
+EventEmitter.prototype._events = undefined;
+EventEmitter.prototype._maxListeners = undefined;
+
+// By default EventEmitters will print a warning if more than 10 listeners are
+// added to it. This is a useful default which helps finding memory leaks.
+var defaultMaxListeners = 10;
+
+var hasDefineProperty;
+try {
+  var o = {};
+  if (Object.defineProperty) Object.defineProperty(o, 'x', { value: 0 });
+  hasDefineProperty = o.x === 0;
+} catch (err) { hasDefineProperty = false }
+if (hasDefineProperty) {
+  Object.defineProperty(EventEmitter, 'defaultMaxListeners', {
+    enumerable: true,
+    get: function() {
+      return defaultMaxListeners;
+    },
+    set: function(arg) {
+      // check whether the input is a positive number (whose value is zero or
+      // greater and not a NaN).
+      if (typeof arg !== 'number' || arg < 0 || arg !== arg)
+        throw new TypeError('"defaultMaxListeners" must be a positive number');
+      defaultMaxListeners = arg;
+    }
+  });
+} else {
+  EventEmitter.defaultMaxListeners = defaultMaxListeners;
+}
+
+// Obviously not all Emitters should be limited to 10. This function allows
+// that to be increased. Set to zero for unlimited.
+EventEmitter.prototype.setMaxListeners = function setMaxListeners(n) {
+  if (typeof n !== 'number' || n < 0 || isNaN(n))
+    throw new TypeError('"n" argument must be a positive number');
+  this._maxListeners = n;
+  return this;
+};
+
+function $getMaxListeners(that) {
+  if (that._maxListeners === undefined)
+    return EventEmitter.defaultMaxListeners;
+  return that._maxListeners;
+}
+
+EventEmitter.prototype.getMaxListeners = function getMaxListeners() {
+  return $getMaxListeners(this);
+};
+
+// These standalone emit* functions are used to optimize calling of event
+// handlers for fast cases because emit() itself often has a variable number of
+// arguments and can be deoptimized because of that. These functions always have
+// the same number of arguments and thus do not get deoptimized, so the code
+// inside them can execute faster.
+function emitNone(handler, isFn, self) {
+  if (isFn)
+    handler.call(self);
+  else {
+    var len = handler.length;
+    var listeners = arrayClone(handler, len);
+    for (var i = 0; i < len; ++i)
+      listeners[i].call(self);
+  }
+}
+function emitOne(handler, isFn, self, arg1) {
+  if (isFn)
+    handler.call(self, arg1);
+  else {
+    var len = handler.length;
+    var listeners = arrayClone(handler, len);
+    for (var i = 0; i < len; ++i)
+      listeners[i].call(self, arg1);
+  }
+}
+function emitTwo(handler, isFn, self, arg1, arg2) {
+  if (isFn)
+    handler.call(self, arg1, arg2);
+  else {
+    var len = handler.length;
+    var listeners = arrayClone(handler, len);
+    for (var i = 0; i < len; ++i)
+      listeners[i].call(self, arg1, arg2);
+  }
+}
+function emitThree(handler, isFn, self, arg1, arg2, arg3) {
+  if (isFn)
+    handler.call(self, arg1, arg2, arg3);
+  else {
+    var len = handler.length;
+    var listeners = arrayClone(handler, len);
+    for (var i = 0; i < len; ++i)
+      listeners[i].call(self, arg1, arg2, arg3);
+  }
+}
+
+function emitMany(handler, isFn, self, args) {
+  if (isFn)
+    handler.apply(self, args);
+  else {
+    var len = handler.length;
+    var listeners = arrayClone(handler, len);
+    for (var i = 0; i < len; ++i)
+      listeners[i].apply(self, args);
+  }
+}
+
+EventEmitter.prototype.emit = function emit(type) {
+  var er, handler, len, args, i, events;
+  var doError = (type === 'error');
+
+  events = this._events;
+  if (events)
+    doError = (doError && events.error == null);
+  else if (!doError)
+    return false;
+
+  // If there is no 'error' event listener then throw.
+  if (doError) {
+    if (arguments.length > 1)
+      er = arguments[1];
+    if (er instanceof Error) {
+      throw er; // Unhandled 'error' event
+    } else {
+      // At least give some kind of context to the user
+      var err = new Error('Unhandled "error" event. (' + er + ')');
+      err.context = er;
+      throw err;
+    }
+    return false;
+  }
+
+  handler = events[type];
+
+  if (!handler)
+    return false;
+
+  var isFn = typeof handler === 'function';
+  len = arguments.length;
+  switch (len) {
+      // fast cases
+    case 1:
+      emitNone(handler, isFn, this);
+      break;
+    case 2:
+      emitOne(handler, isFn, this, arguments[1]);
+      break;
+    case 3:
+      emitTwo(handler, isFn, this, arguments[1], arguments[2]);
+      break;
+    case 4:
+      emitThree(handler, isFn, this, arguments[1], arguments[2], arguments[3]);
+      break;
+      // slower
+    default:
+      args = new Array(len - 1);
+      for (i = 1; i < len; i++)
+        args[i - 1] = arguments[i];
+      emitMany(handler, isFn, this, args);
+  }
+
+  return true;
+};
+
+function _addListener(target, type, listener, prepend) {
+  var m;
+  var events;
+  var existing;
+
+  if (typeof listener !== 'function')
+    throw new TypeError('"listener" argument must be a function');
+
+  events = target._events;
+  if (!events) {
+    events = target._events = objectCreate(null);
+    target._eventsCount = 0;
+  } else {
+    // To avoid recursion in the case that type === "newListener"! Before
+    // adding it to the listeners, first emit "newListener".
+    if (events.newListener) {
+      target.emit('newListener', type,
+          listener.listener ? listener.listener : listener);
+
+      // Re-assign `events` because a newListener handler could have caused the
+      // this._events to be assigned to a new object
+      events = target._events;
+    }
+    existing = events[type];
+  }
+
+  if (!existing) {
+    // Optimize the case of one listener. Don't need the extra array object.
+    existing = events[type] = listener;
+    ++target._eventsCount;
+  } else {
+    if (typeof existing === 'function') {
+      // Adding the second element, need to change to array.
+      existing = events[type] =
+          prepend ? [listener, existing] : [existing, listener];
+    } else {
+      // If we've already got an array, just append.
+      if (prepend) {
+        existing.unshift(listener);
+      } else {
+        existing.push(listener);
+      }
+    }
+
+    // Check for listener leak
+    if (!existing.warned) {
+      m = $getMaxListeners(target);
+      if (m && m > 0 && existing.length > m) {
+        existing.warned = true;
+        var w = new Error('Possible EventEmitter memory leak detected. ' +
+            existing.length + ' "' + String(type) + '" listeners ' +
+            'added. Use emitter.setMaxListeners() to ' +
+            'increase limit.');
+        w.name = 'MaxListenersExceededWarning';
+        w.emitter = target;
+        w.type = type;
+        w.count = existing.length;
+        if (typeof console === 'object' && console.warn) {
+          console.warn('%s: %s', w.name, w.message);
+        }
+      }
+    }
+  }
+
+  return target;
+}
+
+EventEmitter.prototype.addListener = function addListener(type, listener) {
+  return _addListener(this, type, listener, false);
+};
+
+EventEmitter.prototype.on = EventEmitter.prototype.addListener;
+
+EventEmitter.prototype.prependListener =
+    function prependListener(type, listener) {
+      return _addListener(this, type, listener, true);
+    };
+
+function onceWrapper() {
+  if (!this.fired) {
+    this.target.removeListener(this.type, this.wrapFn);
+    this.fired = true;
+    switch (arguments.length) {
+      case 0:
+        return this.listener.call(this.target);
+      case 1:
+        return this.listener.call(this.target, arguments[0]);
+      case 2:
+        return this.listener.call(this.target, arguments[0], arguments[1]);
+      case 3:
+        return this.listener.call(this.target, arguments[0], arguments[1],
+            arguments[2]);
+      default:
+        var args = new Array(arguments.length);
+        for (var i = 0; i < args.length; ++i)
+          args[i] = arguments[i];
+        this.listener.apply(this.target, args);
+    }
+  }
+}
+
+function _onceWrap(target, type, listener) {
+  var state = { fired: false, wrapFn: undefined, target: target, type: type, listener: listener };
+  var wrapped = bind.call(onceWrapper, state);
+  wrapped.listener = listener;
+  state.wrapFn = wrapped;
+  return wrapped;
+}
+
+EventEmitter.prototype.once = function once(type, listener) {
+  if (typeof listener !== 'function')
+    throw new TypeError('"listener" argument must be a function');
+  this.on(type, _onceWrap(this, type, listener));
+  return this;
+};
+
+EventEmitter.prototype.prependOnceListener =
+    function prependOnceListener(type, listener) {
+      if (typeof listener !== 'function')
+        throw new TypeError('"listener" argument must be a function');
+      this.prependListener(type, _onceWrap(this, type, listener));
+      return this;
+    };
+
+// Emits a 'removeListener' event if and only if the listener was removed.
+EventEmitter.prototype.removeListener =
+    function removeListener(type, listener) {
+      var list, events, position, i, originalListener;
+
+      if (typeof listener !== 'function')
+        throw new TypeError('"listener" argument must be a function');
+
+      events = this._events;
+      if (!events)
+        return this;
+
+      list = events[type];
+      if (!list)
+        return this;
+
+      if (list === listener || list.listener === listener) {
+        if (--this._eventsCount === 0)
+          this._events = objectCreate(null);
+        else {
+          delete events[type];
+          if (events.removeListener)
+            this.emit('removeListener', type, list.listener || listener);
+        }
+      } else if (typeof list !== 'function') {
+        position = -1;
+
+        for (i = list.length - 1; i >= 0; i--) {
+          if (list[i] === listener || list[i].listener === listener) {
+            originalListener = list[i].listener;
+            position = i;
+            break;
+          }
+        }
+
+        if (position < 0)
+          return this;
+
+        if (position === 0)
+          list.shift();
+        else
+          spliceOne(list, position);
+
+        if (list.length === 1)
+          events[type] = list[0];
+
+        if (events.removeListener)
+          this.emit('removeListener', type, originalListener || listener);
+      }
+
+      return this;
+    };
+
+EventEmitter.prototype.removeAllListeners =
+    function removeAllListeners(type) {
+      var listeners, events, i;
+
+      events = this._events;
+      if (!events)
+        return this;
+
+      // not listening for removeListener, no need to emit
+      if (!events.removeListener) {
+        if (arguments.length === 0) {
+          this._events = objectCreate(null);
+          this._eventsCount = 0;
+        } else if (events[type]) {
+          if (--this._eventsCount === 0)
+            this._events = objectCreate(null);
+          else
+            delete events[type];
+        }
+        return this;
+      }
+
+      // emit removeListener for all listeners on all events
+      if (arguments.length === 0) {
+        var keys = objectKeys(events);
+        var key;
+        for (i = 0; i < keys.length; ++i) {
+          key = keys[i];
+          if (key === 'removeListener') continue;
+          this.removeAllListeners(key);
+        }
+        this.removeAllListeners('removeListener');
+        this._events = objectCreate(null);
+        this._eventsCount = 0;
+        return this;
+      }
+
+      listeners = events[type];
+
+      if (typeof listeners === 'function') {
+        this.removeListener(type, listeners);
+      } else if (listeners) {
+        // LIFO order
+        for (i = listeners.length - 1; i >= 0; i--) {
+          this.removeListener(type, listeners[i]);
+        }
+      }
+
+      return this;
+    };
+
+function _listeners(target, type, unwrap) {
+  var events = target._events;
+
+  if (!events)
+    return [];
+
+  var evlistener = events[type];
+  if (!evlistener)
+    return [];
+
+  if (typeof evlistener === 'function')
+    return unwrap ? [evlistener.listener || evlistener] : [evlistener];
+
+  return unwrap ? unwrapListeners(evlistener) : arrayClone(evlistener, evlistener.length);
+}
+
+EventEmitter.prototype.listeners = function listeners(type) {
+  return _listeners(this, type, true);
+};
+
+EventEmitter.prototype.rawListeners = function rawListeners(type) {
+  return _listeners(this, type, false);
+};
+
+EventEmitter.listenerCount = function(emitter, type) {
+  if (typeof emitter.listenerCount === 'function') {
+    return emitter.listenerCount(type);
+  } else {
+    return listenerCount.call(emitter, type);
+  }
+};
+
+EventEmitter.prototype.listenerCount = listenerCount;
+function listenerCount(type) {
+  var events = this._events;
+
+  if (events) {
+    var evlistener = events[type];
+
+    if (typeof evlistener === 'function') {
+      return 1;
+    } else if (evlistener) {
+      return evlistener.length;
+    }
+  }
+
+  return 0;
+}
+
+EventEmitter.prototype.eventNames = function eventNames() {
+  return this._eventsCount > 0 ? Reflect.ownKeys(this._events) : [];
+};
+
+// About 1.5x faster than the two-arg version of Array#splice().
+function spliceOne(list, index) {
+  for (var i = index, k = i + 1, n = list.length; k < n; i += 1, k += 1)
+    list[i] = list[k];
+  list.pop();
+}
+
+function arrayClone(arr, n) {
+  var copy = new Array(n);
+  for (var i = 0; i < n; ++i)
+    copy[i] = arr[i];
+  return copy;
+}
+
+function unwrapListeners(arr) {
+  var ret = new Array(arr.length);
+  for (var i = 0; i < ret.length; ++i) {
+    ret[i] = arr[i].listener || arr[i];
+  }
+  return ret;
+}
+
+function objectCreatePolyfill(proto) {
+  var F = function() {};
+  F.prototype = proto;
+  return new F;
+}
+function objectKeysPolyfill(obj) {
+  var keys = [];
+  for (var k in obj) if (Object.prototype.hasOwnProperty.call(obj, k)) {
+    keys.push(k);
+  }
+  return k;
+}
+function functionBindPolyfill(context) {
+  var fn = this;
+  return function () {
+    return fn.apply(context, arguments);
+  };
+}
+
+},{}],49:[function(require,module,exports){
+'use strict';
+
+
+var TYPED_OK =  (typeof Uint8Array !== 'undefined') &&
+                (typeof Uint16Array !== 'undefined') &&
+                (typeof Int32Array !== 'undefined');
+
+function _has(obj, key) {
+  return Object.prototype.hasOwnProperty.call(obj, key);
+}
+
+exports.assign = function (obj /*from1, from2, from3, ...*/) {
+  var sources = Array.prototype.slice.call(arguments, 1);
+  while (sources.length) {
+    var source = sources.shift();
+    if (!source) { continue; }
+
+    if (typeof source !== 'object') {
+      throw new TypeError(source + 'must be non-object');
+    }
+
+    for (var p in source) {
+      if (_has(source, p)) {
+        obj[p] = source[p];
+      }
+    }
+  }
+
+  return obj;
+};
+
+
+// reduce buffer size, avoiding mem copy
+exports.shrinkBuf = function (buf, size) {
+  if (buf.length === size) { return buf; }
+  if (buf.subarray) { return buf.subarray(0, size); }
+  buf.length = size;
+  return buf;
+};
+
+
+var fnTyped = {
+  arraySet: function (dest, src, src_offs, len, dest_offs) {
+    if (src.subarray && dest.subarray) {
+      dest.set(src.subarray(src_offs, src_offs + len), dest_offs);
+      return;
+    }
+    // Fallback to ordinary array
+    for (var i = 0; i < len; i++) {
+      dest[dest_offs + i] = src[src_offs + i];
+    }
+  },
+  // Join array of chunks to single array.
+  flattenChunks: function (chunks) {
+    var i, l, len, pos, chunk, result;
+
+    // calculate data length
+    len = 0;
+    for (i = 0, l = chunks.length; i < l; i++) {
+      len += chunks[i].length;
+    }
+
+    // join chunks
+    result = new Uint8Array(len);
+    pos = 0;
+    for (i = 0, l = chunks.length; i < l; i++) {
+      chunk = chunks[i];
+      result.set(chunk, pos);
+      pos += chunk.length;
+    }
+
+    return result;
+  }
+};
+
+var fnUntyped = {
+  arraySet: function (dest, src, src_offs, len, dest_offs) {
+    for (var i = 0; i < len; i++) {
+      dest[dest_offs + i] = src[src_offs + i];
+    }
+  },
+  // Join array of chunks to single array.
+  flattenChunks: function (chunks) {
+    return [].concat.apply([], chunks);
+  }
+};
+
+
+// Enable/Disable typed arrays use, for testing
+//
+exports.setTyped = function (on) {
+  if (on) {
+    exports.Buf8  = Uint8Array;
+    exports.Buf16 = Uint16Array;
+    exports.Buf32 = Int32Array;
+    exports.assign(exports, fnTyped);
+  } else {
+    exports.Buf8  = Array;
+    exports.Buf16 = Array;
+    exports.Buf32 = Array;
+    exports.assign(exports, fnUntyped);
+  }
+};
+
+exports.setTyped(TYPED_OK);
+
+},{}],50:[function(require,module,exports){
+'use strict';
+
+// Note: adler32 takes 12% for level 0 and 2% for level 6.
+// It isn't worth it to make additional optimizations as in original.
+// Small size is preferable.
+
+// (C) 1995-2013 Jean-loup Gailly and Mark Adler
+// (C) 2014-2017 Vitaly Puzrin and Andrey Tupitsin
+//
+// This software is provided 'as-is', without any express or implied
+// warranty. In no event will the authors be held liable for any damages
+// arising from the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//   claim that you wrote the original software. If you use this software
+//   in a product, an acknowledgment in the product documentation would be
+//   appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//   misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+
+function adler32(adler, buf, len, pos) {
+  var s1 = (adler & 0xffff) |0,
+      s2 = ((adler >>> 16) & 0xffff) |0,
+      n = 0;
+
+  while (len !== 0) {
+    // Set limit ~ twice less than 5552, to keep
+    // s2 in 31-bits, because we force signed ints.
+    // in other case %= will fail.
+    n = len > 2000 ? 2000 : len;
+    len -= n;
+
+    do {
+      s1 = (s1 + buf[pos++]) |0;
+      s2 = (s2 + s1) |0;
+    } while (--n);
+
+    s1 %= 65521;
+    s2 %= 65521;
+  }
+
+  return (s1 | (s2 << 16)) |0;
+}
+
+
+module.exports = adler32;
+
+},{}],51:[function(require,module,exports){
+'use strict';
+
+// (C) 1995-2013 Jean-loup Gailly and Mark Adler
+// (C) 2014-2017 Vitaly Puzrin and Andrey Tupitsin
+//
+// This software is provided 'as-is', without any express or implied
+// warranty. In no event will the authors be held liable for any damages
+// arising from the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//   claim that you wrote the original software. If you use this software
+//   in a product, an acknowledgment in the product documentation would be
+//   appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//   misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+
+module.exports = {
+
+  /* Allowed flush values; see deflate() and inflate() below for details */
+  Z_NO_FLUSH:         0,
+  Z_PARTIAL_FLUSH:    1,
+  Z_SYNC_FLUSH:       2,
+  Z_FULL_FLUSH:       3,
+  Z_FINISH:           4,
+  Z_BLOCK:            5,
+  Z_TREES:            6,
+
+  /* Return codes for the compression/decompression functions. Negative values
+  * are errors, positive values are used for special but normal events.
+  */
+  Z_OK:               0,
+  Z_STREAM_END:       1,
+  Z_NEED_DICT:        2,
+  Z_ERRNO:           -1,
+  Z_STREAM_ERROR:    -2,
+  Z_DATA_ERROR:      -3,
+  //Z_MEM_ERROR:     -4,
+  Z_BUF_ERROR:       -5,
+  //Z_VERSION_ERROR: -6,
+
+  /* compression levels */
+  Z_NO_COMPRESSION:         0,
+  Z_BEST_SPEED:             1,
+  Z_BEST_COMPRESSION:       9,
+  Z_DEFAULT_COMPRESSION:   -1,
+
+
+  Z_FILTERED:               1,
+  Z_HUFFMAN_ONLY:           2,
+  Z_RLE:                    3,
+  Z_FIXED:                  4,
+  Z_DEFAULT_STRATEGY:       0,
+
+  /* Possible values of the data_type field (though see inflate()) */
+  Z_BINARY:                 0,
+  Z_TEXT:                   1,
+  //Z_ASCII:                1, // = Z_TEXT (deprecated)
+  Z_UNKNOWN:                2,
+
+  /* The deflate compression method */
+  Z_DEFLATED:               8
+  //Z_NULL:                 null // Use -1 or null inline, depending on var type
+};
+
+},{}],52:[function(require,module,exports){
+'use strict';
+
+// Note: we can't get significant speed boost here.
+// So write code to minimize size - no pregenerated tables
+// and array tools dependencies.
+
+// (C) 1995-2013 Jean-loup Gailly and Mark Adler
+// (C) 2014-2017 Vitaly Puzrin and Andrey Tupitsin
+//
+// This software is provided 'as-is', without any express or implied
+// warranty. In no event will the authors be held liable for any damages
+// arising from the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//   claim that you wrote the original software. If you use this software
+//   in a product, an acknowledgment in the product documentation would be
+//   appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//   misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+
+// Use ordinary array, since untyped makes no boost here
+function makeTable() {
+  var c, table = [];
+
+  for (var n = 0; n < 256; n++) {
+    c = n;
+    for (var k = 0; k < 8; k++) {
+      c = ((c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1));
+    }
+    table[n] = c;
+  }
+
+  return table;
+}
+
+// Create table on load. Just 255 signed longs. Not a problem.
+var crcTable = makeTable();
+
+
+function crc32(crc, buf, len, pos) {
+  var t = crcTable,
+      end = pos + len;
+
+  crc ^= -1;
+
+  for (var i = pos; i < end; i++) {
+    crc = (crc >>> 8) ^ t[(crc ^ buf[i]) & 0xFF];
+  }
+
+  return (crc ^ (-1)); // >>> 0;
+}
+
+
+module.exports = crc32;
+
+},{}],53:[function(require,module,exports){
+'use strict';
+
+// (C) 1995-2013 Jean-loup Gailly and Mark Adler
+// (C) 2014-2017 Vitaly Puzrin and Andrey Tupitsin
+//
+// This software is provided 'as-is', without any express or implied
+// warranty. In no event will the authors be held liable for any damages
+// arising from the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//   claim that you wrote the original software. If you use this software
+//   in a product, an acknowledgment in the product documentation would be
+//   appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//   misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+
+var utils   = require('../utils/common');
+var trees   = require('./trees');
+var adler32 = require('./adler32');
+var crc32   = require('./crc32');
+var msg     = require('./messages');
+
+/* Public constants ==========================================================*/
+/* ===========================================================================*/
+
+
+/* Allowed flush values; see deflate() and inflate() below for details */
+var Z_NO_FLUSH      = 0;
+var Z_PARTIAL_FLUSH = 1;
+//var Z_SYNC_FLUSH    = 2;
+var Z_FULL_FLUSH    = 3;
+var Z_FINISH        = 4;
+var Z_BLOCK         = 5;
+//var Z_TREES         = 6;
+
+
+/* Return codes for the compression/decompression functions. Negative values
+ * are errors, positive values are used for special but normal events.
+ */
+var Z_OK            = 0;
+var Z_STREAM_END    = 1;
+//var Z_NEED_DICT     = 2;
+//var Z_ERRNO         = -1;
+var Z_STREAM_ERROR  = -2;
+var Z_DATA_ERROR    = -3;
+//var Z_MEM_ERROR     = -4;
+var Z_BUF_ERROR     = -5;
+//var Z_VERSION_ERROR = -6;
+
+
+/* compression levels */
+//var Z_NO_COMPRESSION      = 0;
+//var Z_BEST_SPEED          = 1;
+//var Z_BEST_COMPRESSION    = 9;
+var Z_DEFAULT_COMPRESSION = -1;
+
+
+var Z_FILTERED            = 1;
+var Z_HUFFMAN_ONLY        = 2;
+var Z_RLE                 = 3;
+var Z_FIXED               = 4;
+var Z_DEFAULT_STRATEGY    = 0;
+
+/* Possible values of the data_type field (though see inflate()) */
+//var Z_BINARY              = 0;
+//var Z_TEXT                = 1;
+//var Z_ASCII               = 1; // = Z_TEXT
+var Z_UNKNOWN             = 2;
+
+
+/* The deflate compression method */
+var Z_DEFLATED  = 8;
+
+/*============================================================================*/
+
+
+var MAX_MEM_LEVEL = 9;
+/* Maximum value for memLevel in deflateInit2 */
+var MAX_WBITS = 15;
+/* 32K LZ77 window */
+var DEF_MEM_LEVEL = 8;
+
+
+var LENGTH_CODES  = 29;
+/* number of length codes, not counting the special END_BLOCK code */
+var LITERALS      = 256;
+/* number of literal bytes 0..255 */
+var L_CODES       = LITERALS + 1 + LENGTH_CODES;
+/* number of Literal or Length codes, including the END_BLOCK code */
+var D_CODES       = 30;
+/* number of distance codes */
+var BL_CODES      = 19;
+/* number of codes used to transfer the bit lengths */
+var HEAP_SIZE     = 2 * L_CODES + 1;
+/* maximum heap size */
+var MAX_BITS  = 15;
+/* All codes must not exceed MAX_BITS bits */
+
+var MIN_MATCH = 3;
+var MAX_MATCH = 258;
+var MIN_LOOKAHEAD = (MAX_MATCH + MIN_MATCH + 1);
+
+var PRESET_DICT = 0x20;
+
+var INIT_STATE = 42;
+var EXTRA_STATE = 69;
+var NAME_STATE = 73;
+var COMMENT_STATE = 91;
+var HCRC_STATE = 103;
+var BUSY_STATE = 113;
+var FINISH_STATE = 666;
+
+var BS_NEED_MORE      = 1; /* block not completed, need more input or more output */
+var BS_BLOCK_DONE     = 2; /* block flush performed */
+var BS_FINISH_STARTED = 3; /* finish started, need only more output at next deflate */
+var BS_FINISH_DONE    = 4; /* finish done, accept no more input or output */
+
+var OS_CODE = 0x03; // Unix :) . Don't detect, use this default.
+
+function err(strm, errorCode) {
+  strm.msg = msg[errorCode];
+  return errorCode;
+}
+
+function rank(f) {
+  return ((f) << 1) - ((f) > 4 ? 9 : 0);
+}
+
+function zero(buf) { var len = buf.length; while (--len >= 0) { buf[len] = 0; } }
+
+
+/* =========================================================================
+ * Flush as much pending output as possible. All deflate() output goes
+ * through this function so some applications may wish to modify it
+ * to avoid allocating a large strm->output buffer and copying into it.
+ * (See also read_buf()).
+ */
+function flush_pending(strm) {
+  var s = strm.state;
+
+  //_tr_flush_bits(s);
+  var len = s.pending;
+  if (len > strm.avail_out) {
+    len = strm.avail_out;
+  }
+  if (len === 0) { return; }
+
+  utils.arraySet(strm.output, s.pending_buf, s.pending_out, len, strm.next_out);
+  strm.next_out += len;
+  s.pending_out += len;
+  strm.total_out += len;
+  strm.avail_out -= len;
+  s.pending -= len;
+  if (s.pending === 0) {
+    s.pending_out = 0;
+  }
+}
+
+
+function flush_block_only(s, last) {
+  trees._tr_flush_block(s, (s.block_start >= 0 ? s.block_start : -1), s.strstart - s.block_start, last);
+  s.block_start = s.strstart;
+  flush_pending(s.strm);
+}
+
+
+function put_byte(s, b) {
+  s.pending_buf[s.pending++] = b;
+}
+
+
+/* =========================================================================
+ * Put a short in the pending buffer. The 16-bit value is put in MSB order.
+ * IN assertion: the stream state is correct and there is enough room in
+ * pending_buf.
+ */
+function putShortMSB(s, b) {
+//  put_byte(s, (Byte)(b >> 8));
+//  put_byte(s, (Byte)(b & 0xff));
+  s.pending_buf[s.pending++] = (b >>> 8) & 0xff;
+  s.pending_buf[s.pending++] = b & 0xff;
+}
+
+
+/* ===========================================================================
+ * Read a new buffer from the current input stream, update the adler32
+ * and total number of bytes read.  All deflate() input goes through
+ * this function so some applications may wish to modify it to avoid
+ * allocating a large strm->input buffer and copying from it.
+ * (See also flush_pending()).
+ */
+function read_buf(strm, buf, start, size) {
+  var len = strm.avail_in;
+
+  if (len > size) { len = size; }
+  if (len === 0) { return 0; }
+
+  strm.avail_in -= len;
+
+  // zmemcpy(buf, strm->next_in, len);
+  utils.arraySet(buf, strm.input, strm.next_in, len, start);
+  if (strm.state.wrap === 1) {
+    strm.adler = adler32(strm.adler, buf, len, start);
+  }
+
+  else if (strm.state.wrap === 2) {
+    strm.adler = crc32(strm.adler, buf, len, start);
+  }
+
+  strm.next_in += len;
+  strm.total_in += len;
+
+  return len;
+}
+
+
+/* ===========================================================================
+ * Set match_start to the longest match starting at the given string and
+ * return its length. Matches shorter or equal to prev_length are discarded,
+ * in which case the result is equal to prev_length and match_start is
+ * garbage.
+ * IN assertions: cur_match is the head of the hash chain for the current
+ *   string (strstart) and its distance is <= MAX_DIST, and prev_length >= 1
+ * OUT assertion: the match length is not greater than s->lookahead.
+ */
+function longest_match(s, cur_match) {
+  var chain_length = s.max_chain_length;      /* max hash chain length */
+  var scan = s.strstart; /* current string */
+  var match;                       /* matched string */
+  var len;                           /* length of current match */
+  var best_len = s.prev_length;              /* best match length so far */
+  var nice_match = s.nice_match;             /* stop if match long enough */
+  var limit = (s.strstart > (s.w_size - MIN_LOOKAHEAD)) ?
+      s.strstart - (s.w_size - MIN_LOOKAHEAD) : 0/*NIL*/;
+
+  var _win = s.window; // shortcut
+
+  var wmask = s.w_mask;
+  var prev  = s.prev;
+
+  /* Stop when cur_match becomes <= limit. To simplify the code,
+   * we prevent matches with the string of window index 0.
+   */
+
+  var strend = s.strstart + MAX_MATCH;
+  var scan_end1  = _win[scan + best_len - 1];
+  var scan_end   = _win[scan + best_len];
+
+  /* The code is optimized for HASH_BITS >= 8 and MAX_MATCH-2 multiple of 16.
+   * It is easy to get rid of this optimization if necessary.
+   */
+  // Assert(s->hash_bits >= 8 && MAX_MATCH == 258, "Code too clever");
+
+  /* Do not waste too much time if we already have a good match: */
+  if (s.prev_length >= s.good_match) {
+    chain_length >>= 2;
+  }
+  /* Do not look for matches beyond the end of the input. This is necessary
+   * to make deflate deterministic.
+   */
+  if (nice_match > s.lookahead) { nice_match = s.lookahead; }
+
+  // Assert((ulg)s->strstart <= s->window_size-MIN_LOOKAHEAD, "need lookahead");
+
+  do {
+    // Assert(cur_match < s->strstart, "no future");
+    match = cur_match;
+
+    /* Skip to next match if the match length cannot increase
+     * or if the match length is less than 2.  Note that the checks below
+     * for insufficient lookahead only occur occasionally for performance
+     * reasons.  Therefore uninitialized memory will be accessed, and
+     * conditional jumps will be made that depend on those values.
+     * However the length of the match is limited to the lookahead, so
+     * the output of deflate is not affected by the uninitialized values.
+     */
+
+    if (_win[match + best_len]     !== scan_end  ||
+        _win[match + best_len - 1] !== scan_end1 ||
+        _win[match]                !== _win[scan] ||
+        _win[++match]              !== _win[scan + 1]) {
+      continue;
+    }
+
+    /* The check at best_len-1 can be removed because it will be made
+     * again later. (This heuristic is not always a win.)
+     * It is not necessary to compare scan[2] and match[2] since they
+     * are always equal when the other bytes match, given that
+     * the hash keys are equal and that HASH_BITS >= 8.
+     */
+    scan += 2;
+    match++;
+    // Assert(*scan == *match, "match[2]?");
+
+    /* We check for insufficient lookahead only every 8th comparison;
+     * the 256th check will be made at strstart+258.
+     */
+    do {
+      /*jshint noempty:false*/
+    } while (_win[++scan] === _win[++match] && _win[++scan] === _win[++match] &&
+             _win[++scan] === _win[++match] && _win[++scan] === _win[++match] &&
+             _win[++scan] === _win[++match] && _win[++scan] === _win[++match] &&
+             _win[++scan] === _win[++match] && _win[++scan] === _win[++match] &&
+             scan < strend);
+
+    // Assert(scan <= s->window+(unsigned)(s->window_size-1), "wild scan");
+
+    len = MAX_MATCH - (strend - scan);
+    scan = strend - MAX_MATCH;
+
+    if (len > best_len) {
+      s.match_start = cur_match;
+      best_len = len;
+      if (len >= nice_match) {
+        break;
+      }
+      scan_end1  = _win[scan + best_len - 1];
+      scan_end   = _win[scan + best_len];
+    }
+  } while ((cur_match = prev[cur_match & wmask]) > limit && --chain_length !== 0);
+
+  if (best_len <= s.lookahead) {
+    return best_len;
+  }
+  return s.lookahead;
+}
+
+
+/* ===========================================================================
+ * Fill the window when the lookahead becomes insufficient.
+ * Updates strstart and lookahead.
+ *
+ * IN assertion: lookahead < MIN_LOOKAHEAD
+ * OUT assertions: strstart <= window_size-MIN_LOOKAHEAD
+ *    At least one byte has been read, or avail_in == 0; reads are
+ *    performed for at least two bytes (required for the zip translate_eol
+ *    option -- not supported here).
+ */
+function fill_window(s) {
+  var _w_size = s.w_size;
+  var p, n, m, more, str;
+
+  //Assert(s->lookahead < MIN_LOOKAHEAD, "already enough lookahead");
+
+  do {
+    more = s.window_size - s.lookahead - s.strstart;
+
+    // JS ints have 32 bit, block below not needed
+    /* Deal with !@#$% 64K limit: */
+    //if (sizeof(int) <= 2) {
+    //    if (more == 0 && s->strstart == 0 && s->lookahead == 0) {
+    //        more = wsize;
+    //
+    //  } else if (more == (unsigned)(-1)) {
+    //        /* Very unlikely, but possible on 16 bit machine if
+    //         * strstart == 0 && lookahead == 1 (input done a byte at time)
+    //         */
+    //        more--;
+    //    }
+    //}
+
+
+    /* If the window is almost full and there is insufficient lookahead,
+     * move the upper half to the lower one to make room in the upper half.
+     */
+    if (s.strstart >= _w_size + (_w_size - MIN_LOOKAHEAD)) {
+
+      utils.arraySet(s.window, s.window, _w_size, _w_size, 0);
+      s.match_start -= _w_size;
+      s.strstart -= _w_size;
+      /* we now have strstart >= MAX_DIST */
+      s.block_start -= _w_size;
+
+      /* Slide the hash table (could be avoided with 32 bit values
+       at the expense of memory usage). We slide even when level == 0
+       to keep the hash table consistent if we switch back to level > 0
+       later. (Using level 0 permanently is not an optimal usage of
+       zlib, so we don't care about this pathological case.)
+       */
+
+      n = s.hash_size;
+      p = n;
+      do {
+        m = s.head[--p];
+        s.head[p] = (m >= _w_size ? m - _w_size : 0);
+      } while (--n);
+
+      n = _w_size;
+      p = n;
+      do {
+        m = s.prev[--p];
+        s.prev[p] = (m >= _w_size ? m - _w_size : 0);
+        /* If n is not on any hash chain, prev[n] is garbage but
+         * its value will never be used.
+         */
+      } while (--n);
+
+      more += _w_size;
+    }
+    if (s.strm.avail_in === 0) {
+      break;
+    }
+
+    /* If there was no sliding:
+     *    strstart <= WSIZE+MAX_DIST-1 && lookahead <= MIN_LOOKAHEAD - 1 &&
+     *    more == window_size - lookahead - strstart
+     * => more >= window_size - (MIN_LOOKAHEAD-1 + WSIZE + MAX_DIST-1)
+     * => more >= window_size - 2*WSIZE + 2
+     * In the BIG_MEM or MMAP case (not yet supported),
+     *   window_size == input_size + MIN_LOOKAHEAD  &&
+     *   strstart + s->lookahead <= input_size => more >= MIN_LOOKAHEAD.
+     * Otherwise, window_size == 2*WSIZE so more >= 2.
+     * If there was sliding, more >= WSIZE. So in all cases, more >= 2.
+     */
+    //Assert(more >= 2, "more < 2");
+    n = read_buf(s.strm, s.window, s.strstart + s.lookahead, more);
+    s.lookahead += n;
+
+    /* Initialize the hash value now that we have some input: */
+    if (s.lookahead + s.insert >= MIN_MATCH) {
+      str = s.strstart - s.insert;
+      s.ins_h = s.window[str];
+
+      /* UPDATE_HASH(s, s->ins_h, s->window[str + 1]); */
+      s.ins_h = ((s.ins_h << s.hash_shift) ^ s.window[str + 1]) & s.hash_mask;
+//#if MIN_MATCH != 3
+//        Call update_hash() MIN_MATCH-3 more times
+//#endif
+      while (s.insert) {
+        /* UPDATE_HASH(s, s->ins_h, s->window[str + MIN_MATCH-1]); */
+        s.ins_h = ((s.ins_h << s.hash_shift) ^ s.window[str + MIN_MATCH - 1]) & s.hash_mask;
+
+        s.prev[str & s.w_mask] = s.head[s.ins_h];
+        s.head[s.ins_h] = str;
+        str++;
+        s.insert--;
+        if (s.lookahead + s.insert < MIN_MATCH) {
+          break;
+        }
+      }
+    }
+    /* If the whole input has less than MIN_MATCH bytes, ins_h is garbage,
+     * but this is not important since only literal bytes will be emitted.
+     */
+
+  } while (s.lookahead < MIN_LOOKAHEAD && s.strm.avail_in !== 0);
+
+  /* If the WIN_INIT bytes after the end of the current data have never been
+   * written, then zero those bytes in order to avoid memory check reports of
+   * the use of uninitialized (or uninitialised as Julian writes) bytes by
+   * the longest match routines.  Update the high water mark for the next
+   * time through here.  WIN_INIT is set to MAX_MATCH since the longest match
+   * routines allow scanning to strstart + MAX_MATCH, ignoring lookahead.
+   */
+//  if (s.high_water < s.window_size) {
+//    var curr = s.strstart + s.lookahead;
+//    var init = 0;
+//
+//    if (s.high_water < curr) {
+//      /* Previous high water mark below current data -- zero WIN_INIT
+//       * bytes or up to end of window, whichever is less.
+//       */
+//      init = s.window_size - curr;
+//      if (init > WIN_INIT)
+//        init = WIN_INIT;
+//      zmemzero(s->window + curr, (unsigned)init);
+//      s->high_water = curr + init;
+//    }
+//    else if (s->high_water < (ulg)curr + WIN_INIT) {
+//      /* High water mark at or above current data, but below current data
+//       * plus WIN_INIT -- zero out to current data plus WIN_INIT, or up
+//       * to end of window, whichever is less.
+//       */
+//      init = (ulg)curr + WIN_INIT - s->high_water;
+//      if (init > s->window_size - s->high_water)
+//        init = s->window_size - s->high_water;
+//      zmemzero(s->window + s->high_water, (unsigned)init);
+//      s->high_water += init;
+//    }
+//  }
+//
+//  Assert((ulg)s->strstart <= s->window_size - MIN_LOOKAHEAD,
+//    "not enough room for search");
+}
+
+/* ===========================================================================
+ * Copy without compression as much as possible from the input stream, return
+ * the current block state.
+ * This function does not insert new strings in the dictionary since
+ * uncompressible data is probably not useful. This function is used
+ * only for the level=0 compression option.
+ * NOTE: this function should be optimized to avoid extra copying from
+ * window to pending_buf.
+ */
+function deflate_stored(s, flush) {
+  /* Stored blocks are limited to 0xffff bytes, pending_buf is limited
+   * to pending_buf_size, and each stored block has a 5 byte header:
+   */
+  var max_block_size = 0xffff;
+
+  if (max_block_size > s.pending_buf_size - 5) {
+    max_block_size = s.pending_buf_size - 5;
+  }
+
+  /* Copy as much as possible from input to output: */
+  for (;;) {
+    /* Fill the window as much as possible: */
+    if (s.lookahead <= 1) {
+
+      //Assert(s->strstart < s->w_size+MAX_DIST(s) ||
+      //  s->block_start >= (long)s->w_size, "slide too late");
+//      if (!(s.strstart < s.w_size + (s.w_size - MIN_LOOKAHEAD) ||
+//        s.block_start >= s.w_size)) {
+//        throw  new Error("slide too late");
+//      }
+
+      fill_window(s);
+      if (s.lookahead === 0 && flush === Z_NO_FLUSH) {
+        return BS_NEED_MORE;
+      }
+
+      if (s.lookahead === 0) {
+        break;
+      }
+      /* flush the current block */
+    }
+    //Assert(s->block_start >= 0L, "block gone");
+//    if (s.block_start < 0) throw new Error("block gone");
+
+    s.strstart += s.lookahead;
+    s.lookahead = 0;
+
+    /* Emit a stored block if pending_buf will be full: */
+    var max_start = s.block_start + max_block_size;
+
+    if (s.strstart === 0 || s.strstart >= max_start) {
+      /* strstart == 0 is possible when wraparound on 16-bit machine */
+      s.lookahead = s.strstart - max_start;
+      s.strstart = max_start;
+      /*** FLUSH_BLOCK(s, 0); ***/
+      flush_block_only(s, false);
+      if (s.strm.avail_out === 0) {
+        return BS_NEED_MORE;
+      }
+      /***/
+
+
+    }
+    /* Flush if we may have to slide, otherwise block_start may become
+     * negative and the data will be gone:
+     */
+    if (s.strstart - s.block_start >= (s.w_size - MIN_LOOKAHEAD)) {
+      /*** FLUSH_BLOCK(s, 0); ***/
+      flush_block_only(s, false);
+      if (s.strm.avail_out === 0) {
+        return BS_NEED_MORE;
+      }
+      /***/
+    }
+  }
+
+  s.insert = 0;
+
+  if (flush === Z_FINISH) {
+    /*** FLUSH_BLOCK(s, 1); ***/
+    flush_block_only(s, true);
+    if (s.strm.avail_out === 0) {
+      return BS_FINISH_STARTED;
+    }
+    /***/
+    return BS_FINISH_DONE;
+  }
+
+  if (s.strstart > s.block_start) {
+    /*** FLUSH_BLOCK(s, 0); ***/
+    flush_block_only(s, false);
+    if (s.strm.avail_out === 0) {
+      return BS_NEED_MORE;
+    }
+    /***/
+  }
+
+  return BS_NEED_MORE;
+}
+
+/* ===========================================================================
+ * Compress as much as possible from the input stream, return the current
+ * block state.
+ * This function does not perform lazy evaluation of matches and inserts
+ * new strings in the dictionary only for unmatched strings or for short
+ * matches. It is used only for the fast compression options.
+ */
+function deflate_fast(s, flush) {
+  var hash_head;        /* head of the hash chain */
+  var bflush;           /* set if current block must be flushed */
+
+  for (;;) {
+    /* Make sure that we always have enough lookahead, except
+     * at the end of the input file. We need MAX_MATCH bytes
+     * for the next match, plus MIN_MATCH bytes to insert the
+     * string following the next match.
+     */
+    if (s.lookahead < MIN_LOOKAHEAD) {
+      fill_window(s);
+      if (s.lookahead < MIN_LOOKAHEAD && flush === Z_NO_FLUSH) {
+        return BS_NEED_MORE;
+      }
+      if (s.lookahead === 0) {
+        break; /* flush the current block */
+      }
+    }
+
+    /* Insert the string window[strstart .. strstart+2] in the
+     * dictionary, and set hash_head to the head of the hash chain:
+     */
+    hash_head = 0/*NIL*/;
+    if (s.lookahead >= MIN_MATCH) {
+      /*** INSERT_STRING(s, s.strstart, hash_head); ***/
+      s.ins_h = ((s.ins_h << s.hash_shift) ^ s.window[s.strstart + MIN_MATCH - 1]) & s.hash_mask;
+      hash_head = s.prev[s.strstart & s.w_mask] = s.head[s.ins_h];
+      s.head[s.ins_h] = s.strstart;
+      /***/
+    }
+
+    /* Find the longest match, discarding those <= prev_length.
+     * At this point we have always match_length < MIN_MATCH
+     */
+    if (hash_head !== 0/*NIL*/ && ((s.strstart - hash_head) <= (s.w_size - MIN_LOOKAHEAD))) {
+      /* To simplify the code, we prevent matches with the string
+       * of window index 0 (in particular we have to avoid a match
+       * of the string with itself at the start of the input file).
+       */
+      s.match_length = longest_match(s, hash_head);
+      /* longest_match() sets match_start */
+    }
+    if (s.match_length >= MIN_MATCH) {
+      // check_match(s, s.strstart, s.match_start, s.match_length); // for debug only
+
+      /*** _tr_tally_dist(s, s.strstart - s.match_start,
+                     s.match_length - MIN_MATCH, bflush); ***/
+      bflush = trees._tr_tally(s, s.strstart - s.match_start, s.match_length - MIN_MATCH);
+
+      s.lookahead -= s.match_length;
+
+      /* Insert new strings in the hash table only if the match length
+       * is not too large. This saves time but degrades compression.
+       */
+      if (s.match_length <= s.max_lazy_match/*max_insert_length*/ && s.lookahead >= MIN_MATCH) {
+        s.match_length--; /* string at strstart already in table */
+        do {
+          s.strstart++;
+          /*** INSERT_STRING(s, s.strstart, hash_head); ***/
+          s.ins_h = ((s.ins_h << s.hash_shift) ^ s.window[s.strstart + MIN_MATCH - 1]) & s.hash_mask;
+          hash_head = s.prev[s.strstart & s.w_mask] = s.head[s.ins_h];
+          s.head[s.ins_h] = s.strstart;
+          /***/
+          /* strstart never exceeds WSIZE-MAX_MATCH, so there are
+           * always MIN_MATCH bytes ahead.
+           */
+        } while (--s.match_length !== 0);
+        s.strstart++;
+      } else
+      {
+        s.strstart += s.match_length;
+        s.match_length = 0;
+        s.ins_h = s.window[s.strstart];
+        /* UPDATE_HASH(s, s.ins_h, s.window[s.strstart+1]); */
+        s.ins_h = ((s.ins_h << s.hash_shift) ^ s.window[s.strstart + 1]) & s.hash_mask;
+
+//#if MIN_MATCH != 3
+//                Call UPDATE_HASH() MIN_MATCH-3 more times
+//#endif
+        /* If lookahead < MIN_MATCH, ins_h is garbage, but it does not
+         * matter since it will be recomputed at next deflate call.
+         */
+      }
+    } else {
+      /* No match, output a literal byte */
+      //Tracevv((stderr,"%c", s.window[s.strstart]));
+      /*** _tr_tally_lit(s, s.window[s.strstart], bflush); ***/
+      bflush = trees._tr_tally(s, 0, s.window[s.strstart]);
+
+      s.lookahead--;
+      s.strstart++;
+    }
+    if (bflush) {
+      /*** FLUSH_BLOCK(s, 0); ***/
+      flush_block_only(s, false);
+      if (s.strm.avail_out === 0) {
+        return BS_NEED_MORE;
+      }
+      /***/
+    }
+  }
+  s.insert = ((s.strstart < (MIN_MATCH - 1)) ? s.strstart : MIN_MATCH - 1);
+  if (flush === Z_FINISH) {
+    /*** FLUSH_BLOCK(s, 1); ***/
+    flush_block_only(s, true);
+    if (s.strm.avail_out === 0) {
+      return BS_FINISH_STARTED;
+    }
+    /***/
+    return BS_FINISH_DONE;
+  }
+  if (s.last_lit) {
+    /*** FLUSH_BLOCK(s, 0); ***/
+    flush_block_only(s, false);
+    if (s.strm.avail_out === 0) {
+      return BS_NEED_MORE;
+    }
+    /***/
+  }
+  return BS_BLOCK_DONE;
+}
+
+/* ===========================================================================
+ * Same as above, but achieves better compression. We use a lazy
+ * evaluation for matches: a match is finally adopted only if there is
+ * no better match at the next window position.
+ */
+function deflate_slow(s, flush) {
+  var hash_head;          /* head of hash chain */
+  var bflush;              /* set if current block must be flushed */
+
+  var max_insert;
+
+  /* Process the input block. */
+  for (;;) {
+    /* Make sure that we always have enough lookahead, except
+     * at the end of the input file. We need MAX_MATCH bytes
+     * for the next match, plus MIN_MATCH bytes to insert the
+     * string following the next match.
+     */
+    if (s.lookahead < MIN_LOOKAHEAD) {
+      fill_window(s);
+      if (s.lookahead < MIN_LOOKAHEAD && flush === Z_NO_FLUSH) {
+        return BS_NEED_MORE;
+      }
+      if (s.lookahead === 0) { break; } /* flush the current block */
+    }
+
+    /* Insert the string window[strstart .. strstart+2] in the
+     * dictionary, and set hash_head to the head of the hash chain:
+     */
+    hash_head = 0/*NIL*/;
+    if (s.lookahead >= MIN_MATCH) {
+      /*** INSERT_STRING(s, s.strstart, hash_head); ***/
+      s.ins_h = ((s.ins_h << s.hash_shift) ^ s.window[s.strstart + MIN_MATCH - 1]) & s.hash_mask;
+      hash_head = s.prev[s.strstart & s.w_mask] = s.head[s.ins_h];
+      s.head[s.ins_h] = s.strstart;
+      /***/
+    }
+
+    /* Find the longest match, discarding those <= prev_length.
+     */
+    s.prev_length = s.match_length;
+    s.prev_match = s.match_start;
+    s.match_length = MIN_MATCH - 1;
+
+    if (hash_head !== 0/*NIL*/ && s.prev_length < s.max_lazy_match &&
+        s.strstart - hash_head <= (s.w_size - MIN_LOOKAHEAD)/*MAX_DIST(s)*/) {
+      /* To simplify the code, we prevent matches with the string
+       * of window index 0 (in particular we have to avoid a match
+       * of the string with itself at the start of the input file).
+       */
+      s.match_length = longest_match(s, hash_head);
+      /* longest_match() sets match_start */
+
+      if (s.match_length <= 5 &&
+         (s.strategy === Z_FILTERED || (s.match_length === MIN_MATCH && s.strstart - s.match_start > 4096/*TOO_FAR*/))) {
+
+        /* If prev_match is also MIN_MATCH, match_start is garbage
+         * but we will ignore the current match anyway.
+         */
+        s.match_length = MIN_MATCH - 1;
+      }
+    }
+    /* If there was a match at the previous step and the current
+     * match is not better, output the previous match:
+     */
+    if (s.prev_length >= MIN_MATCH && s.match_length <= s.prev_length) {
+      max_insert = s.strstart + s.lookahead - MIN_MATCH;
+      /* Do not insert strings in hash table beyond this. */
+
+      //check_match(s, s.strstart-1, s.prev_match, s.prev_length);
+
+      /***_tr_tally_dist(s, s.strstart - 1 - s.prev_match,
+                     s.prev_length - MIN_MATCH, bflush);***/
+      bflush = trees._tr_tally(s, s.strstart - 1 - s.prev_match, s.prev_length - MIN_MATCH);
+      /* Insert in hash table all strings up to the end of the match.
+       * strstart-1 and strstart are already inserted. If there is not
+       * enough lookahead, the last two strings are not inserted in
+       * the hash table.
+       */
+      s.lookahead -= s.prev_length - 1;
+      s.prev_length -= 2;
+      do {
+        if (++s.strstart <= max_insert) {
+          /*** INSERT_STRING(s, s.strstart, hash_head); ***/
+          s.ins_h = ((s.ins_h << s.hash_shift) ^ s.window[s.strstart + MIN_MATCH - 1]) & s.hash_mask;
+          hash_head = s.prev[s.strstart & s.w_mask] = s.head[s.ins_h];
+          s.head[s.ins_h] = s.strstart;
+          /***/
+        }
+      } while (--s.prev_length !== 0);
+      s.match_available = 0;
+      s.match_length = MIN_MATCH - 1;
+      s.strstart++;
+
+      if (bflush) {
+        /*** FLUSH_BLOCK(s, 0); ***/
+        flush_block_only(s, false);
+        if (s.strm.avail_out === 0) {
+          return BS_NEED_MORE;
+        }
+        /***/
+      }
+
+    } else if (s.match_available) {
+      /* If there was no match at the previous position, output a
+       * single literal. If there was a match but the current match
+       * is longer, truncate the previous match to a single literal.
+       */
+      //Tracevv((stderr,"%c", s->window[s->strstart-1]));
+      /*** _tr_tally_lit(s, s.window[s.strstart-1], bflush); ***/
+      bflush = trees._tr_tally(s, 0, s.window[s.strstart - 1]);
+
+      if (bflush) {
+        /*** FLUSH_BLOCK_ONLY(s, 0) ***/
+        flush_block_only(s, false);
+        /***/
+      }
+      s.strstart++;
+      s.lookahead--;
+      if (s.strm.avail_out === 0) {
+        return BS_NEED_MORE;
+      }
+    } else {
+      /* There is no previous match to compare with, wait for
+       * the next step to decide.
+       */
+      s.match_available = 1;
+      s.strstart++;
+      s.lookahead--;
+    }
+  }
+  //Assert (flush != Z_NO_FLUSH, "no flush?");
+  if (s.match_available) {
+    //Tracevv((stderr,"%c", s->window[s->strstart-1]));
+    /*** _tr_tally_lit(s, s.window[s.strstart-1], bflush); ***/
+    bflush = trees._tr_tally(s, 0, s.window[s.strstart - 1]);
+
+    s.match_available = 0;
+  }
+  s.insert = s.strstart < MIN_MATCH - 1 ? s.strstart : MIN_MATCH - 1;
+  if (flush === Z_FINISH) {
+    /*** FLUSH_BLOCK(s, 1); ***/
+    flush_block_only(s, true);
+    if (s.strm.avail_out === 0) {
+      return BS_FINISH_STARTED;
+    }
+    /***/
+    return BS_FINISH_DONE;
+  }
+  if (s.last_lit) {
+    /*** FLUSH_BLOCK(s, 0); ***/
+    flush_block_only(s, false);
+    if (s.strm.avail_out === 0) {
+      return BS_NEED_MORE;
+    }
+    /***/
+  }
+
+  return BS_BLOCK_DONE;
+}
+
+
+/* ===========================================================================
+ * For Z_RLE, simply look for runs of bytes, generate matches only of distance
+ * one.  Do not maintain a hash table.  (It will be regenerated if this run of
+ * deflate switches away from Z_RLE.)
+ */
+function deflate_rle(s, flush) {
+  var bflush;            /* set if current block must be flushed */
+  var prev;              /* byte at distance one to match */
+  var scan, strend;      /* scan goes up to strend for length of run */
+
+  var _win = s.window;
+
+  for (;;) {
+    /* Make sure that we always have enough lookahead, except
+     * at the end of the input file. We need MAX_MATCH bytes
+     * for the longest run, plus one for the unrolled loop.
+     */
+    if (s.lookahead <= MAX_MATCH) {
+      fill_window(s);
+      if (s.lookahead <= MAX_MATCH && flush === Z_NO_FLUSH) {
+        return BS_NEED_MORE;
+      }
+      if (s.lookahead === 0) { break; } /* flush the current block */
+    }
+
+    /* See how many times the previous byte repeats */
+    s.match_length = 0;
+    if (s.lookahead >= MIN_MATCH && s.strstart > 0) {
+      scan = s.strstart - 1;
+      prev = _win[scan];
+      if (prev === _win[++scan] && prev === _win[++scan] && prev === _win[++scan]) {
+        strend = s.strstart + MAX_MATCH;
+        do {
+          /*jshint noempty:false*/
+        } while (prev === _win[++scan] && prev === _win[++scan] &&
+                 prev === _win[++scan] && prev === _win[++scan] &&
+                 prev === _win[++scan] && prev === _win[++scan] &&
+                 prev === _win[++scan] && prev === _win[++scan] &&
+                 scan < strend);
+        s.match_length = MAX_MATCH - (strend - scan);
+        if (s.match_length > s.lookahead) {
+          s.match_length = s.lookahead;
+        }
+      }
+      //Assert(scan <= s->window+(uInt)(s->window_size-1), "wild scan");
+    }
+
+    /* Emit match if have run of MIN_MATCH or longer, else emit literal */
+    if (s.match_length >= MIN_MATCH) {
+      //check_match(s, s.strstart, s.strstart - 1, s.match_length);
+
+      /*** _tr_tally_dist(s, 1, s.match_length - MIN_MATCH, bflush); ***/
+      bflush = trees._tr_tally(s, 1, s.match_length - MIN_MATCH);
+
+      s.lookahead -= s.match_length;
+      s.strstart += s.match_length;
+      s.match_length = 0;
+    } else {
+      /* No match, output a literal byte */
+      //Tracevv((stderr,"%c", s->window[s->strstart]));
+      /*** _tr_tally_lit(s, s.window[s.strstart], bflush); ***/
+      bflush = trees._tr_tally(s, 0, s.window[s.strstart]);
+
+      s.lookahead--;
+      s.strstart++;
+    }
+    if (bflush) {
+      /*** FLUSH_BLOCK(s, 0); ***/
+      flush_block_only(s, false);
+      if (s.strm.avail_out === 0) {
+        return BS_NEED_MORE;
+      }
+      /***/
+    }
+  }
+  s.insert = 0;
+  if (flush === Z_FINISH) {
+    /*** FLUSH_BLOCK(s, 1); ***/
+    flush_block_only(s, true);
+    if (s.strm.avail_out === 0) {
+      return BS_FINISH_STARTED;
+    }
+    /***/
+    return BS_FINISH_DONE;
+  }
+  if (s.last_lit) {
+    /*** FLUSH_BLOCK(s, 0); ***/
+    flush_block_only(s, false);
+    if (s.strm.avail_out === 0) {
+      return BS_NEED_MORE;
+    }
+    /***/
+  }
+  return BS_BLOCK_DONE;
+}
+
+/* ===========================================================================
+ * For Z_HUFFMAN_ONLY, do not look for matches.  Do not maintain a hash table.
+ * (It will be regenerated if this run of deflate switches away from Huffman.)
+ */
+function deflate_huff(s, flush) {
+  var bflush;             /* set if current block must be flushed */
+
+  for (;;) {
+    /* Make sure that we have a literal to write. */
+    if (s.lookahead === 0) {
+      fill_window(s);
+      if (s.lookahead === 0) {
+        if (flush === Z_NO_FLUSH) {
+          return BS_NEED_MORE;
+        }
+        break;      /* flush the current block */
+      }
+    }
+
+    /* Output a literal byte */
+    s.match_length = 0;
+    //Tracevv((stderr,"%c", s->window[s->strstart]));
+    /*** _tr_tally_lit(s, s.window[s.strstart], bflush); ***/
+    bflush = trees._tr_tally(s, 0, s.window[s.strstart]);
+    s.lookahead--;
+    s.strstart++;
+    if (bflush) {
+      /*** FLUSH_BLOCK(s, 0); ***/
+      flush_block_only(s, false);
+      if (s.strm.avail_out === 0) {
+        return BS_NEED_MORE;
+      }
+      /***/
+    }
+  }
+  s.insert = 0;
+  if (flush === Z_FINISH) {
+    /*** FLUSH_BLOCK(s, 1); ***/
+    flush_block_only(s, true);
+    if (s.strm.avail_out === 0) {
+      return BS_FINISH_STARTED;
+    }
+    /***/
+    return BS_FINISH_DONE;
+  }
+  if (s.last_lit) {
+    /*** FLUSH_BLOCK(s, 0); ***/
+    flush_block_only(s, false);
+    if (s.strm.avail_out === 0) {
+      return BS_NEED_MORE;
+    }
+    /***/
+  }
+  return BS_BLOCK_DONE;
+}
+
+/* Values for max_lazy_match, good_match and max_chain_length, depending on
+ * the desired pack level (0..9). The values given below have been tuned to
+ * exclude worst case performance for pathological files. Better values may be
+ * found for specific files.
+ */
+function Config(good_length, max_lazy, nice_length, max_chain, func) {
+  this.good_length = good_length;
+  this.max_lazy = max_lazy;
+  this.nice_length = nice_length;
+  this.max_chain = max_chain;
+  this.func = func;
+}
+
+var configuration_table;
+
+configuration_table = [
+  /*      good lazy nice chain */
+  new Config(0, 0, 0, 0, deflate_stored),          /* 0 store only */
+  new Config(4, 4, 8, 4, deflate_fast),            /* 1 max speed, no lazy matches */
+  new Config(4, 5, 16, 8, deflate_fast),           /* 2 */
+  new Config(4, 6, 32, 32, deflate_fast),          /* 3 */
+
+  new Config(4, 4, 16, 16, deflate_slow),          /* 4 lazy matches */
+  new Config(8, 16, 32, 32, deflate_slow),         /* 5 */
+  new Config(8, 16, 128, 128, deflate_slow),       /* 6 */
+  new Config(8, 32, 128, 256, deflate_slow),       /* 7 */
+  new Config(32, 128, 258, 1024, deflate_slow),    /* 8 */
+  new Config(32, 258, 258, 4096, deflate_slow)     /* 9 max compression */
+];
+
+
+/* ===========================================================================
+ * Initialize the "longest match" routines for a new zlib stream
+ */
+function lm_init(s) {
+  s.window_size = 2 * s.w_size;
+
+  /*** CLEAR_HASH(s); ***/
+  zero(s.head); // Fill with NIL (= 0);
+
+  /* Set the default configuration parameters:
+   */
+  s.max_lazy_match = configuration_table[s.level].max_lazy;
+  s.good_match = configuration_table[s.level].good_length;
+  s.nice_match = configuration_table[s.level].nice_length;
+  s.max_chain_length = configuration_table[s.level].max_chain;
+
+  s.strstart = 0;
+  s.block_start = 0;
+  s.lookahead = 0;
+  s.insert = 0;
+  s.match_length = s.prev_length = MIN_MATCH - 1;
+  s.match_available = 0;
+  s.ins_h = 0;
+}
+
+
+function DeflateState() {
+  this.strm = null;            /* pointer back to this zlib stream */
+  this.status = 0;            /* as the name implies */
+  this.pending_buf = null;      /* output still pending */
+  this.pending_buf_size = 0;  /* size of pending_buf */
+  this.pending_out = 0;       /* next pending byte to output to the stream */
+  this.pending = 0;           /* nb of bytes in the pending buffer */
+  this.wrap = 0;              /* bit 0 true for zlib, bit 1 true for gzip */
+  this.gzhead = null;         /* gzip header information to write */
+  this.gzindex = 0;           /* where in extra, name, or comment */
+  this.method = Z_DEFLATED; /* can only be DEFLATED */
+  this.last_flush = -1;   /* value of flush param for previous deflate call */
+
+  this.w_size = 0;  /* LZ77 window size (32K by default) */
+  this.w_bits = 0;  /* log2(w_size)  (8..16) */
+  this.w_mask = 0;  /* w_size - 1 */
+
+  this.window = null;
+  /* Sliding window. Input bytes are read into the second half of the window,
+   * and move to the first half later to keep a dictionary of at least wSize
+   * bytes. With this organization, matches are limited to a distance of
+   * wSize-MAX_MATCH bytes, but this ensures that IO is always
+   * performed with a length multiple of the block size.
+   */
+
+  this.window_size = 0;
+  /* Actual size of window: 2*wSize, except when the user input buffer
+   * is directly used as sliding window.
+   */
+
+  this.prev = null;
+  /* Link to older string with same hash index. To limit the size of this
+   * array to 64K, this link is maintained only for the last 32K strings.
+   * An index in this array is thus a window index modulo 32K.
+   */
+
+  this.head = null;   /* Heads of the hash chains or NIL. */
+
+  this.ins_h = 0;       /* hash index of string to be inserted */
+  this.hash_size = 0;   /* number of elements in hash table */
+  this.hash_bits = 0;   /* log2(hash_size) */
+  this.hash_mask = 0;   /* hash_size-1 */
+
+  this.hash_shift = 0;
+  /* Number of bits by which ins_h must be shifted at each input
+   * step. It must be such that after MIN_MATCH steps, the oldest
+   * byte no longer takes part in the hash key, that is:
+   *   hash_shift * MIN_MATCH >= hash_bits
+   */
+
+  this.block_start = 0;
+  /* Window position at the beginning of the current output block. Gets
+   * negative when the window is moved backwards.
+   */
+
+  this.match_length = 0;      /* length of best match */
+  this.prev_match = 0;        /* previous match */
+  this.match_available = 0;   /* set if previous match exists */
+  this.strstart = 0;          /* start of string to insert */
+  this.match_start = 0;       /* start of matching string */
+  this.lookahead = 0;         /* number of valid bytes ahead in window */
+
+  this.prev_length = 0;
+  /* Length of the best match at previous step. Matches not greater than this
+   * are discarded. This is used in the lazy match evaluation.
+   */
+
+  this.max_chain_length = 0;
+  /* To speed up deflation, hash chains are never searched beyond this
+   * length.  A higher limit improves compression ratio but degrades the
+   * speed.
+   */
+
+  this.max_lazy_match = 0;
+  /* Attempt to find a better match only when the current match is strictly
+   * smaller than this value. This mechanism is used only for compression
+   * levels >= 4.
+   */
+  // That's alias to max_lazy_match, don't use directly
+  //this.max_insert_length = 0;
+  /* Insert new strings in the hash table only if the match length is not
+   * greater than this length. This saves time but degrades compression.
+   * max_insert_length is used only for compression levels <= 3.
+   */
+
+  this.level = 0;     /* compression level (1..9) */
+  this.strategy = 0;  /* favor or force Huffman coding*/
+
+  this.good_match = 0;
+  /* Use a faster search when the previous match is longer than this */
+
+  this.nice_match = 0; /* Stop searching when current match exceeds this */
+
+              /* used by trees.c: */
+
+  /* Didn't use ct_data typedef below to suppress compiler warning */
+
+  // struct ct_data_s dyn_ltree[HEAP_SIZE];   /* literal and length tree */
+  // struct ct_data_s dyn_dtree[2*D_CODES+1]; /* distance tree */
+  // struct ct_data_s bl_tree[2*BL_CODES+1];  /* Huffman tree for bit lengths */
+
+  // Use flat array of DOUBLE size, with interleaved fata,
+  // because JS does not support effective
+  this.dyn_ltree  = new utils.Buf16(HEAP_SIZE * 2);
+  this.dyn_dtree  = new utils.Buf16((2 * D_CODES + 1) * 2);
+  this.bl_tree    = new utils.Buf16((2 * BL_CODES + 1) * 2);
+  zero(this.dyn_ltree);
+  zero(this.dyn_dtree);
+  zero(this.bl_tree);
+
+  this.l_desc   = null;         /* desc. for literal tree */
+  this.d_desc   = null;         /* desc. for distance tree */
+  this.bl_desc  = null;         /* desc. for bit length tree */
+
+  //ush bl_count[MAX_BITS+1];
+  this.bl_count = new utils.Buf16(MAX_BITS + 1);
+  /* number of codes at each bit length for an optimal tree */
+
+  //int heap[2*L_CODES+1];      /* heap used to build the Huffman trees */
+  this.heap = new utils.Buf16(2 * L_CODES + 1);  /* heap used to build the Huffman trees */
+  zero(this.heap);
+
+  this.heap_len = 0;               /* number of elements in the heap */
+  this.heap_max = 0;               /* element of largest frequency */
+  /* The sons of heap[n] are heap[2*n] and heap[2*n+1]. heap[0] is not used.
+   * The same heap array is used to build all trees.
+   */
+
+  this.depth = new utils.Buf16(2 * L_CODES + 1); //uch depth[2*L_CODES+1];
+  zero(this.depth);
+  /* Depth of each subtree used as tie breaker for trees of equal frequency
+   */
+
+  this.l_buf = 0;          /* buffer index for literals or lengths */
+
+  this.lit_bufsize = 0;
+  /* Size of match buffer for literals/lengths.  There are 4 reasons for
+   * limiting lit_bufsize to 64K:
+   *   - frequencies can be kept in 16 bit counters
+   *   - if compression is not successful for the first block, all input
+   *     data is still in the window so we can still emit a stored block even
+   *     when input comes from standard input.  (This can also be done for
+   *     all blocks if lit_bufsize is not greater than 32K.)
+   *   - if compression is not successful for a file smaller than 64K, we can
+   *     even emit a stored file instead of a stored block (saving 5 bytes).
+   *     This is applicable only for zip (not gzip or zlib).
+   *   - creating new Huffman trees less frequently may not provide fast
+   *     adaptation to changes in the input data statistics. (Take for
+   *     example a binary file with poorly compressible code followed by
+   *     a highly compressible string table.) Smaller buffer sizes give
+   *     fast adaptation but have of course the overhead of transmitting
+   *     trees more frequently.
+   *   - I can't count above 4
+   */
+
+  this.last_lit = 0;      /* running index in l_buf */
+
+  this.d_buf = 0;
+  /* Buffer index for distances. To simplify the code, d_buf and l_buf have
+   * the same number of elements. To use different lengths, an extra flag
+   * array would be necessary.
+   */
+
+  this.opt_len = 0;       /* bit length of current block with optimal trees */
+  this.static_len = 0;    /* bit length of current block with static trees */
+  this.matches = 0;       /* number of string matches in current block */
+  this.insert = 0;        /* bytes at end of window left to insert */
+
+
+  this.bi_buf = 0;
+  /* Output buffer. bits are inserted starting at the bottom (least
+   * significant bits).
+   */
+  this.bi_valid = 0;
+  /* Number of valid bits in bi_buf.  All bits above the last valid bit
+   * are always zero.
+   */
+
+  // Used for window memory init. We safely ignore it for JS. That makes
+  // sense only for pointers and memory check tools.
+  //this.high_water = 0;
+  /* High water mark offset in window for initialized bytes -- bytes above
+   * this are set to zero in order to avoid memory check warnings when
+   * longest match routines access bytes past the input.  This is then
+   * updated to the new high water mark.
+   */
+}
+
+
+function deflateResetKeep(strm) {
+  var s;
+
+  if (!strm || !strm.state) {
+    return err(strm, Z_STREAM_ERROR);
+  }
+
+  strm.total_in = strm.total_out = 0;
+  strm.data_type = Z_UNKNOWN;
+
+  s = strm.state;
+  s.pending = 0;
+  s.pending_out = 0;
+
+  if (s.wrap < 0) {
+    s.wrap = -s.wrap;
+    /* was made negative by deflate(..., Z_FINISH); */
+  }
+  s.status = (s.wrap ? INIT_STATE : BUSY_STATE);
+  strm.adler = (s.wrap === 2) ?
+    0  // crc32(0, Z_NULL, 0)
+  :
+    1; // adler32(0, Z_NULL, 0)
+  s.last_flush = Z_NO_FLUSH;
+  trees._tr_init(s);
+  return Z_OK;
+}
+
+
+function deflateReset(strm) {
+  var ret = deflateResetKeep(strm);
+  if (ret === Z_OK) {
+    lm_init(strm.state);
+  }
+  return ret;
+}
+
+
+function deflateSetHeader(strm, head) {
+  if (!strm || !strm.state) { return Z_STREAM_ERROR; }
+  if (strm.state.wrap !== 2) { return Z_STREAM_ERROR; }
+  strm.state.gzhead = head;
+  return Z_OK;
+}
+
+
+function deflateInit2(strm, level, method, windowBits, memLevel, strategy) {
+  if (!strm) { // === Z_NULL
+    return Z_STREAM_ERROR;
+  }
+  var wrap = 1;
+
+  if (level === Z_DEFAULT_COMPRESSION) {
+    level = 6;
+  }
+
+  if (windowBits < 0) { /* suppress zlib wrapper */
+    wrap = 0;
+    windowBits = -windowBits;
+  }
+
+  else if (windowBits > 15) {
+    wrap = 2;           /* write gzip wrapper instead */
+    windowBits -= 16;
+  }
+
+
+  if (memLevel < 1 || memLevel > MAX_MEM_LEVEL || method !== Z_DEFLATED ||
+    windowBits < 8 || windowBits > 15 || level < 0 || level > 9 ||
+    strategy < 0 || strategy > Z_FIXED) {
+    return err(strm, Z_STREAM_ERROR);
+  }
+
+
+  if (windowBits === 8) {
+    windowBits = 9;
+  }
+  /* until 256-byte window bug fixed */
+
+  var s = new DeflateState();
+
+  strm.state = s;
+  s.strm = strm;
+
+  s.wrap = wrap;
+  s.gzhead = null;
+  s.w_bits = windowBits;
+  s.w_size = 1 << s.w_bits;
+  s.w_mask = s.w_size - 1;
+
+  s.hash_bits = memLevel + 7;
+  s.hash_size = 1 << s.hash_bits;
+  s.hash_mask = s.hash_size - 1;
+  s.hash_shift = ~~((s.hash_bits + MIN_MATCH - 1) / MIN_MATCH);
+
+  s.window = new utils.Buf8(s.w_size * 2);
+  s.head = new utils.Buf16(s.hash_size);
+  s.prev = new utils.Buf16(s.w_size);
+
+  // Don't need mem init magic for JS.
+  //s.high_water = 0;  /* nothing written to s->window yet */
+
+  s.lit_bufsize = 1 << (memLevel + 6); /* 16K elements by default */
+
+  s.pending_buf_size = s.lit_bufsize * 4;
+
+  //overlay = (ushf *) ZALLOC(strm, s->lit_bufsize, sizeof(ush)+2);
+  //s->pending_buf = (uchf *) overlay;
+  s.pending_buf = new utils.Buf8(s.pending_buf_size);
+
+  // It is offset from `s.pending_buf` (size is `s.lit_bufsize * 2`)
+  //s->d_buf = overlay + s->lit_bufsize/sizeof(ush);
+  s.d_buf = 1 * s.lit_bufsize;
+
+  //s->l_buf = s->pending_buf + (1+sizeof(ush))*s->lit_bufsize;
+  s.l_buf = (1 + 2) * s.lit_bufsize;
+
+  s.level = level;
+  s.strategy = strategy;
+  s.method = method;
+
+  return deflateReset(strm);
+}
+
+function deflateInit(strm, level) {
+  return deflateInit2(strm, level, Z_DEFLATED, MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY);
+}
+
+
+function deflate(strm, flush) {
+  var old_flush, s;
+  var beg, val; // for gzip header write only
+
+  if (!strm || !strm.state ||
+    flush > Z_BLOCK || flush < 0) {
+    return strm ? err(strm, Z_STREAM_ERROR) : Z_STREAM_ERROR;
+  }
+
+  s = strm.state;
+
+  if (!strm.output ||
+      (!strm.input && strm.avail_in !== 0) ||
+      (s.status === FINISH_STATE && flush !== Z_FINISH)) {
+    return err(strm, (strm.avail_out === 0) ? Z_BUF_ERROR : Z_STREAM_ERROR);
+  }
+
+  s.strm = strm; /* just in case */
+  old_flush = s.last_flush;
+  s.last_flush = flush;
+
+  /* Write the header */
+  if (s.status === INIT_STATE) {
+
+    if (s.wrap === 2) { // GZIP header
+      strm.adler = 0;  //crc32(0L, Z_NULL, 0);
+      put_byte(s, 31);
+      put_byte(s, 139);
+      put_byte(s, 8);
+      if (!s.gzhead) { // s->gzhead == Z_NULL
+        put_byte(s, 0);
+        put_byte(s, 0);
+        put_byte(s, 0);
+        put_byte(s, 0);
+        put_byte(s, 0);
+        put_byte(s, s.level === 9 ? 2 :
+                    (s.strategy >= Z_HUFFMAN_ONLY || s.level < 2 ?
+                     4 : 0));
+        put_byte(s, OS_CODE);
+        s.status = BUSY_STATE;
+      }
+      else {
+        put_byte(s, (s.gzhead.text ? 1 : 0) +
+                    (s.gzhead.hcrc ? 2 : 0) +
+                    (!s.gzhead.extra ? 0 : 4) +
+                    (!s.gzhead.name ? 0 : 8) +
+                    (!s.gzhead.comment ? 0 : 16)
+                );
+        put_byte(s, s.gzhead.time & 0xff);
+        put_byte(s, (s.gzhead.time >> 8) & 0xff);
+        put_byte(s, (s.gzhead.time >> 16) & 0xff);
+        put_byte(s, (s.gzhead.time >> 24) & 0xff);
+        put_byte(s, s.level === 9 ? 2 :
+                    (s.strategy >= Z_HUFFMAN_ONLY || s.level < 2 ?
+                     4 : 0));
+        put_byte(s, s.gzhead.os & 0xff);
+        if (s.gzhead.extra && s.gzhead.extra.length) {
+          put_byte(s, s.gzhead.extra.length & 0xff);
+          put_byte(s, (s.gzhead.extra.length >> 8) & 0xff);
+        }
+        if (s.gzhead.hcrc) {
+          strm.adler = crc32(strm.adler, s.pending_buf, s.pending, 0);
+        }
+        s.gzindex = 0;
+        s.status = EXTRA_STATE;
+      }
+    }
+    else // DEFLATE header
+    {
+      var header = (Z_DEFLATED + ((s.w_bits - 8) << 4)) << 8;
+      var level_flags = -1;
+
+      if (s.strategy >= Z_HUFFMAN_ONLY || s.level < 2) {
+        level_flags = 0;
+      } else if (s.level < 6) {
+        level_flags = 1;
+      } else if (s.level === 6) {
+        level_flags = 2;
+      } else {
+        level_flags = 3;
+      }
+      header |= (level_flags << 6);
+      if (s.strstart !== 0) { header |= PRESET_DICT; }
+      header += 31 - (header % 31);
+
+      s.status = BUSY_STATE;
+      putShortMSB(s, header);
+
+      /* Save the adler32 of the preset dictionary: */
+      if (s.strstart !== 0) {
+        putShortMSB(s, strm.adler >>> 16);
+        putShortMSB(s, strm.adler & 0xffff);
+      }
+      strm.adler = 1; // adler32(0L, Z_NULL, 0);
+    }
+  }
+
+//#ifdef GZIP
+  if (s.status === EXTRA_STATE) {
+    if (s.gzhead.extra/* != Z_NULL*/) {
+      beg = s.pending;  /* start of bytes to update crc */
+
+      while (s.gzindex < (s.gzhead.extra.length & 0xffff)) {
+        if (s.pending === s.pending_buf_size) {
+          if (s.gzhead.hcrc && s.pending > beg) {
+            strm.adler = crc32(strm.adler, s.pending_buf, s.pending - beg, beg);
+          }
+          flush_pending(strm);
+          beg = s.pending;
+          if (s.pending === s.pending_buf_size) {
+            break;
+          }
+        }
+        put_byte(s, s.gzhead.extra[s.gzindex] & 0xff);
+        s.gzindex++;
+      }
+      if (s.gzhead.hcrc && s.pending > beg) {
+        strm.adler = crc32(strm.adler, s.pending_buf, s.pending - beg, beg);
+      }
+      if (s.gzindex === s.gzhead.extra.length) {
+        s.gzindex = 0;
+        s.status = NAME_STATE;
+      }
+    }
+    else {
+      s.status = NAME_STATE;
+    }
+  }
+  if (s.status === NAME_STATE) {
+    if (s.gzhead.name/* != Z_NULL*/) {
+      beg = s.pending;  /* start of bytes to update crc */
+      //int val;
+
+      do {
+        if (s.pending === s.pending_buf_size) {
+          if (s.gzhead.hcrc && s.pending > beg) {
+            strm.adler = crc32(strm.adler, s.pending_buf, s.pending - beg, beg);
+          }
+          flush_pending(strm);
+          beg = s.pending;
+          if (s.pending === s.pending_buf_size) {
+            val = 1;
+            break;
+          }
+        }
+        // JS specific: little magic to add zero terminator to end of string
+        if (s.gzindex < s.gzhead.name.length) {
+          val = s.gzhead.name.charCodeAt(s.gzindex++) & 0xff;
+        } else {
+          val = 0;
+        }
+        put_byte(s, val);
+      } while (val !== 0);
+
+      if (s.gzhead.hcrc && s.pending > beg) {
+        strm.adler = crc32(strm.adler, s.pending_buf, s.pending - beg, beg);
+      }
+      if (val === 0) {
+        s.gzindex = 0;
+        s.status = COMMENT_STATE;
+      }
+    }
+    else {
+      s.status = COMMENT_STATE;
+    }
+  }
+  if (s.status === COMMENT_STATE) {
+    if (s.gzhead.comment/* != Z_NULL*/) {
+      beg = s.pending;  /* start of bytes to update crc */
+      //int val;
+
+      do {
+        if (s.pending === s.pending_buf_size) {
+          if (s.gzhead.hcrc && s.pending > beg) {
+            strm.adler = crc32(strm.adler, s.pending_buf, s.pending - beg, beg);
+          }
+          flush_pending(strm);
+          beg = s.pending;
+          if (s.pending === s.pending_buf_size) {
+            val = 1;
+            break;
+          }
+        }
+        // JS specific: little magic to add zero terminator to end of string
+        if (s.gzindex < s.gzhead.comment.length) {
+          val = s.gzhead.comment.charCodeAt(s.gzindex++) & 0xff;
+        } else {
+          val = 0;
+        }
+        put_byte(s, val);
+      } while (val !== 0);
+
+      if (s.gzhead.hcrc && s.pending > beg) {
+        strm.adler = crc32(strm.adler, s.pending_buf, s.pending - beg, beg);
+      }
+      if (val === 0) {
+        s.status = HCRC_STATE;
+      }
+    }
+    else {
+      s.status = HCRC_STATE;
+    }
+  }
+  if (s.status === HCRC_STATE) {
+    if (s.gzhead.hcrc) {
+      if (s.pending + 2 > s.pending_buf_size) {
+        flush_pending(strm);
+      }
+      if (s.pending + 2 <= s.pending_buf_size) {
+        put_byte(s, strm.adler & 0xff);
+        put_byte(s, (strm.adler >> 8) & 0xff);
+        strm.adler = 0; //crc32(0L, Z_NULL, 0);
+        s.status = BUSY_STATE;
+      }
+    }
+    else {
+      s.status = BUSY_STATE;
+    }
+  }
+//#endif
+
+  /* Flush as much pending output as possible */
+  if (s.pending !== 0) {
+    flush_pending(strm);
+    if (strm.avail_out === 0) {
+      /* Since avail_out is 0, deflate will be called again with
+       * more output space, but possibly with both pending and
+       * avail_in equal to zero. There won't be anything to do,
+       * but this is not an error situation so make sure we
+       * return OK instead of BUF_ERROR at next call of deflate:
+       */
+      s.last_flush = -1;
+      return Z_OK;
+    }
+
+    /* Make sure there is something to do and avoid duplicate consecutive
+     * flushes. For repeated and useless calls with Z_FINISH, we keep
+     * returning Z_STREAM_END instead of Z_BUF_ERROR.
+     */
+  } else if (strm.avail_in === 0 && rank(flush) <= rank(old_flush) &&
+    flush !== Z_FINISH) {
+    return err(strm, Z_BUF_ERROR);
+  }
+
+  /* User must not provide more input after the first FINISH: */
+  if (s.status === FINISH_STATE && strm.avail_in !== 0) {
+    return err(strm, Z_BUF_ERROR);
+  }
+
+  /* Start a new block or continue the current one.
+   */
+  if (strm.avail_in !== 0 || s.lookahead !== 0 ||
+    (flush !== Z_NO_FLUSH && s.status !== FINISH_STATE)) {
+    var bstate = (s.strategy === Z_HUFFMAN_ONLY) ? deflate_huff(s, flush) :
+      (s.strategy === Z_RLE ? deflate_rle(s, flush) :
+        configuration_table[s.level].func(s, flush));
+
+    if (bstate === BS_FINISH_STARTED || bstate === BS_FINISH_DONE) {
+      s.status = FINISH_STATE;
+    }
+    if (bstate === BS_NEED_MORE || bstate === BS_FINISH_STARTED) {
+      if (strm.avail_out === 0) {
+        s.last_flush = -1;
+        /* avoid BUF_ERROR next call, see above */
+      }
+      return Z_OK;
+      /* If flush != Z_NO_FLUSH && avail_out == 0, the next call
+       * of deflate should use the same flush parameter to make sure
+       * that the flush is complete. So we don't have to output an
+       * empty block here, this will be done at next call. This also
+       * ensures that for a very small output buffer, we emit at most
+       * one empty block.
+       */
+    }
+    if (bstate === BS_BLOCK_DONE) {
+      if (flush === Z_PARTIAL_FLUSH) {
+        trees._tr_align(s);
+      }
+      else if (flush !== Z_BLOCK) { /* FULL_FLUSH or SYNC_FLUSH */
+
+        trees._tr_stored_block(s, 0, 0, false);
+        /* For a full flush, this empty block will be recognized
+         * as a special marker by inflate_sync().
+         */
+        if (flush === Z_FULL_FLUSH) {
+          /*** CLEAR_HASH(s); ***/             /* forget history */
+          zero(s.head); // Fill with NIL (= 0);
+
+          if (s.lookahead === 0) {
+            s.strstart = 0;
+            s.block_start = 0;
+            s.insert = 0;
+          }
+        }
+      }
+      flush_pending(strm);
+      if (strm.avail_out === 0) {
+        s.last_flush = -1; /* avoid BUF_ERROR at next call, see above */
+        return Z_OK;
+      }
+    }
+  }
+  //Assert(strm->avail_out > 0, "bug2");
+  //if (strm.avail_out <= 0) { throw new Error("bug2");}
+
+  if (flush !== Z_FINISH) { return Z_OK; }
+  if (s.wrap <= 0) { return Z_STREAM_END; }
+
+  /* Write the trailer */
+  if (s.wrap === 2) {
+    put_byte(s, strm.adler & 0xff);
+    put_byte(s, (strm.adler >> 8) & 0xff);
+    put_byte(s, (strm.adler >> 16) & 0xff);
+    put_byte(s, (strm.adler >> 24) & 0xff);
+    put_byte(s, strm.total_in & 0xff);
+    put_byte(s, (strm.total_in >> 8) & 0xff);
+    put_byte(s, (strm.total_in >> 16) & 0xff);
+    put_byte(s, (strm.total_in >> 24) & 0xff);
+  }
+  else
+  {
+    putShortMSB(s, strm.adler >>> 16);
+    putShortMSB(s, strm.adler & 0xffff);
+  }
+
+  flush_pending(strm);
+  /* If avail_out is zero, the application will call deflate again
+   * to flush the rest.
+   */
+  if (s.wrap > 0) { s.wrap = -s.wrap; }
+  /* write the trailer only once! */
+  return s.pending !== 0 ? Z_OK : Z_STREAM_END;
+}
+
+function deflateEnd(strm) {
+  var status;
+
+  if (!strm/*== Z_NULL*/ || !strm.state/*== Z_NULL*/) {
+    return Z_STREAM_ERROR;
+  }
+
+  status = strm.state.status;
+  if (status !== INIT_STATE &&
+    status !== EXTRA_STATE &&
+    status !== NAME_STATE &&
+    status !== COMMENT_STATE &&
+    status !== HCRC_STATE &&
+    status !== BUSY_STATE &&
+    status !== FINISH_STATE
+  ) {
+    return err(strm, Z_STREAM_ERROR);
+  }
+
+  strm.state = null;
+
+  return status === BUSY_STATE ? err(strm, Z_DATA_ERROR) : Z_OK;
+}
+
+
+/* =========================================================================
+ * Initializes the compression dictionary from the given byte
+ * sequence without producing any compressed output.
+ */
+function deflateSetDictionary(strm, dictionary) {
+  var dictLength = dictionary.length;
+
+  var s;
+  var str, n;
+  var wrap;
+  var avail;
+  var next;
+  var input;
+  var tmpDict;
+
+  if (!strm/*== Z_NULL*/ || !strm.state/*== Z_NULL*/) {
+    return Z_STREAM_ERROR;
+  }
+
+  s = strm.state;
+  wrap = s.wrap;
+
+  if (wrap === 2 || (wrap === 1 && s.status !== INIT_STATE) || s.lookahead) {
+    return Z_STREAM_ERROR;
+  }
+
+  /* when using zlib wrappers, compute Adler-32 for provided dictionary */
+  if (wrap === 1) {
+    /* adler32(strm->adler, dictionary, dictLength); */
+    strm.adler = adler32(strm.adler, dictionary, dictLength, 0);
+  }
+
+  s.wrap = 0;   /* avoid computing Adler-32 in read_buf */
+
+  /* if dictionary would fill window, just replace the history */
+  if (dictLength >= s.w_size) {
+    if (wrap === 0) {            /* already empty otherwise */
+      /*** CLEAR_HASH(s); ***/
+      zero(s.head); // Fill with NIL (= 0);
+      s.strstart = 0;
+      s.block_start = 0;
+      s.insert = 0;
+    }
+    /* use the tail */
+    // dictionary = dictionary.slice(dictLength - s.w_size);
+    tmpDict = new utils.Buf8(s.w_size);
+    utils.arraySet(tmpDict, dictionary, dictLength - s.w_size, s.w_size, 0);
+    dictionary = tmpDict;
+    dictLength = s.w_size;
+  }
+  /* insert dictionary into window and hash */
+  avail = strm.avail_in;
+  next = strm.next_in;
+  input = strm.input;
+  strm.avail_in = dictLength;
+  strm.next_in = 0;
+  strm.input = dictionary;
+  fill_window(s);
+  while (s.lookahead >= MIN_MATCH) {
+    str = s.strstart;
+    n = s.lookahead - (MIN_MATCH - 1);
+    do {
+      /* UPDATE_HASH(s, s->ins_h, s->window[str + MIN_MATCH-1]); */
+      s.ins_h = ((s.ins_h << s.hash_shift) ^ s.window[str + MIN_MATCH - 1]) & s.hash_mask;
+
+      s.prev[str & s.w_mask] = s.head[s.ins_h];
+
+      s.head[s.ins_h] = str;
+      str++;
+    } while (--n);
+    s.strstart = str;
+    s.lookahead = MIN_MATCH - 1;
+    fill_window(s);
+  }
+  s.strstart += s.lookahead;
+  s.block_start = s.strstart;
+  s.insert = s.lookahead;
+  s.lookahead = 0;
+  s.match_length = s.prev_length = MIN_MATCH - 1;
+  s.match_available = 0;
+  strm.next_in = next;
+  strm.input = input;
+  strm.avail_in = avail;
+  s.wrap = wrap;
+  return Z_OK;
+}
+
+
+exports.deflateInit = deflateInit;
+exports.deflateInit2 = deflateInit2;
+exports.deflateReset = deflateReset;
+exports.deflateResetKeep = deflateResetKeep;
+exports.deflateSetHeader = deflateSetHeader;
+exports.deflate = deflate;
+exports.deflateEnd = deflateEnd;
+exports.deflateSetDictionary = deflateSetDictionary;
+exports.deflateInfo = 'pako deflate (from Nodeca project)';
+
+/* Not implemented
+exports.deflateBound = deflateBound;
+exports.deflateCopy = deflateCopy;
+exports.deflateParams = deflateParams;
+exports.deflatePending = deflatePending;
+exports.deflatePrime = deflatePrime;
+exports.deflateTune = deflateTune;
+*/
+
+},{"../utils/common":49,"./adler32":50,"./crc32":52,"./messages":57,"./trees":58}],54:[function(require,module,exports){
+'use strict';
+
+// (C) 1995-2013 Jean-loup Gailly and Mark Adler
+// (C) 2014-2017 Vitaly Puzrin and Andrey Tupitsin
+//
+// This software is provided 'as-is', without any express or implied
+// warranty. In no event will the authors be held liable for any damages
+// arising from the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//   claim that you wrote the original software. If you use this software
+//   in a product, an acknowledgment in the product documentation would be
+//   appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//   misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+
+// See state defs from inflate.js
+var BAD = 30;       /* got a data error -- remain here until reset */
+var TYPE = 12;      /* i: waiting for type bits, including last-flag bit */
+
+/*
+   Decode literal, length, and distance codes and write out the resulting
+   literal and match bytes until either not enough input or output is
+   available, an end-of-block is encountered, or a data error is encountered.
+   When large enough input and output buffers are supplied to inflate(), for
+   example, a 16K input buffer and a 64K output buffer, more than 95% of the
+   inflate execution time is spent in this routine.
+
+   Entry assumptions:
+
+        state.mode === LEN
+        strm.avail_in >= 6
+        strm.avail_out >= 258
+        start >= strm.avail_out
+        state.bits < 8
+
+   On return, state.mode is one of:
+
+        LEN -- ran out of enough output space or enough available input
+        TYPE -- reached end of block code, inflate() to interpret next block
+        BAD -- error in block data
+
+   Notes:
+
+    - The maximum input bits used by a length/distance pair is 15 bits for the
+      length code, 5 bits for the length extra, 15 bits for the distance code,
+      and 13 bits for the distance extra.  This totals 48 bits, or six bytes.
+      Therefore if strm.avail_in >= 6, then there is enough input to avoid
+      checking for available input while decoding.
+
+    - The maximum bytes that a single length/distance pair can output is 258
+      bytes, which is the maximum length that can be coded.  inflate_fast()
+      requires strm.avail_out >= 258 for each loop to avoid checking for
+      output space.
+ */
+module.exports = function inflate_fast(strm, start) {
+  var state;
+  var _in;                    /* local strm.input */
+  var last;                   /* have enough input while in < last */
+  var _out;                   /* local strm.output */
+  var beg;                    /* inflate()'s initial strm.output */
+  var end;                    /* while out < end, enough space available */
+//#ifdef INFLATE_STRICT
+  var dmax;                   /* maximum distance from zlib header */
+//#endif
+  var wsize;                  /* window size or zero if not using window */
+  var whave;                  /* valid bytes in the window */
+  var wnext;                  /* window write index */
+  // Use `s_window` instead `window`, avoid conflict with instrumentation tools
+  var s_window;               /* allocated sliding window, if wsize != 0 */
+  var hold;                   /* local strm.hold */
+  var bits;                   /* local strm.bits */
+  var lcode;                  /* local strm.lencode */
+  var dcode;                  /* local strm.distcode */
+  var lmask;                  /* mask for first level of length codes */
+  var dmask;                  /* mask for first level of distance codes */
+  var here;                   /* retrieved table entry */
+  var op;                     /* code bits, operation, extra bits, or */
+                              /*  window position, window bytes to copy */
+  var len;                    /* match length, unused bytes */
+  var dist;                   /* match distance */
+  var from;                   /* where to copy match from */
+  var from_source;
+
+
+  var input, output; // JS specific, because we have no pointers
+
+  /* copy state to local variables */
+  state = strm.state;
+  //here = state.here;
+  _in = strm.next_in;
+  input = strm.input;
+  last = _in + (strm.avail_in - 5);
+  _out = strm.next_out;
+  output = strm.output;
+  beg = _out - (start - strm.avail_out);
+  end = _out + (strm.avail_out - 257);
+//#ifdef INFLATE_STRICT
+  dmax = state.dmax;
+//#endif
+  wsize = state.wsize;
+  whave = state.whave;
+  wnext = state.wnext;
+  s_window = state.window;
+  hold = state.hold;
+  bits = state.bits;
+  lcode = state.lencode;
+  dcode = state.distcode;
+  lmask = (1 << state.lenbits) - 1;
+  dmask = (1 << state.distbits) - 1;
+
+
+  /* decode literals and length/distances until end-of-block or not enough
+     input data or output space */
+
+  top:
+  do {
+    if (bits < 15) {
+      hold += input[_in++] << bits;
+      bits += 8;
+      hold += input[_in++] << bits;
+      bits += 8;
+    }
+
+    here = lcode[hold & lmask];
+
+    dolen:
+    for (;;) { // Goto emulation
+      op = here >>> 24/*here.bits*/;
+      hold >>>= op;
+      bits -= op;
+      op = (here >>> 16) & 0xff/*here.op*/;
+      if (op === 0) {                          /* literal */
+        //Tracevv((stderr, here.val >= 0x20 && here.val < 0x7f ?
+        //        "inflate:         literal '%c'\n" :
+        //        "inflate:         literal 0x%02x\n", here.val));
+        output[_out++] = here & 0xffff/*here.val*/;
+      }
+      else if (op & 16) {                     /* length base */
+        len = here & 0xffff/*here.val*/;
+        op &= 15;                           /* number of extra bits */
+        if (op) {
+          if (bits < op) {
+            hold += input[_in++] << bits;
+            bits += 8;
+          }
+          len += hold & ((1 << op) - 1);
+          hold >>>= op;
+          bits -= op;
+        }
+        //Tracevv((stderr, "inflate:         length %u\n", len));
+        if (bits < 15) {
+          hold += input[_in++] << bits;
+          bits += 8;
+          hold += input[_in++] << bits;
+          bits += 8;
+        }
+        here = dcode[hold & dmask];
+
+        dodist:
+        for (;;) { // goto emulation
+          op = here >>> 24/*here.bits*/;
+          hold >>>= op;
+          bits -= op;
+          op = (here >>> 16) & 0xff/*here.op*/;
+
+          if (op & 16) {                      /* distance base */
+            dist = here & 0xffff/*here.val*/;
+            op &= 15;                       /* number of extra bits */
+            if (bits < op) {
+              hold += input[_in++] << bits;
+              bits += 8;
+              if (bits < op) {
+                hold += input[_in++] << bits;
+                bits += 8;
+              }
+            }
+            dist += hold & ((1 << op) - 1);
+//#ifdef INFLATE_STRICT
+            if (dist > dmax) {
+              strm.msg = 'invalid distance too far back';
+              state.mode = BAD;
+              break top;
+            }
+//#endif
+            hold >>>= op;
+            bits -= op;
+            //Tracevv((stderr, "inflate:         distance %u\n", dist));
+            op = _out - beg;                /* max distance in output */
+            if (dist > op) {                /* see if copy from window */
+              op = dist - op;               /* distance back in window */
+              if (op > whave) {
+                if (state.sane) {
+                  strm.msg = 'invalid distance too far back';
+                  state.mode = BAD;
+                  break top;
+                }
+
+// (!) This block is disabled in zlib defaults,
+// don't enable it for binary compatibility
+//#ifdef INFLATE_ALLOW_INVALID_DISTANCE_TOOFAR_ARRR
+//                if (len <= op - whave) {
+//                  do {
+//                    output[_out++] = 0;
+//                  } while (--len);
+//                  continue top;
+//                }
+//                len -= op - whave;
+//                do {
+//                  output[_out++] = 0;
+//                } while (--op > whave);
+//                if (op === 0) {
+//                  from = _out - dist;
+//                  do {
+//                    output[_out++] = output[from++];
+//                  } while (--len);
+//                  continue top;
+//                }
+//#endif
+              }
+              from = 0; // window index
+              from_source = s_window;
+              if (wnext === 0) {           /* very common case */
+                from += wsize - op;
+                if (op < len) {         /* some from window */
+                  len -= op;
+                  do {
+                    output[_out++] = s_window[from++];
+                  } while (--op);
+                  from = _out - dist;  /* rest from output */
+                  from_source = output;
+                }
+              }
+              else if (wnext < op) {      /* wrap around window */
+                from += wsize + wnext - op;
+                op -= wnext;
+                if (op < len) {         /* some from end of window */
+                  len -= op;
+                  do {
+                    output[_out++] = s_window[from++];
+                  } while (--op);
+                  from = 0;
+                  if (wnext < len) {  /* some from start of window */
+                    op = wnext;
+                    len -= op;
+                    do {
+                      output[_out++] = s_window[from++];
+                    } while (--op);
+                    from = _out - dist;      /* rest from output */
+                    from_source = output;
+                  }
+                }
+              }
+              else {                      /* contiguous in window */
+                from += wnext - op;
+                if (op < len) {         /* some from window */
+                  len -= op;
+                  do {
+                    output[_out++] = s_window[from++];
+                  } while (--op);
+                  from = _out - dist;  /* rest from output */
+                  from_source = output;
+                }
+              }
+              while (len > 2) {
+                output[_out++] = from_source[from++];
+                output[_out++] = from_source[from++];
+                output[_out++] = from_source[from++];
+                len -= 3;
+              }
+              if (len) {
+                output[_out++] = from_source[from++];
+                if (len > 1) {
+                  output[_out++] = from_source[from++];
+                }
+              }
+            }
+            else {
+              from = _out - dist;          /* copy direct from output */
+              do {                        /* minimum length is three */
+                output[_out++] = output[from++];
+                output[_out++] = output[from++];
+                output[_out++] = output[from++];
+                len -= 3;
+              } while (len > 2);
+              if (len) {
+                output[_out++] = output[from++];
+                if (len > 1) {
+                  output[_out++] = output[from++];
+                }
+              }
+            }
+          }
+          else if ((op & 64) === 0) {          /* 2nd level distance code */
+            here = dcode[(here & 0xffff)/*here.val*/ + (hold & ((1 << op) - 1))];
+            continue dodist;
+          }
+          else {
+            strm.msg = 'invalid distance code';
+            state.mode = BAD;
+            break top;
+          }
+
+          break; // need to emulate goto via "continue"
+        }
+      }
+      else if ((op & 64) === 0) {              /* 2nd level length code */
+        here = lcode[(here & 0xffff)/*here.val*/ + (hold & ((1 << op) - 1))];
+        continue dolen;
+      }
+      else if (op & 32) {                     /* end-of-block */
+        //Tracevv((stderr, "inflate:         end of block\n"));
+        state.mode = TYPE;
+        break top;
+      }
+      else {
+        strm.msg = 'invalid literal/length code';
+        state.mode = BAD;
+        break top;
+      }
+
+      break; // need to emulate goto via "continue"
+    }
+  } while (_in < last && _out < end);
+
+  /* return unused bytes (on entry, bits < 8, so in won't go too far back) */
+  len = bits >> 3;
+  _in -= len;
+  bits -= len << 3;
+  hold &= (1 << bits) - 1;
+
+  /* update state and return */
+  strm.next_in = _in;
+  strm.next_out = _out;
+  strm.avail_in = (_in < last ? 5 + (last - _in) : 5 - (_in - last));
+  strm.avail_out = (_out < end ? 257 + (end - _out) : 257 - (_out - end));
+  state.hold = hold;
+  state.bits = bits;
+  return;
+};
+
+},{}],55:[function(require,module,exports){
+'use strict';
+
+// (C) 1995-2013 Jean-loup Gailly and Mark Adler
+// (C) 2014-2017 Vitaly Puzrin and Andrey Tupitsin
+//
+// This software is provided 'as-is', without any express or implied
+// warranty. In no event will the authors be held liable for any damages
+// arising from the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//   claim that you wrote the original software. If you use this software
+//   in a product, an acknowledgment in the product documentation would be
+//   appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//   misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+
+var utils         = require('../utils/common');
+var adler32       = require('./adler32');
+var crc32         = require('./crc32');
+var inflate_fast  = require('./inffast');
+var inflate_table = require('./inftrees');
+
+var CODES = 0;
+var LENS = 1;
+var DISTS = 2;
+
+/* Public constants ==========================================================*/
+/* ===========================================================================*/
+
+
+/* Allowed flush values; see deflate() and inflate() below for details */
+//var Z_NO_FLUSH      = 0;
+//var Z_PARTIAL_FLUSH = 1;
+//var Z_SYNC_FLUSH    = 2;
+//var Z_FULL_FLUSH    = 3;
+var Z_FINISH        = 4;
+var Z_BLOCK         = 5;
+var Z_TREES         = 6;
+
+
+/* Return codes for the compression/decompression functions. Negative values
+ * are errors, positive values are used for special but normal events.
+ */
+var Z_OK            = 0;
+var Z_STREAM_END    = 1;
+var Z_NEED_DICT     = 2;
+//var Z_ERRNO         = -1;
+var Z_STREAM_ERROR  = -2;
+var Z_DATA_ERROR    = -3;
+var Z_MEM_ERROR     = -4;
+var Z_BUF_ERROR     = -5;
+//var Z_VERSION_ERROR = -6;
+
+/* The deflate compression method */
+var Z_DEFLATED  = 8;
+
+
+/* STATES ====================================================================*/
+/* ===========================================================================*/
+
+
+var    HEAD = 1;       /* i: waiting for magic header */
+var    FLAGS = 2;      /* i: waiting for method and flags (gzip) */
+var    TIME = 3;       /* i: waiting for modification time (gzip) */
+var    OS = 4;         /* i: waiting for extra flags and operating system (gzip) */
+var    EXLEN = 5;      /* i: waiting for extra length (gzip) */
+var    EXTRA = 6;      /* i: waiting for extra bytes (gzip) */
+var    NAME = 7;       /* i: waiting for end of file name (gzip) */
+var    COMMENT = 8;    /* i: waiting for end of comment (gzip) */
+var    HCRC = 9;       /* i: waiting for header crc (gzip) */
+var    DICTID = 10;    /* i: waiting for dictionary check value */
+var    DICT = 11;      /* waiting for inflateSetDictionary() call */
+var        TYPE = 12;      /* i: waiting for type bits, including last-flag bit */
+var        TYPEDO = 13;    /* i: same, but skip check to exit inflate on new block */
+var        STORED = 14;    /* i: waiting for stored size (length and complement) */
+var        COPY_ = 15;     /* i/o: same as COPY below, but only first time in */
+var        COPY = 16;      /* i/o: waiting for input or output to copy stored block */
+var        TABLE = 17;     /* i: waiting for dynamic block table lengths */
+var        LENLENS = 18;   /* i: waiting for code length code lengths */
+var        CODELENS = 19;  /* i: waiting for length/lit and distance code lengths */
+var            LEN_ = 20;      /* i: same as LEN below, but only first time in */
+var            LEN = 21;       /* i: waiting for length/lit/eob code */
+var            LENEXT = 22;    /* i: waiting for length extra bits */
+var            DIST = 23;      /* i: waiting for distance code */
+var            DISTEXT = 24;   /* i: waiting for distance extra bits */
+var            MATCH = 25;     /* o: waiting for output space to copy string */
+var            LIT = 26;       /* o: waiting for output space to write literal */
+var    CHECK = 27;     /* i: waiting for 32-bit check value */
+var    LENGTH = 28;    /* i: waiting for 32-bit length (gzip) */
+var    DONE = 29;      /* finished check, done -- remain here until reset */
+var    BAD = 30;       /* got a data error -- remain here until reset */
+var    MEM = 31;       /* got an inflate() memory error -- remain here until reset */
+var    SYNC = 32;      /* looking for synchronization bytes to restart inflate() */
+
+/* ===========================================================================*/
+
+
+
+var ENOUGH_LENS = 852;
+var ENOUGH_DISTS = 592;
+//var ENOUGH =  (ENOUGH_LENS+ENOUGH_DISTS);
+
+var MAX_WBITS = 15;
+/* 32K LZ77 window */
+var DEF_WBITS = MAX_WBITS;
+
+
+function zswap32(q) {
+  return  (((q >>> 24) & 0xff) +
+          ((q >>> 8) & 0xff00) +
+          ((q & 0xff00) << 8) +
+          ((q & 0xff) << 24));
+}
+
+
+function InflateState() {
+  this.mode = 0;             /* current inflate mode */
+  this.last = false;          /* true if processing last block */
+  this.wrap = 0;              /* bit 0 true for zlib, bit 1 true for gzip */
+  this.havedict = false;      /* true if dictionary provided */
+  this.flags = 0;             /* gzip header method and flags (0 if zlib) */
+  this.dmax = 0;              /* zlib header max distance (INFLATE_STRICT) */
+  this.check = 0;             /* protected copy of check value */
+  this.total = 0;             /* protected copy of output count */
+  // TODO: may be {}
+  this.head = null;           /* where to save gzip header information */
+
+  /* sliding window */
+  this.wbits = 0;             /* log base 2 of requested window size */
+  this.wsize = 0;             /* window size or zero if not using window */
+  this.whave = 0;             /* valid bytes in the window */
+  this.wnext = 0;             /* window write index */
+  this.window = null;         /* allocated sliding window, if needed */
+
+  /* bit accumulator */
+  this.hold = 0;              /* input bit accumulator */
+  this.bits = 0;              /* number of bits in "in" */
+
+  /* for string and stored block copying */
+  this.length = 0;            /* literal or length of data to copy */
+  this.offset = 0;            /* distance back to copy string from */
+
+  /* for table and code decoding */
+  this.extra = 0;             /* extra bits needed */
+
+  /* fixed and dynamic code tables */
+  this.lencode = null;          /* starting table for length/literal codes */
+  this.distcode = null;         /* starting table for distance codes */
+  this.lenbits = 0;           /* index bits for lencode */
+  this.distbits = 0;          /* index bits for distcode */
+
+  /* dynamic table building */
+  this.ncode = 0;             /* number of code length code lengths */
+  this.nlen = 0;              /* number of length code lengths */
+  this.ndist = 0;             /* number of distance code lengths */
+  this.have = 0;              /* number of code lengths in lens[] */
+  this.next = null;              /* next available space in codes[] */
+
+  this.lens = new utils.Buf16(320); /* temporary storage for code lengths */
+  this.work = new utils.Buf16(288); /* work area for code table building */
+
+  /*
+   because we don't have pointers in js, we use lencode and distcode directly
+   as buffers so we don't need codes
+  */
+  //this.codes = new utils.Buf32(ENOUGH);       /* space for code tables */
+  this.lendyn = null;              /* dynamic table for length/literal codes (JS specific) */
+  this.distdyn = null;             /* dynamic table for distance codes (JS specific) */
+  this.sane = 0;                   /* if false, allow invalid distance too far */
+  this.back = 0;                   /* bits back of last unprocessed length/lit */
+  this.was = 0;                    /* initial length of match */
+}
+
+function inflateResetKeep(strm) {
+  var state;
+
+  if (!strm || !strm.state) { return Z_STREAM_ERROR; }
+  state = strm.state;
+  strm.total_in = strm.total_out = state.total = 0;
+  strm.msg = ''; /*Z_NULL*/
+  if (state.wrap) {       /* to support ill-conceived Java test suite */
+    strm.adler = state.wrap & 1;
+  }
+  state.mode = HEAD;
+  state.last = 0;
+  state.havedict = 0;
+  state.dmax = 32768;
+  state.head = null/*Z_NULL*/;
+  state.hold = 0;
+  state.bits = 0;
+  //state.lencode = state.distcode = state.next = state.codes;
+  state.lencode = state.lendyn = new utils.Buf32(ENOUGH_LENS);
+  state.distcode = state.distdyn = new utils.Buf32(ENOUGH_DISTS);
+
+  state.sane = 1;
+  state.back = -1;
+  //Tracev((stderr, "inflate: reset\n"));
+  return Z_OK;
+}
+
+function inflateReset(strm) {
+  var state;
+
+  if (!strm || !strm.state) { return Z_STREAM_ERROR; }
+  state = strm.state;
+  state.wsize = 0;
+  state.whave = 0;
+  state.wnext = 0;
+  return inflateResetKeep(strm);
+
+}
+
+function inflateReset2(strm, windowBits) {
+  var wrap;
+  var state;
+
+  /* get the state */
+  if (!strm || !strm.state) { return Z_STREAM_ERROR; }
+  state = strm.state;
+
+  /* extract wrap request from windowBits parameter */
+  if (windowBits < 0) {
+    wrap = 0;
+    windowBits = -windowBits;
+  }
+  else {
+    wrap = (windowBits >> 4) + 1;
+    if (windowBits < 48) {
+      windowBits &= 15;
+    }
+  }
+
+  /* set number of window bits, free window if different */
+  if (windowBits && (windowBits < 8 || windowBits > 15)) {
+    return Z_STREAM_ERROR;
+  }
+  if (state.window !== null && state.wbits !== windowBits) {
+    state.window = null;
+  }
+
+  /* update state and reset the rest of it */
+  state.wrap = wrap;
+  state.wbits = windowBits;
+  return inflateReset(strm);
+}
+
+function inflateInit2(strm, windowBits) {
+  var ret;
+  var state;
+
+  if (!strm) { return Z_STREAM_ERROR; }
+  //strm.msg = Z_NULL;                 /* in case we return an error */
+
+  state = new InflateState();
+
+  //if (state === Z_NULL) return Z_MEM_ERROR;
+  //Tracev((stderr, "inflate: allocated\n"));
+  strm.state = state;
+  state.window = null/*Z_NULL*/;
+  ret = inflateReset2(strm, windowBits);
+  if (ret !== Z_OK) {
+    strm.state = null/*Z_NULL*/;
+  }
+  return ret;
+}
+
+function inflateInit(strm) {
+  return inflateInit2(strm, DEF_WBITS);
+}
+
+
+/*
+ Return state with length and distance decoding tables and index sizes set to
+ fixed code decoding.  Normally this returns fixed tables from inffixed.h.
+ If BUILDFIXED is defined, then instead this routine builds the tables the
+ first time it's called, and returns those tables the first time and
+ thereafter.  This reduces the size of the code by about 2K bytes, in
+ exchange for a little execution time.  However, BUILDFIXED should not be
+ used for threaded applications, since the rewriting of the tables and virgin
+ may not be thread-safe.
+ */
+var virgin = true;
+
+var lenfix, distfix; // We have no pointers in JS, so keep tables separate
+
+function fixedtables(state) {
+  /* build fixed huffman tables if first call (may not be thread safe) */
+  if (virgin) {
+    var sym;
+
+    lenfix = new utils.Buf32(512);
+    distfix = new utils.Buf32(32);
+
+    /* literal/length table */
+    sym = 0;
+    while (sym < 144) { state.lens[sym++] = 8; }
+    while (sym < 256) { state.lens[sym++] = 9; }
+    while (sym < 280) { state.lens[sym++] = 7; }
+    while (sym < 288) { state.lens[sym++] = 8; }
+
+    inflate_table(LENS,  state.lens, 0, 288, lenfix,   0, state.work, { bits: 9 });
+
+    /* distance table */
+    sym = 0;
+    while (sym < 32) { state.lens[sym++] = 5; }
+
+    inflate_table(DISTS, state.lens, 0, 32,   distfix, 0, state.work, { bits: 5 });
+
+    /* do this just once */
+    virgin = false;
+  }
+
+  state.lencode = lenfix;
+  state.lenbits = 9;
+  state.distcode = distfix;
+  state.distbits = 5;
+}
+
+
+/*
+ Update the window with the last wsize (normally 32K) bytes written before
+ returning.  If window does not exist yet, create it.  This is only called
+ when a window is already in use, or when output has been written during this
+ inflate call, but the end of the deflate stream has not been reached yet.
+ It is also called to create a window for dictionary data when a dictionary
+ is loaded.
+
+ Providing output buffers larger than 32K to inflate() should provide a speed
+ advantage, since only the last 32K of output is copied to the sliding window
+ upon return from inflate(), and since all distances after the first 32K of
+ output will fall in the output data, making match copies simpler and faster.
+ The advantage may be dependent on the size of the processor's data caches.
+ */
+function updatewindow(strm, src, end, copy) {
+  var dist;
+  var state = strm.state;
+
+  /* if it hasn't been done already, allocate space for the window */
+  if (state.window === null) {
+    state.wsize = 1 << state.wbits;
+    state.wnext = 0;
+    state.whave = 0;
+
+    state.window = new utils.Buf8(state.wsize);
+  }
+
+  /* copy state->wsize or less output bytes into the circular window */
+  if (copy >= state.wsize) {
+    utils.arraySet(state.window, src, end - state.wsize, state.wsize, 0);
+    state.wnext = 0;
+    state.whave = state.wsize;
+  }
+  else {
+    dist = state.wsize - state.wnext;
+    if (dist > copy) {
+      dist = copy;
+    }
+    //zmemcpy(state->window + state->wnext, end - copy, dist);
+    utils.arraySet(state.window, src, end - copy, dist, state.wnext);
+    copy -= dist;
+    if (copy) {
+      //zmemcpy(state->window, end - copy, copy);
+      utils.arraySet(state.window, src, end - copy, copy, 0);
+      state.wnext = copy;
+      state.whave = state.wsize;
+    }
+    else {
+      state.wnext += dist;
+      if (state.wnext === state.wsize) { state.wnext = 0; }
+      if (state.whave < state.wsize) { state.whave += dist; }
+    }
+  }
+  return 0;
+}
+
+function inflate(strm, flush) {
+  var state;
+  var input, output;          // input/output buffers
+  var next;                   /* next input INDEX */
+  var put;                    /* next output INDEX */
+  var have, left;             /* available input and output */
+  var hold;                   /* bit buffer */
+  var bits;                   /* bits in bit buffer */
+  var _in, _out;              /* save starting available input and output */
+  var copy;                   /* number of stored or match bytes to copy */
+  var from;                   /* where to copy match bytes from */
+  var from_source;
+  var here = 0;               /* current decoding table entry */
+  var here_bits, here_op, here_val; // paked "here" denormalized (JS specific)
+  //var last;                   /* parent table entry */
+  var last_bits, last_op, last_val; // paked "last" denormalized (JS specific)
+  var len;                    /* length to copy for repeats, bits to drop */
+  var ret;                    /* return code */
+  var hbuf = new utils.Buf8(4);    /* buffer for gzip header crc calculation */
+  var opts;
+
+  var n; // temporary var for NEED_BITS
+
+  var order = /* permutation of code lengths */
+    [ 16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15 ];
+
+
+  if (!strm || !strm.state || !strm.output ||
+      (!strm.input && strm.avail_in !== 0)) {
+    return Z_STREAM_ERROR;
+  }
+
+  state = strm.state;
+  if (state.mode === TYPE) { state.mode = TYPEDO; }    /* skip check */
+
+
+  //--- LOAD() ---
+  put = strm.next_out;
+  output = strm.output;
+  left = strm.avail_out;
+  next = strm.next_in;
+  input = strm.input;
+  have = strm.avail_in;
+  hold = state.hold;
+  bits = state.bits;
+  //---
+
+  _in = have;
+  _out = left;
+  ret = Z_OK;
+
+  inf_leave: // goto emulation
+  for (;;) {
+    switch (state.mode) {
+      case HEAD:
+        if (state.wrap === 0) {
+          state.mode = TYPEDO;
+          break;
+        }
+        //=== NEEDBITS(16);
+        while (bits < 16) {
+          if (have === 0) { break inf_leave; }
+          have--;
+          hold += input[next++] << bits;
+          bits += 8;
+        }
+        //===//
+        if ((state.wrap & 2) && hold === 0x8b1f) {  /* gzip header */
+          state.check = 0/*crc32(0L, Z_NULL, 0)*/;
+          //=== CRC2(state.check, hold);
+          hbuf[0] = hold & 0xff;
+          hbuf[1] = (hold >>> 8) & 0xff;
+          state.check = crc32(state.check, hbuf, 2, 0);
+          //===//
+
           //=== INITBITS();
           hold = 0;
           bits = 0;
@@ -13821,7 +17425,7 @@ exports.inflateSyncPoint = inflateSyncPoint;
 exports.inflateUndermine = inflateUndermine;
 */
 
-},{"../utils/common":44,"./adler32":45,"./crc32":47,"./inffast":49,"./inftrees":51}],51:[function(require,module,exports){
+},{"../utils/common":49,"./adler32":50,"./crc32":52,"./inffast":54,"./inftrees":56}],56:[function(require,module,exports){
 'use strict';
 
 // (C) 1995-2013 Jean-loup Gailly and Mark Adler
@@ -14166,7 +17770,7 @@ module.exports = function inflate_table(type, lens, lens_index, codes, table, ta
   return 0;
 };
 
-},{"../utils/common":44}],52:[function(require,module,exports){
+},{"../utils/common":49}],57:[function(require,module,exports){
 'use strict';
 
 // (C) 1995-2013 Jean-loup Gailly and Mark Adler
@@ -14200,7 +17804,7 @@ module.exports = {
   '-6':   'incompatible version' /* Z_VERSION_ERROR (-6) */
 };
 
-},{}],53:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 'use strict';
 
 // (C) 1995-2013 Jean-loup Gailly and Mark Adler
@@ -14233,6 +17837,15677 @@ var utils = require('../utils/common');
 //var Z_RLE               = 3;
 var Z_FIXED               = 4;
 //var Z_DEFAULT_STRATEGY  = 0;
+
+/* Possible values of the data_type field (though see inflate()) */
+var Z_BINARY              = 0;
+var Z_TEXT                = 1;
+//var Z_ASCII             = 1; // = Z_TEXT
+var Z_UNKNOWN             = 2;
+
+/*============================================================================*/
+
+
+function zero(buf) { var len = buf.length; while (--len >= 0) { buf[len] = 0; } }
+
+// From zutil.h
+
+var STORED_BLOCK = 0;
+var STATIC_TREES = 1;
+var DYN_TREES    = 2;
+/* The three kinds of block type */
+
+var MIN_MATCH    = 3;
+var MAX_MATCH    = 258;
+/* The minimum and maximum match lengths */
+
+// From deflate.h
+/* ===========================================================================
+ * Internal compression state.
+ */
+
+var LENGTH_CODES  = 29;
+/* number of length codes, not counting the special END_BLOCK code */
+
+var LITERALS      = 256;
+/* number of literal bytes 0..255 */
+
+var L_CODES       = LITERALS + 1 + LENGTH_CODES;
+/* number of Literal or Length codes, including the END_BLOCK code */
+
+var D_CODES       = 30;
+/* number of distance codes */
+
+var BL_CODES      = 19;
+/* number of codes used to transfer the bit lengths */
+
+var HEAP_SIZE     = 2 * L_CODES + 1;
+/* maximum heap size */
+
+var MAX_BITS      = 15;
+/* All codes must not exceed MAX_BITS bits */
+
+var Buf_size      = 16;
+/* size of bit buffer in bi_buf */
+
+
+/* ===========================================================================
+ * Constants
+ */
+
+var MAX_BL_BITS = 7;
+/* Bit length codes must not exceed MAX_BL_BITS bits */
+
+var END_BLOCK   = 256;
+/* end of block literal code */
+
+var REP_3_6     = 16;
+/* repeat previous bit length 3-6 times (2 bits of repeat count) */
+
+var REPZ_3_10   = 17;
+/* repeat a zero length 3-10 times  (3 bits of repeat count) */
+
+var REPZ_11_138 = 18;
+/* repeat a zero length 11-138 times  (7 bits of repeat count) */
+
+/* eslint-disable comma-spacing,array-bracket-spacing */
+var extra_lbits =   /* extra bits for each length code */
+  [0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0];
+
+var extra_dbits =   /* extra bits for each distance code */
+  [0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13];
+
+var extra_blbits =  /* extra bits for each bit length code */
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,7];
+
+var bl_order =
+  [16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15];
+/* eslint-enable comma-spacing,array-bracket-spacing */
+
+/* The lengths of the bit length codes are sent in order of decreasing
+ * probability, to avoid transmitting the lengths for unused bit length codes.
+ */
+
+/* ===========================================================================
+ * Local data. These are initialized only once.
+ */
+
+// We pre-fill arrays with 0 to avoid uninitialized gaps
+
+var DIST_CODE_LEN = 512; /* see definition of array dist_code below */
+
+// !!!! Use flat array instead of structure, Freq = i*2, Len = i*2+1
+var static_ltree  = new Array((L_CODES + 2) * 2);
+zero(static_ltree);
+/* The static literal tree. Since the bit lengths are imposed, there is no
+ * need for the L_CODES extra codes used during heap construction. However
+ * The codes 286 and 287 are needed to build a canonical tree (see _tr_init
+ * below).
+ */
+
+var static_dtree  = new Array(D_CODES * 2);
+zero(static_dtree);
+/* The static distance tree. (Actually a trivial tree since all codes use
+ * 5 bits.)
+ */
+
+var _dist_code    = new Array(DIST_CODE_LEN);
+zero(_dist_code);
+/* Distance codes. The first 256 values correspond to the distances
+ * 3 .. 258, the last 256 values correspond to the top 8 bits of
+ * the 15 bit distances.
+ */
+
+var _length_code  = new Array(MAX_MATCH - MIN_MATCH + 1);
+zero(_length_code);
+/* length code for each normalized match length (0 == MIN_MATCH) */
+
+var base_length   = new Array(LENGTH_CODES);
+zero(base_length);
+/* First normalized length for each code (0 = MIN_MATCH) */
+
+var base_dist     = new Array(D_CODES);
+zero(base_dist);
+/* First normalized distance for each code (0 = distance of 1) */
+
+
+function StaticTreeDesc(static_tree, extra_bits, extra_base, elems, max_length) {
+
+  this.static_tree  = static_tree;  /* static tree or NULL */
+  this.extra_bits   = extra_bits;   /* extra bits for each code or NULL */
+  this.extra_base   = extra_base;   /* base index for extra_bits */
+  this.elems        = elems;        /* max number of elements in the tree */
+  this.max_length   = max_length;   /* max bit length for the codes */
+
+  // show if `static_tree` has data or dummy - needed for monomorphic objects
+  this.has_stree    = static_tree && static_tree.length;
+}
+
+
+var static_l_desc;
+var static_d_desc;
+var static_bl_desc;
+
+
+function TreeDesc(dyn_tree, stat_desc) {
+  this.dyn_tree = dyn_tree;     /* the dynamic tree */
+  this.max_code = 0;            /* largest code with non zero frequency */
+  this.stat_desc = stat_desc;   /* the corresponding static tree */
+}
+
+
+
+function d_code(dist) {
+  return dist < 256 ? _dist_code[dist] : _dist_code[256 + (dist >>> 7)];
+}
+
+
+/* ===========================================================================
+ * Output a short LSB first on the stream.
+ * IN assertion: there is enough room in pendingBuf.
+ */
+function put_short(s, w) {
+//    put_byte(s, (uch)((w) & 0xff));
+//    put_byte(s, (uch)((ush)(w) >> 8));
+  s.pending_buf[s.pending++] = (w) & 0xff;
+  s.pending_buf[s.pending++] = (w >>> 8) & 0xff;
+}
+
+
+/* ===========================================================================
+ * Send a value on a given number of bits.
+ * IN assertion: length <= 16 and value fits in length bits.
+ */
+function send_bits(s, value, length) {
+  if (s.bi_valid > (Buf_size - length)) {
+    s.bi_buf |= (value << s.bi_valid) & 0xffff;
+    put_short(s, s.bi_buf);
+    s.bi_buf = value >> (Buf_size - s.bi_valid);
+    s.bi_valid += length - Buf_size;
+  } else {
+    s.bi_buf |= (value << s.bi_valid) & 0xffff;
+    s.bi_valid += length;
+  }
+}
+
+
+function send_code(s, c, tree) {
+  send_bits(s, tree[c * 2]/*.Code*/, tree[c * 2 + 1]/*.Len*/);
+}
+
+
+/* ===========================================================================
+ * Reverse the first len bits of a code, using straightforward code (a faster
+ * method would use a table)
+ * IN assertion: 1 <= len <= 15
+ */
+function bi_reverse(code, len) {
+  var res = 0;
+  do {
+    res |= code & 1;
+    code >>>= 1;
+    res <<= 1;
+  } while (--len > 0);
+  return res >>> 1;
+}
+
+
+/* ===========================================================================
+ * Flush the bit buffer, keeping at most 7 bits in it.
+ */
+function bi_flush(s) {
+  if (s.bi_valid === 16) {
+    put_short(s, s.bi_buf);
+    s.bi_buf = 0;
+    s.bi_valid = 0;
+
+  } else if (s.bi_valid >= 8) {
+    s.pending_buf[s.pending++] = s.bi_buf & 0xff;
+    s.bi_buf >>= 8;
+    s.bi_valid -= 8;
+  }
+}
+
+
+/* ===========================================================================
+ * Compute the optimal bit lengths for a tree and update the total bit length
+ * for the current block.
+ * IN assertion: the fields freq and dad are set, heap[heap_max] and
+ *    above are the tree nodes sorted by increasing frequency.
+ * OUT assertions: the field len is set to the optimal bit length, the
+ *     array bl_count contains the frequencies for each bit length.
+ *     The length opt_len is updated; static_len is also updated if stree is
+ *     not null.
+ */
+function gen_bitlen(s, desc)
+//    deflate_state *s;
+//    tree_desc *desc;    /* the tree descriptor */
+{
+  var tree            = desc.dyn_tree;
+  var max_code        = desc.max_code;
+  var stree           = desc.stat_desc.static_tree;
+  var has_stree       = desc.stat_desc.has_stree;
+  var extra           = desc.stat_desc.extra_bits;
+  var base            = desc.stat_desc.extra_base;
+  var max_length      = desc.stat_desc.max_length;
+  var h;              /* heap index */
+  var n, m;           /* iterate over the tree elements */
+  var bits;           /* bit length */
+  var xbits;          /* extra bits */
+  var f;              /* frequency */
+  var overflow = 0;   /* number of elements with bit length too large */
+
+  for (bits = 0; bits <= MAX_BITS; bits++) {
+    s.bl_count[bits] = 0;
+  }
+
+  /* In a first pass, compute the optimal bit lengths (which may
+   * overflow in the case of the bit length tree).
+   */
+  tree[s.heap[s.heap_max] * 2 + 1]/*.Len*/ = 0; /* root of the heap */
+
+  for (h = s.heap_max + 1; h < HEAP_SIZE; h++) {
+    n = s.heap[h];
+    bits = tree[tree[n * 2 + 1]/*.Dad*/ * 2 + 1]/*.Len*/ + 1;
+    if (bits > max_length) {
+      bits = max_length;
+      overflow++;
+    }
+    tree[n * 2 + 1]/*.Len*/ = bits;
+    /* We overwrite tree[n].Dad which is no longer needed */
+
+    if (n > max_code) { continue; } /* not a leaf node */
+
+    s.bl_count[bits]++;
+    xbits = 0;
+    if (n >= base) {
+      xbits = extra[n - base];
+    }
+    f = tree[n * 2]/*.Freq*/;
+    s.opt_len += f * (bits + xbits);
+    if (has_stree) {
+      s.static_len += f * (stree[n * 2 + 1]/*.Len*/ + xbits);
+    }
+  }
+  if (overflow === 0) { return; }
+
+  // Trace((stderr,"\nbit length overflow\n"));
+  /* This happens for example on obj2 and pic of the Calgary corpus */
+
+  /* Find the first bit length which could increase: */
+  do {
+    bits = max_length - 1;
+    while (s.bl_count[bits] === 0) { bits--; }
+    s.bl_count[bits]--;      /* move one leaf down the tree */
+    s.bl_count[bits + 1] += 2; /* move one overflow item as its brother */
+    s.bl_count[max_length]--;
+    /* The brother of the overflow item also moves one step up,
+     * but this does not affect bl_count[max_length]
+     */
+    overflow -= 2;
+  } while (overflow > 0);
+
+  /* Now recompute all bit lengths, scanning in increasing frequency.
+   * h is still equal to HEAP_SIZE. (It is simpler to reconstruct all
+   * lengths instead of fixing only the wrong ones. This idea is taken
+   * from 'ar' written by Haruhiko Okumura.)
+   */
+  for (bits = max_length; bits !== 0; bits--) {
+    n = s.bl_count[bits];
+    while (n !== 0) {
+      m = s.heap[--h];
+      if (m > max_code) { continue; }
+      if (tree[m * 2 + 1]/*.Len*/ !== bits) {
+        // Trace((stderr,"code %d bits %d->%d\n", m, tree[m].Len, bits));
+        s.opt_len += (bits - tree[m * 2 + 1]/*.Len*/) * tree[m * 2]/*.Freq*/;
+        tree[m * 2 + 1]/*.Len*/ = bits;
+      }
+      n--;
+    }
+  }
+}
+
+
+/* ===========================================================================
+ * Generate the codes for a given tree and bit counts (which need not be
+ * optimal).
+ * IN assertion: the array bl_count contains the bit length statistics for
+ * the given tree and the field len is set for all tree elements.
+ * OUT assertion: the field code is set for all tree elements of non
+ *     zero code length.
+ */
+function gen_codes(tree, max_code, bl_count)
+//    ct_data *tree;             /* the tree to decorate */
+//    int max_code;              /* largest code with non zero frequency */
+//    ushf *bl_count;            /* number of codes at each bit length */
+{
+  var next_code = new Array(MAX_BITS + 1); /* next code value for each bit length */
+  var code = 0;              /* running code value */
+  var bits;                  /* bit index */
+  var n;                     /* code index */
+
+  /* The distribution counts are first used to generate the code values
+   * without bit reversal.
+   */
+  for (bits = 1; bits <= MAX_BITS; bits++) {
+    next_code[bits] = code = (code + bl_count[bits - 1]) << 1;
+  }
+  /* Check that the bit counts in bl_count are consistent. The last code
+   * must be all ones.
+   */
+  //Assert (code + bl_count[MAX_BITS]-1 == (1<<MAX_BITS)-1,
+  //        "inconsistent bit counts");
+  //Tracev((stderr,"\ngen_codes: max_code %d ", max_code));
+
+  for (n = 0;  n <= max_code; n++) {
+    var len = tree[n * 2 + 1]/*.Len*/;
+    if (len === 0) { continue; }
+    /* Now reverse the bits */
+    tree[n * 2]/*.Code*/ = bi_reverse(next_code[len]++, len);
+
+    //Tracecv(tree != static_ltree, (stderr,"\nn %3d %c l %2d c %4x (%x) ",
+    //     n, (isgraph(n) ? n : ' '), len, tree[n].Code, next_code[len]-1));
+  }
+}
+
+
+/* ===========================================================================
+ * Initialize the various 'constant' tables.
+ */
+function tr_static_init() {
+  var n;        /* iterates over tree elements */
+  var bits;     /* bit counter */
+  var length;   /* length value */
+  var code;     /* code value */
+  var dist;     /* distance index */
+  var bl_count = new Array(MAX_BITS + 1);
+  /* number of codes at each bit length for an optimal tree */
+
+  // do check in _tr_init()
+  //if (static_init_done) return;
+
+  /* For some embedded targets, global variables are not initialized: */
+/*#ifdef NO_INIT_GLOBAL_POINTERS
+  static_l_desc.static_tree = static_ltree;
+  static_l_desc.extra_bits = extra_lbits;
+  static_d_desc.static_tree = static_dtree;
+  static_d_desc.extra_bits = extra_dbits;
+  static_bl_desc.extra_bits = extra_blbits;
+#endif*/
+
+  /* Initialize the mapping length (0..255) -> length code (0..28) */
+  length = 0;
+  for (code = 0; code < LENGTH_CODES - 1; code++) {
+    base_length[code] = length;
+    for (n = 0; n < (1 << extra_lbits[code]); n++) {
+      _length_code[length++] = code;
+    }
+  }
+  //Assert (length == 256, "tr_static_init: length != 256");
+  /* Note that the length 255 (match length 258) can be represented
+   * in two different ways: code 284 + 5 bits or code 285, so we
+   * overwrite length_code[255] to use the best encoding:
+   */
+  _length_code[length - 1] = code;
+
+  /* Initialize the mapping dist (0..32K) -> dist code (0..29) */
+  dist = 0;
+  for (code = 0; code < 16; code++) {
+    base_dist[code] = dist;
+    for (n = 0; n < (1 << extra_dbits[code]); n++) {
+      _dist_code[dist++] = code;
+    }
+  }
+  //Assert (dist == 256, "tr_static_init: dist != 256");
+  dist >>= 7; /* from now on, all distances are divided by 128 */
+  for (; code < D_CODES; code++) {
+    base_dist[code] = dist << 7;
+    for (n = 0; n < (1 << (extra_dbits[code] - 7)); n++) {
+      _dist_code[256 + dist++] = code;
+    }
+  }
+  //Assert (dist == 256, "tr_static_init: 256+dist != 512");
+
+  /* Construct the codes of the static literal tree */
+  for (bits = 0; bits <= MAX_BITS; bits++) {
+    bl_count[bits] = 0;
+  }
+
+  n = 0;
+  while (n <= 143) {
+    static_ltree[n * 2 + 1]/*.Len*/ = 8;
+    n++;
+    bl_count[8]++;
+  }
+  while (n <= 255) {
+    static_ltree[n * 2 + 1]/*.Len*/ = 9;
+    n++;
+    bl_count[9]++;
+  }
+  while (n <= 279) {
+    static_ltree[n * 2 + 1]/*.Len*/ = 7;
+    n++;
+    bl_count[7]++;
+  }
+  while (n <= 287) {
+    static_ltree[n * 2 + 1]/*.Len*/ = 8;
+    n++;
+    bl_count[8]++;
+  }
+  /* Codes 286 and 287 do not exist, but we must include them in the
+   * tree construction to get a canonical Huffman tree (longest code
+   * all ones)
+   */
+  gen_codes(static_ltree, L_CODES + 1, bl_count);
+
+  /* The static distance tree is trivial: */
+  for (n = 0; n < D_CODES; n++) {
+    static_dtree[n * 2 + 1]/*.Len*/ = 5;
+    static_dtree[n * 2]/*.Code*/ = bi_reverse(n, 5);
+  }
+
+  // Now data ready and we can init static trees
+  static_l_desc = new StaticTreeDesc(static_ltree, extra_lbits, LITERALS + 1, L_CODES, MAX_BITS);
+  static_d_desc = new StaticTreeDesc(static_dtree, extra_dbits, 0,          D_CODES, MAX_BITS);
+  static_bl_desc = new StaticTreeDesc(new Array(0), extra_blbits, 0,         BL_CODES, MAX_BL_BITS);
+
+  //static_init_done = true;
+}
+
+
+/* ===========================================================================
+ * Initialize a new block.
+ */
+function init_block(s) {
+  var n; /* iterates over tree elements */
+
+  /* Initialize the trees. */
+  for (n = 0; n < L_CODES;  n++) { s.dyn_ltree[n * 2]/*.Freq*/ = 0; }
+  for (n = 0; n < D_CODES;  n++) { s.dyn_dtree[n * 2]/*.Freq*/ = 0; }
+  for (n = 0; n < BL_CODES; n++) { s.bl_tree[n * 2]/*.Freq*/ = 0; }
+
+  s.dyn_ltree[END_BLOCK * 2]/*.Freq*/ = 1;
+  s.opt_len = s.static_len = 0;
+  s.last_lit = s.matches = 0;
+}
+
+
+/* ===========================================================================
+ * Flush the bit buffer and align the output on a byte boundary
+ */
+function bi_windup(s)
+{
+  if (s.bi_valid > 8) {
+    put_short(s, s.bi_buf);
+  } else if (s.bi_valid > 0) {
+    //put_byte(s, (Byte)s->bi_buf);
+    s.pending_buf[s.pending++] = s.bi_buf;
+  }
+  s.bi_buf = 0;
+  s.bi_valid = 0;
+}
+
+/* ===========================================================================
+ * Copy a stored block, storing first the length and its
+ * one's complement if requested.
+ */
+function copy_block(s, buf, len, header)
+//DeflateState *s;
+//charf    *buf;    /* the input data */
+//unsigned len;     /* its length */
+//int      header;  /* true if block header must be written */
+{
+  bi_windup(s);        /* align on byte boundary */
+
+  if (header) {
+    put_short(s, len);
+    put_short(s, ~len);
+  }
+//  while (len--) {
+//    put_byte(s, *buf++);
+//  }
+  utils.arraySet(s.pending_buf, s.window, buf, len, s.pending);
+  s.pending += len;
+}
+
+/* ===========================================================================
+ * Compares to subtrees, using the tree depth as tie breaker when
+ * the subtrees have equal frequency. This minimizes the worst case length.
+ */
+function smaller(tree, n, m, depth) {
+  var _n2 = n * 2;
+  var _m2 = m * 2;
+  return (tree[_n2]/*.Freq*/ < tree[_m2]/*.Freq*/ ||
+         (tree[_n2]/*.Freq*/ === tree[_m2]/*.Freq*/ && depth[n] <= depth[m]));
+}
+
+/* ===========================================================================
+ * Restore the heap property by moving down the tree starting at node k,
+ * exchanging a node with the smallest of its two sons if necessary, stopping
+ * when the heap property is re-established (each father smaller than its
+ * two sons).
+ */
+function pqdownheap(s, tree, k)
+//    deflate_state *s;
+//    ct_data *tree;  /* the tree to restore */
+//    int k;               /* node to move down */
+{
+  var v = s.heap[k];
+  var j = k << 1;  /* left son of k */
+  while (j <= s.heap_len) {
+    /* Set j to the smallest of the two sons: */
+    if (j < s.heap_len &&
+      smaller(tree, s.heap[j + 1], s.heap[j], s.depth)) {
+      j++;
+    }
+    /* Exit if v is smaller than both sons */
+    if (smaller(tree, v, s.heap[j], s.depth)) { break; }
+
+    /* Exchange v with the smallest son */
+    s.heap[k] = s.heap[j];
+    k = j;
+
+    /* And continue down the tree, setting j to the left son of k */
+    j <<= 1;
+  }
+  s.heap[k] = v;
+}
+
+
+// inlined manually
+// var SMALLEST = 1;
+
+/* ===========================================================================
+ * Send the block data compressed using the given Huffman trees
+ */
+function compress_block(s, ltree, dtree)
+//    deflate_state *s;
+//    const ct_data *ltree; /* literal tree */
+//    const ct_data *dtree; /* distance tree */
+{
+  var dist;           /* distance of matched string */
+  var lc;             /* match length or unmatched char (if dist == 0) */
+  var lx = 0;         /* running index in l_buf */
+  var code;           /* the code to send */
+  var extra;          /* number of extra bits to send */
+
+  if (s.last_lit !== 0) {
+    do {
+      dist = (s.pending_buf[s.d_buf + lx * 2] << 8) | (s.pending_buf[s.d_buf + lx * 2 + 1]);
+      lc = s.pending_buf[s.l_buf + lx];
+      lx++;
+
+      if (dist === 0) {
+        send_code(s, lc, ltree); /* send a literal byte */
+        //Tracecv(isgraph(lc), (stderr," '%c' ", lc));
+      } else {
+        /* Here, lc is the match length - MIN_MATCH */
+        code = _length_code[lc];
+        send_code(s, code + LITERALS + 1, ltree); /* send the length code */
+        extra = extra_lbits[code];
+        if (extra !== 0) {
+          lc -= base_length[code];
+          send_bits(s, lc, extra);       /* send the extra length bits */
+        }
+        dist--; /* dist is now the match distance - 1 */
+        code = d_code(dist);
+        //Assert (code < D_CODES, "bad d_code");
+
+        send_code(s, code, dtree);       /* send the distance code */
+        extra = extra_dbits[code];
+        if (extra !== 0) {
+          dist -= base_dist[code];
+          send_bits(s, dist, extra);   /* send the extra distance bits */
+        }
+      } /* literal or match pair ? */
+
+      /* Check that the overlay between pending_buf and d_buf+l_buf is ok: */
+      //Assert((uInt)(s->pending) < s->lit_bufsize + 2*lx,
+      //       "pendingBuf overflow");
+
+    } while (lx < s.last_lit);
+  }
+
+  send_code(s, END_BLOCK, ltree);
+}
+
+
+/* ===========================================================================
+ * Construct one Huffman tree and assigns the code bit strings and lengths.
+ * Update the total bit length for the current block.
+ * IN assertion: the field freq is set for all tree elements.
+ * OUT assertions: the fields len and code are set to the optimal bit length
+ *     and corresponding code. The length opt_len is updated; static_len is
+ *     also updated if stree is not null. The field max_code is set.
+ */
+function build_tree(s, desc)
+//    deflate_state *s;
+//    tree_desc *desc; /* the tree descriptor */
+{
+  var tree     = desc.dyn_tree;
+  var stree    = desc.stat_desc.static_tree;
+  var has_stree = desc.stat_desc.has_stree;
+  var elems    = desc.stat_desc.elems;
+  var n, m;          /* iterate over heap elements */
+  var max_code = -1; /* largest code with non zero frequency */
+  var node;          /* new node being created */
+
+  /* Construct the initial heap, with least frequent element in
+   * heap[SMALLEST]. The sons of heap[n] are heap[2*n] and heap[2*n+1].
+   * heap[0] is not used.
+   */
+  s.heap_len = 0;
+  s.heap_max = HEAP_SIZE;
+
+  for (n = 0; n < elems; n++) {
+    if (tree[n * 2]/*.Freq*/ !== 0) {
+      s.heap[++s.heap_len] = max_code = n;
+      s.depth[n] = 0;
+
+    } else {
+      tree[n * 2 + 1]/*.Len*/ = 0;
+    }
+  }
+
+  /* The pkzip format requires that at least one distance code exists,
+   * and that at least one bit should be sent even if there is only one
+   * possible code. So to avoid special checks later on we force at least
+   * two codes of non zero frequency.
+   */
+  while (s.heap_len < 2) {
+    node = s.heap[++s.heap_len] = (max_code < 2 ? ++max_code : 0);
+    tree[node * 2]/*.Freq*/ = 1;
+    s.depth[node] = 0;
+    s.opt_len--;
+
+    if (has_stree) {
+      s.static_len -= stree[node * 2 + 1]/*.Len*/;
+    }
+    /* node is 0 or 1 so it does not have extra bits */
+  }
+  desc.max_code = max_code;
+
+  /* The elements heap[heap_len/2+1 .. heap_len] are leaves of the tree,
+   * establish sub-heaps of increasing lengths:
+   */
+  for (n = (s.heap_len >> 1/*int /2*/); n >= 1; n--) { pqdownheap(s, tree, n); }
+
+  /* Construct the Huffman tree by repeatedly combining the least two
+   * frequent nodes.
+   */
+  node = elems;              /* next internal node of the tree */
+  do {
+    //pqremove(s, tree, n);  /* n = node of least frequency */
+    /*** pqremove ***/
+    n = s.heap[1/*SMALLEST*/];
+    s.heap[1/*SMALLEST*/] = s.heap[s.heap_len--];
+    pqdownheap(s, tree, 1/*SMALLEST*/);
+    /***/
+
+    m = s.heap[1/*SMALLEST*/]; /* m = node of next least frequency */
+
+    s.heap[--s.heap_max] = n; /* keep the nodes sorted by frequency */
+    s.heap[--s.heap_max] = m;
+
+    /* Create a new node father of n and m */
+    tree[node * 2]/*.Freq*/ = tree[n * 2]/*.Freq*/ + tree[m * 2]/*.Freq*/;
+    s.depth[node] = (s.depth[n] >= s.depth[m] ? s.depth[n] : s.depth[m]) + 1;
+    tree[n * 2 + 1]/*.Dad*/ = tree[m * 2 + 1]/*.Dad*/ = node;
+
+    /* and insert the new node in the heap */
+    s.heap[1/*SMALLEST*/] = node++;
+    pqdownheap(s, tree, 1/*SMALLEST*/);
+
+  } while (s.heap_len >= 2);
+
+  s.heap[--s.heap_max] = s.heap[1/*SMALLEST*/];
+
+  /* At this point, the fields freq and dad are set. We can now
+   * generate the bit lengths.
+   */
+  gen_bitlen(s, desc);
+
+  /* The field len is now set, we can generate the bit codes */
+  gen_codes(tree, max_code, s.bl_count);
+}
+
+
+/* ===========================================================================
+ * Scan a literal or distance tree to determine the frequencies of the codes
+ * in the bit length tree.
+ */
+function scan_tree(s, tree, max_code)
+//    deflate_state *s;
+//    ct_data *tree;   /* the tree to be scanned */
+//    int max_code;    /* and its largest code of non zero frequency */
+{
+  var n;                     /* iterates over all tree elements */
+  var prevlen = -1;          /* last emitted length */
+  var curlen;                /* length of current code */
+
+  var nextlen = tree[0 * 2 + 1]/*.Len*/; /* length of next code */
+
+  var count = 0;             /* repeat count of the current code */
+  var max_count = 7;         /* max repeat count */
+  var min_count = 4;         /* min repeat count */
+
+  if (nextlen === 0) {
+    max_count = 138;
+    min_count = 3;
+  }
+  tree[(max_code + 1) * 2 + 1]/*.Len*/ = 0xffff; /* guard */
+
+  for (n = 0; n <= max_code; n++) {
+    curlen = nextlen;
+    nextlen = tree[(n + 1) * 2 + 1]/*.Len*/;
+
+    if (++count < max_count && curlen === nextlen) {
+      continue;
+
+    } else if (count < min_count) {
+      s.bl_tree[curlen * 2]/*.Freq*/ += count;
+
+    } else if (curlen !== 0) {
+
+      if (curlen !== prevlen) { s.bl_tree[curlen * 2]/*.Freq*/++; }
+      s.bl_tree[REP_3_6 * 2]/*.Freq*/++;
+
+    } else if (count <= 10) {
+      s.bl_tree[REPZ_3_10 * 2]/*.Freq*/++;
+
+    } else {
+      s.bl_tree[REPZ_11_138 * 2]/*.Freq*/++;
+    }
+
+    count = 0;
+    prevlen = curlen;
+
+    if (nextlen === 0) {
+      max_count = 138;
+      min_count = 3;
+
+    } else if (curlen === nextlen) {
+      max_count = 6;
+      min_count = 3;
+
+    } else {
+      max_count = 7;
+      min_count = 4;
+    }
+  }
+}
+
+
+/* ===========================================================================
+ * Send a literal or distance tree in compressed form, using the codes in
+ * bl_tree.
+ */
+function send_tree(s, tree, max_code)
+//    deflate_state *s;
+//    ct_data *tree; /* the tree to be scanned */
+//    int max_code;       /* and its largest code of non zero frequency */
+{
+  var n;                     /* iterates over all tree elements */
+  var prevlen = -1;          /* last emitted length */
+  var curlen;                /* length of current code */
+
+  var nextlen = tree[0 * 2 + 1]/*.Len*/; /* length of next code */
+
+  var count = 0;             /* repeat count of the current code */
+  var max_count = 7;         /* max repeat count */
+  var min_count = 4;         /* min repeat count */
+
+  /* tree[max_code+1].Len = -1; */  /* guard already set */
+  if (nextlen === 0) {
+    max_count = 138;
+    min_count = 3;
+  }
+
+  for (n = 0; n <= max_code; n++) {
+    curlen = nextlen;
+    nextlen = tree[(n + 1) * 2 + 1]/*.Len*/;
+
+    if (++count < max_count && curlen === nextlen) {
+      continue;
+
+    } else if (count < min_count) {
+      do { send_code(s, curlen, s.bl_tree); } while (--count !== 0);
+
+    } else if (curlen !== 0) {
+      if (curlen !== prevlen) {
+        send_code(s, curlen, s.bl_tree);
+        count--;
+      }
+      //Assert(count >= 3 && count <= 6, " 3_6?");
+      send_code(s, REP_3_6, s.bl_tree);
+      send_bits(s, count - 3, 2);
+
+    } else if (count <= 10) {
+      send_code(s, REPZ_3_10, s.bl_tree);
+      send_bits(s, count - 3, 3);
+
+    } else {
+      send_code(s, REPZ_11_138, s.bl_tree);
+      send_bits(s, count - 11, 7);
+    }
+
+    count = 0;
+    prevlen = curlen;
+    if (nextlen === 0) {
+      max_count = 138;
+      min_count = 3;
+
+    } else if (curlen === nextlen) {
+      max_count = 6;
+      min_count = 3;
+
+    } else {
+      max_count = 7;
+      min_count = 4;
+    }
+  }
+}
+
+
+/* ===========================================================================
+ * Construct the Huffman tree for the bit lengths and return the index in
+ * bl_order of the last bit length code to send.
+ */
+function build_bl_tree(s) {
+  var max_blindex;  /* index of last bit length code of non zero freq */
+
+  /* Determine the bit length frequencies for literal and distance trees */
+  scan_tree(s, s.dyn_ltree, s.l_desc.max_code);
+  scan_tree(s, s.dyn_dtree, s.d_desc.max_code);
+
+  /* Build the bit length tree: */
+  build_tree(s, s.bl_desc);
+  /* opt_len now includes the length of the tree representations, except
+   * the lengths of the bit lengths codes and the 5+5+4 bits for the counts.
+   */
+
+  /* Determine the number of bit length codes to send. The pkzip format
+   * requires that at least 4 bit length codes be sent. (appnote.txt says
+   * 3 but the actual value used is 4.)
+   */
+  for (max_blindex = BL_CODES - 1; max_blindex >= 3; max_blindex--) {
+    if (s.bl_tree[bl_order[max_blindex] * 2 + 1]/*.Len*/ !== 0) {
+      break;
+    }
+  }
+  /* Update opt_len to include the bit length tree and counts */
+  s.opt_len += 3 * (max_blindex + 1) + 5 + 5 + 4;
+  //Tracev((stderr, "\ndyn trees: dyn %ld, stat %ld",
+  //        s->opt_len, s->static_len));
+
+  return max_blindex;
+}
+
+
+/* ===========================================================================
+ * Send the header for a block using dynamic Huffman trees: the counts, the
+ * lengths of the bit length codes, the literal tree and the distance tree.
+ * IN assertion: lcodes >= 257, dcodes >= 1, blcodes >= 4.
+ */
+function send_all_trees(s, lcodes, dcodes, blcodes)
+//    deflate_state *s;
+//    int lcodes, dcodes, blcodes; /* number of codes for each tree */
+{
+  var rank;                    /* index in bl_order */
+
+  //Assert (lcodes >= 257 && dcodes >= 1 && blcodes >= 4, "not enough codes");
+  //Assert (lcodes <= L_CODES && dcodes <= D_CODES && blcodes <= BL_CODES,
+  //        "too many codes");
+  //Tracev((stderr, "\nbl counts: "));
+  send_bits(s, lcodes - 257, 5); /* not +255 as stated in appnote.txt */
+  send_bits(s, dcodes - 1,   5);
+  send_bits(s, blcodes - 4,  4); /* not -3 as stated in appnote.txt */
+  for (rank = 0; rank < blcodes; rank++) {
+    //Tracev((stderr, "\nbl code %2d ", bl_order[rank]));
+    send_bits(s, s.bl_tree[bl_order[rank] * 2 + 1]/*.Len*/, 3);
+  }
+  //Tracev((stderr, "\nbl tree: sent %ld", s->bits_sent));
+
+  send_tree(s, s.dyn_ltree, lcodes - 1); /* literal tree */
+  //Tracev((stderr, "\nlit tree: sent %ld", s->bits_sent));
+
+  send_tree(s, s.dyn_dtree, dcodes - 1); /* distance tree */
+  //Tracev((stderr, "\ndist tree: sent %ld", s->bits_sent));
+}
+
+
+/* ===========================================================================
+ * Check if the data type is TEXT or BINARY, using the following algorithm:
+ * - TEXT if the two conditions below are satisfied:
+ *    a) There are no non-portable control characters belonging to the
+ *       "black list" (0..6, 14..25, 28..31).
+ *    b) There is at least one printable character belonging to the
+ *       "white list" (9 {TAB}, 10 {LF}, 13 {CR}, 32..255).
+ * - BINARY otherwise.
+ * - The following partially-portable control characters form a
+ *   "gray list" that is ignored in this detection algorithm:
+ *   (7 {BEL}, 8 {BS}, 11 {VT}, 12 {FF}, 26 {SUB}, 27 {ESC}).
+ * IN assertion: the fields Freq of dyn_ltree are set.
+ */
+function detect_data_type(s) {
+  /* black_mask is the bit mask of black-listed bytes
+   * set bits 0..6, 14..25, and 28..31
+   * 0xf3ffc07f = binary 11110011111111111100000001111111
+   */
+  var black_mask = 0xf3ffc07f;
+  var n;
+
+  /* Check for non-textual ("black-listed") bytes. */
+  for (n = 0; n <= 31; n++, black_mask >>>= 1) {
+    if ((black_mask & 1) && (s.dyn_ltree[n * 2]/*.Freq*/ !== 0)) {
+      return Z_BINARY;
+    }
+  }
+
+  /* Check for textual ("white-listed") bytes. */
+  if (s.dyn_ltree[9 * 2]/*.Freq*/ !== 0 || s.dyn_ltree[10 * 2]/*.Freq*/ !== 0 ||
+      s.dyn_ltree[13 * 2]/*.Freq*/ !== 0) {
+    return Z_TEXT;
+  }
+  for (n = 32; n < LITERALS; n++) {
+    if (s.dyn_ltree[n * 2]/*.Freq*/ !== 0) {
+      return Z_TEXT;
+    }
+  }
+
+  /* There are no "black-listed" or "white-listed" bytes:
+   * this stream either is empty or has tolerated ("gray-listed") bytes only.
+   */
+  return Z_BINARY;
+}
+
+
+var static_init_done = false;
+
+/* ===========================================================================
+ * Initialize the tree data structures for a new zlib stream.
+ */
+function _tr_init(s)
+{
+
+  if (!static_init_done) {
+    tr_static_init();
+    static_init_done = true;
+  }
+
+  s.l_desc  = new TreeDesc(s.dyn_ltree, static_l_desc);
+  s.d_desc  = new TreeDesc(s.dyn_dtree, static_d_desc);
+  s.bl_desc = new TreeDesc(s.bl_tree, static_bl_desc);
+
+  s.bi_buf = 0;
+  s.bi_valid = 0;
+
+  /* Initialize the first block of the first file: */
+  init_block(s);
+}
+
+
+/* ===========================================================================
+ * Send a stored block
+ */
+function _tr_stored_block(s, buf, stored_len, last)
+//DeflateState *s;
+//charf *buf;       /* input block */
+//ulg stored_len;   /* length of input block */
+//int last;         /* one if this is the last block for a file */
+{
+  send_bits(s, (STORED_BLOCK << 1) + (last ? 1 : 0), 3);    /* send block type */
+  copy_block(s, buf, stored_len, true); /* with header */
+}
+
+
+/* ===========================================================================
+ * Send one empty static block to give enough lookahead for inflate.
+ * This takes 10 bits, of which 7 may remain in the bit buffer.
+ */
+function _tr_align(s) {
+  send_bits(s, STATIC_TREES << 1, 3);
+  send_code(s, END_BLOCK, static_ltree);
+  bi_flush(s);
+}
+
+
+/* ===========================================================================
+ * Determine the best encoding for the current block: dynamic trees, static
+ * trees or store, and output the encoded block to the zip file.
+ */
+function _tr_flush_block(s, buf, stored_len, last)
+//DeflateState *s;
+//charf *buf;       /* input block, or NULL if too old */
+//ulg stored_len;   /* length of input block */
+//int last;         /* one if this is the last block for a file */
+{
+  var opt_lenb, static_lenb;  /* opt_len and static_len in bytes */
+  var max_blindex = 0;        /* index of last bit length code of non zero freq */
+
+  /* Build the Huffman trees unless a stored block is forced */
+  if (s.level > 0) {
+
+    /* Check if the file is binary or text */
+    if (s.strm.data_type === Z_UNKNOWN) {
+      s.strm.data_type = detect_data_type(s);
+    }
+
+    /* Construct the literal and distance trees */
+    build_tree(s, s.l_desc);
+    // Tracev((stderr, "\nlit data: dyn %ld, stat %ld", s->opt_len,
+    //        s->static_len));
+
+    build_tree(s, s.d_desc);
+    // Tracev((stderr, "\ndist data: dyn %ld, stat %ld", s->opt_len,
+    //        s->static_len));
+    /* At this point, opt_len and static_len are the total bit lengths of
+     * the compressed block data, excluding the tree representations.
+     */
+
+    /* Build the bit length tree for the above two trees, and get the index
+     * in bl_order of the last bit length code to send.
+     */
+    max_blindex = build_bl_tree(s);
+
+    /* Determine the best encoding. Compute the block lengths in bytes. */
+    opt_lenb = (s.opt_len + 3 + 7) >>> 3;
+    static_lenb = (s.static_len + 3 + 7) >>> 3;
+
+    // Tracev((stderr, "\nopt %lu(%lu) stat %lu(%lu) stored %lu lit %u ",
+    //        opt_lenb, s->opt_len, static_lenb, s->static_len, stored_len,
+    //        s->last_lit));
+
+    if (static_lenb <= opt_lenb) { opt_lenb = static_lenb; }
+
+  } else {
+    // Assert(buf != (char*)0, "lost buf");
+    opt_lenb = static_lenb = stored_len + 5; /* force a stored block */
+  }
+
+  if ((stored_len + 4 <= opt_lenb) && (buf !== -1)) {
+    /* 4: two words for the lengths */
+
+    /* The test buf != NULL is only necessary if LIT_BUFSIZE > WSIZE.
+     * Otherwise we can't have processed more than WSIZE input bytes since
+     * the last block flush, because compression would have been
+     * successful. If LIT_BUFSIZE <= WSIZE, it is never too late to
+     * transform a block into a stored block.
+     */
+    _tr_stored_block(s, buf, stored_len, last);
+
+  } else if (s.strategy === Z_FIXED || static_lenb === opt_lenb) {
+
+    send_bits(s, (STATIC_TREES << 1) + (last ? 1 : 0), 3);
+    compress_block(s, static_ltree, static_dtree);
+
+  } else {
+    send_bits(s, (DYN_TREES << 1) + (last ? 1 : 0), 3);
+    send_all_trees(s, s.l_desc.max_code + 1, s.d_desc.max_code + 1, max_blindex + 1);
+    compress_block(s, s.dyn_ltree, s.dyn_dtree);
+  }
+  // Assert (s->compressed_len == s->bits_sent, "bad compressed size");
+  /* The above check is made mod 2^32, for files larger than 512 MB
+   * and uLong implemented on 32 bits.
+   */
+  init_block(s);
+
+  if (last) {
+    bi_windup(s);
+  }
+  // Tracev((stderr,"\ncomprlen %lu(%lu) ", s->compressed_len>>3,
+  //       s->compressed_len-7*last));
+}
+
+/* ===========================================================================
+ * Save the match info and tally the frequency counts. Return true if
+ * the current block must be flushed.
+ */
+function _tr_tally(s, dist, lc)
+//    deflate_state *s;
+//    unsigned dist;  /* distance of matched string */
+//    unsigned lc;    /* match length-MIN_MATCH or unmatched char (if dist==0) */
+{
+  //var out_length, in_length, dcode;
+
+  s.pending_buf[s.d_buf + s.last_lit * 2]     = (dist >>> 8) & 0xff;
+  s.pending_buf[s.d_buf + s.last_lit * 2 + 1] = dist & 0xff;
+
+  s.pending_buf[s.l_buf + s.last_lit] = lc & 0xff;
+  s.last_lit++;
+
+  if (dist === 0) {
+    /* lc is the unmatched char */
+    s.dyn_ltree[lc * 2]/*.Freq*/++;
+  } else {
+    s.matches++;
+    /* Here, lc is the match length - MIN_MATCH */
+    dist--;             /* dist = match distance - 1 */
+    //Assert((ush)dist < (ush)MAX_DIST(s) &&
+    //       (ush)lc <= (ush)(MAX_MATCH-MIN_MATCH) &&
+    //       (ush)d_code(dist) < (ush)D_CODES,  "_tr_tally: bad match");
+
+    s.dyn_ltree[(_length_code[lc] + LITERALS + 1) * 2]/*.Freq*/++;
+    s.dyn_dtree[d_code(dist) * 2]/*.Freq*/++;
+  }
+
+// (!) This block is disabled in zlib defaults,
+// don't enable it for binary compatibility
+
+//#ifdef TRUNCATE_BLOCK
+//  /* Try to guess if it is profitable to stop the current block here */
+//  if ((s.last_lit & 0x1fff) === 0 && s.level > 2) {
+//    /* Compute an upper bound for the compressed length */
+//    out_length = s.last_lit*8;
+//    in_length = s.strstart - s.block_start;
+//
+//    for (dcode = 0; dcode < D_CODES; dcode++) {
+//      out_length += s.dyn_dtree[dcode*2]/*.Freq*/ * (5 + extra_dbits[dcode]);
+//    }
+//    out_length >>>= 3;
+//    //Tracev((stderr,"\nlast_lit %u, in %ld, out ~%ld(%ld%%) ",
+//    //       s->last_lit, in_length, out_length,
+//    //       100L - out_length*100L/in_length));
+//    if (s.matches < (s.last_lit>>1)/*int /2*/ && out_length < (in_length>>1)/*int /2*/) {
+//      return true;
+//    }
+//  }
+//#endif
+
+  return (s.last_lit === s.lit_bufsize - 1);
+  /* We avoid equality with lit_bufsize because of wraparound at 64K
+   * on 16 bit machines and because stored blocks are restricted to
+   * 64K-1 bytes.
+   */
+}
+
+exports._tr_init  = _tr_init;
+exports._tr_stored_block = _tr_stored_block;
+exports._tr_flush_block  = _tr_flush_block;
+exports._tr_tally = _tr_tally;
+exports._tr_align = _tr_align;
+
+},{"../utils/common":49}],59:[function(require,module,exports){
+'use strict';
+
+// (C) 1995-2013 Jean-loup Gailly and Mark Adler
+// (C) 2014-2017 Vitaly Puzrin and Andrey Tupitsin
+//
+// This software is provided 'as-is', without any express or implied
+// warranty. In no event will the authors be held liable for any damages
+// arising from the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//   claim that you wrote the original software. If you use this software
+//   in a product, an acknowledgment in the product documentation would be
+//   appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//   misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+
+function ZStream() {
+  /* next input byte */
+  this.input = null; // JS specific, because we have no pointers
+  this.next_in = 0;
+  /* number of bytes available at input */
+  this.avail_in = 0;
+  /* total number of input bytes read so far */
+  this.total_in = 0;
+  /* next output byte should be put there */
+  this.output = null; // JS specific, because we have no pointers
+  this.next_out = 0;
+  /* remaining free space at output */
+  this.avail_out = 0;
+  /* total number of bytes output so far */
+  this.total_out = 0;
+  /* last error message, NULL if no error */
+  this.msg = ''/*Z_NULL*/;
+  /* not visible by applications */
+  this.state = null;
+  /* best guess about the data type: binary or text */
+  this.data_type = 2/*Z_UNKNOWN*/;
+  /* adler32 value of the uncompressed data */
+  this.adler = 0;
+}
+
+module.exports = ZStream;
+
+},{}],60:[function(require,module,exports){
+exports.read = function (buffer, offset, isLE, mLen, nBytes) {
+  var e, m
+  var eLen = (nBytes * 8) - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var nBits = -7
+  var i = isLE ? (nBytes - 1) : 0
+  var d = isLE ? -1 : 1
+  var s = buffer[offset + i]
+
+  i += d
+
+  e = s & ((1 << (-nBits)) - 1)
+  s >>= (-nBits)
+  nBits += eLen
+  for (; nBits > 0; e = (e * 256) + buffer[offset + i], i += d, nBits -= 8) {}
+
+  m = e & ((1 << (-nBits)) - 1)
+  e >>= (-nBits)
+  nBits += mLen
+  for (; nBits > 0; m = (m * 256) + buffer[offset + i], i += d, nBits -= 8) {}
+
+  if (e === 0) {
+    e = 1 - eBias
+  } else if (e === eMax) {
+    return m ? NaN : ((s ? -1 : 1) * Infinity)
+  } else {
+    m = m + Math.pow(2, mLen)
+    e = e - eBias
+  }
+  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
+}
+
+exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
+  var e, m, c
+  var eLen = (nBytes * 8) - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
+  var i = isLE ? 0 : (nBytes - 1)
+  var d = isLE ? 1 : -1
+  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+
+  value = Math.abs(value)
+
+  if (isNaN(value) || value === Infinity) {
+    m = isNaN(value) ? 1 : 0
+    e = eMax
+  } else {
+    e = Math.floor(Math.log(value) / Math.LN2)
+    if (value * (c = Math.pow(2, -e)) < 1) {
+      e--
+      c *= 2
+    }
+    if (e + eBias >= 1) {
+      value += rt / c
+    } else {
+      value += rt * Math.pow(2, 1 - eBias)
+    }
+    if (value * c >= 2) {
+      e++
+      c /= 2
+    }
+
+    if (e + eBias >= eMax) {
+      m = 0
+      e = eMax
+    } else if (e + eBias >= 1) {
+      m = ((value * c) - 1) * Math.pow(2, mLen)
+      e = e + eBias
+    } else {
+      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
+      e = 0
+    }
+  }
+
+  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
+
+  e = (e << mLen) | m
+  eLen += mLen
+  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
+
+  buffer[offset + i - d] |= s * 128
+}
+
+},{}],61:[function(require,module,exports){
+/*
+ * Invert the image
+ */
+function Invert(options, UI) {
+
+  var output;
+
+  // The function which is called on every draw.
+  function draw(input, callback, progressObj) {
+
+    progressObj.stop(true);
+    progressObj.overrideFlag = true;
+
+    var step = this;
+
+    function changePixel(r, g, b, a) {
+      return [255 - r, 255 - g, 255 - b, a];
+    }
+
+    function output(image, datauri, mimetype) {
+
+      // This output is accessible by Image Sequencer
+      step.output = { src: datauri, format: mimetype };
+
+    }
+
+    return input.pixelManipulation({
+      output: output,
+      changePixel: changePixel,
+      format: input.format,
+      image: options.image,
+      inBrowser: options.inBrowser,
+      callback: callback
+    });
+
+  }
+
+  return {
+    options: options,
+    draw: draw,
+    output: output,
+    UI: UI
+  }
+}
+var info = {
+  "name": "Invert",
+  "description": "Inverts the image.",
+  "inputs": {
+  }
+}
+module.exports = [Invert,info];
+},{}],62:[function(require,module,exports){
+/**
+ * Copyright (c) 2015 Guyon Roche
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:</p>
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+ */
+"use strict";
+
+var _ = require("underscore");
+
+var main = module.exports = {
+    Bitmap: require("./lib/bitmap")
+};
+
+_.extend(main, require("./lib/enums"));
+
+},{"./lib/bitmap":63,"./lib/enums":64,"underscore":145}],63:[function(require,module,exports){
+(function (Buffer){
+/**
+ * Copyright (c) 2015 Guyon Roche
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:</p>
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+ */
+"use strict";
+
+var fs = require("fs");
+var _ = require("underscore");
+var Promise = require("bluebird");
+var jpeg = require("jpeg-js");
+//var png = require("png-js");
+var PNG = require("node-png").PNG;
+
+var Enums = require("./enums");
+var Utils = require("./utils");
+var Resize = require("./resize");
+//var Graphics = require("./graphics");
+
+// default pad colour
+var transparentBlack = {
+    r: 0, g: 0, b: 0, a: 0
+};
+
+var Bitmap = module.exports = function(options) {
+    if (options) {
+        if (options instanceof Bitmap) {
+            this._data = {
+                data: new Buffer(options.data.data),
+                width: options.width,
+                height: options.height
+            };
+        } else if (options.data) {
+            // attach to supplied data
+            this._data = options;
+        } else if (options.width && options.height) {
+            // construct new bitmap
+            this._data = {
+                data: new Buffer(4 * options.width * options.height),
+                width: options.width,
+                height: options.height
+            };
+            
+            // optional colour
+            if (options.color) {
+                this._fill(options.color);
+            }
+        }
+    }
+};
+
+Bitmap.prototype = {
+    get width() {
+        return this._data.width;
+    },
+    get height() {
+        return this._data.height;
+    },
+    //get graphics() {
+    //    if (!this._graphics) {
+    //        this._graphics = new Graphics(this);
+    //    }
+    //    return this._graphics;
+    //},
+
+    attach: function(data) {
+        var prev = this._data;
+        this._data = data;
+        return prev;
+    },
+    detach: function() {
+        var data = this._data;
+        delete this._data;
+        return data;
+    },
+    
+    _deduceFileType: function(filename) {
+        if (!filename) {
+            throw new Error("Can't determine image type");
+        }
+        switch (filename.substr(-4).toLowerCase()) {
+            case ".jpg":
+                return Enums.ImageType.JPG;
+            case ".png":
+                return Enums.ImageType.PNG;
+        }
+        if (filename.substr(-5).toLowerCase() == ".jpeg") {
+            return Enums.ImageType.JPG;
+        }
+        throw new Error("Can't recognise image type: " + filename);
+    },
+    
+    _readStream: function(stream) {
+        var self = this;
+        var deferred = Promise.defer();
+        
+        var chunks = [];
+        stream.on('data', function(chunk) {
+            chunks.push(chunk);
+        });
+        stream.on('end', function() {
+            var data = Buffer.concat(chunks);
+            deferred.resolve(data);
+        });
+        stream.on('error', function(error) {
+            deferred.reject(error);
+        });
+        
+        return deferred.promise;
+    },
+    _readPNG: function(stream) {
+        var deferred = Promise.defer();
+        
+        var png = new PNG({filterType: 4});
+        png.on('parsed', function() {
+            deferred.resolve(png);
+        });
+        png.on('error', function(error) {
+            deferred.rejecyt(error);
+        });
+        stream.pipe(png);
+        
+        return deferred.promise;
+    },
+    _parseOptions: function(options, filename) {
+        options = options || {};
+        if (typeof options === "number") {
+            options = { type: options };
+        }
+        options.type = options.type || this._deduceFileType(filename);
+        return options;
+    },
+    read: function(stream, options) {
+        var self = this;
+        options = this._parseOptions(options);
+        
+        switch(options.type) {
+            case Enums.ImageType.JPG:
+                return this._readStream(stream)
+                    .then(function(data) {
+                        self._data = jpeg.decode(data);
+                    });
+            case Enums.ImageType.PNG:
+                return this._readPNG(stream)
+                    .then(function(png) {
+                        self._data = {
+                            data: png.data,
+                            width: png.width,
+                            height: png.height
+                        };
+                    });
+            default:
+                return Promise.reject(new Error("Not supported: ImageType " + options.type));
+        }
+    },
+    readFile: function(filename, options) {
+        var self = this;
+        return Utils.fs.exists(filename)
+            .then(function(exists) {
+                if (exists) {
+                    options = self._parseOptions(options, filename);
+                    var stream = fs.createReadStream(filename);
+                    return self.read(stream, options);
+                } else {
+                    throw new Error("File Not Found: " + filename);
+                }
+            });
+    },
+    
+    write: function(stream, options) {
+        options = this._parseOptions(options);
+        var deferred = Promise.defer();
+        try {
+            stream.on('finish', function() {
+                deferred.resolve();
+            });
+            stream.on('error', function(error) {
+                deferred.reject(error);
+            });
+            
+            switch(options.type) {
+                case Enums.ImageType.JPG:
+                    var buffer = jpeg.encode(this._data, options.quality || 90).data;
+                    stream.write(buffer);
+                    stream.end();
+                    break;
+                case Enums.ImageType.PNG:
+                    var png = new PNG();
+                    png.width = this.width;
+                    png.height = this.height;
+                    png.data = this._data.data;
+                    png.on('end', function() {
+                        deferred.resolve();
+                    });
+                    png.on('error', function(error) {
+                        deferred.reject(error);
+                    });
+                    png.pack().pipe(stream);
+                    break;
+                default:
+                    throw new Error("Not supported: ImageType " + options.type);
+            }
+        }
+        catch(ex) {
+            deferred.reject(ex);
+        }
+        return deferred.promise;
+    },
+    writeFile: function(filename, options) {
+        options = this._parseOptions(options, filename);
+        var stream = fs.createWriteStream(filename);
+        return this.write(stream, options);
+    },
+    
+    clone: function() {
+        return new Bitmap({
+            width: this.width,
+            height: this.height,
+            data: new Buffer(this._data.data)
+        });
+    },
+    
+    setPixel: function(x,y,  r,g,b,a) {
+        if (g === undefined) {
+            var color = r;
+            r = color.r;
+            g = color.g;
+            b = color.b;
+            a = color.a;
+        }
+        if (a === undefined) a = 255;
+        var pos = (y * this.width + x) * 4;
+        var buffer = this._data.data;
+        buffer[pos++] = r;
+        buffer[pos++] = g;
+        buffer[pos++] = b;
+        buffer[pos++] = a;
+    },
+    getPixel: function(x,y, color) {
+        var pos = (y * this.width + x) * 4;
+        color = color || {};
+        var buffer = this._data.data;
+        color.r = buffer[pos++];
+        color.g = buffer[pos++];
+        color.b = buffer[pos++];
+        color.a = buffer[pos++];
+        return color;
+    },
+    
+    negative: function() {
+        var that = new Bitmap({width: this.width, height: this.height});
+        var n = this.width * this.height;
+        
+        var src = this._data.data;
+        var dst = that._data.data;
+        var srcPos = 0;
+        var dstPos = 0;
+        for (var i = 0; i < n; i++) {
+            dst[dstPos++] = 255 - src[srcPos++];
+            dst[dstPos++] = 255 - src[srcPos++];
+            dst[dstPos++] = 255 - src[srcPos++];
+            dst[dstPos++] =       src[srcPos++];
+        }
+        return that;
+    },
+    
+    resize: function(options) {
+        var that = new Bitmap(options);
+        var temp;
+        switch (options.fit) {
+            case "pad": // fit all of src in dst with aspect ratio preserved.
+                var padColor = options.padColor || transparentBlack;
+                var srcAr = this.width / this.height;
+                var w2 = Math.round(srcAr * that.height);
+                var h2 = Math.round(that.width / srcAr);
+                var wMargin = 0;
+                var hMargin = 0;
+                if (w2 < that.width) {
+                    // pad sides
+                    temp = new Bitmap({width: w2, height: that.height});
+                    wMargin = (that.width - w2) / 2;
+                    that._fill(padColor, 0, 0, Math.floor(wMargin), that.height);
+                    that._fill(padColor, that.width - Math.ceil(wMargin), 0, Math.ceil(wMargin), that.height);
+                    
+                    Resize[options.algorithm](this, temp, options);
+                    that._blt(temp, {left: Math.floor(wMargin), top: Math.floor(hMargin)});
+                } else if (h2 < that.height) {
+                    // pad top & bottom
+                    temp = new Bitmap({width: that.width, height: h2});
+                    hMargin = (that.height - h2) / 2;
+                    that._fill(padColor, 0, 0, that.width, Math.floor(hMargin));
+                    that._fill(padColor, 0, that.height - Math.ceil(hMargin), that.width, Math.ceil(hMargin));
+                    
+                    Resize[options.algorithm](this, temp, options);
+                    that._blt(temp, {left: Math.floor(wMargin), top: Math.floor(hMargin)});
+                } else {
+                    // stretch straight into that
+                    Resize[options.algorithm](this, that, options);
+                }
+                break;
+            case "crop": // crop original to fit in dst with aspect ratio preserved
+                var gravity = options.gravity || {x: 0.5, y: 0.5};
+                var dstAr = that.width / that.height;
+                var w2 = Math.round(dstAr * this.height);
+                var h2 = Math.round(this.width / dstAr);
+                if (w2 < this.width) {
+                    // crop src width
+                    var dw = this.width - w2;
+                    temp = this.crop({left: Math.round(gravity.x * dw), top: 0, width: w2, height: this.height});
+                } else if (h2 < this.height) {
+                    // crop src height
+                    var dh = this.height - h2;
+                    temp = this.crop({left: 0, top: Math.round(gravity.y * dh), width: this.width, height: h2});
+                } else {
+                    temp = this;
+                }
+                Resize[options.algorithm](temp, that, options);
+                break;
+            case "stretch":
+            default:
+                Resize[options.algorithm](this, that, options);
+                break;
+        }
+        
+        return that;
+    },
+    
+    rotate: function(options) {
+        // TODO: crop, user supplied dst width, height
+        
+        // options.degrees || options.radians;
+        // options.fit = ['pad','crop','same']
+        // options.padColor
+        var radians = options.radians !== undefined ? options.radians : 3.141592653589793 * options.degrees / 180;
+        if (radians < 0.000000001) {
+            return new Bitmap(this);
+        }
+        //console.log("radians=" + radians);
+        
+        var rotators = {
+            forward: {
+                cos: Math.cos(radians),
+                sin: Math.sin(radians)
+            },
+            backward: {
+                cos: Math.cos(-radians),
+                sin: Math.sin(-radians)
+            }
+        }
+        //console.log("cos=" + cos + ", sin=" + sin)
+        
+        var srcWidth = this.width;
+        var srcHeight = this.height;
+        var srcWidthHalf = srcWidth / 2;
+        var srcHeightHalf = srcHeight / 2;
+        
+        var padColor = options.padColor || transparentBlack;
+        var padArray = [padColor.r, padColor.g, padColor.b, padColor.a];
+        var rotate = function(point, rotator) {
+            // in-place rotation of point
+            var x = rotator.cos * point.x - rotator.sin * point.y;
+            var y = rotator.sin * point.x + rotator.cos * point.y;
+            point.x = x;
+            point.y = y;
+            return point;
+        };
+        var cropToSource = function(point) {
+            var m = Math.abs(point.x/srcWidthHalf);
+            var n = Math.abs(point.y/srcHeightHalf);
+            return Math.max(m,n);
+        };
+        
+        var dstWidth, dstHeight;
+        switch (options.fit) {
+            case 'custom':
+                dstWidth = options.width;
+                dstHeight = options.height;
+                break;
+            case 'pad':
+                // entire src fits in dst
+                var tl = rotate({x:-srcWidthHalf,y:srcHeightHalf}, rotators.forward);
+                var tr = rotate({x:srcWidthHalf,y:srcHeightHalf}, rotators.forward);
+                var bl = rotate({x:-srcWidthHalf,y:-srcHeightHalf}, rotators.forward);
+                var br = rotate({x:srcWidthHalf,y:-srcHeightHalf}, rotators.forward);
+                dstWidth = Math.round(Math.max(tl.x,tr.x,bl.x,br.x) - Math.min(tl.x,tr.x,bl.x,br.x));
+                dstHeight = Math.round(Math.max(tl.y,tr.y,bl.y,br.y) - Math.min(tl.y,tr.y,bl.y,br.y));
+                break;
+            case 'crop':
+                var tl = rotate({x:-srcWidthHalf,y:srcHeightHalf}, rotators.forward);
+                var tr = rotate({x:srcWidthHalf,y:srcHeightHalf}, rotators.forward);
+                var bl = rotate({x:-srcWidthHalf,y:-srcHeightHalf}, rotators.forward);
+                var br = rotate({x:srcWidthHalf,y:-srcHeightHalf}, rotators.forward);
+                var d = Math.max(cropToSource(tl), cropToSource(tr), cropToSource(bl), cropToSource(br));
+                dstWidth = Math.floor(srcWidth / d);
+                dstHeight = Math.floor(srcHeight / d);
+                break;
+            case 'same':
+            default:
+                // dst is same size as src
+                dstWidth = srcWidth;
+                dstHeight = srcHeight;
+                break;
+        }
+        
+        var that = new Bitmap({width: dstWidth, height: dstHeight});
+        
+        var srcBuf = this._data.data;
+        var dstBuf = that._data.data;
+        
+        // we will rotate the destination pixels back to the source and interpolate the colour
+        var srcCoord = {};
+        var dstWidthHalf = dstWidth / 2;
+        var dstHeightHalf = dstHeight / 2;
+        var dstWidth4 = dstWidth * 4;
+        var srcWidth4 = srcWidth * 4;
+        
+        //console.log("src=[" + srcWidth + "," + srcHeight + "]")
+        //console.log("dst=[" + dstWidth + "," + dstHeight + "]")
+        for (var i = 0; i < dstHeight; i++) {
+            for (var j = 0; j < dstWidth; j++) {
+                // calculate src coords
+                srcCoord.x = j - dstWidthHalf;
+                srcCoord.y = dstHeightHalf - i;
+                //console.log("x=" + srcCoord.x + ", y=" + srcCoord.y);
+                rotate(srcCoord, rotators.backward);
+                //console.log(" ==> x=" + srcCoord.x + ", y=" + srcCoord.y);
+                
+                // srcX and SrcY are in src coords
+                var srcX = srcCoord.x + srcWidthHalf;
+                var srcY = srcHeightHalf - srcCoord.y;
+                //console.log("srcX=" + srcX + ", srcY=" + srcY);
+                
+                // now interpolate (bilinear!
+                var dstPos = (i * dstWidth + j) * 4;
+                //console.log("dstPos=" + dstPos)
+                if ((srcX > -1) && (srcX < srcWidth) && (srcY > -1) && (srcY < srcHeight)) {
+                    var srcPosX = Math.floor(srcX);
+                    var srcPosY = Math.floor(srcY);
+                    var srcPos = (srcPosY * srcWidth + srcPosX) * 4;
+                    for (var k = 0; k < 4; k++) {
+                        var kSrcPos = srcPos + k;
+                        var kPad = padArray[k];
+                        
+                        var tl = ((srcX >= 0) && (srcY >= 0)) ? srcBuf[kSrcPos] : kPad;
+                        var tr = ((srcX < srcWidth-1) && (srcY >= 0)) ? srcBuf[kSrcPos+4] : kPad;
+                        var bl = ((srcX >= 0) && (srcY < srcHeight-1)) ? srcBuf[kSrcPos + srcWidth4] : kPad;
+                        var br = ((srcX < srcWidth-1) && (srcY < srcHeight-1)) ? srcBuf[kSrcPos + srcWidth4 + 4] : kPad;
+                        
+                        var tx = srcX - srcPosX;
+                        var ty = srcY - srcPosY;
+                        
+                        var t = (1-tx) * tl + tx * tr;
+                        var b = (1-tx) * bl + tx * br;
+                        dstBuf[dstPos++] = (1-ty) * t + ty * b;
+                    }
+                } else {
+                    dstBuf[dstPos++] = padColor.r;
+                    dstBuf[dstPos++] = padColor.g;
+                    dstBuf[dstPos++] = padColor.b;
+                    dstBuf[dstPos++] = padColor.a;
+                }
+            }
+        }
+        return that;
+    },
+    
+    crop: function(options) {
+        var t = options.top;
+        var l = options.left;
+        var w = options.width;
+        var h = options.height;
+        //console.log("Crop: l="+l + ", t="+t + ", w="+w + ", h="+h);
+        
+        var that = new Bitmap({width: w, height: h});
+        
+        var srcBuf = this._data.data;
+        var dstBuf = that._data.data;
+        
+        var w4 = w * 4;
+        for (var i = 0; i < h; i++) {
+            var srcPos = ((i+t)*this.width + l) * 4;
+            var dstPos = i * w * 4;
+            srcBuf.copy(dstBuf, dstPos, srcPos, srcPos + w4);
+        }
+        return that;
+    },
+    
+    blur: function(options) {
+        // todo: expand to own file with different blur algorithms
+        var that = new Bitmap({width: this.width, height: this.height});
+        var w = this.width;
+        var h = this.height;
+    
+        var W = w-1;
+        var H = h-1;
+    
+        var V = w*4; // used for i offsets
+    
+        var src = this._data.data;
+        var dst = that._data.data;
+        for (var i = 0; i < h; i++) {
+            for (var j = 0; j < w; j++) {
+                for (var k = 0; k < 4; k++) {
+                    var pos = (i*w + j) * 4 + k;
+                    var t = src[pos -(i>0?V:0) - (j>0?4:0)] * 1 + // 1/16
+                            src[pos -(i>0?V:0)            ] * 2 + // 2/16
+                            src[pos -(i>0?V:0) + (j<W?4:0)] * 1 + // 1/16
+                            
+                            src[pos            - (j>0?4:0)] * 2 + // 2/16
+                            src[pos                       ] * 4 + // 4/16
+                            src[pos            + (j<W?4:0)] * 2 + // 2/16
+                            
+                            src[pos +(i<H?V:0) - (j>0?4:0)] * 1 + // 1/16
+                            src[pos +(i<H?V:0)            ] * 2 + // 2/16
+                            src[pos +(i<H?V:0) + (j<W?4:0)] * 1;  // 1/16
+                            
+                    dst[pos] = Math.round(t/16);
+                }
+            }
+        }
+        return that;
+    },
+    
+    _fill: function(color, l,t,w,h) {
+        l = l || 0;
+        t = t || 0;
+        w = w || this.width - l;
+        h = h || this.height - t;
+        //console.log("Fill: l="+l + ", t="+t + ", w="+w + ", h="+h);
+        
+        color = color || transparentBlack;
+        var r = color.r || 0;
+        var g = color.g || 0;
+        var b = color.b || 0;
+        var a = color.a || 0;
+        //console.log("     r="+r + ", g="+g + ", b="+b + ", a="+a);
+        
+        var buf = this._data.data;
+        var bottom = t + h;
+        var right = l + w;
+        var width = this.width;
+        
+        // step 1 - build first scanline
+        var pos1 = (t*width + l) * 4;
+        var pos = pos1;
+        for (var j = l; j < right; j++) {
+            buf[pos++] = r;
+            buf[pos++] = g;
+            buf[pos++] = b;
+            buf[pos++] = a;
+        }
+        
+        // step 2 - copy first scanline to all the others
+        var pos1End = pos1 + w * 4;
+        for (var i = t; i < bottom; i++) {
+            var pos = (i*width + l) * 4;
+            buf.copy(buf, pos, pos1, pos1End);
+        }
+    },
+    _blt: function(that, options) {
+        var left = options.left;
+        var top = options.top;
+        var width = Math.min(this.width-left, that.width);
+        var height = Math.min(this.height-top, that.height);
+        //console.log("_blt: left="+left + ", top="+top + ", width="+width + ", height="+height)
+        var w4 = width * 4;
+        var srcBuf = that._data.data;
+        var dstBuf = this._data.data;
+        for (var i = 0; i < height; i++) {
+            var srcPos = i * that.width * 4;
+            var dstPos = ((i+top)*this.width + left) * 4;
+            srcBuf.copy(dstBuf, dstPos, srcPos, srcPos + w4);
+        }
+    }
+}
+}).call(this,require("buffer").Buffer)
+},{"./enums":64,"./resize":65,"./utils":66,"bluebird":3,"buffer":47,"fs":46,"jpeg-js":67,"node-png":92,"underscore":145}],64:[function(require,module,exports){
+/**
+ * Copyright (c) 2015 Guyon Roche
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:</p>
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+ */
+"use strict";
+
+module.exports = {
+    ImageType: {
+        JPG: 1,
+        PNG: 2
+    }
+};
+},{}],65:[function(require,module,exports){
+(function (Buffer){
+/**
+ * Copyright (c) 2015 Guyon Roche
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:</p>
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+ */
+"use strict";
+
+var _ = require("underscore");
+var Promise = require("bluebird");
+
+module.exports = {
+    _writeFile: function(width, height, data, filename) {
+        // for debugging
+        
+        var Bitmap = require("./bitmap");
+        var bmp = new Bitmap({
+            width: width, height: height,
+            data: data
+        });
+        bmp.writeFile(filename);
+    },
+    
+    nearestNeighbor: function(src, dst, options) {
+        
+        var wSrc = src.width;
+        var hSrc = src.height;
+        //console.log("wSrc="+wSrc + ", hSrc="+hSrc);
+        
+        var wDst = dst.width;
+        var hDst = dst.height;
+        //console.log("wDst="+wDst + ", hDst="+hDst);
+        
+        var bufSrc = src._data.data;
+        var bufDst = dst._data.data;
+
+        for (var i = 0; i < hDst; i++) {
+            for (var j = 0; j < wDst; j++) {
+                var posDst = (i * wDst + j) * 4;
+                
+                var iSrc = Math.round(i * hSrc / hDst);
+                var jSrc = Math.round(j * wSrc / wDst);
+                var posSrc = (iSrc * wSrc + jSrc) * 4;
+                
+                bufDst[posDst++] = bufSrc[posSrc++];
+                bufDst[posDst++] = bufSrc[posSrc++];
+                bufDst[posDst++] = bufSrc[posSrc++];
+                bufDst[posDst++] = bufSrc[posSrc++];
+            }
+        }
+    },
+    bilinearInterpolation: function(src, dst, options) {
+        
+        var wSrc = src.width;
+        var hSrc = src.height;
+        //console.log("wSrc="+wSrc + ", hSrc="+hSrc);
+        
+        var wDst = dst.width;
+        var hDst = dst.height;
+        //console.log("wDst="+wDst + ", hDst="+hDst);
+        
+        var bufSrc = src._data.data;
+        var bufDst = dst._data.data;
+        
+        var interpolate = function(k, kMin, vMin, kMax, vMax) {
+            // special case - k is integer
+            if (kMin === kMax) {
+                return vMin;
+            }
+            
+            return Math.round((k - kMin) * vMax + (kMax - k) * vMin);
+        };
+        var assign = function(pos, offset, x, xMin, xMax, y, yMin, yMax) {
+            var posMin = (yMin * wSrc + xMin) * 4 + offset;
+            var posMax = (yMin * wSrc + xMax) * 4 + offset;
+            var vMin = interpolate(x, xMin, bufSrc[posMin], xMax, bufSrc[posMax]);
+            
+            // special case, y is integer
+            if (yMax === yMin) {
+                bufDst[pos+offset] = vMin;
+            } else {
+                posMin = (yMax * wSrc + xMin) * 4 + offset;
+                posMax = (yMax * wSrc + xMax) * 4 + offset;
+                var vMax = interpolate(x, xMin, bufSrc[posMin], xMax, bufSrc[posMax]);
+                
+                bufDst[pos+offset] = interpolate(y, yMin, vMin, yMax, vMax);
+            }
+        }
+        
+        for (var i = 0; i < hDst; i++) {
+            for (var j = 0; j < wDst; j++) {
+                var posDst = (i * wDst + j) * 4;
+                
+                // x & y in src coordinates
+                var x = j * wSrc / wDst;
+                var xMin = Math.floor(x);
+                var xMax = Math.min(Math.ceil(x), wSrc-1);
+                
+                var y = i * hSrc / hDst;
+                var yMin = Math.floor(y);
+                var yMax = Math.min(Math.ceil(y), hSrc-1);
+                
+                assign(posDst, 0, x, xMin, xMax, y, yMin, yMax);
+                assign(posDst, 1, x, xMin, xMax, y, yMin, yMax);
+                assign(posDst, 2, x, xMin, xMax, y, yMin, yMax);
+                assign(posDst, 3, x, xMin, xMax, y, yMin, yMax);
+            }
+        }
+    },
+    
+    _interpolate2D: function(src, dst, options, interpolate) {
+        
+        var bufSrc = src._data.data;
+        var bufDst = dst._data.data;
+        
+        var wSrc = src.width;
+        var hSrc = src.height;
+        //console.log("wSrc="+wSrc + ", hSrc="+hSrc + ", srcLen="+bufSrc.length);
+        
+        var wDst = dst.width;
+        var hDst = dst.height;
+        //console.log("wDst="+wDst + ", hDst="+hDst + ", dstLen="+bufDst.length);
+        
+        // when dst smaller than src/2, interpolate first to a multiple between 0.5 and 1.0 src, then sum squares
+        var wM = Math.max(1, Math.floor(wSrc / wDst));
+        var wDst2 = wDst * wM;
+        var hM = Math.max(1, Math.floor(hSrc / hDst));
+        var hDst2 = hDst * hM;
+        //console.log("wM="+wM + ", wDst2="+wDst2 + ", hM="+hM + ", hDst2="+hDst2);
+        
+        // ===========================================================
+        // Pass 1 - interpolate rows
+        // buf1 has width of dst2 and height of src
+        var buf1 = new Buffer(wDst2 * hSrc * 4);
+        for (var i = 0; i < hSrc; i++) {
+            for (var j = 0; j < wDst2; j++) {
+                // i in src coords, j in dst coords
+                
+                // calculate x in src coords
+                // this interpolation requires 4 sample points and the two inner ones must be real
+                // the outer points can be fudged for the edges.
+                // therefore (wSrc-1)/wDst2
+                var x = j * (wSrc-1) / wDst2;
+                var xPos = Math.floor(x);
+                var t = x - xPos;
+                var srcPos = (i * wSrc + xPos) * 4;
+                
+                var buf1Pos = (i * wDst2 + j) * 4;
+                for (var k = 0; k < 4; k++) {
+                    var kPos = srcPos + k;
+                    var x0 = (xPos > 0) ? bufSrc[kPos - 4] : 2*bufSrc[kPos]-bufSrc[kPos+4];
+                    var x1 = bufSrc[kPos];
+                    var x2 = bufSrc[kPos + 4];
+                    var x3 = (xPos < wSrc - 2) ? bufSrc[kPos + 8] : 2*bufSrc[kPos + 4]-bufSrc[kPos];
+                    buf1[buf1Pos+k] = interpolate(x0,x1,x2,x3,t);
+                }
+            }
+        }
+        //this._writeFile(wDst2, hSrc, buf1, "out/buf1.jpg");
+        
+        // ===========================================================
+        // Pass 2 - interpolate columns
+        // buf2 has width and height of dst2
+        var buf2 = new Buffer(wDst2 * hDst2 * 4);
+        for (var i = 0; i < hDst2; i++) {
+            for (var j = 0; j < wDst2; j++) {
+                // i&j in dst2 coords
+                
+                // calculate y in buf1 coords
+                // this interpolation requires 4 sample points and the two inner ones must be real
+                // the outer points can be fudged for the edges.
+                // therefore (hSrc-1)/hDst2
+                var y = i * (hSrc-1) / hDst2;
+                var yPos = Math.floor(y);
+                var t = y - yPos;
+                var buf1Pos = (yPos * wDst2 + j) * 4;
+                var buf2Pos = (i * wDst2 + j) * 4;
+                for (var k = 0; k < 4; k++) {
+                    var kPos = buf1Pos + k;
+                    var y0 = (yPos > 0) ? buf1[kPos - wDst2*4] : 2*buf1[kPos]-buf1[kPos + wDst2*4];
+                    var y1 = buf1[kPos];
+                    var y2 = buf1[kPos + wDst2*4];
+                    var y3 = (yPos < hSrc-2) ? buf1[kPos + wDst2*8] : 2*buf1[kPos + wDst2*4]-buf1[kPos];
+                    
+                    buf2[buf2Pos + k] = interpolate(y0,y1,y2,y3,t);
+                }
+            }
+        }
+        //this._writeFile(wDst2, hDst2, buf2, "out/buf2.jpg");
+        
+        // ===========================================================
+        // Pass 3 - scale to dst
+        var m = wM * hM;
+        if (m > 1) {
+            for (var i = 0; i < hDst; i++) {
+                for (var j = 0; j < wDst; j++) {
+                    // i&j in dst bounded coords
+                    var r = 0;
+                    var g = 0;
+                    var b = 0;
+                    var a = 0;
+                    for (var y = 0; y < hM; y++) {
+                        var yPos = i * hM + y;
+                        for (var x = 0; x < wM; x++) {
+                            var xPos = j * wM + x;
+                            var xyPos = (yPos * wDst2 + xPos) * 4;
+                            r += buf2[xyPos];
+                            g += buf2[xyPos+1];
+                            b += buf2[xyPos+2];
+                            a += buf2[xyPos+3];
+                        }
+                    }
+                    
+                    var pos = (i*wDst + j) * 4;
+                    bufDst[pos]   = Math.round(r / m);
+                    bufDst[pos+1] = Math.round(g / m);
+                    bufDst[pos+2] = Math.round(b / m);
+                    bufDst[pos+3] = Math.round(a / m);
+                }
+            }
+        } else {
+            // replace dst buffer with buf2
+            dst._data.data = buf2;
+        }
+    },
+    
+    bicubicInterpolation: function(src, dst, options) {
+        var interpolateCubic = function(x0, x1, x2, x3, t) {
+            var a0 = x3 - x2 - x0 + x1;
+            var a1 = x0 - x1 - a0;
+            var a2 = x2 - x0;
+            var a3 = x1;
+            return Math.max(0,Math.min(255,(a0 * (t * t * t)) + (a1 * (t * t)) + (a2 * t) + (a3)));
+        }
+        return this._interpolate2D(src, dst, options, interpolateCubic);
+    },
+    
+    hermiteInterpolation: function(src, dst, options) {
+        var interpolateHermite = function(x0, x1, x2, x3, t)
+        {
+            var c0 = x1;
+            var c1 = 0.5 * (x2 - x0);
+            var c2 = x0 - (2.5 * x1) + (2 * x2) - (0.5 * x3);
+            var c3 = (0.5 * (x3 - x0)) + (1.5 * (x1 - x2));
+            return  Math.max(0,Math.min(255,Math.round((((((c3 * t) + c2) * t) + c1) * t) + c0)));
+        }
+        return this._interpolate2D(src, dst, options, interpolateHermite);
+    },
+    
+    bezierInterpolation: function(src, dst, options) {
+        // between 2 points y(n), y(n+1), use next points out, y(n-1), y(n+2)
+        // to predict control points (a & b) to be placed at n+0.5
+        //  ya(n) = y(n) + (y(n+1)-y(n-1))/4
+        //  yb(n) = y(n+1) - (y(n+2)-y(n))/4
+        // then use std bezier to interpolate [n,n+1)
+        //  y(n+t) = y(n)*(1-t)^3 + 3 * ya(n)*(1-t)^2*t + 3 * yb(n)*(1-t)*t^2 + y(n+1)*t^3
+        //  note the 3* factor for the two control points
+        // for edge cases, can choose:
+        //  y(-1) = y(0) - 2*(y(1)-y(0))
+        //  y(w) = y(w-1) + 2*(y(w-1)-y(w-2))
+        // but can go with y(-1) = y(0) and y(w) = y(w-1)
+        var interpolateBezier = function(x0, x1, x2, x3, t) {
+            // x1, x2 are the knots, use x0 and x3 to calculate control points
+            var cp1 = x1 + (x2-x0)/4;
+            var cp2 = x2 - (x3-x1)/4;
+            var nt = 1-t;
+            var c0 =      x1 * nt * nt * nt;
+            var c1 = 3 * cp1 * nt * nt *  t;
+            var c2 = 3 * cp2 * nt *  t *  t;
+            var c3 =      x2 *  t *  t *  t;
+            return Math.max(0,Math.min(255,Math.round(c0 + c1 + c2 + c3)));
+        }
+        return this._interpolate2D(src, dst, options, interpolateBezier);
+    }
+}
+}).call(this,require("buffer").Buffer)
+},{"./bitmap":63,"bluebird":3,"buffer":47,"underscore":145}],66:[function(require,module,exports){
+/**
+ * Copyright (c) 2015 Guyon Roche
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:</p>
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+ */
+"use strict";
+
+var fs = require("fs");
+var _ = require("underscore");
+var Promise = require("bluebird");
+
+
+var utils = module.exports = {
+    
+    // Promisification of fs
+    fs: {
+        exists: function(filename) {
+            var deferred = Promise.defer();
+            fs.exists(filename, function(exists) {
+                deferred.resolve(exists);
+            });
+            return deferred.promise;
+        }
+    }
+}
+},{"bluebird":3,"fs":46,"underscore":145}],67:[function(require,module,exports){
+var encode = require('./lib/encoder'),
+    decode = require('./lib/decoder');
+
+module.exports = {
+  encode: encode,
+  decode: decode
+};
+
+},{"./lib/decoder":68,"./lib/encoder":69}],68:[function(require,module,exports){
+(function (Buffer){
+/* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- /
+/* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
+/*
+   Copyright 2011 notmasteryet
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
+// - The JPEG specification can be found in the ITU CCITT Recommendation T.81
+//   (www.w3.org/Graphics/JPEG/itu-t81.pdf)
+// - The JFIF specification can be found in the JPEG File Interchange Format
+//   (www.w3.org/Graphics/JPEG/jfif3.pdf)
+// - The Adobe Application-Specific JPEG markers in the Supporting the DCT Filters
+//   in PostScript Level 2, Technical Note #5116
+//   (partners.adobe.com/public/developer/en/ps/sdk/5116.DCT_Filter.pdf)
+
+var JpegImage = (function jpegImage() {
+  "use strict";
+  var dctZigZag = new Int32Array([
+     0,
+     1,  8,
+    16,  9,  2,
+     3, 10, 17, 24,
+    32, 25, 18, 11, 4,
+     5, 12, 19, 26, 33, 40,
+    48, 41, 34, 27, 20, 13,  6,
+     7, 14, 21, 28, 35, 42, 49, 56,
+    57, 50, 43, 36, 29, 22, 15,
+    23, 30, 37, 44, 51, 58,
+    59, 52, 45, 38, 31,
+    39, 46, 53, 60,
+    61, 54, 47,
+    55, 62,
+    63
+  ]);
+
+  var dctCos1  =  4017   // cos(pi/16)
+  var dctSin1  =   799   // sin(pi/16)
+  var dctCos3  =  3406   // cos(3*pi/16)
+  var dctSin3  =  2276   // sin(3*pi/16)
+  var dctCos6  =  1567   // cos(6*pi/16)
+  var dctSin6  =  3784   // sin(6*pi/16)
+  var dctSqrt2 =  5793   // sqrt(2)
+  var dctSqrt1d2 = 2896  // sqrt(2) / 2
+
+  function constructor() {
+  }
+
+  function buildHuffmanTable(codeLengths, values) {
+    var k = 0, code = [], i, j, length = 16;
+    while (length > 0 && !codeLengths[length - 1])
+      length--;
+    code.push({children: [], index: 0});
+    var p = code[0], q;
+    for (i = 0; i < length; i++) {
+      for (j = 0; j < codeLengths[i]; j++) {
+        p = code.pop();
+        p.children[p.index] = values[k];
+        while (p.index > 0) {
+          p = code.pop();
+        }
+        p.index++;
+        code.push(p);
+        while (code.length <= i) {
+          code.push(q = {children: [], index: 0});
+          p.children[p.index] = q.children;
+          p = q;
+        }
+        k++;
+      }
+      if (i + 1 < length) {
+        // p here points to last code
+        code.push(q = {children: [], index: 0});
+        p.children[p.index] = q.children;
+        p = q;
+      }
+    }
+    return code[0].children;
+  }
+
+  function decodeScan(data, offset,
+                      frame, components, resetInterval,
+                      spectralStart, spectralEnd,
+                      successivePrev, successive) {
+    var precision = frame.precision;
+    var samplesPerLine = frame.samplesPerLine;
+    var scanLines = frame.scanLines;
+    var mcusPerLine = frame.mcusPerLine;
+    var progressive = frame.progressive;
+    var maxH = frame.maxH, maxV = frame.maxV;
+
+    var startOffset = offset, bitsData = 0, bitsCount = 0;
+    function readBit() {
+      if (bitsCount > 0) {
+        bitsCount--;
+        return (bitsData >> bitsCount) & 1;
+      }
+      bitsData = data[offset++];
+      if (bitsData == 0xFF) {
+        var nextByte = data[offset++];
+        if (nextByte) {
+          throw "unexpected marker: " + ((bitsData << 8) | nextByte).toString(16);
+        }
+        // unstuff 0
+      }
+      bitsCount = 7;
+      return bitsData >>> 7;
+    }
+    function decodeHuffman(tree) {
+      var node = tree, bit;
+      while ((bit = readBit()) !== null) {
+        node = node[bit];
+        if (typeof node === 'number')
+          return node;
+        if (typeof node !== 'object')
+          throw "invalid huffman sequence";
+      }
+      return null;
+    }
+    function receive(length) {
+      var n = 0;
+      while (length > 0) {
+        var bit = readBit();
+        if (bit === null) return;
+        n = (n << 1) | bit;
+        length--;
+      }
+      return n;
+    }
+    function receiveAndExtend(length) {
+      var n = receive(length);
+      if (n >= 1 << (length - 1))
+        return n;
+      return n + (-1 << length) + 1;
+    }
+    function decodeBaseline(component, zz) {
+      var t = decodeHuffman(component.huffmanTableDC);
+      var diff = t === 0 ? 0 : receiveAndExtend(t);
+      zz[0]= (component.pred += diff);
+      var k = 1;
+      while (k < 64) {
+        var rs = decodeHuffman(component.huffmanTableAC);
+        var s = rs & 15, r = rs >> 4;
+        if (s === 0) {
+          if (r < 15)
+            break;
+          k += 16;
+          continue;
+        }
+        k += r;
+        var z = dctZigZag[k];
+        zz[z] = receiveAndExtend(s);
+        k++;
+      }
+    }
+    function decodeDCFirst(component, zz) {
+      var t = decodeHuffman(component.huffmanTableDC);
+      var diff = t === 0 ? 0 : (receiveAndExtend(t) << successive);
+      zz[0] = (component.pred += diff);
+    }
+    function decodeDCSuccessive(component, zz) {
+      zz[0] |= readBit() << successive;
+    }
+    var eobrun = 0;
+    function decodeACFirst(component, zz) {
+      if (eobrun > 0) {
+        eobrun--;
+        return;
+      }
+      var k = spectralStart, e = spectralEnd;
+      while (k <= e) {
+        var rs = decodeHuffman(component.huffmanTableAC);
+        var s = rs & 15, r = rs >> 4;
+        if (s === 0) {
+          if (r < 15) {
+            eobrun = receive(r) + (1 << r) - 1;
+            break;
+          }
+          k += 16;
+          continue;
+        }
+        k += r;
+        var z = dctZigZag[k];
+        zz[z] = receiveAndExtend(s) * (1 << successive);
+        k++;
+      }
+    }
+    var successiveACState = 0, successiveACNextValue;
+    function decodeACSuccessive(component, zz) {
+      var k = spectralStart, e = spectralEnd, r = 0;
+      while (k <= e) {
+        var z = dctZigZag[k];
+        switch (successiveACState) {
+        case 0: // initial state
+          var rs = decodeHuffman(component.huffmanTableAC);
+          var s = rs & 15, r = rs >> 4;
+          if (s === 0) {
+            if (r < 15) {
+              eobrun = receive(r) + (1 << r);
+              successiveACState = 4;
+            } else {
+              r = 16;
+              successiveACState = 1;
+            }
+          } else {
+            if (s !== 1)
+              throw "invalid ACn encoding";
+            successiveACNextValue = receiveAndExtend(s);
+            successiveACState = r ? 2 : 3;
+          }
+          continue;
+        case 1: // skipping r zero items
+        case 2:
+          if (zz[z])
+            zz[z] += (readBit() << successive);
+          else {
+            r--;
+            if (r === 0)
+              successiveACState = successiveACState == 2 ? 3 : 0;
+          }
+          break;
+        case 3: // set value for a zero item
+          if (zz[z])
+            zz[z] += (readBit() << successive);
+          else {
+            zz[z] = successiveACNextValue << successive;
+            successiveACState = 0;
+          }
+          break;
+        case 4: // eob
+          if (zz[z])
+            zz[z] += (readBit() << successive);
+          break;
+        }
+        k++;
+      }
+      if (successiveACState === 4) {
+        eobrun--;
+        if (eobrun === 0)
+          successiveACState = 0;
+      }
+    }
+    function decodeMcu(component, decode, mcu, row, col) {
+      var mcuRow = (mcu / mcusPerLine) | 0;
+      var mcuCol = mcu % mcusPerLine;
+      var blockRow = mcuRow * component.v + row;
+      var blockCol = mcuCol * component.h + col;
+      decode(component, component.blocks[blockRow][blockCol]);
+    }
+    function decodeBlock(component, decode, mcu) {
+      var blockRow = (mcu / component.blocksPerLine) | 0;
+      var blockCol = mcu % component.blocksPerLine;
+      decode(component, component.blocks[blockRow][blockCol]);
+    }
+
+    var componentsLength = components.length;
+    var component, i, j, k, n;
+    var decodeFn;
+    if (progressive) {
+      if (spectralStart === 0)
+        decodeFn = successivePrev === 0 ? decodeDCFirst : decodeDCSuccessive;
+      else
+        decodeFn = successivePrev === 0 ? decodeACFirst : decodeACSuccessive;
+    } else {
+      decodeFn = decodeBaseline;
+    }
+
+    var mcu = 0, marker;
+    var mcuExpected;
+    if (componentsLength == 1) {
+      mcuExpected = components[0].blocksPerLine * components[0].blocksPerColumn;
+    } else {
+      mcuExpected = mcusPerLine * frame.mcusPerColumn;
+    }
+    if (!resetInterval) resetInterval = mcuExpected;
+
+    var h, v;
+    while (mcu < mcuExpected) {
+      // reset interval stuff
+      for (i = 0; i < componentsLength; i++)
+        components[i].pred = 0;
+      eobrun = 0;
+
+      if (componentsLength == 1) {
+        component = components[0];
+        for (n = 0; n < resetInterval; n++) {
+          decodeBlock(component, decodeFn, mcu);
+          mcu++;
+        }
+      } else {
+        for (n = 0; n < resetInterval; n++) {
+          for (i = 0; i < componentsLength; i++) {
+            component = components[i];
+            h = component.h;
+            v = component.v;
+            for (j = 0; j < v; j++) {
+              for (k = 0; k < h; k++) {
+                decodeMcu(component, decodeFn, mcu, j, k);
+              }
+            }
+          }
+          mcu++;
+
+          // If we've reached our expected MCU's, stop decoding
+          if (mcu === mcuExpected) break;
+        }
+      }
+
+      // find marker
+      bitsCount = 0;
+      marker = (data[offset] << 8) | data[offset + 1];
+      if (marker < 0xFF00) {
+        throw "marker was not found";
+      }
+
+      if (marker >= 0xFFD0 && marker <= 0xFFD7) { // RSTx
+        offset += 2;
+      }
+      else
+        break;
+    }
+
+    return offset - startOffset;
+  }
+
+  function buildComponentData(frame, component) {
+    var lines = [];
+    var blocksPerLine = component.blocksPerLine;
+    var blocksPerColumn = component.blocksPerColumn;
+    var samplesPerLine = blocksPerLine << 3;
+    var R = new Int32Array(64), r = new Uint8Array(64);
+
+    // A port of poppler's IDCT method which in turn is taken from:
+    //   Christoph Loeffler, Adriaan Ligtenberg, George S. Moschytz,
+    //   "Practical Fast 1-D DCT Algorithms with 11 Multiplications",
+    //   IEEE Intl. Conf. on Acoustics, Speech & Signal Processing, 1989,
+    //   988-991.
+    function quantizeAndInverse(zz, dataOut, dataIn) {
+      var qt = component.quantizationTable;
+      var v0, v1, v2, v3, v4, v5, v6, v7, t;
+      var p = dataIn;
+      var i;
+
+      // dequant
+      for (i = 0; i < 64; i++)
+        p[i] = zz[i] * qt[i];
+
+      // inverse DCT on rows
+      for (i = 0; i < 8; ++i) {
+        var row = 8 * i;
+
+        // check for all-zero AC coefficients
+        if (p[1 + row] == 0 && p[2 + row] == 0 && p[3 + row] == 0 &&
+            p[4 + row] == 0 && p[5 + row] == 0 && p[6 + row] == 0 &&
+            p[7 + row] == 0) {
+          t = (dctSqrt2 * p[0 + row] + 512) >> 10;
+          p[0 + row] = t;
+          p[1 + row] = t;
+          p[2 + row] = t;
+          p[3 + row] = t;
+          p[4 + row] = t;
+          p[5 + row] = t;
+          p[6 + row] = t;
+          p[7 + row] = t;
+          continue;
+        }
+
+        // stage 4
+        v0 = (dctSqrt2 * p[0 + row] + 128) >> 8;
+        v1 = (dctSqrt2 * p[4 + row] + 128) >> 8;
+        v2 = p[2 + row];
+        v3 = p[6 + row];
+        v4 = (dctSqrt1d2 * (p[1 + row] - p[7 + row]) + 128) >> 8;
+        v7 = (dctSqrt1d2 * (p[1 + row] + p[7 + row]) + 128) >> 8;
+        v5 = p[3 + row] << 4;
+        v6 = p[5 + row] << 4;
+
+        // stage 3
+        t = (v0 - v1+ 1) >> 1;
+        v0 = (v0 + v1 + 1) >> 1;
+        v1 = t;
+        t = (v2 * dctSin6 + v3 * dctCos6 + 128) >> 8;
+        v2 = (v2 * dctCos6 - v3 * dctSin6 + 128) >> 8;
+        v3 = t;
+        t = (v4 - v6 + 1) >> 1;
+        v4 = (v4 + v6 + 1) >> 1;
+        v6 = t;
+        t = (v7 + v5 + 1) >> 1;
+        v5 = (v7 - v5 + 1) >> 1;
+        v7 = t;
+
+        // stage 2
+        t = (v0 - v3 + 1) >> 1;
+        v0 = (v0 + v3 + 1) >> 1;
+        v3 = t;
+        t = (v1 - v2 + 1) >> 1;
+        v1 = (v1 + v2 + 1) >> 1;
+        v2 = t;
+        t = (v4 * dctSin3 + v7 * dctCos3 + 2048) >> 12;
+        v4 = (v4 * dctCos3 - v7 * dctSin3 + 2048) >> 12;
+        v7 = t;
+        t = (v5 * dctSin1 + v6 * dctCos1 + 2048) >> 12;
+        v5 = (v5 * dctCos1 - v6 * dctSin1 + 2048) >> 12;
+        v6 = t;
+
+        // stage 1
+        p[0 + row] = v0 + v7;
+        p[7 + row] = v0 - v7;
+        p[1 + row] = v1 + v6;
+        p[6 + row] = v1 - v6;
+        p[2 + row] = v2 + v5;
+        p[5 + row] = v2 - v5;
+        p[3 + row] = v3 + v4;
+        p[4 + row] = v3 - v4;
+      }
+
+      // inverse DCT on columns
+      for (i = 0; i < 8; ++i) {
+        var col = i;
+
+        // check for all-zero AC coefficients
+        if (p[1*8 + col] == 0 && p[2*8 + col] == 0 && p[3*8 + col] == 0 &&
+            p[4*8 + col] == 0 && p[5*8 + col] == 0 && p[6*8 + col] == 0 &&
+            p[7*8 + col] == 0) {
+          t = (dctSqrt2 * dataIn[i+0] + 8192) >> 14;
+          p[0*8 + col] = t;
+          p[1*8 + col] = t;
+          p[2*8 + col] = t;
+          p[3*8 + col] = t;
+          p[4*8 + col] = t;
+          p[5*8 + col] = t;
+          p[6*8 + col] = t;
+          p[7*8 + col] = t;
+          continue;
+        }
+
+        // stage 4
+        v0 = (dctSqrt2 * p[0*8 + col] + 2048) >> 12;
+        v1 = (dctSqrt2 * p[4*8 + col] + 2048) >> 12;
+        v2 = p[2*8 + col];
+        v3 = p[6*8 + col];
+        v4 = (dctSqrt1d2 * (p[1*8 + col] - p[7*8 + col]) + 2048) >> 12;
+        v7 = (dctSqrt1d2 * (p[1*8 + col] + p[7*8 + col]) + 2048) >> 12;
+        v5 = p[3*8 + col];
+        v6 = p[5*8 + col];
+
+        // stage 3
+        t = (v0 - v1 + 1) >> 1;
+        v0 = (v0 + v1 + 1) >> 1;
+        v1 = t;
+        t = (v2 * dctSin6 + v3 * dctCos6 + 2048) >> 12;
+        v2 = (v2 * dctCos6 - v3 * dctSin6 + 2048) >> 12;
+        v3 = t;
+        t = (v4 - v6 + 1) >> 1;
+        v4 = (v4 + v6 + 1) >> 1;
+        v6 = t;
+        t = (v7 + v5 + 1) >> 1;
+        v5 = (v7 - v5 + 1) >> 1;
+        v7 = t;
+
+        // stage 2
+        t = (v0 - v3 + 1) >> 1;
+        v0 = (v0 + v3 + 1) >> 1;
+        v3 = t;
+        t = (v1 - v2 + 1) >> 1;
+        v1 = (v1 + v2 + 1) >> 1;
+        v2 = t;
+        t = (v4 * dctSin3 + v7 * dctCos3 + 2048) >> 12;
+        v4 = (v4 * dctCos3 - v7 * dctSin3 + 2048) >> 12;
+        v7 = t;
+        t = (v5 * dctSin1 + v6 * dctCos1 + 2048) >> 12;
+        v5 = (v5 * dctCos1 - v6 * dctSin1 + 2048) >> 12;
+        v6 = t;
+
+        // stage 1
+        p[0*8 + col] = v0 + v7;
+        p[7*8 + col] = v0 - v7;
+        p[1*8 + col] = v1 + v6;
+        p[6*8 + col] = v1 - v6;
+        p[2*8 + col] = v2 + v5;
+        p[5*8 + col] = v2 - v5;
+        p[3*8 + col] = v3 + v4;
+        p[4*8 + col] = v3 - v4;
+      }
+
+      // convert to 8-bit integers
+      for (i = 0; i < 64; ++i) {
+        var sample = 128 + ((p[i] + 8) >> 4);
+        dataOut[i] = sample < 0 ? 0 : sample > 0xFF ? 0xFF : sample;
+      }
+    }
+
+    var i, j;
+    for (var blockRow = 0; blockRow < blocksPerColumn; blockRow++) {
+      var scanLine = blockRow << 3;
+      for (i = 0; i < 8; i++)
+        lines.push(new Uint8Array(samplesPerLine));
+      for (var blockCol = 0; blockCol < blocksPerLine; blockCol++) {
+        quantizeAndInverse(component.blocks[blockRow][blockCol], r, R);
+
+        var offset = 0, sample = blockCol << 3;
+        for (j = 0; j < 8; j++) {
+          var line = lines[scanLine + j];
+          for (i = 0; i < 8; i++)
+            line[sample + i] = r[offset++];
+        }
+      }
+    }
+    return lines;
+  }
+
+  function clampTo8bit(a) {
+    return a < 0 ? 0 : a > 255 ? 255 : a;
+  }
+
+  constructor.prototype = {
+    load: function load(path) {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", path, true);
+      xhr.responseType = "arraybuffer";
+      xhr.onload = (function() {
+        // TODO catch parse error
+        var data = new Uint8Array(xhr.response || xhr.mozResponseArrayBuffer);
+        this.parse(data);
+        if (this.onload)
+          this.onload();
+      }).bind(this);
+      xhr.send(null);
+    },
+    parse: function parse(data) {
+      var offset = 0, length = data.length;
+      function readUint16() {
+        var value = (data[offset] << 8) | data[offset + 1];
+        offset += 2;
+        return value;
+      }
+      function readDataBlock() {
+        var length = readUint16();
+        var array = data.subarray(offset, offset + length - 2);
+        offset += array.length;
+        return array;
+      }
+      function prepareComponents(frame) {
+        var maxH = 0, maxV = 0;
+        var component, componentId;
+        for (componentId in frame.components) {
+          if (frame.components.hasOwnProperty(componentId)) {
+            component = frame.components[componentId];
+            if (maxH < component.h) maxH = component.h;
+            if (maxV < component.v) maxV = component.v;
+          }
+        }
+        var mcusPerLine = Math.ceil(frame.samplesPerLine / 8 / maxH);
+        var mcusPerColumn = Math.ceil(frame.scanLines / 8 / maxV);
+        for (componentId in frame.components) {
+          if (frame.components.hasOwnProperty(componentId)) {
+            component = frame.components[componentId];
+            var blocksPerLine = Math.ceil(Math.ceil(frame.samplesPerLine / 8) * component.h / maxH);
+            var blocksPerColumn = Math.ceil(Math.ceil(frame.scanLines  / 8) * component.v / maxV);
+            var blocksPerLineForMcu = mcusPerLine * component.h;
+            var blocksPerColumnForMcu = mcusPerColumn * component.v;
+            var blocks = [];
+            for (var i = 0; i < blocksPerColumnForMcu; i++) {
+              var row = [];
+              for (var j = 0; j < blocksPerLineForMcu; j++)
+                row.push(new Int32Array(64));
+              blocks.push(row);
+            }
+            component.blocksPerLine = blocksPerLine;
+            component.blocksPerColumn = blocksPerColumn;
+            component.blocks = blocks;
+          }
+        }
+        frame.maxH = maxH;
+        frame.maxV = maxV;
+        frame.mcusPerLine = mcusPerLine;
+        frame.mcusPerColumn = mcusPerColumn;
+      }
+      var jfif = null;
+      var adobe = null;
+      var pixels = null;
+      var frame, resetInterval;
+      var quantizationTables = [], frames = [];
+      var huffmanTablesAC = [], huffmanTablesDC = [];
+      var fileMarker = readUint16();
+      if (fileMarker != 0xFFD8) { // SOI (Start of Image)
+        throw "SOI not found";
+      }
+
+      fileMarker = readUint16();
+      while (fileMarker != 0xFFD9) { // EOI (End of image)
+        var i, j, l;
+        switch(fileMarker) {
+          case 0xFF00: break;
+          case 0xFFE0: // APP0 (Application Specific)
+          case 0xFFE1: // APP1
+          case 0xFFE2: // APP2
+          case 0xFFE3: // APP3
+          case 0xFFE4: // APP4
+          case 0xFFE5: // APP5
+          case 0xFFE6: // APP6
+          case 0xFFE7: // APP7
+          case 0xFFE8: // APP8
+          case 0xFFE9: // APP9
+          case 0xFFEA: // APP10
+          case 0xFFEB: // APP11
+          case 0xFFEC: // APP12
+          case 0xFFED: // APP13
+          case 0xFFEE: // APP14
+          case 0xFFEF: // APP15
+          case 0xFFFE: // COM (Comment)
+            var appData = readDataBlock();
+
+            if (fileMarker === 0xFFE0) {
+              if (appData[0] === 0x4A && appData[1] === 0x46 && appData[2] === 0x49 &&
+                appData[3] === 0x46 && appData[4] === 0) { // 'JFIF\x00'
+                jfif = {
+                  version: { major: appData[5], minor: appData[6] },
+                  densityUnits: appData[7],
+                  xDensity: (appData[8] << 8) | appData[9],
+                  yDensity: (appData[10] << 8) | appData[11],
+                  thumbWidth: appData[12],
+                  thumbHeight: appData[13],
+                  thumbData: appData.subarray(14, 14 + 3 * appData[12] * appData[13])
+                };
+              }
+            }
+            // TODO APP1 - Exif
+            if (fileMarker === 0xFFEE) {
+              if (appData[0] === 0x41 && appData[1] === 0x64 && appData[2] === 0x6F &&
+                appData[3] === 0x62 && appData[4] === 0x65 && appData[5] === 0) { // 'Adobe\x00'
+                adobe = {
+                  version: appData[6],
+                  flags0: (appData[7] << 8) | appData[8],
+                  flags1: (appData[9] << 8) | appData[10],
+                  transformCode: appData[11]
+                };
+              }
+            }
+            break;
+
+          case 0xFFDB: // DQT (Define Quantization Tables)
+            var quantizationTablesLength = readUint16();
+            var quantizationTablesEnd = quantizationTablesLength + offset - 2;
+            while (offset < quantizationTablesEnd) {
+              var quantizationTableSpec = data[offset++];
+              var tableData = new Int32Array(64);
+              if ((quantizationTableSpec >> 4) === 0) { // 8 bit values
+                for (j = 0; j < 64; j++) {
+                  var z = dctZigZag[j];
+                  tableData[z] = data[offset++];
+                }
+              } else if ((quantizationTableSpec >> 4) === 1) { //16 bit
+                for (j = 0; j < 64; j++) {
+                  var z = dctZigZag[j];
+                  tableData[z] = readUint16();
+                }
+              } else
+                throw "DQT: invalid table spec";
+              quantizationTables[quantizationTableSpec & 15] = tableData;
+            }
+            break;
+
+          case 0xFFC0: // SOF0 (Start of Frame, Baseline DCT)
+          case 0xFFC1: // SOF1 (Start of Frame, Extended DCT)
+          case 0xFFC2: // SOF2 (Start of Frame, Progressive DCT)
+            readUint16(); // skip data length
+            frame = {};
+            frame.extended = (fileMarker === 0xFFC1);
+            frame.progressive = (fileMarker === 0xFFC2);
+            frame.precision = data[offset++];
+            frame.scanLines = readUint16();
+            frame.samplesPerLine = readUint16();
+            frame.components = {};
+            frame.componentsOrder = [];
+            var componentsCount = data[offset++], componentId;
+            var maxH = 0, maxV = 0;
+            for (i = 0; i < componentsCount; i++) {
+              componentId = data[offset];
+              var h = data[offset + 1] >> 4;
+              var v = data[offset + 1] & 15;
+              var qId = data[offset + 2];
+              frame.componentsOrder.push(componentId);
+              frame.components[componentId] = {
+                h: h,
+                v: v,
+                quantizationIdx: qId
+              };
+              offset += 3;
+            }
+            prepareComponents(frame);
+            frames.push(frame);
+            break;
+
+          case 0xFFC4: // DHT (Define Huffman Tables)
+            var huffmanLength = readUint16();
+            for (i = 2; i < huffmanLength;) {
+              var huffmanTableSpec = data[offset++];
+              var codeLengths = new Uint8Array(16);
+              var codeLengthSum = 0;
+              for (j = 0; j < 16; j++, offset++)
+                codeLengthSum += (codeLengths[j] = data[offset]);
+              var huffmanValues = new Uint8Array(codeLengthSum);
+              for (j = 0; j < codeLengthSum; j++, offset++)
+                huffmanValues[j] = data[offset];
+              i += 17 + codeLengthSum;
+
+              ((huffmanTableSpec >> 4) === 0 ? 
+                huffmanTablesDC : huffmanTablesAC)[huffmanTableSpec & 15] =
+                buildHuffmanTable(codeLengths, huffmanValues);
+            }
+            break;
+
+          case 0xFFDD: // DRI (Define Restart Interval)
+            readUint16(); // skip data length
+            resetInterval = readUint16();
+            break;
+
+          case 0xFFDA: // SOS (Start of Scan)
+            var scanLength = readUint16();
+            var selectorsCount = data[offset++];
+            var components = [], component;
+            for (i = 0; i < selectorsCount; i++) {
+              component = frame.components[data[offset++]];
+              var tableSpec = data[offset++];
+              component.huffmanTableDC = huffmanTablesDC[tableSpec >> 4];
+              component.huffmanTableAC = huffmanTablesAC[tableSpec & 15];
+              components.push(component);
+            }
+            var spectralStart = data[offset++];
+            var spectralEnd = data[offset++];
+            var successiveApproximation = data[offset++];
+            var processed = decodeScan(data, offset,
+              frame, components, resetInterval,
+              spectralStart, spectralEnd,
+              successiveApproximation >> 4, successiveApproximation & 15);
+            offset += processed;
+            break;
+          default:
+            if (data[offset - 3] == 0xFF &&
+                data[offset - 2] >= 0xC0 && data[offset - 2] <= 0xFE) {
+              // could be incorrect encoding -- last 0xFF byte of the previous
+              // block was eaten by the encoder
+              offset -= 3;
+              break;
+            }
+            throw "unknown JPEG marker " + fileMarker.toString(16);
+        }
+        fileMarker = readUint16();
+      }
+      if (frames.length != 1)
+        throw "only single frame JPEGs supported";
+
+      // set each frame's components quantization table
+      for (var i = 0; i < frames.length; i++) {
+        var cp = frames[i].components;
+        for (var j in cp) {
+          cp[j].quantizationTable = quantizationTables[cp[j].quantizationIdx];
+          delete cp[j].quantizationIdx;
+        }
+      }
+
+      this.width = frame.samplesPerLine;
+      this.height = frame.scanLines;
+      this.jfif = jfif;
+      this.adobe = adobe;
+      this.components = [];
+      for (var i = 0; i < frame.componentsOrder.length; i++) {
+        var component = frame.components[frame.componentsOrder[i]];
+        this.components.push({
+          lines: buildComponentData(frame, component),
+          scaleX: component.h / frame.maxH,
+          scaleY: component.v / frame.maxV
+        });
+      }
+    },
+    getData: function getData(width, height) {
+      var scaleX = this.width / width, scaleY = this.height / height;
+
+      var component1, component2, component3, component4;
+      var component1Line, component2Line, component3Line, component4Line;
+      var x, y;
+      var offset = 0;
+      var Y, Cb, Cr, K, C, M, Ye, R, G, B;
+      var colorTransform;
+      var dataLength = width * height * this.components.length;
+      var data = new Uint8Array(dataLength);
+      switch (this.components.length) {
+        case 1:
+          component1 = this.components[0];
+          for (y = 0; y < height; y++) {
+            component1Line = component1.lines[0 | (y * component1.scaleY * scaleY)];
+            for (x = 0; x < width; x++) {
+              Y = component1Line[0 | (x * component1.scaleX * scaleX)];
+
+              data[offset++] = Y;
+            }
+          }
+          break;
+        case 2:
+          // PDF might compress two component data in custom colorspace
+          component1 = this.components[0];
+          component2 = this.components[1];
+          for (y = 0; y < height; y++) {
+            component1Line = component1.lines[0 | (y * component1.scaleY * scaleY)];
+            component2Line = component2.lines[0 | (y * component2.scaleY * scaleY)];
+            for (x = 0; x < width; x++) {
+              Y = component1Line[0 | (x * component1.scaleX * scaleX)];
+              data[offset++] = Y;
+              Y = component2Line[0 | (x * component2.scaleX * scaleX)];
+              data[offset++] = Y;
+            }
+          }
+          break;
+        case 3:
+          // The default transform for three components is true
+          colorTransform = true;
+          // The adobe transform marker overrides any previous setting
+          if (this.adobe && this.adobe.transformCode)
+            colorTransform = true;
+          else if (typeof this.colorTransform !== 'undefined')
+            colorTransform = !!this.colorTransform;
+
+          component1 = this.components[0];
+          component2 = this.components[1];
+          component3 = this.components[2];
+          for (y = 0; y < height; y++) {
+            component1Line = component1.lines[0 | (y * component1.scaleY * scaleY)];
+            component2Line = component2.lines[0 | (y * component2.scaleY * scaleY)];
+            component3Line = component3.lines[0 | (y * component3.scaleY * scaleY)];
+            for (x = 0; x < width; x++) {
+              if (!colorTransform) {
+                R = component1Line[0 | (x * component1.scaleX * scaleX)];
+                G = component2Line[0 | (x * component2.scaleX * scaleX)];
+                B = component3Line[0 | (x * component3.scaleX * scaleX)];
+              } else {
+                Y = component1Line[0 | (x * component1.scaleX * scaleX)];
+                Cb = component2Line[0 | (x * component2.scaleX * scaleX)];
+                Cr = component3Line[0 | (x * component3.scaleX * scaleX)];
+
+                R = clampTo8bit(Y + 1.402 * (Cr - 128));
+                G = clampTo8bit(Y - 0.3441363 * (Cb - 128) - 0.71413636 * (Cr - 128));
+                B = clampTo8bit(Y + 1.772 * (Cb - 128));
+              }
+
+              data[offset++] = R;
+              data[offset++] = G;
+              data[offset++] = B;
+            }
+          }
+          break;
+        case 4:
+          if (!this.adobe)
+            throw 'Unsupported color mode (4 components)';
+          // The default transform for four components is false
+          colorTransform = false;
+          // The adobe transform marker overrides any previous setting
+          if (this.adobe && this.adobe.transformCode)
+            colorTransform = true;
+          else if (typeof this.colorTransform !== 'undefined')
+            colorTransform = !!this.colorTransform;
+
+          component1 = this.components[0];
+          component2 = this.components[1];
+          component3 = this.components[2];
+          component4 = this.components[3];
+          for (y = 0; y < height; y++) {
+            component1Line = component1.lines[0 | (y * component1.scaleY * scaleY)];
+            component2Line = component2.lines[0 | (y * component2.scaleY * scaleY)];
+            component3Line = component3.lines[0 | (y * component3.scaleY * scaleY)];
+            component4Line = component4.lines[0 | (y * component4.scaleY * scaleY)];
+            for (x = 0; x < width; x++) {
+              if (!colorTransform) {
+                C = component1Line[0 | (x * component1.scaleX * scaleX)];
+                M = component2Line[0 | (x * component2.scaleX * scaleX)];
+                Ye = component3Line[0 | (x * component3.scaleX * scaleX)];
+                K = component4Line[0 | (x * component4.scaleX * scaleX)];
+              } else {
+                Y = component1Line[0 | (x * component1.scaleX * scaleX)];
+                Cb = component2Line[0 | (x * component2.scaleX * scaleX)];
+                Cr = component3Line[0 | (x * component3.scaleX * scaleX)];
+                K = component4Line[0 | (x * component4.scaleX * scaleX)];
+
+                C = 255 - clampTo8bit(Y + 1.402 * (Cr - 128));
+                M = 255 - clampTo8bit(Y - 0.3441363 * (Cb - 128) - 0.71413636 * (Cr - 128));
+                Ye = 255 - clampTo8bit(Y + 1.772 * (Cb - 128));
+              }
+              data[offset++] = C;
+              data[offset++] = M;
+              data[offset++] = Ye;
+              data[offset++] = K;
+            }
+          }
+          break;
+        default:
+          throw 'Unsupported color mode';
+      }
+      return data;
+    },
+    copyToImageData: function copyToImageData(imageData) {
+      var width = imageData.width, height = imageData.height;
+      var imageDataArray = imageData.data;
+      var data = this.getData(width, height);
+      var i = 0, j = 0, x, y;
+      var Y, K, C, M, R, G, B;
+      switch (this.components.length) {
+        case 1:
+          for (y = 0; y < height; y++) {
+            for (x = 0; x < width; x++) {
+              Y = data[i++];
+
+              imageDataArray[j++] = Y;
+              imageDataArray[j++] = Y;
+              imageDataArray[j++] = Y;
+              imageDataArray[j++] = 255;
+            }
+          }
+          break;
+        case 3:
+          for (y = 0; y < height; y++) {
+            for (x = 0; x < width; x++) {
+              R = data[i++];
+              G = data[i++];
+              B = data[i++];
+
+              imageDataArray[j++] = R;
+              imageDataArray[j++] = G;
+              imageDataArray[j++] = B;
+              imageDataArray[j++] = 255;
+            }
+          }
+          break;
+        case 4:
+          for (y = 0; y < height; y++) {
+            for (x = 0; x < width; x++) {
+              C = data[i++];
+              M = data[i++];
+              Y = data[i++];
+              K = data[i++];
+
+              R = 255 - clampTo8bit(C * (1 - K / 255) + K);
+              G = 255 - clampTo8bit(M * (1 - K / 255) + K);
+              B = 255 - clampTo8bit(Y * (1 - K / 255) + K);
+
+              imageDataArray[j++] = R;
+              imageDataArray[j++] = G;
+              imageDataArray[j++] = B;
+              imageDataArray[j++] = 255;
+            }
+          }
+          break;
+        default:
+          throw 'Unsupported color mode';
+      }
+    }
+  };
+
+  return constructor;
+})();
+module.exports = decode;
+
+function decode(jpegData) {
+  var arr = new Uint8Array(jpegData);
+  var decoder = new JpegImage();
+  decoder.parse(arr);
+
+  var image = {
+    width: decoder.width,
+    height: decoder.height,
+    data: new Buffer(decoder.width * decoder.height * 4)
+  };
+  
+  decoder.copyToImageData(image);
+  
+  return image;
+}
+
+}).call(this,require("buffer").Buffer)
+},{"buffer":47}],69:[function(require,module,exports){
+(function (Buffer){
+/*
+  Copyright (c) 2008, Adobe Systems Incorporated
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without 
+  modification, are permitted provided that the following conditions are
+  met:
+
+  * Redistributions of source code must retain the above copyright notice, 
+    this list of conditions and the following disclaimer.
+  
+  * Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the 
+    documentation and/or other materials provided with the distribution.
+  
+  * Neither the name of Adobe Systems Incorporated nor the names of its 
+    contributors may be used to endorse or promote products derived from 
+    this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+  IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+  THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+  PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
+  CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+/*
+JPEG encoder ported to JavaScript and optimized by Andreas Ritter, www.bytestrom.eu, 11/2009
+
+Basic GUI blocking jpeg encoder
+*/
+
+var btoa = btoa || function(buf) {
+  return new Buffer(buf).toString('base64');
+};
+
+function JPEGEncoder(quality) {
+  var self = this;
+	var fround = Math.round;
+	var ffloor = Math.floor;
+	var YTable = new Array(64);
+	var UVTable = new Array(64);
+	var fdtbl_Y = new Array(64);
+	var fdtbl_UV = new Array(64);
+	var YDC_HT;
+	var UVDC_HT;
+	var YAC_HT;
+	var UVAC_HT;
+	
+	var bitcode = new Array(65535);
+	var category = new Array(65535);
+	var outputfDCTQuant = new Array(64);
+	var DU = new Array(64);
+	var byteout = [];
+	var bytenew = 0;
+	var bytepos = 7;
+	
+	var YDU = new Array(64);
+	var UDU = new Array(64);
+	var VDU = new Array(64);
+	var clt = new Array(256);
+	var RGB_YUV_TABLE = new Array(2048);
+	var currentQuality;
+	
+	var ZigZag = [
+			 0, 1, 5, 6,14,15,27,28,
+			 2, 4, 7,13,16,26,29,42,
+			 3, 8,12,17,25,30,41,43,
+			 9,11,18,24,31,40,44,53,
+			10,19,23,32,39,45,52,54,
+			20,22,33,38,46,51,55,60,
+			21,34,37,47,50,56,59,61,
+			35,36,48,49,57,58,62,63
+		];
+	
+	var std_dc_luminance_nrcodes = [0,0,1,5,1,1,1,1,1,1,0,0,0,0,0,0,0];
+	var std_dc_luminance_values = [0,1,2,3,4,5,6,7,8,9,10,11];
+	var std_ac_luminance_nrcodes = [0,0,2,1,3,3,2,4,3,5,5,4,4,0,0,1,0x7d];
+	var std_ac_luminance_values = [
+			0x01,0x02,0x03,0x00,0x04,0x11,0x05,0x12,
+			0x21,0x31,0x41,0x06,0x13,0x51,0x61,0x07,
+			0x22,0x71,0x14,0x32,0x81,0x91,0xa1,0x08,
+			0x23,0x42,0xb1,0xc1,0x15,0x52,0xd1,0xf0,
+			0x24,0x33,0x62,0x72,0x82,0x09,0x0a,0x16,
+			0x17,0x18,0x19,0x1a,0x25,0x26,0x27,0x28,
+			0x29,0x2a,0x34,0x35,0x36,0x37,0x38,0x39,
+			0x3a,0x43,0x44,0x45,0x46,0x47,0x48,0x49,
+			0x4a,0x53,0x54,0x55,0x56,0x57,0x58,0x59,
+			0x5a,0x63,0x64,0x65,0x66,0x67,0x68,0x69,
+			0x6a,0x73,0x74,0x75,0x76,0x77,0x78,0x79,
+			0x7a,0x83,0x84,0x85,0x86,0x87,0x88,0x89,
+			0x8a,0x92,0x93,0x94,0x95,0x96,0x97,0x98,
+			0x99,0x9a,0xa2,0xa3,0xa4,0xa5,0xa6,0xa7,
+			0xa8,0xa9,0xaa,0xb2,0xb3,0xb4,0xb5,0xb6,
+			0xb7,0xb8,0xb9,0xba,0xc2,0xc3,0xc4,0xc5,
+			0xc6,0xc7,0xc8,0xc9,0xca,0xd2,0xd3,0xd4,
+			0xd5,0xd6,0xd7,0xd8,0xd9,0xda,0xe1,0xe2,
+			0xe3,0xe4,0xe5,0xe6,0xe7,0xe8,0xe9,0xea,
+			0xf1,0xf2,0xf3,0xf4,0xf5,0xf6,0xf7,0xf8,
+			0xf9,0xfa
+		];
+	
+	var std_dc_chrominance_nrcodes = [0,0,3,1,1,1,1,1,1,1,1,1,0,0,0,0,0];
+	var std_dc_chrominance_values = [0,1,2,3,4,5,6,7,8,9,10,11];
+	var std_ac_chrominance_nrcodes = [0,0,2,1,2,4,4,3,4,7,5,4,4,0,1,2,0x77];
+	var std_ac_chrominance_values = [
+			0x00,0x01,0x02,0x03,0x11,0x04,0x05,0x21,
+			0x31,0x06,0x12,0x41,0x51,0x07,0x61,0x71,
+			0x13,0x22,0x32,0x81,0x08,0x14,0x42,0x91,
+			0xa1,0xb1,0xc1,0x09,0x23,0x33,0x52,0xf0,
+			0x15,0x62,0x72,0xd1,0x0a,0x16,0x24,0x34,
+			0xe1,0x25,0xf1,0x17,0x18,0x19,0x1a,0x26,
+			0x27,0x28,0x29,0x2a,0x35,0x36,0x37,0x38,
+			0x39,0x3a,0x43,0x44,0x45,0x46,0x47,0x48,
+			0x49,0x4a,0x53,0x54,0x55,0x56,0x57,0x58,
+			0x59,0x5a,0x63,0x64,0x65,0x66,0x67,0x68,
+			0x69,0x6a,0x73,0x74,0x75,0x76,0x77,0x78,
+			0x79,0x7a,0x82,0x83,0x84,0x85,0x86,0x87,
+			0x88,0x89,0x8a,0x92,0x93,0x94,0x95,0x96,
+			0x97,0x98,0x99,0x9a,0xa2,0xa3,0xa4,0xa5,
+			0xa6,0xa7,0xa8,0xa9,0xaa,0xb2,0xb3,0xb4,
+			0xb5,0xb6,0xb7,0xb8,0xb9,0xba,0xc2,0xc3,
+			0xc4,0xc5,0xc6,0xc7,0xc8,0xc9,0xca,0xd2,
+			0xd3,0xd4,0xd5,0xd6,0xd7,0xd8,0xd9,0xda,
+			0xe2,0xe3,0xe4,0xe5,0xe6,0xe7,0xe8,0xe9,
+			0xea,0xf2,0xf3,0xf4,0xf5,0xf6,0xf7,0xf8,
+			0xf9,0xfa
+		];
+	
+	function initQuantTables(sf){
+			var YQT = [
+				16, 11, 10, 16, 24, 40, 51, 61,
+				12, 12, 14, 19, 26, 58, 60, 55,
+				14, 13, 16, 24, 40, 57, 69, 56,
+				14, 17, 22, 29, 51, 87, 80, 62,
+				18, 22, 37, 56, 68,109,103, 77,
+				24, 35, 55, 64, 81,104,113, 92,
+				49, 64, 78, 87,103,121,120,101,
+				72, 92, 95, 98,112,100,103, 99
+			];
+			
+			for (var i = 0; i < 64; i++) {
+				var t = ffloor((YQT[i]*sf+50)/100);
+				if (t < 1) {
+					t = 1;
+				} else if (t > 255) {
+					t = 255;
+				}
+				YTable[ZigZag[i]] = t;
+			}
+			var UVQT = [
+				17, 18, 24, 47, 99, 99, 99, 99,
+				18, 21, 26, 66, 99, 99, 99, 99,
+				24, 26, 56, 99, 99, 99, 99, 99,
+				47, 66, 99, 99, 99, 99, 99, 99,
+				99, 99, 99, 99, 99, 99, 99, 99,
+				99, 99, 99, 99, 99, 99, 99, 99,
+				99, 99, 99, 99, 99, 99, 99, 99,
+				99, 99, 99, 99, 99, 99, 99, 99
+			];
+			for (var j = 0; j < 64; j++) {
+				var u = ffloor((UVQT[j]*sf+50)/100);
+				if (u < 1) {
+					u = 1;
+				} else if (u > 255) {
+					u = 255;
+				}
+				UVTable[ZigZag[j]] = u;
+			}
+			var aasf = [
+				1.0, 1.387039845, 1.306562965, 1.175875602,
+				1.0, 0.785694958, 0.541196100, 0.275899379
+			];
+			var k = 0;
+			for (var row = 0; row < 8; row++)
+			{
+				for (var col = 0; col < 8; col++)
+				{
+					fdtbl_Y[k]  = (1.0 / (YTable [ZigZag[k]] * aasf[row] * aasf[col] * 8.0));
+					fdtbl_UV[k] = (1.0 / (UVTable[ZigZag[k]] * aasf[row] * aasf[col] * 8.0));
+					k++;
+				}
+			}
+		}
+		
+		function computeHuffmanTbl(nrcodes, std_table){
+			var codevalue = 0;
+			var pos_in_table = 0;
+			var HT = new Array();
+			for (var k = 1; k <= 16; k++) {
+				for (var j = 1; j <= nrcodes[k]; j++) {
+					HT[std_table[pos_in_table]] = [];
+					HT[std_table[pos_in_table]][0] = codevalue;
+					HT[std_table[pos_in_table]][1] = k;
+					pos_in_table++;
+					codevalue++;
+				}
+				codevalue*=2;
+			}
+			return HT;
+		}
+		
+		function initHuffmanTbl()
+		{
+			YDC_HT = computeHuffmanTbl(std_dc_luminance_nrcodes,std_dc_luminance_values);
+			UVDC_HT = computeHuffmanTbl(std_dc_chrominance_nrcodes,std_dc_chrominance_values);
+			YAC_HT = computeHuffmanTbl(std_ac_luminance_nrcodes,std_ac_luminance_values);
+			UVAC_HT = computeHuffmanTbl(std_ac_chrominance_nrcodes,std_ac_chrominance_values);
+		}
+	
+		function initCategoryNumber()
+		{
+			var nrlower = 1;
+			var nrupper = 2;
+			for (var cat = 1; cat <= 15; cat++) {
+				//Positive numbers
+				for (var nr = nrlower; nr<nrupper; nr++) {
+					category[32767+nr] = cat;
+					bitcode[32767+nr] = [];
+					bitcode[32767+nr][1] = cat;
+					bitcode[32767+nr][0] = nr;
+				}
+				//Negative numbers
+				for (var nrneg =-(nrupper-1); nrneg<=-nrlower; nrneg++) {
+					category[32767+nrneg] = cat;
+					bitcode[32767+nrneg] = [];
+					bitcode[32767+nrneg][1] = cat;
+					bitcode[32767+nrneg][0] = nrupper-1+nrneg;
+				}
+				nrlower <<= 1;
+				nrupper <<= 1;
+			}
+		}
+		
+		function initRGBYUVTable() {
+			for(var i = 0; i < 256;i++) {
+				RGB_YUV_TABLE[i]      		=  19595 * i;
+				RGB_YUV_TABLE[(i+ 256)>>0] 	=  38470 * i;
+				RGB_YUV_TABLE[(i+ 512)>>0] 	=   7471 * i + 0x8000;
+				RGB_YUV_TABLE[(i+ 768)>>0] 	= -11059 * i;
+				RGB_YUV_TABLE[(i+1024)>>0] 	= -21709 * i;
+				RGB_YUV_TABLE[(i+1280)>>0] 	=  32768 * i + 0x807FFF;
+				RGB_YUV_TABLE[(i+1536)>>0] 	= -27439 * i;
+				RGB_YUV_TABLE[(i+1792)>>0] 	= - 5329 * i;
+			}
+		}
+		
+		// IO functions
+		function writeBits(bs)
+		{
+			var value = bs[0];
+			var posval = bs[1]-1;
+			while ( posval >= 0 ) {
+				if (value & (1 << posval) ) {
+					bytenew |= (1 << bytepos);
+				}
+				posval--;
+				bytepos--;
+				if (bytepos < 0) {
+					if (bytenew == 0xFF) {
+						writeByte(0xFF);
+						writeByte(0);
+					}
+					else {
+						writeByte(bytenew);
+					}
+					bytepos=7;
+					bytenew=0;
+				}
+			}
+		}
+	
+		function writeByte(value)
+		{
+			//byteout.push(clt[value]); // write char directly instead of converting later
+      byteout.push(value);
+		}
+	
+		function writeWord(value)
+		{
+			writeByte((value>>8)&0xFF);
+			writeByte((value   )&0xFF);
+		}
+		
+		// DCT & quantization core
+		function fDCTQuant(data, fdtbl)
+		{
+			var d0, d1, d2, d3, d4, d5, d6, d7;
+			/* Pass 1: process rows. */
+			var dataOff=0;
+			var i;
+			const I8 = 8;
+			const I64 = 64;
+			for (i=0; i<I8; ++i)
+			{
+				d0 = data[dataOff];
+				d1 = data[dataOff+1];
+				d2 = data[dataOff+2];
+				d3 = data[dataOff+3];
+				d4 = data[dataOff+4];
+				d5 = data[dataOff+5];
+				d6 = data[dataOff+6];
+				d7 = data[dataOff+7];
+				
+				var tmp0 = d0 + d7;
+				var tmp7 = d0 - d7;
+				var tmp1 = d1 + d6;
+				var tmp6 = d1 - d6;
+				var tmp2 = d2 + d5;
+				var tmp5 = d2 - d5;
+				var tmp3 = d3 + d4;
+				var tmp4 = d3 - d4;
+	
+				/* Even part */
+				var tmp10 = tmp0 + tmp3;	/* phase 2 */
+				var tmp13 = tmp0 - tmp3;
+				var tmp11 = tmp1 + tmp2;
+				var tmp12 = tmp1 - tmp2;
+	
+				data[dataOff] = tmp10 + tmp11; /* phase 3 */
+				data[dataOff+4] = tmp10 - tmp11;
+	
+				var z1 = (tmp12 + tmp13) * 0.707106781; /* c4 */
+				data[dataOff+2] = tmp13 + z1; /* phase 5 */
+				data[dataOff+6] = tmp13 - z1;
+	
+				/* Odd part */
+				tmp10 = tmp4 + tmp5; /* phase 2 */
+				tmp11 = tmp5 + tmp6;
+				tmp12 = tmp6 + tmp7;
+	
+				/* The rotator is modified from fig 4-8 to avoid extra negations. */
+				var z5 = (tmp10 - tmp12) * 0.382683433; /* c6 */
+				var z2 = 0.541196100 * tmp10 + z5; /* c2-c6 */
+				var z4 = 1.306562965 * tmp12 + z5; /* c2+c6 */
+				var z3 = tmp11 * 0.707106781; /* c4 */
+	
+				var z11 = tmp7 + z3;	/* phase 5 */
+				var z13 = tmp7 - z3;
+	
+				data[dataOff+5] = z13 + z2;	/* phase 6 */
+				data[dataOff+3] = z13 - z2;
+				data[dataOff+1] = z11 + z4;
+				data[dataOff+7] = z11 - z4;
+	
+				dataOff += 8; /* advance pointer to next row */
+			}
+	
+			/* Pass 2: process columns. */
+			dataOff = 0;
+			for (i=0; i<I8; ++i)
+			{
+				d0 = data[dataOff];
+				d1 = data[dataOff + 8];
+				d2 = data[dataOff + 16];
+				d3 = data[dataOff + 24];
+				d4 = data[dataOff + 32];
+				d5 = data[dataOff + 40];
+				d6 = data[dataOff + 48];
+				d7 = data[dataOff + 56];
+				
+				var tmp0p2 = d0 + d7;
+				var tmp7p2 = d0 - d7;
+				var tmp1p2 = d1 + d6;
+				var tmp6p2 = d1 - d6;
+				var tmp2p2 = d2 + d5;
+				var tmp5p2 = d2 - d5;
+				var tmp3p2 = d3 + d4;
+				var tmp4p2 = d3 - d4;
+	
+				/* Even part */
+				var tmp10p2 = tmp0p2 + tmp3p2;	/* phase 2 */
+				var tmp13p2 = tmp0p2 - tmp3p2;
+				var tmp11p2 = tmp1p2 + tmp2p2;
+				var tmp12p2 = tmp1p2 - tmp2p2;
+	
+				data[dataOff] = tmp10p2 + tmp11p2; /* phase 3 */
+				data[dataOff+32] = tmp10p2 - tmp11p2;
+	
+				var z1p2 = (tmp12p2 + tmp13p2) * 0.707106781; /* c4 */
+				data[dataOff+16] = tmp13p2 + z1p2; /* phase 5 */
+				data[dataOff+48] = tmp13p2 - z1p2;
+	
+				/* Odd part */
+				tmp10p2 = tmp4p2 + tmp5p2; /* phase 2 */
+				tmp11p2 = tmp5p2 + tmp6p2;
+				tmp12p2 = tmp6p2 + tmp7p2;
+	
+				/* The rotator is modified from fig 4-8 to avoid extra negations. */
+				var z5p2 = (tmp10p2 - tmp12p2) * 0.382683433; /* c6 */
+				var z2p2 = 0.541196100 * tmp10p2 + z5p2; /* c2-c6 */
+				var z4p2 = 1.306562965 * tmp12p2 + z5p2; /* c2+c6 */
+				var z3p2 = tmp11p2 * 0.707106781; /* c4 */
+	
+				var z11p2 = tmp7p2 + z3p2;	/* phase 5 */
+				var z13p2 = tmp7p2 - z3p2;
+	
+				data[dataOff+40] = z13p2 + z2p2; /* phase 6 */
+				data[dataOff+24] = z13p2 - z2p2;
+				data[dataOff+ 8] = z11p2 + z4p2;
+				data[dataOff+56] = z11p2 - z4p2;
+	
+				dataOff++; /* advance pointer to next column */
+			}
+	
+			// Quantize/descale the coefficients
+			var fDCTQuant;
+			for (i=0; i<I64; ++i)
+			{
+				// Apply the quantization and scaling factor & Round to nearest integer
+				fDCTQuant = data[i]*fdtbl[i];
+				outputfDCTQuant[i] = (fDCTQuant > 0.0) ? ((fDCTQuant + 0.5)|0) : ((fDCTQuant - 0.5)|0);
+				//outputfDCTQuant[i] = fround(fDCTQuant);
+
+			}
+			return outputfDCTQuant;
+		}
+		
+		function writeAPP0()
+		{
+			writeWord(0xFFE0); // marker
+			writeWord(16); // length
+			writeByte(0x4A); // J
+			writeByte(0x46); // F
+			writeByte(0x49); // I
+			writeByte(0x46); // F
+			writeByte(0); // = "JFIF",'\0'
+			writeByte(1); // versionhi
+			writeByte(1); // versionlo
+			writeByte(0); // xyunits
+			writeWord(1); // xdensity
+			writeWord(1); // ydensity
+			writeByte(0); // thumbnwidth
+			writeByte(0); // thumbnheight
+		}
+	
+		function writeSOF0(width, height)
+		{
+			writeWord(0xFFC0); // marker
+			writeWord(17);   // length, truecolor YUV JPG
+			writeByte(8);    // precision
+			writeWord(height);
+			writeWord(width);
+			writeByte(3);    // nrofcomponents
+			writeByte(1);    // IdY
+			writeByte(0x11); // HVY
+			writeByte(0);    // QTY
+			writeByte(2);    // IdU
+			writeByte(0x11); // HVU
+			writeByte(1);    // QTU
+			writeByte(3);    // IdV
+			writeByte(0x11); // HVV
+			writeByte(1);    // QTV
+		}
+	
+		function writeDQT()
+		{
+			writeWord(0xFFDB); // marker
+			writeWord(132);	   // length
+			writeByte(0);
+			for (var i=0; i<64; i++) {
+				writeByte(YTable[i]);
+			}
+			writeByte(1);
+			for (var j=0; j<64; j++) {
+				writeByte(UVTable[j]);
+			}
+		}
+	
+		function writeDHT()
+		{
+			writeWord(0xFFC4); // marker
+			writeWord(0x01A2); // length
+	
+			writeByte(0); // HTYDCinfo
+			for (var i=0; i<16; i++) {
+				writeByte(std_dc_luminance_nrcodes[i+1]);
+			}
+			for (var j=0; j<=11; j++) {
+				writeByte(std_dc_luminance_values[j]);
+			}
+	
+			writeByte(0x10); // HTYACinfo
+			for (var k=0; k<16; k++) {
+				writeByte(std_ac_luminance_nrcodes[k+1]);
+			}
+			for (var l=0; l<=161; l++) {
+				writeByte(std_ac_luminance_values[l]);
+			}
+	
+			writeByte(1); // HTUDCinfo
+			for (var m=0; m<16; m++) {
+				writeByte(std_dc_chrominance_nrcodes[m+1]);
+			}
+			for (var n=0; n<=11; n++) {
+				writeByte(std_dc_chrominance_values[n]);
+			}
+	
+			writeByte(0x11); // HTUACinfo
+			for (var o=0; o<16; o++) {
+				writeByte(std_ac_chrominance_nrcodes[o+1]);
+			}
+			for (var p=0; p<=161; p++) {
+				writeByte(std_ac_chrominance_values[p]);
+			}
+		}
+	
+		function writeSOS()
+		{
+			writeWord(0xFFDA); // marker
+			writeWord(12); // length
+			writeByte(3); // nrofcomponents
+			writeByte(1); // IdY
+			writeByte(0); // HTY
+			writeByte(2); // IdU
+			writeByte(0x11); // HTU
+			writeByte(3); // IdV
+			writeByte(0x11); // HTV
+			writeByte(0); // Ss
+			writeByte(0x3f); // Se
+			writeByte(0); // Bf
+		}
+		
+		function processDU(CDU, fdtbl, DC, HTDC, HTAC){
+			var EOB = HTAC[0x00];
+			var M16zeroes = HTAC[0xF0];
+			var pos;
+			const I16 = 16;
+			const I63 = 63;
+			const I64 = 64;
+			var DU_DCT = fDCTQuant(CDU, fdtbl);
+			//ZigZag reorder
+			for (var j=0;j<I64;++j) {
+				DU[ZigZag[j]]=DU_DCT[j];
+			}
+			var Diff = DU[0] - DC; DC = DU[0];
+			//Encode DC
+			if (Diff==0) {
+				writeBits(HTDC[0]); // Diff might be 0
+			} else {
+				pos = 32767+Diff;
+				writeBits(HTDC[category[pos]]);
+				writeBits(bitcode[pos]);
+			}
+			//Encode ACs
+			var end0pos = 63; // was const... which is crazy
+			for (; (end0pos>0)&&(DU[end0pos]==0); end0pos--) {};
+			//end0pos = first element in reverse order !=0
+			if ( end0pos == 0) {
+				writeBits(EOB);
+				return DC;
+			}
+			var i = 1;
+			var lng;
+			while ( i <= end0pos ) {
+				var startpos = i;
+				for (; (DU[i]==0) && (i<=end0pos); ++i) {}
+				var nrzeroes = i-startpos;
+				if ( nrzeroes >= I16 ) {
+					lng = nrzeroes>>4;
+					for (var nrmarker=1; nrmarker <= lng; ++nrmarker)
+						writeBits(M16zeroes);
+					nrzeroes = nrzeroes&0xF;
+				}
+				pos = 32767+DU[i];
+				writeBits(HTAC[(nrzeroes<<4)+category[pos]]);
+				writeBits(bitcode[pos]);
+				i++;
+			}
+			if ( end0pos != I63 ) {
+				writeBits(EOB);
+			}
+			return DC;
+		}
+
+		function initCharLookupTable(){
+			var sfcc = String.fromCharCode;
+			for(var i=0; i < 256; i++){ ///// ACHTUNG // 255
+				clt[i] = sfcc(i);
+			}
+		}
+		
+		this.encode = function(image,quality) // image data object
+		{
+			var time_start = new Date().getTime();
+			
+			if(quality) setQuality(quality);
+			
+			// Initialize bit writer
+			byteout = new Array();
+			bytenew=0;
+			bytepos=7;
+	
+			// Add JPEG headers
+			writeWord(0xFFD8); // SOI
+			writeAPP0();
+			writeDQT();
+			writeSOF0(image.width,image.height);
+			writeDHT();
+			writeSOS();
+
+	
+			// Encode 8x8 macroblocks
+			var DCY=0;
+			var DCU=0;
+			var DCV=0;
+			
+			bytenew=0;
+			bytepos=7;
+			
+			
+			this.encode.displayName = "_encode_";
+
+			var imageData = image.data;
+			var width = image.width;
+			var height = image.height;
+
+			var quadWidth = width*4;
+			var tripleWidth = width*3;
+			
+			var x, y = 0;
+			var r, g, b;
+			var start,p, col,row,pos;
+			while(y < height){
+				x = 0;
+				while(x < quadWidth){
+				start = quadWidth * y + x;
+				p = start;
+				col = -1;
+				row = 0;
+				
+				for(pos=0; pos < 64; pos++){
+					row = pos >> 3;// /8
+					col = ( pos & 7 ) * 4; // %8
+					p = start + ( row * quadWidth ) + col;		
+					
+					if(y+row >= height){ // padding bottom
+						p-= (quadWidth*(y+1+row-height));
+					}
+
+					if(x+col >= quadWidth){ // padding right	
+						p-= ((x+col) - quadWidth +4)
+					}
+					
+					r = imageData[ p++ ];
+					g = imageData[ p++ ];
+					b = imageData[ p++ ];
+					
+					
+					/* // calculate YUV values dynamically
+					YDU[pos]=((( 0.29900)*r+( 0.58700)*g+( 0.11400)*b))-128; //-0x80
+					UDU[pos]=(((-0.16874)*r+(-0.33126)*g+( 0.50000)*b));
+					VDU[pos]=((( 0.50000)*r+(-0.41869)*g+(-0.08131)*b));
+					*/
+					
+					// use lookup table (slightly faster)
+					YDU[pos] = ((RGB_YUV_TABLE[r]             + RGB_YUV_TABLE[(g +  256)>>0] + RGB_YUV_TABLE[(b +  512)>>0]) >> 16)-128;
+					UDU[pos] = ((RGB_YUV_TABLE[(r +  768)>>0] + RGB_YUV_TABLE[(g + 1024)>>0] + RGB_YUV_TABLE[(b + 1280)>>0]) >> 16)-128;
+					VDU[pos] = ((RGB_YUV_TABLE[(r + 1280)>>0] + RGB_YUV_TABLE[(g + 1536)>>0] + RGB_YUV_TABLE[(b + 1792)>>0]) >> 16)-128;
+
+				}
+				
+				DCY = processDU(YDU, fdtbl_Y, DCY, YDC_HT, YAC_HT);
+				DCU = processDU(UDU, fdtbl_UV, DCU, UVDC_HT, UVAC_HT);
+				DCV = processDU(VDU, fdtbl_UV, DCV, UVDC_HT, UVAC_HT);
+				x+=32;
+				}
+				y+=8;
+			}
+			
+			
+			////////////////////////////////////////////////////////////////
+	
+			// Do the bit alignment of the EOI marker
+			if ( bytepos >= 0 ) {
+				var fillbits = [];
+				fillbits[1] = bytepos+1;
+				fillbits[0] = (1<<(bytepos+1))-1;
+				writeBits(fillbits);
+			}
+	
+			writeWord(0xFFD9); //EOI
+
+      //return new Uint8Array(byteout);
+      return new Buffer(byteout);
+
+			var jpegDataUri = 'data:image/jpeg;base64,' + btoa(byteout.join(''));
+			
+			byteout = [];
+			
+			// benchmarking
+			var duration = new Date().getTime() - time_start;
+    		//console.log('Encoding time: '+ duration + 'ms');
+    		//
+			
+			return jpegDataUri			
+	}
+	
+	function setQuality(quality){
+		if (quality <= 0) {
+			quality = 1;
+		}
+		if (quality > 100) {
+			quality = 100;
+		}
+		
+		if(currentQuality == quality) return // don't recalc if unchanged
+		
+		var sf = 0;
+		if (quality < 50) {
+			sf = Math.floor(5000 / quality);
+		} else {
+			sf = Math.floor(200 - quality*2);
+		}
+		
+		initQuantTables(sf);
+		currentQuality = quality;
+		//console.log('Quality set to: '+quality +'%');
+	}
+	
+	function init(){
+		var time_start = new Date().getTime();
+		if(!quality) quality = 50;
+		// Create tables
+		initCharLookupTable()
+		initHuffmanTbl();
+		initCategoryNumber();
+		initRGBYUVTable();
+		
+		setQuality(quality);
+		var duration = new Date().getTime() - time_start;
+    	//console.log('Initialization '+ duration + 'ms');
+	}
+	
+	init();
+	
+};
+module.exports = encode;
+
+function encode(imgData, qu) {
+  if (typeof qu === 'undefined') qu = 50;
+  var encoder = new JPEGEncoder(qu);
+	var data = encoder.encode(imgData, qu);
+  return {
+    data: data,
+    width: imgData.width,
+    height: imgData.height
+  };
+}
+
+// helper function to get the imageData of an existing image on the current page.
+function getImageDataFromImage(idOrElement){
+	var theImg = (typeof(idOrElement)=='string')? document.getElementById(idOrElement):idOrElement;
+	var cvs = document.createElement('canvas');
+	cvs.width = theImg.width;
+	cvs.height = theImg.height;
+	var ctx = cvs.getContext("2d");
+	ctx.drawImage(theImg,0,0);
+	
+	return (ctx.getImageData(0, 0, cvs.width, cvs.height));
+}
+
+}).call(this,require("buffer").Buffer)
+},{"buffer":47}],70:[function(require,module,exports){
+arguments[4][41][0].apply(exports,arguments)
+},{"dup":41}],71:[function(require,module,exports){
+"use strict"
+
+function iota(n) {
+  var result = new Array(n)
+  for(var i=0; i<n; ++i) {
+    result[i] = i
+  }
+  return result
+}
+
+module.exports = iota
+},{}],72:[function(require,module,exports){
+/*!
+ * Determine if an object is a Buffer
+ *
+ * @author   Feross Aboukhadijeh <https://feross.org>
+ * @license  MIT
+ */
+
+// The _isBuffer check is for Safari 5-7 support, because it's missing
+// Object.prototype.constructor. Remove this eventually
+module.exports = function (obj) {
+  return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer)
+}
+
+function isBuffer (obj) {
+  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
+}
+
+// For Node v0.10 support. Remove this eventually.
+function isSlowBuffer (obj) {
+  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
+}
+
+},{}],73:[function(require,module,exports){
+module.exports = Array.isArray || function (arr) {
+  return Object.prototype.toString.call(arr) == '[object Array]';
+};
+
+},{}],74:[function(require,module,exports){
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["jsQR"] = factory();
+	else
+		root["jsQR"] = factory();
+})(typeof self !== 'undefined' ? self : this, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var BitMatrix = /** @class */ (function () {
+    function BitMatrix(data, width) {
+        this.width = width;
+        this.height = data.length / width;
+        this.data = data;
+    }
+    BitMatrix.createEmpty = function (width, height) {
+        return new BitMatrix(new Uint8ClampedArray(width * height), width);
+    };
+    BitMatrix.prototype.get = function (x, y) {
+        if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
+            return false;
+        }
+        return !!this.data[y * this.width + x];
+    };
+    BitMatrix.prototype.set = function (x, y, v) {
+        this.data[y * this.width + x] = v ? 1 : 0;
+    };
+    BitMatrix.prototype.setRegion = function (left, top, width, height, v) {
+        for (var y = top; y < top + height; y++) {
+            for (var x = left; x < left + width; x++) {
+                this.set(x, y, !!v);
+            }
+        }
+    };
+    BitMatrix.prototype.getInverted = function () {
+        return new BitMatrix(this.data.map(function (d) { return d === 0 ? 1 : 0; }), this.width);
+    };
+    return BitMatrix;
+}());
+exports.BitMatrix = BitMatrix;
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var GenericGFPoly_1 = __webpack_require__(2);
+function addOrSubtractGF(a, b) {
+    return a ^ b; // tslint:disable-line:no-bitwise
+}
+exports.addOrSubtractGF = addOrSubtractGF;
+var GenericGF = /** @class */ (function () {
+    function GenericGF(primitive, size, genBase) {
+        this.primitive = primitive;
+        this.size = size;
+        this.generatorBase = genBase;
+        this.expTable = new Array(this.size);
+        this.logTable = new Array(this.size);
+        var x = 1;
+        for (var i = 0; i < this.size; i++) {
+            this.expTable[i] = x;
+            x = x * 2;
+            if (x >= this.size) {
+                x = (x ^ this.primitive) & (this.size - 1); // tslint:disable-line:no-bitwise
+            }
+        }
+        for (var i = 0; i < this.size - 1; i++) {
+            this.logTable[this.expTable[i]] = i;
+        }
+        this.zero = new GenericGFPoly_1.default(this, Uint8ClampedArray.from([0]));
+        this.one = new GenericGFPoly_1.default(this, Uint8ClampedArray.from([1]));
+    }
+    GenericGF.prototype.multiply = function (a, b) {
+        if (a === 0 || b === 0) {
+            return 0;
+        }
+        return this.expTable[(this.logTable[a] + this.logTable[b]) % (this.size - 1)];
+    };
+    GenericGF.prototype.inverse = function (a) {
+        if (a === 0) {
+            throw new Error("Can't invert 0");
+        }
+        return this.expTable[this.size - this.logTable[a] - 1];
+    };
+    GenericGF.prototype.buildMonomial = function (degree, coefficient) {
+        if (degree < 0) {
+            throw new Error("Invalid monomial degree less than 0");
+        }
+        if (coefficient === 0) {
+            return this.zero;
+        }
+        var coefficients = new Uint8ClampedArray(degree + 1);
+        coefficients[0] = coefficient;
+        return new GenericGFPoly_1.default(this, coefficients);
+    };
+    GenericGF.prototype.log = function (a) {
+        if (a === 0) {
+            throw new Error("Can't take log(0)");
+        }
+        return this.logTable[a];
+    };
+    GenericGF.prototype.exp = function (a) {
+        return this.expTable[a];
+    };
+    return GenericGF;
+}());
+exports.default = GenericGF;
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var GenericGF_1 = __webpack_require__(1);
+var GenericGFPoly = /** @class */ (function () {
+    function GenericGFPoly(field, coefficients) {
+        if (coefficients.length === 0) {
+            throw new Error("No coefficients.");
+        }
+        this.field = field;
+        var coefficientsLength = coefficients.length;
+        if (coefficientsLength > 1 && coefficients[0] === 0) {
+            // Leading term must be non-zero for anything except the constant polynomial "0"
+            var firstNonZero = 1;
+            while (firstNonZero < coefficientsLength && coefficients[firstNonZero] === 0) {
+                firstNonZero++;
+            }
+            if (firstNonZero === coefficientsLength) {
+                this.coefficients = field.zero.coefficients;
+            }
+            else {
+                this.coefficients = new Uint8ClampedArray(coefficientsLength - firstNonZero);
+                for (var i = 0; i < this.coefficients.length; i++) {
+                    this.coefficients[i] = coefficients[firstNonZero + i];
+                }
+            }
+        }
+        else {
+            this.coefficients = coefficients;
+        }
+    }
+    GenericGFPoly.prototype.degree = function () {
+        return this.coefficients.length - 1;
+    };
+    GenericGFPoly.prototype.isZero = function () {
+        return this.coefficients[0] === 0;
+    };
+    GenericGFPoly.prototype.getCoefficient = function (degree) {
+        return this.coefficients[this.coefficients.length - 1 - degree];
+    };
+    GenericGFPoly.prototype.addOrSubtract = function (other) {
+        if (this.isZero()) {
+            return other;
+        }
+        if (other.isZero()) {
+            return this;
+        }
+        var smallerCoefficients = this.coefficients;
+        var largerCoefficients = other.coefficients;
+        if (smallerCoefficients.length > largerCoefficients.length) {
+            _a = [largerCoefficients, smallerCoefficients], smallerCoefficients = _a[0], largerCoefficients = _a[1];
+        }
+        var sumDiff = new Uint8ClampedArray(largerCoefficients.length);
+        var lengthDiff = largerCoefficients.length - smallerCoefficients.length;
+        for (var i = 0; i < lengthDiff; i++) {
+            sumDiff[i] = largerCoefficients[i];
+        }
+        for (var i = lengthDiff; i < largerCoefficients.length; i++) {
+            sumDiff[i] = GenericGF_1.addOrSubtractGF(smallerCoefficients[i - lengthDiff], largerCoefficients[i]);
+        }
+        return new GenericGFPoly(this.field, sumDiff);
+        var _a;
+    };
+    GenericGFPoly.prototype.multiply = function (scalar) {
+        if (scalar === 0) {
+            return this.field.zero;
+        }
+        if (scalar === 1) {
+            return this;
+        }
+        var size = this.coefficients.length;
+        var product = new Uint8ClampedArray(size);
+        for (var i = 0; i < size; i++) {
+            product[i] = this.field.multiply(this.coefficients[i], scalar);
+        }
+        return new GenericGFPoly(this.field, product);
+    };
+    GenericGFPoly.prototype.multiplyPoly = function (other) {
+        if (this.isZero() || other.isZero()) {
+            return this.field.zero;
+        }
+        var aCoefficients = this.coefficients;
+        var aLength = aCoefficients.length;
+        var bCoefficients = other.coefficients;
+        var bLength = bCoefficients.length;
+        var product = new Uint8ClampedArray(aLength + bLength - 1);
+        for (var i = 0; i < aLength; i++) {
+            var aCoeff = aCoefficients[i];
+            for (var j = 0; j < bLength; j++) {
+                product[i + j] = GenericGF_1.addOrSubtractGF(product[i + j], this.field.multiply(aCoeff, bCoefficients[j]));
+            }
+        }
+        return new GenericGFPoly(this.field, product);
+    };
+    GenericGFPoly.prototype.multiplyByMonomial = function (degree, coefficient) {
+        if (degree < 0) {
+            throw new Error("Invalid degree less than 0");
+        }
+        if (coefficient === 0) {
+            return this.field.zero;
+        }
+        var size = this.coefficients.length;
+        var product = new Uint8ClampedArray(size + degree);
+        for (var i = 0; i < size; i++) {
+            product[i] = this.field.multiply(this.coefficients[i], coefficient);
+        }
+        return new GenericGFPoly(this.field, product);
+    };
+    GenericGFPoly.prototype.evaluateAt = function (a) {
+        var result = 0;
+        if (a === 0) {
+            // Just return the x^0 coefficient
+            return this.getCoefficient(0);
+        }
+        var size = this.coefficients.length;
+        if (a === 1) {
+            // Just the sum of the coefficients
+            this.coefficients.forEach(function (coefficient) {
+                result = GenericGF_1.addOrSubtractGF(result, coefficient);
+            });
+            return result;
+        }
+        result = this.coefficients[0];
+        for (var i = 1; i < size; i++) {
+            result = GenericGF_1.addOrSubtractGF(this.field.multiply(a, result), this.coefficients[i]);
+        }
+        return result;
+    };
+    return GenericGFPoly;
+}());
+exports.default = GenericGFPoly;
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var binarizer_1 = __webpack_require__(4);
+var decoder_1 = __webpack_require__(5);
+var extractor_1 = __webpack_require__(11);
+var locator_1 = __webpack_require__(12);
+function scan(matrix) {
+    var location = locator_1.locate(matrix);
+    if (!location) {
+        return null;
+    }
+    var extracted = extractor_1.extract(matrix, location);
+    var decoded = decoder_1.decode(extracted.matrix);
+    if (!decoded) {
+        return null;
+    }
+    return {
+        binaryData: decoded.bytes,
+        data: decoded.text,
+        chunks: decoded.chunks,
+        location: {
+            topRightCorner: extracted.mappingFunction(location.dimension, 0),
+            topLeftCorner: extracted.mappingFunction(0, 0),
+            bottomRightCorner: extracted.mappingFunction(location.dimension, location.dimension),
+            bottomLeftCorner: extracted.mappingFunction(0, location.dimension),
+            topRightFinderPattern: location.topRight,
+            topLeftFinderPattern: location.topLeft,
+            bottomLeftFinderPattern: location.bottomLeft,
+            bottomRightAlignmentPattern: location.alignmentPattern,
+        },
+    };
+}
+function jsQR(data, width, height) {
+    var binarized = binarizer_1.binarize(data, width, height);
+    var result = scan(binarized);
+    if (!result) {
+        result = scan(binarized.getInverted());
+    }
+    return result;
+}
+jsQR.default = jsQR;
+exports.default = jsQR;
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var BitMatrix_1 = __webpack_require__(0);
+var REGION_SIZE = 8;
+var MIN_DYNAMIC_RANGE = 24;
+function numBetween(value, min, max) {
+    return value < min ? min : value > max ? max : value;
+}
+// Like BitMatrix but accepts arbitry Uint8 values
+var Matrix = /** @class */ (function () {
+    function Matrix(width, height) {
+        this.width = width;
+        this.data = new Uint8ClampedArray(width * height);
+    }
+    Matrix.prototype.get = function (x, y) {
+        return this.data[y * this.width + x];
+    };
+    Matrix.prototype.set = function (x, y, value) {
+        this.data[y * this.width + x] = value;
+    };
+    return Matrix;
+}());
+function binarize(data, width, height) {
+    if (data.length !== width * height * 4) {
+        throw new Error("Malformed data passed to binarizer.");
+    }
+    // Convert image to greyscale
+    var greyscalePixels = new Matrix(width, height);
+    for (var x = 0; x < width; x++) {
+        for (var y = 0; y < height; y++) {
+            var r = data[((y * width + x) * 4) + 0];
+            var g = data[((y * width + x) * 4) + 1];
+            var b = data[((y * width + x) * 4) + 2];
+            greyscalePixels.set(x, y, 0.2126 * r + 0.7152 * g + 0.0722 * b);
+        }
+    }
+    var horizontalRegionCount = Math.ceil(width / REGION_SIZE);
+    var verticalRegionCount = Math.ceil(height / REGION_SIZE);
+    var blackPoints = new Matrix(horizontalRegionCount, verticalRegionCount);
+    for (var verticalRegion = 0; verticalRegion < verticalRegionCount; verticalRegion++) {
+        for (var hortizontalRegion = 0; hortizontalRegion < horizontalRegionCount; hortizontalRegion++) {
+            var sum = 0;
+            var min = Infinity;
+            var max = 0;
+            for (var y = 0; y < REGION_SIZE; y++) {
+                for (var x = 0; x < REGION_SIZE; x++) {
+                    var pixelLumosity = greyscalePixels.get(hortizontalRegion * REGION_SIZE + x, verticalRegion * REGION_SIZE + y);
+                    sum += pixelLumosity;
+                    min = Math.min(min, pixelLumosity);
+                    max = Math.max(max, pixelLumosity);
+                }
+            }
+            var average = sum / (Math.pow(REGION_SIZE, 2));
+            if (max - min <= MIN_DYNAMIC_RANGE) {
+                // If variation within the block is low, assume this is a block with only light or only
+                // dark pixels. In that case we do not want to use the average, as it would divide this
+                // low contrast area into black and white pixels, essentially creating data out of noise.
+                //
+                // Default the blackpoint for these blocks to be half the min - effectively white them out
+                average = min / 2;
+                if (verticalRegion > 0 && hortizontalRegion > 0) {
+                    // Correct the "white background" assumption for blocks that have neighbors by comparing
+                    // the pixels in this block to the previously calculated black points. This is based on
+                    // the fact that dark barcode symbology is always surrounded by some amount of light
+                    // background for which reasonable black point estimates were made. The bp estimated at
+                    // the boundaries is used for the interior.
+                    // The (min < bp) is arbitrary but works better than other heuristics that were tried.
+                    var averageNeighborBlackPoint = (blackPoints.get(hortizontalRegion, verticalRegion - 1) +
+                        (2 * blackPoints.get(hortizontalRegion - 1, verticalRegion)) +
+                        blackPoints.get(hortizontalRegion - 1, verticalRegion - 1)) / 4;
+                    if (min < averageNeighborBlackPoint) {
+                        average = averageNeighborBlackPoint;
+                    }
+                }
+            }
+            blackPoints.set(hortizontalRegion, verticalRegion, average);
+        }
+    }
+    var binarized = BitMatrix_1.BitMatrix.createEmpty(width, height);
+    for (var verticalRegion = 0; verticalRegion < verticalRegionCount; verticalRegion++) {
+        for (var hortizontalRegion = 0; hortizontalRegion < horizontalRegionCount; hortizontalRegion++) {
+            var left = numBetween(hortizontalRegion, 2, horizontalRegionCount - 3);
+            var top_1 = numBetween(verticalRegion, 2, verticalRegionCount - 3);
+            var sum = 0;
+            for (var xRegion = -2; xRegion <= 2; xRegion++) {
+                for (var yRegion = -2; yRegion <= 2; yRegion++) {
+                    sum += blackPoints.get(left + xRegion, top_1 + yRegion);
+                }
+            }
+            var threshold = sum / 25;
+            for (var x = 0; x < REGION_SIZE; x++) {
+                for (var y = 0; y < REGION_SIZE; y++) {
+                    var lum = greyscalePixels.get(hortizontalRegion * REGION_SIZE + x, verticalRegion * REGION_SIZE + y);
+                    binarized.set(hortizontalRegion * REGION_SIZE + x, verticalRegion * REGION_SIZE + y, lum <= threshold);
+                }
+            }
+        }
+    }
+    return binarized;
+}
+exports.binarize = binarize;
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var BitMatrix_1 = __webpack_require__(0);
+var decodeData_1 = __webpack_require__(6);
+var reedsolomon_1 = __webpack_require__(9);
+var version_1 = __webpack_require__(10);
+// tslint:disable:no-bitwise
+function numBitsDiffering(x, y) {
+    var z = x ^ y;
+    var bitCount = 0;
+    while (z) {
+        bitCount++;
+        z &= z - 1;
+    }
+    return bitCount;
+}
+function pushBit(bit, byte) {
+    return (byte << 1) | bit;
+}
+// tslint:enable:no-bitwise
+var FORMAT_INFO_TABLE = [
+    { bits: 0x5412, formatInfo: { errorCorrectionLevel: 1, dataMask: 0 } },
+    { bits: 0x5125, formatInfo: { errorCorrectionLevel: 1, dataMask: 1 } },
+    { bits: 0x5E7C, formatInfo: { errorCorrectionLevel: 1, dataMask: 2 } },
+    { bits: 0x5B4B, formatInfo: { errorCorrectionLevel: 1, dataMask: 3 } },
+    { bits: 0x45F9, formatInfo: { errorCorrectionLevel: 1, dataMask: 4 } },
+    { bits: 0x40CE, formatInfo: { errorCorrectionLevel: 1, dataMask: 5 } },
+    { bits: 0x4F97, formatInfo: { errorCorrectionLevel: 1, dataMask: 6 } },
+    { bits: 0x4AA0, formatInfo: { errorCorrectionLevel: 1, dataMask: 7 } },
+    { bits: 0x77C4, formatInfo: { errorCorrectionLevel: 0, dataMask: 0 } },
+    { bits: 0x72F3, formatInfo: { errorCorrectionLevel: 0, dataMask: 1 } },
+    { bits: 0x7DAA, formatInfo: { errorCorrectionLevel: 0, dataMask: 2 } },
+    { bits: 0x789D, formatInfo: { errorCorrectionLevel: 0, dataMask: 3 } },
+    { bits: 0x662F, formatInfo: { errorCorrectionLevel: 0, dataMask: 4 } },
+    { bits: 0x6318, formatInfo: { errorCorrectionLevel: 0, dataMask: 5 } },
+    { bits: 0x6C41, formatInfo: { errorCorrectionLevel: 0, dataMask: 6 } },
+    { bits: 0x6976, formatInfo: { errorCorrectionLevel: 0, dataMask: 7 } },
+    { bits: 0x1689, formatInfo: { errorCorrectionLevel: 3, dataMask: 0 } },
+    { bits: 0x13BE, formatInfo: { errorCorrectionLevel: 3, dataMask: 1 } },
+    { bits: 0x1CE7, formatInfo: { errorCorrectionLevel: 3, dataMask: 2 } },
+    { bits: 0x19D0, formatInfo: { errorCorrectionLevel: 3, dataMask: 3 } },
+    { bits: 0x0762, formatInfo: { errorCorrectionLevel: 3, dataMask: 4 } },
+    { bits: 0x0255, formatInfo: { errorCorrectionLevel: 3, dataMask: 5 } },
+    { bits: 0x0D0C, formatInfo: { errorCorrectionLevel: 3, dataMask: 6 } },
+    { bits: 0x083B, formatInfo: { errorCorrectionLevel: 3, dataMask: 7 } },
+    { bits: 0x355F, formatInfo: { errorCorrectionLevel: 2, dataMask: 0 } },
+    { bits: 0x3068, formatInfo: { errorCorrectionLevel: 2, dataMask: 1 } },
+    { bits: 0x3F31, formatInfo: { errorCorrectionLevel: 2, dataMask: 2 } },
+    { bits: 0x3A06, formatInfo: { errorCorrectionLevel: 2, dataMask: 3 } },
+    { bits: 0x24B4, formatInfo: { errorCorrectionLevel: 2, dataMask: 4 } },
+    { bits: 0x2183, formatInfo: { errorCorrectionLevel: 2, dataMask: 5 } },
+    { bits: 0x2EDA, formatInfo: { errorCorrectionLevel: 2, dataMask: 6 } },
+    { bits: 0x2BED, formatInfo: { errorCorrectionLevel: 2, dataMask: 7 } },
+];
+var DATA_MASKS = [
+    function (p) { return ((p.y + p.x) % 2) === 0; },
+    function (p) { return (p.y % 2) === 0; },
+    function (p) { return p.x % 3 === 0; },
+    function (p) { return (p.y + p.x) % 3 === 0; },
+    function (p) { return (Math.floor(p.y / 2) + Math.floor(p.x / 3)) % 2 === 0; },
+    function (p) { return ((p.x * p.y) % 2) + ((p.x * p.y) % 3) === 0; },
+    function (p) { return ((((p.y * p.x) % 2) + (p.y * p.x) % 3) % 2) === 0; },
+    function (p) { return ((((p.y + p.x) % 2) + (p.y * p.x) % 3) % 2) === 0; },
+];
+function buildFunctionPatternMask(version) {
+    var dimension = 17 + 4 * version.versionNumber;
+    var matrix = BitMatrix_1.BitMatrix.createEmpty(dimension, dimension);
+    matrix.setRegion(0, 0, 9, 9, true); // Top left finder pattern + separator + format
+    matrix.setRegion(dimension - 8, 0, 8, 9, true); // Top right finder pattern + separator + format
+    matrix.setRegion(0, dimension - 8, 9, 8, true); // Bottom left finder pattern + separator + format
+    // Alignment patterns
+    for (var _i = 0, _a = version.alignmentPatternCenters; _i < _a.length; _i++) {
+        var x = _a[_i];
+        for (var _b = 0, _c = version.alignmentPatternCenters; _b < _c.length; _b++) {
+            var y = _c[_b];
+            if (!(x === 6 && y === 6 || x === 6 && y === dimension - 7 || x === dimension - 7 && y === 6)) {
+                matrix.setRegion(x - 2, y - 2, 5, 5, true);
+            }
+        }
+    }
+    matrix.setRegion(6, 9, 1, dimension - 17, true); // Vertical timing pattern
+    matrix.setRegion(9, 6, dimension - 17, 1, true); // Horizontal timing pattern
+    if (version.versionNumber > 6) {
+        matrix.setRegion(dimension - 11, 0, 3, 6, true); // Version info, top right
+        matrix.setRegion(0, dimension - 11, 6, 3, true); // Version info, bottom left
+    }
+    return matrix;
+}
+function readCodewords(matrix, version, formatInfo) {
+    var dataMask = DATA_MASKS[formatInfo.dataMask];
+    var dimension = matrix.height;
+    var functionPatternMask = buildFunctionPatternMask(version);
+    var codewords = [];
+    var currentByte = 0;
+    var bitsRead = 0;
+    // Read columns in pairs, from right to left
+    var readingUp = true;
+    for (var columnIndex = dimension - 1; columnIndex > 0; columnIndex -= 2) {
+        if (columnIndex === 6) {
+            columnIndex--;
+        }
+        for (var i = 0; i < dimension; i++) {
+            var y = readingUp ? dimension - 1 - i : i;
+            for (var columnOffset = 0; columnOffset < 2; columnOffset++) {
+                var x = columnIndex - columnOffset;
+                if (!functionPatternMask.get(x, y)) {
+                    bitsRead++;
+                    var bit = matrix.get(x, y);
+                    if (dataMask({ y: y, x: x })) {
+                        bit = !bit;
+                    }
+                    currentByte = pushBit(bit, currentByte);
+                    if (bitsRead === 8) {
+                        codewords.push(currentByte);
+                        bitsRead = 0;
+                        currentByte = 0;
+                    }
+                }
+            }
+        }
+        readingUp = !readingUp;
+    }
+    return codewords;
+}
+function readVersion(matrix) {
+    var dimension = matrix.height;
+    var provisionalVersion = Math.floor((dimension - 17) / 4);
+    if (provisionalVersion <= 6) {
+        return version_1.VERSIONS[provisionalVersion - 1];
+    }
+    var topRightVersionBits = 0;
+    for (var y = 5; y >= 0; y--) {
+        for (var x = dimension - 9; x >= dimension - 11; x--) {
+            topRightVersionBits = pushBit(matrix.get(x, y), topRightVersionBits);
+        }
+    }
+    var bottomLeftVersionBits = 0;
+    for (var x = 5; x >= 0; x--) {
+        for (var y = dimension - 9; y >= dimension - 11; y--) {
+            bottomLeftVersionBits = pushBit(matrix.get(x, y), bottomLeftVersionBits);
+        }
+    }
+    var bestDifference = Infinity;
+    var bestVersion;
+    for (var _i = 0, VERSIONS_1 = version_1.VERSIONS; _i < VERSIONS_1.length; _i++) {
+        var version = VERSIONS_1[_i];
+        if (version.infoBits === topRightVersionBits || version.infoBits === bottomLeftVersionBits) {
+            return version;
+        }
+        var difference = numBitsDiffering(topRightVersionBits, version.infoBits);
+        if (difference < bestDifference) {
+            bestVersion = version;
+            bestDifference = difference;
+        }
+        difference = numBitsDiffering(bottomLeftVersionBits, version.infoBits);
+        if (difference < bestDifference) {
+            bestVersion = version;
+            bestDifference = difference;
+        }
+    }
+    // We can tolerate up to 3 bits of error since no two version info codewords will
+    // differ in less than 8 bits.
+    if (bestDifference <= 3) {
+        return bestVersion;
+    }
+}
+function readFormatInformation(matrix) {
+    var topLeftFormatInfoBits = 0;
+    for (var x = 0; x <= 8; x++) {
+        if (x !== 6) {
+            topLeftFormatInfoBits = pushBit(matrix.get(x, 8), topLeftFormatInfoBits);
+        }
+    }
+    for (var y = 7; y >= 0; y--) {
+        if (y !== 6) {
+            topLeftFormatInfoBits = pushBit(matrix.get(8, y), topLeftFormatInfoBits);
+        }
+    }
+    var dimension = matrix.height;
+    var topRightBottomRightFormatInfoBits = 0;
+    for (var y = dimension - 1; y >= dimension - 7; y--) {
+        topRightBottomRightFormatInfoBits = pushBit(matrix.get(8, y), topRightBottomRightFormatInfoBits);
+    }
+    for (var x = dimension - 8; x < dimension; x++) {
+        topRightBottomRightFormatInfoBits = pushBit(matrix.get(x, 8), topRightBottomRightFormatInfoBits);
+    }
+    var bestDifference = Infinity;
+    var bestFormatInfo = null;
+    for (var _i = 0, FORMAT_INFO_TABLE_1 = FORMAT_INFO_TABLE; _i < FORMAT_INFO_TABLE_1.length; _i++) {
+        var _a = FORMAT_INFO_TABLE_1[_i], bits = _a.bits, formatInfo = _a.formatInfo;
+        if (bits === topLeftFormatInfoBits || bits === topRightBottomRightFormatInfoBits) {
+            return formatInfo;
+        }
+        var difference = numBitsDiffering(topLeftFormatInfoBits, bits);
+        if (difference < bestDifference) {
+            bestFormatInfo = formatInfo;
+            bestDifference = difference;
+        }
+        if (topLeftFormatInfoBits !== topRightBottomRightFormatInfoBits) {
+            difference = numBitsDiffering(topRightBottomRightFormatInfoBits, bits);
+            if (difference < bestDifference) {
+                bestFormatInfo = formatInfo;
+                bestDifference = difference;
+            }
+        }
+    }
+    // Hamming distance of the 32 masked codes is 7, by construction, so <= 3 bits differing means we found a match
+    if (bestDifference <= 3) {
+        return bestFormatInfo;
+    }
+    return null;
+}
+function getDataBlocks(codewords, version, ecLevel) {
+    var ecInfo = version.errorCorrectionLevels[ecLevel];
+    var dataBlocks = [];
+    var totalCodewords = 0;
+    ecInfo.ecBlocks.forEach(function (block) {
+        for (var i = 0; i < block.numBlocks; i++) {
+            dataBlocks.push({ numDataCodewords: block.dataCodewordsPerBlock, codewords: [] });
+            totalCodewords += block.dataCodewordsPerBlock + ecInfo.ecCodewordsPerBlock;
+        }
+    });
+    // In some cases the QR code will be malformed enough that we pull off more or less than we should.
+    // If we pull off less there's nothing we can do.
+    // If we pull off more we can safely truncate
+    if (codewords.length < totalCodewords) {
+        return null;
+    }
+    codewords = codewords.slice(0, totalCodewords);
+    var shortBlockSize = ecInfo.ecBlocks[0].dataCodewordsPerBlock;
+    // Pull codewords to fill the blocks up to the minimum size
+    for (var i = 0; i < shortBlockSize; i++) {
+        for (var _i = 0, dataBlocks_1 = dataBlocks; _i < dataBlocks_1.length; _i++) {
+            var dataBlock = dataBlocks_1[_i];
+            dataBlock.codewords.push(codewords.shift());
+        }
+    }
+    // If there are any large blocks, pull codewords to fill the last element of those
+    if (ecInfo.ecBlocks.length > 1) {
+        var smallBlockCount = ecInfo.ecBlocks[0].numBlocks;
+        var largeBlockCount = ecInfo.ecBlocks[1].numBlocks;
+        for (var i = 0; i < largeBlockCount; i++) {
+            dataBlocks[smallBlockCount + i].codewords.push(codewords.shift());
+        }
+    }
+    // Add the rest of the codewords to the blocks. These are the error correction codewords.
+    while (codewords.length > 0) {
+        for (var _a = 0, dataBlocks_2 = dataBlocks; _a < dataBlocks_2.length; _a++) {
+            var dataBlock = dataBlocks_2[_a];
+            dataBlock.codewords.push(codewords.shift());
+        }
+    }
+    return dataBlocks;
+}
+function decodeMatrix(matrix) {
+    var version = readVersion(matrix);
+    if (!version) {
+        return null;
+    }
+    var formatInfo = readFormatInformation(matrix);
+    if (!formatInfo) {
+        return null;
+    }
+    var codewords = readCodewords(matrix, version, formatInfo);
+    var dataBlocks = getDataBlocks(codewords, version, formatInfo.errorCorrectionLevel);
+    if (!dataBlocks) {
+        return null;
+    }
+    // Count total number of data bytes
+    var totalBytes = dataBlocks.reduce(function (a, b) { return a + b.numDataCodewords; }, 0);
+    var resultBytes = new Uint8ClampedArray(totalBytes);
+    var resultIndex = 0;
+    for (var _i = 0, dataBlocks_3 = dataBlocks; _i < dataBlocks_3.length; _i++) {
+        var dataBlock = dataBlocks_3[_i];
+        var correctedBytes = reedsolomon_1.decode(dataBlock.codewords, dataBlock.codewords.length - dataBlock.numDataCodewords);
+        if (!correctedBytes) {
+            return null;
+        }
+        for (var i = 0; i < dataBlock.numDataCodewords; i++) {
+            resultBytes[resultIndex++] = correctedBytes[i];
+        }
+    }
+    try {
+        return decodeData_1.decode(resultBytes, version.versionNumber);
+    }
+    catch (_a) {
+        return null;
+    }
+}
+function decode(matrix) {
+    if (matrix == null) {
+        return null;
+    }
+    var result = decodeMatrix(matrix);
+    if (result) {
+        return result;
+    }
+    // Decoding didn't work, try mirroring the QR across the topLeft -> bottomRight line.
+    for (var x = 0; x < matrix.width; x++) {
+        for (var y = x + 1; y < matrix.height; y++) {
+            if (matrix.get(x, y) !== matrix.get(y, x)) {
+                matrix.set(x, y, !matrix.get(x, y));
+                matrix.set(y, x, !matrix.get(y, x));
+            }
+        }
+    }
+    return decodeMatrix(matrix);
+}
+exports.decode = decode;
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+// tslint:disable:no-bitwise
+var BitStream_1 = __webpack_require__(7);
+var shiftJISTable_1 = __webpack_require__(8);
+var Mode;
+(function (Mode) {
+    Mode["Numeric"] = "numeric";
+    Mode["Alphanumeric"] = "alphanumeric";
+    Mode["Byte"] = "byte";
+    Mode["Kanji"] = "kanji";
+    Mode["ECI"] = "eci";
+})(Mode = exports.Mode || (exports.Mode = {}));
+var ModeByte;
+(function (ModeByte) {
+    ModeByte[ModeByte["Terminator"] = 0] = "Terminator";
+    ModeByte[ModeByte["Numeric"] = 1] = "Numeric";
+    ModeByte[ModeByte["Alphanumeric"] = 2] = "Alphanumeric";
+    ModeByte[ModeByte["Byte"] = 4] = "Byte";
+    ModeByte[ModeByte["Kanji"] = 8] = "Kanji";
+    ModeByte[ModeByte["ECI"] = 7] = "ECI";
+    // StructuredAppend = 0x3,
+    // FNC1FirstPosition = 0x5,
+    // FNC1SecondPosition = 0x9,
+})(ModeByte || (ModeByte = {}));
+function decodeNumeric(stream, size) {
+    var bytes = [];
+    var text = "";
+    var characterCountSize = [10, 12, 14][size];
+    var length = stream.readBits(characterCountSize);
+    // Read digits in groups of 3
+    while (length >= 3) {
+        var num = stream.readBits(10);
+        if (num >= 1000) {
+            throw new Error("Invalid numeric value above 999");
+        }
+        var a = Math.floor(num / 100);
+        var b = Math.floor(num / 10) % 10;
+        var c = num % 10;
+        bytes.push(48 + a, 48 + b, 48 + c);
+        text += a.toString() + b.toString() + c.toString();
+        length -= 3;
+    }
+    // If the number of digits aren't a multiple of 3, the remaining digits are special cased.
+    if (length === 2) {
+        var num = stream.readBits(7);
+        if (num >= 100) {
+            throw new Error("Invalid numeric value above 99");
+        }
+        var a = Math.floor(num / 10);
+        var b = num % 10;
+        bytes.push(48 + a, 48 + b);
+        text += a.toString() + b.toString();
+    }
+    else if (length === 1) {
+        var num = stream.readBits(4);
+        if (num >= 10) {
+            throw new Error("Invalid numeric value above 9");
+        }
+        bytes.push(48 + num);
+        text += num.toString();
+    }
+    return { bytes: bytes, text: text };
+}
+var AlphanumericCharacterCodes = [
+    "0", "1", "2", "3", "4", "5", "6", "7", "8",
+    "9", "A", "B", "C", "D", "E", "F", "G", "H",
+    "I", "J", "K", "L", "M", "N", "O", "P", "Q",
+    "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+    " ", "$", "%", "*", "+", "-", ".", "/", ":",
+];
+function decodeAlphanumeric(stream, size) {
+    var bytes = [];
+    var text = "";
+    var characterCountSize = [9, 11, 13][size];
+    var length = stream.readBits(characterCountSize);
+    while (length >= 2) {
+        var v = stream.readBits(11);
+        var a = Math.floor(v / 45);
+        var b = v % 45;
+        bytes.push(AlphanumericCharacterCodes[a].charCodeAt(0), AlphanumericCharacterCodes[b].charCodeAt(0));
+        text += AlphanumericCharacterCodes[a] + AlphanumericCharacterCodes[b];
+        length -= 2;
+    }
+    if (length === 1) {
+        var a = stream.readBits(6);
+        bytes.push(AlphanumericCharacterCodes[a].charCodeAt(0));
+        text += AlphanumericCharacterCodes[a];
+    }
+    return { bytes: bytes, text: text };
+}
+function decodeByte(stream, size) {
+    var bytes = [];
+    var text = "";
+    var characterCountSize = [8, 16, 16][size];
+    var length = stream.readBits(characterCountSize);
+    for (var i = 0; i < length; i++) {
+        var b = stream.readBits(8);
+        bytes.push(b);
+    }
+    try {
+        text += decodeURIComponent(bytes.map(function (b) { return "%" + ("0" + b.toString(16)).substr(-2); }).join(""));
+    }
+    catch (_a) {
+        // failed to decode
+    }
+    return { bytes: bytes, text: text };
+}
+function decodeKanji(stream, size) {
+    var bytes = [];
+    var text = "";
+    var characterCountSize = [8, 10, 12][size];
+    var length = stream.readBits(characterCountSize);
+    for (var i = 0; i < length; i++) {
+        var k = stream.readBits(13);
+        var c = (Math.floor(k / 0xC0) << 8) | (k % 0xC0);
+        if (c < 0x1F00) {
+            c += 0x8140;
+        }
+        else {
+            c += 0xC140;
+        }
+        bytes.push(c >> 8, c & 0xFF);
+        text += String.fromCharCode(shiftJISTable_1.shiftJISTable[c]);
+    }
+    return { bytes: bytes, text: text };
+}
+function decode(data, version) {
+    var stream = new BitStream_1.BitStream(data);
+    // There are 3 'sizes' based on the version. 1-9 is small (0), 10-26 is medium (1) and 27-40 is large (2).
+    var size = version <= 9 ? 0 : version <= 26 ? 1 : 2;
+    var result = {
+        text: "",
+        bytes: [],
+        chunks: [],
+    };
+    while (stream.available() >= 4) {
+        var mode = stream.readBits(4);
+        if (mode === ModeByte.Terminator) {
+            return result;
+        }
+        else if (mode === ModeByte.ECI) {
+            if (stream.readBits(1) === 0) {
+                result.chunks.push({
+                    type: Mode.ECI,
+                    assignmentNumber: stream.readBits(7),
+                });
+            }
+            else if (stream.readBits(1) === 0) {
+                result.chunks.push({
+                    type: Mode.ECI,
+                    assignmentNumber: stream.readBits(14),
+                });
+            }
+            else if (stream.readBits(1) === 0) {
+                result.chunks.push({
+                    type: Mode.ECI,
+                    assignmentNumber: stream.readBits(21),
+                });
+            }
+            else {
+                // ECI data seems corrupted
+                result.chunks.push({
+                    type: Mode.ECI,
+                    assignmentNumber: -1,
+                });
+            }
+        }
+        else if (mode === ModeByte.Numeric) {
+            var numericResult = decodeNumeric(stream, size);
+            result.text += numericResult.text;
+            (_a = result.bytes).push.apply(_a, numericResult.bytes);
+            result.chunks.push({
+                type: Mode.Numeric,
+                text: numericResult.text,
+            });
+        }
+        else if (mode === ModeByte.Alphanumeric) {
+            var alphanumericResult = decodeAlphanumeric(stream, size);
+            result.text += alphanumericResult.text;
+            (_b = result.bytes).push.apply(_b, alphanumericResult.bytes);
+            result.chunks.push({
+                type: Mode.Alphanumeric,
+                text: alphanumericResult.text,
+            });
+        }
+        else if (mode === ModeByte.Byte) {
+            var byteResult = decodeByte(stream, size);
+            result.text += byteResult.text;
+            (_c = result.bytes).push.apply(_c, byteResult.bytes);
+            result.chunks.push({
+                type: Mode.Byte,
+                bytes: byteResult.bytes,
+                text: byteResult.text,
+            });
+        }
+        else if (mode === ModeByte.Kanji) {
+            var kanjiResult = decodeKanji(stream, size);
+            result.text += kanjiResult.text;
+            (_d = result.bytes).push.apply(_d, kanjiResult.bytes);
+            result.chunks.push({
+                type: Mode.Kanji,
+                bytes: kanjiResult.bytes,
+                text: kanjiResult.text,
+            });
+        }
+    }
+    var _a, _b, _c, _d;
+}
+exports.decode = decode;
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+// tslint:disable:no-bitwise
+Object.defineProperty(exports, "__esModule", { value: true });
+var BitStream = /** @class */ (function () {
+    function BitStream(bytes) {
+        this.byteOffset = 0;
+        this.bitOffset = 0;
+        this.bytes = bytes;
+    }
+    BitStream.prototype.readBits = function (numBits) {
+        if (numBits < 1 || numBits > 32 || numBits > this.available()) {
+            throw new Error("Cannot read " + numBits.toString() + " bits");
+        }
+        var result = 0;
+        // First, read remainder from current byte
+        if (this.bitOffset > 0) {
+            var bitsLeft = 8 - this.bitOffset;
+            var toRead = numBits < bitsLeft ? numBits : bitsLeft;
+            var bitsToNotRead = bitsLeft - toRead;
+            var mask = (0xFF >> (8 - toRead)) << bitsToNotRead;
+            result = (this.bytes[this.byteOffset] & mask) >> bitsToNotRead;
+            numBits -= toRead;
+            this.bitOffset += toRead;
+            if (this.bitOffset === 8) {
+                this.bitOffset = 0;
+                this.byteOffset++;
+            }
+        }
+        // Next read whole bytes
+        if (numBits > 0) {
+            while (numBits >= 8) {
+                result = (result << 8) | (this.bytes[this.byteOffset] & 0xFF);
+                this.byteOffset++;
+                numBits -= 8;
+            }
+            // Finally read a partial byte
+            if (numBits > 0) {
+                var bitsToNotRead = 8 - numBits;
+                var mask = (0xFF >> bitsToNotRead) << bitsToNotRead;
+                result = (result << numBits) | ((this.bytes[this.byteOffset] & mask) >> bitsToNotRead);
+                this.bitOffset += numBits;
+            }
+        }
+        return result;
+    };
+    BitStream.prototype.available = function () {
+        return 8 * (this.bytes.length - this.byteOffset) - this.bitOffset;
+    };
+    return BitStream;
+}());
+exports.BitStream = BitStream;
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.shiftJISTable = {
+    0x20: 0x0020,
+    0x21: 0x0021,
+    0x22: 0x0022,
+    0x23: 0x0023,
+    0x24: 0x0024,
+    0x25: 0x0025,
+    0x26: 0x0026,
+    0x27: 0x0027,
+    0x28: 0x0028,
+    0x29: 0x0029,
+    0x2A: 0x002A,
+    0x2B: 0x002B,
+    0x2C: 0x002C,
+    0x2D: 0x002D,
+    0x2E: 0x002E,
+    0x2F: 0x002F,
+    0x30: 0x0030,
+    0x31: 0x0031,
+    0x32: 0x0032,
+    0x33: 0x0033,
+    0x34: 0x0034,
+    0x35: 0x0035,
+    0x36: 0x0036,
+    0x37: 0x0037,
+    0x38: 0x0038,
+    0x39: 0x0039,
+    0x3A: 0x003A,
+    0x3B: 0x003B,
+    0x3C: 0x003C,
+    0x3D: 0x003D,
+    0x3E: 0x003E,
+    0x3F: 0x003F,
+    0x40: 0x0040,
+    0x41: 0x0041,
+    0x42: 0x0042,
+    0x43: 0x0043,
+    0x44: 0x0044,
+    0x45: 0x0045,
+    0x46: 0x0046,
+    0x47: 0x0047,
+    0x48: 0x0048,
+    0x49: 0x0049,
+    0x4A: 0x004A,
+    0x4B: 0x004B,
+    0x4C: 0x004C,
+    0x4D: 0x004D,
+    0x4E: 0x004E,
+    0x4F: 0x004F,
+    0x50: 0x0050,
+    0x51: 0x0051,
+    0x52: 0x0052,
+    0x53: 0x0053,
+    0x54: 0x0054,
+    0x55: 0x0055,
+    0x56: 0x0056,
+    0x57: 0x0057,
+    0x58: 0x0058,
+    0x59: 0x0059,
+    0x5A: 0x005A,
+    0x5B: 0x005B,
+    0x5C: 0x00A5,
+    0x5D: 0x005D,
+    0x5E: 0x005E,
+    0x5F: 0x005F,
+    0x60: 0x0060,
+    0x61: 0x0061,
+    0x62: 0x0062,
+    0x63: 0x0063,
+    0x64: 0x0064,
+    0x65: 0x0065,
+    0x66: 0x0066,
+    0x67: 0x0067,
+    0x68: 0x0068,
+    0x69: 0x0069,
+    0x6A: 0x006A,
+    0x6B: 0x006B,
+    0x6C: 0x006C,
+    0x6D: 0x006D,
+    0x6E: 0x006E,
+    0x6F: 0x006F,
+    0x70: 0x0070,
+    0x71: 0x0071,
+    0x72: 0x0072,
+    0x73: 0x0073,
+    0x74: 0x0074,
+    0x75: 0x0075,
+    0x76: 0x0076,
+    0x77: 0x0077,
+    0x78: 0x0078,
+    0x79: 0x0079,
+    0x7A: 0x007A,
+    0x7B: 0x007B,
+    0x7C: 0x007C,
+    0x7D: 0x007D,
+    0x7E: 0x203E,
+    0x8140: 0x3000,
+    0x8141: 0x3001,
+    0x8142: 0x3002,
+    0x8143: 0xFF0C,
+    0x8144: 0xFF0E,
+    0x8145: 0x30FB,
+    0x8146: 0xFF1A,
+    0x8147: 0xFF1B,
+    0x8148: 0xFF1F,
+    0x8149: 0xFF01,
+    0x814A: 0x309B,
+    0x814B: 0x309C,
+    0x814C: 0x00B4,
+    0x814D: 0xFF40,
+    0x814E: 0x00A8,
+    0x814F: 0xFF3E,
+    0x8150: 0xFFE3,
+    0x8151: 0xFF3F,
+    0x8152: 0x30FD,
+    0x8153: 0x30FE,
+    0x8154: 0x309D,
+    0x8155: 0x309E,
+    0x8156: 0x3003,
+    0x8157: 0x4EDD,
+    0x8158: 0x3005,
+    0x8159: 0x3006,
+    0x815A: 0x3007,
+    0x815B: 0x30FC,
+    0x815C: 0x2015,
+    0x815D: 0x2010,
+    0x815E: 0xFF0F,
+    0x815F: 0x005C,
+    0x8160: 0x301C,
+    0x8161: 0x2016,
+    0x8162: 0xFF5C,
+    0x8163: 0x2026,
+    0x8164: 0x2025,
+    0x8165: 0x2018,
+    0x8166: 0x2019,
+    0x8167: 0x201C,
+    0x8168: 0x201D,
+    0x8169: 0xFF08,
+    0x816A: 0xFF09,
+    0x816B: 0x3014,
+    0x816C: 0x3015,
+    0x816D: 0xFF3B,
+    0x816E: 0xFF3D,
+    0x816F: 0xFF5B,
+    0x8170: 0xFF5D,
+    0x8171: 0x3008,
+    0x8172: 0x3009,
+    0x8173: 0x300A,
+    0x8174: 0x300B,
+    0x8175: 0x300C,
+    0x8176: 0x300D,
+    0x8177: 0x300E,
+    0x8178: 0x300F,
+    0x8179: 0x3010,
+    0x817A: 0x3011,
+    0x817B: 0xFF0B,
+    0x817C: 0x2212,
+    0x817D: 0x00B1,
+    0x817E: 0x00D7,
+    0x8180: 0x00F7,
+    0x8181: 0xFF1D,
+    0x8182: 0x2260,
+    0x8183: 0xFF1C,
+    0x8184: 0xFF1E,
+    0x8185: 0x2266,
+    0x8186: 0x2267,
+    0x8187: 0x221E,
+    0x8188: 0x2234,
+    0x8189: 0x2642,
+    0x818A: 0x2640,
+    0x818B: 0x00B0,
+    0x818C: 0x2032,
+    0x818D: 0x2033,
+    0x818E: 0x2103,
+    0x818F: 0xFFE5,
+    0x8190: 0xFF04,
+    0x8191: 0x00A2,
+    0x8192: 0x00A3,
+    0x8193: 0xFF05,
+    0x8194: 0xFF03,
+    0x8195: 0xFF06,
+    0x8196: 0xFF0A,
+    0x8197: 0xFF20,
+    0x8198: 0x00A7,
+    0x8199: 0x2606,
+    0x819A: 0x2605,
+    0x819B: 0x25CB,
+    0x819C: 0x25CF,
+    0x819D: 0x25CE,
+    0x819E: 0x25C7,
+    0x819F: 0x25C6,
+    0x81A0: 0x25A1,
+    0x81A1: 0x25A0,
+    0x81A2: 0x25B3,
+    0x81A3: 0x25B2,
+    0x81A4: 0x25BD,
+    0x81A5: 0x25BC,
+    0x81A6: 0x203B,
+    0x81A7: 0x3012,
+    0x81A8: 0x2192,
+    0x81A9: 0x2190,
+    0x81AA: 0x2191,
+    0x81AB: 0x2193,
+    0x81AC: 0x3013,
+    0x81B8: 0x2208,
+    0x81B9: 0x220B,
+    0x81BA: 0x2286,
+    0x81BB: 0x2287,
+    0x81BC: 0x2282,
+    0x81BD: 0x2283,
+    0x81BE: 0x222A,
+    0x81BF: 0x2229,
+    0x81C8: 0x2227,
+    0x81C9: 0x2228,
+    0x81CA: 0x00AC,
+    0x81CB: 0x21D2,
+    0x81CC: 0x21D4,
+    0x81CD: 0x2200,
+    0x81CE: 0x2203,
+    0x81DA: 0x2220,
+    0x81DB: 0x22A5,
+    0x81DC: 0x2312,
+    0x81DD: 0x2202,
+    0x81DE: 0x2207,
+    0x81DF: 0x2261,
+    0x81E0: 0x2252,
+    0x81E1: 0x226A,
+    0x81E2: 0x226B,
+    0x81E3: 0x221A,
+    0x81E4: 0x223D,
+    0x81E5: 0x221D,
+    0x81E6: 0x2235,
+    0x81E7: 0x222B,
+    0x81E8: 0x222C,
+    0x81F0: 0x212B,
+    0x81F1: 0x2030,
+    0x81F2: 0x266F,
+    0x81F3: 0x266D,
+    0x81F4: 0x266A,
+    0x81F5: 0x2020,
+    0x81F6: 0x2021,
+    0x81F7: 0x00B6,
+    0x81FC: 0x25EF,
+    0x824F: 0xFF10,
+    0x8250: 0xFF11,
+    0x8251: 0xFF12,
+    0x8252: 0xFF13,
+    0x8253: 0xFF14,
+    0x8254: 0xFF15,
+    0x8255: 0xFF16,
+    0x8256: 0xFF17,
+    0x8257: 0xFF18,
+    0x8258: 0xFF19,
+    0x8260: 0xFF21,
+    0x8261: 0xFF22,
+    0x8262: 0xFF23,
+    0x8263: 0xFF24,
+    0x8264: 0xFF25,
+    0x8265: 0xFF26,
+    0x8266: 0xFF27,
+    0x8267: 0xFF28,
+    0x8268: 0xFF29,
+    0x8269: 0xFF2A,
+    0x826A: 0xFF2B,
+    0x826B: 0xFF2C,
+    0x826C: 0xFF2D,
+    0x826D: 0xFF2E,
+    0x826E: 0xFF2F,
+    0x826F: 0xFF30,
+    0x8270: 0xFF31,
+    0x8271: 0xFF32,
+    0x8272: 0xFF33,
+    0x8273: 0xFF34,
+    0x8274: 0xFF35,
+    0x8275: 0xFF36,
+    0x8276: 0xFF37,
+    0x8277: 0xFF38,
+    0x8278: 0xFF39,
+    0x8279: 0xFF3A,
+    0x8281: 0xFF41,
+    0x8282: 0xFF42,
+    0x8283: 0xFF43,
+    0x8284: 0xFF44,
+    0x8285: 0xFF45,
+    0x8286: 0xFF46,
+    0x8287: 0xFF47,
+    0x8288: 0xFF48,
+    0x8289: 0xFF49,
+    0x828A: 0xFF4A,
+    0x828B: 0xFF4B,
+    0x828C: 0xFF4C,
+    0x828D: 0xFF4D,
+    0x828E: 0xFF4E,
+    0x828F: 0xFF4F,
+    0x8290: 0xFF50,
+    0x8291: 0xFF51,
+    0x8292: 0xFF52,
+    0x8293: 0xFF53,
+    0x8294: 0xFF54,
+    0x8295: 0xFF55,
+    0x8296: 0xFF56,
+    0x8297: 0xFF57,
+    0x8298: 0xFF58,
+    0x8299: 0xFF59,
+    0x829A: 0xFF5A,
+    0x829F: 0x3041,
+    0x82A0: 0x3042,
+    0x82A1: 0x3043,
+    0x82A2: 0x3044,
+    0x82A3: 0x3045,
+    0x82A4: 0x3046,
+    0x82A5: 0x3047,
+    0x82A6: 0x3048,
+    0x82A7: 0x3049,
+    0x82A8: 0x304A,
+    0x82A9: 0x304B,
+    0x82AA: 0x304C,
+    0x82AB: 0x304D,
+    0x82AC: 0x304E,
+    0x82AD: 0x304F,
+    0x82AE: 0x3050,
+    0x82AF: 0x3051,
+    0x82B0: 0x3052,
+    0x82B1: 0x3053,
+    0x82B2: 0x3054,
+    0x82B3: 0x3055,
+    0x82B4: 0x3056,
+    0x82B5: 0x3057,
+    0x82B6: 0x3058,
+    0x82B7: 0x3059,
+    0x82B8: 0x305A,
+    0x82B9: 0x305B,
+    0x82BA: 0x305C,
+    0x82BB: 0x305D,
+    0x82BC: 0x305E,
+    0x82BD: 0x305F,
+    0x82BE: 0x3060,
+    0x82BF: 0x3061,
+    0x82C0: 0x3062,
+    0x82C1: 0x3063,
+    0x82C2: 0x3064,
+    0x82C3: 0x3065,
+    0x82C4: 0x3066,
+    0x82C5: 0x3067,
+    0x82C6: 0x3068,
+    0x82C7: 0x3069,
+    0x82C8: 0x306A,
+    0x82C9: 0x306B,
+    0x82CA: 0x306C,
+    0x82CB: 0x306D,
+    0x82CC: 0x306E,
+    0x82CD: 0x306F,
+    0x82CE: 0x3070,
+    0x82CF: 0x3071,
+    0x82D0: 0x3072,
+    0x82D1: 0x3073,
+    0x82D2: 0x3074,
+    0x82D3: 0x3075,
+    0x82D4: 0x3076,
+    0x82D5: 0x3077,
+    0x82D6: 0x3078,
+    0x82D7: 0x3079,
+    0x82D8: 0x307A,
+    0x82D9: 0x307B,
+    0x82DA: 0x307C,
+    0x82DB: 0x307D,
+    0x82DC: 0x307E,
+    0x82DD: 0x307F,
+    0x82DE: 0x3080,
+    0x82DF: 0x3081,
+    0x82E0: 0x3082,
+    0x82E1: 0x3083,
+    0x82E2: 0x3084,
+    0x82E3: 0x3085,
+    0x82E4: 0x3086,
+    0x82E5: 0x3087,
+    0x82E6: 0x3088,
+    0x82E7: 0x3089,
+    0x82E8: 0x308A,
+    0x82E9: 0x308B,
+    0x82EA: 0x308C,
+    0x82EB: 0x308D,
+    0x82EC: 0x308E,
+    0x82ED: 0x308F,
+    0x82EE: 0x3090,
+    0x82EF: 0x3091,
+    0x82F0: 0x3092,
+    0x82F1: 0x3093,
+    0x8340: 0x30A1,
+    0x8341: 0x30A2,
+    0x8342: 0x30A3,
+    0x8343: 0x30A4,
+    0x8344: 0x30A5,
+    0x8345: 0x30A6,
+    0x8346: 0x30A7,
+    0x8347: 0x30A8,
+    0x8348: 0x30A9,
+    0x8349: 0x30AA,
+    0x834A: 0x30AB,
+    0x834B: 0x30AC,
+    0x834C: 0x30AD,
+    0x834D: 0x30AE,
+    0x834E: 0x30AF,
+    0x834F: 0x30B0,
+    0x8350: 0x30B1,
+    0x8351: 0x30B2,
+    0x8352: 0x30B3,
+    0x8353: 0x30B4,
+    0x8354: 0x30B5,
+    0x8355: 0x30B6,
+    0x8356: 0x30B7,
+    0x8357: 0x30B8,
+    0x8358: 0x30B9,
+    0x8359: 0x30BA,
+    0x835A: 0x30BB,
+    0x835B: 0x30BC,
+    0x835C: 0x30BD,
+    0x835D: 0x30BE,
+    0x835E: 0x30BF,
+    0x835F: 0x30C0,
+    0x8360: 0x30C1,
+    0x8361: 0x30C2,
+    0x8362: 0x30C3,
+    0x8363: 0x30C4,
+    0x8364: 0x30C5,
+    0x8365: 0x30C6,
+    0x8366: 0x30C7,
+    0x8367: 0x30C8,
+    0x8368: 0x30C9,
+    0x8369: 0x30CA,
+    0x836A: 0x30CB,
+    0x836B: 0x30CC,
+    0x836C: 0x30CD,
+    0x836D: 0x30CE,
+    0x836E: 0x30CF,
+    0x836F: 0x30D0,
+    0x8370: 0x30D1,
+    0x8371: 0x30D2,
+    0x8372: 0x30D3,
+    0x8373: 0x30D4,
+    0x8374: 0x30D5,
+    0x8375: 0x30D6,
+    0x8376: 0x30D7,
+    0x8377: 0x30D8,
+    0x8378: 0x30D9,
+    0x8379: 0x30DA,
+    0x837A: 0x30DB,
+    0x837B: 0x30DC,
+    0x837C: 0x30DD,
+    0x837D: 0x30DE,
+    0x837E: 0x30DF,
+    0x8380: 0x30E0,
+    0x8381: 0x30E1,
+    0x8382: 0x30E2,
+    0x8383: 0x30E3,
+    0x8384: 0x30E4,
+    0x8385: 0x30E5,
+    0x8386: 0x30E6,
+    0x8387: 0x30E7,
+    0x8388: 0x30E8,
+    0x8389: 0x30E9,
+    0x838A: 0x30EA,
+    0x838B: 0x30EB,
+    0x838C: 0x30EC,
+    0x838D: 0x30ED,
+    0x838E: 0x30EE,
+    0x838F: 0x30EF,
+    0x8390: 0x30F0,
+    0x8391: 0x30F1,
+    0x8392: 0x30F2,
+    0x8393: 0x30F3,
+    0x8394: 0x30F4,
+    0x8395: 0x30F5,
+    0x8396: 0x30F6,
+    0x839F: 0x0391,
+    0x83A0: 0x0392,
+    0x83A1: 0x0393,
+    0x83A2: 0x0394,
+    0x83A3: 0x0395,
+    0x83A4: 0x0396,
+    0x83A5: 0x0397,
+    0x83A6: 0x0398,
+    0x83A7: 0x0399,
+    0x83A8: 0x039A,
+    0x83A9: 0x039B,
+    0x83AA: 0x039C,
+    0x83AB: 0x039D,
+    0x83AC: 0x039E,
+    0x83AD: 0x039F,
+    0x83AE: 0x03A0,
+    0x83AF: 0x03A1,
+    0x83B0: 0x03A3,
+    0x83B1: 0x03A4,
+    0x83B2: 0x03A5,
+    0x83B3: 0x03A6,
+    0x83B4: 0x03A7,
+    0x83B5: 0x03A8,
+    0x83B6: 0x03A9,
+    0x83BF: 0x03B1,
+    0x83C0: 0x03B2,
+    0x83C1: 0x03B3,
+    0x83C2: 0x03B4,
+    0x83C3: 0x03B5,
+    0x83C4: 0x03B6,
+    0x83C5: 0x03B7,
+    0x83C6: 0x03B8,
+    0x83C7: 0x03B9,
+    0x83C8: 0x03BA,
+    0x83C9: 0x03BB,
+    0x83CA: 0x03BC,
+    0x83CB: 0x03BD,
+    0x83CC: 0x03BE,
+    0x83CD: 0x03BF,
+    0x83CE: 0x03C0,
+    0x83CF: 0x03C1,
+    0x83D0: 0x03C3,
+    0x83D1: 0x03C4,
+    0x83D2: 0x03C5,
+    0x83D3: 0x03C6,
+    0x83D4: 0x03C7,
+    0x83D5: 0x03C8,
+    0x83D6: 0x03C9,
+    0x8440: 0x0410,
+    0x8441: 0x0411,
+    0x8442: 0x0412,
+    0x8443: 0x0413,
+    0x8444: 0x0414,
+    0x8445: 0x0415,
+    0x8446: 0x0401,
+    0x8447: 0x0416,
+    0x8448: 0x0417,
+    0x8449: 0x0418,
+    0x844A: 0x0419,
+    0x844B: 0x041A,
+    0x844C: 0x041B,
+    0x844D: 0x041C,
+    0x844E: 0x041D,
+    0x844F: 0x041E,
+    0x8450: 0x041F,
+    0x8451: 0x0420,
+    0x8452: 0x0421,
+    0x8453: 0x0422,
+    0x8454: 0x0423,
+    0x8455: 0x0424,
+    0x8456: 0x0425,
+    0x8457: 0x0426,
+    0x8458: 0x0427,
+    0x8459: 0x0428,
+    0x845A: 0x0429,
+    0x845B: 0x042A,
+    0x845C: 0x042B,
+    0x845D: 0x042C,
+    0x845E: 0x042D,
+    0x845F: 0x042E,
+    0x8460: 0x042F,
+    0x8470: 0x0430,
+    0x8471: 0x0431,
+    0x8472: 0x0432,
+    0x8473: 0x0433,
+    0x8474: 0x0434,
+    0x8475: 0x0435,
+    0x8476: 0x0451,
+    0x8477: 0x0436,
+    0x8478: 0x0437,
+    0x8479: 0x0438,
+    0x847A: 0x0439,
+    0x847B: 0x043A,
+    0x847C: 0x043B,
+    0x847D: 0x043C,
+    0x847E: 0x043D,
+    0x8480: 0x043E,
+    0x8481: 0x043F,
+    0x8482: 0x0440,
+    0x8483: 0x0441,
+    0x8484: 0x0442,
+    0x8485: 0x0443,
+    0x8486: 0x0444,
+    0x8487: 0x0445,
+    0x8488: 0x0446,
+    0x8489: 0x0447,
+    0x848A: 0x0448,
+    0x848B: 0x0449,
+    0x848C: 0x044A,
+    0x848D: 0x044B,
+    0x848E: 0x044C,
+    0x848F: 0x044D,
+    0x8490: 0x044E,
+    0x8491: 0x044F,
+    0x849F: 0x2500,
+    0x84A0: 0x2502,
+    0x84A1: 0x250C,
+    0x84A2: 0x2510,
+    0x84A3: 0x2518,
+    0x84A4: 0x2514,
+    0x84A5: 0x251C,
+    0x84A6: 0x252C,
+    0x84A7: 0x2524,
+    0x84A8: 0x2534,
+    0x84A9: 0x253C,
+    0x84AA: 0x2501,
+    0x84AB: 0x2503,
+    0x84AC: 0x250F,
+    0x84AD: 0x2513,
+    0x84AE: 0x251B,
+    0x84AF: 0x2517,
+    0x84B0: 0x2523,
+    0x84B1: 0x2533,
+    0x84B2: 0x252B,
+    0x84B3: 0x253B,
+    0x84B4: 0x254B,
+    0x84B5: 0x2520,
+    0x84B6: 0x252F,
+    0x84B7: 0x2528,
+    0x84B8: 0x2537,
+    0x84B9: 0x253F,
+    0x84BA: 0x251D,
+    0x84BB: 0x2530,
+    0x84BC: 0x2525,
+    0x84BD: 0x2538,
+    0x84BE: 0x2542,
+    0x889F: 0x4E9C,
+    0x88A0: 0x5516,
+    0x88A1: 0x5A03,
+    0x88A2: 0x963F,
+    0x88A3: 0x54C0,
+    0x88A4: 0x611B,
+    0x88A5: 0x6328,
+    0x88A6: 0x59F6,
+    0x88A7: 0x9022,
+    0x88A8: 0x8475,
+    0x88A9: 0x831C,
+    0x88AA: 0x7A50,
+    0x88AB: 0x60AA,
+    0x88AC: 0x63E1,
+    0x88AD: 0x6E25,
+    0x88AE: 0x65ED,
+    0x88AF: 0x8466,
+    0x88B0: 0x82A6,
+    0x88B1: 0x9BF5,
+    0x88B2: 0x6893,
+    0x88B3: 0x5727,
+    0x88B4: 0x65A1,
+    0x88B5: 0x6271,
+    0x88B6: 0x5B9B,
+    0x88B7: 0x59D0,
+    0x88B8: 0x867B,
+    0x88B9: 0x98F4,
+    0x88BA: 0x7D62,
+    0x88BB: 0x7DBE,
+    0x88BC: 0x9B8E,
+    0x88BD: 0x6216,
+    0x88BE: 0x7C9F,
+    0x88BF: 0x88B7,
+    0x88C0: 0x5B89,
+    0x88C1: 0x5EB5,
+    0x88C2: 0x6309,
+    0x88C3: 0x6697,
+    0x88C4: 0x6848,
+    0x88C5: 0x95C7,
+    0x88C6: 0x978D,
+    0x88C7: 0x674F,
+    0x88C8: 0x4EE5,
+    0x88C9: 0x4F0A,
+    0x88CA: 0x4F4D,
+    0x88CB: 0x4F9D,
+    0x88CC: 0x5049,
+    0x88CD: 0x56F2,
+    0x88CE: 0x5937,
+    0x88CF: 0x59D4,
+    0x88D0: 0x5A01,
+    0x88D1: 0x5C09,
+    0x88D2: 0x60DF,
+    0x88D3: 0x610F,
+    0x88D4: 0x6170,
+    0x88D5: 0x6613,
+    0x88D6: 0x6905,
+    0x88D7: 0x70BA,
+    0x88D8: 0x754F,
+    0x88D9: 0x7570,
+    0x88DA: 0x79FB,
+    0x88DB: 0x7DAD,
+    0x88DC: 0x7DEF,
+    0x88DD: 0x80C3,
+    0x88DE: 0x840E,
+    0x88DF: 0x8863,
+    0x88E0: 0x8B02,
+    0x88E1: 0x9055,
+    0x88E2: 0x907A,
+    0x88E3: 0x533B,
+    0x88E4: 0x4E95,
+    0x88E5: 0x4EA5,
+    0x88E6: 0x57DF,
+    0x88E7: 0x80B2,
+    0x88E8: 0x90C1,
+    0x88E9: 0x78EF,
+    0x88EA: 0x4E00,
+    0x88EB: 0x58F1,
+    0x88EC: 0x6EA2,
+    0x88ED: 0x9038,
+    0x88EE: 0x7A32,
+    0x88EF: 0x8328,
+    0x88F0: 0x828B,
+    0x88F1: 0x9C2F,
+    0x88F2: 0x5141,
+    0x88F3: 0x5370,
+    0x88F4: 0x54BD,
+    0x88F5: 0x54E1,
+    0x88F6: 0x56E0,
+    0x88F7: 0x59FB,
+    0x88F8: 0x5F15,
+    0x88F9: 0x98F2,
+    0x88FA: 0x6DEB,
+    0x88FB: 0x80E4,
+    0x88FC: 0x852D,
+    0x8940: 0x9662,
+    0x8941: 0x9670,
+    0x8942: 0x96A0,
+    0x8943: 0x97FB,
+    0x8944: 0x540B,
+    0x8945: 0x53F3,
+    0x8946: 0x5B87,
+    0x8947: 0x70CF,
+    0x8948: 0x7FBD,
+    0x8949: 0x8FC2,
+    0x894A: 0x96E8,
+    0x894B: 0x536F,
+    0x894C: 0x9D5C,
+    0x894D: 0x7ABA,
+    0x894E: 0x4E11,
+    0x894F: 0x7893,
+    0x8950: 0x81FC,
+    0x8951: 0x6E26,
+    0x8952: 0x5618,
+    0x8953: 0x5504,
+    0x8954: 0x6B1D,
+    0x8955: 0x851A,
+    0x8956: 0x9C3B,
+    0x8957: 0x59E5,
+    0x8958: 0x53A9,
+    0x8959: 0x6D66,
+    0x895A: 0x74DC,
+    0x895B: 0x958F,
+    0x895C: 0x5642,
+    0x895D: 0x4E91,
+    0x895E: 0x904B,
+    0x895F: 0x96F2,
+    0x8960: 0x834F,
+    0x8961: 0x990C,
+    0x8962: 0x53E1,
+    0x8963: 0x55B6,
+    0x8964: 0x5B30,
+    0x8965: 0x5F71,
+    0x8966: 0x6620,
+    0x8967: 0x66F3,
+    0x8968: 0x6804,
+    0x8969: 0x6C38,
+    0x896A: 0x6CF3,
+    0x896B: 0x6D29,
+    0x896C: 0x745B,
+    0x896D: 0x76C8,
+    0x896E: 0x7A4E,
+    0x896F: 0x9834,
+    0x8970: 0x82F1,
+    0x8971: 0x885B,
+    0x8972: 0x8A60,
+    0x8973: 0x92ED,
+    0x8974: 0x6DB2,
+    0x8975: 0x75AB,
+    0x8976: 0x76CA,
+    0x8977: 0x99C5,
+    0x8978: 0x60A6,
+    0x8979: 0x8B01,
+    0x897A: 0x8D8A,
+    0x897B: 0x95B2,
+    0x897C: 0x698E,
+    0x897D: 0x53AD,
+    0x897E: 0x5186,
+    0x8980: 0x5712,
+    0x8981: 0x5830,
+    0x8982: 0x5944,
+    0x8983: 0x5BB4,
+    0x8984: 0x5EF6,
+    0x8985: 0x6028,
+    0x8986: 0x63A9,
+    0x8987: 0x63F4,
+    0x8988: 0x6CBF,
+    0x8989: 0x6F14,
+    0x898A: 0x708E,
+    0x898B: 0x7114,
+    0x898C: 0x7159,
+    0x898D: 0x71D5,
+    0x898E: 0x733F,
+    0x898F: 0x7E01,
+    0x8990: 0x8276,
+    0x8991: 0x82D1,
+    0x8992: 0x8597,
+    0x8993: 0x9060,
+    0x8994: 0x925B,
+    0x8995: 0x9D1B,
+    0x8996: 0x5869,
+    0x8997: 0x65BC,
+    0x8998: 0x6C5A,
+    0x8999: 0x7525,
+    0x899A: 0x51F9,
+    0x899B: 0x592E,
+    0x899C: 0x5965,
+    0x899D: 0x5F80,
+    0x899E: 0x5FDC,
+    0x899F: 0x62BC,
+    0x89A0: 0x65FA,
+    0x89A1: 0x6A2A,
+    0x89A2: 0x6B27,
+    0x89A3: 0x6BB4,
+    0x89A4: 0x738B,
+    0x89A5: 0x7FC1,
+    0x89A6: 0x8956,
+    0x89A7: 0x9D2C,
+    0x89A8: 0x9D0E,
+    0x89A9: 0x9EC4,
+    0x89AA: 0x5CA1,
+    0x89AB: 0x6C96,
+    0x89AC: 0x837B,
+    0x89AD: 0x5104,
+    0x89AE: 0x5C4B,
+    0x89AF: 0x61B6,
+    0x89B0: 0x81C6,
+    0x89B1: 0x6876,
+    0x89B2: 0x7261,
+    0x89B3: 0x4E59,
+    0x89B4: 0x4FFA,
+    0x89B5: 0x5378,
+    0x89B6: 0x6069,
+    0x89B7: 0x6E29,
+    0x89B8: 0x7A4F,
+    0x89B9: 0x97F3,
+    0x89BA: 0x4E0B,
+    0x89BB: 0x5316,
+    0x89BC: 0x4EEE,
+    0x89BD: 0x4F55,
+    0x89BE: 0x4F3D,
+    0x89BF: 0x4FA1,
+    0x89C0: 0x4F73,
+    0x89C1: 0x52A0,
+    0x89C2: 0x53EF,
+    0x89C3: 0x5609,
+    0x89C4: 0x590F,
+    0x89C5: 0x5AC1,
+    0x89C6: 0x5BB6,
+    0x89C7: 0x5BE1,
+    0x89C8: 0x79D1,
+    0x89C9: 0x6687,
+    0x89CA: 0x679C,
+    0x89CB: 0x67B6,
+    0x89CC: 0x6B4C,
+    0x89CD: 0x6CB3,
+    0x89CE: 0x706B,
+    0x89CF: 0x73C2,
+    0x89D0: 0x798D,
+    0x89D1: 0x79BE,
+    0x89D2: 0x7A3C,
+    0x89D3: 0x7B87,
+    0x89D4: 0x82B1,
+    0x89D5: 0x82DB,
+    0x89D6: 0x8304,
+    0x89D7: 0x8377,
+    0x89D8: 0x83EF,
+    0x89D9: 0x83D3,
+    0x89DA: 0x8766,
+    0x89DB: 0x8AB2,
+    0x89DC: 0x5629,
+    0x89DD: 0x8CA8,
+    0x89DE: 0x8FE6,
+    0x89DF: 0x904E,
+    0x89E0: 0x971E,
+    0x89E1: 0x868A,
+    0x89E2: 0x4FC4,
+    0x89E3: 0x5CE8,
+    0x89E4: 0x6211,
+    0x89E5: 0x7259,
+    0x89E6: 0x753B,
+    0x89E7: 0x81E5,
+    0x89E8: 0x82BD,
+    0x89E9: 0x86FE,
+    0x89EA: 0x8CC0,
+    0x89EB: 0x96C5,
+    0x89EC: 0x9913,
+    0x89ED: 0x99D5,
+    0x89EE: 0x4ECB,
+    0x89EF: 0x4F1A,
+    0x89F0: 0x89E3,
+    0x89F1: 0x56DE,
+    0x89F2: 0x584A,
+    0x89F3: 0x58CA,
+    0x89F4: 0x5EFB,
+    0x89F5: 0x5FEB,
+    0x89F6: 0x602A,
+    0x89F7: 0x6094,
+    0x89F8: 0x6062,
+    0x89F9: 0x61D0,
+    0x89FA: 0x6212,
+    0x89FB: 0x62D0,
+    0x89FC: 0x6539,
+    0x8A40: 0x9B41,
+    0x8A41: 0x6666,
+    0x8A42: 0x68B0,
+    0x8A43: 0x6D77,
+    0x8A44: 0x7070,
+    0x8A45: 0x754C,
+    0x8A46: 0x7686,
+    0x8A47: 0x7D75,
+    0x8A48: 0x82A5,
+    0x8A49: 0x87F9,
+    0x8A4A: 0x958B,
+    0x8A4B: 0x968E,
+    0x8A4C: 0x8C9D,
+    0x8A4D: 0x51F1,
+    0x8A4E: 0x52BE,
+    0x8A4F: 0x5916,
+    0x8A50: 0x54B3,
+    0x8A51: 0x5BB3,
+    0x8A52: 0x5D16,
+    0x8A53: 0x6168,
+    0x8A54: 0x6982,
+    0x8A55: 0x6DAF,
+    0x8A56: 0x788D,
+    0x8A57: 0x84CB,
+    0x8A58: 0x8857,
+    0x8A59: 0x8A72,
+    0x8A5A: 0x93A7,
+    0x8A5B: 0x9AB8,
+    0x8A5C: 0x6D6C,
+    0x8A5D: 0x99A8,
+    0x8A5E: 0x86D9,
+    0x8A5F: 0x57A3,
+    0x8A60: 0x67FF,
+    0x8A61: 0x86CE,
+    0x8A62: 0x920E,
+    0x8A63: 0x5283,
+    0x8A64: 0x5687,
+    0x8A65: 0x5404,
+    0x8A66: 0x5ED3,
+    0x8A67: 0x62E1,
+    0x8A68: 0x64B9,
+    0x8A69: 0x683C,
+    0x8A6A: 0x6838,
+    0x8A6B: 0x6BBB,
+    0x8A6C: 0x7372,
+    0x8A6D: 0x78BA,
+    0x8A6E: 0x7A6B,
+    0x8A6F: 0x899A,
+    0x8A70: 0x89D2,
+    0x8A71: 0x8D6B,
+    0x8A72: 0x8F03,
+    0x8A73: 0x90ED,
+    0x8A74: 0x95A3,
+    0x8A75: 0x9694,
+    0x8A76: 0x9769,
+    0x8A77: 0x5B66,
+    0x8A78: 0x5CB3,
+    0x8A79: 0x697D,
+    0x8A7A: 0x984D,
+    0x8A7B: 0x984E,
+    0x8A7C: 0x639B,
+    0x8A7D: 0x7B20,
+    0x8A7E: 0x6A2B,
+    0x8A80: 0x6A7F,
+    0x8A81: 0x68B6,
+    0x8A82: 0x9C0D,
+    0x8A83: 0x6F5F,
+    0x8A84: 0x5272,
+    0x8A85: 0x559D,
+    0x8A86: 0x6070,
+    0x8A87: 0x62EC,
+    0x8A88: 0x6D3B,
+    0x8A89: 0x6E07,
+    0x8A8A: 0x6ED1,
+    0x8A8B: 0x845B,
+    0x8A8C: 0x8910,
+    0x8A8D: 0x8F44,
+    0x8A8E: 0x4E14,
+    0x8A8F: 0x9C39,
+    0x8A90: 0x53F6,
+    0x8A91: 0x691B,
+    0x8A92: 0x6A3A,
+    0x8A93: 0x9784,
+    0x8A94: 0x682A,
+    0x8A95: 0x515C,
+    0x8A96: 0x7AC3,
+    0x8A97: 0x84B2,
+    0x8A98: 0x91DC,
+    0x8A99: 0x938C,
+    0x8A9A: 0x565B,
+    0x8A9B: 0x9D28,
+    0x8A9C: 0x6822,
+    0x8A9D: 0x8305,
+    0x8A9E: 0x8431,
+    0x8A9F: 0x7CA5,
+    0x8AA0: 0x5208,
+    0x8AA1: 0x82C5,
+    0x8AA2: 0x74E6,
+    0x8AA3: 0x4E7E,
+    0x8AA4: 0x4F83,
+    0x8AA5: 0x51A0,
+    0x8AA6: 0x5BD2,
+    0x8AA7: 0x520A,
+    0x8AA8: 0x52D8,
+    0x8AA9: 0x52E7,
+    0x8AAA: 0x5DFB,
+    0x8AAB: 0x559A,
+    0x8AAC: 0x582A,
+    0x8AAD: 0x59E6,
+    0x8AAE: 0x5B8C,
+    0x8AAF: 0x5B98,
+    0x8AB0: 0x5BDB,
+    0x8AB1: 0x5E72,
+    0x8AB2: 0x5E79,
+    0x8AB3: 0x60A3,
+    0x8AB4: 0x611F,
+    0x8AB5: 0x6163,
+    0x8AB6: 0x61BE,
+    0x8AB7: 0x63DB,
+    0x8AB8: 0x6562,
+    0x8AB9: 0x67D1,
+    0x8ABA: 0x6853,
+    0x8ABB: 0x68FA,
+    0x8ABC: 0x6B3E,
+    0x8ABD: 0x6B53,
+    0x8ABE: 0x6C57,
+    0x8ABF: 0x6F22,
+    0x8AC0: 0x6F97,
+    0x8AC1: 0x6F45,
+    0x8AC2: 0x74B0,
+    0x8AC3: 0x7518,
+    0x8AC4: 0x76E3,
+    0x8AC5: 0x770B,
+    0x8AC6: 0x7AFF,
+    0x8AC7: 0x7BA1,
+    0x8AC8: 0x7C21,
+    0x8AC9: 0x7DE9,
+    0x8ACA: 0x7F36,
+    0x8ACB: 0x7FF0,
+    0x8ACC: 0x809D,
+    0x8ACD: 0x8266,
+    0x8ACE: 0x839E,
+    0x8ACF: 0x89B3,
+    0x8AD0: 0x8ACC,
+    0x8AD1: 0x8CAB,
+    0x8AD2: 0x9084,
+    0x8AD3: 0x9451,
+    0x8AD4: 0x9593,
+    0x8AD5: 0x9591,
+    0x8AD6: 0x95A2,
+    0x8AD7: 0x9665,
+    0x8AD8: 0x97D3,
+    0x8AD9: 0x9928,
+    0x8ADA: 0x8218,
+    0x8ADB: 0x4E38,
+    0x8ADC: 0x542B,
+    0x8ADD: 0x5CB8,
+    0x8ADE: 0x5DCC,
+    0x8ADF: 0x73A9,
+    0x8AE0: 0x764C,
+    0x8AE1: 0x773C,
+    0x8AE2: 0x5CA9,
+    0x8AE3: 0x7FEB,
+    0x8AE4: 0x8D0B,
+    0x8AE5: 0x96C1,
+    0x8AE6: 0x9811,
+    0x8AE7: 0x9854,
+    0x8AE8: 0x9858,
+    0x8AE9: 0x4F01,
+    0x8AEA: 0x4F0E,
+    0x8AEB: 0x5371,
+    0x8AEC: 0x559C,
+    0x8AED: 0x5668,
+    0x8AEE: 0x57FA,
+    0x8AEF: 0x5947,
+    0x8AF0: 0x5B09,
+    0x8AF1: 0x5BC4,
+    0x8AF2: 0x5C90,
+    0x8AF3: 0x5E0C,
+    0x8AF4: 0x5E7E,
+    0x8AF5: 0x5FCC,
+    0x8AF6: 0x63EE,
+    0x8AF7: 0x673A,
+    0x8AF8: 0x65D7,
+    0x8AF9: 0x65E2,
+    0x8AFA: 0x671F,
+    0x8AFB: 0x68CB,
+    0x8AFC: 0x68C4,
+    0x8B40: 0x6A5F,
+    0x8B41: 0x5E30,
+    0x8B42: 0x6BC5,
+    0x8B43: 0x6C17,
+    0x8B44: 0x6C7D,
+    0x8B45: 0x757F,
+    0x8B46: 0x7948,
+    0x8B47: 0x5B63,
+    0x8B48: 0x7A00,
+    0x8B49: 0x7D00,
+    0x8B4A: 0x5FBD,
+    0x8B4B: 0x898F,
+    0x8B4C: 0x8A18,
+    0x8B4D: 0x8CB4,
+    0x8B4E: 0x8D77,
+    0x8B4F: 0x8ECC,
+    0x8B50: 0x8F1D,
+    0x8B51: 0x98E2,
+    0x8B52: 0x9A0E,
+    0x8B53: 0x9B3C,
+    0x8B54: 0x4E80,
+    0x8B55: 0x507D,
+    0x8B56: 0x5100,
+    0x8B57: 0x5993,
+    0x8B58: 0x5B9C,
+    0x8B59: 0x622F,
+    0x8B5A: 0x6280,
+    0x8B5B: 0x64EC,
+    0x8B5C: 0x6B3A,
+    0x8B5D: 0x72A0,
+    0x8B5E: 0x7591,
+    0x8B5F: 0x7947,
+    0x8B60: 0x7FA9,
+    0x8B61: 0x87FB,
+    0x8B62: 0x8ABC,
+    0x8B63: 0x8B70,
+    0x8B64: 0x63AC,
+    0x8B65: 0x83CA,
+    0x8B66: 0x97A0,
+    0x8B67: 0x5409,
+    0x8B68: 0x5403,
+    0x8B69: 0x55AB,
+    0x8B6A: 0x6854,
+    0x8B6B: 0x6A58,
+    0x8B6C: 0x8A70,
+    0x8B6D: 0x7827,
+    0x8B6E: 0x6775,
+    0x8B6F: 0x9ECD,
+    0x8B70: 0x5374,
+    0x8B71: 0x5BA2,
+    0x8B72: 0x811A,
+    0x8B73: 0x8650,
+    0x8B74: 0x9006,
+    0x8B75: 0x4E18,
+    0x8B76: 0x4E45,
+    0x8B77: 0x4EC7,
+    0x8B78: 0x4F11,
+    0x8B79: 0x53CA,
+    0x8B7A: 0x5438,
+    0x8B7B: 0x5BAE,
+    0x8B7C: 0x5F13,
+    0x8B7D: 0x6025,
+    0x8B7E: 0x6551,
+    0x8B80: 0x673D,
+    0x8B81: 0x6C42,
+    0x8B82: 0x6C72,
+    0x8B83: 0x6CE3,
+    0x8B84: 0x7078,
+    0x8B85: 0x7403,
+    0x8B86: 0x7A76,
+    0x8B87: 0x7AAE,
+    0x8B88: 0x7B08,
+    0x8B89: 0x7D1A,
+    0x8B8A: 0x7CFE,
+    0x8B8B: 0x7D66,
+    0x8B8C: 0x65E7,
+    0x8B8D: 0x725B,
+    0x8B8E: 0x53BB,
+    0x8B8F: 0x5C45,
+    0x8B90: 0x5DE8,
+    0x8B91: 0x62D2,
+    0x8B92: 0x62E0,
+    0x8B93: 0x6319,
+    0x8B94: 0x6E20,
+    0x8B95: 0x865A,
+    0x8B96: 0x8A31,
+    0x8B97: 0x8DDD,
+    0x8B98: 0x92F8,
+    0x8B99: 0x6F01,
+    0x8B9A: 0x79A6,
+    0x8B9B: 0x9B5A,
+    0x8B9C: 0x4EA8,
+    0x8B9D: 0x4EAB,
+    0x8B9E: 0x4EAC,
+    0x8B9F: 0x4F9B,
+    0x8BA0: 0x4FA0,
+    0x8BA1: 0x50D1,
+    0x8BA2: 0x5147,
+    0x8BA3: 0x7AF6,
+    0x8BA4: 0x5171,
+    0x8BA5: 0x51F6,
+    0x8BA6: 0x5354,
+    0x8BA7: 0x5321,
+    0x8BA8: 0x537F,
+    0x8BA9: 0x53EB,
+    0x8BAA: 0x55AC,
+    0x8BAB: 0x5883,
+    0x8BAC: 0x5CE1,
+    0x8BAD: 0x5F37,
+    0x8BAE: 0x5F4A,
+    0x8BAF: 0x602F,
+    0x8BB0: 0x6050,
+    0x8BB1: 0x606D,
+    0x8BB2: 0x631F,
+    0x8BB3: 0x6559,
+    0x8BB4: 0x6A4B,
+    0x8BB5: 0x6CC1,
+    0x8BB6: 0x72C2,
+    0x8BB7: 0x72ED,
+    0x8BB8: 0x77EF,
+    0x8BB9: 0x80F8,
+    0x8BBA: 0x8105,
+    0x8BBB: 0x8208,
+    0x8BBC: 0x854E,
+    0x8BBD: 0x90F7,
+    0x8BBE: 0x93E1,
+    0x8BBF: 0x97FF,
+    0x8BC0: 0x9957,
+    0x8BC1: 0x9A5A,
+    0x8BC2: 0x4EF0,
+    0x8BC3: 0x51DD,
+    0x8BC4: 0x5C2D,
+    0x8BC5: 0x6681,
+    0x8BC6: 0x696D,
+    0x8BC7: 0x5C40,
+    0x8BC8: 0x66F2,
+    0x8BC9: 0x6975,
+    0x8BCA: 0x7389,
+    0x8BCB: 0x6850,
+    0x8BCC: 0x7C81,
+    0x8BCD: 0x50C5,
+    0x8BCE: 0x52E4,
+    0x8BCF: 0x5747,
+    0x8BD0: 0x5DFE,
+    0x8BD1: 0x9326,
+    0x8BD2: 0x65A4,
+    0x8BD3: 0x6B23,
+    0x8BD4: 0x6B3D,
+    0x8BD5: 0x7434,
+    0x8BD6: 0x7981,
+    0x8BD7: 0x79BD,
+    0x8BD8: 0x7B4B,
+    0x8BD9: 0x7DCA,
+    0x8BDA: 0x82B9,
+    0x8BDB: 0x83CC,
+    0x8BDC: 0x887F,
+    0x8BDD: 0x895F,
+    0x8BDE: 0x8B39,
+    0x8BDF: 0x8FD1,
+    0x8BE0: 0x91D1,
+    0x8BE1: 0x541F,
+    0x8BE2: 0x9280,
+    0x8BE3: 0x4E5D,
+    0x8BE4: 0x5036,
+    0x8BE5: 0x53E5,
+    0x8BE6: 0x533A,
+    0x8BE7: 0x72D7,
+    0x8BE8: 0x7396,
+    0x8BE9: 0x77E9,
+    0x8BEA: 0x82E6,
+    0x8BEB: 0x8EAF,
+    0x8BEC: 0x99C6,
+    0x8BED: 0x99C8,
+    0x8BEE: 0x99D2,
+    0x8BEF: 0x5177,
+    0x8BF0: 0x611A,
+    0x8BF1: 0x865E,
+    0x8BF2: 0x55B0,
+    0x8BF3: 0x7A7A,
+    0x8BF4: 0x5076,
+    0x8BF5: 0x5BD3,
+    0x8BF6: 0x9047,
+    0x8BF7: 0x9685,
+    0x8BF8: 0x4E32,
+    0x8BF9: 0x6ADB,
+    0x8BFA: 0x91E7,
+    0x8BFB: 0x5C51,
+    0x8BFC: 0x5C48,
+    0x8C40: 0x6398,
+    0x8C41: 0x7A9F,
+    0x8C42: 0x6C93,
+    0x8C43: 0x9774,
+    0x8C44: 0x8F61,
+    0x8C45: 0x7AAA,
+    0x8C46: 0x718A,
+    0x8C47: 0x9688,
+    0x8C48: 0x7C82,
+    0x8C49: 0x6817,
+    0x8C4A: 0x7E70,
+    0x8C4B: 0x6851,
+    0x8C4C: 0x936C,
+    0x8C4D: 0x52F2,
+    0x8C4E: 0x541B,
+    0x8C4F: 0x85AB,
+    0x8C50: 0x8A13,
+    0x8C51: 0x7FA4,
+    0x8C52: 0x8ECD,
+    0x8C53: 0x90E1,
+    0x8C54: 0x5366,
+    0x8C55: 0x8888,
+    0x8C56: 0x7941,
+    0x8C57: 0x4FC2,
+    0x8C58: 0x50BE,
+    0x8C59: 0x5211,
+    0x8C5A: 0x5144,
+    0x8C5B: 0x5553,
+    0x8C5C: 0x572D,
+    0x8C5D: 0x73EA,
+    0x8C5E: 0x578B,
+    0x8C5F: 0x5951,
+    0x8C60: 0x5F62,
+    0x8C61: 0x5F84,
+    0x8C62: 0x6075,
+    0x8C63: 0x6176,
+    0x8C64: 0x6167,
+    0x8C65: 0x61A9,
+    0x8C66: 0x63B2,
+    0x8C67: 0x643A,
+    0x8C68: 0x656C,
+    0x8C69: 0x666F,
+    0x8C6A: 0x6842,
+    0x8C6B: 0x6E13,
+    0x8C6C: 0x7566,
+    0x8C6D: 0x7A3D,
+    0x8C6E: 0x7CFB,
+    0x8C6F: 0x7D4C,
+    0x8C70: 0x7D99,
+    0x8C71: 0x7E4B,
+    0x8C72: 0x7F6B,
+    0x8C73: 0x830E,
+    0x8C74: 0x834A,
+    0x8C75: 0x86CD,
+    0x8C76: 0x8A08,
+    0x8C77: 0x8A63,
+    0x8C78: 0x8B66,
+    0x8C79: 0x8EFD,
+    0x8C7A: 0x981A,
+    0x8C7B: 0x9D8F,
+    0x8C7C: 0x82B8,
+    0x8C7D: 0x8FCE,
+    0x8C7E: 0x9BE8,
+    0x8C80: 0x5287,
+    0x8C81: 0x621F,
+    0x8C82: 0x6483,
+    0x8C83: 0x6FC0,
+    0x8C84: 0x9699,
+    0x8C85: 0x6841,
+    0x8C86: 0x5091,
+    0x8C87: 0x6B20,
+    0x8C88: 0x6C7A,
+    0x8C89: 0x6F54,
+    0x8C8A: 0x7A74,
+    0x8C8B: 0x7D50,
+    0x8C8C: 0x8840,
+    0x8C8D: 0x8A23,
+    0x8C8E: 0x6708,
+    0x8C8F: 0x4EF6,
+    0x8C90: 0x5039,
+    0x8C91: 0x5026,
+    0x8C92: 0x5065,
+    0x8C93: 0x517C,
+    0x8C94: 0x5238,
+    0x8C95: 0x5263,
+    0x8C96: 0x55A7,
+    0x8C97: 0x570F,
+    0x8C98: 0x5805,
+    0x8C99: 0x5ACC,
+    0x8C9A: 0x5EFA,
+    0x8C9B: 0x61B2,
+    0x8C9C: 0x61F8,
+    0x8C9D: 0x62F3,
+    0x8C9E: 0x6372,
+    0x8C9F: 0x691C,
+    0x8CA0: 0x6A29,
+    0x8CA1: 0x727D,
+    0x8CA2: 0x72AC,
+    0x8CA3: 0x732E,
+    0x8CA4: 0x7814,
+    0x8CA5: 0x786F,
+    0x8CA6: 0x7D79,
+    0x8CA7: 0x770C,
+    0x8CA8: 0x80A9,
+    0x8CA9: 0x898B,
+    0x8CAA: 0x8B19,
+    0x8CAB: 0x8CE2,
+    0x8CAC: 0x8ED2,
+    0x8CAD: 0x9063,
+    0x8CAE: 0x9375,
+    0x8CAF: 0x967A,
+    0x8CB0: 0x9855,
+    0x8CB1: 0x9A13,
+    0x8CB2: 0x9E78,
+    0x8CB3: 0x5143,
+    0x8CB4: 0x539F,
+    0x8CB5: 0x53B3,
+    0x8CB6: 0x5E7B,
+    0x8CB7: 0x5F26,
+    0x8CB8: 0x6E1B,
+    0x8CB9: 0x6E90,
+    0x8CBA: 0x7384,
+    0x8CBB: 0x73FE,
+    0x8CBC: 0x7D43,
+    0x8CBD: 0x8237,
+    0x8CBE: 0x8A00,
+    0x8CBF: 0x8AFA,
+    0x8CC0: 0x9650,
+    0x8CC1: 0x4E4E,
+    0x8CC2: 0x500B,
+    0x8CC3: 0x53E4,
+    0x8CC4: 0x547C,
+    0x8CC5: 0x56FA,
+    0x8CC6: 0x59D1,
+    0x8CC7: 0x5B64,
+    0x8CC8: 0x5DF1,
+    0x8CC9: 0x5EAB,
+    0x8CCA: 0x5F27,
+    0x8CCB: 0x6238,
+    0x8CCC: 0x6545,
+    0x8CCD: 0x67AF,
+    0x8CCE: 0x6E56,
+    0x8CCF: 0x72D0,
+    0x8CD0: 0x7CCA,
+    0x8CD1: 0x88B4,
+    0x8CD2: 0x80A1,
+    0x8CD3: 0x80E1,
+    0x8CD4: 0x83F0,
+    0x8CD5: 0x864E,
+    0x8CD6: 0x8A87,
+    0x8CD7: 0x8DE8,
+    0x8CD8: 0x9237,
+    0x8CD9: 0x96C7,
+    0x8CDA: 0x9867,
+    0x8CDB: 0x9F13,
+    0x8CDC: 0x4E94,
+    0x8CDD: 0x4E92,
+    0x8CDE: 0x4F0D,
+    0x8CDF: 0x5348,
+    0x8CE0: 0x5449,
+    0x8CE1: 0x543E,
+    0x8CE2: 0x5A2F,
+    0x8CE3: 0x5F8C,
+    0x8CE4: 0x5FA1,
+    0x8CE5: 0x609F,
+    0x8CE6: 0x68A7,
+    0x8CE7: 0x6A8E,
+    0x8CE8: 0x745A,
+    0x8CE9: 0x7881,
+    0x8CEA: 0x8A9E,
+    0x8CEB: 0x8AA4,
+    0x8CEC: 0x8B77,
+    0x8CED: 0x9190,
+    0x8CEE: 0x4E5E,
+    0x8CEF: 0x9BC9,
+    0x8CF0: 0x4EA4,
+    0x8CF1: 0x4F7C,
+    0x8CF2: 0x4FAF,
+    0x8CF3: 0x5019,
+    0x8CF4: 0x5016,
+    0x8CF5: 0x5149,
+    0x8CF6: 0x516C,
+    0x8CF7: 0x529F,
+    0x8CF8: 0x52B9,
+    0x8CF9: 0x52FE,
+    0x8CFA: 0x539A,
+    0x8CFB: 0x53E3,
+    0x8CFC: 0x5411,
+    0x8D40: 0x540E,
+    0x8D41: 0x5589,
+    0x8D42: 0x5751,
+    0x8D43: 0x57A2,
+    0x8D44: 0x597D,
+    0x8D45: 0x5B54,
+    0x8D46: 0x5B5D,
+    0x8D47: 0x5B8F,
+    0x8D48: 0x5DE5,
+    0x8D49: 0x5DE7,
+    0x8D4A: 0x5DF7,
+    0x8D4B: 0x5E78,
+    0x8D4C: 0x5E83,
+    0x8D4D: 0x5E9A,
+    0x8D4E: 0x5EB7,
+    0x8D4F: 0x5F18,
+    0x8D50: 0x6052,
+    0x8D51: 0x614C,
+    0x8D52: 0x6297,
+    0x8D53: 0x62D8,
+    0x8D54: 0x63A7,
+    0x8D55: 0x653B,
+    0x8D56: 0x6602,
+    0x8D57: 0x6643,
+    0x8D58: 0x66F4,
+    0x8D59: 0x676D,
+    0x8D5A: 0x6821,
+    0x8D5B: 0x6897,
+    0x8D5C: 0x69CB,
+    0x8D5D: 0x6C5F,
+    0x8D5E: 0x6D2A,
+    0x8D5F: 0x6D69,
+    0x8D60: 0x6E2F,
+    0x8D61: 0x6E9D,
+    0x8D62: 0x7532,
+    0x8D63: 0x7687,
+    0x8D64: 0x786C,
+    0x8D65: 0x7A3F,
+    0x8D66: 0x7CE0,
+    0x8D67: 0x7D05,
+    0x8D68: 0x7D18,
+    0x8D69: 0x7D5E,
+    0x8D6A: 0x7DB1,
+    0x8D6B: 0x8015,
+    0x8D6C: 0x8003,
+    0x8D6D: 0x80AF,
+    0x8D6E: 0x80B1,
+    0x8D6F: 0x8154,
+    0x8D70: 0x818F,
+    0x8D71: 0x822A,
+    0x8D72: 0x8352,
+    0x8D73: 0x884C,
+    0x8D74: 0x8861,
+    0x8D75: 0x8B1B,
+    0x8D76: 0x8CA2,
+    0x8D77: 0x8CFC,
+    0x8D78: 0x90CA,
+    0x8D79: 0x9175,
+    0x8D7A: 0x9271,
+    0x8D7B: 0x783F,
+    0x8D7C: 0x92FC,
+    0x8D7D: 0x95A4,
+    0x8D7E: 0x964D,
+    0x8D80: 0x9805,
+    0x8D81: 0x9999,
+    0x8D82: 0x9AD8,
+    0x8D83: 0x9D3B,
+    0x8D84: 0x525B,
+    0x8D85: 0x52AB,
+    0x8D86: 0x53F7,
+    0x8D87: 0x5408,
+    0x8D88: 0x58D5,
+    0x8D89: 0x62F7,
+    0x8D8A: 0x6FE0,
+    0x8D8B: 0x8C6A,
+    0x8D8C: 0x8F5F,
+    0x8D8D: 0x9EB9,
+    0x8D8E: 0x514B,
+    0x8D8F: 0x523B,
+    0x8D90: 0x544A,
+    0x8D91: 0x56FD,
+    0x8D92: 0x7A40,
+    0x8D93: 0x9177,
+    0x8D94: 0x9D60,
+    0x8D95: 0x9ED2,
+    0x8D96: 0x7344,
+    0x8D97: 0x6F09,
+    0x8D98: 0x8170,
+    0x8D99: 0x7511,
+    0x8D9A: 0x5FFD,
+    0x8D9B: 0x60DA,
+    0x8D9C: 0x9AA8,
+    0x8D9D: 0x72DB,
+    0x8D9E: 0x8FBC,
+    0x8D9F: 0x6B64,
+    0x8DA0: 0x9803,
+    0x8DA1: 0x4ECA,
+    0x8DA2: 0x56F0,
+    0x8DA3: 0x5764,
+    0x8DA4: 0x58BE,
+    0x8DA5: 0x5A5A,
+    0x8DA6: 0x6068,
+    0x8DA7: 0x61C7,
+    0x8DA8: 0x660F,
+    0x8DA9: 0x6606,
+    0x8DAA: 0x6839,
+    0x8DAB: 0x68B1,
+    0x8DAC: 0x6DF7,
+    0x8DAD: 0x75D5,
+    0x8DAE: 0x7D3A,
+    0x8DAF: 0x826E,
+    0x8DB0: 0x9B42,
+    0x8DB1: 0x4E9B,
+    0x8DB2: 0x4F50,
+    0x8DB3: 0x53C9,
+    0x8DB4: 0x5506,
+    0x8DB5: 0x5D6F,
+    0x8DB6: 0x5DE6,
+    0x8DB7: 0x5DEE,
+    0x8DB8: 0x67FB,
+    0x8DB9: 0x6C99,
+    0x8DBA: 0x7473,
+    0x8DBB: 0x7802,
+    0x8DBC: 0x8A50,
+    0x8DBD: 0x9396,
+    0x8DBE: 0x88DF,
+    0x8DBF: 0x5750,
+    0x8DC0: 0x5EA7,
+    0x8DC1: 0x632B,
+    0x8DC2: 0x50B5,
+    0x8DC3: 0x50AC,
+    0x8DC4: 0x518D,
+    0x8DC5: 0x6700,
+    0x8DC6: 0x54C9,
+    0x8DC7: 0x585E,
+    0x8DC8: 0x59BB,
+    0x8DC9: 0x5BB0,
+    0x8DCA: 0x5F69,
+    0x8DCB: 0x624D,
+    0x8DCC: 0x63A1,
+    0x8DCD: 0x683D,
+    0x8DCE: 0x6B73,
+    0x8DCF: 0x6E08,
+    0x8DD0: 0x707D,
+    0x8DD1: 0x91C7,
+    0x8DD2: 0x7280,
+    0x8DD3: 0x7815,
+    0x8DD4: 0x7826,
+    0x8DD5: 0x796D,
+    0x8DD6: 0x658E,
+    0x8DD7: 0x7D30,
+    0x8DD8: 0x83DC,
+    0x8DD9: 0x88C1,
+    0x8DDA: 0x8F09,
+    0x8DDB: 0x969B,
+    0x8DDC: 0x5264,
+    0x8DDD: 0x5728,
+    0x8DDE: 0x6750,
+    0x8DDF: 0x7F6A,
+    0x8DE0: 0x8CA1,
+    0x8DE1: 0x51B4,
+    0x8DE2: 0x5742,
+    0x8DE3: 0x962A,
+    0x8DE4: 0x583A,
+    0x8DE5: 0x698A,
+    0x8DE6: 0x80B4,
+    0x8DE7: 0x54B2,
+    0x8DE8: 0x5D0E,
+    0x8DE9: 0x57FC,
+    0x8DEA: 0x7895,
+    0x8DEB: 0x9DFA,
+    0x8DEC: 0x4F5C,
+    0x8DED: 0x524A,
+    0x8DEE: 0x548B,
+    0x8DEF: 0x643E,
+    0x8DF0: 0x6628,
+    0x8DF1: 0x6714,
+    0x8DF2: 0x67F5,
+    0x8DF3: 0x7A84,
+    0x8DF4: 0x7B56,
+    0x8DF5: 0x7D22,
+    0x8DF6: 0x932F,
+    0x8DF7: 0x685C,
+    0x8DF8: 0x9BAD,
+    0x8DF9: 0x7B39,
+    0x8DFA: 0x5319,
+    0x8DFB: 0x518A,
+    0x8DFC: 0x5237,
+    0x8E40: 0x5BDF,
+    0x8E41: 0x62F6,
+    0x8E42: 0x64AE,
+    0x8E43: 0x64E6,
+    0x8E44: 0x672D,
+    0x8E45: 0x6BBA,
+    0x8E46: 0x85A9,
+    0x8E47: 0x96D1,
+    0x8E48: 0x7690,
+    0x8E49: 0x9BD6,
+    0x8E4A: 0x634C,
+    0x8E4B: 0x9306,
+    0x8E4C: 0x9BAB,
+    0x8E4D: 0x76BF,
+    0x8E4E: 0x6652,
+    0x8E4F: 0x4E09,
+    0x8E50: 0x5098,
+    0x8E51: 0x53C2,
+    0x8E52: 0x5C71,
+    0x8E53: 0x60E8,
+    0x8E54: 0x6492,
+    0x8E55: 0x6563,
+    0x8E56: 0x685F,
+    0x8E57: 0x71E6,
+    0x8E58: 0x73CA,
+    0x8E59: 0x7523,
+    0x8E5A: 0x7B97,
+    0x8E5B: 0x7E82,
+    0x8E5C: 0x8695,
+    0x8E5D: 0x8B83,
+    0x8E5E: 0x8CDB,
+    0x8E5F: 0x9178,
+    0x8E60: 0x9910,
+    0x8E61: 0x65AC,
+    0x8E62: 0x66AB,
+    0x8E63: 0x6B8B,
+    0x8E64: 0x4ED5,
+    0x8E65: 0x4ED4,
+    0x8E66: 0x4F3A,
+    0x8E67: 0x4F7F,
+    0x8E68: 0x523A,
+    0x8E69: 0x53F8,
+    0x8E6A: 0x53F2,
+    0x8E6B: 0x55E3,
+    0x8E6C: 0x56DB,
+    0x8E6D: 0x58EB,
+    0x8E6E: 0x59CB,
+    0x8E6F: 0x59C9,
+    0x8E70: 0x59FF,
+    0x8E71: 0x5B50,
+    0x8E72: 0x5C4D,
+    0x8E73: 0x5E02,
+    0x8E74: 0x5E2B,
+    0x8E75: 0x5FD7,
+    0x8E76: 0x601D,
+    0x8E77: 0x6307,
+    0x8E78: 0x652F,
+    0x8E79: 0x5B5C,
+    0x8E7A: 0x65AF,
+    0x8E7B: 0x65BD,
+    0x8E7C: 0x65E8,
+    0x8E7D: 0x679D,
+    0x8E7E: 0x6B62,
+    0x8E80: 0x6B7B,
+    0x8E81: 0x6C0F,
+    0x8E82: 0x7345,
+    0x8E83: 0x7949,
+    0x8E84: 0x79C1,
+    0x8E85: 0x7CF8,
+    0x8E86: 0x7D19,
+    0x8E87: 0x7D2B,
+    0x8E88: 0x80A2,
+    0x8E89: 0x8102,
+    0x8E8A: 0x81F3,
+    0x8E8B: 0x8996,
+    0x8E8C: 0x8A5E,
+    0x8E8D: 0x8A69,
+    0x8E8E: 0x8A66,
+    0x8E8F: 0x8A8C,
+    0x8E90: 0x8AEE,
+    0x8E91: 0x8CC7,
+    0x8E92: 0x8CDC,
+    0x8E93: 0x96CC,
+    0x8E94: 0x98FC,
+    0x8E95: 0x6B6F,
+    0x8E96: 0x4E8B,
+    0x8E97: 0x4F3C,
+    0x8E98: 0x4F8D,
+    0x8E99: 0x5150,
+    0x8E9A: 0x5B57,
+    0x8E9B: 0x5BFA,
+    0x8E9C: 0x6148,
+    0x8E9D: 0x6301,
+    0x8E9E: 0x6642,
+    0x8E9F: 0x6B21,
+    0x8EA0: 0x6ECB,
+    0x8EA1: 0x6CBB,
+    0x8EA2: 0x723E,
+    0x8EA3: 0x74BD,
+    0x8EA4: 0x75D4,
+    0x8EA5: 0x78C1,
+    0x8EA6: 0x793A,
+    0x8EA7: 0x800C,
+    0x8EA8: 0x8033,
+    0x8EA9: 0x81EA,
+    0x8EAA: 0x8494,
+    0x8EAB: 0x8F9E,
+    0x8EAC: 0x6C50,
+    0x8EAD: 0x9E7F,
+    0x8EAE: 0x5F0F,
+    0x8EAF: 0x8B58,
+    0x8EB0: 0x9D2B,
+    0x8EB1: 0x7AFA,
+    0x8EB2: 0x8EF8,
+    0x8EB3: 0x5B8D,
+    0x8EB4: 0x96EB,
+    0x8EB5: 0x4E03,
+    0x8EB6: 0x53F1,
+    0x8EB7: 0x57F7,
+    0x8EB8: 0x5931,
+    0x8EB9: 0x5AC9,
+    0x8EBA: 0x5BA4,
+    0x8EBB: 0x6089,
+    0x8EBC: 0x6E7F,
+    0x8EBD: 0x6F06,
+    0x8EBE: 0x75BE,
+    0x8EBF: 0x8CEA,
+    0x8EC0: 0x5B9F,
+    0x8EC1: 0x8500,
+    0x8EC2: 0x7BE0,
+    0x8EC3: 0x5072,
+    0x8EC4: 0x67F4,
+    0x8EC5: 0x829D,
+    0x8EC6: 0x5C61,
+    0x8EC7: 0x854A,
+    0x8EC8: 0x7E1E,
+    0x8EC9: 0x820E,
+    0x8ECA: 0x5199,
+    0x8ECB: 0x5C04,
+    0x8ECC: 0x6368,
+    0x8ECD: 0x8D66,
+    0x8ECE: 0x659C,
+    0x8ECF: 0x716E,
+    0x8ED0: 0x793E,
+    0x8ED1: 0x7D17,
+    0x8ED2: 0x8005,
+    0x8ED3: 0x8B1D,
+    0x8ED4: 0x8ECA,
+    0x8ED5: 0x906E,
+    0x8ED6: 0x86C7,
+    0x8ED7: 0x90AA,
+    0x8ED8: 0x501F,
+    0x8ED9: 0x52FA,
+    0x8EDA: 0x5C3A,
+    0x8EDB: 0x6753,
+    0x8EDC: 0x707C,
+    0x8EDD: 0x7235,
+    0x8EDE: 0x914C,
+    0x8EDF: 0x91C8,
+    0x8EE0: 0x932B,
+    0x8EE1: 0x82E5,
+    0x8EE2: 0x5BC2,
+    0x8EE3: 0x5F31,
+    0x8EE4: 0x60F9,
+    0x8EE5: 0x4E3B,
+    0x8EE6: 0x53D6,
+    0x8EE7: 0x5B88,
+    0x8EE8: 0x624B,
+    0x8EE9: 0x6731,
+    0x8EEA: 0x6B8A,
+    0x8EEB: 0x72E9,
+    0x8EEC: 0x73E0,
+    0x8EED: 0x7A2E,
+    0x8EEE: 0x816B,
+    0x8EEF: 0x8DA3,
+    0x8EF0: 0x9152,
+    0x8EF1: 0x9996,
+    0x8EF2: 0x5112,
+    0x8EF3: 0x53D7,
+    0x8EF4: 0x546A,
+    0x8EF5: 0x5BFF,
+    0x8EF6: 0x6388,
+    0x8EF7: 0x6A39,
+    0x8EF8: 0x7DAC,
+    0x8EF9: 0x9700,
+    0x8EFA: 0x56DA,
+    0x8EFB: 0x53CE,
+    0x8EFC: 0x5468,
+    0x8F40: 0x5B97,
+    0x8F41: 0x5C31,
+    0x8F42: 0x5DDE,
+    0x8F43: 0x4FEE,
+    0x8F44: 0x6101,
+    0x8F45: 0x62FE,
+    0x8F46: 0x6D32,
+    0x8F47: 0x79C0,
+    0x8F48: 0x79CB,
+    0x8F49: 0x7D42,
+    0x8F4A: 0x7E4D,
+    0x8F4B: 0x7FD2,
+    0x8F4C: 0x81ED,
+    0x8F4D: 0x821F,
+    0x8F4E: 0x8490,
+    0x8F4F: 0x8846,
+    0x8F50: 0x8972,
+    0x8F51: 0x8B90,
+    0x8F52: 0x8E74,
+    0x8F53: 0x8F2F,
+    0x8F54: 0x9031,
+    0x8F55: 0x914B,
+    0x8F56: 0x916C,
+    0x8F57: 0x96C6,
+    0x8F58: 0x919C,
+    0x8F59: 0x4EC0,
+    0x8F5A: 0x4F4F,
+    0x8F5B: 0x5145,
+    0x8F5C: 0x5341,
+    0x8F5D: 0x5F93,
+    0x8F5E: 0x620E,
+    0x8F5F: 0x67D4,
+    0x8F60: 0x6C41,
+    0x8F61: 0x6E0B,
+    0x8F62: 0x7363,
+    0x8F63: 0x7E26,
+    0x8F64: 0x91CD,
+    0x8F65: 0x9283,
+    0x8F66: 0x53D4,
+    0x8F67: 0x5919,
+    0x8F68: 0x5BBF,
+    0x8F69: 0x6DD1,
+    0x8F6A: 0x795D,
+    0x8F6B: 0x7E2E,
+    0x8F6C: 0x7C9B,
+    0x8F6D: 0x587E,
+    0x8F6E: 0x719F,
+    0x8F6F: 0x51FA,
+    0x8F70: 0x8853,
+    0x8F71: 0x8FF0,
+    0x8F72: 0x4FCA,
+    0x8F73: 0x5CFB,
+    0x8F74: 0x6625,
+    0x8F75: 0x77AC,
+    0x8F76: 0x7AE3,
+    0x8F77: 0x821C,
+    0x8F78: 0x99FF,
+    0x8F79: 0x51C6,
+    0x8F7A: 0x5FAA,
+    0x8F7B: 0x65EC,
+    0x8F7C: 0x696F,
+    0x8F7D: 0x6B89,
+    0x8F7E: 0x6DF3,
+    0x8F80: 0x6E96,
+    0x8F81: 0x6F64,
+    0x8F82: 0x76FE,
+    0x8F83: 0x7D14,
+    0x8F84: 0x5DE1,
+    0x8F85: 0x9075,
+    0x8F86: 0x9187,
+    0x8F87: 0x9806,
+    0x8F88: 0x51E6,
+    0x8F89: 0x521D,
+    0x8F8A: 0x6240,
+    0x8F8B: 0x6691,
+    0x8F8C: 0x66D9,
+    0x8F8D: 0x6E1A,
+    0x8F8E: 0x5EB6,
+    0x8F8F: 0x7DD2,
+    0x8F90: 0x7F72,
+    0x8F91: 0x66F8,
+    0x8F92: 0x85AF,
+    0x8F93: 0x85F7,
+    0x8F94: 0x8AF8,
+    0x8F95: 0x52A9,
+    0x8F96: 0x53D9,
+    0x8F97: 0x5973,
+    0x8F98: 0x5E8F,
+    0x8F99: 0x5F90,
+    0x8F9A: 0x6055,
+    0x8F9B: 0x92E4,
+    0x8F9C: 0x9664,
+    0x8F9D: 0x50B7,
+    0x8F9E: 0x511F,
+    0x8F9F: 0x52DD,
+    0x8FA0: 0x5320,
+    0x8FA1: 0x5347,
+    0x8FA2: 0x53EC,
+    0x8FA3: 0x54E8,
+    0x8FA4: 0x5546,
+    0x8FA5: 0x5531,
+    0x8FA6: 0x5617,
+    0x8FA7: 0x5968,
+    0x8FA8: 0x59BE,
+    0x8FA9: 0x5A3C,
+    0x8FAA: 0x5BB5,
+    0x8FAB: 0x5C06,
+    0x8FAC: 0x5C0F,
+    0x8FAD: 0x5C11,
+    0x8FAE: 0x5C1A,
+    0x8FAF: 0x5E84,
+    0x8FB0: 0x5E8A,
+    0x8FB1: 0x5EE0,
+    0x8FB2: 0x5F70,
+    0x8FB3: 0x627F,
+    0x8FB4: 0x6284,
+    0x8FB5: 0x62DB,
+    0x8FB6: 0x638C,
+    0x8FB7: 0x6377,
+    0x8FB8: 0x6607,
+    0x8FB9: 0x660C,
+    0x8FBA: 0x662D,
+    0x8FBB: 0x6676,
+    0x8FBC: 0x677E,
+    0x8FBD: 0x68A2,
+    0x8FBE: 0x6A1F,
+    0x8FBF: 0x6A35,
+    0x8FC0: 0x6CBC,
+    0x8FC1: 0x6D88,
+    0x8FC2: 0x6E09,
+    0x8FC3: 0x6E58,
+    0x8FC4: 0x713C,
+    0x8FC5: 0x7126,
+    0x8FC6: 0x7167,
+    0x8FC7: 0x75C7,
+    0x8FC8: 0x7701,
+    0x8FC9: 0x785D,
+    0x8FCA: 0x7901,
+    0x8FCB: 0x7965,
+    0x8FCC: 0x79F0,
+    0x8FCD: 0x7AE0,
+    0x8FCE: 0x7B11,
+    0x8FCF: 0x7CA7,
+    0x8FD0: 0x7D39,
+    0x8FD1: 0x8096,
+    0x8FD2: 0x83D6,
+    0x8FD3: 0x848B,
+    0x8FD4: 0x8549,
+    0x8FD5: 0x885D,
+    0x8FD6: 0x88F3,
+    0x8FD7: 0x8A1F,
+    0x8FD8: 0x8A3C,
+    0x8FD9: 0x8A54,
+    0x8FDA: 0x8A73,
+    0x8FDB: 0x8C61,
+    0x8FDC: 0x8CDE,
+    0x8FDD: 0x91A4,
+    0x8FDE: 0x9266,
+    0x8FDF: 0x937E,
+    0x8FE0: 0x9418,
+    0x8FE1: 0x969C,
+    0x8FE2: 0x9798,
+    0x8FE3: 0x4E0A,
+    0x8FE4: 0x4E08,
+    0x8FE5: 0x4E1E,
+    0x8FE6: 0x4E57,
+    0x8FE7: 0x5197,
+    0x8FE8: 0x5270,
+    0x8FE9: 0x57CE,
+    0x8FEA: 0x5834,
+    0x8FEB: 0x58CC,
+    0x8FEC: 0x5B22,
+    0x8FED: 0x5E38,
+    0x8FEE: 0x60C5,
+    0x8FEF: 0x64FE,
+    0x8FF0: 0x6761,
+    0x8FF1: 0x6756,
+    0x8FF2: 0x6D44,
+    0x8FF3: 0x72B6,
+    0x8FF4: 0x7573,
+    0x8FF5: 0x7A63,
+    0x8FF6: 0x84B8,
+    0x8FF7: 0x8B72,
+    0x8FF8: 0x91B8,
+    0x8FF9: 0x9320,
+    0x8FFA: 0x5631,
+    0x8FFB: 0x57F4,
+    0x8FFC: 0x98FE,
+    0x9040: 0x62ED,
+    0x9041: 0x690D,
+    0x9042: 0x6B96,
+    0x9043: 0x71ED,
+    0x9044: 0x7E54,
+    0x9045: 0x8077,
+    0x9046: 0x8272,
+    0x9047: 0x89E6,
+    0x9048: 0x98DF,
+    0x9049: 0x8755,
+    0x904A: 0x8FB1,
+    0x904B: 0x5C3B,
+    0x904C: 0x4F38,
+    0x904D: 0x4FE1,
+    0x904E: 0x4FB5,
+    0x904F: 0x5507,
+    0x9050: 0x5A20,
+    0x9051: 0x5BDD,
+    0x9052: 0x5BE9,
+    0x9053: 0x5FC3,
+    0x9054: 0x614E,
+    0x9055: 0x632F,
+    0x9056: 0x65B0,
+    0x9057: 0x664B,
+    0x9058: 0x68EE,
+    0x9059: 0x699B,
+    0x905A: 0x6D78,
+    0x905B: 0x6DF1,
+    0x905C: 0x7533,
+    0x905D: 0x75B9,
+    0x905E: 0x771F,
+    0x905F: 0x795E,
+    0x9060: 0x79E6,
+    0x9061: 0x7D33,
+    0x9062: 0x81E3,
+    0x9063: 0x82AF,
+    0x9064: 0x85AA,
+    0x9065: 0x89AA,
+    0x9066: 0x8A3A,
+    0x9067: 0x8EAB,
+    0x9068: 0x8F9B,
+    0x9069: 0x9032,
+    0x906A: 0x91DD,
+    0x906B: 0x9707,
+    0x906C: 0x4EBA,
+    0x906D: 0x4EC1,
+    0x906E: 0x5203,
+    0x906F: 0x5875,
+    0x9070: 0x58EC,
+    0x9071: 0x5C0B,
+    0x9072: 0x751A,
+    0x9073: 0x5C3D,
+    0x9074: 0x814E,
+    0x9075: 0x8A0A,
+    0x9076: 0x8FC5,
+    0x9077: 0x9663,
+    0x9078: 0x976D,
+    0x9079: 0x7B25,
+    0x907A: 0x8ACF,
+    0x907B: 0x9808,
+    0x907C: 0x9162,
+    0x907D: 0x56F3,
+    0x907E: 0x53A8,
+    0x9080: 0x9017,
+    0x9081: 0x5439,
+    0x9082: 0x5782,
+    0x9083: 0x5E25,
+    0x9084: 0x63A8,
+    0x9085: 0x6C34,
+    0x9086: 0x708A,
+    0x9087: 0x7761,
+    0x9088: 0x7C8B,
+    0x9089: 0x7FE0,
+    0x908A: 0x8870,
+    0x908B: 0x9042,
+    0x908C: 0x9154,
+    0x908D: 0x9310,
+    0x908E: 0x9318,
+    0x908F: 0x968F,
+    0x9090: 0x745E,
+    0x9091: 0x9AC4,
+    0x9092: 0x5D07,
+    0x9093: 0x5D69,
+    0x9094: 0x6570,
+    0x9095: 0x67A2,
+    0x9096: 0x8DA8,
+    0x9097: 0x96DB,
+    0x9098: 0x636E,
+    0x9099: 0x6749,
+    0x909A: 0x6919,
+    0x909B: 0x83C5,
+    0x909C: 0x9817,
+    0x909D: 0x96C0,
+    0x909E: 0x88FE,
+    0x909F: 0x6F84,
+    0x90A0: 0x647A,
+    0x90A1: 0x5BF8,
+    0x90A2: 0x4E16,
+    0x90A3: 0x702C,
+    0x90A4: 0x755D,
+    0x90A5: 0x662F,
+    0x90A6: 0x51C4,
+    0x90A7: 0x5236,
+    0x90A8: 0x52E2,
+    0x90A9: 0x59D3,
+    0x90AA: 0x5F81,
+    0x90AB: 0x6027,
+    0x90AC: 0x6210,
+    0x90AD: 0x653F,
+    0x90AE: 0x6574,
+    0x90AF: 0x661F,
+    0x90B0: 0x6674,
+    0x90B1: 0x68F2,
+    0x90B2: 0x6816,
+    0x90B3: 0x6B63,
+    0x90B4: 0x6E05,
+    0x90B5: 0x7272,
+    0x90B6: 0x751F,
+    0x90B7: 0x76DB,
+    0x90B8: 0x7CBE,
+    0x90B9: 0x8056,
+    0x90BA: 0x58F0,
+    0x90BB: 0x88FD,
+    0x90BC: 0x897F,
+    0x90BD: 0x8AA0,
+    0x90BE: 0x8A93,
+    0x90BF: 0x8ACB,
+    0x90C0: 0x901D,
+    0x90C1: 0x9192,
+    0x90C2: 0x9752,
+    0x90C3: 0x9759,
+    0x90C4: 0x6589,
+    0x90C5: 0x7A0E,
+    0x90C6: 0x8106,
+    0x90C7: 0x96BB,
+    0x90C8: 0x5E2D,
+    0x90C9: 0x60DC,
+    0x90CA: 0x621A,
+    0x90CB: 0x65A5,
+    0x90CC: 0x6614,
+    0x90CD: 0x6790,
+    0x90CE: 0x77F3,
+    0x90CF: 0x7A4D,
+    0x90D0: 0x7C4D,
+    0x90D1: 0x7E3E,
+    0x90D2: 0x810A,
+    0x90D3: 0x8CAC,
+    0x90D4: 0x8D64,
+    0x90D5: 0x8DE1,
+    0x90D6: 0x8E5F,
+    0x90D7: 0x78A9,
+    0x90D8: 0x5207,
+    0x90D9: 0x62D9,
+    0x90DA: 0x63A5,
+    0x90DB: 0x6442,
+    0x90DC: 0x6298,
+    0x90DD: 0x8A2D,
+    0x90DE: 0x7A83,
+    0x90DF: 0x7BC0,
+    0x90E0: 0x8AAC,
+    0x90E1: 0x96EA,
+    0x90E2: 0x7D76,
+    0x90E3: 0x820C,
+    0x90E4: 0x8749,
+    0x90E5: 0x4ED9,
+    0x90E6: 0x5148,
+    0x90E7: 0x5343,
+    0x90E8: 0x5360,
+    0x90E9: 0x5BA3,
+    0x90EA: 0x5C02,
+    0x90EB: 0x5C16,
+    0x90EC: 0x5DDD,
+    0x90ED: 0x6226,
+    0x90EE: 0x6247,
+    0x90EF: 0x64B0,
+    0x90F0: 0x6813,
+    0x90F1: 0x6834,
+    0x90F2: 0x6CC9,
+    0x90F3: 0x6D45,
+    0x90F4: 0x6D17,
+    0x90F5: 0x67D3,
+    0x90F6: 0x6F5C,
+    0x90F7: 0x714E,
+    0x90F8: 0x717D,
+    0x90F9: 0x65CB,
+    0x90FA: 0x7A7F,
+    0x90FB: 0x7BAD,
+    0x90FC: 0x7DDA,
+    0x9140: 0x7E4A,
+    0x9141: 0x7FA8,
+    0x9142: 0x817A,
+    0x9143: 0x821B,
+    0x9144: 0x8239,
+    0x9145: 0x85A6,
+    0x9146: 0x8A6E,
+    0x9147: 0x8CCE,
+    0x9148: 0x8DF5,
+    0x9149: 0x9078,
+    0x914A: 0x9077,
+    0x914B: 0x92AD,
+    0x914C: 0x9291,
+    0x914D: 0x9583,
+    0x914E: 0x9BAE,
+    0x914F: 0x524D,
+    0x9150: 0x5584,
+    0x9151: 0x6F38,
+    0x9152: 0x7136,
+    0x9153: 0x5168,
+    0x9154: 0x7985,
+    0x9155: 0x7E55,
+    0x9156: 0x81B3,
+    0x9157: 0x7CCE,
+    0x9158: 0x564C,
+    0x9159: 0x5851,
+    0x915A: 0x5CA8,
+    0x915B: 0x63AA,
+    0x915C: 0x66FE,
+    0x915D: 0x66FD,
+    0x915E: 0x695A,
+    0x915F: 0x72D9,
+    0x9160: 0x758F,
+    0x9161: 0x758E,
+    0x9162: 0x790E,
+    0x9163: 0x7956,
+    0x9164: 0x79DF,
+    0x9165: 0x7C97,
+    0x9166: 0x7D20,
+    0x9167: 0x7D44,
+    0x9168: 0x8607,
+    0x9169: 0x8A34,
+    0x916A: 0x963B,
+    0x916B: 0x9061,
+    0x916C: 0x9F20,
+    0x916D: 0x50E7,
+    0x916E: 0x5275,
+    0x916F: 0x53CC,
+    0x9170: 0x53E2,
+    0x9171: 0x5009,
+    0x9172: 0x55AA,
+    0x9173: 0x58EE,
+    0x9174: 0x594F,
+    0x9175: 0x723D,
+    0x9176: 0x5B8B,
+    0x9177: 0x5C64,
+    0x9178: 0x531D,
+    0x9179: 0x60E3,
+    0x917A: 0x60F3,
+    0x917B: 0x635C,
+    0x917C: 0x6383,
+    0x917D: 0x633F,
+    0x917E: 0x63BB,
+    0x9180: 0x64CD,
+    0x9181: 0x65E9,
+    0x9182: 0x66F9,
+    0x9183: 0x5DE3,
+    0x9184: 0x69CD,
+    0x9185: 0x69FD,
+    0x9186: 0x6F15,
+    0x9187: 0x71E5,
+    0x9188: 0x4E89,
+    0x9189: 0x75E9,
+    0x918A: 0x76F8,
+    0x918B: 0x7A93,
+    0x918C: 0x7CDF,
+    0x918D: 0x7DCF,
+    0x918E: 0x7D9C,
+    0x918F: 0x8061,
+    0x9190: 0x8349,
+    0x9191: 0x8358,
+    0x9192: 0x846C,
+    0x9193: 0x84BC,
+    0x9194: 0x85FB,
+    0x9195: 0x88C5,
+    0x9196: 0x8D70,
+    0x9197: 0x9001,
+    0x9198: 0x906D,
+    0x9199: 0x9397,
+    0x919A: 0x971C,
+    0x919B: 0x9A12,
+    0x919C: 0x50CF,
+    0x919D: 0x5897,
+    0x919E: 0x618E,
+    0x919F: 0x81D3,
+    0x91A0: 0x8535,
+    0x91A1: 0x8D08,
+    0x91A2: 0x9020,
+    0x91A3: 0x4FC3,
+    0x91A4: 0x5074,
+    0x91A5: 0x5247,
+    0x91A6: 0x5373,
+    0x91A7: 0x606F,
+    0x91A8: 0x6349,
+    0x91A9: 0x675F,
+    0x91AA: 0x6E2C,
+    0x91AB: 0x8DB3,
+    0x91AC: 0x901F,
+    0x91AD: 0x4FD7,
+    0x91AE: 0x5C5E,
+    0x91AF: 0x8CCA,
+    0x91B0: 0x65CF,
+    0x91B1: 0x7D9A,
+    0x91B2: 0x5352,
+    0x91B3: 0x8896,
+    0x91B4: 0x5176,
+    0x91B5: 0x63C3,
+    0x91B6: 0x5B58,
+    0x91B7: 0x5B6B,
+    0x91B8: 0x5C0A,
+    0x91B9: 0x640D,
+    0x91BA: 0x6751,
+    0x91BB: 0x905C,
+    0x91BC: 0x4ED6,
+    0x91BD: 0x591A,
+    0x91BE: 0x592A,
+    0x91BF: 0x6C70,
+    0x91C0: 0x8A51,
+    0x91C1: 0x553E,
+    0x91C2: 0x5815,
+    0x91C3: 0x59A5,
+    0x91C4: 0x60F0,
+    0x91C5: 0x6253,
+    0x91C6: 0x67C1,
+    0x91C7: 0x8235,
+    0x91C8: 0x6955,
+    0x91C9: 0x9640,
+    0x91CA: 0x99C4,
+    0x91CB: 0x9A28,
+    0x91CC: 0x4F53,
+    0x91CD: 0x5806,
+    0x91CE: 0x5BFE,
+    0x91CF: 0x8010,
+    0x91D0: 0x5CB1,
+    0x91D1: 0x5E2F,
+    0x91D2: 0x5F85,
+    0x91D3: 0x6020,
+    0x91D4: 0x614B,
+    0x91D5: 0x6234,
+    0x91D6: 0x66FF,
+    0x91D7: 0x6CF0,
+    0x91D8: 0x6EDE,
+    0x91D9: 0x80CE,
+    0x91DA: 0x817F,
+    0x91DB: 0x82D4,
+    0x91DC: 0x888B,
+    0x91DD: 0x8CB8,
+    0x91DE: 0x9000,
+    0x91DF: 0x902E,
+    0x91E0: 0x968A,
+    0x91E1: 0x9EDB,
+    0x91E2: 0x9BDB,
+    0x91E3: 0x4EE3,
+    0x91E4: 0x53F0,
+    0x91E5: 0x5927,
+    0x91E6: 0x7B2C,
+    0x91E7: 0x918D,
+    0x91E8: 0x984C,
+    0x91E9: 0x9DF9,
+    0x91EA: 0x6EDD,
+    0x91EB: 0x7027,
+    0x91EC: 0x5353,
+    0x91ED: 0x5544,
+    0x91EE: 0x5B85,
+    0x91EF: 0x6258,
+    0x91F0: 0x629E,
+    0x91F1: 0x62D3,
+    0x91F2: 0x6CA2,
+    0x91F3: 0x6FEF,
+    0x91F4: 0x7422,
+    0x91F5: 0x8A17,
+    0x91F6: 0x9438,
+    0x91F7: 0x6FC1,
+    0x91F8: 0x8AFE,
+    0x91F9: 0x8338,
+    0x91FA: 0x51E7,
+    0x91FB: 0x86F8,
+    0x91FC: 0x53EA,
+    0x9240: 0x53E9,
+    0x9241: 0x4F46,
+    0x9242: 0x9054,
+    0x9243: 0x8FB0,
+    0x9244: 0x596A,
+    0x9245: 0x8131,
+    0x9246: 0x5DFD,
+    0x9247: 0x7AEA,
+    0x9248: 0x8FBF,
+    0x9249: 0x68DA,
+    0x924A: 0x8C37,
+    0x924B: 0x72F8,
+    0x924C: 0x9C48,
+    0x924D: 0x6A3D,
+    0x924E: 0x8AB0,
+    0x924F: 0x4E39,
+    0x9250: 0x5358,
+    0x9251: 0x5606,
+    0x9252: 0x5766,
+    0x9253: 0x62C5,
+    0x9254: 0x63A2,
+    0x9255: 0x65E6,
+    0x9256: 0x6B4E,
+    0x9257: 0x6DE1,
+    0x9258: 0x6E5B,
+    0x9259: 0x70AD,
+    0x925A: 0x77ED,
+    0x925B: 0x7AEF,
+    0x925C: 0x7BAA,
+    0x925D: 0x7DBB,
+    0x925E: 0x803D,
+    0x925F: 0x80C6,
+    0x9260: 0x86CB,
+    0x9261: 0x8A95,
+    0x9262: 0x935B,
+    0x9263: 0x56E3,
+    0x9264: 0x58C7,
+    0x9265: 0x5F3E,
+    0x9266: 0x65AD,
+    0x9267: 0x6696,
+    0x9268: 0x6A80,
+    0x9269: 0x6BB5,
+    0x926A: 0x7537,
+    0x926B: 0x8AC7,
+    0x926C: 0x5024,
+    0x926D: 0x77E5,
+    0x926E: 0x5730,
+    0x926F: 0x5F1B,
+    0x9270: 0x6065,
+    0x9271: 0x667A,
+    0x9272: 0x6C60,
+    0x9273: 0x75F4,
+    0x9274: 0x7A1A,
+    0x9275: 0x7F6E,
+    0x9276: 0x81F4,
+    0x9277: 0x8718,
+    0x9278: 0x9045,
+    0x9279: 0x99B3,
+    0x927A: 0x7BC9,
+    0x927B: 0x755C,
+    0x927C: 0x7AF9,
+    0x927D: 0x7B51,
+    0x927E: 0x84C4,
+    0x9280: 0x9010,
+    0x9281: 0x79E9,
+    0x9282: 0x7A92,
+    0x9283: 0x8336,
+    0x9284: 0x5AE1,
+    0x9285: 0x7740,
+    0x9286: 0x4E2D,
+    0x9287: 0x4EF2,
+    0x9288: 0x5B99,
+    0x9289: 0x5FE0,
+    0x928A: 0x62BD,
+    0x928B: 0x663C,
+    0x928C: 0x67F1,
+    0x928D: 0x6CE8,
+    0x928E: 0x866B,
+    0x928F: 0x8877,
+    0x9290: 0x8A3B,
+    0x9291: 0x914E,
+    0x9292: 0x92F3,
+    0x9293: 0x99D0,
+    0x9294: 0x6A17,
+    0x9295: 0x7026,
+    0x9296: 0x732A,
+    0x9297: 0x82E7,
+    0x9298: 0x8457,
+    0x9299: 0x8CAF,
+    0x929A: 0x4E01,
+    0x929B: 0x5146,
+    0x929C: 0x51CB,
+    0x929D: 0x558B,
+    0x929E: 0x5BF5,
+    0x929F: 0x5E16,
+    0x92A0: 0x5E33,
+    0x92A1: 0x5E81,
+    0x92A2: 0x5F14,
+    0x92A3: 0x5F35,
+    0x92A4: 0x5F6B,
+    0x92A5: 0x5FB4,
+    0x92A6: 0x61F2,
+    0x92A7: 0x6311,
+    0x92A8: 0x66A2,
+    0x92A9: 0x671D,
+    0x92AA: 0x6F6E,
+    0x92AB: 0x7252,
+    0x92AC: 0x753A,
+    0x92AD: 0x773A,
+    0x92AE: 0x8074,
+    0x92AF: 0x8139,
+    0x92B0: 0x8178,
+    0x92B1: 0x8776,
+    0x92B2: 0x8ABF,
+    0x92B3: 0x8ADC,
+    0x92B4: 0x8D85,
+    0x92B5: 0x8DF3,
+    0x92B6: 0x929A,
+    0x92B7: 0x9577,
+    0x92B8: 0x9802,
+    0x92B9: 0x9CE5,
+    0x92BA: 0x52C5,
+    0x92BB: 0x6357,
+    0x92BC: 0x76F4,
+    0x92BD: 0x6715,
+    0x92BE: 0x6C88,
+    0x92BF: 0x73CD,
+    0x92C0: 0x8CC3,
+    0x92C1: 0x93AE,
+    0x92C2: 0x9673,
+    0x92C3: 0x6D25,
+    0x92C4: 0x589C,
+    0x92C5: 0x690E,
+    0x92C6: 0x69CC,
+    0x92C7: 0x8FFD,
+    0x92C8: 0x939A,
+    0x92C9: 0x75DB,
+    0x92CA: 0x901A,
+    0x92CB: 0x585A,
+    0x92CC: 0x6802,
+    0x92CD: 0x63B4,
+    0x92CE: 0x69FB,
+    0x92CF: 0x4F43,
+    0x92D0: 0x6F2C,
+    0x92D1: 0x67D8,
+    0x92D2: 0x8FBB,
+    0x92D3: 0x8526,
+    0x92D4: 0x7DB4,
+    0x92D5: 0x9354,
+    0x92D6: 0x693F,
+    0x92D7: 0x6F70,
+    0x92D8: 0x576A,
+    0x92D9: 0x58F7,
+    0x92DA: 0x5B2C,
+    0x92DB: 0x7D2C,
+    0x92DC: 0x722A,
+    0x92DD: 0x540A,
+    0x92DE: 0x91E3,
+    0x92DF: 0x9DB4,
+    0x92E0: 0x4EAD,
+    0x92E1: 0x4F4E,
+    0x92E2: 0x505C,
+    0x92E3: 0x5075,
+    0x92E4: 0x5243,
+    0x92E5: 0x8C9E,
+    0x92E6: 0x5448,
+    0x92E7: 0x5824,
+    0x92E8: 0x5B9A,
+    0x92E9: 0x5E1D,
+    0x92EA: 0x5E95,
+    0x92EB: 0x5EAD,
+    0x92EC: 0x5EF7,
+    0x92ED: 0x5F1F,
+    0x92EE: 0x608C,
+    0x92EF: 0x62B5,
+    0x92F0: 0x633A,
+    0x92F1: 0x63D0,
+    0x92F2: 0x68AF,
+    0x92F3: 0x6C40,
+    0x92F4: 0x7887,
+    0x92F5: 0x798E,
+    0x92F6: 0x7A0B,
+    0x92F7: 0x7DE0,
+    0x92F8: 0x8247,
+    0x92F9: 0x8A02,
+    0x92FA: 0x8AE6,
+    0x92FB: 0x8E44,
+    0x92FC: 0x9013,
+    0x9340: 0x90B8,
+    0x9341: 0x912D,
+    0x9342: 0x91D8,
+    0x9343: 0x9F0E,
+    0x9344: 0x6CE5,
+    0x9345: 0x6458,
+    0x9346: 0x64E2,
+    0x9347: 0x6575,
+    0x9348: 0x6EF4,
+    0x9349: 0x7684,
+    0x934A: 0x7B1B,
+    0x934B: 0x9069,
+    0x934C: 0x93D1,
+    0x934D: 0x6EBA,
+    0x934E: 0x54F2,
+    0x934F: 0x5FB9,
+    0x9350: 0x64A4,
+    0x9351: 0x8F4D,
+    0x9352: 0x8FED,
+    0x9353: 0x9244,
+    0x9354: 0x5178,
+    0x9355: 0x586B,
+    0x9356: 0x5929,
+    0x9357: 0x5C55,
+    0x9358: 0x5E97,
+    0x9359: 0x6DFB,
+    0x935A: 0x7E8F,
+    0x935B: 0x751C,
+    0x935C: 0x8CBC,
+    0x935D: 0x8EE2,
+    0x935E: 0x985B,
+    0x935F: 0x70B9,
+    0x9360: 0x4F1D,
+    0x9361: 0x6BBF,
+    0x9362: 0x6FB1,
+    0x9363: 0x7530,
+    0x9364: 0x96FB,
+    0x9365: 0x514E,
+    0x9366: 0x5410,
+    0x9367: 0x5835,
+    0x9368: 0x5857,
+    0x9369: 0x59AC,
+    0x936A: 0x5C60,
+    0x936B: 0x5F92,
+    0x936C: 0x6597,
+    0x936D: 0x675C,
+    0x936E: 0x6E21,
+    0x936F: 0x767B,
+    0x9370: 0x83DF,
+    0x9371: 0x8CED,
+    0x9372: 0x9014,
+    0x9373: 0x90FD,
+    0x9374: 0x934D,
+    0x9375: 0x7825,
+    0x9376: 0x783A,
+    0x9377: 0x52AA,
+    0x9378: 0x5EA6,
+    0x9379: 0x571F,
+    0x937A: 0x5974,
+    0x937B: 0x6012,
+    0x937C: 0x5012,
+    0x937D: 0x515A,
+    0x937E: 0x51AC,
+    0x9380: 0x51CD,
+    0x9381: 0x5200,
+    0x9382: 0x5510,
+    0x9383: 0x5854,
+    0x9384: 0x5858,
+    0x9385: 0x5957,
+    0x9386: 0x5B95,
+    0x9387: 0x5CF6,
+    0x9388: 0x5D8B,
+    0x9389: 0x60BC,
+    0x938A: 0x6295,
+    0x938B: 0x642D,
+    0x938C: 0x6771,
+    0x938D: 0x6843,
+    0x938E: 0x68BC,
+    0x938F: 0x68DF,
+    0x9390: 0x76D7,
+    0x9391: 0x6DD8,
+    0x9392: 0x6E6F,
+    0x9393: 0x6D9B,
+    0x9394: 0x706F,
+    0x9395: 0x71C8,
+    0x9396: 0x5F53,
+    0x9397: 0x75D8,
+    0x9398: 0x7977,
+    0x9399: 0x7B49,
+    0x939A: 0x7B54,
+    0x939B: 0x7B52,
+    0x939C: 0x7CD6,
+    0x939D: 0x7D71,
+    0x939E: 0x5230,
+    0x939F: 0x8463,
+    0x93A0: 0x8569,
+    0x93A1: 0x85E4,
+    0x93A2: 0x8A0E,
+    0x93A3: 0x8B04,
+    0x93A4: 0x8C46,
+    0x93A5: 0x8E0F,
+    0x93A6: 0x9003,
+    0x93A7: 0x900F,
+    0x93A8: 0x9419,
+    0x93A9: 0x9676,
+    0x93AA: 0x982D,
+    0x93AB: 0x9A30,
+    0x93AC: 0x95D8,
+    0x93AD: 0x50CD,
+    0x93AE: 0x52D5,
+    0x93AF: 0x540C,
+    0x93B0: 0x5802,
+    0x93B1: 0x5C0E,
+    0x93B2: 0x61A7,
+    0x93B3: 0x649E,
+    0x93B4: 0x6D1E,
+    0x93B5: 0x77B3,
+    0x93B6: 0x7AE5,
+    0x93B7: 0x80F4,
+    0x93B8: 0x8404,
+    0x93B9: 0x9053,
+    0x93BA: 0x9285,
+    0x93BB: 0x5CE0,
+    0x93BC: 0x9D07,
+    0x93BD: 0x533F,
+    0x93BE: 0x5F97,
+    0x93BF: 0x5FB3,
+    0x93C0: 0x6D9C,
+    0x93C1: 0x7279,
+    0x93C2: 0x7763,
+    0x93C3: 0x79BF,
+    0x93C4: 0x7BE4,
+    0x93C5: 0x6BD2,
+    0x93C6: 0x72EC,
+    0x93C7: 0x8AAD,
+    0x93C8: 0x6803,
+    0x93C9: 0x6A61,
+    0x93CA: 0x51F8,
+    0x93CB: 0x7A81,
+    0x93CC: 0x6934,
+    0x93CD: 0x5C4A,
+    0x93CE: 0x9CF6,
+    0x93CF: 0x82EB,
+    0x93D0: 0x5BC5,
+    0x93D1: 0x9149,
+    0x93D2: 0x701E,
+    0x93D3: 0x5678,
+    0x93D4: 0x5C6F,
+    0x93D5: 0x60C7,
+    0x93D6: 0x6566,
+    0x93D7: 0x6C8C,
+    0x93D8: 0x8C5A,
+    0x93D9: 0x9041,
+    0x93DA: 0x9813,
+    0x93DB: 0x5451,
+    0x93DC: 0x66C7,
+    0x93DD: 0x920D,
+    0x93DE: 0x5948,
+    0x93DF: 0x90A3,
+    0x93E0: 0x5185,
+    0x93E1: 0x4E4D,
+    0x93E2: 0x51EA,
+    0x93E3: 0x8599,
+    0x93E4: 0x8B0E,
+    0x93E5: 0x7058,
+    0x93E6: 0x637A,
+    0x93E7: 0x934B,
+    0x93E8: 0x6962,
+    0x93E9: 0x99B4,
+    0x93EA: 0x7E04,
+    0x93EB: 0x7577,
+    0x93EC: 0x5357,
+    0x93ED: 0x6960,
+    0x93EE: 0x8EDF,
+    0x93EF: 0x96E3,
+    0x93F0: 0x6C5D,
+    0x93F1: 0x4E8C,
+    0x93F2: 0x5C3C,
+    0x93F3: 0x5F10,
+    0x93F4: 0x8FE9,
+    0x93F5: 0x5302,
+    0x93F6: 0x8CD1,
+    0x93F7: 0x8089,
+    0x93F8: 0x8679,
+    0x93F9: 0x5EFF,
+    0x93FA: 0x65E5,
+    0x93FB: 0x4E73,
+    0x93FC: 0x5165,
+    0x9440: 0x5982,
+    0x9441: 0x5C3F,
+    0x9442: 0x97EE,
+    0x9443: 0x4EFB,
+    0x9444: 0x598A,
+    0x9445: 0x5FCD,
+    0x9446: 0x8A8D,
+    0x9447: 0x6FE1,
+    0x9448: 0x79B0,
+    0x9449: 0x7962,
+    0x944A: 0x5BE7,
+    0x944B: 0x8471,
+    0x944C: 0x732B,
+    0x944D: 0x71B1,
+    0x944E: 0x5E74,
+    0x944F: 0x5FF5,
+    0x9450: 0x637B,
+    0x9451: 0x649A,
+    0x9452: 0x71C3,
+    0x9453: 0x7C98,
+    0x9454: 0x4E43,
+    0x9455: 0x5EFC,
+    0x9456: 0x4E4B,
+    0x9457: 0x57DC,
+    0x9458: 0x56A2,
+    0x9459: 0x60A9,
+    0x945A: 0x6FC3,
+    0x945B: 0x7D0D,
+    0x945C: 0x80FD,
+    0x945D: 0x8133,
+    0x945E: 0x81BF,
+    0x945F: 0x8FB2,
+    0x9460: 0x8997,
+    0x9461: 0x86A4,
+    0x9462: 0x5DF4,
+    0x9463: 0x628A,
+    0x9464: 0x64AD,
+    0x9465: 0x8987,
+    0x9466: 0x6777,
+    0x9467: 0x6CE2,
+    0x9468: 0x6D3E,
+    0x9469: 0x7436,
+    0x946A: 0x7834,
+    0x946B: 0x5A46,
+    0x946C: 0x7F75,
+    0x946D: 0x82AD,
+    0x946E: 0x99AC,
+    0x946F: 0x4FF3,
+    0x9470: 0x5EC3,
+    0x9471: 0x62DD,
+    0x9472: 0x6392,
+    0x9473: 0x6557,
+    0x9474: 0x676F,
+    0x9475: 0x76C3,
+    0x9476: 0x724C,
+    0x9477: 0x80CC,
+    0x9478: 0x80BA,
+    0x9479: 0x8F29,
+    0x947A: 0x914D,
+    0x947B: 0x500D,
+    0x947C: 0x57F9,
+    0x947D: 0x5A92,
+    0x947E: 0x6885,
+    0x9480: 0x6973,
+    0x9481: 0x7164,
+    0x9482: 0x72FD,
+    0x9483: 0x8CB7,
+    0x9484: 0x58F2,
+    0x9485: 0x8CE0,
+    0x9486: 0x966A,
+    0x9487: 0x9019,
+    0x9488: 0x877F,
+    0x9489: 0x79E4,
+    0x948A: 0x77E7,
+    0x948B: 0x8429,
+    0x948C: 0x4F2F,
+    0x948D: 0x5265,
+    0x948E: 0x535A,
+    0x948F: 0x62CD,
+    0x9490: 0x67CF,
+    0x9491: 0x6CCA,
+    0x9492: 0x767D,
+    0x9493: 0x7B94,
+    0x9494: 0x7C95,
+    0x9495: 0x8236,
+    0x9496: 0x8584,
+    0x9497: 0x8FEB,
+    0x9498: 0x66DD,
+    0x9499: 0x6F20,
+    0x949A: 0x7206,
+    0x949B: 0x7E1B,
+    0x949C: 0x83AB,
+    0x949D: 0x99C1,
+    0x949E: 0x9EA6,
+    0x949F: 0x51FD,
+    0x94A0: 0x7BB1,
+    0x94A1: 0x7872,
+    0x94A2: 0x7BB8,
+    0x94A3: 0x8087,
+    0x94A4: 0x7B48,
+    0x94A5: 0x6AE8,
+    0x94A6: 0x5E61,
+    0x94A7: 0x808C,
+    0x94A8: 0x7551,
+    0x94A9: 0x7560,
+    0x94AA: 0x516B,
+    0x94AB: 0x9262,
+    0x94AC: 0x6E8C,
+    0x94AD: 0x767A,
+    0x94AE: 0x9197,
+    0x94AF: 0x9AEA,
+    0x94B0: 0x4F10,
+    0x94B1: 0x7F70,
+    0x94B2: 0x629C,
+    0x94B3: 0x7B4F,
+    0x94B4: 0x95A5,
+    0x94B5: 0x9CE9,
+    0x94B6: 0x567A,
+    0x94B7: 0x5859,
+    0x94B8: 0x86E4,
+    0x94B9: 0x96BC,
+    0x94BA: 0x4F34,
+    0x94BB: 0x5224,
+    0x94BC: 0x534A,
+    0x94BD: 0x53CD,
+    0x94BE: 0x53DB,
+    0x94BF: 0x5E06,
+    0x94C0: 0x642C,
+    0x94C1: 0x6591,
+    0x94C2: 0x677F,
+    0x94C3: 0x6C3E,
+    0x94C4: 0x6C4E,
+    0x94C5: 0x7248,
+    0x94C6: 0x72AF,
+    0x94C7: 0x73ED,
+    0x94C8: 0x7554,
+    0x94C9: 0x7E41,
+    0x94CA: 0x822C,
+    0x94CB: 0x85E9,
+    0x94CC: 0x8CA9,
+    0x94CD: 0x7BC4,
+    0x94CE: 0x91C6,
+    0x94CF: 0x7169,
+    0x94D0: 0x9812,
+    0x94D1: 0x98EF,
+    0x94D2: 0x633D,
+    0x94D3: 0x6669,
+    0x94D4: 0x756A,
+    0x94D5: 0x76E4,
+    0x94D6: 0x78D0,
+    0x94D7: 0x8543,
+    0x94D8: 0x86EE,
+    0x94D9: 0x532A,
+    0x94DA: 0x5351,
+    0x94DB: 0x5426,
+    0x94DC: 0x5983,
+    0x94DD: 0x5E87,
+    0x94DE: 0x5F7C,
+    0x94DF: 0x60B2,
+    0x94E0: 0x6249,
+    0x94E1: 0x6279,
+    0x94E2: 0x62AB,
+    0x94E3: 0x6590,
+    0x94E4: 0x6BD4,
+    0x94E5: 0x6CCC,
+    0x94E6: 0x75B2,
+    0x94E7: 0x76AE,
+    0x94E8: 0x7891,
+    0x94E9: 0x79D8,
+    0x94EA: 0x7DCB,
+    0x94EB: 0x7F77,
+    0x94EC: 0x80A5,
+    0x94ED: 0x88AB,
+    0x94EE: 0x8AB9,
+    0x94EF: 0x8CBB,
+    0x94F0: 0x907F,
+    0x94F1: 0x975E,
+    0x94F2: 0x98DB,
+    0x94F3: 0x6A0B,
+    0x94F4: 0x7C38,
+    0x94F5: 0x5099,
+    0x94F6: 0x5C3E,
+    0x94F7: 0x5FAE,
+    0x94F8: 0x6787,
+    0x94F9: 0x6BD8,
+    0x94FA: 0x7435,
+    0x94FB: 0x7709,
+    0x94FC: 0x7F8E,
+    0x9540: 0x9F3B,
+    0x9541: 0x67CA,
+    0x9542: 0x7A17,
+    0x9543: 0x5339,
+    0x9544: 0x758B,
+    0x9545: 0x9AED,
+    0x9546: 0x5F66,
+    0x9547: 0x819D,
+    0x9548: 0x83F1,
+    0x9549: 0x8098,
+    0x954A: 0x5F3C,
+    0x954B: 0x5FC5,
+    0x954C: 0x7562,
+    0x954D: 0x7B46,
+    0x954E: 0x903C,
+    0x954F: 0x6867,
+    0x9550: 0x59EB,
+    0x9551: 0x5A9B,
+    0x9552: 0x7D10,
+    0x9553: 0x767E,
+    0x9554: 0x8B2C,
+    0x9555: 0x4FF5,
+    0x9556: 0x5F6A,
+    0x9557: 0x6A19,
+    0x9558: 0x6C37,
+    0x9559: 0x6F02,
+    0x955A: 0x74E2,
+    0x955B: 0x7968,
+    0x955C: 0x8868,
+    0x955D: 0x8A55,
+    0x955E: 0x8C79,
+    0x955F: 0x5EDF,
+    0x9560: 0x63CF,
+    0x9561: 0x75C5,
+    0x9562: 0x79D2,
+    0x9563: 0x82D7,
+    0x9564: 0x9328,
+    0x9565: 0x92F2,
+    0x9566: 0x849C,
+    0x9567: 0x86ED,
+    0x9568: 0x9C2D,
+    0x9569: 0x54C1,
+    0x956A: 0x5F6C,
+    0x956B: 0x658C,
+    0x956C: 0x6D5C,
+    0x956D: 0x7015,
+    0x956E: 0x8CA7,
+    0x956F: 0x8CD3,
+    0x9570: 0x983B,
+    0x9571: 0x654F,
+    0x9572: 0x74F6,
+    0x9573: 0x4E0D,
+    0x9574: 0x4ED8,
+    0x9575: 0x57E0,
+    0x9576: 0x592B,
+    0x9577: 0x5A66,
+    0x9578: 0x5BCC,
+    0x9579: 0x51A8,
+    0x957A: 0x5E03,
+    0x957B: 0x5E9C,
+    0x957C: 0x6016,
+    0x957D: 0x6276,
+    0x957E: 0x6577,
+    0x9580: 0x65A7,
+    0x9581: 0x666E,
+    0x9582: 0x6D6E,
+    0x9583: 0x7236,
+    0x9584: 0x7B26,
+    0x9585: 0x8150,
+    0x9586: 0x819A,
+    0x9587: 0x8299,
+    0x9588: 0x8B5C,
+    0x9589: 0x8CA0,
+    0x958A: 0x8CE6,
+    0x958B: 0x8D74,
+    0x958C: 0x961C,
+    0x958D: 0x9644,
+    0x958E: 0x4FAE,
+    0x958F: 0x64AB,
+    0x9590: 0x6B66,
+    0x9591: 0x821E,
+    0x9592: 0x8461,
+    0x9593: 0x856A,
+    0x9594: 0x90E8,
+    0x9595: 0x5C01,
+    0x9596: 0x6953,
+    0x9597: 0x98A8,
+    0x9598: 0x847A,
+    0x9599: 0x8557,
+    0x959A: 0x4F0F,
+    0x959B: 0x526F,
+    0x959C: 0x5FA9,
+    0x959D: 0x5E45,
+    0x959E: 0x670D,
+    0x959F: 0x798F,
+    0x95A0: 0x8179,
+    0x95A1: 0x8907,
+    0x95A2: 0x8986,
+    0x95A3: 0x6DF5,
+    0x95A4: 0x5F17,
+    0x95A5: 0x6255,
+    0x95A6: 0x6CB8,
+    0x95A7: 0x4ECF,
+    0x95A8: 0x7269,
+    0x95A9: 0x9B92,
+    0x95AA: 0x5206,
+    0x95AB: 0x543B,
+    0x95AC: 0x5674,
+    0x95AD: 0x58B3,
+    0x95AE: 0x61A4,
+    0x95AF: 0x626E,
+    0x95B0: 0x711A,
+    0x95B1: 0x596E,
+    0x95B2: 0x7C89,
+    0x95B3: 0x7CDE,
+    0x95B4: 0x7D1B,
+    0x95B5: 0x96F0,
+    0x95B6: 0x6587,
+    0x95B7: 0x805E,
+    0x95B8: 0x4E19,
+    0x95B9: 0x4F75,
+    0x95BA: 0x5175,
+    0x95BB: 0x5840,
+    0x95BC: 0x5E63,
+    0x95BD: 0x5E73,
+    0x95BE: 0x5F0A,
+    0x95BF: 0x67C4,
+    0x95C0: 0x4E26,
+    0x95C1: 0x853D,
+    0x95C2: 0x9589,
+    0x95C3: 0x965B,
+    0x95C4: 0x7C73,
+    0x95C5: 0x9801,
+    0x95C6: 0x50FB,
+    0x95C7: 0x58C1,
+    0x95C8: 0x7656,
+    0x95C9: 0x78A7,
+    0x95CA: 0x5225,
+    0x95CB: 0x77A5,
+    0x95CC: 0x8511,
+    0x95CD: 0x7B86,
+    0x95CE: 0x504F,
+    0x95CF: 0x5909,
+    0x95D0: 0x7247,
+    0x95D1: 0x7BC7,
+    0x95D2: 0x7DE8,
+    0x95D3: 0x8FBA,
+    0x95D4: 0x8FD4,
+    0x95D5: 0x904D,
+    0x95D6: 0x4FBF,
+    0x95D7: 0x52C9,
+    0x95D8: 0x5A29,
+    0x95D9: 0x5F01,
+    0x95DA: 0x97AD,
+    0x95DB: 0x4FDD,
+    0x95DC: 0x8217,
+    0x95DD: 0x92EA,
+    0x95DE: 0x5703,
+    0x95DF: 0x6355,
+    0x95E0: 0x6B69,
+    0x95E1: 0x752B,
+    0x95E2: 0x88DC,
+    0x95E3: 0x8F14,
+    0x95E4: 0x7A42,
+    0x95E5: 0x52DF,
+    0x95E6: 0x5893,
+    0x95E7: 0x6155,
+    0x95E8: 0x620A,
+    0x95E9: 0x66AE,
+    0x95EA: 0x6BCD,
+    0x95EB: 0x7C3F,
+    0x95EC: 0x83E9,
+    0x95ED: 0x5023,
+    0x95EE: 0x4FF8,
+    0x95EF: 0x5305,
+    0x95F0: 0x5446,
+    0x95F1: 0x5831,
+    0x95F2: 0x5949,
+    0x95F3: 0x5B9D,
+    0x95F4: 0x5CF0,
+    0x95F5: 0x5CEF,
+    0x95F6: 0x5D29,
+    0x95F7: 0x5E96,
+    0x95F8: 0x62B1,
+    0x95F9: 0x6367,
+    0x95FA: 0x653E,
+    0x95FB: 0x65B9,
+    0x95FC: 0x670B,
+    0x9640: 0x6CD5,
+    0x9641: 0x6CE1,
+    0x9642: 0x70F9,
+    0x9643: 0x7832,
+    0x9644: 0x7E2B,
+    0x9645: 0x80DE,
+    0x9646: 0x82B3,
+    0x9647: 0x840C,
+    0x9648: 0x84EC,
+    0x9649: 0x8702,
+    0x964A: 0x8912,
+    0x964B: 0x8A2A,
+    0x964C: 0x8C4A,
+    0x964D: 0x90A6,
+    0x964E: 0x92D2,
+    0x964F: 0x98FD,
+    0x9650: 0x9CF3,
+    0x9651: 0x9D6C,
+    0x9652: 0x4E4F,
+    0x9653: 0x4EA1,
+    0x9654: 0x508D,
+    0x9655: 0x5256,
+    0x9656: 0x574A,
+    0x9657: 0x59A8,
+    0x9658: 0x5E3D,
+    0x9659: 0x5FD8,
+    0x965A: 0x5FD9,
+    0x965B: 0x623F,
+    0x965C: 0x66B4,
+    0x965D: 0x671B,
+    0x965E: 0x67D0,
+    0x965F: 0x68D2,
+    0x9660: 0x5192,
+    0x9661: 0x7D21,
+    0x9662: 0x80AA,
+    0x9663: 0x81A8,
+    0x9664: 0x8B00,
+    0x9665: 0x8C8C,
+    0x9666: 0x8CBF,
+    0x9667: 0x927E,
+    0x9668: 0x9632,
+    0x9669: 0x5420,
+    0x966A: 0x982C,
+    0x966B: 0x5317,
+    0x966C: 0x50D5,
+    0x966D: 0x535C,
+    0x966E: 0x58A8,
+    0x966F: 0x64B2,
+    0x9670: 0x6734,
+    0x9671: 0x7267,
+    0x9672: 0x7766,
+    0x9673: 0x7A46,
+    0x9674: 0x91E6,
+    0x9675: 0x52C3,
+    0x9676: 0x6CA1,
+    0x9677: 0x6B86,
+    0x9678: 0x5800,
+    0x9679: 0x5E4C,
+    0x967A: 0x5954,
+    0x967B: 0x672C,
+    0x967C: 0x7FFB,
+    0x967D: 0x51E1,
+    0x967E: 0x76C6,
+    0x9680: 0x6469,
+    0x9681: 0x78E8,
+    0x9682: 0x9B54,
+    0x9683: 0x9EBB,
+    0x9684: 0x57CB,
+    0x9685: 0x59B9,
+    0x9686: 0x6627,
+    0x9687: 0x679A,
+    0x9688: 0x6BCE,
+    0x9689: 0x54E9,
+    0x968A: 0x69D9,
+    0x968B: 0x5E55,
+    0x968C: 0x819C,
+    0x968D: 0x6795,
+    0x968E: 0x9BAA,
+    0x968F: 0x67FE,
+    0x9690: 0x9C52,
+    0x9691: 0x685D,
+    0x9692: 0x4EA6,
+    0x9693: 0x4FE3,
+    0x9694: 0x53C8,
+    0x9695: 0x62B9,
+    0x9696: 0x672B,
+    0x9697: 0x6CAB,
+    0x9698: 0x8FC4,
+    0x9699: 0x4FAD,
+    0x969A: 0x7E6D,
+    0x969B: 0x9EBF,
+    0x969C: 0x4E07,
+    0x969D: 0x6162,
+    0x969E: 0x6E80,
+    0x969F: 0x6F2B,
+    0x96A0: 0x8513,
+    0x96A1: 0x5473,
+    0x96A2: 0x672A,
+    0x96A3: 0x9B45,
+    0x96A4: 0x5DF3,
+    0x96A5: 0x7B95,
+    0x96A6: 0x5CAC,
+    0x96A7: 0x5BC6,
+    0x96A8: 0x871C,
+    0x96A9: 0x6E4A,
+    0x96AA: 0x84D1,
+    0x96AB: 0x7A14,
+    0x96AC: 0x8108,
+    0x96AD: 0x5999,
+    0x96AE: 0x7C8D,
+    0x96AF: 0x6C11,
+    0x96B0: 0x7720,
+    0x96B1: 0x52D9,
+    0x96B2: 0x5922,
+    0x96B3: 0x7121,
+    0x96B4: 0x725F,
+    0x96B5: 0x77DB,
+    0x96B6: 0x9727,
+    0x96B7: 0x9D61,
+    0x96B8: 0x690B,
+    0x96B9: 0x5A7F,
+    0x96BA: 0x5A18,
+    0x96BB: 0x51A5,
+    0x96BC: 0x540D,
+    0x96BD: 0x547D,
+    0x96BE: 0x660E,
+    0x96BF: 0x76DF,
+    0x96C0: 0x8FF7,
+    0x96C1: 0x9298,
+    0x96C2: 0x9CF4,
+    0x96C3: 0x59EA,
+    0x96C4: 0x725D,
+    0x96C5: 0x6EC5,
+    0x96C6: 0x514D,
+    0x96C7: 0x68C9,
+    0x96C8: 0x7DBF,
+    0x96C9: 0x7DEC,
+    0x96CA: 0x9762,
+    0x96CB: 0x9EBA,
+    0x96CC: 0x6478,
+    0x96CD: 0x6A21,
+    0x96CE: 0x8302,
+    0x96CF: 0x5984,
+    0x96D0: 0x5B5F,
+    0x96D1: 0x6BDB,
+    0x96D2: 0x731B,
+    0x96D3: 0x76F2,
+    0x96D4: 0x7DB2,
+    0x96D5: 0x8017,
+    0x96D6: 0x8499,
+    0x96D7: 0x5132,
+    0x96D8: 0x6728,
+    0x96D9: 0x9ED9,
+    0x96DA: 0x76EE,
+    0x96DB: 0x6762,
+    0x96DC: 0x52FF,
+    0x96DD: 0x9905,
+    0x96DE: 0x5C24,
+    0x96DF: 0x623B,
+    0x96E0: 0x7C7E,
+    0x96E1: 0x8CB0,
+    0x96E2: 0x554F,
+    0x96E3: 0x60B6,
+    0x96E4: 0x7D0B,
+    0x96E5: 0x9580,
+    0x96E6: 0x5301,
+    0x96E7: 0x4E5F,
+    0x96E8: 0x51B6,
+    0x96E9: 0x591C,
+    0x96EA: 0x723A,
+    0x96EB: 0x8036,
+    0x96EC: 0x91CE,
+    0x96ED: 0x5F25,
+    0x96EE: 0x77E2,
+    0x96EF: 0x5384,
+    0x96F0: 0x5F79,
+    0x96F1: 0x7D04,
+    0x96F2: 0x85AC,
+    0x96F3: 0x8A33,
+    0x96F4: 0x8E8D,
+    0x96F5: 0x9756,
+    0x96F6: 0x67F3,
+    0x96F7: 0x85AE,
+    0x96F8: 0x9453,
+    0x96F9: 0x6109,
+    0x96FA: 0x6108,
+    0x96FB: 0x6CB9,
+    0x96FC: 0x7652,
+    0x9740: 0x8AED,
+    0x9741: 0x8F38,
+    0x9742: 0x552F,
+    0x9743: 0x4F51,
+    0x9744: 0x512A,
+    0x9745: 0x52C7,
+    0x9746: 0x53CB,
+    0x9747: 0x5BA5,
+    0x9748: 0x5E7D,
+    0x9749: 0x60A0,
+    0x974A: 0x6182,
+    0x974B: 0x63D6,
+    0x974C: 0x6709,
+    0x974D: 0x67DA,
+    0x974E: 0x6E67,
+    0x974F: 0x6D8C,
+    0x9750: 0x7336,
+    0x9751: 0x7337,
+    0x9752: 0x7531,
+    0x9753: 0x7950,
+    0x9754: 0x88D5,
+    0x9755: 0x8A98,
+    0x9756: 0x904A,
+    0x9757: 0x9091,
+    0x9758: 0x90F5,
+    0x9759: 0x96C4,
+    0x975A: 0x878D,
+    0x975B: 0x5915,
+    0x975C: 0x4E88,
+    0x975D: 0x4F59,
+    0x975E: 0x4E0E,
+    0x975F: 0x8A89,
+    0x9760: 0x8F3F,
+    0x9761: 0x9810,
+    0x9762: 0x50AD,
+    0x9763: 0x5E7C,
+    0x9764: 0x5996,
+    0x9765: 0x5BB9,
+    0x9766: 0x5EB8,
+    0x9767: 0x63DA,
+    0x9768: 0x63FA,
+    0x9769: 0x64C1,
+    0x976A: 0x66DC,
+    0x976B: 0x694A,
+    0x976C: 0x69D8,
+    0x976D: 0x6D0B,
+    0x976E: 0x6EB6,
+    0x976F: 0x7194,
+    0x9770: 0x7528,
+    0x9771: 0x7AAF,
+    0x9772: 0x7F8A,
+    0x9773: 0x8000,
+    0x9774: 0x8449,
+    0x9775: 0x84C9,
+    0x9776: 0x8981,
+    0x9777: 0x8B21,
+    0x9778: 0x8E0A,
+    0x9779: 0x9065,
+    0x977A: 0x967D,
+    0x977B: 0x990A,
+    0x977C: 0x617E,
+    0x977D: 0x6291,
+    0x977E: 0x6B32,
+    0x9780: 0x6C83,
+    0x9781: 0x6D74,
+    0x9782: 0x7FCC,
+    0x9783: 0x7FFC,
+    0x9784: 0x6DC0,
+    0x9785: 0x7F85,
+    0x9786: 0x87BA,
+    0x9787: 0x88F8,
+    0x9788: 0x6765,
+    0x9789: 0x83B1,
+    0x978A: 0x983C,
+    0x978B: 0x96F7,
+    0x978C: 0x6D1B,
+    0x978D: 0x7D61,
+    0x978E: 0x843D,
+    0x978F: 0x916A,
+    0x9790: 0x4E71,
+    0x9791: 0x5375,
+    0x9792: 0x5D50,
+    0x9793: 0x6B04,
+    0x9794: 0x6FEB,
+    0x9795: 0x85CD,
+    0x9796: 0x862D,
+    0x9797: 0x89A7,
+    0x9798: 0x5229,
+    0x9799: 0x540F,
+    0x979A: 0x5C65,
+    0x979B: 0x674E,
+    0x979C: 0x68A8,
+    0x979D: 0x7406,
+    0x979E: 0x7483,
+    0x979F: 0x75E2,
+    0x97A0: 0x88CF,
+    0x97A1: 0x88E1,
+    0x97A2: 0x91CC,
+    0x97A3: 0x96E2,
+    0x97A4: 0x9678,
+    0x97A5: 0x5F8B,
+    0x97A6: 0x7387,
+    0x97A7: 0x7ACB,
+    0x97A8: 0x844E,
+    0x97A9: 0x63A0,
+    0x97AA: 0x7565,
+    0x97AB: 0x5289,
+    0x97AC: 0x6D41,
+    0x97AD: 0x6E9C,
+    0x97AE: 0x7409,
+    0x97AF: 0x7559,
+    0x97B0: 0x786B,
+    0x97B1: 0x7C92,
+    0x97B2: 0x9686,
+    0x97B3: 0x7ADC,
+    0x97B4: 0x9F8D,
+    0x97B5: 0x4FB6,
+    0x97B6: 0x616E,
+    0x97B7: 0x65C5,
+    0x97B8: 0x865C,
+    0x97B9: 0x4E86,
+    0x97BA: 0x4EAE,
+    0x97BB: 0x50DA,
+    0x97BC: 0x4E21,
+    0x97BD: 0x51CC,
+    0x97BE: 0x5BEE,
+    0x97BF: 0x6599,
+    0x97C0: 0x6881,
+    0x97C1: 0x6DBC,
+    0x97C2: 0x731F,
+    0x97C3: 0x7642,
+    0x97C4: 0x77AD,
+    0x97C5: 0x7A1C,
+    0x97C6: 0x7CE7,
+    0x97C7: 0x826F,
+    0x97C8: 0x8AD2,
+    0x97C9: 0x907C,
+    0x97CA: 0x91CF,
+    0x97CB: 0x9675,
+    0x97CC: 0x9818,
+    0x97CD: 0x529B,
+    0x97CE: 0x7DD1,
+    0x97CF: 0x502B,
+    0x97D0: 0x5398,
+    0x97D1: 0x6797,
+    0x97D2: 0x6DCB,
+    0x97D3: 0x71D0,
+    0x97D4: 0x7433,
+    0x97D5: 0x81E8,
+    0x97D6: 0x8F2A,
+    0x97D7: 0x96A3,
+    0x97D8: 0x9C57,
+    0x97D9: 0x9E9F,
+    0x97DA: 0x7460,
+    0x97DB: 0x5841,
+    0x97DC: 0x6D99,
+    0x97DD: 0x7D2F,
+    0x97DE: 0x985E,
+    0x97DF: 0x4EE4,
+    0x97E0: 0x4F36,
+    0x97E1: 0x4F8B,
+    0x97E2: 0x51B7,
+    0x97E3: 0x52B1,
+    0x97E4: 0x5DBA,
+    0x97E5: 0x601C,
+    0x97E6: 0x73B2,
+    0x97E7: 0x793C,
+    0x97E8: 0x82D3,
+    0x97E9: 0x9234,
+    0x97EA: 0x96B7,
+    0x97EB: 0x96F6,
+    0x97EC: 0x970A,
+    0x97ED: 0x9E97,
+    0x97EE: 0x9F62,
+    0x97EF: 0x66A6,
+    0x97F0: 0x6B74,
+    0x97F1: 0x5217,
+    0x97F2: 0x52A3,
+    0x97F3: 0x70C8,
+    0x97F4: 0x88C2,
+    0x97F5: 0x5EC9,
+    0x97F6: 0x604B,
+    0x97F7: 0x6190,
+    0x97F8: 0x6F23,
+    0x97F9: 0x7149,
+    0x97FA: 0x7C3E,
+    0x97FB: 0x7DF4,
+    0x97FC: 0x806F,
+    0x9840: 0x84EE,
+    0x9841: 0x9023,
+    0x9842: 0x932C,
+    0x9843: 0x5442,
+    0x9844: 0x9B6F,
+    0x9845: 0x6AD3,
+    0x9846: 0x7089,
+    0x9847: 0x8CC2,
+    0x9848: 0x8DEF,
+    0x9849: 0x9732,
+    0x984A: 0x52B4,
+    0x984B: 0x5A41,
+    0x984C: 0x5ECA,
+    0x984D: 0x5F04,
+    0x984E: 0x6717,
+    0x984F: 0x697C,
+    0x9850: 0x6994,
+    0x9851: 0x6D6A,
+    0x9852: 0x6F0F,
+    0x9853: 0x7262,
+    0x9854: 0x72FC,
+    0x9855: 0x7BED,
+    0x9856: 0x8001,
+    0x9857: 0x807E,
+    0x9858: 0x874B,
+    0x9859: 0x90CE,
+    0x985A: 0x516D,
+    0x985B: 0x9E93,
+    0x985C: 0x7984,
+    0x985D: 0x808B,
+    0x985E: 0x9332,
+    0x985F: 0x8AD6,
+    0x9860: 0x502D,
+    0x9861: 0x548C,
+    0x9862: 0x8A71,
+    0x9863: 0x6B6A,
+    0x9864: 0x8CC4,
+    0x9865: 0x8107,
+    0x9866: 0x60D1,
+    0x9867: 0x67A0,
+    0x9868: 0x9DF2,
+    0x9869: 0x4E99,
+    0x986A: 0x4E98,
+    0x986B: 0x9C10,
+    0x986C: 0x8A6B,
+    0x986D: 0x85C1,
+    0x986E: 0x8568,
+    0x986F: 0x6900,
+    0x9870: 0x6E7E,
+    0x9871: 0x7897,
+    0x9872: 0x8155,
+    0x989F: 0x5F0C,
+    0x98A0: 0x4E10,
+    0x98A1: 0x4E15,
+    0x98A2: 0x4E2A,
+    0x98A3: 0x4E31,
+    0x98A4: 0x4E36,
+    0x98A5: 0x4E3C,
+    0x98A6: 0x4E3F,
+    0x98A7: 0x4E42,
+    0x98A8: 0x4E56,
+    0x98A9: 0x4E58,
+    0x98AA: 0x4E82,
+    0x98AB: 0x4E85,
+    0x98AC: 0x8C6B,
+    0x98AD: 0x4E8A,
+    0x98AE: 0x8212,
+    0x98AF: 0x5F0D,
+    0x98B0: 0x4E8E,
+    0x98B1: 0x4E9E,
+    0x98B2: 0x4E9F,
+    0x98B3: 0x4EA0,
+    0x98B4: 0x4EA2,
+    0x98B5: 0x4EB0,
+    0x98B6: 0x4EB3,
+    0x98B7: 0x4EB6,
+    0x98B8: 0x4ECE,
+    0x98B9: 0x4ECD,
+    0x98BA: 0x4EC4,
+    0x98BB: 0x4EC6,
+    0x98BC: 0x4EC2,
+    0x98BD: 0x4ED7,
+    0x98BE: 0x4EDE,
+    0x98BF: 0x4EED,
+    0x98C0: 0x4EDF,
+    0x98C1: 0x4EF7,
+    0x98C2: 0x4F09,
+    0x98C3: 0x4F5A,
+    0x98C4: 0x4F30,
+    0x98C5: 0x4F5B,
+    0x98C6: 0x4F5D,
+    0x98C7: 0x4F57,
+    0x98C8: 0x4F47,
+    0x98C9: 0x4F76,
+    0x98CA: 0x4F88,
+    0x98CB: 0x4F8F,
+    0x98CC: 0x4F98,
+    0x98CD: 0x4F7B,
+    0x98CE: 0x4F69,
+    0x98CF: 0x4F70,
+    0x98D0: 0x4F91,
+    0x98D1: 0x4F6F,
+    0x98D2: 0x4F86,
+    0x98D3: 0x4F96,
+    0x98D4: 0x5118,
+    0x98D5: 0x4FD4,
+    0x98D6: 0x4FDF,
+    0x98D7: 0x4FCE,
+    0x98D8: 0x4FD8,
+    0x98D9: 0x4FDB,
+    0x98DA: 0x4FD1,
+    0x98DB: 0x4FDA,
+    0x98DC: 0x4FD0,
+    0x98DD: 0x4FE4,
+    0x98DE: 0x4FE5,
+    0x98DF: 0x501A,
+    0x98E0: 0x5028,
+    0x98E1: 0x5014,
+    0x98E2: 0x502A,
+    0x98E3: 0x5025,
+    0x98E4: 0x5005,
+    0x98E5: 0x4F1C,
+    0x98E6: 0x4FF6,
+    0x98E7: 0x5021,
+    0x98E8: 0x5029,
+    0x98E9: 0x502C,
+    0x98EA: 0x4FFE,
+    0x98EB: 0x4FEF,
+    0x98EC: 0x5011,
+    0x98ED: 0x5006,
+    0x98EE: 0x5043,
+    0x98EF: 0x5047,
+    0x98F0: 0x6703,
+    0x98F1: 0x5055,
+    0x98F2: 0x5050,
+    0x98F3: 0x5048,
+    0x98F4: 0x505A,
+    0x98F5: 0x5056,
+    0x98F6: 0x506C,
+    0x98F7: 0x5078,
+    0x98F8: 0x5080,
+    0x98F9: 0x509A,
+    0x98FA: 0x5085,
+    0x98FB: 0x50B4,
+    0x98FC: 0x50B2,
+    0x9940: 0x50C9,
+    0x9941: 0x50CA,
+    0x9942: 0x50B3,
+    0x9943: 0x50C2,
+    0x9944: 0x50D6,
+    0x9945: 0x50DE,
+    0x9946: 0x50E5,
+    0x9947: 0x50ED,
+    0x9948: 0x50E3,
+    0x9949: 0x50EE,
+    0x994A: 0x50F9,
+    0x994B: 0x50F5,
+    0x994C: 0x5109,
+    0x994D: 0x5101,
+    0x994E: 0x5102,
+    0x994F: 0x5116,
+    0x9950: 0x5115,
+    0x9951: 0x5114,
+    0x9952: 0x511A,
+    0x9953: 0x5121,
+    0x9954: 0x513A,
+    0x9955: 0x5137,
+    0x9956: 0x513C,
+    0x9957: 0x513B,
+    0x9958: 0x513F,
+    0x9959: 0x5140,
+    0x995A: 0x5152,
+    0x995B: 0x514C,
+    0x995C: 0x5154,
+    0x995D: 0x5162,
+    0x995E: 0x7AF8,
+    0x995F: 0x5169,
+    0x9960: 0x516A,
+    0x9961: 0x516E,
+    0x9962: 0x5180,
+    0x9963: 0x5182,
+    0x9964: 0x56D8,
+    0x9965: 0x518C,
+    0x9966: 0x5189,
+    0x9967: 0x518F,
+    0x9968: 0x5191,
+    0x9969: 0x5193,
+    0x996A: 0x5195,
+    0x996B: 0x5196,
+    0x996C: 0x51A4,
+    0x996D: 0x51A6,
+    0x996E: 0x51A2,
+    0x996F: 0x51A9,
+    0x9970: 0x51AA,
+    0x9971: 0x51AB,
+    0x9972: 0x51B3,
+    0x9973: 0x51B1,
+    0x9974: 0x51B2,
+    0x9975: 0x51B0,
+    0x9976: 0x51B5,
+    0x9977: 0x51BD,
+    0x9978: 0x51C5,
+    0x9979: 0x51C9,
+    0x997A: 0x51DB,
+    0x997B: 0x51E0,
+    0x997C: 0x8655,
+    0x997D: 0x51E9,
+    0x997E: 0x51ED,
+    0x9980: 0x51F0,
+    0x9981: 0x51F5,
+    0x9982: 0x51FE,
+    0x9983: 0x5204,
+    0x9984: 0x520B,
+    0x9985: 0x5214,
+    0x9986: 0x520E,
+    0x9987: 0x5227,
+    0x9988: 0x522A,
+    0x9989: 0x522E,
+    0x998A: 0x5233,
+    0x998B: 0x5239,
+    0x998C: 0x524F,
+    0x998D: 0x5244,
+    0x998E: 0x524B,
+    0x998F: 0x524C,
+    0x9990: 0x525E,
+    0x9991: 0x5254,
+    0x9992: 0x526A,
+    0x9993: 0x5274,
+    0x9994: 0x5269,
+    0x9995: 0x5273,
+    0x9996: 0x527F,
+    0x9997: 0x527D,
+    0x9998: 0x528D,
+    0x9999: 0x5294,
+    0x999A: 0x5292,
+    0x999B: 0x5271,
+    0x999C: 0x5288,
+    0x999D: 0x5291,
+    0x999E: 0x8FA8,
+    0x999F: 0x8FA7,
+    0x99A0: 0x52AC,
+    0x99A1: 0x52AD,
+    0x99A2: 0x52BC,
+    0x99A3: 0x52B5,
+    0x99A4: 0x52C1,
+    0x99A5: 0x52CD,
+    0x99A6: 0x52D7,
+    0x99A7: 0x52DE,
+    0x99A8: 0x52E3,
+    0x99A9: 0x52E6,
+    0x99AA: 0x98ED,
+    0x99AB: 0x52E0,
+    0x99AC: 0x52F3,
+    0x99AD: 0x52F5,
+    0x99AE: 0x52F8,
+    0x99AF: 0x52F9,
+    0x99B0: 0x5306,
+    0x99B1: 0x5308,
+    0x99B2: 0x7538,
+    0x99B3: 0x530D,
+    0x99B4: 0x5310,
+    0x99B5: 0x530F,
+    0x99B6: 0x5315,
+    0x99B7: 0x531A,
+    0x99B8: 0x5323,
+    0x99B9: 0x532F,
+    0x99BA: 0x5331,
+    0x99BB: 0x5333,
+    0x99BC: 0x5338,
+    0x99BD: 0x5340,
+    0x99BE: 0x5346,
+    0x99BF: 0x5345,
+    0x99C0: 0x4E17,
+    0x99C1: 0x5349,
+    0x99C2: 0x534D,
+    0x99C3: 0x51D6,
+    0x99C4: 0x535E,
+    0x99C5: 0x5369,
+    0x99C6: 0x536E,
+    0x99C7: 0x5918,
+    0x99C8: 0x537B,
+    0x99C9: 0x5377,
+    0x99CA: 0x5382,
+    0x99CB: 0x5396,
+    0x99CC: 0x53A0,
+    0x99CD: 0x53A6,
+    0x99CE: 0x53A5,
+    0x99CF: 0x53AE,
+    0x99D0: 0x53B0,
+    0x99D1: 0x53B6,
+    0x99D2: 0x53C3,
+    0x99D3: 0x7C12,
+    0x99D4: 0x96D9,
+    0x99D5: 0x53DF,
+    0x99D6: 0x66FC,
+    0x99D7: 0x71EE,
+    0x99D8: 0x53EE,
+    0x99D9: 0x53E8,
+    0x99DA: 0x53ED,
+    0x99DB: 0x53FA,
+    0x99DC: 0x5401,
+    0x99DD: 0x543D,
+    0x99DE: 0x5440,
+    0x99DF: 0x542C,
+    0x99E0: 0x542D,
+    0x99E1: 0x543C,
+    0x99E2: 0x542E,
+    0x99E3: 0x5436,
+    0x99E4: 0x5429,
+    0x99E5: 0x541D,
+    0x99E6: 0x544E,
+    0x99E7: 0x548F,
+    0x99E8: 0x5475,
+    0x99E9: 0x548E,
+    0x99EA: 0x545F,
+    0x99EB: 0x5471,
+    0x99EC: 0x5477,
+    0x99ED: 0x5470,
+    0x99EE: 0x5492,
+    0x99EF: 0x547B,
+    0x99F0: 0x5480,
+    0x99F1: 0x5476,
+    0x99F2: 0x5484,
+    0x99F3: 0x5490,
+    0x99F4: 0x5486,
+    0x99F5: 0x54C7,
+    0x99F6: 0x54A2,
+    0x99F7: 0x54B8,
+    0x99F8: 0x54A5,
+    0x99F9: 0x54AC,
+    0x99FA: 0x54C4,
+    0x99FB: 0x54C8,
+    0x99FC: 0x54A8,
+    0x9A40: 0x54AB,
+    0x9A41: 0x54C2,
+    0x9A42: 0x54A4,
+    0x9A43: 0x54BE,
+    0x9A44: 0x54BC,
+    0x9A45: 0x54D8,
+    0x9A46: 0x54E5,
+    0x9A47: 0x54E6,
+    0x9A48: 0x550F,
+    0x9A49: 0x5514,
+    0x9A4A: 0x54FD,
+    0x9A4B: 0x54EE,
+    0x9A4C: 0x54ED,
+    0x9A4D: 0x54FA,
+    0x9A4E: 0x54E2,
+    0x9A4F: 0x5539,
+    0x9A50: 0x5540,
+    0x9A51: 0x5563,
+    0x9A52: 0x554C,
+    0x9A53: 0x552E,
+    0x9A54: 0x555C,
+    0x9A55: 0x5545,
+    0x9A56: 0x5556,
+    0x9A57: 0x5557,
+    0x9A58: 0x5538,
+    0x9A59: 0x5533,
+    0x9A5A: 0x555D,
+    0x9A5B: 0x5599,
+    0x9A5C: 0x5580,
+    0x9A5D: 0x54AF,
+    0x9A5E: 0x558A,
+    0x9A5F: 0x559F,
+    0x9A60: 0x557B,
+    0x9A61: 0x557E,
+    0x9A62: 0x5598,
+    0x9A63: 0x559E,
+    0x9A64: 0x55AE,
+    0x9A65: 0x557C,
+    0x9A66: 0x5583,
+    0x9A67: 0x55A9,
+    0x9A68: 0x5587,
+    0x9A69: 0x55A8,
+    0x9A6A: 0x55DA,
+    0x9A6B: 0x55C5,
+    0x9A6C: 0x55DF,
+    0x9A6D: 0x55C4,
+    0x9A6E: 0x55DC,
+    0x9A6F: 0x55E4,
+    0x9A70: 0x55D4,
+    0x9A71: 0x5614,
+    0x9A72: 0x55F7,
+    0x9A73: 0x5616,
+    0x9A74: 0x55FE,
+    0x9A75: 0x55FD,
+    0x9A76: 0x561B,
+    0x9A77: 0x55F9,
+    0x9A78: 0x564E,
+    0x9A79: 0x5650,
+    0x9A7A: 0x71DF,
+    0x9A7B: 0x5634,
+    0x9A7C: 0x5636,
+    0x9A7D: 0x5632,
+    0x9A7E: 0x5638,
+    0x9A80: 0x566B,
+    0x9A81: 0x5664,
+    0x9A82: 0x562F,
+    0x9A83: 0x566C,
+    0x9A84: 0x566A,
+    0x9A85: 0x5686,
+    0x9A86: 0x5680,
+    0x9A87: 0x568A,
+    0x9A88: 0x56A0,
+    0x9A89: 0x5694,
+    0x9A8A: 0x568F,
+    0x9A8B: 0x56A5,
+    0x9A8C: 0x56AE,
+    0x9A8D: 0x56B6,
+    0x9A8E: 0x56B4,
+    0x9A8F: 0x56C2,
+    0x9A90: 0x56BC,
+    0x9A91: 0x56C1,
+    0x9A92: 0x56C3,
+    0x9A93: 0x56C0,
+    0x9A94: 0x56C8,
+    0x9A95: 0x56CE,
+    0x9A96: 0x56D1,
+    0x9A97: 0x56D3,
+    0x9A98: 0x56D7,
+    0x9A99: 0x56EE,
+    0x9A9A: 0x56F9,
+    0x9A9B: 0x5700,
+    0x9A9C: 0x56FF,
+    0x9A9D: 0x5704,
+    0x9A9E: 0x5709,
+    0x9A9F: 0x5708,
+    0x9AA0: 0x570B,
+    0x9AA1: 0x570D,
+    0x9AA2: 0x5713,
+    0x9AA3: 0x5718,
+    0x9AA4: 0x5716,
+    0x9AA5: 0x55C7,
+    0x9AA6: 0x571C,
+    0x9AA7: 0x5726,
+    0x9AA8: 0x5737,
+    0x9AA9: 0x5738,
+    0x9AAA: 0x574E,
+    0x9AAB: 0x573B,
+    0x9AAC: 0x5740,
+    0x9AAD: 0x574F,
+    0x9AAE: 0x5769,
+    0x9AAF: 0x57C0,
+    0x9AB0: 0x5788,
+    0x9AB1: 0x5761,
+    0x9AB2: 0x577F,
+    0x9AB3: 0x5789,
+    0x9AB4: 0x5793,
+    0x9AB5: 0x57A0,
+    0x9AB6: 0x57B3,
+    0x9AB7: 0x57A4,
+    0x9AB8: 0x57AA,
+    0x9AB9: 0x57B0,
+    0x9ABA: 0x57C3,
+    0x9ABB: 0x57C6,
+    0x9ABC: 0x57D4,
+    0x9ABD: 0x57D2,
+    0x9ABE: 0x57D3,
+    0x9ABF: 0x580A,
+    0x9AC0: 0x57D6,
+    0x9AC1: 0x57E3,
+    0x9AC2: 0x580B,
+    0x9AC3: 0x5819,
+    0x9AC4: 0x581D,
+    0x9AC5: 0x5872,
+    0x9AC6: 0x5821,
+    0x9AC7: 0x5862,
+    0x9AC8: 0x584B,
+    0x9AC9: 0x5870,
+    0x9ACA: 0x6BC0,
+    0x9ACB: 0x5852,
+    0x9ACC: 0x583D,
+    0x9ACD: 0x5879,
+    0x9ACE: 0x5885,
+    0x9ACF: 0x58B9,
+    0x9AD0: 0x589F,
+    0x9AD1: 0x58AB,
+    0x9AD2: 0x58BA,
+    0x9AD3: 0x58DE,
+    0x9AD4: 0x58BB,
+    0x9AD5: 0x58B8,
+    0x9AD6: 0x58AE,
+    0x9AD7: 0x58C5,
+    0x9AD8: 0x58D3,
+    0x9AD9: 0x58D1,
+    0x9ADA: 0x58D7,
+    0x9ADB: 0x58D9,
+    0x9ADC: 0x58D8,
+    0x9ADD: 0x58E5,
+    0x9ADE: 0x58DC,
+    0x9ADF: 0x58E4,
+    0x9AE0: 0x58DF,
+    0x9AE1: 0x58EF,
+    0x9AE2: 0x58FA,
+    0x9AE3: 0x58F9,
+    0x9AE4: 0x58FB,
+    0x9AE5: 0x58FC,
+    0x9AE6: 0x58FD,
+    0x9AE7: 0x5902,
+    0x9AE8: 0x590A,
+    0x9AE9: 0x5910,
+    0x9AEA: 0x591B,
+    0x9AEB: 0x68A6,
+    0x9AEC: 0x5925,
+    0x9AED: 0x592C,
+    0x9AEE: 0x592D,
+    0x9AEF: 0x5932,
+    0x9AF0: 0x5938,
+    0x9AF1: 0x593E,
+    0x9AF2: 0x7AD2,
+    0x9AF3: 0x5955,
+    0x9AF4: 0x5950,
+    0x9AF5: 0x594E,
+    0x9AF6: 0x595A,
+    0x9AF7: 0x5958,
+    0x9AF8: 0x5962,
+    0x9AF9: 0x5960,
+    0x9AFA: 0x5967,
+    0x9AFB: 0x596C,
+    0x9AFC: 0x5969,
+    0x9B40: 0x5978,
+    0x9B41: 0x5981,
+    0x9B42: 0x599D,
+    0x9B43: 0x4F5E,
+    0x9B44: 0x4FAB,
+    0x9B45: 0x59A3,
+    0x9B46: 0x59B2,
+    0x9B47: 0x59C6,
+    0x9B48: 0x59E8,
+    0x9B49: 0x59DC,
+    0x9B4A: 0x598D,
+    0x9B4B: 0x59D9,
+    0x9B4C: 0x59DA,
+    0x9B4D: 0x5A25,
+    0x9B4E: 0x5A1F,
+    0x9B4F: 0x5A11,
+    0x9B50: 0x5A1C,
+    0x9B51: 0x5A09,
+    0x9B52: 0x5A1A,
+    0x9B53: 0x5A40,
+    0x9B54: 0x5A6C,
+    0x9B55: 0x5A49,
+    0x9B56: 0x5A35,
+    0x9B57: 0x5A36,
+    0x9B58: 0x5A62,
+    0x9B59: 0x5A6A,
+    0x9B5A: 0x5A9A,
+    0x9B5B: 0x5ABC,
+    0x9B5C: 0x5ABE,
+    0x9B5D: 0x5ACB,
+    0x9B5E: 0x5AC2,
+    0x9B5F: 0x5ABD,
+    0x9B60: 0x5AE3,
+    0x9B61: 0x5AD7,
+    0x9B62: 0x5AE6,
+    0x9B63: 0x5AE9,
+    0x9B64: 0x5AD6,
+    0x9B65: 0x5AFA,
+    0x9B66: 0x5AFB,
+    0x9B67: 0x5B0C,
+    0x9B68: 0x5B0B,
+    0x9B69: 0x5B16,
+    0x9B6A: 0x5B32,
+    0x9B6B: 0x5AD0,
+    0x9B6C: 0x5B2A,
+    0x9B6D: 0x5B36,
+    0x9B6E: 0x5B3E,
+    0x9B6F: 0x5B43,
+    0x9B70: 0x5B45,
+    0x9B71: 0x5B40,
+    0x9B72: 0x5B51,
+    0x9B73: 0x5B55,
+    0x9B74: 0x5B5A,
+    0x9B75: 0x5B5B,
+    0x9B76: 0x5B65,
+    0x9B77: 0x5B69,
+    0x9B78: 0x5B70,
+    0x9B79: 0x5B73,
+    0x9B7A: 0x5B75,
+    0x9B7B: 0x5B78,
+    0x9B7C: 0x6588,
+    0x9B7D: 0x5B7A,
+    0x9B7E: 0x5B80,
+    0x9B80: 0x5B83,
+    0x9B81: 0x5BA6,
+    0x9B82: 0x5BB8,
+    0x9B83: 0x5BC3,
+    0x9B84: 0x5BC7,
+    0x9B85: 0x5BC9,
+    0x9B86: 0x5BD4,
+    0x9B87: 0x5BD0,
+    0x9B88: 0x5BE4,
+    0x9B89: 0x5BE6,
+    0x9B8A: 0x5BE2,
+    0x9B8B: 0x5BDE,
+    0x9B8C: 0x5BE5,
+    0x9B8D: 0x5BEB,
+    0x9B8E: 0x5BF0,
+    0x9B8F: 0x5BF6,
+    0x9B90: 0x5BF3,
+    0x9B91: 0x5C05,
+    0x9B92: 0x5C07,
+    0x9B93: 0x5C08,
+    0x9B94: 0x5C0D,
+    0x9B95: 0x5C13,
+    0x9B96: 0x5C20,
+    0x9B97: 0x5C22,
+    0x9B98: 0x5C28,
+    0x9B99: 0x5C38,
+    0x9B9A: 0x5C39,
+    0x9B9B: 0x5C41,
+    0x9B9C: 0x5C46,
+    0x9B9D: 0x5C4E,
+    0x9B9E: 0x5C53,
+    0x9B9F: 0x5C50,
+    0x9BA0: 0x5C4F,
+    0x9BA1: 0x5B71,
+    0x9BA2: 0x5C6C,
+    0x9BA3: 0x5C6E,
+    0x9BA4: 0x4E62,
+    0x9BA5: 0x5C76,
+    0x9BA6: 0x5C79,
+    0x9BA7: 0x5C8C,
+    0x9BA8: 0x5C91,
+    0x9BA9: 0x5C94,
+    0x9BAA: 0x599B,
+    0x9BAB: 0x5CAB,
+    0x9BAC: 0x5CBB,
+    0x9BAD: 0x5CB6,
+    0x9BAE: 0x5CBC,
+    0x9BAF: 0x5CB7,
+    0x9BB0: 0x5CC5,
+    0x9BB1: 0x5CBE,
+    0x9BB2: 0x5CC7,
+    0x9BB3: 0x5CD9,
+    0x9BB4: 0x5CE9,
+    0x9BB5: 0x5CFD,
+    0x9BB6: 0x5CFA,
+    0x9BB7: 0x5CED,
+    0x9BB8: 0x5D8C,
+    0x9BB9: 0x5CEA,
+    0x9BBA: 0x5D0B,
+    0x9BBB: 0x5D15,
+    0x9BBC: 0x5D17,
+    0x9BBD: 0x5D5C,
+    0x9BBE: 0x5D1F,
+    0x9BBF: 0x5D1B,
+    0x9BC0: 0x5D11,
+    0x9BC1: 0x5D14,
+    0x9BC2: 0x5D22,
+    0x9BC3: 0x5D1A,
+    0x9BC4: 0x5D19,
+    0x9BC5: 0x5D18,
+    0x9BC6: 0x5D4C,
+    0x9BC7: 0x5D52,
+    0x9BC8: 0x5D4E,
+    0x9BC9: 0x5D4B,
+    0x9BCA: 0x5D6C,
+    0x9BCB: 0x5D73,
+    0x9BCC: 0x5D76,
+    0x9BCD: 0x5D87,
+    0x9BCE: 0x5D84,
+    0x9BCF: 0x5D82,
+    0x9BD0: 0x5DA2,
+    0x9BD1: 0x5D9D,
+    0x9BD2: 0x5DAC,
+    0x9BD3: 0x5DAE,
+    0x9BD4: 0x5DBD,
+    0x9BD5: 0x5D90,
+    0x9BD6: 0x5DB7,
+    0x9BD7: 0x5DBC,
+    0x9BD8: 0x5DC9,
+    0x9BD9: 0x5DCD,
+    0x9BDA: 0x5DD3,
+    0x9BDB: 0x5DD2,
+    0x9BDC: 0x5DD6,
+    0x9BDD: 0x5DDB,
+    0x9BDE: 0x5DEB,
+    0x9BDF: 0x5DF2,
+    0x9BE0: 0x5DF5,
+    0x9BE1: 0x5E0B,
+    0x9BE2: 0x5E1A,
+    0x9BE3: 0x5E19,
+    0x9BE4: 0x5E11,
+    0x9BE5: 0x5E1B,
+    0x9BE6: 0x5E36,
+    0x9BE7: 0x5E37,
+    0x9BE8: 0x5E44,
+    0x9BE9: 0x5E43,
+    0x9BEA: 0x5E40,
+    0x9BEB: 0x5E4E,
+    0x9BEC: 0x5E57,
+    0x9BED: 0x5E54,
+    0x9BEE: 0x5E5F,
+    0x9BEF: 0x5E62,
+    0x9BF0: 0x5E64,
+    0x9BF1: 0x5E47,
+    0x9BF2: 0x5E75,
+    0x9BF3: 0x5E76,
+    0x9BF4: 0x5E7A,
+    0x9BF5: 0x9EBC,
+    0x9BF6: 0x5E7F,
+    0x9BF7: 0x5EA0,
+    0x9BF8: 0x5EC1,
+    0x9BF9: 0x5EC2,
+    0x9BFA: 0x5EC8,
+    0x9BFB: 0x5ED0,
+    0x9BFC: 0x5ECF,
+    0x9C40: 0x5ED6,
+    0x9C41: 0x5EE3,
+    0x9C42: 0x5EDD,
+    0x9C43: 0x5EDA,
+    0x9C44: 0x5EDB,
+    0x9C45: 0x5EE2,
+    0x9C46: 0x5EE1,
+    0x9C47: 0x5EE8,
+    0x9C48: 0x5EE9,
+    0x9C49: 0x5EEC,
+    0x9C4A: 0x5EF1,
+    0x9C4B: 0x5EF3,
+    0x9C4C: 0x5EF0,
+    0x9C4D: 0x5EF4,
+    0x9C4E: 0x5EF8,
+    0x9C4F: 0x5EFE,
+    0x9C50: 0x5F03,
+    0x9C51: 0x5F09,
+    0x9C52: 0x5F5D,
+    0x9C53: 0x5F5C,
+    0x9C54: 0x5F0B,
+    0x9C55: 0x5F11,
+    0x9C56: 0x5F16,
+    0x9C57: 0x5F29,
+    0x9C58: 0x5F2D,
+    0x9C59: 0x5F38,
+    0x9C5A: 0x5F41,
+    0x9C5B: 0x5F48,
+    0x9C5C: 0x5F4C,
+    0x9C5D: 0x5F4E,
+    0x9C5E: 0x5F2F,
+    0x9C5F: 0x5F51,
+    0x9C60: 0x5F56,
+    0x9C61: 0x5F57,
+    0x9C62: 0x5F59,
+    0x9C63: 0x5F61,
+    0x9C64: 0x5F6D,
+    0x9C65: 0x5F73,
+    0x9C66: 0x5F77,
+    0x9C67: 0x5F83,
+    0x9C68: 0x5F82,
+    0x9C69: 0x5F7F,
+    0x9C6A: 0x5F8A,
+    0x9C6B: 0x5F88,
+    0x9C6C: 0x5F91,
+    0x9C6D: 0x5F87,
+    0x9C6E: 0x5F9E,
+    0x9C6F: 0x5F99,
+    0x9C70: 0x5F98,
+    0x9C71: 0x5FA0,
+    0x9C72: 0x5FA8,
+    0x9C73: 0x5FAD,
+    0x9C74: 0x5FBC,
+    0x9C75: 0x5FD6,
+    0x9C76: 0x5FFB,
+    0x9C77: 0x5FE4,
+    0x9C78: 0x5FF8,
+    0x9C79: 0x5FF1,
+    0x9C7A: 0x5FDD,
+    0x9C7B: 0x60B3,
+    0x9C7C: 0x5FFF,
+    0x9C7D: 0x6021,
+    0x9C7E: 0x6060,
+    0x9C80: 0x6019,
+    0x9C81: 0x6010,
+    0x9C82: 0x6029,
+    0x9C83: 0x600E,
+    0x9C84: 0x6031,
+    0x9C85: 0x601B,
+    0x9C86: 0x6015,
+    0x9C87: 0x602B,
+    0x9C88: 0x6026,
+    0x9C89: 0x600F,
+    0x9C8A: 0x603A,
+    0x9C8B: 0x605A,
+    0x9C8C: 0x6041,
+    0x9C8D: 0x606A,
+    0x9C8E: 0x6077,
+    0x9C8F: 0x605F,
+    0x9C90: 0x604A,
+    0x9C91: 0x6046,
+    0x9C92: 0x604D,
+    0x9C93: 0x6063,
+    0x9C94: 0x6043,
+    0x9C95: 0x6064,
+    0x9C96: 0x6042,
+    0x9C97: 0x606C,
+    0x9C98: 0x606B,
+    0x9C99: 0x6059,
+    0x9C9A: 0x6081,
+    0x9C9B: 0x608D,
+    0x9C9C: 0x60E7,
+    0x9C9D: 0x6083,
+    0x9C9E: 0x609A,
+    0x9C9F: 0x6084,
+    0x9CA0: 0x609B,
+    0x9CA1: 0x6096,
+    0x9CA2: 0x6097,
+    0x9CA3: 0x6092,
+    0x9CA4: 0x60A7,
+    0x9CA5: 0x608B,
+    0x9CA6: 0x60E1,
+    0x9CA7: 0x60B8,
+    0x9CA8: 0x60E0,
+    0x9CA9: 0x60D3,
+    0x9CAA: 0x60B4,
+    0x9CAB: 0x5FF0,
+    0x9CAC: 0x60BD,
+    0x9CAD: 0x60C6,
+    0x9CAE: 0x60B5,
+    0x9CAF: 0x60D8,
+    0x9CB0: 0x614D,
+    0x9CB1: 0x6115,
+    0x9CB2: 0x6106,
+    0x9CB3: 0x60F6,
+    0x9CB4: 0x60F7,
+    0x9CB5: 0x6100,
+    0x9CB6: 0x60F4,
+    0x9CB7: 0x60FA,
+    0x9CB8: 0x6103,
+    0x9CB9: 0x6121,
+    0x9CBA: 0x60FB,
+    0x9CBB: 0x60F1,
+    0x9CBC: 0x610D,
+    0x9CBD: 0x610E,
+    0x9CBE: 0x6147,
+    0x9CBF: 0x613E,
+    0x9CC0: 0x6128,
+    0x9CC1: 0x6127,
+    0x9CC2: 0x614A,
+    0x9CC3: 0x613F,
+    0x9CC4: 0x613C,
+    0x9CC5: 0x612C,
+    0x9CC6: 0x6134,
+    0x9CC7: 0x613D,
+    0x9CC8: 0x6142,
+    0x9CC9: 0x6144,
+    0x9CCA: 0x6173,
+    0x9CCB: 0x6177,
+    0x9CCC: 0x6158,
+    0x9CCD: 0x6159,
+    0x9CCE: 0x615A,
+    0x9CCF: 0x616B,
+    0x9CD0: 0x6174,
+    0x9CD1: 0x616F,
+    0x9CD2: 0x6165,
+    0x9CD3: 0x6171,
+    0x9CD4: 0x615F,
+    0x9CD5: 0x615D,
+    0x9CD6: 0x6153,
+    0x9CD7: 0x6175,
+    0x9CD8: 0x6199,
+    0x9CD9: 0x6196,
+    0x9CDA: 0x6187,
+    0x9CDB: 0x61AC,
+    0x9CDC: 0x6194,
+    0x9CDD: 0x619A,
+    0x9CDE: 0x618A,
+    0x9CDF: 0x6191,
+    0x9CE0: 0x61AB,
+    0x9CE1: 0x61AE,
+    0x9CE2: 0x61CC,
+    0x9CE3: 0x61CA,
+    0x9CE4: 0x61C9,
+    0x9CE5: 0x61F7,
+    0x9CE6: 0x61C8,
+    0x9CE7: 0x61C3,
+    0x9CE8: 0x61C6,
+    0x9CE9: 0x61BA,
+    0x9CEA: 0x61CB,
+    0x9CEB: 0x7F79,
+    0x9CEC: 0x61CD,
+    0x9CED: 0x61E6,
+    0x9CEE: 0x61E3,
+    0x9CEF: 0x61F6,
+    0x9CF0: 0x61FA,
+    0x9CF1: 0x61F4,
+    0x9CF2: 0x61FF,
+    0x9CF3: 0x61FD,
+    0x9CF4: 0x61FC,
+    0x9CF5: 0x61FE,
+    0x9CF6: 0x6200,
+    0x9CF7: 0x6208,
+    0x9CF8: 0x6209,
+    0x9CF9: 0x620D,
+    0x9CFA: 0x620C,
+    0x9CFB: 0x6214,
+    0x9CFC: 0x621B,
+    0x9D40: 0x621E,
+    0x9D41: 0x6221,
+    0x9D42: 0x622A,
+    0x9D43: 0x622E,
+    0x9D44: 0x6230,
+    0x9D45: 0x6232,
+    0x9D46: 0x6233,
+    0x9D47: 0x6241,
+    0x9D48: 0x624E,
+    0x9D49: 0x625E,
+    0x9D4A: 0x6263,
+    0x9D4B: 0x625B,
+    0x9D4C: 0x6260,
+    0x9D4D: 0x6268,
+    0x9D4E: 0x627C,
+    0x9D4F: 0x6282,
+    0x9D50: 0x6289,
+    0x9D51: 0x627E,
+    0x9D52: 0x6292,
+    0x9D53: 0x6293,
+    0x9D54: 0x6296,
+    0x9D55: 0x62D4,
+    0x9D56: 0x6283,
+    0x9D57: 0x6294,
+    0x9D58: 0x62D7,
+    0x9D59: 0x62D1,
+    0x9D5A: 0x62BB,
+    0x9D5B: 0x62CF,
+    0x9D5C: 0x62FF,
+    0x9D5D: 0x62C6,
+    0x9D5E: 0x64D4,
+    0x9D5F: 0x62C8,
+    0x9D60: 0x62DC,
+    0x9D61: 0x62CC,
+    0x9D62: 0x62CA,
+    0x9D63: 0x62C2,
+    0x9D64: 0x62C7,
+    0x9D65: 0x629B,
+    0x9D66: 0x62C9,
+    0x9D67: 0x630C,
+    0x9D68: 0x62EE,
+    0x9D69: 0x62F1,
+    0x9D6A: 0x6327,
+    0x9D6B: 0x6302,
+    0x9D6C: 0x6308,
+    0x9D6D: 0x62EF,
+    0x9D6E: 0x62F5,
+    0x9D6F: 0x6350,
+    0x9D70: 0x633E,
+    0x9D71: 0x634D,
+    0x9D72: 0x641C,
+    0x9D73: 0x634F,
+    0x9D74: 0x6396,
+    0x9D75: 0x638E,
+    0x9D76: 0x6380,
+    0x9D77: 0x63AB,
+    0x9D78: 0x6376,
+    0x9D79: 0x63A3,
+    0x9D7A: 0x638F,
+    0x9D7B: 0x6389,
+    0x9D7C: 0x639F,
+    0x9D7D: 0x63B5,
+    0x9D7E: 0x636B,
+    0x9D80: 0x6369,
+    0x9D81: 0x63BE,
+    0x9D82: 0x63E9,
+    0x9D83: 0x63C0,
+    0x9D84: 0x63C6,
+    0x9D85: 0x63E3,
+    0x9D86: 0x63C9,
+    0x9D87: 0x63D2,
+    0x9D88: 0x63F6,
+    0x9D89: 0x63C4,
+    0x9D8A: 0x6416,
+    0x9D8B: 0x6434,
+    0x9D8C: 0x6406,
+    0x9D8D: 0x6413,
+    0x9D8E: 0x6426,
+    0x9D8F: 0x6436,
+    0x9D90: 0x651D,
+    0x9D91: 0x6417,
+    0x9D92: 0x6428,
+    0x9D93: 0x640F,
+    0x9D94: 0x6467,
+    0x9D95: 0x646F,
+    0x9D96: 0x6476,
+    0x9D97: 0x644E,
+    0x9D98: 0x652A,
+    0x9D99: 0x6495,
+    0x9D9A: 0x6493,
+    0x9D9B: 0x64A5,
+    0x9D9C: 0x64A9,
+    0x9D9D: 0x6488,
+    0x9D9E: 0x64BC,
+    0x9D9F: 0x64DA,
+    0x9DA0: 0x64D2,
+    0x9DA1: 0x64C5,
+    0x9DA2: 0x64C7,
+    0x9DA3: 0x64BB,
+    0x9DA4: 0x64D8,
+    0x9DA5: 0x64C2,
+    0x9DA6: 0x64F1,
+    0x9DA7: 0x64E7,
+    0x9DA8: 0x8209,
+    0x9DA9: 0x64E0,
+    0x9DAA: 0x64E1,
+    0x9DAB: 0x62AC,
+    0x9DAC: 0x64E3,
+    0x9DAD: 0x64EF,
+    0x9DAE: 0x652C,
+    0x9DAF: 0x64F6,
+    0x9DB0: 0x64F4,
+    0x9DB1: 0x64F2,
+    0x9DB2: 0x64FA,
+    0x9DB3: 0x6500,
+    0x9DB4: 0x64FD,
+    0x9DB5: 0x6518,
+    0x9DB6: 0x651C,
+    0x9DB7: 0x6505,
+    0x9DB8: 0x6524,
+    0x9DB9: 0x6523,
+    0x9DBA: 0x652B,
+    0x9DBB: 0x6534,
+    0x9DBC: 0x6535,
+    0x9DBD: 0x6537,
+    0x9DBE: 0x6536,
+    0x9DBF: 0x6538,
+    0x9DC0: 0x754B,
+    0x9DC1: 0x6548,
+    0x9DC2: 0x6556,
+    0x9DC3: 0x6555,
+    0x9DC4: 0x654D,
+    0x9DC5: 0x6558,
+    0x9DC6: 0x655E,
+    0x9DC7: 0x655D,
+    0x9DC8: 0x6572,
+    0x9DC9: 0x6578,
+    0x9DCA: 0x6582,
+    0x9DCB: 0x6583,
+    0x9DCC: 0x8B8A,
+    0x9DCD: 0x659B,
+    0x9DCE: 0x659F,
+    0x9DCF: 0x65AB,
+    0x9DD0: 0x65B7,
+    0x9DD1: 0x65C3,
+    0x9DD2: 0x65C6,
+    0x9DD3: 0x65C1,
+    0x9DD4: 0x65C4,
+    0x9DD5: 0x65CC,
+    0x9DD6: 0x65D2,
+    0x9DD7: 0x65DB,
+    0x9DD8: 0x65D9,
+    0x9DD9: 0x65E0,
+    0x9DDA: 0x65E1,
+    0x9DDB: 0x65F1,
+    0x9DDC: 0x6772,
+    0x9DDD: 0x660A,
+    0x9DDE: 0x6603,
+    0x9DDF: 0x65FB,
+    0x9DE0: 0x6773,
+    0x9DE1: 0x6635,
+    0x9DE2: 0x6636,
+    0x9DE3: 0x6634,
+    0x9DE4: 0x661C,
+    0x9DE5: 0x664F,
+    0x9DE6: 0x6644,
+    0x9DE7: 0x6649,
+    0x9DE8: 0x6641,
+    0x9DE9: 0x665E,
+    0x9DEA: 0x665D,
+    0x9DEB: 0x6664,
+    0x9DEC: 0x6667,
+    0x9DED: 0x6668,
+    0x9DEE: 0x665F,
+    0x9DEF: 0x6662,
+    0x9DF0: 0x6670,
+    0x9DF1: 0x6683,
+    0x9DF2: 0x6688,
+    0x9DF3: 0x668E,
+    0x9DF4: 0x6689,
+    0x9DF5: 0x6684,
+    0x9DF6: 0x6698,
+    0x9DF7: 0x669D,
+    0x9DF8: 0x66C1,
+    0x9DF9: 0x66B9,
+    0x9DFA: 0x66C9,
+    0x9DFB: 0x66BE,
+    0x9DFC: 0x66BC,
+    0x9E40: 0x66C4,
+    0x9E41: 0x66B8,
+    0x9E42: 0x66D6,
+    0x9E43: 0x66DA,
+    0x9E44: 0x66E0,
+    0x9E45: 0x663F,
+    0x9E46: 0x66E6,
+    0x9E47: 0x66E9,
+    0x9E48: 0x66F0,
+    0x9E49: 0x66F5,
+    0x9E4A: 0x66F7,
+    0x9E4B: 0x670F,
+    0x9E4C: 0x6716,
+    0x9E4D: 0x671E,
+    0x9E4E: 0x6726,
+    0x9E4F: 0x6727,
+    0x9E50: 0x9738,
+    0x9E51: 0x672E,
+    0x9E52: 0x673F,
+    0x9E53: 0x6736,
+    0x9E54: 0x6741,
+    0x9E55: 0x6738,
+    0x9E56: 0x6737,
+    0x9E57: 0x6746,
+    0x9E58: 0x675E,
+    0x9E59: 0x6760,
+    0x9E5A: 0x6759,
+    0x9E5B: 0x6763,
+    0x9E5C: 0x6764,
+    0x9E5D: 0x6789,
+    0x9E5E: 0x6770,
+    0x9E5F: 0x67A9,
+    0x9E60: 0x677C,
+    0x9E61: 0x676A,
+    0x9E62: 0x678C,
+    0x9E63: 0x678B,
+    0x9E64: 0x67A6,
+    0x9E65: 0x67A1,
+    0x9E66: 0x6785,
+    0x9E67: 0x67B7,
+    0x9E68: 0x67EF,
+    0x9E69: 0x67B4,
+    0x9E6A: 0x67EC,
+    0x9E6B: 0x67B3,
+    0x9E6C: 0x67E9,
+    0x9E6D: 0x67B8,
+    0x9E6E: 0x67E4,
+    0x9E6F: 0x67DE,
+    0x9E70: 0x67DD,
+    0x9E71: 0x67E2,
+    0x9E72: 0x67EE,
+    0x9E73: 0x67B9,
+    0x9E74: 0x67CE,
+    0x9E75: 0x67C6,
+    0x9E76: 0x67E7,
+    0x9E77: 0x6A9C,
+    0x9E78: 0x681E,
+    0x9E79: 0x6846,
+    0x9E7A: 0x6829,
+    0x9E7B: 0x6840,
+    0x9E7C: 0x684D,
+    0x9E7D: 0x6832,
+    0x9E7E: 0x684E,
+    0x9E80: 0x68B3,
+    0x9E81: 0x682B,
+    0x9E82: 0x6859,
+    0x9E83: 0x6863,
+    0x9E84: 0x6877,
+    0x9E85: 0x687F,
+    0x9E86: 0x689F,
+    0x9E87: 0x688F,
+    0x9E88: 0x68AD,
+    0x9E89: 0x6894,
+    0x9E8A: 0x689D,
+    0x9E8B: 0x689B,
+    0x9E8C: 0x6883,
+    0x9E8D: 0x6AAE,
+    0x9E8E: 0x68B9,
+    0x9E8F: 0x6874,
+    0x9E90: 0x68B5,
+    0x9E91: 0x68A0,
+    0x9E92: 0x68BA,
+    0x9E93: 0x690F,
+    0x9E94: 0x688D,
+    0x9E95: 0x687E,
+    0x9E96: 0x6901,
+    0x9E97: 0x68CA,
+    0x9E98: 0x6908,
+    0x9E99: 0x68D8,
+    0x9E9A: 0x6922,
+    0x9E9B: 0x6926,
+    0x9E9C: 0x68E1,
+    0x9E9D: 0x690C,
+    0x9E9E: 0x68CD,
+    0x9E9F: 0x68D4,
+    0x9EA0: 0x68E7,
+    0x9EA1: 0x68D5,
+    0x9EA2: 0x6936,
+    0x9EA3: 0x6912,
+    0x9EA4: 0x6904,
+    0x9EA5: 0x68D7,
+    0x9EA6: 0x68E3,
+    0x9EA7: 0x6925,
+    0x9EA8: 0x68F9,
+    0x9EA9: 0x68E0,
+    0x9EAA: 0x68EF,
+    0x9EAB: 0x6928,
+    0x9EAC: 0x692A,
+    0x9EAD: 0x691A,
+    0x9EAE: 0x6923,
+    0x9EAF: 0x6921,
+    0x9EB0: 0x68C6,
+    0x9EB1: 0x6979,
+    0x9EB2: 0x6977,
+    0x9EB3: 0x695C,
+    0x9EB4: 0x6978,
+    0x9EB5: 0x696B,
+    0x9EB6: 0x6954,
+    0x9EB7: 0x697E,
+    0x9EB8: 0x696E,
+    0x9EB9: 0x6939,
+    0x9EBA: 0x6974,
+    0x9EBB: 0x693D,
+    0x9EBC: 0x6959,
+    0x9EBD: 0x6930,
+    0x9EBE: 0x6961,
+    0x9EBF: 0x695E,
+    0x9EC0: 0x695D,
+    0x9EC1: 0x6981,
+    0x9EC2: 0x696A,
+    0x9EC3: 0x69B2,
+    0x9EC4: 0x69AE,
+    0x9EC5: 0x69D0,
+    0x9EC6: 0x69BF,
+    0x9EC7: 0x69C1,
+    0x9EC8: 0x69D3,
+    0x9EC9: 0x69BE,
+    0x9ECA: 0x69CE,
+    0x9ECB: 0x5BE8,
+    0x9ECC: 0x69CA,
+    0x9ECD: 0x69DD,
+    0x9ECE: 0x69BB,
+    0x9ECF: 0x69C3,
+    0x9ED0: 0x69A7,
+    0x9ED1: 0x6A2E,
+    0x9ED2: 0x6991,
+    0x9ED3: 0x69A0,
+    0x9ED4: 0x699C,
+    0x9ED5: 0x6995,
+    0x9ED6: 0x69B4,
+    0x9ED7: 0x69DE,
+    0x9ED8: 0x69E8,
+    0x9ED9: 0x6A02,
+    0x9EDA: 0x6A1B,
+    0x9EDB: 0x69FF,
+    0x9EDC: 0x6B0A,
+    0x9EDD: 0x69F9,
+    0x9EDE: 0x69F2,
+    0x9EDF: 0x69E7,
+    0x9EE0: 0x6A05,
+    0x9EE1: 0x69B1,
+    0x9EE2: 0x6A1E,
+    0x9EE3: 0x69ED,
+    0x9EE4: 0x6A14,
+    0x9EE5: 0x69EB,
+    0x9EE6: 0x6A0A,
+    0x9EE7: 0x6A12,
+    0x9EE8: 0x6AC1,
+    0x9EE9: 0x6A23,
+    0x9EEA: 0x6A13,
+    0x9EEB: 0x6A44,
+    0x9EEC: 0x6A0C,
+    0x9EED: 0x6A72,
+    0x9EEE: 0x6A36,
+    0x9EEF: 0x6A78,
+    0x9EF0: 0x6A47,
+    0x9EF1: 0x6A62,
+    0x9EF2: 0x6A59,
+    0x9EF3: 0x6A66,
+    0x9EF4: 0x6A48,
+    0x9EF5: 0x6A38,
+    0x9EF6: 0x6A22,
+    0x9EF7: 0x6A90,
+    0x9EF8: 0x6A8D,
+    0x9EF9: 0x6AA0,
+    0x9EFA: 0x6A84,
+    0x9EFB: 0x6AA2,
+    0x9EFC: 0x6AA3,
+    0x9F40: 0x6A97,
+    0x9F41: 0x8617,
+    0x9F42: 0x6ABB,
+    0x9F43: 0x6AC3,
+    0x9F44: 0x6AC2,
+    0x9F45: 0x6AB8,
+    0x9F46: 0x6AB3,
+    0x9F47: 0x6AAC,
+    0x9F48: 0x6ADE,
+    0x9F49: 0x6AD1,
+    0x9F4A: 0x6ADF,
+    0x9F4B: 0x6AAA,
+    0x9F4C: 0x6ADA,
+    0x9F4D: 0x6AEA,
+    0x9F4E: 0x6AFB,
+    0x9F4F: 0x6B05,
+    0x9F50: 0x8616,
+    0x9F51: 0x6AFA,
+    0x9F52: 0x6B12,
+    0x9F53: 0x6B16,
+    0x9F54: 0x9B31,
+    0x9F55: 0x6B1F,
+    0x9F56: 0x6B38,
+    0x9F57: 0x6B37,
+    0x9F58: 0x76DC,
+    0x9F59: 0x6B39,
+    0x9F5A: 0x98EE,
+    0x9F5B: 0x6B47,
+    0x9F5C: 0x6B43,
+    0x9F5D: 0x6B49,
+    0x9F5E: 0x6B50,
+    0x9F5F: 0x6B59,
+    0x9F60: 0x6B54,
+    0x9F61: 0x6B5B,
+    0x9F62: 0x6B5F,
+    0x9F63: 0x6B61,
+    0x9F64: 0x6B78,
+    0x9F65: 0x6B79,
+    0x9F66: 0x6B7F,
+    0x9F67: 0x6B80,
+    0x9F68: 0x6B84,
+    0x9F69: 0x6B83,
+    0x9F6A: 0x6B8D,
+    0x9F6B: 0x6B98,
+    0x9F6C: 0x6B95,
+    0x9F6D: 0x6B9E,
+    0x9F6E: 0x6BA4,
+    0x9F6F: 0x6BAA,
+    0x9F70: 0x6BAB,
+    0x9F71: 0x6BAF,
+    0x9F72: 0x6BB2,
+    0x9F73: 0x6BB1,
+    0x9F74: 0x6BB3,
+    0x9F75: 0x6BB7,
+    0x9F76: 0x6BBC,
+    0x9F77: 0x6BC6,
+    0x9F78: 0x6BCB,
+    0x9F79: 0x6BD3,
+    0x9F7A: 0x6BDF,
+    0x9F7B: 0x6BEC,
+    0x9F7C: 0x6BEB,
+    0x9F7D: 0x6BF3,
+    0x9F7E: 0x6BEF,
+    0x9F80: 0x9EBE,
+    0x9F81: 0x6C08,
+    0x9F82: 0x6C13,
+    0x9F83: 0x6C14,
+    0x9F84: 0x6C1B,
+    0x9F85: 0x6C24,
+    0x9F86: 0x6C23,
+    0x9F87: 0x6C5E,
+    0x9F88: 0x6C55,
+    0x9F89: 0x6C62,
+    0x9F8A: 0x6C6A,
+    0x9F8B: 0x6C82,
+    0x9F8C: 0x6C8D,
+    0x9F8D: 0x6C9A,
+    0x9F8E: 0x6C81,
+    0x9F8F: 0x6C9B,
+    0x9F90: 0x6C7E,
+    0x9F91: 0x6C68,
+    0x9F92: 0x6C73,
+    0x9F93: 0x6C92,
+    0x9F94: 0x6C90,
+    0x9F95: 0x6CC4,
+    0x9F96: 0x6CF1,
+    0x9F97: 0x6CD3,
+    0x9F98: 0x6CBD,
+    0x9F99: 0x6CD7,
+    0x9F9A: 0x6CC5,
+    0x9F9B: 0x6CDD,
+    0x9F9C: 0x6CAE,
+    0x9F9D: 0x6CB1,
+    0x9F9E: 0x6CBE,
+    0x9F9F: 0x6CBA,
+    0x9FA0: 0x6CDB,
+    0x9FA1: 0x6CEF,
+    0x9FA2: 0x6CD9,
+    0x9FA3: 0x6CEA,
+    0x9FA4: 0x6D1F,
+    0x9FA5: 0x884D,
+    0x9FA6: 0x6D36,
+    0x9FA7: 0x6D2B,
+    0x9FA8: 0x6D3D,
+    0x9FA9: 0x6D38,
+    0x9FAA: 0x6D19,
+    0x9FAB: 0x6D35,
+    0x9FAC: 0x6D33,
+    0x9FAD: 0x6D12,
+    0x9FAE: 0x6D0C,
+    0x9FAF: 0x6D63,
+    0x9FB0: 0x6D93,
+    0x9FB1: 0x6D64,
+    0x9FB2: 0x6D5A,
+    0x9FB3: 0x6D79,
+    0x9FB4: 0x6D59,
+    0x9FB5: 0x6D8E,
+    0x9FB6: 0x6D95,
+    0x9FB7: 0x6FE4,
+    0x9FB8: 0x6D85,
+    0x9FB9: 0x6DF9,
+    0x9FBA: 0x6E15,
+    0x9FBB: 0x6E0A,
+    0x9FBC: 0x6DB5,
+    0x9FBD: 0x6DC7,
+    0x9FBE: 0x6DE6,
+    0x9FBF: 0x6DB8,
+    0x9FC0: 0x6DC6,
+    0x9FC1: 0x6DEC,
+    0x9FC2: 0x6DDE,
+    0x9FC3: 0x6DCC,
+    0x9FC4: 0x6DE8,
+    0x9FC5: 0x6DD2,
+    0x9FC6: 0x6DC5,
+    0x9FC7: 0x6DFA,
+    0x9FC8: 0x6DD9,
+    0x9FC9: 0x6DE4,
+    0x9FCA: 0x6DD5,
+    0x9FCB: 0x6DEA,
+    0x9FCC: 0x6DEE,
+    0x9FCD: 0x6E2D,
+    0x9FCE: 0x6E6E,
+    0x9FCF: 0x6E2E,
+    0x9FD0: 0x6E19,
+    0x9FD1: 0x6E72,
+    0x9FD2: 0x6E5F,
+    0x9FD3: 0x6E3E,
+    0x9FD4: 0x6E23,
+    0x9FD5: 0x6E6B,
+    0x9FD6: 0x6E2B,
+    0x9FD7: 0x6E76,
+    0x9FD8: 0x6E4D,
+    0x9FD9: 0x6E1F,
+    0x9FDA: 0x6E43,
+    0x9FDB: 0x6E3A,
+    0x9FDC: 0x6E4E,
+    0x9FDD: 0x6E24,
+    0x9FDE: 0x6EFF,
+    0x9FDF: 0x6E1D,
+    0x9FE0: 0x6E38,
+    0x9FE1: 0x6E82,
+    0x9FE2: 0x6EAA,
+    0x9FE3: 0x6E98,
+    0x9FE4: 0x6EC9,
+    0x9FE5: 0x6EB7,
+    0x9FE6: 0x6ED3,
+    0x9FE7: 0x6EBD,
+    0x9FE8: 0x6EAF,
+    0x9FE9: 0x6EC4,
+    0x9FEA: 0x6EB2,
+    0x9FEB: 0x6ED4,
+    0x9FEC: 0x6ED5,
+    0x9FED: 0x6E8F,
+    0x9FEE: 0x6EA5,
+    0x9FEF: 0x6EC2,
+    0x9FF0: 0x6E9F,
+    0x9FF1: 0x6F41,
+    0x9FF2: 0x6F11,
+    0x9FF3: 0x704C,
+    0x9FF4: 0x6EEC,
+    0x9FF5: 0x6EF8,
+    0x9FF6: 0x6EFE,
+    0x9FF7: 0x6F3F,
+    0x9FF8: 0x6EF2,
+    0x9FF9: 0x6F31,
+    0x9FFA: 0x6EEF,
+    0x9FFB: 0x6F32,
+    0x9FFC: 0x6ECC,
+    0xA1: 0xFF61,
+    0xA2: 0xFF62,
+    0xA3: 0xFF63,
+    0xA4: 0xFF64,
+    0xA5: 0xFF65,
+    0xA6: 0xFF66,
+    0xA7: 0xFF67,
+    0xA8: 0xFF68,
+    0xA9: 0xFF69,
+    0xAA: 0xFF6A,
+    0xAB: 0xFF6B,
+    0xAC: 0xFF6C,
+    0xAD: 0xFF6D,
+    0xAE: 0xFF6E,
+    0xAF: 0xFF6F,
+    0xB0: 0xFF70,
+    0xB1: 0xFF71,
+    0xB2: 0xFF72,
+    0xB3: 0xFF73,
+    0xB4: 0xFF74,
+    0xB5: 0xFF75,
+    0xB6: 0xFF76,
+    0xB7: 0xFF77,
+    0xB8: 0xFF78,
+    0xB9: 0xFF79,
+    0xBA: 0xFF7A,
+    0xBB: 0xFF7B,
+    0xBC: 0xFF7C,
+    0xBD: 0xFF7D,
+    0xBE: 0xFF7E,
+    0xBF: 0xFF7F,
+    0xC0: 0xFF80,
+    0xC1: 0xFF81,
+    0xC2: 0xFF82,
+    0xC3: 0xFF83,
+    0xC4: 0xFF84,
+    0xC5: 0xFF85,
+    0xC6: 0xFF86,
+    0xC7: 0xFF87,
+    0xC8: 0xFF88,
+    0xC9: 0xFF89,
+    0xCA: 0xFF8A,
+    0xCB: 0xFF8B,
+    0xCC: 0xFF8C,
+    0xCD: 0xFF8D,
+    0xCE: 0xFF8E,
+    0xCF: 0xFF8F,
+    0xD0: 0xFF90,
+    0xD1: 0xFF91,
+    0xD2: 0xFF92,
+    0xD3: 0xFF93,
+    0xD4: 0xFF94,
+    0xD5: 0xFF95,
+    0xD6: 0xFF96,
+    0xD7: 0xFF97,
+    0xD8: 0xFF98,
+    0xD9: 0xFF99,
+    0xDA: 0xFF9A,
+    0xDB: 0xFF9B,
+    0xDC: 0xFF9C,
+    0xDD: 0xFF9D,
+    0xDE: 0xFF9E,
+    0xDF: 0xFF9F,
+    0xE040: 0x6F3E,
+    0xE041: 0x6F13,
+    0xE042: 0x6EF7,
+    0xE043: 0x6F86,
+    0xE044: 0x6F7A,
+    0xE045: 0x6F78,
+    0xE046: 0x6F81,
+    0xE047: 0x6F80,
+    0xE048: 0x6F6F,
+    0xE049: 0x6F5B,
+    0xE04A: 0x6FF3,
+    0xE04B: 0x6F6D,
+    0xE04C: 0x6F82,
+    0xE04D: 0x6F7C,
+    0xE04E: 0x6F58,
+    0xE04F: 0x6F8E,
+    0xE050: 0x6F91,
+    0xE051: 0x6FC2,
+    0xE052: 0x6F66,
+    0xE053: 0x6FB3,
+    0xE054: 0x6FA3,
+    0xE055: 0x6FA1,
+    0xE056: 0x6FA4,
+    0xE057: 0x6FB9,
+    0xE058: 0x6FC6,
+    0xE059: 0x6FAA,
+    0xE05A: 0x6FDF,
+    0xE05B: 0x6FD5,
+    0xE05C: 0x6FEC,
+    0xE05D: 0x6FD4,
+    0xE05E: 0x6FD8,
+    0xE05F: 0x6FF1,
+    0xE060: 0x6FEE,
+    0xE061: 0x6FDB,
+    0xE062: 0x7009,
+    0xE063: 0x700B,
+    0xE064: 0x6FFA,
+    0xE065: 0x7011,
+    0xE066: 0x7001,
+    0xE067: 0x700F,
+    0xE068: 0x6FFE,
+    0xE069: 0x701B,
+    0xE06A: 0x701A,
+    0xE06B: 0x6F74,
+    0xE06C: 0x701D,
+    0xE06D: 0x7018,
+    0xE06E: 0x701F,
+    0xE06F: 0x7030,
+    0xE070: 0x703E,
+    0xE071: 0x7032,
+    0xE072: 0x7051,
+    0xE073: 0x7063,
+    0xE074: 0x7099,
+    0xE075: 0x7092,
+    0xE076: 0x70AF,
+    0xE077: 0x70F1,
+    0xE078: 0x70AC,
+    0xE079: 0x70B8,
+    0xE07A: 0x70B3,
+    0xE07B: 0x70AE,
+    0xE07C: 0x70DF,
+    0xE07D: 0x70CB,
+    0xE07E: 0x70DD,
+    0xE080: 0x70D9,
+    0xE081: 0x7109,
+    0xE082: 0x70FD,
+    0xE083: 0x711C,
+    0xE084: 0x7119,
+    0xE085: 0x7165,
+    0xE086: 0x7155,
+    0xE087: 0x7188,
+    0xE088: 0x7166,
+    0xE089: 0x7162,
+    0xE08A: 0x714C,
+    0xE08B: 0x7156,
+    0xE08C: 0x716C,
+    0xE08D: 0x718F,
+    0xE08E: 0x71FB,
+    0xE08F: 0x7184,
+    0xE090: 0x7195,
+    0xE091: 0x71A8,
+    0xE092: 0x71AC,
+    0xE093: 0x71D7,
+    0xE094: 0x71B9,
+    0xE095: 0x71BE,
+    0xE096: 0x71D2,
+    0xE097: 0x71C9,
+    0xE098: 0x71D4,
+    0xE099: 0x71CE,
+    0xE09A: 0x71E0,
+    0xE09B: 0x71EC,
+    0xE09C: 0x71E7,
+    0xE09D: 0x71F5,
+    0xE09E: 0x71FC,
+    0xE09F: 0x71F9,
+    0xE0A0: 0x71FF,
+    0xE0A1: 0x720D,
+    0xE0A2: 0x7210,
+    0xE0A3: 0x721B,
+    0xE0A4: 0x7228,
+    0xE0A5: 0x722D,
+    0xE0A6: 0x722C,
+    0xE0A7: 0x7230,
+    0xE0A8: 0x7232,
+    0xE0A9: 0x723B,
+    0xE0AA: 0x723C,
+    0xE0AB: 0x723F,
+    0xE0AC: 0x7240,
+    0xE0AD: 0x7246,
+    0xE0AE: 0x724B,
+    0xE0AF: 0x7258,
+    0xE0B0: 0x7274,
+    0xE0B1: 0x727E,
+    0xE0B2: 0x7282,
+    0xE0B3: 0x7281,
+    0xE0B4: 0x7287,
+    0xE0B5: 0x7292,
+    0xE0B6: 0x7296,
+    0xE0B7: 0x72A2,
+    0xE0B8: 0x72A7,
+    0xE0B9: 0x72B9,
+    0xE0BA: 0x72B2,
+    0xE0BB: 0x72C3,
+    0xE0BC: 0x72C6,
+    0xE0BD: 0x72C4,
+    0xE0BE: 0x72CE,
+    0xE0BF: 0x72D2,
+    0xE0C0: 0x72E2,
+    0xE0C1: 0x72E0,
+    0xE0C2: 0x72E1,
+    0xE0C3: 0x72F9,
+    0xE0C4: 0x72F7,
+    0xE0C5: 0x500F,
+    0xE0C6: 0x7317,
+    0xE0C7: 0x730A,
+    0xE0C8: 0x731C,
+    0xE0C9: 0x7316,
+    0xE0CA: 0x731D,
+    0xE0CB: 0x7334,
+    0xE0CC: 0x732F,
+    0xE0CD: 0x7329,
+    0xE0CE: 0x7325,
+    0xE0CF: 0x733E,
+    0xE0D0: 0x734E,
+    0xE0D1: 0x734F,
+    0xE0D2: 0x9ED8,
+    0xE0D3: 0x7357,
+    0xE0D4: 0x736A,
+    0xE0D5: 0x7368,
+    0xE0D6: 0x7370,
+    0xE0D7: 0x7378,
+    0xE0D8: 0x7375,
+    0xE0D9: 0x737B,
+    0xE0DA: 0x737A,
+    0xE0DB: 0x73C8,
+    0xE0DC: 0x73B3,
+    0xE0DD: 0x73CE,
+    0xE0DE: 0x73BB,
+    0xE0DF: 0x73C0,
+    0xE0E0: 0x73E5,
+    0xE0E1: 0x73EE,
+    0xE0E2: 0x73DE,
+    0xE0E3: 0x74A2,
+    0xE0E4: 0x7405,
+    0xE0E5: 0x746F,
+    0xE0E6: 0x7425,
+    0xE0E7: 0x73F8,
+    0xE0E8: 0x7432,
+    0xE0E9: 0x743A,
+    0xE0EA: 0x7455,
+    0xE0EB: 0x743F,
+    0xE0EC: 0x745F,
+    0xE0ED: 0x7459,
+    0xE0EE: 0x7441,
+    0xE0EF: 0x745C,
+    0xE0F0: 0x7469,
+    0xE0F1: 0x7470,
+    0xE0F2: 0x7463,
+    0xE0F3: 0x746A,
+    0xE0F4: 0x7476,
+    0xE0F5: 0x747E,
+    0xE0F6: 0x748B,
+    0xE0F7: 0x749E,
+    0xE0F8: 0x74A7,
+    0xE0F9: 0x74CA,
+    0xE0FA: 0x74CF,
+    0xE0FB: 0x74D4,
+    0xE0FC: 0x73F1,
+    0xE140: 0x74E0,
+    0xE141: 0x74E3,
+    0xE142: 0x74E7,
+    0xE143: 0x74E9,
+    0xE144: 0x74EE,
+    0xE145: 0x74F2,
+    0xE146: 0x74F0,
+    0xE147: 0x74F1,
+    0xE148: 0x74F8,
+    0xE149: 0x74F7,
+    0xE14A: 0x7504,
+    0xE14B: 0x7503,
+    0xE14C: 0x7505,
+    0xE14D: 0x750C,
+    0xE14E: 0x750E,
+    0xE14F: 0x750D,
+    0xE150: 0x7515,
+    0xE151: 0x7513,
+    0xE152: 0x751E,
+    0xE153: 0x7526,
+    0xE154: 0x752C,
+    0xE155: 0x753C,
+    0xE156: 0x7544,
+    0xE157: 0x754D,
+    0xE158: 0x754A,
+    0xE159: 0x7549,
+    0xE15A: 0x755B,
+    0xE15B: 0x7546,
+    0xE15C: 0x755A,
+    0xE15D: 0x7569,
+    0xE15E: 0x7564,
+    0xE15F: 0x7567,
+    0xE160: 0x756B,
+    0xE161: 0x756D,
+    0xE162: 0x7578,
+    0xE163: 0x7576,
+    0xE164: 0x7586,
+    0xE165: 0x7587,
+    0xE166: 0x7574,
+    0xE167: 0x758A,
+    0xE168: 0x7589,
+    0xE169: 0x7582,
+    0xE16A: 0x7594,
+    0xE16B: 0x759A,
+    0xE16C: 0x759D,
+    0xE16D: 0x75A5,
+    0xE16E: 0x75A3,
+    0xE16F: 0x75C2,
+    0xE170: 0x75B3,
+    0xE171: 0x75C3,
+    0xE172: 0x75B5,
+    0xE173: 0x75BD,
+    0xE174: 0x75B8,
+    0xE175: 0x75BC,
+    0xE176: 0x75B1,
+    0xE177: 0x75CD,
+    0xE178: 0x75CA,
+    0xE179: 0x75D2,
+    0xE17A: 0x75D9,
+    0xE17B: 0x75E3,
+    0xE17C: 0x75DE,
+    0xE17D: 0x75FE,
+    0xE17E: 0x75FF,
+    0xE180: 0x75FC,
+    0xE181: 0x7601,
+    0xE182: 0x75F0,
+    0xE183: 0x75FA,
+    0xE184: 0x75F2,
+    0xE185: 0x75F3,
+    0xE186: 0x760B,
+    0xE187: 0x760D,
+    0xE188: 0x7609,
+    0xE189: 0x761F,
+    0xE18A: 0x7627,
+    0xE18B: 0x7620,
+    0xE18C: 0x7621,
+    0xE18D: 0x7622,
+    0xE18E: 0x7624,
+    0xE18F: 0x7634,
+    0xE190: 0x7630,
+    0xE191: 0x763B,
+    0xE192: 0x7647,
+    0xE193: 0x7648,
+    0xE194: 0x7646,
+    0xE195: 0x765C,
+    0xE196: 0x7658,
+    0xE197: 0x7661,
+    0xE198: 0x7662,
+    0xE199: 0x7668,
+    0xE19A: 0x7669,
+    0xE19B: 0x766A,
+    0xE19C: 0x7667,
+    0xE19D: 0x766C,
+    0xE19E: 0x7670,
+    0xE19F: 0x7672,
+    0xE1A0: 0x7676,
+    0xE1A1: 0x7678,
+    0xE1A2: 0x767C,
+    0xE1A3: 0x7680,
+    0xE1A4: 0x7683,
+    0xE1A5: 0x7688,
+    0xE1A6: 0x768B,
+    0xE1A7: 0x768E,
+    0xE1A8: 0x7696,
+    0xE1A9: 0x7693,
+    0xE1AA: 0x7699,
+    0xE1AB: 0x769A,
+    0xE1AC: 0x76B0,
+    0xE1AD: 0x76B4,
+    0xE1AE: 0x76B8,
+    0xE1AF: 0x76B9,
+    0xE1B0: 0x76BA,
+    0xE1B1: 0x76C2,
+    0xE1B2: 0x76CD,
+    0xE1B3: 0x76D6,
+    0xE1B4: 0x76D2,
+    0xE1B5: 0x76DE,
+    0xE1B6: 0x76E1,
+    0xE1B7: 0x76E5,
+    0xE1B8: 0x76E7,
+    0xE1B9: 0x76EA,
+    0xE1BA: 0x862F,
+    0xE1BB: 0x76FB,
+    0xE1BC: 0x7708,
+    0xE1BD: 0x7707,
+    0xE1BE: 0x7704,
+    0xE1BF: 0x7729,
+    0xE1C0: 0x7724,
+    0xE1C1: 0x771E,
+    0xE1C2: 0x7725,
+    0xE1C3: 0x7726,
+    0xE1C4: 0x771B,
+    0xE1C5: 0x7737,
+    0xE1C6: 0x7738,
+    0xE1C7: 0x7747,
+    0xE1C8: 0x775A,
+    0xE1C9: 0x7768,
+    0xE1CA: 0x776B,
+    0xE1CB: 0x775B,
+    0xE1CC: 0x7765,
+    0xE1CD: 0x777F,
+    0xE1CE: 0x777E,
+    0xE1CF: 0x7779,
+    0xE1D0: 0x778E,
+    0xE1D1: 0x778B,
+    0xE1D2: 0x7791,
+    0xE1D3: 0x77A0,
+    0xE1D4: 0x779E,
+    0xE1D5: 0x77B0,
+    0xE1D6: 0x77B6,
+    0xE1D7: 0x77B9,
+    0xE1D8: 0x77BF,
+    0xE1D9: 0x77BC,
+    0xE1DA: 0x77BD,
+    0xE1DB: 0x77BB,
+    0xE1DC: 0x77C7,
+    0xE1DD: 0x77CD,
+    0xE1DE: 0x77D7,
+    0xE1DF: 0x77DA,
+    0xE1E0: 0x77DC,
+    0xE1E1: 0x77E3,
+    0xE1E2: 0x77EE,
+    0xE1E3: 0x77FC,
+    0xE1E4: 0x780C,
+    0xE1E5: 0x7812,
+    0xE1E6: 0x7926,
+    0xE1E7: 0x7820,
+    0xE1E8: 0x792A,
+    0xE1E9: 0x7845,
+    0xE1EA: 0x788E,
+    0xE1EB: 0x7874,
+    0xE1EC: 0x7886,
+    0xE1ED: 0x787C,
+    0xE1EE: 0x789A,
+    0xE1EF: 0x788C,
+    0xE1F0: 0x78A3,
+    0xE1F1: 0x78B5,
+    0xE1F2: 0x78AA,
+    0xE1F3: 0x78AF,
+    0xE1F4: 0x78D1,
+    0xE1F5: 0x78C6,
+    0xE1F6: 0x78CB,
+    0xE1F7: 0x78D4,
+    0xE1F8: 0x78BE,
+    0xE1F9: 0x78BC,
+    0xE1FA: 0x78C5,
+    0xE1FB: 0x78CA,
+    0xE1FC: 0x78EC,
+    0xE240: 0x78E7,
+    0xE241: 0x78DA,
+    0xE242: 0x78FD,
+    0xE243: 0x78F4,
+    0xE244: 0x7907,
+    0xE245: 0x7912,
+    0xE246: 0x7911,
+    0xE247: 0x7919,
+    0xE248: 0x792C,
+    0xE249: 0x792B,
+    0xE24A: 0x7940,
+    0xE24B: 0x7960,
+    0xE24C: 0x7957,
+    0xE24D: 0x795F,
+    0xE24E: 0x795A,
+    0xE24F: 0x7955,
+    0xE250: 0x7953,
+    0xE251: 0x797A,
+    0xE252: 0x797F,
+    0xE253: 0x798A,
+    0xE254: 0x799D,
+    0xE255: 0x79A7,
+    0xE256: 0x9F4B,
+    0xE257: 0x79AA,
+    0xE258: 0x79AE,
+    0xE259: 0x79B3,
+    0xE25A: 0x79B9,
+    0xE25B: 0x79BA,
+    0xE25C: 0x79C9,
+    0xE25D: 0x79D5,
+    0xE25E: 0x79E7,
+    0xE25F: 0x79EC,
+    0xE260: 0x79E1,
+    0xE261: 0x79E3,
+    0xE262: 0x7A08,
+    0xE263: 0x7A0D,
+    0xE264: 0x7A18,
+    0xE265: 0x7A19,
+    0xE266: 0x7A20,
+    0xE267: 0x7A1F,
+    0xE268: 0x7980,
+    0xE269: 0x7A31,
+    0xE26A: 0x7A3B,
+    0xE26B: 0x7A3E,
+    0xE26C: 0x7A37,
+    0xE26D: 0x7A43,
+    0xE26E: 0x7A57,
+    0xE26F: 0x7A49,
+    0xE270: 0x7A61,
+    0xE271: 0x7A62,
+    0xE272: 0x7A69,
+    0xE273: 0x9F9D,
+    0xE274: 0x7A70,
+    0xE275: 0x7A79,
+    0xE276: 0x7A7D,
+    0xE277: 0x7A88,
+    0xE278: 0x7A97,
+    0xE279: 0x7A95,
+    0xE27A: 0x7A98,
+    0xE27B: 0x7A96,
+    0xE27C: 0x7AA9,
+    0xE27D: 0x7AC8,
+    0xE27E: 0x7AB0,
+    0xE280: 0x7AB6,
+    0xE281: 0x7AC5,
+    0xE282: 0x7AC4,
+    0xE283: 0x7ABF,
+    0xE284: 0x9083,
+    0xE285: 0x7AC7,
+    0xE286: 0x7ACA,
+    0xE287: 0x7ACD,
+    0xE288: 0x7ACF,
+    0xE289: 0x7AD5,
+    0xE28A: 0x7AD3,
+    0xE28B: 0x7AD9,
+    0xE28C: 0x7ADA,
+    0xE28D: 0x7ADD,
+    0xE28E: 0x7AE1,
+    0xE28F: 0x7AE2,
+    0xE290: 0x7AE6,
+    0xE291: 0x7AED,
+    0xE292: 0x7AF0,
+    0xE293: 0x7B02,
+    0xE294: 0x7B0F,
+    0xE295: 0x7B0A,
+    0xE296: 0x7B06,
+    0xE297: 0x7B33,
+    0xE298: 0x7B18,
+    0xE299: 0x7B19,
+    0xE29A: 0x7B1E,
+    0xE29B: 0x7B35,
+    0xE29C: 0x7B28,
+    0xE29D: 0x7B36,
+    0xE29E: 0x7B50,
+    0xE29F: 0x7B7A,
+    0xE2A0: 0x7B04,
+    0xE2A1: 0x7B4D,
+    0xE2A2: 0x7B0B,
+    0xE2A3: 0x7B4C,
+    0xE2A4: 0x7B45,
+    0xE2A5: 0x7B75,
+    0xE2A6: 0x7B65,
+    0xE2A7: 0x7B74,
+    0xE2A8: 0x7B67,
+    0xE2A9: 0x7B70,
+    0xE2AA: 0x7B71,
+    0xE2AB: 0x7B6C,
+    0xE2AC: 0x7B6E,
+    0xE2AD: 0x7B9D,
+    0xE2AE: 0x7B98,
+    0xE2AF: 0x7B9F,
+    0xE2B0: 0x7B8D,
+    0xE2B1: 0x7B9C,
+    0xE2B2: 0x7B9A,
+    0xE2B3: 0x7B8B,
+    0xE2B4: 0x7B92,
+    0xE2B5: 0x7B8F,
+    0xE2B6: 0x7B5D,
+    0xE2B7: 0x7B99,
+    0xE2B8: 0x7BCB,
+    0xE2B9: 0x7BC1,
+    0xE2BA: 0x7BCC,
+    0xE2BB: 0x7BCF,
+    0xE2BC: 0x7BB4,
+    0xE2BD: 0x7BC6,
+    0xE2BE: 0x7BDD,
+    0xE2BF: 0x7BE9,
+    0xE2C0: 0x7C11,
+    0xE2C1: 0x7C14,
+    0xE2C2: 0x7BE6,
+    0xE2C3: 0x7BE5,
+    0xE2C4: 0x7C60,
+    0xE2C5: 0x7C00,
+    0xE2C6: 0x7C07,
+    0xE2C7: 0x7C13,
+    0xE2C8: 0x7BF3,
+    0xE2C9: 0x7BF7,
+    0xE2CA: 0x7C17,
+    0xE2CB: 0x7C0D,
+    0xE2CC: 0x7BF6,
+    0xE2CD: 0x7C23,
+    0xE2CE: 0x7C27,
+    0xE2CF: 0x7C2A,
+    0xE2D0: 0x7C1F,
+    0xE2D1: 0x7C37,
+    0xE2D2: 0x7C2B,
+    0xE2D3: 0x7C3D,
+    0xE2D4: 0x7C4C,
+    0xE2D5: 0x7C43,
+    0xE2D6: 0x7C54,
+    0xE2D7: 0x7C4F,
+    0xE2D8: 0x7C40,
+    0xE2D9: 0x7C50,
+    0xE2DA: 0x7C58,
+    0xE2DB: 0x7C5F,
+    0xE2DC: 0x7C64,
+    0xE2DD: 0x7C56,
+    0xE2DE: 0x7C65,
+    0xE2DF: 0x7C6C,
+    0xE2E0: 0x7C75,
+    0xE2E1: 0x7C83,
+    0xE2E2: 0x7C90,
+    0xE2E3: 0x7CA4,
+    0xE2E4: 0x7CAD,
+    0xE2E5: 0x7CA2,
+    0xE2E6: 0x7CAB,
+    0xE2E7: 0x7CA1,
+    0xE2E8: 0x7CA8,
+    0xE2E9: 0x7CB3,
+    0xE2EA: 0x7CB2,
+    0xE2EB: 0x7CB1,
+    0xE2EC: 0x7CAE,
+    0xE2ED: 0x7CB9,
+    0xE2EE: 0x7CBD,
+    0xE2EF: 0x7CC0,
+    0xE2F0: 0x7CC5,
+    0xE2F1: 0x7CC2,
+    0xE2F2: 0x7CD8,
+    0xE2F3: 0x7CD2,
+    0xE2F4: 0x7CDC,
+    0xE2F5: 0x7CE2,
+    0xE2F6: 0x9B3B,
+    0xE2F7: 0x7CEF,
+    0xE2F8: 0x7CF2,
+    0xE2F9: 0x7CF4,
+    0xE2FA: 0x7CF6,
+    0xE2FB: 0x7CFA,
+    0xE2FC: 0x7D06,
+    0xE340: 0x7D02,
+    0xE341: 0x7D1C,
+    0xE342: 0x7D15,
+    0xE343: 0x7D0A,
+    0xE344: 0x7D45,
+    0xE345: 0x7D4B,
+    0xE346: 0x7D2E,
+    0xE347: 0x7D32,
+    0xE348: 0x7D3F,
+    0xE349: 0x7D35,
+    0xE34A: 0x7D46,
+    0xE34B: 0x7D73,
+    0xE34C: 0x7D56,
+    0xE34D: 0x7D4E,
+    0xE34E: 0x7D72,
+    0xE34F: 0x7D68,
+    0xE350: 0x7D6E,
+    0xE351: 0x7D4F,
+    0xE352: 0x7D63,
+    0xE353: 0x7D93,
+    0xE354: 0x7D89,
+    0xE355: 0x7D5B,
+    0xE356: 0x7D8F,
+    0xE357: 0x7D7D,
+    0xE358: 0x7D9B,
+    0xE359: 0x7DBA,
+    0xE35A: 0x7DAE,
+    0xE35B: 0x7DA3,
+    0xE35C: 0x7DB5,
+    0xE35D: 0x7DC7,
+    0xE35E: 0x7DBD,
+    0xE35F: 0x7DAB,
+    0xE360: 0x7E3D,
+    0xE361: 0x7DA2,
+    0xE362: 0x7DAF,
+    0xE363: 0x7DDC,
+    0xE364: 0x7DB8,
+    0xE365: 0x7D9F,
+    0xE366: 0x7DB0,
+    0xE367: 0x7DD8,
+    0xE368: 0x7DDD,
+    0xE369: 0x7DE4,
+    0xE36A: 0x7DDE,
+    0xE36B: 0x7DFB,
+    0xE36C: 0x7DF2,
+    0xE36D: 0x7DE1,
+    0xE36E: 0x7E05,
+    0xE36F: 0x7E0A,
+    0xE370: 0x7E23,
+    0xE371: 0x7E21,
+    0xE372: 0x7E12,
+    0xE373: 0x7E31,
+    0xE374: 0x7E1F,
+    0xE375: 0x7E09,
+    0xE376: 0x7E0B,
+    0xE377: 0x7E22,
+    0xE378: 0x7E46,
+    0xE379: 0x7E66,
+    0xE37A: 0x7E3B,
+    0xE37B: 0x7E35,
+    0xE37C: 0x7E39,
+    0xE37D: 0x7E43,
+    0xE37E: 0x7E37,
+    0xE380: 0x7E32,
+    0xE381: 0x7E3A,
+    0xE382: 0x7E67,
+    0xE383: 0x7E5D,
+    0xE384: 0x7E56,
+    0xE385: 0x7E5E,
+    0xE386: 0x7E59,
+    0xE387: 0x7E5A,
+    0xE388: 0x7E79,
+    0xE389: 0x7E6A,
+    0xE38A: 0x7E69,
+    0xE38B: 0x7E7C,
+    0xE38C: 0x7E7B,
+    0xE38D: 0x7E83,
+    0xE38E: 0x7DD5,
+    0xE38F: 0x7E7D,
+    0xE390: 0x8FAE,
+    0xE391: 0x7E7F,
+    0xE392: 0x7E88,
+    0xE393: 0x7E89,
+    0xE394: 0x7E8C,
+    0xE395: 0x7E92,
+    0xE396: 0x7E90,
+    0xE397: 0x7E93,
+    0xE398: 0x7E94,
+    0xE399: 0x7E96,
+    0xE39A: 0x7E8E,
+    0xE39B: 0x7E9B,
+    0xE39C: 0x7E9C,
+    0xE39D: 0x7F38,
+    0xE39E: 0x7F3A,
+    0xE39F: 0x7F45,
+    0xE3A0: 0x7F4C,
+    0xE3A1: 0x7F4D,
+    0xE3A2: 0x7F4E,
+    0xE3A3: 0x7F50,
+    0xE3A4: 0x7F51,
+    0xE3A5: 0x7F55,
+    0xE3A6: 0x7F54,
+    0xE3A7: 0x7F58,
+    0xE3A8: 0x7F5F,
+    0xE3A9: 0x7F60,
+    0xE3AA: 0x7F68,
+    0xE3AB: 0x7F69,
+    0xE3AC: 0x7F67,
+    0xE3AD: 0x7F78,
+    0xE3AE: 0x7F82,
+    0xE3AF: 0x7F86,
+    0xE3B0: 0x7F83,
+    0xE3B1: 0x7F88,
+    0xE3B2: 0x7F87,
+    0xE3B3: 0x7F8C,
+    0xE3B4: 0x7F94,
+    0xE3B5: 0x7F9E,
+    0xE3B6: 0x7F9D,
+    0xE3B7: 0x7F9A,
+    0xE3B8: 0x7FA3,
+    0xE3B9: 0x7FAF,
+    0xE3BA: 0x7FB2,
+    0xE3BB: 0x7FB9,
+    0xE3BC: 0x7FAE,
+    0xE3BD: 0x7FB6,
+    0xE3BE: 0x7FB8,
+    0xE3BF: 0x8B71,
+    0xE3C0: 0x7FC5,
+    0xE3C1: 0x7FC6,
+    0xE3C2: 0x7FCA,
+    0xE3C3: 0x7FD5,
+    0xE3C4: 0x7FD4,
+    0xE3C5: 0x7FE1,
+    0xE3C6: 0x7FE6,
+    0xE3C7: 0x7FE9,
+    0xE3C8: 0x7FF3,
+    0xE3C9: 0x7FF9,
+    0xE3CA: 0x98DC,
+    0xE3CB: 0x8006,
+    0xE3CC: 0x8004,
+    0xE3CD: 0x800B,
+    0xE3CE: 0x8012,
+    0xE3CF: 0x8018,
+    0xE3D0: 0x8019,
+    0xE3D1: 0x801C,
+    0xE3D2: 0x8021,
+    0xE3D3: 0x8028,
+    0xE3D4: 0x803F,
+    0xE3D5: 0x803B,
+    0xE3D6: 0x804A,
+    0xE3D7: 0x8046,
+    0xE3D8: 0x8052,
+    0xE3D9: 0x8058,
+    0xE3DA: 0x805A,
+    0xE3DB: 0x805F,
+    0xE3DC: 0x8062,
+    0xE3DD: 0x8068,
+    0xE3DE: 0x8073,
+    0xE3DF: 0x8072,
+    0xE3E0: 0x8070,
+    0xE3E1: 0x8076,
+    0xE3E2: 0x8079,
+    0xE3E3: 0x807D,
+    0xE3E4: 0x807F,
+    0xE3E5: 0x8084,
+    0xE3E6: 0x8086,
+    0xE3E7: 0x8085,
+    0xE3E8: 0x809B,
+    0xE3E9: 0x8093,
+    0xE3EA: 0x809A,
+    0xE3EB: 0x80AD,
+    0xE3EC: 0x5190,
+    0xE3ED: 0x80AC,
+    0xE3EE: 0x80DB,
+    0xE3EF: 0x80E5,
+    0xE3F0: 0x80D9,
+    0xE3F1: 0x80DD,
+    0xE3F2: 0x80C4,
+    0xE3F3: 0x80DA,
+    0xE3F4: 0x80D6,
+    0xE3F5: 0x8109,
+    0xE3F6: 0x80EF,
+    0xE3F7: 0x80F1,
+    0xE3F8: 0x811B,
+    0xE3F9: 0x8129,
+    0xE3FA: 0x8123,
+    0xE3FB: 0x812F,
+    0xE3FC: 0x814B,
+    0xE440: 0x968B,
+    0xE441: 0x8146,
+    0xE442: 0x813E,
+    0xE443: 0x8153,
+    0xE444: 0x8151,
+    0xE445: 0x80FC,
+    0xE446: 0x8171,
+    0xE447: 0x816E,
+    0xE448: 0x8165,
+    0xE449: 0x8166,
+    0xE44A: 0x8174,
+    0xE44B: 0x8183,
+    0xE44C: 0x8188,
+    0xE44D: 0x818A,
+    0xE44E: 0x8180,
+    0xE44F: 0x8182,
+    0xE450: 0x81A0,
+    0xE451: 0x8195,
+    0xE452: 0x81A4,
+    0xE453: 0x81A3,
+    0xE454: 0x815F,
+    0xE455: 0x8193,
+    0xE456: 0x81A9,
+    0xE457: 0x81B0,
+    0xE458: 0x81B5,
+    0xE459: 0x81BE,
+    0xE45A: 0x81B8,
+    0xE45B: 0x81BD,
+    0xE45C: 0x81C0,
+    0xE45D: 0x81C2,
+    0xE45E: 0x81BA,
+    0xE45F: 0x81C9,
+    0xE460: 0x81CD,
+    0xE461: 0x81D1,
+    0xE462: 0x81D9,
+    0xE463: 0x81D8,
+    0xE464: 0x81C8,
+    0xE465: 0x81DA,
+    0xE466: 0x81DF,
+    0xE467: 0x81E0,
+    0xE468: 0x81E7,
+    0xE469: 0x81FA,
+    0xE46A: 0x81FB,
+    0xE46B: 0x81FE,
+    0xE46C: 0x8201,
+    0xE46D: 0x8202,
+    0xE46E: 0x8205,
+    0xE46F: 0x8207,
+    0xE470: 0x820A,
+    0xE471: 0x820D,
+    0xE472: 0x8210,
+    0xE473: 0x8216,
+    0xE474: 0x8229,
+    0xE475: 0x822B,
+    0xE476: 0x8238,
+    0xE477: 0x8233,
+    0xE478: 0x8240,
+    0xE479: 0x8259,
+    0xE47A: 0x8258,
+    0xE47B: 0x825D,
+    0xE47C: 0x825A,
+    0xE47D: 0x825F,
+    0xE47E: 0x8264,
+    0xE480: 0x8262,
+    0xE481: 0x8268,
+    0xE482: 0x826A,
+    0xE483: 0x826B,
+    0xE484: 0x822E,
+    0xE485: 0x8271,
+    0xE486: 0x8277,
+    0xE487: 0x8278,
+    0xE488: 0x827E,
+    0xE489: 0x828D,
+    0xE48A: 0x8292,
+    0xE48B: 0x82AB,
+    0xE48C: 0x829F,
+    0xE48D: 0x82BB,
+    0xE48E: 0x82AC,
+    0xE48F: 0x82E1,
+    0xE490: 0x82E3,
+    0xE491: 0x82DF,
+    0xE492: 0x82D2,
+    0xE493: 0x82F4,
+    0xE494: 0x82F3,
+    0xE495: 0x82FA,
+    0xE496: 0x8393,
+    0xE497: 0x8303,
+    0xE498: 0x82FB,
+    0xE499: 0x82F9,
+    0xE49A: 0x82DE,
+    0xE49B: 0x8306,
+    0xE49C: 0x82DC,
+    0xE49D: 0x8309,
+    0xE49E: 0x82D9,
+    0xE49F: 0x8335,
+    0xE4A0: 0x8334,
+    0xE4A1: 0x8316,
+    0xE4A2: 0x8332,
+    0xE4A3: 0x8331,
+    0xE4A4: 0x8340,
+    0xE4A5: 0x8339,
+    0xE4A6: 0x8350,
+    0xE4A7: 0x8345,
+    0xE4A8: 0x832F,
+    0xE4A9: 0x832B,
+    0xE4AA: 0x8317,
+    0xE4AB: 0x8318,
+    0xE4AC: 0x8385,
+    0xE4AD: 0x839A,
+    0xE4AE: 0x83AA,
+    0xE4AF: 0x839F,
+    0xE4B0: 0x83A2,
+    0xE4B1: 0x8396,
+    0xE4B2: 0x8323,
+    0xE4B3: 0x838E,
+    0xE4B4: 0x8387,
+    0xE4B5: 0x838A,
+    0xE4B6: 0x837C,
+    0xE4B7: 0x83B5,
+    0xE4B8: 0x8373,
+    0xE4B9: 0x8375,
+    0xE4BA: 0x83A0,
+    0xE4BB: 0x8389,
+    0xE4BC: 0x83A8,
+    0xE4BD: 0x83F4,
+    0xE4BE: 0x8413,
+    0xE4BF: 0x83EB,
+    0xE4C0: 0x83CE,
+    0xE4C1: 0x83FD,
+    0xE4C2: 0x8403,
+    0xE4C3: 0x83D8,
+    0xE4C4: 0x840B,
+    0xE4C5: 0x83C1,
+    0xE4C6: 0x83F7,
+    0xE4C7: 0x8407,
+    0xE4C8: 0x83E0,
+    0xE4C9: 0x83F2,
+    0xE4CA: 0x840D,
+    0xE4CB: 0x8422,
+    0xE4CC: 0x8420,
+    0xE4CD: 0x83BD,
+    0xE4CE: 0x8438,
+    0xE4CF: 0x8506,
+    0xE4D0: 0x83FB,
+    0xE4D1: 0x846D,
+    0xE4D2: 0x842A,
+    0xE4D3: 0x843C,
+    0xE4D4: 0x855A,
+    0xE4D5: 0x8484,
+    0xE4D6: 0x8477,
+    0xE4D7: 0x846B,
+    0xE4D8: 0x84AD,
+    0xE4D9: 0x846E,
+    0xE4DA: 0x8482,
+    0xE4DB: 0x8469,
+    0xE4DC: 0x8446,
+    0xE4DD: 0x842C,
+    0xE4DE: 0x846F,
+    0xE4DF: 0x8479,
+    0xE4E0: 0x8435,
+    0xE4E1: 0x84CA,
+    0xE4E2: 0x8462,
+    0xE4E3: 0x84B9,
+    0xE4E4: 0x84BF,
+    0xE4E5: 0x849F,
+    0xE4E6: 0x84D9,
+    0xE4E7: 0x84CD,
+    0xE4E8: 0x84BB,
+    0xE4E9: 0x84DA,
+    0xE4EA: 0x84D0,
+    0xE4EB: 0x84C1,
+    0xE4EC: 0x84C6,
+    0xE4ED: 0x84D6,
+    0xE4EE: 0x84A1,
+    0xE4EF: 0x8521,
+    0xE4F0: 0x84FF,
+    0xE4F1: 0x84F4,
+    0xE4F2: 0x8517,
+    0xE4F3: 0x8518,
+    0xE4F4: 0x852C,
+    0xE4F5: 0x851F,
+    0xE4F6: 0x8515,
+    0xE4F7: 0x8514,
+    0xE4F8: 0x84FC,
+    0xE4F9: 0x8540,
+    0xE4FA: 0x8563,
+    0xE4FB: 0x8558,
+    0xE4FC: 0x8548,
+    0xE540: 0x8541,
+    0xE541: 0x8602,
+    0xE542: 0x854B,
+    0xE543: 0x8555,
+    0xE544: 0x8580,
+    0xE545: 0x85A4,
+    0xE546: 0x8588,
+    0xE547: 0x8591,
+    0xE548: 0x858A,
+    0xE549: 0x85A8,
+    0xE54A: 0x856D,
+    0xE54B: 0x8594,
+    0xE54C: 0x859B,
+    0xE54D: 0x85EA,
+    0xE54E: 0x8587,
+    0xE54F: 0x859C,
+    0xE550: 0x8577,
+    0xE551: 0x857E,
+    0xE552: 0x8590,
+    0xE553: 0x85C9,
+    0xE554: 0x85BA,
+    0xE555: 0x85CF,
+    0xE556: 0x85B9,
+    0xE557: 0x85D0,
+    0xE558: 0x85D5,
+    0xE559: 0x85DD,
+    0xE55A: 0x85E5,
+    0xE55B: 0x85DC,
+    0xE55C: 0x85F9,
+    0xE55D: 0x860A,
+    0xE55E: 0x8613,
+    0xE55F: 0x860B,
+    0xE560: 0x85FE,
+    0xE561: 0x85FA,
+    0xE562: 0x8606,
+    0xE563: 0x8622,
+    0xE564: 0x861A,
+    0xE565: 0x8630,
+    0xE566: 0x863F,
+    0xE567: 0x864D,
+    0xE568: 0x4E55,
+    0xE569: 0x8654,
+    0xE56A: 0x865F,
+    0xE56B: 0x8667,
+    0xE56C: 0x8671,
+    0xE56D: 0x8693,
+    0xE56E: 0x86A3,
+    0xE56F: 0x86A9,
+    0xE570: 0x86AA,
+    0xE571: 0x868B,
+    0xE572: 0x868C,
+    0xE573: 0x86B6,
+    0xE574: 0x86AF,
+    0xE575: 0x86C4,
+    0xE576: 0x86C6,
+    0xE577: 0x86B0,
+    0xE578: 0x86C9,
+    0xE579: 0x8823,
+    0xE57A: 0x86AB,
+    0xE57B: 0x86D4,
+    0xE57C: 0x86DE,
+    0xE57D: 0x86E9,
+    0xE57E: 0x86EC,
+    0xE580: 0x86DF,
+    0xE581: 0x86DB,
+    0xE582: 0x86EF,
+    0xE583: 0x8712,
+    0xE584: 0x8706,
+    0xE585: 0x8708,
+    0xE586: 0x8700,
+    0xE587: 0x8703,
+    0xE588: 0x86FB,
+    0xE589: 0x8711,
+    0xE58A: 0x8709,
+    0xE58B: 0x870D,
+    0xE58C: 0x86F9,
+    0xE58D: 0x870A,
+    0xE58E: 0x8734,
+    0xE58F: 0x873F,
+    0xE590: 0x8737,
+    0xE591: 0x873B,
+    0xE592: 0x8725,
+    0xE593: 0x8729,
+    0xE594: 0x871A,
+    0xE595: 0x8760,
+    0xE596: 0x875F,
+    0xE597: 0x8778,
+    0xE598: 0x874C,
+    0xE599: 0x874E,
+    0xE59A: 0x8774,
+    0xE59B: 0x8757,
+    0xE59C: 0x8768,
+    0xE59D: 0x876E,
+    0xE59E: 0x8759,
+    0xE59F: 0x8753,
+    0xE5A0: 0x8763,
+    0xE5A1: 0x876A,
+    0xE5A2: 0x8805,
+    0xE5A3: 0x87A2,
+    0xE5A4: 0x879F,
+    0xE5A5: 0x8782,
+    0xE5A6: 0x87AF,
+    0xE5A7: 0x87CB,
+    0xE5A8: 0x87BD,
+    0xE5A9: 0x87C0,
+    0xE5AA: 0x87D0,
+    0xE5AB: 0x96D6,
+    0xE5AC: 0x87AB,
+    0xE5AD: 0x87C4,
+    0xE5AE: 0x87B3,
+    0xE5AF: 0x87C7,
+    0xE5B0: 0x87C6,
+    0xE5B1: 0x87BB,
+    0xE5B2: 0x87EF,
+    0xE5B3: 0x87F2,
+    0xE5B4: 0x87E0,
+    0xE5B5: 0x880F,
+    0xE5B6: 0x880D,
+    0xE5B7: 0x87FE,
+    0xE5B8: 0x87F6,
+    0xE5B9: 0x87F7,
+    0xE5BA: 0x880E,
+    0xE5BB: 0x87D2,
+    0xE5BC: 0x8811,
+    0xE5BD: 0x8816,
+    0xE5BE: 0x8815,
+    0xE5BF: 0x8822,
+    0xE5C0: 0x8821,
+    0xE5C1: 0x8831,
+    0xE5C2: 0x8836,
+    0xE5C3: 0x8839,
+    0xE5C4: 0x8827,
+    0xE5C5: 0x883B,
+    0xE5C6: 0x8844,
+    0xE5C7: 0x8842,
+    0xE5C8: 0x8852,
+    0xE5C9: 0x8859,
+    0xE5CA: 0x885E,
+    0xE5CB: 0x8862,
+    0xE5CC: 0x886B,
+    0xE5CD: 0x8881,
+    0xE5CE: 0x887E,
+    0xE5CF: 0x889E,
+    0xE5D0: 0x8875,
+    0xE5D1: 0x887D,
+    0xE5D2: 0x88B5,
+    0xE5D3: 0x8872,
+    0xE5D4: 0x8882,
+    0xE5D5: 0x8897,
+    0xE5D6: 0x8892,
+    0xE5D7: 0x88AE,
+    0xE5D8: 0x8899,
+    0xE5D9: 0x88A2,
+    0xE5DA: 0x888D,
+    0xE5DB: 0x88A4,
+    0xE5DC: 0x88B0,
+    0xE5DD: 0x88BF,
+    0xE5DE: 0x88B1,
+    0xE5DF: 0x88C3,
+    0xE5E0: 0x88C4,
+    0xE5E1: 0x88D4,
+    0xE5E2: 0x88D8,
+    0xE5E3: 0x88D9,
+    0xE5E4: 0x88DD,
+    0xE5E5: 0x88F9,
+    0xE5E6: 0x8902,
+    0xE5E7: 0x88FC,
+    0xE5E8: 0x88F4,
+    0xE5E9: 0x88E8,
+    0xE5EA: 0x88F2,
+    0xE5EB: 0x8904,
+    0xE5EC: 0x890C,
+    0xE5ED: 0x890A,
+    0xE5EE: 0x8913,
+    0xE5EF: 0x8943,
+    0xE5F0: 0x891E,
+    0xE5F1: 0x8925,
+    0xE5F2: 0x892A,
+    0xE5F3: 0x892B,
+    0xE5F4: 0x8941,
+    0xE5F5: 0x8944,
+    0xE5F6: 0x893B,
+    0xE5F7: 0x8936,
+    0xE5F8: 0x8938,
+    0xE5F9: 0x894C,
+    0xE5FA: 0x891D,
+    0xE5FB: 0x8960,
+    0xE5FC: 0x895E,
+    0xE640: 0x8966,
+    0xE641: 0x8964,
+    0xE642: 0x896D,
+    0xE643: 0x896A,
+    0xE644: 0x896F,
+    0xE645: 0x8974,
+    0xE646: 0x8977,
+    0xE647: 0x897E,
+    0xE648: 0x8983,
+    0xE649: 0x8988,
+    0xE64A: 0x898A,
+    0xE64B: 0x8993,
+    0xE64C: 0x8998,
+    0xE64D: 0x89A1,
+    0xE64E: 0x89A9,
+    0xE64F: 0x89A6,
+    0xE650: 0x89AC,
+    0xE651: 0x89AF,
+    0xE652: 0x89B2,
+    0xE653: 0x89BA,
+    0xE654: 0x89BD,
+    0xE655: 0x89BF,
+    0xE656: 0x89C0,
+    0xE657: 0x89DA,
+    0xE658: 0x89DC,
+    0xE659: 0x89DD,
+    0xE65A: 0x89E7,
+    0xE65B: 0x89F4,
+    0xE65C: 0x89F8,
+    0xE65D: 0x8A03,
+    0xE65E: 0x8A16,
+    0xE65F: 0x8A10,
+    0xE660: 0x8A0C,
+    0xE661: 0x8A1B,
+    0xE662: 0x8A1D,
+    0xE663: 0x8A25,
+    0xE664: 0x8A36,
+    0xE665: 0x8A41,
+    0xE666: 0x8A5B,
+    0xE667: 0x8A52,
+    0xE668: 0x8A46,
+    0xE669: 0x8A48,
+    0xE66A: 0x8A7C,
+    0xE66B: 0x8A6D,
+    0xE66C: 0x8A6C,
+    0xE66D: 0x8A62,
+    0xE66E: 0x8A85,
+    0xE66F: 0x8A82,
+    0xE670: 0x8A84,
+    0xE671: 0x8AA8,
+    0xE672: 0x8AA1,
+    0xE673: 0x8A91,
+    0xE674: 0x8AA5,
+    0xE675: 0x8AA6,
+    0xE676: 0x8A9A,
+    0xE677: 0x8AA3,
+    0xE678: 0x8AC4,
+    0xE679: 0x8ACD,
+    0xE67A: 0x8AC2,
+    0xE67B: 0x8ADA,
+    0xE67C: 0x8AEB,
+    0xE67D: 0x8AF3,
+    0xE67E: 0x8AE7,
+    0xE680: 0x8AE4,
+    0xE681: 0x8AF1,
+    0xE682: 0x8B14,
+    0xE683: 0x8AE0,
+    0xE684: 0x8AE2,
+    0xE685: 0x8AF7,
+    0xE686: 0x8ADE,
+    0xE687: 0x8ADB,
+    0xE688: 0x8B0C,
+    0xE689: 0x8B07,
+    0xE68A: 0x8B1A,
+    0xE68B: 0x8AE1,
+    0xE68C: 0x8B16,
+    0xE68D: 0x8B10,
+    0xE68E: 0x8B17,
+    0xE68F: 0x8B20,
+    0xE690: 0x8B33,
+    0xE691: 0x97AB,
+    0xE692: 0x8B26,
+    0xE693: 0x8B2B,
+    0xE694: 0x8B3E,
+    0xE695: 0x8B28,
+    0xE696: 0x8B41,
+    0xE697: 0x8B4C,
+    0xE698: 0x8B4F,
+    0xE699: 0x8B4E,
+    0xE69A: 0x8B49,
+    0xE69B: 0x8B56,
+    0xE69C: 0x8B5B,
+    0xE69D: 0x8B5A,
+    0xE69E: 0x8B6B,
+    0xE69F: 0x8B5F,
+    0xE6A0: 0x8B6C,
+    0xE6A1: 0x8B6F,
+    0xE6A2: 0x8B74,
+    0xE6A3: 0x8B7D,
+    0xE6A4: 0x8B80,
+    0xE6A5: 0x8B8C,
+    0xE6A6: 0x8B8E,
+    0xE6A7: 0x8B92,
+    0xE6A8: 0x8B93,
+    0xE6A9: 0x8B96,
+    0xE6AA: 0x8B99,
+    0xE6AB: 0x8B9A,
+    0xE6AC: 0x8C3A,
+    0xE6AD: 0x8C41,
+    0xE6AE: 0x8C3F,
+    0xE6AF: 0x8C48,
+    0xE6B0: 0x8C4C,
+    0xE6B1: 0x8C4E,
+    0xE6B2: 0x8C50,
+    0xE6B3: 0x8C55,
+    0xE6B4: 0x8C62,
+    0xE6B5: 0x8C6C,
+    0xE6B6: 0x8C78,
+    0xE6B7: 0x8C7A,
+    0xE6B8: 0x8C82,
+    0xE6B9: 0x8C89,
+    0xE6BA: 0x8C85,
+    0xE6BB: 0x8C8A,
+    0xE6BC: 0x8C8D,
+    0xE6BD: 0x8C8E,
+    0xE6BE: 0x8C94,
+    0xE6BF: 0x8C7C,
+    0xE6C0: 0x8C98,
+    0xE6C1: 0x621D,
+    0xE6C2: 0x8CAD,
+    0xE6C3: 0x8CAA,
+    0xE6C4: 0x8CBD,
+    0xE6C5: 0x8CB2,
+    0xE6C6: 0x8CB3,
+    0xE6C7: 0x8CAE,
+    0xE6C8: 0x8CB6,
+    0xE6C9: 0x8CC8,
+    0xE6CA: 0x8CC1,
+    0xE6CB: 0x8CE4,
+    0xE6CC: 0x8CE3,
+    0xE6CD: 0x8CDA,
+    0xE6CE: 0x8CFD,
+    0xE6CF: 0x8CFA,
+    0xE6D0: 0x8CFB,
+    0xE6D1: 0x8D04,
+    0xE6D2: 0x8D05,
+    0xE6D3: 0x8D0A,
+    0xE6D4: 0x8D07,
+    0xE6D5: 0x8D0F,
+    0xE6D6: 0x8D0D,
+    0xE6D7: 0x8D10,
+    0xE6D8: 0x9F4E,
+    0xE6D9: 0x8D13,
+    0xE6DA: 0x8CCD,
+    0xE6DB: 0x8D14,
+    0xE6DC: 0x8D16,
+    0xE6DD: 0x8D67,
+    0xE6DE: 0x8D6D,
+    0xE6DF: 0x8D71,
+    0xE6E0: 0x8D73,
+    0xE6E1: 0x8D81,
+    0xE6E2: 0x8D99,
+    0xE6E3: 0x8DC2,
+    0xE6E4: 0x8DBE,
+    0xE6E5: 0x8DBA,
+    0xE6E6: 0x8DCF,
+    0xE6E7: 0x8DDA,
+    0xE6E8: 0x8DD6,
+    0xE6E9: 0x8DCC,
+    0xE6EA: 0x8DDB,
+    0xE6EB: 0x8DCB,
+    0xE6EC: 0x8DEA,
+    0xE6ED: 0x8DEB,
+    0xE6EE: 0x8DDF,
+    0xE6EF: 0x8DE3,
+    0xE6F0: 0x8DFC,
+    0xE6F1: 0x8E08,
+    0xE6F2: 0x8E09,
+    0xE6F3: 0x8DFF,
+    0xE6F4: 0x8E1D,
+    0xE6F5: 0x8E1E,
+    0xE6F6: 0x8E10,
+    0xE6F7: 0x8E1F,
+    0xE6F8: 0x8E42,
+    0xE6F9: 0x8E35,
+    0xE6FA: 0x8E30,
+    0xE6FB: 0x8E34,
+    0xE6FC: 0x8E4A,
+    0xE740: 0x8E47,
+    0xE741: 0x8E49,
+    0xE742: 0x8E4C,
+    0xE743: 0x8E50,
+    0xE744: 0x8E48,
+    0xE745: 0x8E59,
+    0xE746: 0x8E64,
+    0xE747: 0x8E60,
+    0xE748: 0x8E2A,
+    0xE749: 0x8E63,
+    0xE74A: 0x8E55,
+    0xE74B: 0x8E76,
+    0xE74C: 0x8E72,
+    0xE74D: 0x8E7C,
+    0xE74E: 0x8E81,
+    0xE74F: 0x8E87,
+    0xE750: 0x8E85,
+    0xE751: 0x8E84,
+    0xE752: 0x8E8B,
+    0xE753: 0x8E8A,
+    0xE754: 0x8E93,
+    0xE755: 0x8E91,
+    0xE756: 0x8E94,
+    0xE757: 0x8E99,
+    0xE758: 0x8EAA,
+    0xE759: 0x8EA1,
+    0xE75A: 0x8EAC,
+    0xE75B: 0x8EB0,
+    0xE75C: 0x8EC6,
+    0xE75D: 0x8EB1,
+    0xE75E: 0x8EBE,
+    0xE75F: 0x8EC5,
+    0xE760: 0x8EC8,
+    0xE761: 0x8ECB,
+    0xE762: 0x8EDB,
+    0xE763: 0x8EE3,
+    0xE764: 0x8EFC,
+    0xE765: 0x8EFB,
+    0xE766: 0x8EEB,
+    0xE767: 0x8EFE,
+    0xE768: 0x8F0A,
+    0xE769: 0x8F05,
+    0xE76A: 0x8F15,
+    0xE76B: 0x8F12,
+    0xE76C: 0x8F19,
+    0xE76D: 0x8F13,
+    0xE76E: 0x8F1C,
+    0xE76F: 0x8F1F,
+    0xE770: 0x8F1B,
+    0xE771: 0x8F0C,
+    0xE772: 0x8F26,
+    0xE773: 0x8F33,
+    0xE774: 0x8F3B,
+    0xE775: 0x8F39,
+    0xE776: 0x8F45,
+    0xE777: 0x8F42,
+    0xE778: 0x8F3E,
+    0xE779: 0x8F4C,
+    0xE77A: 0x8F49,
+    0xE77B: 0x8F46,
+    0xE77C: 0x8F4E,
+    0xE77D: 0x8F57,
+    0xE77E: 0x8F5C,
+    0xE780: 0x8F62,
+    0xE781: 0x8F63,
+    0xE782: 0x8F64,
+    0xE783: 0x8F9C,
+    0xE784: 0x8F9F,
+    0xE785: 0x8FA3,
+    0xE786: 0x8FAD,
+    0xE787: 0x8FAF,
+    0xE788: 0x8FB7,
+    0xE789: 0x8FDA,
+    0xE78A: 0x8FE5,
+    0xE78B: 0x8FE2,
+    0xE78C: 0x8FEA,
+    0xE78D: 0x8FEF,
+    0xE78E: 0x9087,
+    0xE78F: 0x8FF4,
+    0xE790: 0x9005,
+    0xE791: 0x8FF9,
+    0xE792: 0x8FFA,
+    0xE793: 0x9011,
+    0xE794: 0x9015,
+    0xE795: 0x9021,
+    0xE796: 0x900D,
+    0xE797: 0x901E,
+    0xE798: 0x9016,
+    0xE799: 0x900B,
+    0xE79A: 0x9027,
+    0xE79B: 0x9036,
+    0xE79C: 0x9035,
+    0xE79D: 0x9039,
+    0xE79E: 0x8FF8,
+    0xE79F: 0x904F,
+    0xE7A0: 0x9050,
+    0xE7A1: 0x9051,
+    0xE7A2: 0x9052,
+    0xE7A3: 0x900E,
+    0xE7A4: 0x9049,
+    0xE7A5: 0x903E,
+    0xE7A6: 0x9056,
+    0xE7A7: 0x9058,
+    0xE7A8: 0x905E,
+    0xE7A9: 0x9068,
+    0xE7AA: 0x906F,
+    0xE7AB: 0x9076,
+    0xE7AC: 0x96A8,
+    0xE7AD: 0x9072,
+    0xE7AE: 0x9082,
+    0xE7AF: 0x907D,
+    0xE7B0: 0x9081,
+    0xE7B1: 0x9080,
+    0xE7B2: 0x908A,
+    0xE7B3: 0x9089,
+    0xE7B4: 0x908F,
+    0xE7B5: 0x90A8,
+    0xE7B6: 0x90AF,
+    0xE7B7: 0x90B1,
+    0xE7B8: 0x90B5,
+    0xE7B9: 0x90E2,
+    0xE7BA: 0x90E4,
+    0xE7BB: 0x6248,
+    0xE7BC: 0x90DB,
+    0xE7BD: 0x9102,
+    0xE7BE: 0x9112,
+    0xE7BF: 0x9119,
+    0xE7C0: 0x9132,
+    0xE7C1: 0x9130,
+    0xE7C2: 0x914A,
+    0xE7C3: 0x9156,
+    0xE7C4: 0x9158,
+    0xE7C5: 0x9163,
+    0xE7C6: 0x9165,
+    0xE7C7: 0x9169,
+    0xE7C8: 0x9173,
+    0xE7C9: 0x9172,
+    0xE7CA: 0x918B,
+    0xE7CB: 0x9189,
+    0xE7CC: 0x9182,
+    0xE7CD: 0x91A2,
+    0xE7CE: 0x91AB,
+    0xE7CF: 0x91AF,
+    0xE7D0: 0x91AA,
+    0xE7D1: 0x91B5,
+    0xE7D2: 0x91B4,
+    0xE7D3: 0x91BA,
+    0xE7D4: 0x91C0,
+    0xE7D5: 0x91C1,
+    0xE7D6: 0x91C9,
+    0xE7D7: 0x91CB,
+    0xE7D8: 0x91D0,
+    0xE7D9: 0x91D6,
+    0xE7DA: 0x91DF,
+    0xE7DB: 0x91E1,
+    0xE7DC: 0x91DB,
+    0xE7DD: 0x91FC,
+    0xE7DE: 0x91F5,
+    0xE7DF: 0x91F6,
+    0xE7E0: 0x921E,
+    0xE7E1: 0x91FF,
+    0xE7E2: 0x9214,
+    0xE7E3: 0x922C,
+    0xE7E4: 0x9215,
+    0xE7E5: 0x9211,
+    0xE7E6: 0x925E,
+    0xE7E7: 0x9257,
+    0xE7E8: 0x9245,
+    0xE7E9: 0x9249,
+    0xE7EA: 0x9264,
+    0xE7EB: 0x9248,
+    0xE7EC: 0x9295,
+    0xE7ED: 0x923F,
+    0xE7EE: 0x924B,
+    0xE7EF: 0x9250,
+    0xE7F0: 0x929C,
+    0xE7F1: 0x9296,
+    0xE7F2: 0x9293,
+    0xE7F3: 0x929B,
+    0xE7F4: 0x925A,
+    0xE7F5: 0x92CF,
+    0xE7F6: 0x92B9,
+    0xE7F7: 0x92B7,
+    0xE7F8: 0x92E9,
+    0xE7F9: 0x930F,
+    0xE7FA: 0x92FA,
+    0xE7FB: 0x9344,
+    0xE7FC: 0x932E,
+    0xE840: 0x9319,
+    0xE841: 0x9322,
+    0xE842: 0x931A,
+    0xE843: 0x9323,
+    0xE844: 0x933A,
+    0xE845: 0x9335,
+    0xE846: 0x933B,
+    0xE847: 0x935C,
+    0xE848: 0x9360,
+    0xE849: 0x937C,
+    0xE84A: 0x936E,
+    0xE84B: 0x9356,
+    0xE84C: 0x93B0,
+    0xE84D: 0x93AC,
+    0xE84E: 0x93AD,
+    0xE84F: 0x9394,
+    0xE850: 0x93B9,
+    0xE851: 0x93D6,
+    0xE852: 0x93D7,
+    0xE853: 0x93E8,
+    0xE854: 0x93E5,
+    0xE855: 0x93D8,
+    0xE856: 0x93C3,
+    0xE857: 0x93DD,
+    0xE858: 0x93D0,
+    0xE859: 0x93C8,
+    0xE85A: 0x93E4,
+    0xE85B: 0x941A,
+    0xE85C: 0x9414,
+    0xE85D: 0x9413,
+    0xE85E: 0x9403,
+    0xE85F: 0x9407,
+    0xE860: 0x9410,
+    0xE861: 0x9436,
+    0xE862: 0x942B,
+    0xE863: 0x9435,
+    0xE864: 0x9421,
+    0xE865: 0x943A,
+    0xE866: 0x9441,
+    0xE867: 0x9452,
+    0xE868: 0x9444,
+    0xE869: 0x945B,
+    0xE86A: 0x9460,
+    0xE86B: 0x9462,
+    0xE86C: 0x945E,
+    0xE86D: 0x946A,
+    0xE86E: 0x9229,
+    0xE86F: 0x9470,
+    0xE870: 0x9475,
+    0xE871: 0x9477,
+    0xE872: 0x947D,
+    0xE873: 0x945A,
+    0xE874: 0x947C,
+    0xE875: 0x947E,
+    0xE876: 0x9481,
+    0xE877: 0x947F,
+    0xE878: 0x9582,
+    0xE879: 0x9587,
+    0xE87A: 0x958A,
+    0xE87B: 0x9594,
+    0xE87C: 0x9596,
+    0xE87D: 0x9598,
+    0xE87E: 0x9599,
+    0xE880: 0x95A0,
+    0xE881: 0x95A8,
+    0xE882: 0x95A7,
+    0xE883: 0x95AD,
+    0xE884: 0x95BC,
+    0xE885: 0x95BB,
+    0xE886: 0x95B9,
+    0xE887: 0x95BE,
+    0xE888: 0x95CA,
+    0xE889: 0x6FF6,
+    0xE88A: 0x95C3,
+    0xE88B: 0x95CD,
+    0xE88C: 0x95CC,
+    0xE88D: 0x95D5,
+    0xE88E: 0x95D4,
+    0xE88F: 0x95D6,
+    0xE890: 0x95DC,
+    0xE891: 0x95E1,
+    0xE892: 0x95E5,
+    0xE893: 0x95E2,
+    0xE894: 0x9621,
+    0xE895: 0x9628,
+    0xE896: 0x962E,
+    0xE897: 0x962F,
+    0xE898: 0x9642,
+    0xE899: 0x964C,
+    0xE89A: 0x964F,
+    0xE89B: 0x964B,
+    0xE89C: 0x9677,
+    0xE89D: 0x965C,
+    0xE89E: 0x965E,
+    0xE89F: 0x965D,
+    0xE8A0: 0x965F,
+    0xE8A1: 0x9666,
+    0xE8A2: 0x9672,
+    0xE8A3: 0x966C,
+    0xE8A4: 0x968D,
+    0xE8A5: 0x9698,
+    0xE8A6: 0x9695,
+    0xE8A7: 0x9697,
+    0xE8A8: 0x96AA,
+    0xE8A9: 0x96A7,
+    0xE8AA: 0x96B1,
+    0xE8AB: 0x96B2,
+    0xE8AC: 0x96B0,
+    0xE8AD: 0x96B4,
+    0xE8AE: 0x96B6,
+    0xE8AF: 0x96B8,
+    0xE8B0: 0x96B9,
+    0xE8B1: 0x96CE,
+    0xE8B2: 0x96CB,
+    0xE8B3: 0x96C9,
+    0xE8B4: 0x96CD,
+    0xE8B5: 0x894D,
+    0xE8B6: 0x96DC,
+    0xE8B7: 0x970D,
+    0xE8B8: 0x96D5,
+    0xE8B9: 0x96F9,
+    0xE8BA: 0x9704,
+    0xE8BB: 0x9706,
+    0xE8BC: 0x9708,
+    0xE8BD: 0x9713,
+    0xE8BE: 0x970E,
+    0xE8BF: 0x9711,
+    0xE8C0: 0x970F,
+    0xE8C1: 0x9716,
+    0xE8C2: 0x9719,
+    0xE8C3: 0x9724,
+    0xE8C4: 0x972A,
+    0xE8C5: 0x9730,
+    0xE8C6: 0x9739,
+    0xE8C7: 0x973D,
+    0xE8C8: 0x973E,
+    0xE8C9: 0x9744,
+    0xE8CA: 0x9746,
+    0xE8CB: 0x9748,
+    0xE8CC: 0x9742,
+    0xE8CD: 0x9749,
+    0xE8CE: 0x975C,
+    0xE8CF: 0x9760,
+    0xE8D0: 0x9764,
+    0xE8D1: 0x9766,
+    0xE8D2: 0x9768,
+    0xE8D3: 0x52D2,
+    0xE8D4: 0x976B,
+    0xE8D5: 0x9771,
+    0xE8D6: 0x9779,
+    0xE8D7: 0x9785,
+    0xE8D8: 0x977C,
+    0xE8D9: 0x9781,
+    0xE8DA: 0x977A,
+    0xE8DB: 0x9786,
+    0xE8DC: 0x978B,
+    0xE8DD: 0x978F,
+    0xE8DE: 0x9790,
+    0xE8DF: 0x979C,
+    0xE8E0: 0x97A8,
+    0xE8E1: 0x97A6,
+    0xE8E2: 0x97A3,
+    0xE8E3: 0x97B3,
+    0xE8E4: 0x97B4,
+    0xE8E5: 0x97C3,
+    0xE8E6: 0x97C6,
+    0xE8E7: 0x97C8,
+    0xE8E8: 0x97CB,
+    0xE8E9: 0x97DC,
+    0xE8EA: 0x97ED,
+    0xE8EB: 0x9F4F,
+    0xE8EC: 0x97F2,
+    0xE8ED: 0x7ADF,
+    0xE8EE: 0x97F6,
+    0xE8EF: 0x97F5,
+    0xE8F0: 0x980F,
+    0xE8F1: 0x980C,
+    0xE8F2: 0x9838,
+    0xE8F3: 0x9824,
+    0xE8F4: 0x9821,
+    0xE8F5: 0x9837,
+    0xE8F6: 0x983D,
+    0xE8F7: 0x9846,
+    0xE8F8: 0x984F,
+    0xE8F9: 0x984B,
+    0xE8FA: 0x986B,
+    0xE8FB: 0x986F,
+    0xE8FC: 0x9870,
+    0xE940: 0x9871,
+    0xE941: 0x9874,
+    0xE942: 0x9873,
+    0xE943: 0x98AA,
+    0xE944: 0x98AF,
+    0xE945: 0x98B1,
+    0xE946: 0x98B6,
+    0xE947: 0x98C4,
+    0xE948: 0x98C3,
+    0xE949: 0x98C6,
+    0xE94A: 0x98E9,
+    0xE94B: 0x98EB,
+    0xE94C: 0x9903,
+    0xE94D: 0x9909,
+    0xE94E: 0x9912,
+    0xE94F: 0x9914,
+    0xE950: 0x9918,
+    0xE951: 0x9921,
+    0xE952: 0x991D,
+    0xE953: 0x991E,
+    0xE954: 0x9924,
+    0xE955: 0x9920,
+    0xE956: 0x992C,
+    0xE957: 0x992E,
+    0xE958: 0x993D,
+    0xE959: 0x993E,
+    0xE95A: 0x9942,
+    0xE95B: 0x9949,
+    0xE95C: 0x9945,
+    0xE95D: 0x9950,
+    0xE95E: 0x994B,
+    0xE95F: 0x9951,
+    0xE960: 0x9952,
+    0xE961: 0x994C,
+    0xE962: 0x9955,
+    0xE963: 0x9997,
+    0xE964: 0x9998,
+    0xE965: 0x99A5,
+    0xE966: 0x99AD,
+    0xE967: 0x99AE,
+    0xE968: 0x99BC,
+    0xE969: 0x99DF,
+    0xE96A: 0x99DB,
+    0xE96B: 0x99DD,
+    0xE96C: 0x99D8,
+    0xE96D: 0x99D1,
+    0xE96E: 0x99ED,
+    0xE96F: 0x99EE,
+    0xE970: 0x99F1,
+    0xE971: 0x99F2,
+    0xE972: 0x99FB,
+    0xE973: 0x99F8,
+    0xE974: 0x9A01,
+    0xE975: 0x9A0F,
+    0xE976: 0x9A05,
+    0xE977: 0x99E2,
+    0xE978: 0x9A19,
+    0xE979: 0x9A2B,
+    0xE97A: 0x9A37,
+    0xE97B: 0x9A45,
+    0xE97C: 0x9A42,
+    0xE97D: 0x9A40,
+    0xE97E: 0x9A43,
+    0xE980: 0x9A3E,
+    0xE981: 0x9A55,
+    0xE982: 0x9A4D,
+    0xE983: 0x9A5B,
+    0xE984: 0x9A57,
+    0xE985: 0x9A5F,
+    0xE986: 0x9A62,
+    0xE987: 0x9A65,
+    0xE988: 0x9A64,
+    0xE989: 0x9A69,
+    0xE98A: 0x9A6B,
+    0xE98B: 0x9A6A,
+    0xE98C: 0x9AAD,
+    0xE98D: 0x9AB0,
+    0xE98E: 0x9ABC,
+    0xE98F: 0x9AC0,
+    0xE990: 0x9ACF,
+    0xE991: 0x9AD1,
+    0xE992: 0x9AD3,
+    0xE993: 0x9AD4,
+    0xE994: 0x9ADE,
+    0xE995: 0x9ADF,
+    0xE996: 0x9AE2,
+    0xE997: 0x9AE3,
+    0xE998: 0x9AE6,
+    0xE999: 0x9AEF,
+    0xE99A: 0x9AEB,
+    0xE99B: 0x9AEE,
+    0xE99C: 0x9AF4,
+    0xE99D: 0x9AF1,
+    0xE99E: 0x9AF7,
+    0xE99F: 0x9AFB,
+    0xE9A0: 0x9B06,
+    0xE9A1: 0x9B18,
+    0xE9A2: 0x9B1A,
+    0xE9A3: 0x9B1F,
+    0xE9A4: 0x9B22,
+    0xE9A5: 0x9B23,
+    0xE9A6: 0x9B25,
+    0xE9A7: 0x9B27,
+    0xE9A8: 0x9B28,
+    0xE9A9: 0x9B29,
+    0xE9AA: 0x9B2A,
+    0xE9AB: 0x9B2E,
+    0xE9AC: 0x9B2F,
+    0xE9AD: 0x9B32,
+    0xE9AE: 0x9B44,
+    0xE9AF: 0x9B43,
+    0xE9B0: 0x9B4F,
+    0xE9B1: 0x9B4D,
+    0xE9B2: 0x9B4E,
+    0xE9B3: 0x9B51,
+    0xE9B4: 0x9B58,
+    0xE9B5: 0x9B74,
+    0xE9B6: 0x9B93,
+    0xE9B7: 0x9B83,
+    0xE9B8: 0x9B91,
+    0xE9B9: 0x9B96,
+    0xE9BA: 0x9B97,
+    0xE9BB: 0x9B9F,
+    0xE9BC: 0x9BA0,
+    0xE9BD: 0x9BA8,
+    0xE9BE: 0x9BB4,
+    0xE9BF: 0x9BC0,
+    0xE9C0: 0x9BCA,
+    0xE9C1: 0x9BB9,
+    0xE9C2: 0x9BC6,
+    0xE9C3: 0x9BCF,
+    0xE9C4: 0x9BD1,
+    0xE9C5: 0x9BD2,
+    0xE9C6: 0x9BE3,
+    0xE9C7: 0x9BE2,
+    0xE9C8: 0x9BE4,
+    0xE9C9: 0x9BD4,
+    0xE9CA: 0x9BE1,
+    0xE9CB: 0x9C3A,
+    0xE9CC: 0x9BF2,
+    0xE9CD: 0x9BF1,
+    0xE9CE: 0x9BF0,
+    0xE9CF: 0x9C15,
+    0xE9D0: 0x9C14,
+    0xE9D1: 0x9C09,
+    0xE9D2: 0x9C13,
+    0xE9D3: 0x9C0C,
+    0xE9D4: 0x9C06,
+    0xE9D5: 0x9C08,
+    0xE9D6: 0x9C12,
+    0xE9D7: 0x9C0A,
+    0xE9D8: 0x9C04,
+    0xE9D9: 0x9C2E,
+    0xE9DA: 0x9C1B,
+    0xE9DB: 0x9C25,
+    0xE9DC: 0x9C24,
+    0xE9DD: 0x9C21,
+    0xE9DE: 0x9C30,
+    0xE9DF: 0x9C47,
+    0xE9E0: 0x9C32,
+    0xE9E1: 0x9C46,
+    0xE9E2: 0x9C3E,
+    0xE9E3: 0x9C5A,
+    0xE9E4: 0x9C60,
+    0xE9E5: 0x9C67,
+    0xE9E6: 0x9C76,
+    0xE9E7: 0x9C78,
+    0xE9E8: 0x9CE7,
+    0xE9E9: 0x9CEC,
+    0xE9EA: 0x9CF0,
+    0xE9EB: 0x9D09,
+    0xE9EC: 0x9D08,
+    0xE9ED: 0x9CEB,
+    0xE9EE: 0x9D03,
+    0xE9EF: 0x9D06,
+    0xE9F0: 0x9D2A,
+    0xE9F1: 0x9D26,
+    0xE9F2: 0x9DAF,
+    0xE9F3: 0x9D23,
+    0xE9F4: 0x9D1F,
+    0xE9F5: 0x9D44,
+    0xE9F6: 0x9D15,
+    0xE9F7: 0x9D12,
+    0xE9F8: 0x9D41,
+    0xE9F9: 0x9D3F,
+    0xE9FA: 0x9D3E,
+    0xE9FB: 0x9D46,
+    0xE9FC: 0x9D48,
+    0xEA40: 0x9D5D,
+    0xEA41: 0x9D5E,
+    0xEA42: 0x9D64,
+    0xEA43: 0x9D51,
+    0xEA44: 0x9D50,
+    0xEA45: 0x9D59,
+    0xEA46: 0x9D72,
+    0xEA47: 0x9D89,
+    0xEA48: 0x9D87,
+    0xEA49: 0x9DAB,
+    0xEA4A: 0x9D6F,
+    0xEA4B: 0x9D7A,
+    0xEA4C: 0x9D9A,
+    0xEA4D: 0x9DA4,
+    0xEA4E: 0x9DA9,
+    0xEA4F: 0x9DB2,
+    0xEA50: 0x9DC4,
+    0xEA51: 0x9DC1,
+    0xEA52: 0x9DBB,
+    0xEA53: 0x9DB8,
+    0xEA54: 0x9DBA,
+    0xEA55: 0x9DC6,
+    0xEA56: 0x9DCF,
+    0xEA57: 0x9DC2,
+    0xEA58: 0x9DD9,
+    0xEA59: 0x9DD3,
+    0xEA5A: 0x9DF8,
+    0xEA5B: 0x9DE6,
+    0xEA5C: 0x9DED,
+    0xEA5D: 0x9DEF,
+    0xEA5E: 0x9DFD,
+    0xEA5F: 0x9E1A,
+    0xEA60: 0x9E1B,
+    0xEA61: 0x9E1E,
+    0xEA62: 0x9E75,
+    0xEA63: 0x9E79,
+    0xEA64: 0x9E7D,
+    0xEA65: 0x9E81,
+    0xEA66: 0x9E88,
+    0xEA67: 0x9E8B,
+    0xEA68: 0x9E8C,
+    0xEA69: 0x9E92,
+    0xEA6A: 0x9E95,
+    0xEA6B: 0x9E91,
+    0xEA6C: 0x9E9D,
+    0xEA6D: 0x9EA5,
+    0xEA6E: 0x9EA9,
+    0xEA6F: 0x9EB8,
+    0xEA70: 0x9EAA,
+    0xEA71: 0x9EAD,
+    0xEA72: 0x9761,
+    0xEA73: 0x9ECC,
+    0xEA74: 0x9ECE,
+    0xEA75: 0x9ECF,
+    0xEA76: 0x9ED0,
+    0xEA77: 0x9ED4,
+    0xEA78: 0x9EDC,
+    0xEA79: 0x9EDE,
+    0xEA7A: 0x9EDD,
+    0xEA7B: 0x9EE0,
+    0xEA7C: 0x9EE5,
+    0xEA7D: 0x9EE8,
+    0xEA7E: 0x9EEF,
+    0xEA80: 0x9EF4,
+    0xEA81: 0x9EF6,
+    0xEA82: 0x9EF7,
+    0xEA83: 0x9EF9,
+    0xEA84: 0x9EFB,
+    0xEA85: 0x9EFC,
+    0xEA86: 0x9EFD,
+    0xEA87: 0x9F07,
+    0xEA88: 0x9F08,
+    0xEA89: 0x76B7,
+    0xEA8A: 0x9F15,
+    0xEA8B: 0x9F21,
+    0xEA8C: 0x9F2C,
+    0xEA8D: 0x9F3E,
+    0xEA8E: 0x9F4A,
+    0xEA8F: 0x9F52,
+    0xEA90: 0x9F54,
+    0xEA91: 0x9F63,
+    0xEA92: 0x9F5F,
+    0xEA93: 0x9F60,
+    0xEA94: 0x9F61,
+    0xEA95: 0x9F66,
+    0xEA96: 0x9F67,
+    0xEA97: 0x9F6C,
+    0xEA98: 0x9F6A,
+    0xEA99: 0x9F77,
+    0xEA9A: 0x9F72,
+    0xEA9B: 0x9F76,
+    0xEA9C: 0x9F95,
+    0xEA9D: 0x9F9C,
+    0xEA9E: 0x9FA0,
+    0xEA9F: 0x582F,
+    0xEAA0: 0x69C7,
+    0xEAA1: 0x9059,
+    0xEAA2: 0x7464,
+    0xEAA3: 0x51DC,
+    0xEAA4: 0x7199,
+};
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var GenericGF_1 = __webpack_require__(1);
+var GenericGFPoly_1 = __webpack_require__(2);
+function runEuclideanAlgorithm(field, a, b, R) {
+    // Assume a's degree is >= b's
+    if (a.degree() < b.degree()) {
+        _a = [b, a], a = _a[0], b = _a[1];
+    }
+    var rLast = a;
+    var r = b;
+    var tLast = field.zero;
+    var t = field.one;
+    // Run Euclidean algorithm until r's degree is less than R/2
+    while (r.degree() >= R / 2) {
+        var rLastLast = rLast;
+        var tLastLast = tLast;
+        rLast = r;
+        tLast = t;
+        // Divide rLastLast by rLast, with quotient in q and remainder in r
+        if (rLast.isZero()) {
+            // Euclidean algorithm already terminated?
+            return null;
+        }
+        r = rLastLast;
+        var q = field.zero;
+        var denominatorLeadingTerm = rLast.getCoefficient(rLast.degree());
+        var dltInverse = field.inverse(denominatorLeadingTerm);
+        while (r.degree() >= rLast.degree() && !r.isZero()) {
+            var degreeDiff = r.degree() - rLast.degree();
+            var scale = field.multiply(r.getCoefficient(r.degree()), dltInverse);
+            q = q.addOrSubtract(field.buildMonomial(degreeDiff, scale));
+            r = r.addOrSubtract(rLast.multiplyByMonomial(degreeDiff, scale));
+        }
+        t = q.multiplyPoly(tLast).addOrSubtract(tLastLast);
+        if (r.degree() >= rLast.degree()) {
+            return null;
+        }
+    }
+    var sigmaTildeAtZero = t.getCoefficient(0);
+    if (sigmaTildeAtZero === 0) {
+        return null;
+    }
+    var inverse = field.inverse(sigmaTildeAtZero);
+    return [t.multiply(inverse), r.multiply(inverse)];
+    var _a;
+}
+function findErrorLocations(field, errorLocator) {
+    // This is a direct application of Chien's search
+    var numErrors = errorLocator.degree();
+    if (numErrors === 1) {
+        return [errorLocator.getCoefficient(1)];
+    }
+    var result = new Array(numErrors);
+    var errorCount = 0;
+    for (var i = 1; i < field.size && errorCount < numErrors; i++) {
+        if (errorLocator.evaluateAt(i) === 0) {
+            result[errorCount] = field.inverse(i);
+            errorCount++;
+        }
+    }
+    if (errorCount !== numErrors) {
+        return null;
+    }
+    return result;
+}
+function findErrorMagnitudes(field, errorEvaluator, errorLocations) {
+    // This is directly applying Forney's Formula
+    var s = errorLocations.length;
+    var result = new Array(s);
+    for (var i = 0; i < s; i++) {
+        var xiInverse = field.inverse(errorLocations[i]);
+        var denominator = 1;
+        for (var j = 0; j < s; j++) {
+            if (i !== j) {
+                denominator = field.multiply(denominator, GenericGF_1.addOrSubtractGF(1, field.multiply(errorLocations[j], xiInverse)));
+            }
+        }
+        result[i] = field.multiply(errorEvaluator.evaluateAt(xiInverse), field.inverse(denominator));
+        if (field.generatorBase !== 0) {
+            result[i] = field.multiply(result[i], xiInverse);
+        }
+    }
+    return result;
+}
+function decode(bytes, twoS) {
+    var outputBytes = new Uint8ClampedArray(bytes.length);
+    outputBytes.set(bytes);
+    var field = new GenericGF_1.default(0x011D, 256, 0); // x^8 + x^4 + x^3 + x^2 + 1
+    var poly = new GenericGFPoly_1.default(field, outputBytes);
+    var syndromeCoefficients = new Uint8ClampedArray(twoS);
+    var error = false;
+    for (var s = 0; s < twoS; s++) {
+        var evaluation = poly.evaluateAt(field.exp(s + field.generatorBase));
+        syndromeCoefficients[syndromeCoefficients.length - 1 - s] = evaluation;
+        if (evaluation !== 0) {
+            error = true;
+        }
+    }
+    if (!error) {
+        return outputBytes;
+    }
+    var syndrome = new GenericGFPoly_1.default(field, syndromeCoefficients);
+    var sigmaOmega = runEuclideanAlgorithm(field, field.buildMonomial(twoS, 1), syndrome, twoS);
+    if (sigmaOmega === null) {
+        return null;
+    }
+    var errorLocations = findErrorLocations(field, sigmaOmega[0]);
+    if (errorLocations == null) {
+        return null;
+    }
+    var errorMagnitudes = findErrorMagnitudes(field, sigmaOmega[1], errorLocations);
+    for (var i = 0; i < errorLocations.length; i++) {
+        var position = outputBytes.length - 1 - field.log(errorLocations[i]);
+        if (position < 0) {
+            return null;
+        }
+        outputBytes[position] = GenericGF_1.addOrSubtractGF(outputBytes[position], errorMagnitudes[i]);
+    }
+    return outputBytes;
+}
+exports.decode = decode;
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.VERSIONS = [
+    {
+        infoBits: null,
+        versionNumber: 1,
+        alignmentPatternCenters: [],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 7,
+                ecBlocks: [{ numBlocks: 1, dataCodewordsPerBlock: 19 }],
+            },
+            {
+                ecCodewordsPerBlock: 10,
+                ecBlocks: [{ numBlocks: 1, dataCodewordsPerBlock: 16 }],
+            },
+            {
+                ecCodewordsPerBlock: 13,
+                ecBlocks: [{ numBlocks: 1, dataCodewordsPerBlock: 13 }],
+            },
+            {
+                ecCodewordsPerBlock: 17,
+                ecBlocks: [{ numBlocks: 1, dataCodewordsPerBlock: 9 }],
+            },
+        ],
+    },
+    {
+        infoBits: null,
+        versionNumber: 2,
+        alignmentPatternCenters: [6, 18],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 10,
+                ecBlocks: [{ numBlocks: 1, dataCodewordsPerBlock: 34 }],
+            },
+            {
+                ecCodewordsPerBlock: 16,
+                ecBlocks: [{ numBlocks: 1, dataCodewordsPerBlock: 28 }],
+            },
+            {
+                ecCodewordsPerBlock: 22,
+                ecBlocks: [{ numBlocks: 1, dataCodewordsPerBlock: 22 }],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [{ numBlocks: 1, dataCodewordsPerBlock: 16 }],
+            },
+        ],
+    },
+    {
+        infoBits: null,
+        versionNumber: 3,
+        alignmentPatternCenters: [6, 22],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 15,
+                ecBlocks: [{ numBlocks: 1, dataCodewordsPerBlock: 55 }],
+            },
+            {
+                ecCodewordsPerBlock: 26,
+                ecBlocks: [{ numBlocks: 1, dataCodewordsPerBlock: 44 }],
+            },
+            {
+                ecCodewordsPerBlock: 18,
+                ecBlocks: [{ numBlocks: 2, dataCodewordsPerBlock: 17 }],
+            },
+            {
+                ecCodewordsPerBlock: 22,
+                ecBlocks: [{ numBlocks: 2, dataCodewordsPerBlock: 13 }],
+            },
+        ],
+    },
+    {
+        infoBits: null,
+        versionNumber: 4,
+        alignmentPatternCenters: [6, 26],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 20,
+                ecBlocks: [{ numBlocks: 1, dataCodewordsPerBlock: 80 }],
+            },
+            {
+                ecCodewordsPerBlock: 18,
+                ecBlocks: [{ numBlocks: 2, dataCodewordsPerBlock: 32 }],
+            },
+            {
+                ecCodewordsPerBlock: 26,
+                ecBlocks: [{ numBlocks: 2, dataCodewordsPerBlock: 24 }],
+            },
+            {
+                ecCodewordsPerBlock: 16,
+                ecBlocks: [{ numBlocks: 4, dataCodewordsPerBlock: 9 }],
+            },
+        ],
+    },
+    {
+        infoBits: null,
+        versionNumber: 5,
+        alignmentPatternCenters: [6, 30],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 26,
+                ecBlocks: [{ numBlocks: 1, dataCodewordsPerBlock: 108 }],
+            },
+            {
+                ecCodewordsPerBlock: 24,
+                ecBlocks: [{ numBlocks: 2, dataCodewordsPerBlock: 43 }],
+            },
+            {
+                ecCodewordsPerBlock: 18,
+                ecBlocks: [
+                    { numBlocks: 2, dataCodewordsPerBlock: 15 },
+                    { numBlocks: 2, dataCodewordsPerBlock: 16 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 22,
+                ecBlocks: [
+                    { numBlocks: 2, dataCodewordsPerBlock: 11 },
+                    { numBlocks: 2, dataCodewordsPerBlock: 12 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: null,
+        versionNumber: 6,
+        alignmentPatternCenters: [6, 34],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 18,
+                ecBlocks: [{ numBlocks: 2, dataCodewordsPerBlock: 68 }],
+            },
+            {
+                ecCodewordsPerBlock: 16,
+                ecBlocks: [{ numBlocks: 4, dataCodewordsPerBlock: 27 }],
+            },
+            {
+                ecCodewordsPerBlock: 24,
+                ecBlocks: [{ numBlocks: 4, dataCodewordsPerBlock: 19 }],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [{ numBlocks: 4, dataCodewordsPerBlock: 15 }],
+            },
+        ],
+    },
+    {
+        infoBits: 0x07C94,
+        versionNumber: 7,
+        alignmentPatternCenters: [6, 22, 38],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 20,
+                ecBlocks: [{ numBlocks: 2, dataCodewordsPerBlock: 78 }],
+            },
+            {
+                ecCodewordsPerBlock: 18,
+                ecBlocks: [{ numBlocks: 4, dataCodewordsPerBlock: 31 }],
+            },
+            {
+                ecCodewordsPerBlock: 18,
+                ecBlocks: [
+                    { numBlocks: 2, dataCodewordsPerBlock: 14 },
+                    { numBlocks: 4, dataCodewordsPerBlock: 15 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 26,
+                ecBlocks: [
+                    { numBlocks: 4, dataCodewordsPerBlock: 13 },
+                    { numBlocks: 1, dataCodewordsPerBlock: 14 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x085BC,
+        versionNumber: 8,
+        alignmentPatternCenters: [6, 24, 42],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 24,
+                ecBlocks: [{ numBlocks: 2, dataCodewordsPerBlock: 97 }],
+            },
+            {
+                ecCodewordsPerBlock: 22,
+                ecBlocks: [
+                    { numBlocks: 2, dataCodewordsPerBlock: 38 },
+                    { numBlocks: 2, dataCodewordsPerBlock: 39 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 22,
+                ecBlocks: [
+                    { numBlocks: 4, dataCodewordsPerBlock: 18 },
+                    { numBlocks: 2, dataCodewordsPerBlock: 19 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 26,
+                ecBlocks: [
+                    { numBlocks: 4, dataCodewordsPerBlock: 14 },
+                    { numBlocks: 2, dataCodewordsPerBlock: 15 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x09A99,
+        versionNumber: 9,
+        alignmentPatternCenters: [6, 26, 46],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [{ numBlocks: 2, dataCodewordsPerBlock: 116 }],
+            },
+            {
+                ecCodewordsPerBlock: 22,
+                ecBlocks: [
+                    { numBlocks: 3, dataCodewordsPerBlock: 36 },
+                    { numBlocks: 2, dataCodewordsPerBlock: 37 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 20,
+                ecBlocks: [
+                    { numBlocks: 4, dataCodewordsPerBlock: 16 },
+                    { numBlocks: 4, dataCodewordsPerBlock: 17 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 24,
+                ecBlocks: [
+                    { numBlocks: 4, dataCodewordsPerBlock: 12 },
+                    { numBlocks: 4, dataCodewordsPerBlock: 13 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x0A4D3,
+        versionNumber: 10,
+        alignmentPatternCenters: [6, 28, 50],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 18,
+                ecBlocks: [
+                    { numBlocks: 2, dataCodewordsPerBlock: 68 },
+                    { numBlocks: 2, dataCodewordsPerBlock: 69 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 26,
+                ecBlocks: [
+                    { numBlocks: 4, dataCodewordsPerBlock: 43 },
+                    { numBlocks: 1, dataCodewordsPerBlock: 44 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 24,
+                ecBlocks: [
+                    { numBlocks: 6, dataCodewordsPerBlock: 19 },
+                    { numBlocks: 2, dataCodewordsPerBlock: 20 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 6, dataCodewordsPerBlock: 15 },
+                    { numBlocks: 2, dataCodewordsPerBlock: 16 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x0BBF6,
+        versionNumber: 11,
+        alignmentPatternCenters: [6, 30, 54],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 20,
+                ecBlocks: [{ numBlocks: 4, dataCodewordsPerBlock: 81 }],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 1, dataCodewordsPerBlock: 50 },
+                    { numBlocks: 4, dataCodewordsPerBlock: 51 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 4, dataCodewordsPerBlock: 22 },
+                    { numBlocks: 4, dataCodewordsPerBlock: 23 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 24,
+                ecBlocks: [
+                    { numBlocks: 3, dataCodewordsPerBlock: 12 },
+                    { numBlocks: 8, dataCodewordsPerBlock: 13 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x0C762,
+        versionNumber: 12,
+        alignmentPatternCenters: [6, 32, 58],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 24,
+                ecBlocks: [
+                    { numBlocks: 2, dataCodewordsPerBlock: 92 },
+                    { numBlocks: 2, dataCodewordsPerBlock: 93 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 22,
+                ecBlocks: [
+                    { numBlocks: 6, dataCodewordsPerBlock: 36 },
+                    { numBlocks: 2, dataCodewordsPerBlock: 37 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 26,
+                ecBlocks: [
+                    { numBlocks: 4, dataCodewordsPerBlock: 20 },
+                    { numBlocks: 6, dataCodewordsPerBlock: 21 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 7, dataCodewordsPerBlock: 14 },
+                    { numBlocks: 4, dataCodewordsPerBlock: 15 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x0D847,
+        versionNumber: 13,
+        alignmentPatternCenters: [6, 34, 62],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 26,
+                ecBlocks: [{ numBlocks: 4, dataCodewordsPerBlock: 107 }],
+            },
+            {
+                ecCodewordsPerBlock: 22,
+                ecBlocks: [
+                    { numBlocks: 8, dataCodewordsPerBlock: 37 },
+                    { numBlocks: 1, dataCodewordsPerBlock: 38 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 24,
+                ecBlocks: [
+                    { numBlocks: 8, dataCodewordsPerBlock: 20 },
+                    { numBlocks: 4, dataCodewordsPerBlock: 21 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 22,
+                ecBlocks: [
+                    { numBlocks: 12, dataCodewordsPerBlock: 11 },
+                    { numBlocks: 4, dataCodewordsPerBlock: 12 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x0E60D,
+        versionNumber: 14,
+        alignmentPatternCenters: [6, 26, 46, 66],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 3, dataCodewordsPerBlock: 115 },
+                    { numBlocks: 1, dataCodewordsPerBlock: 116 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 24,
+                ecBlocks: [
+                    { numBlocks: 4, dataCodewordsPerBlock: 40 },
+                    { numBlocks: 5, dataCodewordsPerBlock: 41 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 20,
+                ecBlocks: [
+                    { numBlocks: 11, dataCodewordsPerBlock: 16 },
+                    { numBlocks: 5, dataCodewordsPerBlock: 17 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 24,
+                ecBlocks: [
+                    { numBlocks: 11, dataCodewordsPerBlock: 12 },
+                    { numBlocks: 5, dataCodewordsPerBlock: 13 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x0F928,
+        versionNumber: 15,
+        alignmentPatternCenters: [6, 26, 48, 70],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 22,
+                ecBlocks: [
+                    { numBlocks: 5, dataCodewordsPerBlock: 87 },
+                    { numBlocks: 1, dataCodewordsPerBlock: 88 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 24,
+                ecBlocks: [
+                    { numBlocks: 5, dataCodewordsPerBlock: 41 },
+                    { numBlocks: 5, dataCodewordsPerBlock: 42 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 5, dataCodewordsPerBlock: 24 },
+                    { numBlocks: 7, dataCodewordsPerBlock: 25 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 24,
+                ecBlocks: [
+                    { numBlocks: 11, dataCodewordsPerBlock: 12 },
+                    { numBlocks: 7, dataCodewordsPerBlock: 13 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x10B78,
+        versionNumber: 16,
+        alignmentPatternCenters: [6, 26, 50, 74],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 24,
+                ecBlocks: [
+                    { numBlocks: 5, dataCodewordsPerBlock: 98 },
+                    { numBlocks: 1, dataCodewordsPerBlock: 99 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 7, dataCodewordsPerBlock: 45 },
+                    { numBlocks: 3, dataCodewordsPerBlock: 46 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 24,
+                ecBlocks: [
+                    { numBlocks: 15, dataCodewordsPerBlock: 19 },
+                    { numBlocks: 2, dataCodewordsPerBlock: 20 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 3, dataCodewordsPerBlock: 15 },
+                    { numBlocks: 13, dataCodewordsPerBlock: 16 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x1145D,
+        versionNumber: 17,
+        alignmentPatternCenters: [6, 30, 54, 78],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 1, dataCodewordsPerBlock: 107 },
+                    { numBlocks: 5, dataCodewordsPerBlock: 108 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 10, dataCodewordsPerBlock: 46 },
+                    { numBlocks: 1, dataCodewordsPerBlock: 47 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 1, dataCodewordsPerBlock: 22 },
+                    { numBlocks: 15, dataCodewordsPerBlock: 23 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 2, dataCodewordsPerBlock: 14 },
+                    { numBlocks: 17, dataCodewordsPerBlock: 15 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x12A17,
+        versionNumber: 18,
+        alignmentPatternCenters: [6, 30, 56, 82],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 5, dataCodewordsPerBlock: 120 },
+                    { numBlocks: 1, dataCodewordsPerBlock: 121 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 26,
+                ecBlocks: [
+                    { numBlocks: 9, dataCodewordsPerBlock: 43 },
+                    { numBlocks: 4, dataCodewordsPerBlock: 44 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 17, dataCodewordsPerBlock: 22 },
+                    { numBlocks: 1, dataCodewordsPerBlock: 23 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 2, dataCodewordsPerBlock: 14 },
+                    { numBlocks: 19, dataCodewordsPerBlock: 15 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x13532,
+        versionNumber: 19,
+        alignmentPatternCenters: [6, 30, 58, 86],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 3, dataCodewordsPerBlock: 113 },
+                    { numBlocks: 4, dataCodewordsPerBlock: 114 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 26,
+                ecBlocks: [
+                    { numBlocks: 3, dataCodewordsPerBlock: 44 },
+                    { numBlocks: 11, dataCodewordsPerBlock: 45 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 26,
+                ecBlocks: [
+                    { numBlocks: 17, dataCodewordsPerBlock: 21 },
+                    { numBlocks: 4, dataCodewordsPerBlock: 22 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 26,
+                ecBlocks: [
+                    { numBlocks: 9, dataCodewordsPerBlock: 13 },
+                    { numBlocks: 16, dataCodewordsPerBlock: 14 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x149A6,
+        versionNumber: 20,
+        alignmentPatternCenters: [6, 34, 62, 90],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 3, dataCodewordsPerBlock: 107 },
+                    { numBlocks: 5, dataCodewordsPerBlock: 108 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 26,
+                ecBlocks: [
+                    { numBlocks: 3, dataCodewordsPerBlock: 41 },
+                    { numBlocks: 13, dataCodewordsPerBlock: 42 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 15, dataCodewordsPerBlock: 24 },
+                    { numBlocks: 5, dataCodewordsPerBlock: 25 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 15, dataCodewordsPerBlock: 15 },
+                    { numBlocks: 10, dataCodewordsPerBlock: 16 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x15683,
+        versionNumber: 21,
+        alignmentPatternCenters: [6, 28, 50, 72, 94],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 4, dataCodewordsPerBlock: 116 },
+                    { numBlocks: 4, dataCodewordsPerBlock: 117 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 26,
+                ecBlocks: [{ numBlocks: 17, dataCodewordsPerBlock: 42 }],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 17, dataCodewordsPerBlock: 22 },
+                    { numBlocks: 6, dataCodewordsPerBlock: 23 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 19, dataCodewordsPerBlock: 16 },
+                    { numBlocks: 6, dataCodewordsPerBlock: 17 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x168C9,
+        versionNumber: 22,
+        alignmentPatternCenters: [6, 26, 50, 74, 98],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 2, dataCodewordsPerBlock: 111 },
+                    { numBlocks: 7, dataCodewordsPerBlock: 112 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [{ numBlocks: 17, dataCodewordsPerBlock: 46 }],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 7, dataCodewordsPerBlock: 24 },
+                    { numBlocks: 16, dataCodewordsPerBlock: 25 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 24,
+                ecBlocks: [{ numBlocks: 34, dataCodewordsPerBlock: 13 }],
+            },
+        ],
+    },
+    {
+        infoBits: 0x177EC,
+        versionNumber: 23,
+        alignmentPatternCenters: [6, 30, 54, 74, 102],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 4, dataCodewordsPerBlock: 121 },
+                    { numBlocks: 5, dataCodewordsPerBlock: 122 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 4, dataCodewordsPerBlock: 47 },
+                    { numBlocks: 14, dataCodewordsPerBlock: 48 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 11, dataCodewordsPerBlock: 24 },
+                    { numBlocks: 14, dataCodewordsPerBlock: 25 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 16, dataCodewordsPerBlock: 15 },
+                    { numBlocks: 14, dataCodewordsPerBlock: 16 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x18EC4,
+        versionNumber: 24,
+        alignmentPatternCenters: [6, 28, 54, 80, 106],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 6, dataCodewordsPerBlock: 117 },
+                    { numBlocks: 4, dataCodewordsPerBlock: 118 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 6, dataCodewordsPerBlock: 45 },
+                    { numBlocks: 14, dataCodewordsPerBlock: 46 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 11, dataCodewordsPerBlock: 24 },
+                    { numBlocks: 16, dataCodewordsPerBlock: 25 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 30, dataCodewordsPerBlock: 16 },
+                    { numBlocks: 2, dataCodewordsPerBlock: 17 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x191E1,
+        versionNumber: 25,
+        alignmentPatternCenters: [6, 32, 58, 84, 110],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 26,
+                ecBlocks: [
+                    { numBlocks: 8, dataCodewordsPerBlock: 106 },
+                    { numBlocks: 4, dataCodewordsPerBlock: 107 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 8, dataCodewordsPerBlock: 47 },
+                    { numBlocks: 13, dataCodewordsPerBlock: 48 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 7, dataCodewordsPerBlock: 24 },
+                    { numBlocks: 22, dataCodewordsPerBlock: 25 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 22, dataCodewordsPerBlock: 15 },
+                    { numBlocks: 13, dataCodewordsPerBlock: 16 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x1AFAB,
+        versionNumber: 26,
+        alignmentPatternCenters: [6, 30, 58, 86, 114],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 10, dataCodewordsPerBlock: 114 },
+                    { numBlocks: 2, dataCodewordsPerBlock: 115 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 19, dataCodewordsPerBlock: 46 },
+                    { numBlocks: 4, dataCodewordsPerBlock: 47 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 28, dataCodewordsPerBlock: 22 },
+                    { numBlocks: 6, dataCodewordsPerBlock: 23 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 33, dataCodewordsPerBlock: 16 },
+                    { numBlocks: 4, dataCodewordsPerBlock: 17 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x1B08E,
+        versionNumber: 27,
+        alignmentPatternCenters: [6, 34, 62, 90, 118],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 8, dataCodewordsPerBlock: 122 },
+                    { numBlocks: 4, dataCodewordsPerBlock: 123 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 22, dataCodewordsPerBlock: 45 },
+                    { numBlocks: 3, dataCodewordsPerBlock: 46 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 8, dataCodewordsPerBlock: 23 },
+                    { numBlocks: 26, dataCodewordsPerBlock: 24 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 12, dataCodewordsPerBlock: 15 },
+                    { numBlocks: 28, dataCodewordsPerBlock: 16 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x1CC1A,
+        versionNumber: 28,
+        alignmentPatternCenters: [6, 26, 50, 74, 98, 122],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 3, dataCodewordsPerBlock: 117 },
+                    { numBlocks: 10, dataCodewordsPerBlock: 118 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 3, dataCodewordsPerBlock: 45 },
+                    { numBlocks: 23, dataCodewordsPerBlock: 46 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 4, dataCodewordsPerBlock: 24 },
+                    { numBlocks: 31, dataCodewordsPerBlock: 25 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 11, dataCodewordsPerBlock: 15 },
+                    { numBlocks: 31, dataCodewordsPerBlock: 16 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x1D33F,
+        versionNumber: 29,
+        alignmentPatternCenters: [6, 30, 54, 78, 102, 126],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 7, dataCodewordsPerBlock: 116 },
+                    { numBlocks: 7, dataCodewordsPerBlock: 117 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 21, dataCodewordsPerBlock: 45 },
+                    { numBlocks: 7, dataCodewordsPerBlock: 46 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 1, dataCodewordsPerBlock: 23 },
+                    { numBlocks: 37, dataCodewordsPerBlock: 24 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 19, dataCodewordsPerBlock: 15 },
+                    { numBlocks: 26, dataCodewordsPerBlock: 16 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x1ED75,
+        versionNumber: 30,
+        alignmentPatternCenters: [6, 26, 52, 78, 104, 130],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 5, dataCodewordsPerBlock: 115 },
+                    { numBlocks: 10, dataCodewordsPerBlock: 116 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 19, dataCodewordsPerBlock: 47 },
+                    { numBlocks: 10, dataCodewordsPerBlock: 48 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 15, dataCodewordsPerBlock: 24 },
+                    { numBlocks: 25, dataCodewordsPerBlock: 25 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 23, dataCodewordsPerBlock: 15 },
+                    { numBlocks: 25, dataCodewordsPerBlock: 16 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x1F250,
+        versionNumber: 31,
+        alignmentPatternCenters: [6, 30, 56, 82, 108, 134],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 13, dataCodewordsPerBlock: 115 },
+                    { numBlocks: 3, dataCodewordsPerBlock: 116 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 2, dataCodewordsPerBlock: 46 },
+                    { numBlocks: 29, dataCodewordsPerBlock: 47 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 42, dataCodewordsPerBlock: 24 },
+                    { numBlocks: 1, dataCodewordsPerBlock: 25 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 23, dataCodewordsPerBlock: 15 },
+                    { numBlocks: 28, dataCodewordsPerBlock: 16 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x209D5,
+        versionNumber: 32,
+        alignmentPatternCenters: [6, 34, 60, 86, 112, 138],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [{ numBlocks: 17, dataCodewordsPerBlock: 115 }],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 10, dataCodewordsPerBlock: 46 },
+                    { numBlocks: 23, dataCodewordsPerBlock: 47 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 10, dataCodewordsPerBlock: 24 },
+                    { numBlocks: 35, dataCodewordsPerBlock: 25 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 19, dataCodewordsPerBlock: 15 },
+                    { numBlocks: 35, dataCodewordsPerBlock: 16 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x216F0,
+        versionNumber: 33,
+        alignmentPatternCenters: [6, 30, 58, 86, 114, 142],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 17, dataCodewordsPerBlock: 115 },
+                    { numBlocks: 1, dataCodewordsPerBlock: 116 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 14, dataCodewordsPerBlock: 46 },
+                    { numBlocks: 21, dataCodewordsPerBlock: 47 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 29, dataCodewordsPerBlock: 24 },
+                    { numBlocks: 19, dataCodewordsPerBlock: 25 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 11, dataCodewordsPerBlock: 15 },
+                    { numBlocks: 46, dataCodewordsPerBlock: 16 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x228BA,
+        versionNumber: 34,
+        alignmentPatternCenters: [6, 34, 62, 90, 118, 146],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 13, dataCodewordsPerBlock: 115 },
+                    { numBlocks: 6, dataCodewordsPerBlock: 116 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 14, dataCodewordsPerBlock: 46 },
+                    { numBlocks: 23, dataCodewordsPerBlock: 47 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 44, dataCodewordsPerBlock: 24 },
+                    { numBlocks: 7, dataCodewordsPerBlock: 25 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 59, dataCodewordsPerBlock: 16 },
+                    { numBlocks: 1, dataCodewordsPerBlock: 17 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x2379F,
+        versionNumber: 35,
+        alignmentPatternCenters: [6, 30, 54, 78, 102, 126, 150],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 12, dataCodewordsPerBlock: 121 },
+                    { numBlocks: 7, dataCodewordsPerBlock: 122 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 12, dataCodewordsPerBlock: 47 },
+                    { numBlocks: 26, dataCodewordsPerBlock: 48 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 39, dataCodewordsPerBlock: 24 },
+                    { numBlocks: 14, dataCodewordsPerBlock: 25 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 22, dataCodewordsPerBlock: 15 },
+                    { numBlocks: 41, dataCodewordsPerBlock: 16 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x24B0B,
+        versionNumber: 36,
+        alignmentPatternCenters: [6, 24, 50, 76, 102, 128, 154],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 6, dataCodewordsPerBlock: 121 },
+                    { numBlocks: 14, dataCodewordsPerBlock: 122 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 6, dataCodewordsPerBlock: 47 },
+                    { numBlocks: 34, dataCodewordsPerBlock: 48 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 46, dataCodewordsPerBlock: 24 },
+                    { numBlocks: 10, dataCodewordsPerBlock: 25 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 2, dataCodewordsPerBlock: 15 },
+                    { numBlocks: 64, dataCodewordsPerBlock: 16 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x2542E,
+        versionNumber: 37,
+        alignmentPatternCenters: [6, 28, 54, 80, 106, 132, 158],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 17, dataCodewordsPerBlock: 122 },
+                    { numBlocks: 4, dataCodewordsPerBlock: 123 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 29, dataCodewordsPerBlock: 46 },
+                    { numBlocks: 14, dataCodewordsPerBlock: 47 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 49, dataCodewordsPerBlock: 24 },
+                    { numBlocks: 10, dataCodewordsPerBlock: 25 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 24, dataCodewordsPerBlock: 15 },
+                    { numBlocks: 46, dataCodewordsPerBlock: 16 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x26A64,
+        versionNumber: 38,
+        alignmentPatternCenters: [6, 32, 58, 84, 110, 136, 162],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 4, dataCodewordsPerBlock: 122 },
+                    { numBlocks: 18, dataCodewordsPerBlock: 123 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 13, dataCodewordsPerBlock: 46 },
+                    { numBlocks: 32, dataCodewordsPerBlock: 47 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 48, dataCodewordsPerBlock: 24 },
+                    { numBlocks: 14, dataCodewordsPerBlock: 25 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 42, dataCodewordsPerBlock: 15 },
+                    { numBlocks: 32, dataCodewordsPerBlock: 16 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x27541,
+        versionNumber: 39,
+        alignmentPatternCenters: [6, 26, 54, 82, 110, 138, 166],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 20, dataCodewordsPerBlock: 117 },
+                    { numBlocks: 4, dataCodewordsPerBlock: 118 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 40, dataCodewordsPerBlock: 47 },
+                    { numBlocks: 7, dataCodewordsPerBlock: 48 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 43, dataCodewordsPerBlock: 24 },
+                    { numBlocks: 22, dataCodewordsPerBlock: 25 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 10, dataCodewordsPerBlock: 15 },
+                    { numBlocks: 67, dataCodewordsPerBlock: 16 },
+                ],
+            },
+        ],
+    },
+    {
+        infoBits: 0x28C69,
+        versionNumber: 40,
+        alignmentPatternCenters: [6, 30, 58, 86, 114, 142, 170],
+        errorCorrectionLevels: [
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 19, dataCodewordsPerBlock: 118 },
+                    { numBlocks: 6, dataCodewordsPerBlock: 119 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 28,
+                ecBlocks: [
+                    { numBlocks: 18, dataCodewordsPerBlock: 47 },
+                    { numBlocks: 31, dataCodewordsPerBlock: 48 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 34, dataCodewordsPerBlock: 24 },
+                    { numBlocks: 34, dataCodewordsPerBlock: 25 },
+                ],
+            },
+            {
+                ecCodewordsPerBlock: 30,
+                ecBlocks: [
+                    { numBlocks: 20, dataCodewordsPerBlock: 15 },
+                    { numBlocks: 61, dataCodewordsPerBlock: 16 },
+                ],
+            },
+        ],
+    },
+];
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var BitMatrix_1 = __webpack_require__(0);
+function squareToQuadrilateral(p1, p2, p3, p4) {
+    var dx3 = p1.x - p2.x + p3.x - p4.x;
+    var dy3 = p1.y - p2.y + p3.y - p4.y;
+    if (dx3 === 0 && dy3 === 0) {
+        return {
+            a11: p2.x - p1.x,
+            a12: p2.y - p1.y,
+            a13: 0,
+            a21: p3.x - p2.x,
+            a22: p3.y - p2.y,
+            a23: 0,
+            a31: p1.x,
+            a32: p1.y,
+            a33: 1,
+        };
+    }
+    else {
+        var dx1 = p2.x - p3.x;
+        var dx2 = p4.x - p3.x;
+        var dy1 = p2.y - p3.y;
+        var dy2 = p4.y - p3.y;
+        var denominator = dx1 * dy2 - dx2 * dy1;
+        var a13 = (dx3 * dy2 - dx2 * dy3) / denominator;
+        var a23 = (dx1 * dy3 - dx3 * dy1) / denominator;
+        return {
+            a11: p2.x - p1.x + a13 * p2.x,
+            a12: p2.y - p1.y + a13 * p2.y,
+            a13: a13,
+            a21: p4.x - p1.x + a23 * p4.x,
+            a22: p4.y - p1.y + a23 * p4.y,
+            a23: a23,
+            a31: p1.x,
+            a32: p1.y,
+            a33: 1,
+        };
+    }
+}
+function quadrilateralToSquare(p1, p2, p3, p4) {
+    // Here, the adjoint serves as the inverse:
+    var sToQ = squareToQuadrilateral(p1, p2, p3, p4);
+    return {
+        a11: sToQ.a22 * sToQ.a33 - sToQ.a23 * sToQ.a32,
+        a12: sToQ.a13 * sToQ.a32 - sToQ.a12 * sToQ.a33,
+        a13: sToQ.a12 * sToQ.a23 - sToQ.a13 * sToQ.a22,
+        a21: sToQ.a23 * sToQ.a31 - sToQ.a21 * sToQ.a33,
+        a22: sToQ.a11 * sToQ.a33 - sToQ.a13 * sToQ.a31,
+        a23: sToQ.a13 * sToQ.a21 - sToQ.a11 * sToQ.a23,
+        a31: sToQ.a21 * sToQ.a32 - sToQ.a22 * sToQ.a31,
+        a32: sToQ.a12 * sToQ.a31 - sToQ.a11 * sToQ.a32,
+        a33: sToQ.a11 * sToQ.a22 - sToQ.a12 * sToQ.a21,
+    };
+}
+function times(a, b) {
+    return {
+        a11: a.a11 * b.a11 + a.a21 * b.a12 + a.a31 * b.a13,
+        a12: a.a12 * b.a11 + a.a22 * b.a12 + a.a32 * b.a13,
+        a13: a.a13 * b.a11 + a.a23 * b.a12 + a.a33 * b.a13,
+        a21: a.a11 * b.a21 + a.a21 * b.a22 + a.a31 * b.a23,
+        a22: a.a12 * b.a21 + a.a22 * b.a22 + a.a32 * b.a23,
+        a23: a.a13 * b.a21 + a.a23 * b.a22 + a.a33 * b.a23,
+        a31: a.a11 * b.a31 + a.a21 * b.a32 + a.a31 * b.a33,
+        a32: a.a12 * b.a31 + a.a22 * b.a32 + a.a32 * b.a33,
+        a33: a.a13 * b.a31 + a.a23 * b.a32 + a.a33 * b.a33,
+    };
+}
+function extract(image, location) {
+    var qToS = quadrilateralToSquare({ x: 3.5, y: 3.5 }, { x: location.dimension - 3.5, y: 3.5 }, { x: location.dimension - 6.5, y: location.dimension - 6.5 }, { x: 3.5, y: location.dimension - 3.5 });
+    var sToQ = squareToQuadrilateral(location.topLeft, location.topRight, location.alignmentPattern, location.bottomLeft);
+    var transform = times(sToQ, qToS);
+    var matrix = BitMatrix_1.BitMatrix.createEmpty(location.dimension, location.dimension);
+    var mappingFunction = function (x, y) {
+        var denominator = transform.a13 * x + transform.a23 * y + transform.a33;
+        return {
+            x: (transform.a11 * x + transform.a21 * y + transform.a31) / denominator,
+            y: (transform.a12 * x + transform.a22 * y + transform.a32) / denominator,
+        };
+    };
+    for (var y = 0; y < location.dimension; y++) {
+        for (var x = 0; x < location.dimension; x++) {
+            var xValue = x + 0.5;
+            var yValue = y + 0.5;
+            var sourcePixel = mappingFunction(xValue, yValue);
+            matrix.set(x, y, image.get(Math.floor(sourcePixel.x), Math.floor(sourcePixel.y)));
+        }
+    }
+    return {
+        matrix: matrix,
+        mappingFunction: mappingFunction,
+    };
+}
+exports.extract = extract;
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var MAX_FINDERPATTERNS_TO_SEARCH = 4;
+var MIN_QUAD_RATIO = 0.5;
+var MAX_QUAD_RATIO = 1.5;
+var distance = function (a, b) { return Math.sqrt(Math.pow((b.x - a.x), 2) + Math.pow((b.y - a.y), 2)); };
+function sum(values) {
+    return values.reduce(function (a, b) { return a + b; });
+}
+// Takes three finder patterns and organizes them into topLeft, topRight, etc
+function reorderFinderPatterns(pattern1, pattern2, pattern3) {
+    // Find distances between pattern centers
+    var oneTwoDistance = distance(pattern1, pattern2);
+    var twoThreeDistance = distance(pattern2, pattern3);
+    var oneThreeDistance = distance(pattern1, pattern3);
+    var bottomLeft;
+    var topLeft;
+    var topRight;
+    // Assume one closest to other two is B; A and C will just be guesses at first
+    if (twoThreeDistance >= oneTwoDistance && twoThreeDistance >= oneThreeDistance) {
+        _a = [pattern2, pattern1, pattern3], bottomLeft = _a[0], topLeft = _a[1], topRight = _a[2];
+    }
+    else if (oneThreeDistance >= twoThreeDistance && oneThreeDistance >= oneTwoDistance) {
+        _b = [pattern1, pattern2, pattern3], bottomLeft = _b[0], topLeft = _b[1], topRight = _b[2];
+    }
+    else {
+        _c = [pattern1, pattern3, pattern2], bottomLeft = _c[0], topLeft = _c[1], topRight = _c[2];
+    }
+    // Use cross product to figure out whether bottomLeft (A) and topRight (C) are correct or flipped in relation to topLeft (B)
+    // This asks whether BC x BA has a positive z component, which is the arrangement we want. If it's negative, then
+    // we've got it flipped around and should swap topRight and bottomLeft.
+    if (((topRight.x - topLeft.x) * (bottomLeft.y - topLeft.y)) - ((topRight.y - topLeft.y) * (bottomLeft.x - topLeft.x)) < 0) {
+        _d = [topRight, bottomLeft], bottomLeft = _d[0], topRight = _d[1];
+    }
+    return { bottomLeft: bottomLeft, topLeft: topLeft, topRight: topRight };
+    var _a, _b, _c, _d;
+}
+// Computes the dimension (number of modules on a side) of the QR Code based on the position of the finder patterns
+function computeDimension(topLeft, topRight, bottomLeft, matrix) {
+    var moduleSize = (sum(countBlackWhiteRun(topLeft, bottomLeft, matrix, 5)) / 7 + // Divide by 7 since the ratio is 1:1:3:1:1
+        sum(countBlackWhiteRun(topLeft, topRight, matrix, 5)) / 7 +
+        sum(countBlackWhiteRun(bottomLeft, topLeft, matrix, 5)) / 7 +
+        sum(countBlackWhiteRun(topRight, topLeft, matrix, 5)) / 7) / 4;
+    if (moduleSize < 1) {
+        throw new Error("Invalid module size");
+    }
+    var topDimension = Math.round(distance(topLeft, topRight) / moduleSize);
+    var sideDimension = Math.round(distance(topLeft, bottomLeft) / moduleSize);
+    var dimension = Math.floor((topDimension + sideDimension) / 2) + 7;
+    switch (dimension % 4) {
+        case 0:
+            dimension++;
+            break;
+        case 2:
+            dimension--;
+            break;
+    }
+    return { dimension: dimension, moduleSize: moduleSize };
+}
+// Takes an origin point and an end point and counts the sizes of the black white run from the origin towards the end point.
+// Returns an array of elements, representing the pixel size of the black white run.
+// Uses a variant of http://en.wikipedia.org/wiki/Bresenham's_line_algorithm
+function countBlackWhiteRunTowardsPoint(origin, end, matrix, length) {
+    var switchPoints = [{ x: Math.floor(origin.x), y: Math.floor(origin.y) }];
+    var steep = Math.abs(end.y - origin.y) > Math.abs(end.x - origin.x);
+    var fromX;
+    var fromY;
+    var toX;
+    var toY;
+    if (steep) {
+        fromX = Math.floor(origin.y);
+        fromY = Math.floor(origin.x);
+        toX = Math.floor(end.y);
+        toY = Math.floor(end.x);
+    }
+    else {
+        fromX = Math.floor(origin.x);
+        fromY = Math.floor(origin.y);
+        toX = Math.floor(end.x);
+        toY = Math.floor(end.y);
+    }
+    var dx = Math.abs(toX - fromX);
+    var dy = Math.abs(toY - fromY);
+    var error = Math.floor(-dx / 2);
+    var xStep = fromX < toX ? 1 : -1;
+    var yStep = fromY < toY ? 1 : -1;
+    var currentPixel = true;
+    // Loop up until x == toX, but not beyond
+    for (var x = fromX, y = fromY; x !== toX + xStep; x += xStep) {
+        // Does current pixel mean we have moved white to black or vice versa?
+        // Scanning black in state 0,2 and white in state 1, so if we find the wrong
+        // color, advance to next state or end if we are in state 2 already
+        var realX = steep ? y : x;
+        var realY = steep ? x : y;
+        if (matrix.get(realX, realY) !== currentPixel) {
+            currentPixel = !currentPixel;
+            switchPoints.push({ x: realX, y: realY });
+            if (switchPoints.length === length + 1) {
+                break;
+            }
+        }
+        error += dy;
+        if (error > 0) {
+            if (y === toY) {
+                break;
+            }
+            y += yStep;
+            error -= dx;
+        }
+    }
+    var distances = [];
+    for (var i = 0; i < length; i++) {
+        if (switchPoints[i] && switchPoints[i + 1]) {
+            distances.push(distance(switchPoints[i], switchPoints[i + 1]));
+        }
+        else {
+            distances.push(0);
+        }
+    }
+    return distances;
+}
+// Takes an origin point and an end point and counts the sizes of the black white run in the origin point
+// along the line that intersects with the end point. Returns an array of elements, representing the pixel sizes
+// of the black white run. Takes a length which represents the number of switches from black to white to look for.
+function countBlackWhiteRun(origin, end, matrix, length) {
+    var rise = end.y - origin.y;
+    var run = end.x - origin.x;
+    var towardsEnd = countBlackWhiteRunTowardsPoint(origin, end, matrix, Math.ceil(length / 2));
+    var awayFromEnd = countBlackWhiteRunTowardsPoint(origin, { x: origin.x - run, y: origin.y - rise }, matrix, Math.ceil(length / 2));
+    var middleValue = towardsEnd.shift() + awayFromEnd.shift() - 1; // Substract one so we don't double count a pixel
+    return (_a = awayFromEnd.concat(middleValue)).concat.apply(_a, towardsEnd);
+    var _a;
+}
+// Takes in a black white run and an array of expected ratios. Returns the average size of the run as well as the "error" -
+// that is the amount the run diverges from the expected ratio
+function scoreBlackWhiteRun(sequence, ratios) {
+    var averageSize = sum(sequence) / sum(ratios);
+    var error = 0;
+    ratios.forEach(function (ratio, i) {
+        error += Math.pow((sequence[i] - ratio * averageSize), 2);
+    });
+    return { averageSize: averageSize, error: error };
+}
+// Takes an X,Y point and an array of sizes and scores the point against those ratios.
+// For example for a finder pattern takes the ratio list of 1:1:3:1:1 and checks horizontal, vertical and diagonal ratios
+// against that.
+function scorePattern(point, ratios, matrix) {
+    try {
+        var horizontalRun = countBlackWhiteRun(point, { x: -1, y: point.y }, matrix, ratios.length);
+        var verticalRun = countBlackWhiteRun(point, { x: point.x, y: -1 }, matrix, ratios.length);
+        var topLeftPoint = {
+            x: Math.max(0, point.x - point.y) - 1,
+            y: Math.max(0, point.y - point.x) - 1,
+        };
+        var topLeftBottomRightRun = countBlackWhiteRun(point, topLeftPoint, matrix, ratios.length);
+        var bottomLeftPoint = {
+            x: Math.min(matrix.width, point.x + point.y) + 1,
+            y: Math.min(matrix.height, point.y + point.x) + 1,
+        };
+        var bottomLeftTopRightRun = countBlackWhiteRun(point, bottomLeftPoint, matrix, ratios.length);
+        var horzError = scoreBlackWhiteRun(horizontalRun, ratios);
+        var vertError = scoreBlackWhiteRun(verticalRun, ratios);
+        var diagDownError = scoreBlackWhiteRun(topLeftBottomRightRun, ratios);
+        var diagUpError = scoreBlackWhiteRun(bottomLeftTopRightRun, ratios);
+        var ratioError = Math.sqrt(horzError.error * horzError.error +
+            vertError.error * vertError.error +
+            diagDownError.error * diagDownError.error +
+            diagUpError.error * diagUpError.error);
+        var avgSize = (horzError.averageSize + vertError.averageSize + diagDownError.averageSize + diagUpError.averageSize) / 4;
+        var sizeError = (Math.pow((horzError.averageSize - avgSize), 2) +
+            Math.pow((vertError.averageSize - avgSize), 2) +
+            Math.pow((diagDownError.averageSize - avgSize), 2) +
+            Math.pow((diagUpError.averageSize - avgSize), 2)) / avgSize;
+        return ratioError + sizeError;
+    }
+    catch (_a) {
+        return Infinity;
+    }
+}
+function locate(matrix) {
+    var finderPatternQuads = [];
+    var activeFinderPatternQuads = [];
+    var alignmentPatternQuads = [];
+    var activeAlignmentPatternQuads = [];
+    var _loop_1 = function (y) {
+        var length_1 = 0;
+        var lastBit = false;
+        var scans = [0, 0, 0, 0, 0];
+        var _loop_2 = function (x) {
+            var v = matrix.get(x, y);
+            if (v === lastBit) {
+                length_1++;
+            }
+            else {
+                scans = [scans[1], scans[2], scans[3], scans[4], length_1];
+                length_1 = 1;
+                lastBit = v;
+                // Do the last 5 color changes ~ match the expected ratio for a finder pattern? 1:1:3:1:1 of b:w:b:w:b
+                var averageFinderPatternBlocksize = sum(scans) / 7;
+                var validFinderPattern = Math.abs(scans[0] - averageFinderPatternBlocksize) < averageFinderPatternBlocksize &&
+                    Math.abs(scans[1] - averageFinderPatternBlocksize) < averageFinderPatternBlocksize &&
+                    Math.abs(scans[2] - 3 * averageFinderPatternBlocksize) < 3 * averageFinderPatternBlocksize &&
+                    Math.abs(scans[3] - averageFinderPatternBlocksize) < averageFinderPatternBlocksize &&
+                    Math.abs(scans[4] - averageFinderPatternBlocksize) < averageFinderPatternBlocksize &&
+                    !v; // And make sure the current pixel is white since finder patterns are bordered in white
+                // Do the last 3 color changes ~ match the expected ratio for an alignment pattern? 1:1:1 of w:b:w
+                var averageAlignmentPatternBlocksize = sum(scans.slice(-3)) / 3;
+                var validAlignmentPattern = Math.abs(scans[2] - averageAlignmentPatternBlocksize) < averageAlignmentPatternBlocksize &&
+                    Math.abs(scans[3] - averageAlignmentPatternBlocksize) < averageAlignmentPatternBlocksize &&
+                    Math.abs(scans[4] - averageAlignmentPatternBlocksize) < averageAlignmentPatternBlocksize &&
+                    v; // Is the current pixel black since alignment patterns are bordered in black
+                if (validFinderPattern) {
+                    // Compute the start and end x values of the large center black square
+                    var endX_1 = x - scans[3] - scans[4];
+                    var startX_1 = endX_1 - scans[2];
+                    var line = { startX: startX_1, endX: endX_1, y: y };
+                    // Is there a quad directly above the current spot? If so, extend it with the new line. Otherwise, create a new quad with
+                    // that line as the starting point.
+                    var matchingQuads = activeFinderPatternQuads.filter(function (q) {
+                        return (startX_1 >= q.bottom.startX && startX_1 <= q.bottom.endX) ||
+                            (endX_1 >= q.bottom.startX && startX_1 <= q.bottom.endX) ||
+                            (startX_1 <= q.bottom.startX && endX_1 >= q.bottom.endX && ((scans[2] / (q.bottom.endX - q.bottom.startX)) < MAX_QUAD_RATIO &&
+                                (scans[2] / (q.bottom.endX - q.bottom.startX)) > MIN_QUAD_RATIO));
+                    });
+                    if (matchingQuads.length > 0) {
+                        matchingQuads[0].bottom = line;
+                    }
+                    else {
+                        activeFinderPatternQuads.push({ top: line, bottom: line });
+                    }
+                }
+                if (validAlignmentPattern) {
+                    // Compute the start and end x values of the center black square
+                    var endX_2 = x - scans[4];
+                    var startX_2 = endX_2 - scans[3];
+                    var line = { startX: startX_2, y: y, endX: endX_2 };
+                    // Is there a quad directly above the current spot? If so, extend it with the new line. Otherwise, create a new quad with
+                    // that line as the starting point.
+                    var matchingQuads = activeAlignmentPatternQuads.filter(function (q) {
+                        return (startX_2 >= q.bottom.startX && startX_2 <= q.bottom.endX) ||
+                            (endX_2 >= q.bottom.startX && startX_2 <= q.bottom.endX) ||
+                            (startX_2 <= q.bottom.startX && endX_2 >= q.bottom.endX && ((scans[2] / (q.bottom.endX - q.bottom.startX)) < MAX_QUAD_RATIO &&
+                                (scans[2] / (q.bottom.endX - q.bottom.startX)) > MIN_QUAD_RATIO));
+                    });
+                    if (matchingQuads.length > 0) {
+                        matchingQuads[0].bottom = line;
+                    }
+                    else {
+                        activeAlignmentPatternQuads.push({ top: line, bottom: line });
+                    }
+                }
+            }
+        };
+        for (var x = -1; x <= matrix.width; x++) {
+            _loop_2(x);
+        }
+        finderPatternQuads.push.apply(finderPatternQuads, activeFinderPatternQuads.filter(function (q) { return q.bottom.y !== y && q.bottom.y - q.top.y >= 2; }));
+        activeFinderPatternQuads = activeFinderPatternQuads.filter(function (q) { return q.bottom.y === y; });
+        alignmentPatternQuads.push.apply(alignmentPatternQuads, activeAlignmentPatternQuads.filter(function (q) { return q.bottom.y !== y; }));
+        activeAlignmentPatternQuads = activeAlignmentPatternQuads.filter(function (q) { return q.bottom.y === y; });
+    };
+    for (var y = 0; y <= matrix.height; y++) {
+        _loop_1(y);
+    }
+    finderPatternQuads.push.apply(finderPatternQuads, activeFinderPatternQuads.filter(function (q) { return q.bottom.y - q.top.y >= 2; }));
+    alignmentPatternQuads.push.apply(alignmentPatternQuads, activeAlignmentPatternQuads);
+    var finderPatternGroups = finderPatternQuads
+        .filter(function (q) { return q.bottom.y - q.top.y >= 2; }) // All quads must be at least 2px tall since the center square is larger than a block
+        .map(function (q) {
+        var x = (q.top.startX + q.top.endX + q.bottom.startX + q.bottom.endX) / 4;
+        var y = (q.top.y + q.bottom.y + 1) / 2;
+        if (!matrix.get(Math.round(x), Math.round(y))) {
+            return;
+        }
+        var lengths = [q.top.endX - q.top.startX, q.bottom.endX - q.bottom.startX, q.bottom.y - q.top.y + 1];
+        var size = sum(lengths) / lengths.length;
+        var score = scorePattern({ x: Math.round(x), y: Math.round(y) }, [1, 1, 3, 1, 1], matrix);
+        return { score: score, x: x, y: y, size: size };
+    })
+        .filter(function (q) { return !!q; }) // Filter out any rejected quads from above
+        .sort(function (a, b) { return a.score - b.score; })
+        .map(function (point, i, finderPatterns) {
+        if (i > MAX_FINDERPATTERNS_TO_SEARCH) {
+            return null;
+        }
+        var otherPoints = finderPatterns
+            .filter(function (p, ii) { return i !== ii; })
+            .map(function (p) { return ({ x: p.x, y: p.y, score: p.score + (Math.pow((p.size - point.size), 2)) / point.size, size: p.size }); })
+            .sort(function (a, b) { return a.score - b.score; });
+        if (otherPoints.length < 2) {
+            return null;
+        }
+        var score = point.score + otherPoints[0].score + otherPoints[1].score;
+        return { points: [point].concat(otherPoints.slice(0, 2)), score: score };
+    })
+        .filter(function (q) { return !!q; }) // Filter out any rejected finder patterns from above
+        .sort(function (a, b) { return a.score - b.score; });
+    if (finderPatternGroups.length === 0) {
+        return null;
+    }
+    var _a = reorderFinderPatterns(finderPatternGroups[0].points[0], finderPatternGroups[0].points[1], finderPatternGroups[0].points[2]), topRight = _a.topRight, topLeft = _a.topLeft, bottomLeft = _a.bottomLeft;
+    // Now that we've found the three finder patterns we can determine the blockSize and the size of the QR code.
+    // We'll use these to help find the alignment pattern but also later when we do the extraction.
+    var dimension;
+    var moduleSize;
+    try {
+        (_b = computeDimension(topLeft, topRight, bottomLeft, matrix), dimension = _b.dimension, moduleSize = _b.moduleSize);
+    }
+    catch (e) {
+        return null;
+    }
+    // Now find the alignment pattern
+    var bottomRightFinderPattern = {
+        x: topRight.x - topLeft.x + bottomLeft.x,
+        y: topRight.y - topLeft.y + bottomLeft.y,
+    };
+    var modulesBetweenFinderPatterns = ((distance(topLeft, bottomLeft) + distance(topLeft, topRight)) / 2 / moduleSize);
+    var correctionToTopLeft = 1 - (3 / modulesBetweenFinderPatterns);
+    var expectedAlignmentPattern = {
+        x: topLeft.x + correctionToTopLeft * (bottomRightFinderPattern.x - topLeft.x),
+        y: topLeft.y + correctionToTopLeft * (bottomRightFinderPattern.y - topLeft.y),
+    };
+    var alignmentPatterns = alignmentPatternQuads
+        .map(function (q) {
+        var x = (q.top.startX + q.top.endX + q.bottom.startX + q.bottom.endX) / 4;
+        var y = (q.top.y + q.bottom.y + 1) / 2;
+        if (!matrix.get(Math.floor(x), Math.floor(y))) {
+            return;
+        }
+        var lengths = [q.top.endX - q.top.startX, q.bottom.endX - q.bottom.startX, (q.bottom.y - q.top.y + 1)];
+        var size = sum(lengths) / lengths.length;
+        var sizeScore = scorePattern({ x: Math.floor(x), y: Math.floor(y) }, [1, 1, 1], matrix);
+        var score = sizeScore + distance({ x: x, y: y }, expectedAlignmentPattern);
+        return { x: x, y: y, score: score };
+    })
+        .filter(function (v) { return !!v; })
+        .sort(function (a, b) { return a.score - b.score; });
+    // If there are less than 15 modules between finder patterns it's a version 1 QR code and as such has no alignmemnt pattern
+    // so we can only use our best guess.
+    var alignmentPattern = modulesBetweenFinderPatterns >= 15 && alignmentPatterns.length ? alignmentPatterns[0] : expectedAlignmentPattern;
+    return {
+        alignmentPattern: { x: alignmentPattern.x, y: alignmentPattern.y },
+        bottomLeft: { x: bottomLeft.x, y: bottomLeft.y },
+        dimension: dimension,
+        topLeft: { x: topLeft.x, y: topLeft.y },
+        topRight: { x: topRight.x, y: topRight.y },
+    };
+    var _b;
+}
+exports.locate = locate;
+
+
+/***/ })
+/******/ ])["default"];
+});
+},{}],75:[function(require,module,exports){
+(function (global){
+/**
+ * @license
+ * Lodash <https://lodash.com/>
+ * Copyright JS Foundation and other contributors <https://js.foundation/>
+ * Released under MIT license <https://lodash.com/license>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ */
+;(function() {
+
+  /** Used as a safe reference for `undefined` in pre-ES5 environments. */
+  var undefined;
+
+  /** Used as the semantic version number. */
+  var VERSION = '4.17.11';
+
+  /** Used as the size to enable large array optimizations. */
+  var LARGE_ARRAY_SIZE = 200;
+
+  /** Error message constants. */
+  var CORE_ERROR_TEXT = 'Unsupported core-js use. Try https://npms.io/search?q=ponyfill.',
+      FUNC_ERROR_TEXT = 'Expected a function';
+
+  /** Used to stand-in for `undefined` hash values. */
+  var HASH_UNDEFINED = '__lodash_hash_undefined__';
+
+  /** Used as the maximum memoize cache size. */
+  var MAX_MEMOIZE_SIZE = 500;
+
+  /** Used as the internal argument placeholder. */
+  var PLACEHOLDER = '__lodash_placeholder__';
+
+  /** Used to compose bitmasks for cloning. */
+  var CLONE_DEEP_FLAG = 1,
+      CLONE_FLAT_FLAG = 2,
+      CLONE_SYMBOLS_FLAG = 4;
+
+  /** Used to compose bitmasks for value comparisons. */
+  var COMPARE_PARTIAL_FLAG = 1,
+      COMPARE_UNORDERED_FLAG = 2;
+
+  /** Used to compose bitmasks for function metadata. */
+  var WRAP_BIND_FLAG = 1,
+      WRAP_BIND_KEY_FLAG = 2,
+      WRAP_CURRY_BOUND_FLAG = 4,
+      WRAP_CURRY_FLAG = 8,
+      WRAP_CURRY_RIGHT_FLAG = 16,
+      WRAP_PARTIAL_FLAG = 32,
+      WRAP_PARTIAL_RIGHT_FLAG = 64,
+      WRAP_ARY_FLAG = 128,
+      WRAP_REARG_FLAG = 256,
+      WRAP_FLIP_FLAG = 512;
+
+  /** Used as default options for `_.truncate`. */
+  var DEFAULT_TRUNC_LENGTH = 30,
+      DEFAULT_TRUNC_OMISSION = '...';
+
+  /** Used to detect hot functions by number of calls within a span of milliseconds. */
+  var HOT_COUNT = 800,
+      HOT_SPAN = 16;
+
+  /** Used to indicate the type of lazy iteratees. */
+  var LAZY_FILTER_FLAG = 1,
+      LAZY_MAP_FLAG = 2,
+      LAZY_WHILE_FLAG = 3;
+
+  /** Used as references for various `Number` constants. */
+  var INFINITY = 1 / 0,
+      MAX_SAFE_INTEGER = 9007199254740991,
+      MAX_INTEGER = 1.7976931348623157e+308,
+      NAN = 0 / 0;
+
+  /** Used as references for the maximum length and index of an array. */
+  var MAX_ARRAY_LENGTH = 4294967295,
+      MAX_ARRAY_INDEX = MAX_ARRAY_LENGTH - 1,
+      HALF_MAX_ARRAY_LENGTH = MAX_ARRAY_LENGTH >>> 1;
+
+  /** Used to associate wrap methods with their bit flags. */
+  var wrapFlags = [
+    ['ary', WRAP_ARY_FLAG],
+    ['bind', WRAP_BIND_FLAG],
+    ['bindKey', WRAP_BIND_KEY_FLAG],
+    ['curry', WRAP_CURRY_FLAG],
+    ['curryRight', WRAP_CURRY_RIGHT_FLAG],
+    ['flip', WRAP_FLIP_FLAG],
+    ['partial', WRAP_PARTIAL_FLAG],
+    ['partialRight', WRAP_PARTIAL_RIGHT_FLAG],
+    ['rearg', WRAP_REARG_FLAG]
+  ];
+
+  /** `Object#toString` result references. */
+  var argsTag = '[object Arguments]',
+      arrayTag = '[object Array]',
+      asyncTag = '[object AsyncFunction]',
+      boolTag = '[object Boolean]',
+      dateTag = '[object Date]',
+      domExcTag = '[object DOMException]',
+      errorTag = '[object Error]',
+      funcTag = '[object Function]',
+      genTag = '[object GeneratorFunction]',
+      mapTag = '[object Map]',
+      numberTag = '[object Number]',
+      nullTag = '[object Null]',
+      objectTag = '[object Object]',
+      promiseTag = '[object Promise]',
+      proxyTag = '[object Proxy]',
+      regexpTag = '[object RegExp]',
+      setTag = '[object Set]',
+      stringTag = '[object String]',
+      symbolTag = '[object Symbol]',
+      undefinedTag = '[object Undefined]',
+      weakMapTag = '[object WeakMap]',
+      weakSetTag = '[object WeakSet]';
+
+  var arrayBufferTag = '[object ArrayBuffer]',
+      dataViewTag = '[object DataView]',
+      float32Tag = '[object Float32Array]',
+      float64Tag = '[object Float64Array]',
+      int8Tag = '[object Int8Array]',
+      int16Tag = '[object Int16Array]',
+      int32Tag = '[object Int32Array]',
+      uint8Tag = '[object Uint8Array]',
+      uint8ClampedTag = '[object Uint8ClampedArray]',
+      uint16Tag = '[object Uint16Array]',
+      uint32Tag = '[object Uint32Array]';
+
+  /** Used to match empty string literals in compiled template source. */
+  var reEmptyStringLeading = /\b__p \+= '';/g,
+      reEmptyStringMiddle = /\b(__p \+=) '' \+/g,
+      reEmptyStringTrailing = /(__e\(.*?\)|\b__t\)) \+\n'';/g;
+
+  /** Used to match HTML entities and HTML characters. */
+  var reEscapedHtml = /&(?:amp|lt|gt|quot|#39);/g,
+      reUnescapedHtml = /[&<>"']/g,
+      reHasEscapedHtml = RegExp(reEscapedHtml.source),
+      reHasUnescapedHtml = RegExp(reUnescapedHtml.source);
+
+  /** Used to match template delimiters. */
+  var reEscape = /<%-([\s\S]+?)%>/g,
+      reEvaluate = /<%([\s\S]+?)%>/g,
+      reInterpolate = /<%=([\s\S]+?)%>/g;
+
+  /** Used to match property names within property paths. */
+  var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/,
+      reIsPlainProp = /^\w*$/,
+      rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
+
+  /**
+   * Used to match `RegExp`
+   * [syntax characters](http://ecma-international.org/ecma-262/7.0/#sec-patterns).
+   */
+  var reRegExpChar = /[\\^$.*+?()[\]{}|]/g,
+      reHasRegExpChar = RegExp(reRegExpChar.source);
+
+  /** Used to match leading and trailing whitespace. */
+  var reTrim = /^\s+|\s+$/g,
+      reTrimStart = /^\s+/,
+      reTrimEnd = /\s+$/;
+
+  /** Used to match wrap detail comments. */
+  var reWrapComment = /\{(?:\n\/\* \[wrapped with .+\] \*\/)?\n?/,
+      reWrapDetails = /\{\n\/\* \[wrapped with (.+)\] \*/,
+      reSplitDetails = /,? & /;
+
+  /** Used to match words composed of alphanumeric characters. */
+  var reAsciiWord = /[^\x00-\x2f\x3a-\x40\x5b-\x60\x7b-\x7f]+/g;
+
+  /** Used to match backslashes in property paths. */
+  var reEscapeChar = /\\(\\)?/g;
+
+  /**
+   * Used to match
+   * [ES template delimiters](http://ecma-international.org/ecma-262/7.0/#sec-template-literal-lexical-components).
+   */
+  var reEsTemplate = /\$\{([^\\}]*(?:\\.[^\\}]*)*)\}/g;
+
+  /** Used to match `RegExp` flags from their coerced string values. */
+  var reFlags = /\w*$/;
+
+  /** Used to detect bad signed hexadecimal string values. */
+  var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+
+  /** Used to detect binary string values. */
+  var reIsBinary = /^0b[01]+$/i;
+
+  /** Used to detect host constructors (Safari). */
+  var reIsHostCtor = /^\[object .+?Constructor\]$/;
+
+  /** Used to detect octal string values. */
+  var reIsOctal = /^0o[0-7]+$/i;
+
+  /** Used to detect unsigned integer values. */
+  var reIsUint = /^(?:0|[1-9]\d*)$/;
+
+  /** Used to match Latin Unicode letters (excluding mathematical operators). */
+  var reLatin = /[\xc0-\xd6\xd8-\xf6\xf8-\xff\u0100-\u017f]/g;
+
+  /** Used to ensure capturing order of template delimiters. */
+  var reNoMatch = /($^)/;
+
+  /** Used to match unescaped characters in compiled string literals. */
+  var reUnescapedString = /['\n\r\u2028\u2029\\]/g;
+
+  /** Used to compose unicode character classes. */
+  var rsAstralRange = '\\ud800-\\udfff',
+      rsComboMarksRange = '\\u0300-\\u036f',
+      reComboHalfMarksRange = '\\ufe20-\\ufe2f',
+      rsComboSymbolsRange = '\\u20d0-\\u20ff',
+      rsComboRange = rsComboMarksRange + reComboHalfMarksRange + rsComboSymbolsRange,
+      rsDingbatRange = '\\u2700-\\u27bf',
+      rsLowerRange = 'a-z\\xdf-\\xf6\\xf8-\\xff',
+      rsMathOpRange = '\\xac\\xb1\\xd7\\xf7',
+      rsNonCharRange = '\\x00-\\x2f\\x3a-\\x40\\x5b-\\x60\\x7b-\\xbf',
+      rsPunctuationRange = '\\u2000-\\u206f',
+      rsSpaceRange = ' \\t\\x0b\\f\\xa0\\ufeff\\n\\r\\u2028\\u2029\\u1680\\u180e\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200a\\u202f\\u205f\\u3000',
+      rsUpperRange = 'A-Z\\xc0-\\xd6\\xd8-\\xde',
+      rsVarRange = '\\ufe0e\\ufe0f',
+      rsBreakRange = rsMathOpRange + rsNonCharRange + rsPunctuationRange + rsSpaceRange;
+
+  /** Used to compose unicode capture groups. */
+  var rsApos = "['\u2019]",
+      rsAstral = '[' + rsAstralRange + ']',
+      rsBreak = '[' + rsBreakRange + ']',
+      rsCombo = '[' + rsComboRange + ']',
+      rsDigits = '\\d+',
+      rsDingbat = '[' + rsDingbatRange + ']',
+      rsLower = '[' + rsLowerRange + ']',
+      rsMisc = '[^' + rsAstralRange + rsBreakRange + rsDigits + rsDingbatRange + rsLowerRange + rsUpperRange + ']',
+      rsFitz = '\\ud83c[\\udffb-\\udfff]',
+      rsModifier = '(?:' + rsCombo + '|' + rsFitz + ')',
+      rsNonAstral = '[^' + rsAstralRange + ']',
+      rsRegional = '(?:\\ud83c[\\udde6-\\uddff]){2}',
+      rsSurrPair = '[\\ud800-\\udbff][\\udc00-\\udfff]',
+      rsUpper = '[' + rsUpperRange + ']',
+      rsZWJ = '\\u200d';
+
+  /** Used to compose unicode regexes. */
+  var rsMiscLower = '(?:' + rsLower + '|' + rsMisc + ')',
+      rsMiscUpper = '(?:' + rsUpper + '|' + rsMisc + ')',
+      rsOptContrLower = '(?:' + rsApos + '(?:d|ll|m|re|s|t|ve))?',
+      rsOptContrUpper = '(?:' + rsApos + '(?:D|LL|M|RE|S|T|VE))?',
+      reOptMod = rsModifier + '?',
+      rsOptVar = '[' + rsVarRange + ']?',
+      rsOptJoin = '(?:' + rsZWJ + '(?:' + [rsNonAstral, rsRegional, rsSurrPair].join('|') + ')' + rsOptVar + reOptMod + ')*',
+      rsOrdLower = '\\d*(?:1st|2nd|3rd|(?![123])\\dth)(?=\\b|[A-Z_])',
+      rsOrdUpper = '\\d*(?:1ST|2ND|3RD|(?![123])\\dTH)(?=\\b|[a-z_])',
+      rsSeq = rsOptVar + reOptMod + rsOptJoin,
+      rsEmoji = '(?:' + [rsDingbat, rsRegional, rsSurrPair].join('|') + ')' + rsSeq,
+      rsSymbol = '(?:' + [rsNonAstral + rsCombo + '?', rsCombo, rsRegional, rsSurrPair, rsAstral].join('|') + ')';
+
+  /** Used to match apostrophes. */
+  var reApos = RegExp(rsApos, 'g');
+
+  /**
+   * Used to match [combining diacritical marks](https://en.wikipedia.org/wiki/Combining_Diacritical_Marks) and
+   * [combining diacritical marks for symbols](https://en.wikipedia.org/wiki/Combining_Diacritical_Marks_for_Symbols).
+   */
+  var reComboMark = RegExp(rsCombo, 'g');
+
+  /** Used to match [string symbols](https://mathiasbynens.be/notes/javascript-unicode). */
+  var reUnicode = RegExp(rsFitz + '(?=' + rsFitz + ')|' + rsSymbol + rsSeq, 'g');
+
+  /** Used to match complex or compound words. */
+  var reUnicodeWord = RegExp([
+    rsUpper + '?' + rsLower + '+' + rsOptContrLower + '(?=' + [rsBreak, rsUpper, '$'].join('|') + ')',
+    rsMiscUpper + '+' + rsOptContrUpper + '(?=' + [rsBreak, rsUpper + rsMiscLower, '$'].join('|') + ')',
+    rsUpper + '?' + rsMiscLower + '+' + rsOptContrLower,
+    rsUpper + '+' + rsOptContrUpper,
+    rsOrdUpper,
+    rsOrdLower,
+    rsDigits,
+    rsEmoji
+  ].join('|'), 'g');
+
+  /** Used to detect strings with [zero-width joiners or code points from the astral planes](http://eev.ee/blog/2015/09/12/dark-corners-of-unicode/). */
+  var reHasUnicode = RegExp('[' + rsZWJ + rsAstralRange  + rsComboRange + rsVarRange + ']');
+
+  /** Used to detect strings that need a more robust regexp to match words. */
+  var reHasUnicodeWord = /[a-z][A-Z]|[A-Z]{2}[a-z]|[0-9][a-zA-Z]|[a-zA-Z][0-9]|[^a-zA-Z0-9 ]/;
+
+  /** Used to assign default `context` object properties. */
+  var contextProps = [
+    'Array', 'Buffer', 'DataView', 'Date', 'Error', 'Float32Array', 'Float64Array',
+    'Function', 'Int8Array', 'Int16Array', 'Int32Array', 'Map', 'Math', 'Object',
+    'Promise', 'RegExp', 'Set', 'String', 'Symbol', 'TypeError', 'Uint8Array',
+    'Uint8ClampedArray', 'Uint16Array', 'Uint32Array', 'WeakMap',
+    '_', 'clearTimeout', 'isFinite', 'parseInt', 'setTimeout'
+  ];
+
+  /** Used to make template sourceURLs easier to identify. */
+  var templateCounter = -1;
+
+  /** Used to identify `toStringTag` values of typed arrays. */
+  var typedArrayTags = {};
+  typedArrayTags[float32Tag] = typedArrayTags[float64Tag] =
+  typedArrayTags[int8Tag] = typedArrayTags[int16Tag] =
+  typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] =
+  typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] =
+  typedArrayTags[uint32Tag] = true;
+  typedArrayTags[argsTag] = typedArrayTags[arrayTag] =
+  typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] =
+  typedArrayTags[dataViewTag] = typedArrayTags[dateTag] =
+  typedArrayTags[errorTag] = typedArrayTags[funcTag] =
+  typedArrayTags[mapTag] = typedArrayTags[numberTag] =
+  typedArrayTags[objectTag] = typedArrayTags[regexpTag] =
+  typedArrayTags[setTag] = typedArrayTags[stringTag] =
+  typedArrayTags[weakMapTag] = false;
+
+  /** Used to identify `toStringTag` values supported by `_.clone`. */
+  var cloneableTags = {};
+  cloneableTags[argsTag] = cloneableTags[arrayTag] =
+  cloneableTags[arrayBufferTag] = cloneableTags[dataViewTag] =
+  cloneableTags[boolTag] = cloneableTags[dateTag] =
+  cloneableTags[float32Tag] = cloneableTags[float64Tag] =
+  cloneableTags[int8Tag] = cloneableTags[int16Tag] =
+  cloneableTags[int32Tag] = cloneableTags[mapTag] =
+  cloneableTags[numberTag] = cloneableTags[objectTag] =
+  cloneableTags[regexpTag] = cloneableTags[setTag] =
+  cloneableTags[stringTag] = cloneableTags[symbolTag] =
+  cloneableTags[uint8Tag] = cloneableTags[uint8ClampedTag] =
+  cloneableTags[uint16Tag] = cloneableTags[uint32Tag] = true;
+  cloneableTags[errorTag] = cloneableTags[funcTag] =
+  cloneableTags[weakMapTag] = false;
+
+  /** Used to map Latin Unicode letters to basic Latin letters. */
+  var deburredLetters = {
+    // Latin-1 Supplement block.
+    '\xc0': 'A',  '\xc1': 'A', '\xc2': 'A', '\xc3': 'A', '\xc4': 'A', '\xc5': 'A',
+    '\xe0': 'a',  '\xe1': 'a', '\xe2': 'a', '\xe3': 'a', '\xe4': 'a', '\xe5': 'a',
+    '\xc7': 'C',  '\xe7': 'c',
+    '\xd0': 'D',  '\xf0': 'd',
+    '\xc8': 'E',  '\xc9': 'E', '\xca': 'E', '\xcb': 'E',
+    '\xe8': 'e',  '\xe9': 'e', '\xea': 'e', '\xeb': 'e',
+    '\xcc': 'I',  '\xcd': 'I', '\xce': 'I', '\xcf': 'I',
+    '\xec': 'i',  '\xed': 'i', '\xee': 'i', '\xef': 'i',
+    '\xd1': 'N',  '\xf1': 'n',
+    '\xd2': 'O',  '\xd3': 'O', '\xd4': 'O', '\xd5': 'O', '\xd6': 'O', '\xd8': 'O',
+    '\xf2': 'o',  '\xf3': 'o', '\xf4': 'o', '\xf5': 'o', '\xf6': 'o', '\xf8': 'o',
+    '\xd9': 'U',  '\xda': 'U', '\xdb': 'U', '\xdc': 'U',
+    '\xf9': 'u',  '\xfa': 'u', '\xfb': 'u', '\xfc': 'u',
+    '\xdd': 'Y',  '\xfd': 'y', '\xff': 'y',
+    '\xc6': 'Ae', '\xe6': 'ae',
+    '\xde': 'Th', '\xfe': 'th',
+    '\xdf': 'ss',
+    // Latin Extended-A block.
+    '\u0100': 'A',  '\u0102': 'A', '\u0104': 'A',
+    '\u0101': 'a',  '\u0103': 'a', '\u0105': 'a',
+    '\u0106': 'C',  '\u0108': 'C', '\u010a': 'C', '\u010c': 'C',
+    '\u0107': 'c',  '\u0109': 'c', '\u010b': 'c', '\u010d': 'c',
+    '\u010e': 'D',  '\u0110': 'D', '\u010f': 'd', '\u0111': 'd',
+    '\u0112': 'E',  '\u0114': 'E', '\u0116': 'E', '\u0118': 'E', '\u011a': 'E',
+    '\u0113': 'e',  '\u0115': 'e', '\u0117': 'e', '\u0119': 'e', '\u011b': 'e',
+    '\u011c': 'G',  '\u011e': 'G', '\u0120': 'G', '\u0122': 'G',
+    '\u011d': 'g',  '\u011f': 'g', '\u0121': 'g', '\u0123': 'g',
+    '\u0124': 'H',  '\u0126': 'H', '\u0125': 'h', '\u0127': 'h',
+    '\u0128': 'I',  '\u012a': 'I', '\u012c': 'I', '\u012e': 'I', '\u0130': 'I',
+    '\u0129': 'i',  '\u012b': 'i', '\u012d': 'i', '\u012f': 'i', '\u0131': 'i',
+    '\u0134': 'J',  '\u0135': 'j',
+    '\u0136': 'K',  '\u0137': 'k', '\u0138': 'k',
+    '\u0139': 'L',  '\u013b': 'L', '\u013d': 'L', '\u013f': 'L', '\u0141': 'L',
+    '\u013a': 'l',  '\u013c': 'l', '\u013e': 'l', '\u0140': 'l', '\u0142': 'l',
+    '\u0143': 'N',  '\u0145': 'N', '\u0147': 'N', '\u014a': 'N',
+    '\u0144': 'n',  '\u0146': 'n', '\u0148': 'n', '\u014b': 'n',
+    '\u014c': 'O',  '\u014e': 'O', '\u0150': 'O',
+    '\u014d': 'o',  '\u014f': 'o', '\u0151': 'o',
+    '\u0154': 'R',  '\u0156': 'R', '\u0158': 'R',
+    '\u0155': 'r',  '\u0157': 'r', '\u0159': 'r',
+    '\u015a': 'S',  '\u015c': 'S', '\u015e': 'S', '\u0160': 'S',
+    '\u015b': 's',  '\u015d': 's', '\u015f': 's', '\u0161': 's',
+    '\u0162': 'T',  '\u0164': 'T', '\u0166': 'T',
+    '\u0163': 't',  '\u0165': 't', '\u0167': 't',
+    '\u0168': 'U',  '\u016a': 'U', '\u016c': 'U', '\u016e': 'U', '\u0170': 'U', '\u0172': 'U',
+    '\u0169': 'u',  '\u016b': 'u', '\u016d': 'u', '\u016f': 'u', '\u0171': 'u', '\u0173': 'u',
+    '\u0174': 'W',  '\u0175': 'w',
+    '\u0176': 'Y',  '\u0177': 'y', '\u0178': 'Y',
+    '\u0179': 'Z',  '\u017b': 'Z', '\u017d': 'Z',
+    '\u017a': 'z',  '\u017c': 'z', '\u017e': 'z',
+    '\u0132': 'IJ', '\u0133': 'ij',
+    '\u0152': 'Oe', '\u0153': 'oe',
+    '\u0149': "'n", '\u017f': 's'
+  };
+
+  /** Used to map characters to HTML entities. */
+  var htmlEscapes = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  };
+
+  /** Used to map HTML entities to characters. */
+  var htmlUnescapes = {
+    '&amp;': '&',
+    '&lt;': '<',
+    '&gt;': '>',
+    '&quot;': '"',
+    '&#39;': "'"
+  };
+
+  /** Used to escape characters for inclusion in compiled string literals. */
+  var stringEscapes = {
+    '\\': '\\',
+    "'": "'",
+    '\n': 'n',
+    '\r': 'r',
+    '\u2028': 'u2028',
+    '\u2029': 'u2029'
+  };
+
+  /** Built-in method references without a dependency on `root`. */
+  var freeParseFloat = parseFloat,
+      freeParseInt = parseInt;
+
+  /** Detect free variable `global` from Node.js. */
+  var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
+
+  /** Detect free variable `self`. */
+  var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
+
+  /** Used as a reference to the global object. */
+  var root = freeGlobal || freeSelf || Function('return this')();
+
+  /** Detect free variable `exports`. */
+  var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
+
+  /** Detect free variable `module`. */
+  var freeModule = freeExports && typeof module == 'object' && module && !module.nodeType && module;
+
+  /** Detect the popular CommonJS extension `module.exports`. */
+  var moduleExports = freeModule && freeModule.exports === freeExports;
+
+  /** Detect free variable `process` from Node.js. */
+  var freeProcess = moduleExports && freeGlobal.process;
+
+  /** Used to access faster Node.js helpers. */
+  var nodeUtil = (function() {
+    try {
+      // Use `util.types` for Node.js 10+.
+      var types = freeModule && freeModule.require && freeModule.require('util').types;
+
+      if (types) {
+        return types;
+      }
+
+      // Legacy `process.binding('util')` for Node.js < 10.
+      return freeProcess && freeProcess.binding && freeProcess.binding('util');
+    } catch (e) {}
+  }());
+
+  /* Node.js helper references. */
+  var nodeIsArrayBuffer = nodeUtil && nodeUtil.isArrayBuffer,
+      nodeIsDate = nodeUtil && nodeUtil.isDate,
+      nodeIsMap = nodeUtil && nodeUtil.isMap,
+      nodeIsRegExp = nodeUtil && nodeUtil.isRegExp,
+      nodeIsSet = nodeUtil && nodeUtil.isSet,
+      nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
+
+  /*--------------------------------------------------------------------------*/
+
+  /**
+   * A faster alternative to `Function#apply`, this function invokes `func`
+   * with the `this` binding of `thisArg` and the arguments of `args`.
+   *
+   * @private
+   * @param {Function} func The function to invoke.
+   * @param {*} thisArg The `this` binding of `func`.
+   * @param {Array} args The arguments to invoke `func` with.
+   * @returns {*} Returns the result of `func`.
+   */
+  function apply(func, thisArg, args) {
+    switch (args.length) {
+      case 0: return func.call(thisArg);
+      case 1: return func.call(thisArg, args[0]);
+      case 2: return func.call(thisArg, args[0], args[1]);
+      case 3: return func.call(thisArg, args[0], args[1], args[2]);
+    }
+    return func.apply(thisArg, args);
+  }
+
+  /**
+   * A specialized version of `baseAggregator` for arrays.
+   *
+   * @private
+   * @param {Array} [array] The array to iterate over.
+   * @param {Function} setter The function to set `accumulator` values.
+   * @param {Function} iteratee The iteratee to transform keys.
+   * @param {Object} accumulator The initial aggregated object.
+   * @returns {Function} Returns `accumulator`.
+   */
+  function arrayAggregator(array, setter, iteratee, accumulator) {
+    var index = -1,
+        length = array == null ? 0 : array.length;
+
+    while (++index < length) {
+      var value = array[index];
+      setter(accumulator, value, iteratee(value), array);
+    }
+    return accumulator;
+  }
+
+  /**
+   * A specialized version of `_.forEach` for arrays without support for
+   * iteratee shorthands.
+   *
+   * @private
+   * @param {Array} [array] The array to iterate over.
+   * @param {Function} iteratee The function invoked per iteration.
+   * @returns {Array} Returns `array`.
+   */
+  function arrayEach(array, iteratee) {
+    var index = -1,
+        length = array == null ? 0 : array.length;
+
+    while (++index < length) {
+      if (iteratee(array[index], index, array) === false) {
+        break;
+      }
+    }
+    return array;
+  }
+
+  /**
+   * A specialized version of `_.forEachRight` for arrays without support for
+   * iteratee shorthands.
+   *
+   * @private
+   * @param {Array} [array] The array to iterate over.
+   * @param {Function} iteratee The function invoked per iteration.
+   * @returns {Array} Returns `array`.
+   */
+  function arrayEachRight(array, iteratee) {
+    var length = array == null ? 0 : array.length;
+
+    while (length--) {
+      if (iteratee(array[length], length, array) === false) {
+        break;
+      }
+    }
+    return array;
+  }
+
+  /**
+   * A specialized version of `_.every` for arrays without support for
+   * iteratee shorthands.
+   *
+   * @private
+   * @param {Array} [array] The array to iterate over.
+   * @param {Function} predicate The function invoked per iteration.
+   * @returns {boolean} Returns `true` if all elements pass the predicate check,
+   *  else `false`.
+   */
+  function arrayEvery(array, predicate) {
+    var index = -1,
+        length = array == null ? 0 : array.length;
+
+    while (++index < length) {
+      if (!predicate(array[index], index, array)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * A specialized version of `_.filter` for arrays without support for
+   * iteratee shorthands.
+   *
+   * @private
+   * @param {Array} [array] The array to iterate over.
+   * @param {Function} predicate The function invoked per iteration.
+   * @returns {Array} Returns the new filtered array.
+   */
+  function arrayFilter(array, predicate) {
+    var index = -1,
+        length = array == null ? 0 : array.length,
+        resIndex = 0,
+        result = [];
+
+    while (++index < length) {
+      var value = array[index];
+      if (predicate(value, index, array)) {
+        result[resIndex++] = value;
+      }
+    }
+    return result;
+  }
+
+  /**
+   * A specialized version of `_.includes` for arrays without support for
+   * specifying an index to search from.
+   *
+   * @private
+   * @param {Array} [array] The array to inspect.
+   * @param {*} target The value to search for.
+   * @returns {boolean} Returns `true` if `target` is found, else `false`.
+   */
+  function arrayIncludes(array, value) {
+    var length = array == null ? 0 : array.length;
+    return !!length && baseIndexOf(array, value, 0) > -1;
+  }
+
+  /**
+   * This function is like `arrayIncludes` except that it accepts a comparator.
+   *
+   * @private
+   * @param {Array} [array] The array to inspect.
+   * @param {*} target The value to search for.
+   * @param {Function} comparator The comparator invoked per element.
+   * @returns {boolean} Returns `true` if `target` is found, else `false`.
+   */
+  function arrayIncludesWith(array, value, comparator) {
+    var index = -1,
+        length = array == null ? 0 : array.length;
+
+    while (++index < length) {
+      if (comparator(value, array[index])) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * A specialized version of `_.map` for arrays without support for iteratee
+   * shorthands.
+   *
+   * @private
+   * @param {Array} [array] The array to iterate over.
+   * @param {Function} iteratee The function invoked per iteration.
+   * @returns {Array} Returns the new mapped array.
+   */
+  function arrayMap(array, iteratee) {
+    var index = -1,
+        length = array == null ? 0 : array.length,
+        result = Array(length);
+
+    while (++index < length) {
+      result[index] = iteratee(array[index], index, array);
+    }
+    return result;
+  }
+
+  /**
+   * Appends the elements of `values` to `array`.
+   *
+   * @private
+   * @param {Array} array The array to modify.
+   * @param {Array} values The values to append.
+   * @returns {Array} Returns `array`.
+   */
+  function arrayPush(array, values) {
+    var index = -1,
+        length = values.length,
+        offset = array.length;
+
+    while (++index < length) {
+      array[offset + index] = values[index];
+    }
+    return array;
+  }
+
+  /**
+   * A specialized version of `_.reduce` for arrays without support for
+   * iteratee shorthands.
+   *
+   * @private
+   * @param {Array} [array] The array to iterate over.
+   * @param {Function} iteratee The function invoked per iteration.
+   * @param {*} [accumulator] The initial value.
+   * @param {boolean} [initAccum] Specify using the first element of `array` as
+   *  the initial value.
+   * @returns {*} Returns the accumulated value.
+   */
+  function arrayReduce(array, iteratee, accumulator, initAccum) {
+    var index = -1,
+        length = array == null ? 0 : array.length;
+
+    if (initAccum && length) {
+      accumulator = array[++index];
+    }
+    while (++index < length) {
+      accumulator = iteratee(accumulator, array[index], index, array);
+    }
+    return accumulator;
+  }
+
+  /**
+   * A specialized version of `_.reduceRight` for arrays without support for
+   * iteratee shorthands.
+   *
+   * @private
+   * @param {Array} [array] The array to iterate over.
+   * @param {Function} iteratee The function invoked per iteration.
+   * @param {*} [accumulator] The initial value.
+   * @param {boolean} [initAccum] Specify using the last element of `array` as
+   *  the initial value.
+   * @returns {*} Returns the accumulated value.
+   */
+  function arrayReduceRight(array, iteratee, accumulator, initAccum) {
+    var length = array == null ? 0 : array.length;
+    if (initAccum && length) {
+      accumulator = array[--length];
+    }
+    while (length--) {
+      accumulator = iteratee(accumulator, array[length], length, array);
+    }
+    return accumulator;
+  }
+
+  /**
+   * A specialized version of `_.some` for arrays without support for iteratee
+   * shorthands.
+   *
+   * @private
+   * @param {Array} [array] The array to iterate over.
+   * @param {Function} predicate The function invoked per iteration.
+   * @returns {boolean} Returns `true` if any element passes the predicate check,
+   *  else `false`.
+   */
+  function arraySome(array, predicate) {
+    var index = -1,
+        length = array == null ? 0 : array.length;
+
+    while (++index < length) {
+      if (predicate(array[index], index, array)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  if (root > max) {
+    root = max;
+  }
+  if (max === 0) {                     /* no symbols to code at all */
+    //table.op[opts.table_index] = 64;  //here.op = (var char)64;    /* invalid code marker */
+    //table.bits[opts.table_index] = 1;   //here.bits = (var char)1;
+    //table.val[opts.table_index++] = 0;   //here.val = (var short)0;
+    table[table_index++] = (1 << 24) | (64 << 16) | 0;
+
+  /**
+   * Gets the size of an ASCII `string`.
+   *
+   * @private
+   * @param {string} string The string inspect.
+   * @returns {number} Returns the string size.
+   */
+  var asciiSize = baseProperty('length');
+
+  /**
+   * Converts an ASCII `string` to an array.
+   *
+   * @private
+   * @param {string} string The string to convert.
+   * @returns {Array} Returns the converted array.
+   */
+  function asciiToArray(string) {
+    return string.split('');
+  }
+
+  /**
+   * Splits an ASCII `string` into an array of its words.
+   *
+   * @private
+   * @param {string} The string to inspect.
+   * @returns {Array} Returns the words of `string`.
+   */
+  function asciiWords(string) {
+    return string.match(reAsciiWord) || [];
+  }
+
+  /**
+   * The base implementation of methods like `_.findKey` and `_.findLastKey`,
+   * without support for iteratee shorthands, which iterates over `collection`
+   * using `eachFunc`.
+   *
+   * @private
+   * @param {Array|Object} collection The collection to inspect.
+   * @param {Function} predicate The function invoked per iteration.
+   * @param {Function} eachFunc The function to iterate over `collection`.
+   * @returns {*} Returns the found element or its key, else `undefined`.
+   */
+  function baseFindKey(collection, predicate, eachFunc) {
+    var result;
+    eachFunc(collection, function(value, key, collection) {
+      if (predicate(value, key, collection)) {
+        result = key;
+        return false;
+      }
+    });
+    return result;
+  }
+
+  /**
+   * The base implementation of `_.findIndex` and `_.findLastIndex` without
+   * support for iteratee shorthands.
+   *
+   * @private
+   * @param {Array} array The array to inspect.
+   * @param {Function} predicate The function invoked per iteration.
+   * @param {number} fromIndex The index to search from.
+   * @param {boolean} [fromRight] Specify iterating from right to left.
+   * @returns {number} Returns the index of the matched value, else `-1`.
+   */
+  function baseFindIndex(array, predicate, fromIndex, fromRight) {
+    var length = array.length,
+        index = fromIndex + (fromRight ? 1 : -1);
+
+    while ((fromRight ? index-- : ++index < length)) {
+      if (predicate(array[index], index, array)) {
+        return index;
+      }
+    }
+    return -1;
+  }
+
+  /**
+   * The base implementation of `_.indexOf` without `fromIndex` bounds checks.
+   *
+   * @private
+   * @param {Array} array The array to inspect.
+   * @param {*} value The value to search for.
+   * @param {number} fromIndex The index to search from.
+   * @returns {number} Returns the index of the matched value, else `-1`.
+   */
+  function baseIndexOf(array, value, fromIndex) {
+    return value === value
+      ? strictIndexOf(array, value, fromIndex)
+      : baseFindIndex(array, baseIsNaN, fromIndex);
+  }
+
+  /**
+   * This function is like `baseIndexOf` except that it accepts a comparator.
+   *
+   * @private
+   * @param {Array} array The array to inspect.
+   * @param {*} value The value to search for.
+   * @param {number} fromIndex The index to search from.
+   * @param {Function} comparator The comparator invoked per element.
+   * @returns {number} Returns the index of the matched value, else `-1`.
+   */
+  function baseIndexOfWith(array, value, fromIndex, comparator) {
+    var index = fromIndex - 1,
+        length = array.length;
+
+    while (++index < length) {
+      if (comparator(array[index], value)) {
+        return index;
+      }
+    }
+    return -1;
+  }
+
+  /**
+   * The base implementation of `_.isNaN` without support for number objects.
+   *
+   * @private
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is `NaN`, else `false`.
+   */
+  function baseIsNaN(value) {
+    return value !== value;
+  }
+
+  /**
+   * The base implementation of `_.mean` and `_.meanBy` without support for
+   * iteratee shorthands.
+   *
+   * @private
+   * @param {Array} array The array to iterate over.
+   * @param {Function} iteratee The function invoked per iteration.
+   * @returns {number} Returns the mean.
+   */
+  function baseMean(array, iteratee) {
+    var length = array == null ? 0 : array.length;
+    return length ? (baseSum(array, iteratee) / length) : NAN;
+  }
+
+  /**
+   * The base implementation of `_.property` without support for deep paths.
+   *
+   * @private
+   * @param {string} key The key of the property to get.
+   * @returns {Function} Returns the new accessor function.
+   */
+  function baseProperty(key) {
+    return function(object) {
+      return object == null ? undefined : object[key];
+    };
+  }
+
+  /**
+   * The base implementation of `_.propertyOf` without support for deep paths.
+   *
+   * @private
+   * @param {Object} object The object to query.
+   * @returns {Function} Returns the new accessor function.
+   */
+  function basePropertyOf(object) {
+    return function(key) {
+      return object == null ? undefined : object[key];
+    };
+  }
+
+  /**
+   * The base implementation of `_.reduce` and `_.reduceRight`, without support
+   * for iteratee shorthands, which iterates over `collection` using `eachFunc`.
+   *
+   * @private
+   * @param {Array|Object} collection The collection to iterate over.
+   * @param {Function} iteratee The function invoked per iteration.
+   * @param {*} accumulator The initial value.
+   * @param {boolean} initAccum Specify using the first or last element of
+   *  `collection` as the initial value.
+   * @param {Function} eachFunc The function to iterate over `collection`.
+   * @returns {*} Returns the accumulated value.
+   */
+  function baseReduce(collection, iteratee, accumulator, initAccum, eachFunc) {
+    eachFunc(collection, function(value, index, collection) {
+      accumulator = initAccum
+        ? (initAccum = false, value)
+        : iteratee(accumulator, value, index, collection);
+    });
+    return accumulator;
+  }
+
+  /**
+   * The base implementation of `_.sortBy` which uses `comparer` to define the
+   * sort order of `array` and replaces criteria objects with their corresponding
+   * values.
+   *
+   * @private
+   * @param {Array} array The array to sort.
+   * @param {Function} comparer The function to define sort order.
+   * @returns {Array} Returns `array`.
+   */
+  function baseSortBy(array, comparer) {
+    var length = array.length;
+
+    array.sort(comparer);
+    while (length--) {
+      array[length] = array[length].value;
+    }
+    return array;
+  }
+
+  /**
+   * The base implementation of `_.sum` and `_.sumBy` without support for
+   * iteratee shorthands.
+   *
+   * @private
+   * @param {Array} array The array to iterate over.
+   * @param {Function} iteratee The function invoked per iteration.
+   * @returns {number} Returns the sum.
+   */
+  function baseSum(array, iteratee) {
+    var result,
+        index = -1,
+        length = array.length;
+
+    while (++index < length) {
+      var current = iteratee(array[index]);
+      if (current !== undefined) {
+        result = result === undefined ? current : (result + current);
+      }
+    }
+    return result;
+  }
+
+  /**
+   * The base implementation of `_.times` without support for iteratee shorthands
+   * or max array length checks.
+   *
+   * @private
+   * @param {number} n The number of times to invoke `iteratee`.
+   * @param {Function} iteratee The function invoked per iteration.
+   * @returns {Array} Returns the array of results.
+   */
+  function baseTimes(n, iteratee) {
+    var index = -1,
+        result = Array(n);
+
+    while (++index < n) {
+      result[index] = iteratee(index);
+    }
+    return result;
+  }
+
+  /**
+   * The base implementation of `_.toPairs` and `_.toPairsIn` which creates an array
+   * of key-value pairs for `object` corresponding to the property names of `props`.
+   *
+   * @private
+   * @param {Object} object The object to query.
+   * @param {Array} props The property names to get values for.
+   * @returns {Object} Returns the key-value pairs.
+   */
+  function baseToPairs(object, props) {
+    return arrayMap(props, function(key) {
+      return [key, object[key]];
+    });
+  }
+
+  /**
+   * The base implementation of `_.unary` without support for storing metadata.
+   *
+   * @private
+   * @param {Function} func The function to cap arguments for.
+   * @returns {Function} Returns the new capped function.
+   */
+  function baseUnary(func) {
+    return function(value) {
+      return func(value);
+    };
+  }
+
+  /**
+   * The base implementation of `_.values` and `_.valuesIn` which creates an
+   * array of `object` property values corresponding to the property names
+   * of `props`.
+   *
+   * @private
+   * @param {Object} object The object to query.
+   * @param {Array} props The property names to get values for.
+   * @returns {Object} Returns the array of property values.
+   */
+  function baseValues(object, props) {
+    return arrayMap(props, function(key) {
+      return object[key];
+    });
+  }
+
+  /**
+   * Checks if a `cache` value for `key` exists.
+   *
+   * @private
+   * @param {Object} cache The cache to query.
+   * @param {string} key The key of the entry to check.
+   * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+   */
+  function cacheHas(cache, key) {
+    return cache.has(key);
+  }
+
+  /**
+   * Used by `_.trim` and `_.trimStart` to get the index of the first string symbol
+   * that is not found in the character symbols.
+   *
+   * @private
+   * @param {Array} strSymbols The string symbols to inspect.
+   * @param {Array} chrSymbols The character symbols to find.
+   * @returns {number} Returns the index of the first unmatched string symbol.
+   */
+  function charsStartIndex(strSymbols, chrSymbols) {
+    var index = -1,
+        length = strSymbols.length;
+
+    while (++index < length && baseIndexOf(chrSymbols, strSymbols[index], 0) > -1) {}
+    return index;
+  }
+
+  /**
+   * Used by `_.trim` and `_.trimEnd` to get the index of the last string symbol
+   * that is not found in the character symbols.
+   *
+   * @private
+   * @param {Array} strSymbols The string symbols to inspect.
+   * @param {Array} chrSymbols The character symbols to find.
+   * @returns {number} Returns the index of the last unmatched string symbol.
+   */
+  function charsEndIndex(strSymbols, chrSymbols) {
+    var index = strSymbols.length;
+
+    while (index-- && baseIndexOf(chrSymbols, strSymbols[index], 0) > -1) {}
+    return index;
+  }
+
+  /**
+   * Gets the number of `placeholder` occurrences in `array`.
+   *
+   * @private
+   * @param {Array} array The array to inspect.
+   * @param {*} placeholder The placeholder to search for.
+   * @returns {number} Returns the placeholder count.
+   */
+  function countHolders(array, placeholder) {
+    var length = array.length,
+        result = 0;
+
+    while (length--) {
+      if (array[length] === placeholder) {
+        ++result;
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Used by `_.deburr` to convert Latin-1 Supplement and Latin Extended-A
+   * letters to basic Latin letters.
+   *
+   * @private
+   * @param {string} letter The matched letter to deburr.
+   * @returns {string} Returns the deburred letter.
+   */
+  var deburrLetter = basePropertyOf(deburredLetters);
+
+  /**
+   * Used by `_.escape` to convert characters to HTML entities.
+   *
+   * @private
+   * @param {string} chr The matched character to escape.
+   * @returns {string} Returns the escaped character.
+   */
+  var escapeHtmlChar = basePropertyOf(htmlEscapes);
+
+  /**
+   * Used by `_.template` to escape characters for inclusion in compiled string literals.
+   *
+   * @private
+   * @param {string} chr The matched character to escape.
+   * @returns {string} Returns the escaped character.
+   */
+  function escapeStringChar(chr) {
+    return '\\' + stringEscapes[chr];
+  }
+
+  /**
+   * Gets the value at `key` of `object`.
+   *
+   * @private
+   * @param {Object} [object] The object to query.
+   * @param {string} key The key of the property to get.
+   * @returns {*} Returns the property value.
+   */
+  function getValue(object, key) {
+    return object == null ? undefined : object[key];
+  }
+
+  /**
+   * Checks if `string` contains Unicode symbols.
+   *
+   * @private
+   * @param {string} string The string to inspect.
+   * @returns {boolean} Returns `true` if a symbol is found, else `false`.
+   */
+  function hasUnicode(string) {
+    return reHasUnicode.test(string);
+  }
+
+  /**
+   * Checks if `string` contains a word composed of Unicode symbols.
+   *
+   * @private
+   * @param {string} string The string to inspect.
+   * @returns {boolean} Returns `true` if a word is found, else `false`.
+   */
+  function hasUnicodeWord(string) {
+    return reHasUnicodeWord.test(string);
+  }
+
+  /**
+   * Converts `iterator` to an array.
+   *
+   * @private
+   * @param {Object} iterator The iterator to convert.
+   * @returns {Array} Returns the converted array.
+   */
+  function iteratorToArray(iterator) {
+    var data,
+        result = [];
+
+    while (!(data = iterator.next()).done) {
+      result.push(data.value);
+    }
+    return result;
+  }
+
+  /**
+   * Converts `map` to its key-value pairs.
+   *
+   * @private
+   * @param {Object} map The map to convert.
+   * @returns {Array} Returns the key-value pairs.
+   */
+  function mapToArray(map) {
+    var index = -1,
+        result = Array(map.size);
+
+    map.forEach(function(value, key) {
+      result[++index] = [key, value];
+    });
+    return result;
+  }
+
+  /**
+   * Creates a unary function that invokes `func` with its argument transformed.
+   *
+   * @private
+   * @param {Function} func The function to wrap.
+   * @param {Function} transform The argument transform.
+   * @returns {Function} Returns the new function.
+   */
+  function overArg(func, transform) {
+    return function(arg) {
+      return func(transform(arg));
+    };
+  }
+
+  /**
+   * Replaces all `placeholder` elements in `array` with an internal placeholder
+   * and returns an array of their indexes.
+   *
+   * @private
+   * @param {Array} array The array to modify.
+   * @param {*} placeholder The placeholder to replace.
+   * @returns {Array} Returns the new array of placeholder indexes.
+   */
+  function replaceHolders(array, placeholder) {
+    var index = -1,
+        length = array.length,
+        resIndex = 0,
+        result = [];
+
+    while (++index < length) {
+      var value = array[index];
+      if (value === placeholder || value === PLACEHOLDER) {
+        array[index] = PLACEHOLDER;
+        result[resIndex++] = index;
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Converts `set` to an array of its values.
+   *
+   * @private
+   * @param {Object} set The set to convert.
+   * @returns {Array} Returns the values.
+   */
+  function setToArray(set) {
+    var index = -1,
+        result = Array(set.size);
+
+    set.forEach(function(value) {
+      result[++index] = value;
+    });
+    return result;
+  }
+
+  /**
+   * Converts `set` to its value-value pairs.
+   *
+   * @private
+   * @param {Object} set The set to convert.
+   * @returns {Array} Returns the value-value pairs.
+   */
+  function setToPairs(set) {
+    var index = -1,
+        result = Array(set.size);
+
+    set.forEach(function(value) {
+      result[++index] = [value, value];
+    });
+    return result;
+  }
+
+  /**
+   * A specialized version of `_.indexOf` which performs strict equality
+   * comparisons of values, i.e. `===`.
+   *
+   * @private
+   * @param {Array} array The array to inspect.
+   * @param {*} value The value to search for.
+   * @param {number} fromIndex The index to search from.
+   * @returns {number} Returns the index of the matched value, else `-1`.
+   */
+  function strictIndexOf(array, value, fromIndex) {
+    var index = fromIndex - 1,
+        length = array.length;
+
+    while (++index < length) {
+      if (array[index] === value) {
+        return index;
+      }
+    }
+    return -1;
+  }
+
+  /**
+   * A specialized version of `_.lastIndexOf` which performs strict equality
+   * comparisons of values, i.e. `===`.
+   *
+   * @private
+   * @param {Array} array The array to inspect.
+   * @param {*} value The value to search for.
+   * @param {number} fromIndex The index to search from.
+   * @returns {number} Returns the index of the matched value, else `-1`.
+   */
+  function strictLastIndexOf(array, value, fromIndex) {
+    var index = fromIndex + 1;
+    while (index--) {
+      if (array[index] === value) {
+        return index;
+      }
+    }
+    return index;
+  }
+
+  /**
+   * Gets the number of symbols in `string`.
+   *
+   * @private
+   * @param {string} string The string to inspect.
+   * @returns {number} Returns the string size.
+   */
+  function stringSize(string) {
+    return hasUnicode(string)
+      ? unicodeSize(string)
+      : asciiSize(string);
+  }
+
+  /**
+   * Converts `string` to an array.
+   *
+   * @private
+   * @param {string} string The string to convert.
+   * @returns {Array} Returns the converted array.
+   */
+  function stringToArray(string) {
+    return hasUnicode(string)
+      ? unicodeToArray(string)
+      : asciiToArray(string);
+  }
+
+  /**
+   * Used by `_.unescape` to convert HTML entities to characters.
+   *
+   * @private
+   * @param {string} chr The matched character to unescape.
+   * @returns {string} Returns the unescaped character.
+   */
+  var unescapeHtmlChar = basePropertyOf(htmlUnescapes);
+
+  /**
+   * Gets the size of a Unicode `string`.
+   *
+   * @private
+   * @param {string} string The string inspect.
+   * @returns {number} Returns the string size.
+   */
+  function unicodeSize(string) {
+    var result = reUnicode.lastIndex = 0;
+    while (reUnicode.test(string)) {
+      ++result;
+    }
+    return result;
+  }
+
+  /**
+   * Converts a Unicode `string` to an array.
+   *
+   * @private
+   * @param {string} string The string to convert.
+   * @returns {Array} Returns the converted array.
+   */
+  function unicodeToArray(string) {
+    return string.match(reUnicode) || [];
+  }
+
+  /**
+   * Splits a Unicode `string` into an array of its words.
+   *
+   * @private
+   * @param {string} The string to inspect.
+   * @returns {Array} Returns the words of `string`.
+   */
+  function unicodeWords(string) {
+    return string.match(reUnicodeWord) || [];
+  }
+
+  /*--------------------------------------------------------------------------*/
+
+  /**
+   * Create a new pristine `lodash` function using the `context` object.
+   *
+   * @static
+   * @memberOf _
+   * @since 1.1.0
+   * @category Util
+   * @param {Object} [context=root] The context object.
+   * @returns {Function} Returns a new `lodash` function.
+   * @example
+   *
+   * _.mixin({ 'foo': _.constant('foo') });
+   *
+   * var lodash = _.runInContext();
+   * lodash.mixin({ 'bar': lodash.constant('bar') });
+   *
+   * _.isFunction(_.foo);
+   * // => true
+   * _.isFunction(_.bar);
+   * // => false
+   *
+   * lodash.isFunction(lodash.foo);
+   * // => false
+   * lodash.isFunction(lodash.bar);
+   * // => true
+   *
+   * // Create a suped-up `defer` in Node.js.
+   * var defer = _.runInContext({ 'setTimeout': setImmediate }).defer;
+   */
+  var runInContext = (function runInContext(context) {
+    context = context == null ? root : _.defaults(root.Object(), context, _.pick(root, contextProps));
+
+    /** Built-in constructor references. */
+    var Array = context.Array,
+        Date = context.Date,
+        Error = context.Error,
+        Function = context.Function,
+        Math = context.Math,
+        Object = context.Object,
+        RegExp = context.RegExp,
+        String = context.String,
+        TypeError = context.TypeError;
+
+    /** Used for built-in method references. */
+    var arrayProto = Array.prototype,
+        funcProto = Function.prototype,
+        objectProto = Object.prototype;
+
+    /** Used to detect overreaching core-js shims. */
+    var coreJsData = context['__core-js_shared__'];
+
+    /** Used to resolve the decompiled source of functions. */
+    var funcToString = funcProto.toString;
+
+    /** Used to check objects for own properties. */
+    var hasOwnProperty = objectProto.hasOwnProperty;
+
+    /** Used to generate unique IDs. */
+    var idCounter = 0;
+
+    /** Used to detect methods masquerading as native. */
+    var maskSrcKey = (function() {
+      var uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || '');
+      return uid ? ('Symbol(src)_1.' + uid) : '';
+    }());
+
+    /**
+     * Used to resolve the
+     * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+     * of values.
+     */
+    var nativeObjectToString = objectProto.toString;
+
+    /** Used to infer the `Object` constructor. */
+    var objectCtorString = funcToString.call(Object);
+
+    /** Used to restore the original `_` reference in `_.noConflict`. */
+    var oldDash = root._;
 
 /* Possible values of the data_type field (though see inflate()) */
 var Z_BINARY              = 0;
@@ -44343,2982 +63618,19 @@ function PassThrough(options) {
   Transform.call(this, options);
 }
 
-PassThrough.prototype._transform = function (chunk, encoding, cb) {
-  cb(null, chunk);
-};
-},{"./_stream_transform":117,"core-util-is":8,"inherits":57}],116:[function(require,module,exports){
-(function (process,global){
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-'use strict';
-
-/*<replacement>*/
-
-var pna = require('process-nextick-args');
-/*</replacement>*/
-
-module.exports = Readable;
-
-/*<replacement>*/
-var isArray = require('isarray');
-/*</replacement>*/
-
-/*<replacement>*/
-var Duplex;
-/*</replacement>*/
-
-Readable.ReadableState = ReadableState;
-
-/*<replacement>*/
-var EE = require('events').EventEmitter;
-
-var EElistenerCount = function (emitter, type) {
-  return emitter.listeners(type).length;
-};
-/*</replacement>*/
-
-/*<replacement>*/
-var Stream = require('./internal/streams/stream');
-/*</replacement>*/
-
-/*<replacement>*/
-
-var Buffer = require('safe-buffer').Buffer;
-var OurUint8Array = global.Uint8Array || function () {};
-function _uint8ArrayToBuffer(chunk) {
-  return Buffer.from(chunk);
-}
-function _isUint8Array(obj) {
-  return Buffer.isBuffer(obj) || obj instanceof OurUint8Array;
-}
-
-/*</replacement>*/
-
-/*<replacement>*/
-var util = require('core-util-is');
-util.inherits = require('inherits');
-/*</replacement>*/
-
-/*<replacement>*/
-var debugUtil = require('util');
-var debug = void 0;
-if (debugUtil && debugUtil.debuglog) {
-  debug = debugUtil.debuglog('stream');
-} else {
-  debug = function () {};
-}
-/*</replacement>*/
-
-var BufferList = require('./internal/streams/BufferList');
-var destroyImpl = require('./internal/streams/destroy');
-var StringDecoder;
-
-util.inherits(Readable, Stream);
-
-var kProxyEvents = ['error', 'close', 'destroy', 'pause', 'resume'];
-
-function prependListener(emitter, event, fn) {
-  // Sadly this is not cacheable as some libraries bundle their own
-  // event emitter implementation with them.
-  if (typeof emitter.prependListener === 'function') return emitter.prependListener(event, fn);
-
-  // This is a hack to make sure that our error handler is attached before any
-  // userland ones.  NEVER DO THIS. This is here only because this code needs
-  // to continue to work with older versions of Node.js that do not include
-  // the prependListener() method. The goal is to eventually remove this hack.
-  if (!emitter._events || !emitter._events[event]) emitter.on(event, fn);else if (isArray(emitter._events[event])) emitter._events[event].unshift(fn);else emitter._events[event] = [fn, emitter._events[event]];
-}
-
-function ReadableState(options, stream) {
-  Duplex = Duplex || require('./_stream_duplex');
-
-  options = options || {};
-
-  // Duplex streams are both readable and writable, but share
-  // the same options object.
-  // However, some cases require setting options to different
-  // values for the readable and the writable sides of the duplex stream.
-  // These options can be provided separately as readableXXX and writableXXX.
-  var isDuplex = stream instanceof Duplex;
-
-  // object stream flag. Used to make read(n) ignore n and to
-  // make all the buffer merging and length checks go away
-  this.objectMode = !!options.objectMode;
-
-  if (isDuplex) this.objectMode = this.objectMode || !!options.readableObjectMode;
-
-  // the point at which it stops calling _read() to fill the buffer
-  // Note: 0 is a valid value, means "don't call _read preemptively ever"
-  var hwm = options.highWaterMark;
-  var readableHwm = options.readableHighWaterMark;
-  var defaultHwm = this.objectMode ? 16 : 16 * 1024;
-
-  if (hwm || hwm === 0) this.highWaterMark = hwm;else if (isDuplex && (readableHwm || readableHwm === 0)) this.highWaterMark = readableHwm;else this.highWaterMark = defaultHwm;
-
-  // cast to ints.
-  this.highWaterMark = Math.floor(this.highWaterMark);
-
-  // A linked list is used to store data chunks instead of an array because the
-  // linked list can remove elements from the beginning faster than
-  // array.shift()
-  this.buffer = new BufferList();
-  this.length = 0;
-  this.pipes = null;
-  this.pipesCount = 0;
-  this.flowing = null;
-  this.ended = false;
-  this.endEmitted = false;
-  this.reading = false;
-
-  // a flag to be able to tell if the event 'readable'/'data' is emitted
-  // immediately, or on a later tick.  We set this to true at first, because
-  // any actions that shouldn't happen until "later" should generally also
-  // not happen before the first read call.
-  this.sync = true;
-
-  // whenever we return null, then we set a flag to say
-  // that we're awaiting a 'readable' event emission.
-  this.needReadable = false;
-  this.emittedReadable = false;
-  this.readableListening = false;
-  this.resumeScheduled = false;
-
-  // has it been destroyed
-  this.destroyed = false;
-
-  // Crypto is kind of old and crusty.  Historically, its default string
-  // encoding is 'binary' so we have to make this configurable.
-  // Everything else in the universe uses 'utf8', though.
-  this.defaultEncoding = options.defaultEncoding || 'utf8';
-
-  // the number of writers that are awaiting a drain event in .pipe()s
-  this.awaitDrain = 0;
-
-  // if true, a maybeReadMore has been scheduled
-  this.readingMore = false;
-
-  this.decoder = null;
-  this.encoding = null;
-  if (options.encoding) {
-    if (!StringDecoder) StringDecoder = require('string_decoder/').StringDecoder;
-    this.decoder = new StringDecoder(options.encoding);
-    this.encoding = options.encoding;
-  }
-}
-
-function Readable(options) {
-  Duplex = Duplex || require('./_stream_duplex');
-
-  if (!(this instanceof Readable)) return new Readable(options);
-
-  this._readableState = new ReadableState(options, this);
-
-  // legacy
-  this.readable = true;
-
-  if (options) {
-    if (typeof options.read === 'function') this._read = options.read;
-
-    if (typeof options.destroy === 'function') this._destroy = options.destroy;
-  }
-
-  Stream.call(this);
-}
-
-Object.defineProperty(Readable.prototype, 'destroyed', {
-  get: function () {
-    if (this._readableState === undefined) {
-      return false;
-    }
-    return this._readableState.destroyed;
-  },
-  set: function (value) {
-    // we ignore the value if the stream
-    // has not been initialized yet
-    if (!this._readableState) {
-      return;
-    }
-
-    // backward compatibility, the user is explicitly
-    // managing destroyed
-    this._readableState.destroyed = value;
-  }
-});
-
-Readable.prototype.destroy = destroyImpl.destroy;
-Readable.prototype._undestroy = destroyImpl.undestroy;
-Readable.prototype._destroy = function (err, cb) {
-  this.push(null);
-  cb(err);
-};
-
-// Manually shove something into the read() buffer.
-// This returns true if the highWaterMark has not been hit yet,
-// similar to how Writable.write() returns true if you should
-// write() some more.
-Readable.prototype.push = function (chunk, encoding) {
-  var state = this._readableState;
-  var skipChunkCheck;
-
-  if (!state.objectMode) {
-    if (typeof chunk === 'string') {
-      encoding = encoding || state.defaultEncoding;
-      if (encoding !== state.encoding) {
-        chunk = Buffer.from(chunk, encoding);
-        encoding = '';
-      }
-      skipChunkCheck = true;
-    }
-  } else {
-    skipChunkCheck = true;
-  }
-
-  return readableAddChunk(this, chunk, encoding, false, skipChunkCheck);
-};
-
-// Unshift should *always* be something directly out of read()
-Readable.prototype.unshift = function (chunk) {
-  return readableAddChunk(this, chunk, null, true, false);
-};
-
-function readableAddChunk(stream, chunk, encoding, addToFront, skipChunkCheck) {
-  var state = stream._readableState;
-  if (chunk === null) {
-    state.reading = false;
-    onEofChunk(stream, state);
-  } else {
-    var er;
-    if (!skipChunkCheck) er = chunkInvalid(state, chunk);
-    if (er) {
-      stream.emit('error', er);
-    } else if (state.objectMode || chunk && chunk.length > 0) {
-      if (typeof chunk !== 'string' && !state.objectMode && Object.getPrototypeOf(chunk) !== Buffer.prototype) {
-        chunk = _uint8ArrayToBuffer(chunk);
-      }
-
-      if (addToFront) {
-        if (state.endEmitted) stream.emit('error', new Error('stream.unshift() after end event'));else addChunk(stream, state, chunk, true);
-      } else if (state.ended) {
-        stream.emit('error', new Error('stream.push() after EOF'));
-      } else {
-        state.reading = false;
-        if (state.decoder && !encoding) {
-          chunk = state.decoder.write(chunk);
-          if (state.objectMode || chunk.length !== 0) addChunk(stream, state, chunk, false);else maybeReadMore(stream, state);
-        } else {
-          addChunk(stream, state, chunk, false);
-        }
-      }
-    } else if (!addToFront) {
-      state.reading = false;
-    }
-  }
-
-  return needMoreData(state);
-}
-
-function addChunk(stream, state, chunk, addToFront) {
-  if (state.flowing && state.length === 0 && !state.sync) {
-    stream.emit('data', chunk);
-    stream.read(0);
-  } else {
-    // update the buffer info.
-    state.length += state.objectMode ? 1 : chunk.length;
-    if (addToFront) state.buffer.unshift(chunk);else state.buffer.push(chunk);
-
-    if (state.needReadable) emitReadable(stream);
-  }
-  maybeReadMore(stream, state);
-}
-
-function chunkInvalid(state, chunk) {
-  var er;
-  if (!_isUint8Array(chunk) && typeof chunk !== 'string' && chunk !== undefined && !state.objectMode) {
-    er = new TypeError('Invalid non-string/buffer chunk');
-  }
-  return er;
-}
-
-// if it's past the high water mark, we can push in some more.
-// Also, if we have no data yet, we can stand some
-// more bytes.  This is to work around cases where hwm=0,
-// such as the repl.  Also, if the push() triggered a
-// readable event, and the user called read(largeNumber) such that
-// needReadable was set, then we ought to push more, so that another
-// 'readable' event will be triggered.
-function needMoreData(state) {
-  return !state.ended && (state.needReadable || state.length < state.highWaterMark || state.length === 0);
-}
-
-Readable.prototype.isPaused = function () {
-  return this._readableState.flowing === false;
-};
-
-// backwards compatibility.
-Readable.prototype.setEncoding = function (enc) {
-  if (!StringDecoder) StringDecoder = require('string_decoder/').StringDecoder;
-  this._readableState.decoder = new StringDecoder(enc);
-  this._readableState.encoding = enc;
-  return this;
-};
-
-// Don't raise the hwm > 8MB
-var MAX_HWM = 0x800000;
-function computeNewHighWaterMark(n) {
-  if (n >= MAX_HWM) {
-    n = MAX_HWM;
-  } else {
-    // Get the next highest power of 2 to prevent increasing hwm excessively in
-    // tiny amounts
-    n--;
-    n |= n >>> 1;
-    n |= n >>> 2;
-    n |= n >>> 4;
-    n |= n >>> 8;
-    n |= n >>> 16;
-    n++;
-  }
-  return n;
-}
-
-// This function is designed to be inlinable, so please take care when making
-// changes to the function body.
-function howMuchToRead(n, state) {
-  if (n <= 0 || state.length === 0 && state.ended) return 0;
-  if (state.objectMode) return 1;
-  if (n !== n) {
-    // Only flow one buffer at a time
-    if (state.flowing && state.length) return state.buffer.head.data.length;else return state.length;
-  }
-  // If we're asking for more than the current hwm, then raise the hwm.
-  if (n > state.highWaterMark) state.highWaterMark = computeNewHighWaterMark(n);
-  if (n <= state.length) return n;
-  // Don't have enough
-  if (!state.ended) {
-    state.needReadable = true;
-    return 0;
-  }
-  return state.length;
-}
-
-// you can override either this method, or the async _read(n) below.
-Readable.prototype.read = function (n) {
-  debug('read', n);
-  n = parseInt(n, 10);
-  var state = this._readableState;
-  var nOrig = n;
-
-  if (n !== 0) state.emittedReadable = false;
-
-  // if we're doing read(0) to trigger a readable event, but we
-  // already have a bunch of data in the buffer, then just trigger
-  // the 'readable' event and move on.
-  if (n === 0 && state.needReadable && (state.length >= state.highWaterMark || state.ended)) {
-    debug('read: emitReadable', state.length, state.ended);
-    if (state.length === 0 && state.ended) endReadable(this);else emitReadable(this);
-    return null;
-  }
-
-  n = howMuchToRead(n, state);
-
-  // if we've ended, and we're now clear, then finish it up.
-  if (n === 0 && state.ended) {
-    if (state.length === 0) endReadable(this);
-    return null;
-  }
-
-  // All the actual chunk generation logic needs to be
-  // *below* the call to _read.  The reason is that in certain
-  // synthetic stream cases, such as passthrough streams, _read
-  // may be a completely synchronous operation which may change
-  // the state of the read buffer, providing enough data when
-  // before there was *not* enough.
-  //
-  // So, the steps are:
-  // 1. Figure out what the state of things will be after we do
-  // a read from the buffer.
-  //
-  // 2. If that resulting state will trigger a _read, then call _read.
-  // Note that this may be asynchronous, or synchronous.  Yes, it is
-  // deeply ugly to write APIs this way, but that still doesn't mean
-  // that the Readable class should behave improperly, as streams are
-  // designed to be sync/async agnostic.
-  // Take note if the _read call is sync or async (ie, if the read call
-  // has returned yet), so that we know whether or not it's safe to emit
-  // 'readable' etc.
-  //
-  // 3. Actually pull the requested chunks out of the buffer and return.
-
-  // if we need a readable event, then we need to do some reading.
-  var doRead = state.needReadable;
-  debug('need readable', doRead);
-
-  // if we currently have less than the highWaterMark, then also read some
-  if (state.length === 0 || state.length - n < state.highWaterMark) {
-    doRead = true;
-    debug('length less than watermark', doRead);
-  }
-
-  // however, if we've ended, then there's no point, and if we're already
-  // reading, then it's unnecessary.
-  if (state.ended || state.reading) {
-    doRead = false;
-    debug('reading or ended', doRead);
-  } else if (doRead) {
-    debug('do read');
-    state.reading = true;
-    state.sync = true;
-    // if the length is currently zero, then we *need* a readable event.
-    if (state.length === 0) state.needReadable = true;
-    // call internal read method
-    this._read(state.highWaterMark);
-    state.sync = false;
-    // If _read pushed data synchronously, then `reading` will be false,
-    // and we need to re-evaluate how much data we can return to the user.
-    if (!state.reading) n = howMuchToRead(nOrig, state);
-  }
-
-  var ret;
-  if (n > 0) ret = fromList(n, state);else ret = null;
-
-  if (ret === null) {
-    state.needReadable = true;
-    n = 0;
-  } else {
-    state.length -= n;
-  }
-
-  if (state.length === 0) {
-    // If we have nothing in the buffer, then we want to know
-    // as soon as we *do* get something into the buffer.
-    if (!state.ended) state.needReadable = true;
-
-    // If we tried to read() past the EOF, then emit end on the next tick.
-    if (nOrig !== n && state.ended) endReadable(this);
-  }
-
-  if (ret !== null) this.emit('data', ret);
-
-  return ret;
-};
-
-function onEofChunk(stream, state) {
-  if (state.ended) return;
-  if (state.decoder) {
-    var chunk = state.decoder.end();
-    if (chunk && chunk.length) {
-      state.buffer.push(chunk);
-      state.length += state.objectMode ? 1 : chunk.length;
-    }
-  }
-  state.ended = true;
-
-  // emit 'readable' now to make sure it gets picked up.
-  emitReadable(stream);
-}
-
-// Don't emit readable right away in sync mode, because this can trigger
-// another read() call => stack overflow.  This way, it might trigger
-// a nextTick recursion warning, but that's not so bad.
-function emitReadable(stream) {
-  var state = stream._readableState;
-  state.needReadable = false;
-  if (!state.emittedReadable) {
-    debug('emitReadable', state.flowing);
-    state.emittedReadable = true;
-    if (state.sync) pna.nextTick(emitReadable_, stream);else emitReadable_(stream);
-  }
-}
-
-function emitReadable_(stream) {
-  debug('emit readable');
-  stream.emit('readable');
-  flow(stream);
-}
-
-// at this point, the user has presumably seen the 'readable' event,
-// and called read() to consume some data.  that may have triggered
-// in turn another _read(n) call, in which case reading = true if
-// it's in progress.
-// However, if we're not ended, or reading, and the length < hwm,
-// then go ahead and try to read some more preemptively.
-function maybeReadMore(stream, state) {
-  if (!state.readingMore) {
-    state.readingMore = true;
-    pna.nextTick(maybeReadMore_, stream, state);
-  }
-}
-
-function maybeReadMore_(stream, state) {
-  var len = state.length;
-  while (!state.reading && !state.flowing && !state.ended && state.length < state.highWaterMark) {
-    debug('maybeReadMore read 0');
-    stream.read(0);
-    if (len === state.length)
-      // didn't get any data, stop spinning.
-      break;else len = state.length;
-  }
-  state.readingMore = false;
-}
-
-// abstract method.  to be overridden in specific implementation classes.
-// call cb(er, data) where data is <= n in length.
-// for virtual (non-string, non-buffer) streams, "length" is somewhat
-// arbitrary, and perhaps not very meaningful.
-Readable.prototype._read = function (n) {
-  this.emit('error', new Error('_read() is not implemented'));
-};
-
-Readable.prototype.pipe = function (dest, pipeOpts) {
-  var src = this;
-  var state = this._readableState;
-
-  switch (state.pipesCount) {
-    case 0:
-      state.pipes = dest;
-      break;
-    case 1:
-      state.pipes = [state.pipes, dest];
-      break;
-    default:
-      state.pipes.push(dest);
-      break;
-  }
-  state.pipesCount += 1;
-  debug('pipe count=%d opts=%j', state.pipesCount, pipeOpts);
-
-  var doEnd = (!pipeOpts || pipeOpts.end !== false) && dest !== process.stdout && dest !== process.stderr;
-
-  var endFn = doEnd ? onend : unpipe;
-  if (state.endEmitted) pna.nextTick(endFn);else src.once('end', endFn);
-
-  dest.on('unpipe', onunpipe);
-  function onunpipe(readable, unpipeInfo) {
-    debug('onunpipe');
-    if (readable === src) {
-      if (unpipeInfo && unpipeInfo.hasUnpiped === false) {
-        unpipeInfo.hasUnpiped = true;
-        cleanup();
-      }
-    }
-  }
-
-  function onend() {
-    debug('onend');
-    dest.end();
-  }
-
-  // when the dest drains, it reduces the awaitDrain counter
-  // on the source.  This would be more elegant with a .once()
-  // handler in flow(), but adding and removing repeatedly is
-  // too slow.
-  var ondrain = pipeOnDrain(src);
-  dest.on('drain', ondrain);
-
-  var cleanedUp = false;
-  function cleanup() {
-    debug('cleanup');
-    // cleanup event handlers once the pipe is broken
-    dest.removeListener('close', onclose);
-    dest.removeListener('finish', onfinish);
-    dest.removeListener('drain', ondrain);
-    dest.removeListener('error', onerror);
-    dest.removeListener('unpipe', onunpipe);
-    src.removeListener('end', onend);
-    src.removeListener('end', unpipe);
-    src.removeListener('data', ondata);
-
-    cleanedUp = true;
-
-    // if the reader is waiting for a drain event from this
-    // specific writer, then it would cause it to never start
-    // flowing again.
-    // So, if this is awaiting a drain, then we just call it now.
-    // If we don't know, then assume that we are waiting for one.
-    if (state.awaitDrain && (!dest._writableState || dest._writableState.needDrain)) ondrain();
-  }
-
-  // If the user pushes more data while we're writing to dest then we'll end up
-  // in ondata again. However, we only want to increase awaitDrain once because
-  // dest will only emit one 'drain' event for the multiple writes.
-  // => Introduce a guard on increasing awaitDrain.
-  var increasedAwaitDrain = false;
-  src.on('data', ondata);
-  function ondata(chunk) {
-    debug('ondata');
-    increasedAwaitDrain = false;
-    var ret = dest.write(chunk);
-    if (false === ret && !increasedAwaitDrain) {
-      // If the user unpiped during `dest.write()`, it is possible
-      // to get stuck in a permanently paused state if that write
-      // also returned false.
-      // => Check whether `dest` is still a piping destination.
-      if ((state.pipesCount === 1 && state.pipes === dest || state.pipesCount > 1 && indexOf(state.pipes, dest) !== -1) && !cleanedUp) {
-        debug('false write response, pause', src._readableState.awaitDrain);
-        src._readableState.awaitDrain++;
-        increasedAwaitDrain = true;
-      }
-      src.pause();
-    }
-  }
-
-  // if the dest has an error, then stop piping into it.
-  // however, don't suppress the throwing behavior for this.
-  function onerror(er) {
-    debug('onerror', er);
-    unpipe();
-    dest.removeListener('error', onerror);
-    if (EElistenerCount(dest, 'error') === 0) dest.emit('error', er);
-  }
-
-  // Make sure our error handler is attached before userland ones.
-  prependListener(dest, 'error', onerror);
-
-  // Both close and finish should trigger unpipe, but only once.
-  function onclose() {
-    dest.removeListener('finish', onfinish);
-    unpipe();
-  }
-  dest.once('close', onclose);
-  function onfinish() {
-    debug('onfinish');
-    dest.removeListener('close', onclose);
-    unpipe();
-  }
-  dest.once('finish', onfinish);
-
-  function unpipe() {
-    debug('unpipe');
-    src.unpipe(dest);
-  }
-
-  // tell the dest that it's being piped to
-  dest.emit('pipe', src);
-
-  // start the flow if it hasn't been started already.
-  if (!state.flowing) {
-    debug('pipe resume');
-    src.resume();
-  }
-
-  return dest;
-};
-
-function pipeOnDrain(src) {
-  return function () {
-    var state = src._readableState;
-    debug('pipeOnDrain', state.awaitDrain);
-    if (state.awaitDrain) state.awaitDrain--;
-    if (state.awaitDrain === 0 && EElistenerCount(src, 'data')) {
-      state.flowing = true;
-      flow(src);
-    }
-  };
-}
-
-Readable.prototype.unpipe = function (dest) {
-  var state = this._readableState;
-  var unpipeInfo = { hasUnpiped: false };
-
-  // if we're not piping anywhere, then do nothing.
-  if (state.pipesCount === 0) return this;
-
-  // just one destination.  most common case.
-  if (state.pipesCount === 1) {
-    // passed in one, but it's not the right one.
-    if (dest && dest !== state.pipes) return this;
-
-    if (!dest) dest = state.pipes;
-
-    // got a match.
-    state.pipes = null;
-    state.pipesCount = 0;
-    state.flowing = false;
-    if (dest) dest.emit('unpipe', this, unpipeInfo);
-    return this;
-  }
-
-  // slow case. multiple pipe destinations.
-
-  if (!dest) {
-    // remove all.
-    var dests = state.pipes;
-    var len = state.pipesCount;
-    state.pipes = null;
-    state.pipesCount = 0;
-    state.flowing = false;
-
-    for (var i = 0; i < len; i++) {
-      dests[i].emit('unpipe', this, unpipeInfo);
-    }return this;
-  }
-
-  // try to find the right one.
-  var index = indexOf(state.pipes, dest);
-  if (index === -1) return this;
-
-  state.pipes.splice(index, 1);
-  state.pipesCount -= 1;
-  if (state.pipesCount === 1) state.pipes = state.pipes[0];
-
-  dest.emit('unpipe', this, unpipeInfo);
-
-  return this;
-};
-
-// set up data events if they are asked for
-// Ensure readable listeners eventually get something
-Readable.prototype.on = function (ev, fn) {
-  var res = Stream.prototype.on.call(this, ev, fn);
-
-  if (ev === 'data') {
-    // Start flowing on next tick if stream isn't explicitly paused
-    if (this._readableState.flowing !== false) this.resume();
-  } else if (ev === 'readable') {
-    var state = this._readableState;
-    if (!state.endEmitted && !state.readableListening) {
-      state.readableListening = state.needReadable = true;
-      state.emittedReadable = false;
-      if (!state.reading) {
-        pna.nextTick(nReadingNextTick, this);
-      } else if (state.length) {
-        emitReadable(this);
-      }
-    }
-  }
-
-  return res;
-};
-Readable.prototype.addListener = Readable.prototype.on;
-
-function nReadingNextTick(self) {
-  debug('readable nexttick read 0');
-  self.read(0);
-}
-
-// pause() and resume() are remnants of the legacy readable stream API
-// If the user uses them, then switch into old mode.
-Readable.prototype.resume = function () {
-  var state = this._readableState;
-  if (!state.flowing) {
-    debug('resume');
-    state.flowing = true;
-    resume(this, state);
-  }
-  return this;
-};
-
-function resume(stream, state) {
-  if (!state.resumeScheduled) {
-    state.resumeScheduled = true;
-    pna.nextTick(resume_, stream, state);
-  }
-}
-
-function resume_(stream, state) {
-  if (!state.reading) {
-    debug('resume read 0');
-    stream.read(0);
-  }
-
-  state.resumeScheduled = false;
-  state.awaitDrain = 0;
-  stream.emit('resume');
-  flow(stream);
-  if (state.flowing && !state.reading) stream.read(0);
-}
-
-Readable.prototype.pause = function () {
-  debug('call pause flowing=%j', this._readableState.flowing);
-  if (false !== this._readableState.flowing) {
-    debug('pause');
-    this._readableState.flowing = false;
-    this.emit('pause');
-  }
-  return this;
-};
-
-function flow(stream) {
-  var state = stream._readableState;
-  debug('flow', state.flowing);
-  while (state.flowing && stream.read() !== null) {}
-}
-
-// wrap an old-style stream as the async data source.
-// This is *not* part of the readable stream interface.
-// It is an ugly unfortunate mess of history.
-Readable.prototype.wrap = function (stream) {
-  var _this = this;
-
-  var state = this._readableState;
-  var paused = false;
-
-  stream.on('end', function () {
-    debug('wrapped end');
-    if (state.decoder && !state.ended) {
-      var chunk = state.decoder.end();
-      if (chunk && chunk.length) _this.push(chunk);
-    }
-
-    _this.push(null);
-  });
-
-  stream.on('data', function (chunk) {
-    debug('wrapped data');
-    if (state.decoder) chunk = state.decoder.write(chunk);
-
-    // don't skip over falsy values in objectMode
-    if (state.objectMode && (chunk === null || chunk === undefined)) return;else if (!state.objectMode && (!chunk || !chunk.length)) return;
-
-    var ret = _this.push(chunk);
-    if (!ret) {
-      paused = true;
-      stream.pause();
-    }
-  });
-
-  // proxy all the other methods.
-  // important when wrapping filters and duplexes.
-  for (var i in stream) {
-    if (this[i] === undefined && typeof stream[i] === 'function') {
-      this[i] = function (method) {
-        return function () {
-          return stream[method].apply(stream, arguments);
-        };
-      }(i);
-    }
-  }
-
-  // proxy certain important events.
-  for (var n = 0; n < kProxyEvents.length; n++) {
-    stream.on(kProxyEvents[n], this.emit.bind(this, kProxyEvents[n]));
-  }
-
-  // when we try to consume some more bytes, simply unpause the
-  // underlying stream.
-  this._read = function (n) {
-    debug('wrapped _read', n);
-    if (paused) {
-      paused = false;
-      stream.resume();
-    }
-  };
-
-  return this;
-};
-
-Object.defineProperty(Readable.prototype, 'readableHighWaterMark', {
-  // making it explicit this property is not enumerable
-  // because otherwise some prototype manipulation in
-  // userland will fail
-  enumerable: false,
-  get: function () {
-    return this._readableState.highWaterMark;
-  }
-});
-
-// exposed for testing purposes only.
-Readable._fromList = fromList;
-
-// Pluck off n bytes from an array of buffers.
-// Length is the combined lengths of all the buffers in the list.
-// This function is designed to be inlinable, so please take care when making
-// changes to the function body.
-function fromList(n, state) {
-  // nothing buffered
-  if (state.length === 0) return null;
-
-  var ret;
-  if (state.objectMode) ret = state.buffer.shift();else if (!n || n >= state.length) {
-    // read it all, truncate the list
-    if (state.decoder) ret = state.buffer.join('');else if (state.buffer.length === 1) ret = state.buffer.head.data;else ret = state.buffer.concat(state.length);
-    state.buffer.clear();
-  } else {
-    // read part of list
-    ret = fromListPartial(n, state.buffer, state.decoder);
-  }
-
-  return ret;
-}
-
-// Extracts only enough buffered data to satisfy the amount requested.
-// This function is designed to be inlinable, so please take care when making
-// changes to the function body.
-function fromListPartial(n, list, hasStrings) {
-  var ret;
-  if (n < list.head.data.length) {
-    // slice is the same for buffers and strings
-    ret = list.head.data.slice(0, n);
-    list.head.data = list.head.data.slice(n);
-  } else if (n === list.head.data.length) {
-    // first chunk is a perfect match
-    ret = list.shift();
-  } else {
-    // result spans more than one buffer
-    ret = hasStrings ? copyFromBufferString(n, list) : copyFromBuffer(n, list);
-  }
-  return ret;
-}
-
-// Copies a specified amount of characters from the list of buffered data
-// chunks.
-// This function is designed to be inlinable, so please take care when making
-// changes to the function body.
-function copyFromBufferString(n, list) {
-  var p = list.head;
-  var c = 1;
-  var ret = p.data;
-  n -= ret.length;
-  while (p = p.next) {
-    var str = p.data;
-    var nb = n > str.length ? str.length : n;
-    if (nb === str.length) ret += str;else ret += str.slice(0, n);
-    n -= nb;
-    if (n === 0) {
-      if (nb === str.length) {
-        ++c;
-        if (p.next) list.head = p.next;else list.head = list.tail = null;
-      } else {
-        list.head = p;
-        p.data = str.slice(nb);
-      }
-      break;
-    }
-    ++c;
-  }
-  list.length -= c;
-  return ret;
-}
-
-// Copies a specified amount of bytes from the list of buffered data chunks.
-// This function is designed to be inlinable, so please take care when making
-// changes to the function body.
-function copyFromBuffer(n, list) {
-  var ret = Buffer.allocUnsafe(n);
-  var p = list.head;
-  var c = 1;
-  p.data.copy(ret);
-  n -= p.data.length;
-  while (p = p.next) {
-    var buf = p.data;
-    var nb = n > buf.length ? buf.length : n;
-    buf.copy(ret, ret.length - n, 0, nb);
-    n -= nb;
-    if (n === 0) {
-      if (nb === buf.length) {
-        ++c;
-        if (p.next) list.head = p.next;else list.head = list.tail = null;
-      } else {
-        list.head = p;
-        p.data = buf.slice(nb);
-      }
-      break;
-    }
-    ++c;
-  }
-  list.length -= c;
-  return ret;
-}
-
-function endReadable(stream) {
-  var state = stream._readableState;
-
-  // If we get here before consuming all the bytes, then that is a
-  // bug in node.  Should never happen.
-  if (state.length > 0) throw new Error('"endReadable()" called on non-empty stream');
-
-  if (!state.endEmitted) {
-    state.ended = true;
-    pna.nextTick(endReadableNT, state, stream);
-  }
-}
-
-function endReadableNT(state, stream) {
-  // Check that we didn't get one last unshift.
-  if (!state.endEmitted && state.length === 0) {
-    state.endEmitted = true;
-    stream.readable = false;
-    stream.emit('end');
-  }
-}
-
-function indexOf(xs, x) {
-  for (var i = 0, l = xs.length; i < l; i++) {
-    if (xs[i] === x) return i;
-  }
-  return -1;
-}
-}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./_stream_duplex":114,"./internal/streams/BufferList":119,"./internal/streams/destroy":120,"./internal/streams/stream":121,"_process":98,"core-util-is":8,"events":43,"inherits":57,"isarray":60,"process-nextick-args":97,"safe-buffer":107,"string_decoder/":126,"util":3}],117:[function(require,module,exports){
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-// a transform stream is a readable/writable stream where you do
-// something with the data.  Sometimes it's called a "filter",
-// but that's not a great name for it, since that implies a thing where
-// some bits pass through, and others are simply ignored.  (That would
-// be a valid example of a transform, of course.)
-//
-// While the output is causally related to the input, it's not a
-// necessarily symmetric or synchronous transformation.  For example,
-// a zlib stream might take multiple plain-text writes(), and then
-// emit a single compressed chunk some time in the future.
-//
-// Here's how this works:
-//
-// The Transform stream has all the aspects of the readable and writable
-// stream classes.  When you write(chunk), that calls _write(chunk,cb)
-// internally, and returns false if there's a lot of pending writes
-// buffered up.  When you call read(), that calls _read(n) until
-// there's enough pending readable data buffered up.
-//
-// In a transform stream, the written data is placed in a buffer.  When
-// _read(n) is called, it transforms the queued up data, calling the
-// buffered _write cb's as it consumes chunks.  If consuming a single
-// written chunk would result in multiple output chunks, then the first
-// outputted bit calls the readcb, and subsequent chunks just go into
-// the read buffer, and will cause it to emit 'readable' if necessary.
-//
-// This way, back-pressure is actually determined by the reading side,
-// since _read has to be called to start processing a new chunk.  However,
-// a pathological inflate type of transform can cause excessive buffering
-// here.  For example, imagine a stream where every byte of input is
-// interpreted as an integer from 0-255, and then results in that many
-// bytes of output.  Writing the 4 bytes {ff,ff,ff,ff} would result in
-// 1kb of data being output.  In this case, you could write a very small
-// amount of input, and end up with a very large amount of output.  In
-// such a pathological inflating mechanism, there'd be no way to tell
-// the system to stop doing the transform.  A single 4MB write could
-// cause the system to run out of memory.
-//
-// However, even in such a pathological case, only a single written chunk
-// would be consumed, and then the rest would wait (un-transformed) until
-// the results of the previous transformed chunk were consumed.
-
-'use strict';
-
-module.exports = Transform;
-
-var Duplex = require('./_stream_duplex');
-
-/*<replacement>*/
-var util = require('core-util-is');
-util.inherits = require('inherits');
-/*</replacement>*/
-
-util.inherits(Transform, Duplex);
-
-function afterTransform(er, data) {
-  var ts = this._transformState;
-  ts.transforming = false;
-
-  var cb = ts.writecb;
-
-  if (!cb) {
-    return this.emit('error', new Error('write callback called multiple times'));
-  }
-
-  ts.writechunk = null;
-  ts.writecb = null;
-
-  if (data != null) // single equals check for both `null` and `undefined`
-    this.push(data);
-
-  cb(er);
-
-  var rs = this._readableState;
-  rs.reading = false;
-  if (rs.needReadable || rs.length < rs.highWaterMark) {
-    this._read(rs.highWaterMark);
-  }
-}
-
-function Transform(options) {
-  if (!(this instanceof Transform)) return new Transform(options);
-
-  Duplex.call(this, options);
-
-  this._transformState = {
-    afterTransform: afterTransform.bind(this),
-    needTransform: false,
-    transforming: false,
-    writecb: null,
-    writechunk: null,
-    writeencoding: null
-  };
-
-  // start out asking for a readable event once data is transformed.
-  this._readableState.needReadable = true;
-
-  // we have implemented the _read method, and done the other things
-  // that Readable wants before the first _read call, so unset the
-  // sync guard flag.
-  this._readableState.sync = false;
-
-  if (options) {
-    if (typeof options.transform === 'function') this._transform = options.transform;
-
-    if (typeof options.flush === 'function') this._flush = options.flush;
-  }
-
-  // When the writable side finishes, then flush out anything remaining.
-  this.on('prefinish', prefinish);
-}
-
-function prefinish() {
-  var _this = this;
-
-  if (typeof this._flush === 'function') {
-    this._flush(function (er, data) {
-      done(_this, er, data);
-    });
-  } else {
-    done(this, null, null);
-  }
-}
-
-Transform.prototype.push = function (chunk, encoding) {
-  this._transformState.needTransform = false;
-  return Duplex.prototype.push.call(this, chunk, encoding);
-};
-
-// This is the part where you do stuff!
-// override this function in implementation classes.
-// 'chunk' is an input chunk.
-//
-// Call `push(newChunk)` to pass along transformed output
-// to the readable side.  You may call 'push' zero or more times.
-//
-// Call `cb(err)` when you are done with this chunk.  If you pass
-// an error, then that'll put the hurt on the whole operation.  If you
-// never call cb(), then you'll never get another chunk.
-Transform.prototype._transform = function (chunk, encoding, cb) {
-  throw new Error('_transform() is not implemented');
-};
-
-Transform.prototype._write = function (chunk, encoding, cb) {
-  var ts = this._transformState;
-  ts.writecb = cb;
-  ts.writechunk = chunk;
-  ts.writeencoding = encoding;
-  if (!ts.transforming) {
-    var rs = this._readableState;
-    if (ts.needTransform || rs.needReadable || rs.length < rs.highWaterMark) this._read(rs.highWaterMark);
-  }
-};
-
-// Doesn't matter what the args are here.
-// _transform does all the work.
-// That we got here means that the readable side wants more data.
-Transform.prototype._read = function (n) {
-  var ts = this._transformState;
-
-  if (ts.writechunk !== null && ts.writecb && !ts.transforming) {
-    ts.transforming = true;
-    this._transform(ts.writechunk, ts.writeencoding, ts.afterTransform);
-  } else {
-    // mark that we need a transform, so that any data that comes in
-    // will get processed, now that we've asked for it.
-    ts.needTransform = true;
-  }
-};
-
-Transform.prototype._destroy = function (err, cb) {
-  var _this2 = this;
-
-  Duplex.prototype._destroy.call(this, err, function (err2) {
-    cb(err2);
-    _this2.emit('close');
-  });
-};
-
-function done(stream, er, data) {
-  if (er) return stream.emit('error', er);
-
-  if (data != null) // single equals check for both `null` and `undefined`
-    stream.push(data);
-
-  // if there's nothing in the write buffer, then that means
-  // that nothing more will ever be provided
-  if (stream._writableState.length) throw new Error('Calling transform done when ws.length != 0');
-
-  if (stream._transformState.transforming) throw new Error('Calling transform done when still transforming');
-
-  return stream.push(null);
-}
-},{"./_stream_duplex":114,"core-util-is":8,"inherits":57}],118:[function(require,module,exports){
-(function (process,global,setImmediate){
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-// A bit simpler than readable streams.
-// Implement an async ._write(chunk, encoding, cb), and it'll handle all
-// the drain event emission and buffering.
-
-'use strict';
-
-/*<replacement>*/
-
-var pna = require('process-nextick-args');
-/*</replacement>*/
-
-module.exports = Writable;
-
-/* <replacement> */
-function WriteReq(chunk, encoding, cb) {
-  this.chunk = chunk;
-  this.encoding = encoding;
-  this.callback = cb;
-  this.next = null;
-}
-
-// It seems a linked list but it is not
-// there will be only 2 of these for each stream
-function CorkedRequest(state) {
-  var _this = this;
-
-  this.next = null;
-  this.entry = null;
-  this.finish = function () {
-    onCorkedFinish(_this, state);
-  };
-}
-/* </replacement> */
-
-/*<replacement>*/
-var asyncWrite = !process.browser && ['v0.10', 'v0.9.'].indexOf(process.version.slice(0, 5)) > -1 ? setImmediate : pna.nextTick;
-/*</replacement>*/
-
-/*<replacement>*/
-var Duplex;
-/*</replacement>*/
-
-Writable.WritableState = WritableState;
-
-/*<replacement>*/
-var util = require('core-util-is');
-util.inherits = require('inherits');
-/*</replacement>*/
-
-/*<replacement>*/
-var internalUtil = {
-  deprecate: require('util-deprecate')
-};
-/*</replacement>*/
-
-/*<replacement>*/
-var Stream = require('./internal/streams/stream');
-/*</replacement>*/
-
-/*<replacement>*/
-
-var Buffer = require('safe-buffer').Buffer;
-var OurUint8Array = global.Uint8Array || function () {};
-function _uint8ArrayToBuffer(chunk) {
-  return Buffer.from(chunk);
-}
-function _isUint8Array(obj) {
-  return Buffer.isBuffer(obj) || obj instanceof OurUint8Array;
-}
-
-/*</replacement>*/
-
-var destroyImpl = require('./internal/streams/destroy');
-
-util.inherits(Writable, Stream);
-
-function nop() {}
-
-function WritableState(options, stream) {
-  Duplex = Duplex || require('./_stream_duplex');
-
-  options = options || {};
-
-  // Duplex streams are both readable and writable, but share
-  // the same options object.
-  // However, some cases require setting options to different
-  // values for the readable and the writable sides of the duplex stream.
-  // These options can be provided separately as readableXXX and writableXXX.
-  var isDuplex = stream instanceof Duplex;
-
-  // object stream flag to indicate whether or not this stream
-  // contains buffers or objects.
-  this.objectMode = !!options.objectMode;
-
-  if (isDuplex) this.objectMode = this.objectMode || !!options.writableObjectMode;
-
-  // the point at which write() starts returning false
-  // Note: 0 is a valid value, means that we always return false if
-  // the entire buffer is not flushed immediately on write()
-  var hwm = options.highWaterMark;
-  var writableHwm = options.writableHighWaterMark;
-  var defaultHwm = this.objectMode ? 16 : 16 * 1024;
-
-  if (hwm || hwm === 0) this.highWaterMark = hwm;else if (isDuplex && (writableHwm || writableHwm === 0)) this.highWaterMark = writableHwm;else this.highWaterMark = defaultHwm;
-
-  // cast to ints.
-  this.highWaterMark = Math.floor(this.highWaterMark);
-
-  // if _final has been called
-  this.finalCalled = false;
-
-  // drain event flag.
-  this.needDrain = false;
-  // at the start of calling end()
-  this.ending = false;
-  // when end() has been called, and returned
-  this.ended = false;
-  // when 'finish' is emitted
-  this.finished = false;
-
-  // has it been destroyed
-  this.destroyed = false;
-
-  // should we decode strings into buffers before passing to _write?
-  // this is here so that some node-core streams can optimize string
-  // handling at a lower level.
-  var noDecode = options.decodeStrings === false;
-  this.decodeStrings = !noDecode;
-
-  // Crypto is kind of old and crusty.  Historically, its default string
-  // encoding is 'binary' so we have to make this configurable.
-  // Everything else in the universe uses 'utf8', though.
-  this.defaultEncoding = options.defaultEncoding || 'utf8';
-
-  // not an actual buffer we keep track of, but a measurement
-  // of how much we're waiting to get pushed to some underlying
-  // socket or file.
-  this.length = 0;
-
-  // a flag to see when we're in the middle of a write.
-  this.writing = false;
-
-  // when true all writes will be buffered until .uncork() call
-  this.corked = 0;
-
-  // a flag to be able to tell if the onwrite cb is called immediately,
-  // or on a later tick.  We set this to true at first, because any
-  // actions that shouldn't happen until "later" should generally also
-  // not happen before the first write call.
-  this.sync = true;
-
-  // a flag to know if we're processing previously buffered items, which
-  // may call the _write() callback in the same tick, so that we don't
-  // end up in an overlapped onwrite situation.
-  this.bufferProcessing = false;
-
-  // the callback that's passed to _write(chunk,cb)
-  this.onwrite = function (er) {
-    onwrite(stream, er);
-  };
-
-  // the callback that the user supplies to write(chunk,encoding,cb)
-  this.writecb = null;
-
-  // the amount that is being written when _write is called.
-  this.writelen = 0;
-
-  this.bufferedRequest = null;
-  this.lastBufferedRequest = null;
-
-  // number of pending user-supplied write callbacks
-  // this must be 0 before 'finish' can be emitted
-  this.pendingcb = 0;
-
-  // emit prefinish if the only thing we're waiting for is _write cbs
-  // This is relevant for synchronous Transform streams
-  this.prefinished = false;
-
-  // True if the error was already emitted and should not be thrown again
-  this.errorEmitted = false;
-
-  // count buffered requests
-  this.bufferedRequestCount = 0;
-
-  // allocate the first CorkedRequest, there is always
-  // one allocated and free to use, and we maintain at most two
-  this.corkedRequestsFree = new CorkedRequest(this);
-}
-
-WritableState.prototype.getBuffer = function getBuffer() {
-  var current = this.bufferedRequest;
-  var out = [];
-  while (current) {
-    out.push(current);
-    current = current.next;
-  }
-  return out;
-};
-
-(function () {
-  try {
-    Object.defineProperty(WritableState.prototype, 'buffer', {
-      get: internalUtil.deprecate(function () {
-        return this.getBuffer();
-      }, '_writableState.buffer is deprecated. Use _writableState.getBuffer ' + 'instead.', 'DEP0003')
-    });
-  } catch (_) {}
-})();
-
-// Test _writableState for inheritance to account for Duplex streams,
-// whose prototype chain only points to Readable.
-var realHasInstance;
-if (typeof Symbol === 'function' && Symbol.hasInstance && typeof Function.prototype[Symbol.hasInstance] === 'function') {
-  realHasInstance = Function.prototype[Symbol.hasInstance];
-  Object.defineProperty(Writable, Symbol.hasInstance, {
-    value: function (object) {
-      if (realHasInstance.call(this, object)) return true;
-      if (this !== Writable) return false;
-
-      return object && object._writableState instanceof WritableState;
-    }
-  });
-} else {
-  realHasInstance = function (object) {
-    return object instanceof this;
-  };
-}
-
-function Writable(options) {
-  Duplex = Duplex || require('./_stream_duplex');
-
-  // Writable ctor is applied to Duplexes, too.
-  // `realHasInstance` is necessary because using plain `instanceof`
-  // would return false, as no `_writableState` property is attached.
-
-  // Trying to use the custom `instanceof` for Writable here will also break the
-  // Node.js LazyTransform implementation, which has a non-trivial getter for
-  // `_writableState` that would lead to infinite recursion.
-  if (!realHasInstance.call(Writable, this) && !(this instanceof Duplex)) {
-    return new Writable(options);
-  }
-
-  this._writableState = new WritableState(options, this);
-
-  // legacy.
-  this.writable = true;
-
-  if (options) {
-    if (typeof options.write === 'function') this._write = options.write;
-
-    if (typeof options.writev === 'function') this._writev = options.writev;
-
-    if (typeof options.destroy === 'function') this._destroy = options.destroy;
-
-    if (typeof options.final === 'function') this._final = options.final;
-  }
-
-  Stream.call(this);
-}
-
-// Otherwise people can pipe Writable streams, which is just wrong.
-Writable.prototype.pipe = function () {
-  this.emit('error', new Error('Cannot pipe, not readable'));
-};
-
-function writeAfterEnd(stream, cb) {
-  var er = new Error('write after end');
-  // TODO: defer error events consistently everywhere, not just the cb
-  stream.emit('error', er);
-  pna.nextTick(cb, er);
-}
-
-// Checks that a user-supplied chunk is valid, especially for the particular
-// mode the stream is in. Currently this means that `null` is never accepted
-// and undefined/non-string values are only allowed in object mode.
-function validChunk(stream, state, chunk, cb) {
-  var valid = true;
-  var er = false;
-
-  if (chunk === null) {
-    er = new TypeError('May not write null values to stream');
-  } else if (typeof chunk !== 'string' && chunk !== undefined && !state.objectMode) {
-    er = new TypeError('Invalid non-string/buffer chunk');
-  }
-  if (er) {
-    stream.emit('error', er);
-    pna.nextTick(cb, er);
-    valid = false;
-  }
-  return valid;
-}
-
-Writable.prototype.write = function (chunk, encoding, cb) {
-  var state = this._writableState;
-  var ret = false;
-  var isBuf = !state.objectMode && _isUint8Array(chunk);
-
-  if (isBuf && !Buffer.isBuffer(chunk)) {
-    chunk = _uint8ArrayToBuffer(chunk);
-  }
-
-  if (typeof encoding === 'function') {
-    cb = encoding;
-    encoding = null;
-  }
-
-  if (isBuf) encoding = 'buffer';else if (!encoding) encoding = state.defaultEncoding;
-
-  if (typeof cb !== 'function') cb = nop;
-
-  if (state.ended) writeAfterEnd(this, cb);else if (isBuf || validChunk(this, state, chunk, cb)) {
-    state.pendingcb++;
-    ret = writeOrBuffer(this, state, isBuf, chunk, encoding, cb);
-  }
-
-  return ret;
-};
-
-Writable.prototype.cork = function () {
-  var state = this._writableState;
-
-  state.corked++;
-};
-
-Writable.prototype.uncork = function () {
-  var state = this._writableState;
-
-  if (state.corked) {
-    state.corked--;
-
-    if (!state.writing && !state.corked && !state.finished && !state.bufferProcessing && state.bufferedRequest) clearBuffer(this, state);
-  }
-};
-
-Writable.prototype.setDefaultEncoding = function setDefaultEncoding(encoding) {
-  // node::ParseEncoding() requires lower case.
-  if (typeof encoding === 'string') encoding = encoding.toLowerCase();
-  if (!(['hex', 'utf8', 'utf-8', 'ascii', 'binary', 'base64', 'ucs2', 'ucs-2', 'utf16le', 'utf-16le', 'raw'].indexOf((encoding + '').toLowerCase()) > -1)) throw new TypeError('Unknown encoding: ' + encoding);
-  this._writableState.defaultEncoding = encoding;
-  return this;
-};
-
-function decodeChunk(state, chunk, encoding) {
-  if (!state.objectMode && state.decodeStrings !== false && typeof chunk === 'string') {
-    chunk = Buffer.from(chunk, encoding);
-  }
-  return chunk;
-}
-
-Object.defineProperty(Writable.prototype, 'writableHighWaterMark', {
-  // making it explicit this property is not enumerable
-  // because otherwise some prototype manipulation in
-  // userland will fail
-  enumerable: false,
-  get: function () {
-    return this._writableState.highWaterMark;
-  }
-});
-
-// if we're already writing something, then just put this
-// in the queue, and wait our turn.  Otherwise, call _write
-// If we return false, then we need a drain event, so set that flag.
-function writeOrBuffer(stream, state, isBuf, chunk, encoding, cb) {
-  if (!isBuf) {
-    var newChunk = decodeChunk(state, chunk, encoding);
-    if (chunk !== newChunk) {
-      isBuf = true;
-      encoding = 'buffer';
-      chunk = newChunk;
-    }
-  }
-  var len = state.objectMode ? 1 : chunk.length;
-
-  state.length += len;
-
-  var ret = state.length < state.highWaterMark;
-  // we must ensure that previous needDrain will not be reset to false.
-  if (!ret) state.needDrain = true;
-
-  if (state.writing || state.corked) {
-    var last = state.lastBufferedRequest;
-    state.lastBufferedRequest = {
-      chunk: chunk,
-      encoding: encoding,
-      isBuf: isBuf,
-      callback: cb,
-      next: null
-    };
-    if (last) {
-      last.next = state.lastBufferedRequest;
-    } else {
-      state.bufferedRequest = state.lastBufferedRequest;
-    }
-    state.bufferedRequestCount += 1;
-  } else {
-    doWrite(stream, state, false, len, chunk, encoding, cb);
-  }
-
-  return ret;
-}
-
-function doWrite(stream, state, writev, len, chunk, encoding, cb) {
-  state.writelen = len;
-  state.writecb = cb;
-  state.writing = true;
-  state.sync = true;
-  if (writev) stream._writev(chunk, state.onwrite);else stream._write(chunk, encoding, state.onwrite);
-  state.sync = false;
-}
-
-function onwriteError(stream, state, sync, er, cb) {
-  --state.pendingcb;
-
-  if (sync) {
-    // defer the callback if we are being called synchronously
-    // to avoid piling up things on the stack
-    pna.nextTick(cb, er);
-    // this can emit finish, and it will always happen
-    // after error
-    pna.nextTick(finishMaybe, stream, state);
-    stream._writableState.errorEmitted = true;
-    stream.emit('error', er);
-  } else {
-    // the caller expect this to happen before if
-    // it is async
-    cb(er);
-    stream._writableState.errorEmitted = true;
-    stream.emit('error', er);
-    // this can emit finish, but finish must
-    // always follow error
-    finishMaybe(stream, state);
-  }
-}
-
-function onwriteStateUpdate(state) {
-  state.writing = false;
-  state.writecb = null;
-  state.length -= state.writelen;
-  state.writelen = 0;
-}
-
-function onwrite(stream, er) {
-  var state = stream._writableState;
-  var sync = state.sync;
-  var cb = state.writecb;
-
-  onwriteStateUpdate(state);
-
-  if (er) onwriteError(stream, state, sync, er, cb);else {
-    // Check if we're actually ready to finish, but don't emit yet
-    var finished = needFinish(state);
-
-    if (!finished && !state.corked && !state.bufferProcessing && state.bufferedRequest) {
-      clearBuffer(stream, state);
-    }
-
-    if (sync) {
-      /*<replacement>*/
-      asyncWrite(afterWrite, stream, state, finished, cb);
-      /*</replacement>*/
-    } else {
-      afterWrite(stream, state, finished, cb);
-    }
-  }
-}
-
-function afterWrite(stream, state, finished, cb) {
-  if (!finished) onwriteDrain(stream, state);
-  state.pendingcb--;
-  cb();
-  finishMaybe(stream, state);
-}
-
-// Must force callback to be called on nextTick, so that we don't
-// emit 'drain' before the write() consumer gets the 'false' return
-// value, and has a chance to attach a 'drain' listener.
-function onwriteDrain(stream, state) {
-  if (state.length === 0 && state.needDrain) {
-    state.needDrain = false;
-    stream.emit('drain');
-  }
-}
-
-// if there's something in the buffer waiting, then process it
-function clearBuffer(stream, state) {
-  state.bufferProcessing = true;
-  var entry = state.bufferedRequest;
-
-  if (stream._writev && entry && entry.next) {
-    // Fast case, write everything using _writev()
-    var l = state.bufferedRequestCount;
-    var buffer = new Array(l);
-    var holder = state.corkedRequestsFree;
-    holder.entry = entry;
-
-    var count = 0;
-    var allBuffers = true;
-    while (entry) {
-      buffer[count] = entry;
-      if (!entry.isBuf) allBuffers = false;
-      entry = entry.next;
-      count += 1;
-    }
-    buffer.allBuffers = allBuffers;
-
-    doWrite(stream, state, true, state.length, buffer, '', holder.finish);
-
-    // doWrite is almost always async, defer these to save a bit of time
-    // as the hot path ends with doWrite
-    state.pendingcb++;
-    state.lastBufferedRequest = null;
-    if (holder.next) {
-      state.corkedRequestsFree = holder.next;
-      holder.next = null;
-    } else {
-      state.corkedRequestsFree = new CorkedRequest(state);
-    }
-    state.bufferedRequestCount = 0;
-  } else {
-    // Slow case, write chunks one-by-one
-    while (entry) {
-      var chunk = entry.chunk;
-      var encoding = entry.encoding;
-      var cb = entry.callback;
-      var len = state.objectMode ? 1 : chunk.length;
-
-      doWrite(stream, state, false, len, chunk, encoding, cb);
-      entry = entry.next;
-      state.bufferedRequestCount--;
-      // if we didn't call the onwrite immediately, then
-      // it means that we need to wait until it does.
-      // also, that means that the chunk and cb are currently
-      // being processed, so move the buffer counter past them.
-      if (state.writing) {
-        break;
-      }
-    }
-
-    if (entry === null) state.lastBufferedRequest = null;
-  }
-
-  state.bufferedRequest = entry;
-  state.bufferProcessing = false;
-}
-
-Writable.prototype._write = function (chunk, encoding, cb) {
-  cb(new Error('_write() is not implemented'));
-};
-
-Writable.prototype._writev = null;
-
-Writable.prototype.end = function (chunk, encoding, cb) {
-  var state = this._writableState;
-
-  if (typeof chunk === 'function') {
-    cb = chunk;
-    chunk = null;
-    encoding = null;
-  } else if (typeof encoding === 'function') {
-    cb = encoding;
-    encoding = null;
-  }
-
-  if (chunk !== null && chunk !== undefined) this.write(chunk, encoding);
-
-  // .end() fully uncorks
-  if (state.corked) {
-    state.corked = 1;
-    this.uncork();
-  }
-
-  // ignore unnecessary end() calls.
-  if (!state.ending && !state.finished) endWritable(this, state, cb);
-};
-
-function needFinish(state) {
-  return state.ending && state.length === 0 && state.bufferedRequest === null && !state.finished && !state.writing;
-}
-function callFinal(stream, state) {
-  stream._final(function (err) {
-    state.pendingcb--;
-    if (err) {
-      stream.emit('error', err);
-    }
-    state.prefinished = true;
-    stream.emit('prefinish');
-    finishMaybe(stream, state);
-  });
-}
-function prefinish(stream, state) {
-  if (!state.prefinished && !state.finalCalled) {
-    if (typeof stream._final === 'function') {
-      state.pendingcb++;
-      state.finalCalled = true;
-      pna.nextTick(callFinal, stream, state);
-    } else {
-      state.prefinished = true;
-      stream.emit('prefinish');
-    }
-  }
-}
-
-function finishMaybe(stream, state) {
-  var need = needFinish(state);
-  if (need) {
-    prefinish(stream, state);
-    if (state.pendingcb === 0) {
-      state.finished = true;
-      stream.emit('finish');
-    }
-  }
-  return need;
-}
-
-function endWritable(stream, state, cb) {
-  state.ending = true;
-  finishMaybe(stream, state);
-  if (cb) {
-    if (state.finished) pna.nextTick(cb);else stream.once('finish', cb);
-  }
-  state.ended = true;
-  stream.writable = false;
-}
-
-function onCorkedFinish(corkReq, state, err) {
-  var entry = corkReq.entry;
-  corkReq.entry = null;
-  while (entry) {
-    var cb = entry.callback;
-    state.pendingcb--;
-    cb(err);
-    entry = entry.next;
-  }
-  if (state.corkedRequestsFree) {
-    state.corkedRequestsFree.next = corkReq;
-  } else {
-    state.corkedRequestsFree = corkReq;
-  }
-}
-
-Object.defineProperty(Writable.prototype, 'destroyed', {
-  get: function () {
-    if (this._writableState === undefined) {
-      return false;
-    }
-    return this._writableState.destroyed;
-  },
-  set: function (value) {
-    // we ignore the value if the stream
-    // has not been initialized yet
-    if (!this._writableState) {
-      return;
-    }
-
-    // backward compatibility, the user is explicitly
-    // managing destroyed
-    this._writableState.destroyed = value;
-  }
-});
-
-Writable.prototype.destroy = destroyImpl.destroy;
-Writable.prototype._undestroy = destroyImpl.undestroy;
-Writable.prototype._destroy = function (err, cb) {
-  this.end();
-  cb(err);
-};
-}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("timers").setImmediate)
-},{"./_stream_duplex":114,"./internal/streams/destroy":120,"./internal/streams/stream":121,"_process":98,"core-util-is":8,"inherits":57,"process-nextick-args":97,"safe-buffer":107,"timers":128,"util-deprecate":133}],119:[function(require,module,exports){
-'use strict';
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Buffer = require('safe-buffer').Buffer;
-var util = require('util');
-
-function copyBuffer(src, target, offset) {
-  src.copy(target, offset);
-}
-
-module.exports = function () {
-  function BufferList() {
-    _classCallCheck(this, BufferList);
-
-    this.head = null;
-    this.tail = null;
-    this.length = 0;
-  }
-
-  BufferList.prototype.push = function push(v) {
-    var entry = { data: v, next: null };
-    if (this.length > 0) this.tail.next = entry;else this.head = entry;
-    this.tail = entry;
-    ++this.length;
-  };
-
-  BufferList.prototype.unshift = function unshift(v) {
-    var entry = { data: v, next: this.head };
-    if (this.length === 0) this.tail = entry;
-    this.head = entry;
-    ++this.length;
-  };
-
-  BufferList.prototype.shift = function shift() {
-    if (this.length === 0) return;
-    var ret = this.head.data;
-    if (this.length === 1) this.head = this.tail = null;else this.head = this.head.next;
-    --this.length;
-    return ret;
-  };
-
-  BufferList.prototype.clear = function clear() {
-    this.head = this.tail = null;
-    this.length = 0;
-  };
-
-  BufferList.prototype.join = function join(s) {
-    if (this.length === 0) return '';
-    var p = this.head;
-    var ret = '' + p.data;
-    while (p = p.next) {
-      ret += s + p.data;
-    }return ret;
-  };
-
-  BufferList.prototype.concat = function concat(n) {
-    if (this.length === 0) return Buffer.alloc(0);
-    if (this.length === 1) return this.head.data;
-    var ret = Buffer.allocUnsafe(n >>> 0);
-    var p = this.head;
-    var i = 0;
-    while (p) {
-      copyBuffer(p.data, ret, i);
-      i += p.data.length;
-      p = p.next;
-    }
-    return ret;
-  };
-
-  return BufferList;
-}();
-
-if (util && util.inspect && util.inspect.custom) {
-  module.exports.prototype[util.inspect.custom] = function () {
-    var obj = util.inspect({ length: this.length });
-    return this.constructor.name + ' ' + obj;
-  };
-}
-},{"safe-buffer":107,"util":3}],120:[function(require,module,exports){
-'use strict';
-
-/*<replacement>*/
-
-var pna = require('process-nextick-args');
-/*</replacement>*/
-
-// undocumented cb() API, needed for core, not for public API
-function destroy(err, cb) {
-  var _this = this;
-
-  var readableDestroyed = this._readableState && this._readableState.destroyed;
-  var writableDestroyed = this._writableState && this._writableState.destroyed;
-
-  if (readableDestroyed || writableDestroyed) {
-    if (cb) {
-      cb(err);
-    } else if (err && (!this._writableState || !this._writableState.errorEmitted)) {
-      pna.nextTick(emitErrorNT, this, err);
-    }
-    return this;
-  }
-
-  // we set destroyed to true before firing error callbacks in order
-  // to make it re-entrance safe in case destroy() is called within callbacks
-
-  if (this._readableState) {
-    this._readableState.destroyed = true;
-  }
-
-  // if this is a duplex stream mark the writable part as destroyed as well
-  if (this._writableState) {
-    this._writableState.destroyed = true;
-  }
-
-  this._destroy(err || null, function (err) {
-    if (!cb && err) {
-      pna.nextTick(emitErrorNT, _this, err);
-      if (_this._writableState) {
-        _this._writableState.errorEmitted = true;
-      }
-    } else if (cb) {
-      cb(err);
-    }
-  });
-
-  return this;
-}
-
-function undestroy() {
-  if (this._readableState) {
-    this._readableState.destroyed = false;
-    this._readableState.reading = false;
-    this._readableState.ended = false;
-    this._readableState.endEmitted = false;
-  }
-
-  if (this._writableState) {
-    this._writableState.destroyed = false;
-    this._writableState.ended = false;
-    this._writableState.ending = false;
-    this._writableState.finished = false;
-    this._writableState.errorEmitted = false;
-  }
-}
-
-function emitErrorNT(self, err) {
-  self.emit('error', err);
-}
-
-module.exports = {
-  destroy: destroy,
-  undestroy: undestroy
-};
-},{"process-nextick-args":97}],121:[function(require,module,exports){
-module.exports = require('events').EventEmitter;
-
-},{"events":43}],122:[function(require,module,exports){
-module.exports = require('./readable').PassThrough
-
-},{"./readable":123}],123:[function(require,module,exports){
-exports = module.exports = require('./lib/_stream_readable.js');
-exports.Stream = exports;
-exports.Readable = exports;
-exports.Writable = require('./lib/_stream_writable.js');
-exports.Duplex = require('./lib/_stream_duplex.js');
-exports.Transform = require('./lib/_stream_transform.js');
-exports.PassThrough = require('./lib/_stream_passthrough.js');
-
-},{"./lib/_stream_duplex.js":114,"./lib/_stream_passthrough.js":115,"./lib/_stream_readable.js":116,"./lib/_stream_transform.js":117,"./lib/_stream_writable.js":118}],124:[function(require,module,exports){
-module.exports = require('./readable').Transform
-
-},{"./readable":123}],125:[function(require,module,exports){
-module.exports = require('./lib/_stream_writable.js');
-
-},{"./lib/_stream_writable.js":118}],126:[function(require,module,exports){
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-'use strict';
-
-/*<replacement>*/
-
-var Buffer = require('safe-buffer').Buffer;
-/*</replacement>*/
-
-var isEncoding = Buffer.isEncoding || function (encoding) {
-  encoding = '' + encoding;
-  switch (encoding && encoding.toLowerCase()) {
-    case 'hex':case 'utf8':case 'utf-8':case 'ascii':case 'binary':case 'base64':case 'ucs2':case 'ucs-2':case 'utf16le':case 'utf-16le':case 'raw':
-      return true;
-    default:
-      return false;
-  }
-};
-
-function _normalizeEncoding(enc) {
-  if (!enc) return 'utf8';
-  var retried;
-  while (true) {
-    switch (enc) {
-      case 'utf8':
-      case 'utf-8':
-        return 'utf8';
-      case 'ucs2':
-      case 'ucs-2':
-      case 'utf16le':
-      case 'utf-16le':
-        return 'utf16le';
-      case 'latin1':
-      case 'binary':
-        return 'latin1';
-      case 'base64':
-      case 'ascii':
-      case 'hex':
-        return enc;
-      default:
-        if (retried) return; // undefined
-        enc = ('' + enc).toLowerCase();
-        retried = true;
-    }
-  }
-};
-
-// Do not cache `Buffer.isEncoding` when checking encoding names as some
-// modules monkey-patch it to support additional encodings
-function normalizeEncoding(enc) {
-  var nenc = _normalizeEncoding(enc);
-  if (typeof nenc !== 'string' && (Buffer.isEncoding === isEncoding || !isEncoding(enc))) throw new Error('Unknown encoding: ' + enc);
-  return nenc || enc;
-}
-
-// StringDecoder provides an interface for efficiently splitting a series of
-// buffers into a series of JS strings without breaking apart multi-byte
-// characters.
-exports.StringDecoder = StringDecoder;
-function StringDecoder(encoding) {
-  this.encoding = normalizeEncoding(encoding);
-  var nb;
-  switch (this.encoding) {
-    case 'utf16le':
-      this.text = utf16Text;
-      this.end = utf16End;
-      nb = 4;
-      break;
-    case 'utf8':
-      this.fillLast = utf8FillLast;
-      nb = 4;
-      break;
-    case 'base64':
-      this.text = base64Text;
-      this.end = base64End;
-      nb = 3;
-      break;
-    default:
-      this.write = simpleWrite;
-      this.end = simpleEnd;
-      return;
-  }
-  this.lastNeed = 0;
-  this.lastTotal = 0;
-  this.lastChar = Buffer.allocUnsafe(nb);
-}
-
-StringDecoder.prototype.write = function (buf) {
-  if (buf.length === 0) return '';
-  var r;
-  var i;
-  if (this.lastNeed) {
-    r = this.fillLast(buf);
-    if (r === undefined) return '';
-    i = this.lastNeed;
-    this.lastNeed = 0;
-  } else {
-    i = 0;
-  }
-  if (i < buf.length) return r ? r + this.text(buf, i) : this.text(buf, i);
-  return r || '';
-};
-
-StringDecoder.prototype.end = utf8End;
-
-// Returns only complete characters in a Buffer
-StringDecoder.prototype.text = utf8Text;
-
-// Attempts to complete a partial non-UTF-8 character using bytes from a Buffer
-StringDecoder.prototype.fillLast = function (buf) {
-  if (this.lastNeed <= buf.length) {
-    buf.copy(this.lastChar, this.lastTotal - this.lastNeed, 0, this.lastNeed);
-    return this.lastChar.toString(this.encoding, 0, this.lastTotal);
-  }
-  buf.copy(this.lastChar, this.lastTotal - this.lastNeed, 0, buf.length);
-  this.lastNeed -= buf.length;
-};
-
-// Checks the type of a UTF-8 byte, whether it's ASCII, a leading byte, or a
-// continuation byte. If an invalid byte is detected, -2 is returned.
-function utf8CheckByte(byte) {
-  if (byte <= 0x7F) return 0;else if (byte >> 5 === 0x06) return 2;else if (byte >> 4 === 0x0E) return 3;else if (byte >> 3 === 0x1E) return 4;
-  return byte >> 6 === 0x02 ? -1 : -2;
-}
-
-// Checks at most 3 bytes at the end of a Buffer in order to detect an
-// incomplete multi-byte UTF-8 character. The total number of bytes (2, 3, or 4)
-// needed to complete the UTF-8 character (if applicable) are returned.
-function utf8CheckIncomplete(self, buf, i) {
-  var j = buf.length - 1;
-  if (j < i) return 0;
-  var nb = utf8CheckByte(buf[j]);
-  if (nb >= 0) {
-    if (nb > 0) self.lastNeed = nb - 1;
-    return nb;
-  }
-  if (--j < i || nb === -2) return 0;
-  nb = utf8CheckByte(buf[j]);
-  if (nb >= 0) {
-    if (nb > 0) self.lastNeed = nb - 2;
-    return nb;
-  }
-  if (--j < i || nb === -2) return 0;
-  nb = utf8CheckByte(buf[j]);
-  if (nb >= 0) {
-    if (nb > 0) {
-      if (nb === 2) nb = 0;else self.lastNeed = nb - 3;
-    }
-    return nb;
-  }
-  return 0;
-}
-
-// Validates as many continuation bytes for a multi-byte UTF-8 character as
-// needed or are available. If we see a non-continuation byte where we expect
-// one, we "replace" the validated continuation bytes we've seen so far with
-// a single UTF-8 replacement character ('\ufffd'), to match v8's UTF-8 decoding
-// behavior. The continuation byte check is included three times in the case
-// where all of the continuation bytes for a character exist in the same buffer.
-// It is also done this way as a slight performance increase instead of using a
-// loop.
-function utf8CheckExtraBytes(self, buf, p) {
-  if ((buf[0] & 0xC0) !== 0x80) {
-    self.lastNeed = 0;
-    return '\ufffd';
-  }
-  if (self.lastNeed > 1 && buf.length > 1) {
-    if ((buf[1] & 0xC0) !== 0x80) {
-      self.lastNeed = 1;
-      return '\ufffd';
-    }
-    if (self.lastNeed > 2 && buf.length > 2) {
-      if ((buf[2] & 0xC0) !== 0x80) {
-        self.lastNeed = 2;
-        return '\ufffd';
-      }
-    }
-  }
-}
-
-// Attempts to complete a multi-byte UTF-8 character using bytes from a Buffer.
-function utf8FillLast(buf) {
-  var p = this.lastTotal - this.lastNeed;
-  var r = utf8CheckExtraBytes(this, buf, p);
-  if (r !== undefined) return r;
-  if (this.lastNeed <= buf.length) {
-    buf.copy(this.lastChar, p, 0, this.lastNeed);
-    return this.lastChar.toString(this.encoding, 0, this.lastTotal);
-  }
-  buf.copy(this.lastChar, p, 0, buf.length);
-  this.lastNeed -= buf.length;
-}
-
-// Returns all complete UTF-8 characters in a Buffer. If the Buffer ended on a
-// partial character, the character's bytes are buffered until the required
-// number of bytes are available.
-function utf8Text(buf, i) {
-  var total = utf8CheckIncomplete(this, buf, i);
-  if (!this.lastNeed) return buf.toString('utf8', i);
-  this.lastTotal = total;
-  var end = buf.length - (total - this.lastNeed);
-  buf.copy(this.lastChar, 0, end);
-  return buf.toString('utf8', i, end);
-}
-
-// For UTF-8, a replacement character is added when ending on a partial
-// character.
-function utf8End(buf) {
-  var r = buf && buf.length ? this.write(buf) : '';
-  if (this.lastNeed) return r + '\ufffd';
-  return r;
-}
-
-// UTF-16LE typically needs two bytes per character, but even if we have an even
-// number of bytes available, we need to check if we end on a leading/high
-// surrogate. In that case, we need to wait for the next two bytes in order to
-// decode the last character properly.
-function utf16Text(buf, i) {
-  if ((buf.length - i) % 2 === 0) {
-    var r = buf.toString('utf16le', i);
-    if (r) {
-      var c = r.charCodeAt(r.length - 1);
-      if (c >= 0xD800 && c <= 0xDBFF) {
-        this.lastNeed = 2;
-        this.lastTotal = 4;
-        this.lastChar[0] = buf[buf.length - 2];
-        this.lastChar[1] = buf[buf.length - 1];
-        return r.slice(0, -1);
-      }
-    }
-    return r;
-  }
-  this.lastNeed = 1;
-  this.lastTotal = 2;
-  this.lastChar[0] = buf[buf.length - 1];
-  return buf.toString('utf16le', i, buf.length - 1);
-}
-
-// For UTF-16LE we do not explicitly append special replacement characters if we
-// end on a partial character, we simply let v8 handle that.
-function utf16End(buf) {
-  var r = buf && buf.length ? this.write(buf) : '';
-  if (this.lastNeed) {
-    var end = this.lastTotal - this.lastNeed;
-    return r + this.lastChar.toString('utf16le', 0, end);
-  }
-  return r;
-}
-
-function base64Text(buf, i) {
-  var n = (buf.length - i) % 3;
-  if (n === 0) return buf.toString('base64', i);
-  this.lastNeed = 3 - n;
-  this.lastTotal = 3;
-  if (n === 1) {
-    this.lastChar[0] = buf[buf.length - 1];
-  } else {
-    this.lastChar[0] = buf[buf.length - 2];
-    this.lastChar[1] = buf[buf.length - 1];
-  }
-  return buf.toString('base64', i, buf.length - n);
-}
-
-function base64End(buf) {
-  var r = buf && buf.length ? this.write(buf) : '';
-  if (this.lastNeed) return r + this.lastChar.toString('base64', 0, 3 - this.lastNeed);
-  return r;
-}
-
-// Pass bytes on through for single-byte encodings (e.g. ascii, latin1, hex)
-function simpleWrite(buf) {
-  return buf.toString(this.encoding);
-}
-
-function simpleEnd(buf) {
-  return buf && buf.length ? this.write(buf) : '';
-}
-},{"safe-buffer":107}],127:[function(require,module,exports){
-(function (process){
-var Stream = require('stream')
-
-// through
-//
-// a stream that does nothing but re-emit the input.
-// useful for aggregating a series of changing but not ending streams into one stream)
-
-exports = module.exports = through
-through.through = through
-
-//create a readable writable stream.
-
-function through (write, end, opts) {
-  write = write || function (data) { this.queue(data) }
-  end = end || function () { this.queue(null) }
-
-  var ended = false, destroyed = false, buffer = [], _ended = false
-  var stream = new Stream()
-  stream.readable = stream.writable = true
-  stream.paused = false
-
-//  stream.autoPause   = !(opts && opts.autoPause   === false)
-  stream.autoDestroy = !(opts && opts.autoDestroy === false)
-
-  stream.write = function (data) {
-    write.call(this, data)
-    return !stream.paused
-  }
-
-  function drain() {
-    while(buffer.length && !stream.paused) {
-      var data = buffer.shift()
-      if(null === data)
-        return stream.emit('end')
-      else
-        stream.emit('data', data)
-    }
-  }
-
-  stream.queue = stream.push = function (data) {
-//    console.error(ended)
-    if(_ended) return stream
-    if(data === null) _ended = true
-    buffer.push(data)
-    drain()
-    return stream
-  }
-
-  //this will be registered as the first 'end' listener
-  //must call destroy next tick, to make sure we're after any
-  //stream piped from here.
-  //this is only a problem if end is not emitted synchronously.
-  //a nicer way to do this is to make sure this is the last listener for 'end'
-
-  stream.on('end', function () {
-    stream.readable = false
-    if(!stream.writable && stream.autoDestroy)
-      process.nextTick(function () {
-        stream.destroy()
-      })
-  })
-
-  function _end () {
-    stream.writable = false
-    end.call(stream)
-    if(!stream.readable && stream.autoDestroy)
-      stream.destroy()
-  }
-
-  stream.end = function (data) {
-    if(ended) return
-    ended = true
-    if(arguments.length) stream.write(data)
-    _end() // will emit or queue
-    return stream
-  }
-
-  stream.destroy = function () {
-    if(destroyed) return
-    destroyed = true
-    ended = true
-    buffer.length = 0
-    stream.writable = stream.readable = false
-    stream.emit('close')
-    return stream
-  }
-
-  stream.pause = function () {
-    if(stream.paused) return
-    stream.paused = true
-    return stream
-  }
-
-  stream.resume = function () {
-    if(stream.paused) {
-      stream.paused = false
-      stream.emit('resume')
-    }
-    drain()
-    //may have become paused again,
-    //as drain emits 'data'.
-    if(!stream.paused)
-      stream.emit('drain')
-    return stream
-  }
-  return stream
-}
-
-
-}).call(this,require('_process'))
-},{"_process":98,"stream":112}],128:[function(require,module,exports){
-(function (setImmediate,clearImmediate){
-var nextTick = require('process/browser.js').nextTick;
-var apply = Function.prototype.apply;
-var slice = Array.prototype.slice;
-var immediateIds = {};
-var nextImmediateId = 0;
-
-// DOM APIs, for completeness
-
-exports.setTimeout = function() {
-  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
-};
-exports.setInterval = function() {
-  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
-};
-exports.clearTimeout =
-exports.clearInterval = function(timeout) { timeout.close(); };
-
-function Timeout(id, clearFn) {
-  this._id = id;
-  this._clearFn = clearFn;
-}
-Timeout.prototype.unref = Timeout.prototype.ref = function() {};
-Timeout.prototype.close = function() {
-  this._clearFn.call(window, this._id);
-};
-
-// Does not start the time, just sets up the members needed.
-exports.enroll = function(item, msecs) {
-  clearTimeout(item._idleTimeoutId);
-  item._idleTimeout = msecs;
-};
-
-exports.unenroll = function(item) {
-  clearTimeout(item._idleTimeoutId);
-  item._idleTimeout = -1;
-};
-
-exports._unrefActive = exports.active = function(item) {
-  clearTimeout(item._idleTimeoutId);
-
-  var msecs = item._idleTimeout;
-  if (msecs >= 0) {
-    item._idleTimeoutId = setTimeout(function onTimeout() {
-      if (item._onTimeout)
-        item._onTimeout();
-    }, msecs);
-  }
-};
-
-// That's not how node.js implements it but the exposed api is the same.
-exports.setImmediate = typeof setImmediate === "function" ? setImmediate : function(fn) {
-  var id = nextImmediateId++;
-  var args = arguments.length < 2 ? false : slice.call(arguments, 1);
-
-  immediateIds[id] = true;
-
-  nextTick(function onNextTick() {
-    if (immediateIds[id]) {
-      // fn.call() is faster so we optimize for the common use-case
-      // @see http://jsperf.com/call-apply-segu
-      if (args) {
-        fn.apply(null, args);
-      } else {
-        fn.call(null);
-      }
-      // Prevent ids from leaking
-      exports.clearImmediate(id);
-    }
-  });
-
-  return id;
-};
-
-exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate : function(id) {
-  delete immediateIds[id];
-};
-}).call(this,require("timers").setImmediate,require("timers").clearImmediate)
-},{"process/browser.js":98,"timers":128}],129:[function(require,module,exports){
-exports.isatty = function () { return false; };
-
-function ReadStream() {
-  throw new Error('tty.ReadStream is not implemented');
-}
-exports.ReadStream = ReadStream;
-
-function WriteStream() {
-  throw new Error('tty.WriteStream is not implemented');
-}
-exports.WriteStream = WriteStream;
-
-},{}],130:[function(require,module,exports){
-(function (global,Buffer){
-'use strict'
-
-var bits = require('bit-twiddle')
-var dup = require('dup')
-
-//Legacy pool support
-if(!global.__TYPEDARRAY_POOL) {
-  global.__TYPEDARRAY_POOL = {
-      UINT8   : dup([32, 0])
-    , UINT16  : dup([32, 0])
-    , UINT32  : dup([32, 0])
-    , INT8    : dup([32, 0])
-    , INT16   : dup([32, 0])
-    , INT32   : dup([32, 0])
-    , FLOAT   : dup([32, 0])
-    , DOUBLE  : dup([32, 0])
-    , DATA    : dup([32, 0])
-    , UINT8C  : dup([32, 0])
-    , BUFFER  : dup([32, 0])
-  }
-}
-
-var hasUint8C = (typeof Uint8ClampedArray) !== 'undefined'
-var POOL = global.__TYPEDARRAY_POOL
-
-//Upgrade pool
-if(!POOL.UINT8C) {
-  POOL.UINT8C = dup([32, 0])
-}
-if(!POOL.BUFFER) {
-  POOL.BUFFER = dup([32, 0])
-}
-
-//New technique: Only allocate from ArrayBufferView and Buffer
-var DATA    = POOL.DATA
-  , BUFFER  = POOL.BUFFER
-
-exports.free = function free(array) {
-  if(Buffer.isBuffer(array)) {
-    BUFFER[bits.log2(array.length)].push(array)
-  } else {
-    if(Object.prototype.toString.call(array) !== '[object ArrayBuffer]') {
-      array = array.buffer
-    }
-    if(!array) {
-      return
-    }
-    var n = array.length || array.byteLength
-    var log_n = bits.log2(n)|0
-    DATA[log_n].push(array)
-  }
-}
-
-function freeArrayBuffer(buffer) {
-  if(!buffer) {
-    return
-  }
-  var n = buffer.length || buffer.byteLength
-  var log_n = bits.log2(n)
-  DATA[log_n].push(buffer)
-}
-
-function freeTypedArray(array) {
-  freeArrayBuffer(array.buffer)
-}
-
-exports.freeUint8 =
-exports.freeUint16 =
-exports.freeUint32 =
-exports.freeInt8 =
-exports.freeInt16 =
-exports.freeInt32 =
-exports.freeFloat32 = 
-exports.freeFloat =
-exports.freeFloat64 = 
-exports.freeDouble = 
-exports.freeUint8Clamped = 
-exports.freeDataView = freeTypedArray
-
-exports.freeArrayBuffer = freeArrayBuffer
-
-exports.freeBuffer = function freeBuffer(array) {
-  BUFFER[bits.log2(array.length)].push(array)
-}
-
-exports.malloc = function malloc(n, dtype) {
-  if(dtype === undefined || dtype === 'arraybuffer') {
-    return mallocArrayBuffer(n)
-  } else {
-    switch(dtype) {
-      case 'uint8':
-        return mallocUint8(n)
-      case 'uint16':
-        return mallocUint16(n)
-      case 'uint32':
-        return mallocUint32(n)
-      case 'int8':
-        return mallocInt8(n)
-      case 'int16':
-        return mallocInt16(n)
-      case 'int32':
-        return mallocInt32(n)
-      case 'float':
-      case 'float32':
-        return mallocFloat(n)
-      case 'double':
-      case 'float64':
-        return mallocDouble(n)
-      case 'uint8_clamped':
-        return mallocUint8Clamped(n)
-      case 'buffer':
-        return mallocBuffer(n)
-      case 'data':
-      case 'dataview':
-        return mallocDataView(n)
-
-      default:
-        return null
-    }
-  }
-  return null
-}
-
-function mallocArrayBuffer(n) {
-  var n = bits.nextPow2(n)
-  var log_n = bits.log2(n)
-  var d = DATA[log_n]
-  if(d.length > 0) {
-    return d.pop()
-  }
-  return new ArrayBuffer(n)
-}
-exports.mallocArrayBuffer = mallocArrayBuffer
-
-function mallocUint8(n) {
-  return new Uint8Array(mallocArrayBuffer(n), 0, n)
-}
-exports.mallocUint8 = mallocUint8
-
-function mallocUint16(n) {
-  return new Uint16Array(mallocArrayBuffer(2*n), 0, n)
-}
-exports.mallocUint16 = mallocUint16
-
-function mallocUint32(n) {
-  return new Uint32Array(mallocArrayBuffer(4*n), 0, n)
-}
-exports.mallocUint32 = mallocUint32
-
-function mallocInt8(n) {
-  return new Int8Array(mallocArrayBuffer(n), 0, n)
-}
-exports.mallocInt8 = mallocInt8
-
-function mallocInt16(n) {
-  return new Int16Array(mallocArrayBuffer(2*n), 0, n)
-}
-exports.mallocInt16 = mallocInt16
-
-function mallocInt32(n) {
-  return new Int32Array(mallocArrayBuffer(4*n), 0, n)
-}
-exports.mallocInt32 = mallocInt32
-
-function mallocFloat(n) {
-  return new Float32Array(mallocArrayBuffer(4*n), 0, n)
-}
-exports.mallocFloat32 = exports.mallocFloat = mallocFloat
-
-function mallocDouble(n) {
-  return new Float64Array(mallocArrayBuffer(8*n), 0, n)
-}
-exports.mallocFloat64 = exports.mallocDouble = mallocDouble
-
-function mallocUint8Clamped(n) {
-  if(hasUint8C) {
-    return new Uint8ClampedArray(mallocArrayBuffer(n), 0, n)
-  } else {
-    return mallocUint8(n)
-  }
-}
-exports.mallocUint8Clamped = mallocUint8Clamped
-
-function mallocDataView(n) {
-  return new DataView(mallocArrayBuffer(n), 0, n)
-}
-exports.mallocDataView = mallocDataView
-
-function mallocBuffer(n) {
-  n = bits.nextPow2(n)
-  var log_n = bits.log2(n)
-  var cache = BUFFER[log_n]
-  if(cache.length > 0) {
-    return cache.pop()
-  }
-  return new Buffer(n)
-}
-exports.mallocBuffer = mallocBuffer
-
-exports.clearCache = function clearCache() {
-  for(var i=0; i<32; ++i) {
-    POOL.UINT8[i].length = 0
-    POOL.UINT16[i].length = 0
-    POOL.UINT32[i].length = 0
-    POOL.INT8[i].length = 0
-    POOL.INT16[i].length = 0
-    POOL.INT32[i].length = 0
-    POOL.FLOAT[i].length = 0
-    POOL.DOUBLE[i].length = 0
-    POOL.UINT8C[i].length = 0
-    DATA[i].length = 0
-    BUFFER[i].length = 0
-  }
-}
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"bit-twiddle":2,"buffer":4,"dup":14}],131:[function(require,module,exports){
-"use strict"
-
-function unique_pred(list, compare) {
-  var ptr = 1
-    , len = list.length
-    , a=list[0], b=list[0]
-  for(var i=1; i<len; ++i) {
-    b = a
-    a = list[i]
-    if(compare(a, b)) {
-      if(i === ptr) {
-        ptr++
-        continue
-      }
-      list[ptr++] = a
-    }
-  }
-  list.length = ptr
-  return list
-}
-
-function unique_eq(list) {
-  var ptr = 1
-    , len = list.length
-    , a=list[0], b = list[0]
-  for(var i=1; i<len; ++i, b=a) {
-    b = a
-    a = list[i]
-    if(a !== b) {
-      if(i === ptr) {
-        ptr++
-        continue
-      }
-      list[ptr++] = a
-    }
-  }
-  list.length = ptr
-  return list
-}
-
-function unique(list, compare, sorted) {
-  if(list.length === 0) {
-    return list
-  }
-  if(compare) {
-    if(!sorted) {
-      list.sort(compare)
-    }
-    return unique_pred(list, compare)
-  }
-  if(!sorted) {
-    list.sort()
-  }
-  return unique_eq(list)
-}
-
-module.exports = unique
-
-},{}],132:[function(require,module,exports){
-var mime = require('mime');
-var fs = require('fs');
-
-module.exports = function urifyNode (file) {
-  var type = mime.lookup(file);
-  var data = fs.readFileSync(file, 'base64');
-  return 'data:' + type + ';base64,' + data;
-};
-
-},{"fs":42,"mime":63}],133:[function(require,module,exports){
-(function (global){
-
-/**
- * Module exports.
- */
-
-module.exports = deprecate;
-
-/**
- * Mark that a method should not be used.
- * Returns a modified function which warns once by default.
- *
- * If `localStorage.noDeprecation = true` is set, then it is a no-op.
- *
- * If `localStorage.throwDeprecation = true` is set, then deprecated functions
- * will throw an Error when invoked.
- *
- * If `localStorage.traceDeprecation = true` is set, then deprecated functions
- * will invoke `console.trace()` instead of `console.error()`.
- *
- * @param {Function} fn - the function to deprecate
- * @param {String} msg - the string to print to the console when `fn` is invoked
- * @returns {Function} a new "deprecated" version of `fn`
- * @api public
- */
-
-function deprecate (fn, msg) {
-  if (config('noDeprecation')) {
-    return fn;
-  }
-
-  var warned = false;
-  function deprecated() {
-    if (!warned) {
-      if (config('throwDeprecation')) {
-        throw new Error(msg);
-      } else if (config('traceDeprecation')) {
-        console.trace(msg);
-      } else {
-        console.warn(msg);
-      }
-      warned = true;
-    }
-    return fn.apply(this, arguments);
-  }
-
-  return deprecated;
-}
-
-/**
- * Checks `localStorage` for boolean values for the given `name`.
- *
- * @param {String} name
- * @returns {Boolean}
- * @api private
- */
-
-function config (name) {
-  // accessing global.localStorage can trigger a DOMException in sandboxed iframes
-  try {
-    if (!global.localStorage) return false;
-  } catch (_) {
-    return false;
-  }
-  var val = global.localStorage[name];
-  if (null == val) return false;
-  return String(val).toLowerCase() === 'true';
-}
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],134:[function(require,module,exports){
-arguments[4][38][0].apply(exports,arguments)
-},{"dup":38}],135:[function(require,module,exports){
-arguments[4][39][0].apply(exports,arguments)
-},{"./support/isBuffer":134,"_process":98,"dup":39,"inherits":57}],136:[function(require,module,exports){
+},{}],149:[function(require,module,exports){
+arguments[4][42][0].apply(exports,arguments)
+},{"dup":42}],150:[function(require,module,exports){
+arguments[4][43][0].apply(exports,arguments)
+},{"./support/isBuffer":149,"_process":117,"dup":43,"inherits":70}],151:[function(require,module,exports){
 // add steps to the sequencer
 function AddStep(_sequencer, image, name, o) {
   return require('./InsertStep')(_sequencer,image,-1,name,o);
 }
 module.exports = AddStep;
 
-},{"./InsertStep":140}],137:[function(require,module,exports){
+},{"./InsertStep":155}],152:[function(require,module,exports){
 var fs = require('fs');
 var getDirectories = function(rootDir, cb) {
   fs.readdir(rootDir, function(err, files) {
@@ -47393,7 +63705,7 @@ module.exports = function ExportBin(dir = "./output/", ref, basic, filename) {
   }
 }
 
-},{"data-uri-to-buffer":13,"fs":42}],138:[function(require,module,exports){
+},{"data-uri-to-buffer":19,"fs":46}],153:[function(require,module,exports){
 function objTypeOf(object){
   return Object.prototype.toString.call(object).split(" ")[1].slice(0,-1)
 }
@@ -47559,7 +63871,7 @@ function formatInput(args,format,images) {
 }
 module.exports = formatInput;
 
-},{}],139:[function(require,module,exports){
+},{}],154:[function(require,module,exports){
 if (typeof window !== 'undefined') { isBrowser = true }
 else { var isBrowser = false }
 require('./util/getStep.js');
@@ -47781,7 +64093,7 @@ ImageSequencer = function ImageSequencer(options) {
         modulesdata[modulename] = modules[modulename][1];
       }
       for (var sequencename in this.sequences) {
-        modulesdata[sequencename] = { name: sequencename, steps: sequences[sequencename] };
+        modulesdata[sequencename] = { name: sequencename, steps: this.sequences[sequencename] };
       }
     }
     else {
@@ -47818,15 +64130,18 @@ ImageSequencer = function ImageSequencer(options) {
 
   // Stringifies one step of the sequence
   function stepToString(step) {
-    let inputs = copy(modulesInfo(step.options.name).inputs);
-    inputs = inputs || {};
+    let inputs = modulesInfo(step.options.name).inputs || {}, op = {};
 
     for (let input in inputs) {
-      inputs[input] = step.options[input] || inputs[input].default;
-      inputs[input] = encodeURIComponent(inputs[input]);
+
+      if (!!step.options[input] && step.options[input] != inputs[input].default) {
+        op[input] = step.options[input];
+        op[input] = encodeURIComponent(op[input]);
+      }
+
     }
 
-    var configurations = Object.keys(inputs).map(key => key + ':' + inputs[key]).join('|');
+    var configurations = Object.keys(op).map(key => key + ':' + op[key]).join('|');
     return `${step.options.name}{${configurations}}`;
   }
 
@@ -48014,7 +64329,7 @@ ImageSequencer = function ImageSequencer(options) {
     createMetaModule: createMetaModule,
     saveSequence: saveSequence,
     loadModules: loadModules,
-
+    
     //other functions
     log: log,
     objTypeOf: objTypeOf,
@@ -48026,7 +64341,7 @@ ImageSequencer = function ImageSequencer(options) {
 }
 module.exports = ImageSequencer;
 
-},{"./AddStep":136,"./ExportBin":137,"./FormatInput":138,"./InsertStep":140,"./Modules":141,"./ReplaceImage":142,"./Run":143,"./SavedSequences.json":145,"./ui/LoadImage":208,"./ui/SetInputStep":209,"./ui/UserInterface":210,"./util/getStep.js":212,"fs":42}],140:[function(require,module,exports){
+},{"./AddStep":151,"./ExportBin":152,"./FormatInput":153,"./InsertStep":155,"./Modules":156,"./ReplaceImage":157,"./Run":158,"./SavedSequences.json":160,"./ui/LoadImage":254,"./ui/SetInputStep":255,"./ui/UserInterface":256,"./util/getStep.js":259,"fs":46}],155:[function(require,module,exports){
 const getStepUtils = require('./util/getStep.js');
 
 // insert one or more steps at a given index in the sequencer
@@ -48063,15 +64378,22 @@ function InsertStep(ref, image, index, name, o) {
     };
     var UI = ref.events;
 
-    // Tell UI that a step has been set up.
-    o = o || {};
+    // define the expandSteps function for sequencer
     ref.modules[name].expandSteps = function expandSteps(stepsArray) {
-      for (var step of stepsArray) {
-        ref.addSteps(step['name'], step['options']);
+      for (var i in stepsArray) {
+        let step = stepsArray[i];
+        console.log(step['name'])
+        console.log(step['options'])
+        ref.insertSteps(index + Number.parseInt(i), step['name'], step['options']);
+        // ref.addSteps(step['name'], step['options']);
       }
     }
+
+    // Tell UI that a step has been set up.
+    o = o || {};
+
     if (!ref.modules[name][1].length) {
-      UI.onSetup(o.step);
+      UI.onSetup(o.step, { index: index });
       ref.images[image].steps.splice(index, 0, ref.modules[name][0](o, UI));
     } else {
       ref.modules[name][0](o, UI);
@@ -48086,32 +64408,42 @@ function InsertStep(ref, image, index, name, o) {
 }
 module.exports = InsertStep;
 
-},{"./util/getStep.js":212}],141:[function(require,module,exports){
+},{"./util/getStep.js":259}],156:[function(require,module,exports){
 /*
 * Core modules and their info files
 */
 module.exports = {
-  'channel': require('./modules/Channel'),
-  'brightness': require('./modules/Brightness'),
-  'edge-detect': require('./modules/EdgeDetect'),
-  'ndvi': require('./modules/Ndvi'),
-  'crop': require('./modules/Crop'),
-  'colormap': require('./modules/Colormap'),
-  'decode-qr': require('./modules/DecodeQr'),
-  'fisheye-gl': require('./modules/FisheyeGl'),
-  'dynamic': require('./modules/Dynamic'),
-  'blur': require('./modules/Blur'),
-  'saturation': require('./modules/Saturation'),
   'average': require('./modules/Average'),
   'blend': require('./modules/Blend'),
-  'import-image': require('./modules/ImportImage'),
-  'overlay': require('./modules/Overlay'),
-  'gradient': require('./modules/Gradient'),
-  'invert': require('image-sequencer-invert'),
-  'ndvi-colormap': require('./modules/NdviColormap'),
+  'blur': require('./modules/Blur'),
+  'brightness': require('./modules/Brightness'),
+  'channel': require('./modules/Channel'),
   'colorbar': require('./modules/Colorbar'),
+  'colormap': require('./modules/Colormap'),
+  'contrast': require('./modules/Contrast'),
+  'convolution': require('./modules/Convolution'),
+  'crop': require('./modules/Crop'),
+  'decode-qr': require('./modules/DecodeQr'),
+  'dither': require('./modules/Dither'),
+  'draw-rectangle': require('./modules/DrawRectangle'),
+  'dynamic': require('./modules/Dynamic'),
+  'edge-detect': require('./modules/EdgeDetect'),
+  'fisheye-gl': require('./modules/FisheyeGl'),
+  'histogram': require('./modules/Histogram'),
+  'gamma-correction': require('./modules/GammaCorrection'),
+  'gradient': require('./modules/Gradient'),
+  'import-image': require('./modules/ImportImage'),
+  'invert': require('image-sequencer-invert'),
+  'ndvi': require('./modules/Ndvi'),
+  'ndvi-colormap': require('./modules/NdviColormap'),
+  'overlay': require('./modules/Overlay'),
+  'resize': require('./modules/Resize'),
+  'rotate': require('./modules/Rotate'),
+  'saturation': require('./modules/Saturation'),
+  'white-balance': require('./modules/WhiteBalance')
 }
-},{"./modules/Average":147,"./modules/Blend":150,"./modules/Blur":154,"./modules/Brightness":157,"./modules/Channel":160,"./modules/Colorbar":163,"./modules/Colormap":167,"./modules/Crop":172,"./modules/DecodeQr":175,"./modules/Dynamic":178,"./modules/EdgeDetect":182,"./modules/FisheyeGl":185,"./modules/Gradient":188,"./modules/ImportImage":192,"./modules/Ndvi":199,"./modules/NdviColormap":195,"./modules/Overlay":202,"./modules/Saturation":205,"image-sequencer-invert":56}],142:[function(require,module,exports){
+
+},{"./modules/Average":162,"./modules/Blend":165,"./modules/Blur":169,"./modules/Brightness":172,"./modules/Channel":175,"./modules/Colorbar":178,"./modules/Colormap":182,"./modules/Contrast":186,"./modules/Convolution":190,"./modules/Crop":195,"./modules/DecodeQr":198,"./modules/Dither":202,"./modules/DrawRectangle":206,"./modules/Dynamic":209,"./modules/EdgeDetect":213,"./modules/FisheyeGl":216,"./modules/GammaCorrection":219,"./modules/Gradient":222,"./modules/Histogram":225,"./modules/ImportImage":229,"./modules/Ndvi":236,"./modules/NdviColormap":232,"./modules/Overlay":239,"./modules/Resize":242,"./modules/Rotate":245,"./modules/Saturation":248,"./modules/WhiteBalance":251,"image-sequencer-invert":61}],157:[function(require,module,exports){
 // Uses a given image as input and replaces it with the output.
 // Works only in the browser.
 function ReplaceImage(ref,selector,steps,options) {
@@ -48172,7 +64504,7 @@ function ReplaceImage(ref,selector,steps,options) {
 
 module.exports = ReplaceImage;
 
-},{}],143:[function(require,module,exports){
+},{}],158:[function(require,module,exports){
 const getStepUtils = require('./util/getStep.js');
 
 function Run(ref, json_q, callback, ind, progressObj) {
@@ -48267,7 +64599,7 @@ function Run(ref, json_q, callback, ind, progressObj) {
 }
 module.exports = Run;
 
-},{"./RunToolkit":144,"./util/getStep.js":212}],144:[function(require,module,exports){
+},{"./RunToolkit":159,"./util/getStep.js":259}],159:[function(require,module,exports){
 const getPixels = require('get-pixels');
 const pixelManipulation = require('./modules/_nomodule/PixelManipulation');
 const lodash = require('lodash');
@@ -48282,9 +64614,9 @@ module.exports = function(input) {
     input.savePixels = savePixels;
     return input;
 }
-},{"./modules/_nomodule/PixelManipulation":207,"data-uri-to-buffer":13,"get-pixels":23,"lodash":62,"save-pixels":111}],145:[function(require,module,exports){
+},{"./modules/_nomodule/PixelManipulation":253,"data-uri-to-buffer":19,"get-pixels":29,"lodash":75,"save-pixels":138}],160:[function(require,module,exports){
 module.exports={"sample":[{"name":"invert","options":{}},{"name":"channel","options":{"channel":"red"}},{"name":"blur","options":{"blur":"5"}}]}
-},{}],146:[function(require,module,exports){
+},{}],161:[function(require,module,exports){
 /*
 * Average all pixel colors
 */
@@ -48362,100 +64694,111 @@ module.exports = function Average(options, UI){
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":207}],147:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":253}],162:[function(require,module,exports){
 module.exports = [
     require('./Module'),
     require('./info.json')
 ]
-},{"./Module":146,"./info.json":148}],148:[function(require,module,exports){
+},{"./Module":161,"./info.json":163}],163:[function(require,module,exports){
 module.exports={
     "name": "Average",
     "description": "Average all pixel color",
     "inputs": {
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+}
+
+},{}],164:[function(require,module,exports){
+module.exports = function Dynamic(options, UI, util) {
+
+    options.func = options.func || "function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] }";
+    options.offset = options.offset || -2;
+
+    var output;
+
+    // This function is called on every draw.
+    function draw(input, callback, progressObj) {
+
+        progressObj.stop(true);
+        progressObj.overrideFlag = true;
+
+        var step = this;
+
+        // convert to runnable code:
+        if (typeof options.func === "string") eval('options.func = ' + options.func);
+
+        var getPixels = require('get-pixels');
+
+        // convert offset as string to int
+        if(typeof options.offset === "string") options.offset = parseInt(options.offset);
+
+        // save first image's pixels
+        var priorStep = this.getStep(options.offset);
+
+        getPixels(priorStep.output.src, function(err, pixels) {
+            options.firstImagePixels = pixels;
+
+            function changePixel(r2, g2, b2, a2, x, y) {
+                // blend!
+                var p = options.firstImagePixels;
+                return options.func(
+                    r2, g2, b2, a2,
+                    p.get(x, y, 0),
+                    p.get(x, y, 1),
+                    p.get(x, y, 2),
+                    p.get(x, y, 3)
+                )
+            }
+
+            function output(image, datauri, mimetype) {
+
+                // This output is accessible by Image Sequencer
+                step.output = { src: datauri, format: mimetype };
+
+            }
+
+            // run PixelManipulatin on second image's pixels
+            return require('../_nomodule/PixelManipulation.js')(input, {
+                output: output,
+                changePixel: changePixel,
+                format: input.format,
+                image: options.image,
+                inBrowser: options.inBrowser,
+                callback: callback
+            });
+        });
+    }
+
+    return {
+        options: options,
+        draw: draw,
+        output: output,
+        UI: UI
     }
 }
 
-},{}],149:[function(require,module,exports){
-module.exports = function Dynamic(options, UI, util) {
-
-  options.func = options.func || "function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] }";
-
-  var output;
-
-  // This function is called on every draw.
-  function draw(input, callback, progressObj) {
-
-    progressObj.stop(true);
-    progressObj.overrideFlag = true;
-
-    var step = this;
-
-    // convert to runnable code:
-    if (typeof options.func === "string") eval('options.func = ' + options.func);
-
-    var getPixels = require('get-pixels');
-
-    // save first image's pixels
-    var priorStep = this.getStep(-2);
-
-    getPixels(priorStep.output.src, function(err, pixels) {
-      options.firstImagePixels = pixels;
-
-      function changePixel(r2, g2, b2, a2, x, y) {
-        // blend!
-        var p = options.firstImagePixels;
-        return options.func(
-          r2, g2, b2, a2,
-          p.get(x, y, 0),
-          p.get(x, y, 1),
-          p.get(x, y, 2),
-          p.get(x, y, 3)
-        )
-      }
-
-      function output(image, datauri, mimetype) {
-
-        // This output is accessible by Image Sequencer
-        step.output = { src: datauri, format: mimetype };
-
-      }
-
-      // run PixelManipulatin on second image's pixels
-      return require('../_nomodule/PixelManipulation.js')(input, {
-        output: output,
-        changePixel: changePixel,
-        format: input.format,
-        image: options.image,
-        inBrowser: options.inBrowser,
-        callback: callback
-      });
-    });
-  }
-
-  return {
-    options: options,
-    draw: draw,
-    output: output,
-    UI: UI
-  }
-}
-
-},{"../_nomodule/PixelManipulation.js":207,"get-pixels":23}],150:[function(require,module,exports){
-arguments[4][147][0].apply(exports,arguments)
-},{"./Module":149,"./info.json":151,"dup":147}],151:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":253,"get-pixels":29}],165:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":164,"./info.json":166,"dup":162}],166:[function(require,module,exports){
 module.exports={
   "name": "Blend",
-  "description": "Blend the past two image steps with the given function. Defaults to using the red channel from image 1 and the green and blue and alpha channels of image 2. Easier to use interfaces coming soon!",
+  "description": "Blend two chosen image steps with the given function. Defaults to using the red channel from image 1 and the green and blue and alpha channels of image 2. Easier to use interfaces coming soon!",
   "inputs": {
+    "offset": {
+      "type": "integer",
+      "desc": "Choose which image to blend the current image with. Two steps back is -2, three steps back is -3 etc.",
+      "default": -2
+    },
     "blend": {
       "type": "input",
       "desc": "Function to use to blend the two images.",
       "default": "function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] }"
     }
-  }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],152:[function(require,module,exports){
+},{}],167:[function(require,module,exports){
 module.exports = exports = function(pixels, blur) {
     let kernel = kernelGenerator(blur, 1), oldpix = pixels;
     kernel = flipKernel(kernel);
@@ -48540,7 +64883,7 @@ module.exports = exports = function(pixels, blur) {
         return result;
     }
 }
-},{}],153:[function(require,module,exports){
+},{}],168:[function(require,module,exports){
 /*
 * Blur an Image
 */
@@ -48590,32 +64933,39 @@ module.exports = function Blur(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":207,"./Blur":152}],154:[function(require,module,exports){
-arguments[4][147][0].apply(exports,arguments)
-},{"./Module":153,"./info.json":155,"dup":147}],155:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":253,"./Blur":167}],169:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":168,"./info.json":170,"dup":162}],170:[function(require,module,exports){
 module.exports={
     "name": "Blur",
-    "description": "Gaussian blur an image by a given value, typically 0-5",
+    "description": "Applies a Gaussian blur given by the intensity value",
     "inputs": {
         "blur": {
-            "type": "integer",
-            "desc": "amount of gaussian blur(Less blur gives more detail, typically 0-5)",
-            "default": 2
+            "type": "range",
+            "desc": "Amount of gaussian blur(Less blur gives more detail, typically 0-5)",
+            "default": "2",
+            "min": "0",
+            "max": "5",
+            "step": "0.25"
         }
-    }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],156:[function(require,module,exports){
+},{}],171:[function(require,module,exports){
 /*
 * Changes the Image Brightness
 */
 
 module.exports = function Brightness(options,UI){
 
+
     var output;
 
     function draw(input,callback,progressObj){
 
+        options.brightness = parseInt(options.brightness) || 100;
+        var val = (options.brightness)/100.0;
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
@@ -48628,12 +64978,11 @@ module.exports = function Brightness(options,UI){
         var step = this;
 
         function changePixel(r, g, b, a){
-            var val = (options.brightness)/100.0
 
-            r = val*r<255?val*r:255
-            g = val*g<255?val*g:255
-            b = val*b<255?val*b:255
-            return [r , g, b, a]
+            r = Math.min(val*r, 255)
+            g = Math.min(val*g, 255)
+            b = Math.min(val*b, 255)
+            return [r, g, b, a]
         }
 
         function output(image,datauri,mimetype){
@@ -48661,22 +65010,26 @@ module.exports = function Brightness(options,UI){
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":207}],157:[function(require,module,exports){
-arguments[4][147][0].apply(exports,arguments)
-},{"./Module":156,"./info.json":158,"dup":147}],158:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":253}],172:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":171,"./info.json":173,"dup":162}],173:[function(require,module,exports){
 module.exports={
-    "name": "Brightness",
-    "description": "Change the brightness of the image by given percent value",
-    "inputs": {
-        "brightness": {
-            "type": "integer",
-            "desc": "% brightness for the new image",
-            "default": 0 
-        }
-    } 
+  "name": "Brightness",
+  "description": "Change the brightness of the image by given percent value",
+  "inputs": {
+      "brightness": {
+          "type": "range",
+          "desc": "% brightness for the new image",
+          "default": "175",
+          "min": "0",
+          "max": "200",
+          "step": "1"
+      }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],159:[function(require,module,exports){
+},{}],174:[function(require,module,exports){
 /*
  * Display only one color channel
  */
@@ -48726,9 +65079,9 @@ module.exports = function Channel(options, UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":207}],160:[function(require,module,exports){
-arguments[4][147][0].apply(exports,arguments)
-},{"./Module":159,"./info.json":161,"dup":147}],161:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":253}],175:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":174,"./info.json":176,"dup":162}],176:[function(require,module,exports){
 module.exports={
   "name": "Channel",
   "description": "Displays only one color channel of an image -- default is green",
@@ -48739,10 +65092,11 @@ module.exports={
       "default": "green",
       "values": ["red", "green", "blue"]
     }
-  }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],162:[function(require,module,exports){
+},{}],177:[function(require,module,exports){
 module.exports = function NdviColormapfunction(options, UI) {
 
     options.x = options.x || 0;
@@ -48759,9 +65113,9 @@ module.exports = function NdviColormapfunction(options, UI) {
         isMeta: true
     }
 }
-},{}],163:[function(require,module,exports){
-arguments[4][147][0].apply(exports,arguments)
-},{"./Module":162,"./info.json":164,"dup":147}],164:[function(require,module,exports){
+},{}],178:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":177,"./info.json":179,"dup":162}],179:[function(require,module,exports){
 module.exports={
     "name": "Colorbar",
     "description": "Generates a colorbar to lay over the image",
@@ -48793,9 +65147,10 @@ module.exports={
             "default": 10
         }
     },
-    "length": 4
+    "length": 4,
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
-},{}],165:[function(require,module,exports){
+},{}],180:[function(require,module,exports){
 /*
  * Accepts a value from 0-255 and returns the new color-mapped pixel 
  * from a lookup table, which can be specified as an array of [begin, end] 
@@ -48854,37 +65209,146 @@ var colormaps = {
                [0,     [0,   0,   0],   [255, 255, 255] ],
                [1,     [255, 255, 255], [255, 255, 255] ]
              ]),
-  default:   colormap([
-               [0,     [0,   0,   255], [0,   255, 0]   ],
-               [0.25,  [0,   255, 0],   [255, 255, 0]   ],
-               [0.50,  [0,   255, 255], [255, 255, 0]   ],
-               [0.75,  [255, 255, 0],   [255, 0,   0]   ]
+
+ bluwhtgrngis:   colormap([
+               [0,     	[6,23,86],    [6,25, 84]    ],
+               [0.0625, [6,25,84],    [6,25, 84]    ],//1
+               [0.125,  [6,25,84],    [6,25, 84]    ],//2
+               [0.1875, [6,25,84],    [6,25, 84]    ],
+               [0.25,   [6,25,84],    [6,25,84]     ],
+               [0.3125, [6,25,84],    [9,24, 84]    ],//5
+               [0.3438, [9,24, 84],   [119,120,162] ],//5
+               [0.375,  [119,129,162],[249,250,251] ], //6
+               [0.406,  [249,250,251],[255,255,255] ], //6.5
+               [0.4375, [255,255,255],[255,255,255] ], //7 white
+               [0.50,   [255,255,255],[214,205,191] ],//8
+               [0.52,   [214,205,191],[178,175,96]  ],//8.2
+               [0.5625, [178,175,96], [151,176,53]  ],//9
+               [0.593,  [151,176,53], [146,188,12]  ],//9.5
+               [0.625,  [146,188,12], [96,161,1]    ], //10
+               [0.6875, [96,161,1],   [30,127,3]    ],//11
+               [0.75,   [30,127,3],   [0,99,1]      ],//12
+               [0.8125, [0,99,1],     [0,74,1]      ],//13
+               [0.875,  [0,74,1],     [0,52, 0]     ],//14
+               [0.9375, [0,52, 0],    [0,34,0]      ], //15
+               [0.968,  [0,34,0],     [68,70,67]    ] //16
+              ]),
+
+
+  brntogrn:   colormap([
+               [0,      [110,12,3],   [118,6,1]      ],
+               [0.0625, [118,6,1],    [141,19,6]     ],
+               [0.125,  [141,19,6],   [165,35,13]    ],
+               [0.1875, [165,35,13],  [177,59,25]    ],
+               [0.2188, [177,59,25],  [192,91,36]    ],
+               [0.25,   [192,91,36],  [214, 145, 76] ],
+               [0.3125, [214,145,76], [230,183,134]  ],
+               [0.375,  [230,183,134],[243, 224, 194]],   
+               [0.4375, [243,224,194],[250,252,229]  ],
+               [0.50,   [250,252,229],[217,235,185]  ],
+               [0.5625, [217,235,185],[184,218,143]  ],
+               [0.625,  [184,218,143],[141,202,89]   ],
+               [0.6875, [141,202,89], [80,176,61]    ],
+               [0.75,   [80,176,61],  [0, 147, 32]   ],
+               [0.8125, [0,147,32],   [1, 122, 22]   ],
+               [0.875,  [1,122,22],   [0, 114, 19]   ],
+               [0.90,   [0,114,19],   [0,105,18]     ],
+               [0.9375, [0,105,18],   [7,70,14]      ] 
+
              ]),
-  ndvi:      colormap([
-               [0,     [0,   0,   255], [38,  195, 195] ],
-               [0.5,   [0,   150, 0],   [255, 255, 0]   ],
-               [0.75,  [255, 255, 0],   [255, 50,  50]  ]
+
+
+  blutoredjet:     colormap([
+               [0,       [0,0,140],    [1,1,186]    ],
+               [0.0625,  [1,1,186],    [0,1,248]    ],
+               [0.125,   [0,1,248],    [0,70,254]   ],
+               [0.1875,  [0,70,254],   [0,130,255]  ],
+               [0.25,    [0,130,255],  [2,160,255]  ],
+	       [0.2813,  [2,160,255],  [0,187,255]  ],	//inset
+               [0.3125,  [0,187,255],  [6,250,255]  ],
+ //            [0.348,   [0,218,255],  [8,252,251]  ],//inset
+               [0.375,   [8,252,251],  [27,254,228] ], 
+               [0.406,   [27,254,228], [70,255,187] ], //insert
+               [0.4375,  [70,255,187], [104,254,151]],
+               [0.47, 	 [104,254,151],[132,255,19] ],//insert
+               [0.50,    [132,255,19], [195,255,60] ],
+               [0.5625,  [195,255,60], [231,254,25] ],
+               [0.5976,  [231,254,25], [253,246,1]  ],//insert
+               [0.625,   [253,246,1],  [252,210,1]  ], //yellow
+               [0.657,   [252,210,1],  [255,183,0]  ],//insert
+               [0.6875,  [255,183,0],  [255,125,2]  ],
+               [0.75,    [255,125,2],  [255,65, 1]  ],
+               [0.8125,  [255,65, 1],  [247, 1, 1]  ],
+               [0.875,   [247,1,1],    [200, 1,  3] ],
+               [0.9375,  [200,1,3],    [122, 3,  2] ] 
+
              ]),
+
+
+  colors16:   colormap([
+               [0,      [0,0,0],       [0,0,0]       ],
+               [0.0625, [3,1,172],     [3,1,172]     ],
+               [0.125,  [3,1,222],     [3,1, 222]    ],
+               [0.1875, [0,111,255],   [0,111,255]   ],
+               [0.25,   [3,172,255],   [3,172,255]   ],
+               [0.3125, [1,226,255],   [1,226,255]   ],
+               [0.375,  [2,255,0],     [2,255,0]     ],   
+               [0.4375, [198,254,0],   [190,254,0]   ],
+               [0.50,   [252,255,0],   [252,255,0]   ],
+               [0.5625, [255,223,3],   [255,223,3]   ],
+               [0.625,  [255,143,3],   [255,143,3]   ],
+               [0.6875, [255,95,3],    [255,95,3]    ],
+               [0.75,   [242,0,1],     [242,0,1]     ],
+               [0.8125, [245,0,170],   [245,0,170]   ],
+               [0.875,  [223,180,225], [223,180,225] ],
+               [0.9375, [255,255,255], [255,255, 255]] 
+
+             ]),
+
+   default:      colormap([
+               [0,       [45,1,121],     [25,1,137]    ],
+               [0.125,   [25,1,137],     [0,6,156]     ],
+               [0.1875,  [0,6,156],      [7,41,172]    ],
+               [0.25,    [7,41,172],     [22,84,187]   ],
+               [0.3125,  [22,84,187],    [25,125,194]  ],
+               [0.375,   [25,125,194],   [26,177,197]  ],   
+               [0.4375,  [26,177,197],   [23,199,193]  ],
+               [0.47,    [23,199,193],   [25, 200,170] ],
+               [0.50,    [25, 200,170],  [21,209,27]   ],
+               [0.5625,  [21,209,27],    [108,215,18]  ],
+               [0.625,   [108,215,18],   [166,218,19]  ],
+               [0.6875,  [166,218,19],   [206,221,20]  ],
+               [0.75,    [206,221,20],   [222,213,19 ] ],
+               [0.7813,  [222,213,19],   [222, 191, 19]],
+               [0.8125,  [222, 191, 19], [227,133,17]  ],
+               [0.875,   [227,133,17],   [231,83,16]   ],
+               [0.9375,  [231,83,16],    [220,61,48]   ] 
+
+             ]),
+
+
+  fastie:    colormap([
+               [0,     [255, 255, 255], [0,   0,   0]   ],
+               [0.167, [0,   0,   0],   [255, 255, 255] ],
+               [0.33,  [255, 255, 255],   [0,   0,   0] ],
+               [0.5,   [0,   0,   0],   [140, 140, 255] ],
+               [0.55,  [140, 140, 255], [0,   255, 0]   ],
+               [0.63,  [0,   255, 0],   [255, 255, 0]   ],
+               [0.75,  [255, 255, 0],   [255, 0,   0]   ],
+               [0.95,  [255, 0,   0],   [255, 0,   255] ]
+             ]),
+
+
   stretched: colormap([
                [0,     [0,   0,   255], [0,   0,   255] ],
                [0.1,   [0,   0,   255], [38,  195, 195] ],
                [0.5,   [0,   150, 0],   [255, 255, 0]   ],
                [0.7,   [255, 255, 0],   [255, 50,  50]  ],
                [0.9,   [255, 50,  50],  [255, 50,  50]  ]
-             ]),
-  fastie:    colormap([
-               [0,     [255, 255, 255], [0,   0,   0]   ],
-               [0.167, [0,   0,   0],   [255, 255, 255] ],
-               [0.33,  [255, 255, 255], [0,   0,   0]   ],
-               [0.5,   [0,   0,   0],   [140, 140, 255] ],
-               [0.55,  [140, 140, 255], [0,   255, 0]   ],
-               [0.63,  [0,   255, 0],   [255, 255, 0]   ],
-               [0.75,  [255, 255, 0],   [255, 0,   0]   ],
-               [0.95,  [255, 0,   0],   [255, 0,   255] ]
              ])
+ 
 }
-
-},{}],166:[function(require,module,exports){
+},{}],181:[function(require,module,exports){
 module.exports = function Colormap(options,UI) {
 
   var output;
@@ -48928,9 +65392,9 @@ module.exports = function Colormap(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":207,"./Colormap":165}],167:[function(require,module,exports){
-arguments[4][147][0].apply(exports,arguments)
-},{"./Module":166,"./info.json":168,"dup":147}],168:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":253,"./Colormap":180}],182:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":181,"./info.json":183,"dup":162}],183:[function(require,module,exports){
 module.exports={
   "name": "Colormap",
   "description": "Maps brightness values (average of red, green & blue) to a given color lookup table, made up of a set of one more color gradients.\n\nFor example, 'cooler' colors like blue could represent low values, while 'hot' colors like red could represent high values.",
@@ -48939,12 +65403,274 @@ module.exports={
       "type": "select",
       "desc": "Name of the Colormap",
       "default": "default",
-      "values": ["default","greyscale","stretched","fastie"]
+      "values": ["default","greyscale","bluwhtgrngis","stretched","fastie","brntogrn","blutoredjet","colors16"]
     }
-  }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],169:[function(require,module,exports){
+},{}],184:[function(require,module,exports){
+var _ = require('lodash');
+module.exports = exports = function(pixels , contrast){
+	let oldpix = _.cloneDeep(pixels);
+    contrast = Number(contrast)
+	if (contrast < -100) contrast = -100;
+    if (contrast > 100) contrast = 100;
+    contrast = (100.0 + contrast) / 100.0;
+    contrast *= contrast;
+        
+    for (let i = 0; i < oldpix.shape[0]; i++) {
+        for (let j = 0; j < oldpix.shape[1]; j++) {
+        	var r = oldpix.get(i,j,0)/255.0;
+        	r -= 0.5;
+            r *= contrast;
+        	r += 0.5;
+            r *= 255;
+            if (r < 0) r = 0;
+            if (r > 255) r = 255;
+
+
+            var g = oldpix.get(i,j,1)/255.0;
+            g -= 0.5;
+            g *= contrast;
+            g += 0.5;
+            g *= 255;
+            if (g < 0) g = 0;
+            if (g > 255) g = 255;
+        
+
+
+            var b = oldpix.get(i,j,2)/255.0;
+            b -= 0.5;
+            b *= contrast;
+            b += 0.5;
+            b *= 255;
+            if (b < 0) b = 0;
+            if (b > 255) b = 255;
+            
+
+            pixels.set(i, j, 0, r);
+            pixels.set(i, j, 1, g);
+            pixels.set(i, j, 2, b);
+
+        }
+    }
+    return pixels;
+}
+},{"lodash":75}],185:[function(require,module,exports){
+// /*
+// * Changes the Image Contrast
+// */
+
+module.exports = function Contrast(options, UI) {
+
+    options.contrast = options.contrast || 70
+    var output;
+
+    function draw(input, callback, progressObj) {
+
+        progressObj.stop(true);
+        progressObj.overrideFlag = true;
+
+        var step = this;
+
+        function changePixel(r, g, b, a) {
+            return [r, g, b, a]
+        }
+
+        function extraManipulation(pixels) {
+            pixels = require('./Contrast')(pixels, options.contrast)
+            return pixels
+        }
+
+        function output(image, datauri, mimetype) {
+
+            // This output is accessible by Image Sequencer
+            step.output = { src: datauri, format: mimetype };
+
+        }
+
+        return require('../_nomodule/PixelManipulation.js')(input, {
+            output: output,
+            changePixel: changePixel,
+            extraManipulation: extraManipulation,
+            format: input.format,
+            image: options.image,
+            callback: callback
+        });
+
+    }
+    return {
+        options: options,
+        draw: draw,
+        output: output,
+        UI: UI
+    }
+}
+
+},{"../_nomodule/PixelManipulation.js":253,"./Contrast":184}],186:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":185,"./info.json":187,"dup":162}],187:[function(require,module,exports){
+module.exports={
+    "name": "Contrast",
+    "description": "Change the contrast of the image by given value",
+    "inputs": {
+        "contrast": {
+            "type": "range",
+            "desc": "contrast for the new image, typically -100 to 100",
+            "default": "70",
+            "min": "-100",
+            "max": "100",
+            "step": "1"
+        }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+}
+
+},{}],188:[function(require,module,exports){
+var _ = require('lodash');
+module.exports = exports = function(pixels, constantFactor, kernelValues){
+	let kernel = kernelGenerator(constantFactor, kernelValues), oldpix = _.cloneDeep(pixels);
+	kernel = flipKernel(kernel);
+
+	for (let i = 0; i < pixels.shape[0]; i++) {
+        for (let j = 0; j < pixels.shape[1]; j++) {
+            let neighboutPos = getNeighbouringPixelPositions([i, j]);
+            let acc = [0.0, 0.0, 0.0, 0.0];
+            for (let a = 0; a < kernel.length; a++) {
+                for (let b = 0; b < kernel.length; b++) {
+                    acc[0] += (oldpix.get(neighboutPos[a][b][0], neighboutPos[a][b][1], 0) * kernel[a][b]);
+                    acc[1] += (oldpix.get(neighboutPos[a][b][0], neighboutPos[a][b][1], 1) * kernel[a][b]);
+                    acc[2] += (oldpix.get(neighboutPos[a][b][0], neighboutPos[a][b][1], 2) * kernel[a][b]);
+                    acc[3] += (oldpix.get(neighboutPos[a][b][0], neighboutPos[a][b][1], 3) * kernel[a][b]);
+                }
+            }
+            acc[0] = acc[0]%255;
+            acc[1] = acc[1]%255;
+            acc[2] = acc[2]%255;
+            pixels.set(i, j, 0, acc[0]);
+            pixels.set(i, j, 1, acc[1]);
+            pixels.set(i, j, 2, acc[2]);
+        }
+    }
+    return pixels;
+
+
+	function kernelGenerator(constantFactor, kernelValues){
+		kernelValues = kernelValues.split(" ");
+        for(i = 0 ; i < 9; i++){
+            kernelValues[i] = Number(kernelValues[i]) * constantFactor;
+        }
+        let k = 0;
+		let arr = [];
+		for(i = 0; i < 3; i++){
+			let columns = [];
+			for(j = 0; j < 3; j++){
+				columns.push(kernelValues[k]);
+				k += 1;
+			}
+			arr.push(columns);
+		}
+		return arr;
+	}
+
+	function getNeighbouringPixelPositions(pixelPosition) {
+        let x = pixelPosition[0], y = pixelPosition[1], result = [];
+
+        for (let i = -1; i <= 1; i++) {
+            let arr = [];
+            for (let j = -1; j <= 1; j++)
+                arr.push([x + i, y + j]);
+
+            result.push(arr);
+        }
+        return result;
+    }
+
+	function flipKernel(kernel) {
+        let result = [];
+        for (let i = kernel.length - 1; i >= 0; i--) {
+            let arr = [];
+            for (let j = kernel[i].length - 1; j >= 0; j--) {
+                arr.push(kernel[i][j]);
+            }
+            result.push(arr);
+        }
+        return result;
+    }
+}
+},{"lodash":75}],189:[function(require,module,exports){
+module.exports = function Convolution(options, UI) {
+
+    options.kernelValues = options.kernelValues || '1 1 1 1 1 1 1 1 1';
+    options.constantFactor = options.constantFactor || 1/9;
+    var output;
+
+    function draw(input, callback, progressObj) {
+
+        progressObj.stop(true);
+        progressObj.overrideFlag = true;
+
+        var step = this;
+
+        function changePixel(r, g, b, a) {
+            return [r, g, b, a]
+        }
+
+        function extraManipulation(pixels) {
+            pixels = require('./Convolution')(pixels, options.constantFactor, options.kernelValues)
+            return pixels
+        }
+
+        function output(image, datauri, mimetype) {
+
+            step.output = { src: datauri, format: mimetype };
+
+        }
+
+        return require('../_nomodule/PixelManipulation.js')(input, {
+            output: output,
+            changePixel: changePixel,
+            extraManipulation: extraManipulation,
+            format: input.format,
+            image: options.image,
+            callback: callback
+        });
+
+    }
+    return {
+        options: options,
+        draw: draw,
+        output: output,
+        UI: UI
+    }
+}
+
+},{"../_nomodule/PixelManipulation.js":253,"./Convolution":188}],190:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":189,"./info.json":191,"dup":162}],191:[function(require,module,exports){
+module.exports={
+    "name": "Convolution",
+    "description": "Image Convolution using a given 3x3 kernel matrix <a href='https://en.wikipedia.org/wiki/Kernel_(image_processing)'>Read more</a>",
+    "inputs": {
+  		"constantFactor":{
+  			"type": "Float",
+  			"desc": "a constant factor, multiplies all the kernel values by that factor",
+  			"default": 0.1111,
+        "placeholder": 0.1111
+  		},
+        
+      "kernelValues": {
+        "type": "String",
+        "desc": "nine space separated numbers representing the kernel values in left to right and top to bottom format.",
+        "default": "1 1 1 1 1 1 1 1 1",
+        "placeholder": "1 1 1 1 1 1 1 1 1"
+      }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+}
+
+},{}],192:[function(require,module,exports){
 (function (Buffer){
 module.exports = function Crop(input,options,callback) {
 
@@ -48957,14 +65683,25 @@ module.exports = function Crop(input,options,callback) {
   getPixels(input.src,function(err,pixels){
     options.w = parseInt(options.w) || Math.floor(pixels.shape[0]);
     options.h = parseInt(options.h) || Math.floor(pixels.shape[1]);
+    options.backgroundColor = options.backgroundColor || '255 255 255 255';
     var ox = options.x;
     var oy = options.y;
     var w = options.w;
     var h = options.h;
     var iw = pixels.shape[0]; //Width of Original Image
+    var ih = pixels.shape[1]; //Height of Original Image
+    var backgroundArray = [];
+    backgroundColor = options.backgroundColor.split(" ");
+    for(var i = 0; i < w ; i++){
+      backgroundArray = backgroundArray.concat([backgroundColor[0],backgroundColor[1],backgroundColor[2],backgroundColor[3]]);
+    }
     var newarray = new Uint8Array(4*w*h);
     for (var n = oy; n < oy + h; n++) {
+      if(n<ih){
       newarray.set(pixels.data.slice(n*4*iw + ox, n*4*iw + ox + 4*w),4*w*(n-oy));
+      } else {
+        newarray.set(backgroundArray,4*w*(n-oy));
+      }
     }
     pixels.data = newarray;
     pixels.shape = [w,h,4];
@@ -48990,7 +65727,7 @@ module.exports = function Crop(input,options,callback) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":4,"get-pixels":23,"save-pixels":111}],170:[function(require,module,exports){
+},{"buffer":47,"get-pixels":29,"save-pixels":138}],193:[function(require,module,exports){
 /*
  * Image Cropping module
  * Usage:
@@ -49010,9 +65747,9 @@ module.exports = function CropModule(options, UI) {
 
   // we should get UI to return the image thumbnail so we can attach our own UI extensions
   // add our custom in-module html ui:
-  if (options.step.inBrowser) var ui = require('./Ui.js')(options.step, UI);
+  if (options.step.inBrowser && !options.noUI) var ui = require('./Ui.js')(options.step, UI);
   var output,
-      setupComplete = false;
+    setupComplete = false;
 
   // This function is caled everytime the step has to be redrawn
   function draw(input,callback) {
@@ -49022,8 +65759,23 @@ module.exports = function CropModule(options, UI) {
     // save the input image;
     // TODO: this should be moved to module API to persist the input image
     options.step.input = input.src;
+    var parseCornerCoordinateInputs = require('../../util/ParseInputCoordinates');
 
-    require('./Crop')(input, options, function(out, format){
+    //parse the inputs
+    parseCornerCoordinateInputs(options,{
+      src: input.src,
+      x: { valInp: options.x, type: 'horizontal' },
+      y: { valInp: options.y, type: 'vertical' },
+      w: { valInp: options.w, type: 'horizontal' },
+      h: { valInp: options.h, type: 'vertical' },
+    }, function (options, coord) {
+      options.x = parseInt(coord.x.valInp);
+      options.y = parseInt(coord.y.valInp);
+      options.w = coord.w.valInp;
+      options.h = coord.h.valInp;
+    });
+
+    require('./Crop')(input, options, function (out, format) {
 
       // This output is accessible to Image Sequencer
       step.output = {
@@ -49042,7 +65794,7 @@ module.exports = function CropModule(options, UI) {
 
       // start custom UI setup (draggable UI)
       // only once we have an input image
-      if (setupComplete === false && options.step.inBrowser) {
+      if (setupComplete === false && options.step.inBrowser && !options.noUI) {
         setupComplete = true;
         ui.setup();
       }
@@ -49062,7 +65814,7 @@ module.exports = function CropModule(options, UI) {
   }
 }
 
-},{"./Crop":169,"./Ui.js":171}],171:[function(require,module,exports){
+},{"../../util/ParseInputCoordinates":258,"./Crop":192,"./Ui.js":194}],194:[function(require,module,exports){
 // hide on save
 module.exports = function CropModuleUi(step, ui) {
 
@@ -49161,12 +65913,12 @@ module.exports = function CropModuleUi(step, ui) {
   }
 }
 
-},{}],172:[function(require,module,exports){
-arguments[4][147][0].apply(exports,arguments)
-},{"./Module":170,"./info.json":173,"dup":147}],173:[function(require,module,exports){
+},{}],195:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":193,"./info.json":196,"dup":162}],196:[function(require,module,exports){
 module.exports={
   "name": "Crop",
-  "description": "Crop image to given x, y, w, h in pixels, measured from top left",
+  "description": "Crop image to given x, y, w, h in pixels or % , measured from top left",
   "url": "https://github.com/publiclab/image-sequencer/tree/master/MODULES.md",
   "inputs": {
     "x": {
@@ -49182,16 +65934,24 @@ module.exports={
     "w": {
       "type": "integer",
       "desc": "Width of crop",
-      "default": "(100%)"
+      "default": "(50%)"
     },
     "h": {
       "type": "integer",
       "desc": "Height of crop",
-      "default": "(100%)"
+      "default": "(50%)"
+    },
+    "backgroundColor": {
+      "type": "String",
+      "desc": "Background Color (Four space separated RGBA values)",
+      "default": "255 255 255 255",
+      "placeholder": "255 255 255 255"
     }
-  }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
-},{}],174:[function(require,module,exports){
+
+},{}],197:[function(require,module,exports){
 /*
  * Decodes QR from a given image.
  */
@@ -49234,9 +65994,9 @@ module.exports = function DoNothing(options,UI) {
   }
 }
 
-},{"get-pixels":23,"jsqr":61}],175:[function(require,module,exports){
-arguments[4][147][0].apply(exports,arguments)
-},{"./Module":174,"./info.json":176,"dup":147}],176:[function(require,module,exports){
+},{"get-pixels":29,"jsqr":74}],198:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":197,"./info.json":199,"dup":162}],199:[function(require,module,exports){
 module.exports={
   "name": "Decode QR",
   "description": "Search for and decode a QR code in the image",
@@ -49246,10 +66006,265 @@ module.exports={
     "qrval": {
       "type": "text"
     }
-  }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],177:[function(require,module,exports){
+},{}],200:[function(require,module,exports){
+module.exports = function Dither(pixels, type) {
+  type = type || "none";
+      var bayerThresholdMap = [
+          [  15, 135,  45, 165 ],
+          [ 195,  75, 225, 105 ],
+          [  60, 180,  30, 150 ],
+          [ 240, 120, 210,  90 ]
+      ];
+      
+      var lumR = [];
+      var lumG = [];
+      var lumB = [];
+      for (var i=0; i<256; i++) {
+          lumR[i] = i*0.299;
+          lumG[i] = i*0.587;
+          lumB[i] = i*0.114;
+      }
+      var threshold = 129;
+      var imageDataLength = pixels.data.length;   //imageData.data.length;
+    
+      // Greyscale luminance (sets r pixels to luminance of rgb)
+      for (var i = 0; i <= imageDataLength; i += 4) {
+        pixels.data[i] = Math.floor(lumR[pixels.data[i]] + lumG[pixels.data[i+1]] + lumB[pixels.data[i+2]]);
+      }
+    
+      var w = pixels.shape[0];
+      var newPixel, err;
+    
+      for (var currentPixel = 0; currentPixel <= imageDataLength; currentPixel+=4) {
+    
+        if (type === "none") {
+          // No dithering
+          pixels.data[currentPixel] = pixels.data[currentPixel] < threshold ? 0 : 255;
+        } else if (type === "bayer") {
+          // 4x4 Bayer ordered dithering algorithm
+          var x = currentPixel/4 % w;
+          var y = Math.floor(currentPixel/4 / w);
+          var map = Math.floor( (pixels.data[currentPixel] + bayerThresholdMap[x%4][y%4]) / 2 );
+          pixels.data[currentPixel] = (map < threshold) ? 0 : 255;
+        } else if (type === "floydsteinberg") {
+          // Floyd–Steinberg dithering algorithm
+          newPixel = pixels.data[currentPixel] < 129 ? 0 : 255;
+          err = Math.floor((pixels.data[currentPixel] - newPixel) / 16);
+          pixels.data[currentPixel] = newPixel;
+    
+          pixels.data[currentPixel       + 4 ] += err*7;
+          pixels.data[currentPixel + 4*w - 4 ] += err*3;
+          pixels.data[currentPixel + 4*w     ] += err*5;
+          pixels.data[currentPixel + 4*w + 4 ] += err*1;
+        } else {
+          // Bill Atkinson's dithering algorithm
+          newPixel = pixels.data[currentPixel] < threshold ? 0 : 255;
+          err = Math.floor((pixels.data[currentPixel] - newPixel) / 8);
+          pixels.data[currentPixel] = newPixel;
+    
+          pixels.data[currentPixel       + 4 ] += err;
+          pixels.data[currentPixel       + 8 ] += err;
+          pixels.data[currentPixel + 4*w - 4 ] += err;
+          pixels.data[currentPixel + 4*w     ] += err;
+          pixels.data[currentPixel + 4*w + 4 ] += err;
+          pixels.data[currentPixel + 8*w     ] += err;
+        }
+    
+        // Set g and b pixels equal to r
+        pixels.data[currentPixel + 1] = pixels.data[currentPixel + 2] = pixels.data[currentPixel];
+      }
+      return pixels;
+  
+  }
+  
+},{}],201:[function(require,module,exports){
+module.exports = function Dither(options, UI){
+
+    var output;
+
+    function draw(input,callback,progressObj){
+
+        progressObj.stop(true);
+        progressObj.overrideFlag = true;
+
+        var step = this;
+
+        function extraManipulation(pixels) {
+            pixels = require('./Dither')(pixels, options.dither)
+            return pixels
+        }
+
+        function output(image,  datauri, mimetype){
+            // This output is accessible by Image Sequencer
+            step.output = { src: datauri, format: mimetype };
+
+        }
+
+        return require('../_nomodule/PixelManipulation.js')(input, {
+            output: output,
+            extraManipulation: extraManipulation,
+            format: input.format,
+            image: options.image,
+            callback: callback
+        });
+    }
+    return {
+        options: options,
+        draw: draw,
+        output: output,
+        UI: UI
+    }
+}
+},{"../_nomodule/PixelManipulation.js":253,"./Dither":200}],202:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":201,"./info.json":203,"dup":162}],203:[function(require,module,exports){
+module.exports={
+    "name": "Dither",
+    "description": "Approximates a color from a mixture of other colors when the required color is not available, creating illusions of the color that is not present actually.<a href='https://en.wikipedia.org/wiki/Dither'>Read more</a>",
+    "inputs": {
+      "dither": {
+        "type": "select",
+        "desc": "Name of the Dithering Algorithm",
+        "default": "none",
+        "values": ["none","floydsteinberg","bayer","Atkinson"]
+      }
+    }
+}
+  
+},{}],204:[function(require,module,exports){
+module.exports = exports = function(pixels, options){
+	options.startingX = options.startingX || 0;
+  options.startingY = options.startingY || 0;
+	var ox = Number(options.startingX),
+	  oy = Number(options.startingY),
+	  iw = pixels.shape[0],
+	  ih = pixels.shape[1],
+	  ex =  options.endX = Number(options.endX) || iw - 1,
+	  ey = options.endY = Number(options.endY) || ih - 1,
+    thickness = Number(options.thickness) || 1,
+    color = options.color || "0 0 0 255";
+
+  color = color.split(" ");
+
+  var drawSide = function(startY, startX, endY, endX, yIncrement, xIncrement, sign, incrementFactor = 1){
+    for(var i = 0; i<thickness; i++){
+      for(
+        var n = (startY + i*yIncrement*sign)*4*iw + 4*(startX + i*xIncrement*sign);
+        n <= (endY + i*yIncrement*sign)*4*iw + 4*(endX + i*xIncrement*sign);
+        n = n+4*(incrementFactor)
+      )
+      {
+        pixels.data[n] = color[0];
+        pixels.data[n+1] = color[1];
+        pixels.data[n+2] = color[2];
+        pixels.data[n+3] = color[3];
+      }
+    }
+  }
+
+  drawSide(oy, ox, oy, ex, 1, 0, 1); // Top
+  drawSide(ey, ox, ey, ex, 1, 0, -1); // Bottom
+  drawSide(oy, ox, ey, ox, 0, 1, 1, iw); // Left
+  drawSide(oy, ex, ey, ex, 0, 1, -1, iw); // Right
+
+  return pixels;
+}
+},{}],205:[function(require,module,exports){
+module.exports = function DrawRectangle(options, UI) {
+
+    
+    var output;
+
+    function draw(input, callback, progressObj) {
+
+        progressObj.stop(true);
+        progressObj.overrideFlag = true;
+
+        var step = this;
+
+        function changePixel(r, g, b, a) {
+            return [r, g, b, a]
+        }
+
+        function extraManipulation(pixels) {
+            pixels = require('./DrawRectangle')(pixels, options)
+            return pixels
+        }
+
+        function output(image, datauri, mimetype) {
+
+            step.output = { src: datauri, format: mimetype };
+
+        }
+
+        return require('../_nomodule/PixelManipulation.js')(input, {
+            output: output,
+            changePixel: changePixel,
+            extraManipulation: extraManipulation,
+            format: input.format,
+            image: options.image,
+            callback: callback
+        });
+
+    }
+    return {
+        options: options,
+        draw: draw,
+        output: output,
+        UI: UI
+    }
+}
+
+},{"../_nomodule/PixelManipulation.js":253,"./DrawRectangle":204}],206:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":205,"./info.json":207,"dup":162}],207:[function(require,module,exports){
+module.exports={
+    "name": "Draw Rectangle",
+    "description": "It draws a rectangle on the image",
+    "inputs": {
+  		"startingX":{
+  			"type": "Number",
+  			"desc": "starting x position of the rectangle",
+  			"default": 0
+  		},
+        
+      "startingY": {
+        "type": "Number",
+        "desc": "starting y position of the rectangle",
+        "default": 0
+      },
+
+      "endX":{
+        "type": "integer",
+        "desc": "last x position of the rectangle",
+        "default": "width"
+      },
+
+      "endY":{
+        "type": "integer",
+        "desc": "last y position of the rectangle",
+        "default": "height"
+      },
+
+      "thickness":{
+        "type": "integer",
+        "desc": "thickness of border",
+        "default": 1
+      },
+
+      "color":{
+        "type": "String",
+        "desc": "RGBA values separated by a space",
+        "default": "0 0 0 255"
+      }
+    }
+}
+
+},{}],208:[function(require,module,exports){
 module.exports = function Dynamic(options,UI) {
 
   var output;
@@ -49306,6 +66321,22 @@ module.exports = function Dynamic(options,UI) {
       ]
     }
 
+    // via P5js: https://github.com/processing/p5.js/blob/2920492842aae9a8bf1a779916893ac19d65cd38/src/math/calculation.js#L461-L472
+    function map(n, start1, stop1, start2, stop2, withinBounds) {
+      var newval = (n - start1) / (stop1 - start1) * (stop2 - start2) + start2;
+      if (!withinBounds) {
+        return newval;
+      }
+      // also via P5js: https://github.com/processing/p5.js/blob/2920492842aae9a8bf1a779916893ac19d65cd38/src/math/calculation.js#L116-L119
+      function constrain(n, low, high) {
+        return Math.max(Math.min(n, high), low);
+      };
+      if (start2 < stop2) {
+        return constrain(newval, start2, stop2);
+      } else {
+        return constrain(newval, stop2, start2);
+      }
+    };
 
     function output(image,datauri,mimetype){
 
@@ -49334,9 +66365,9 @@ module.exports = function Dynamic(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":207}],178:[function(require,module,exports){
-arguments[4][147][0].apply(exports,arguments)
-},{"./Module":177,"./info.json":179,"dup":147}],179:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":253}],209:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":208,"./info.json":210,"dup":162}],210:[function(require,module,exports){
 module.exports={
   "name": "Dynamic",
   "description": "A module which accepts JavaScript math expressions to produce each color channel based on the original image's color. See <a href='https://publiclab.org/wiki/infragram-sandbox'>Infragrammar</a>.",
@@ -49361,19 +66392,19 @@ module.exports={
       "desc": "Expression to return with R, G, B, and A inputs; fallback for other channels if none provided",
       "default": "r + g + b"
     }
-  }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],180:[function(require,module,exports){
+},{}],211:[function(require,module,exports){
 const _ = require('lodash')
 
 //define kernels for the sobel filter
 const kernelx = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]],
     kernely = [[-1, -2, -1], [0, 0, 0], [1, 2, 1]];
 
-let angles = [], mags = [], strongEdgePixels = [], weakEdgePixels = [], notInUI;
 module.exports = function(pixels, highThresholdRatio, lowThresholdRatio, inBrowser) {
-    notInUI = !inBrowser;
+    let angles = [], mags = [], strongEdgePixels = [], weakEdgePixels = [], notInUI = !inBrowser;
     for (var x = 0; x < pixels.shape[0]; x++) {
         angles.push([]);
         mags.push([]);
@@ -49396,8 +66427,9 @@ module.exports = function(pixels, highThresholdRatio, lowThresholdRatio, inBrows
             angles.slice(-1)[0].push(result.angle);
         }
     }
-
-    return doubleThreshold(nonMaxSupress(pixels), highThresholdRatio, lowThresholdRatio);
+    nonMaxSupress(pixels, mags, angles);
+    doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio, mags, strongEdgePixels, weakEdgePixels);
+    return pixels;
 }
 
 //changepixel function that convolutes every pixel (sobel filter)
@@ -49432,7 +66464,7 @@ function changePixel(pixels, val, a, x, y) {
 }
 
 //Non Maximum Supression without interpolation
-function nonMaxSupress(pixels) {
+function nonMaxSupress(pixels, mags, angles) {
 
     angles = angles.map((arr) => arr.map(convertToDegrees));
 
@@ -49480,7 +66512,6 @@ function nonMaxSupress(pixels) {
 
         }
     }
-    return pixels;
 }
 //Converts radians to degrees
 var convertToDegrees = radians => (radians * 180) / Math.PI;
@@ -49489,9 +66520,9 @@ var convertToDegrees = radians => (radians * 180) / Math.PI;
 var findMaxInMatrix = arr => Math.max(...arr.map(el => el.map(val => !!val ? val : 0)).map(el => Math.max(...el)));
 
 //Applies the double threshold to the image
-function doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio) {
+function doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio, mags, strongEdgePixels, weakEdgePixels) {
 
-    const highThreshold = findMaxInMatrix(mags) * 0.2;
+    const highThreshold = findMaxInMatrix(mags) * highThresholdRatio;
     const lowThreshold = highThreshold * lowThresholdRatio;
 
     for (let i = 0; i < pixels.shape[0]; i++) {
@@ -49507,8 +66538,6 @@ function doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio) {
     }
 
     strongEdgePixels.forEach(pix => pixels.set(pix[0], pix[1], 3, 255));
-
-    return pixels;
 }
 
 //  hysteresis edge tracking algorithm -- not working as of now
@@ -49543,20 +66572,20 @@ function doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio) {
 
 
 
-},{"lodash":62}],181:[function(require,module,exports){
+},{"lodash":75}],212:[function(require,module,exports){
 /*
 * Detect Edges in an Image
 */
-module.exports = function edgeDetect(options,UI) {
+module.exports = function edgeDetect(options, UI) {
 
   options.blur = options.blur || 2;
-  options.highThresholdRatio = options.highThresholdRatio||0.2;
-  options.lowThresholdRatio = options.lowThresholdRatio||0.15;
+  options.highThresholdRatio = options.highThresholdRatio || 0.2;
+  options.lowThresholdRatio = options.lowThresholdRatio || 0.15;
 
   var output;
 
   // The function which is called on every draw.
-  function draw(input,callback,progressObj) {
+  function draw(input, callback, progressObj) {
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;
@@ -49565,19 +66594,20 @@ module.exports = function edgeDetect(options,UI) {
 
 
     //   Extra Manipulation function used as an enveloper for applying gaussian blur and Convolution
-    function extraManipulation(pixels){
-      pixels = require('ndarray-gaussian-filter')(pixels,options.blur);
-      return require('./EdgeUtils')(pixels,options.highThresholdRatio,options.lowThresholdRatio,options.inBrowser);
+    function extraManipulation(pixels) {
+      pixels = require('ndarray-gaussian-filter')(pixels, options.blur);
+      pixels = require('./EdgeUtils')(pixels, options.highThresholdRatio, options.lowThresholdRatio, options.inBrowser);
+      return pixels;
     }
 
     function changePixel(r, g, b, a) {
-      return [(r+g+b)/3, (r+g+b)/3, (r+g+b)/3, a];
+      return [(r + g + b) / 3, (r + g + b) / 3, (r + g + b) / 3, a];
     }
 
-    function output(image,datauri,mimetype){
+    function output(image, datauri, mimetype) {
 
       // This output is accessible by Image Sequencer
-      step.output = {src:datauri,format:mimetype};
+      step.output = { src: datauri, format: mimetype };
 
     }
 
@@ -49595,23 +66625,26 @@ module.exports = function edgeDetect(options,UI) {
 
   return {
     options: options,
-    draw:  draw,
+    draw: draw,
     output: output,
     UI: UI
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":207,"./EdgeUtils":180,"ndarray-gaussian-filter":67}],182:[function(require,module,exports){
-arguments[4][147][0].apply(exports,arguments)
-},{"./Module":181,"./info.json":183,"dup":147}],183:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":253,"./EdgeUtils":211,"ndarray-gaussian-filter":80}],213:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":212,"./info.json":214,"dup":162}],214:[function(require,module,exports){
 module.exports={
     "name": "Detect Edges",
-    "description": "this module detects edges using the Canny method, which first Gaussian blurs the image to reduce noise (amount of blur configurable in settings as `options.blur`), then applies a number of steps to highlight edges, resulting in a greyscale image where the brighter the pixel, the stronger the detected edge. Read more at: https://en.wikipedia.org/wiki/Canny_edge_detector",
+    "description": "This module detects edges using the Canny method, which first Gaussian blurs the image to reduce noise (amount of blur configurable in settings as `options.blur`), then applies a number of steps to highlight edges, resulting in a greyscale image where the brighter the pixel, the stronger the detected edge.<a href='https://en.wikipedia.org/wiki/Canny_edge_detector'> Read more. </a>",
     "inputs": {
         "blur": {
-            "type": "integer",
-            "desc": "amount of gaussian blur(Less blur gives more detail, typically 0-5)",
-            "default": 2
+            "type": "range",
+            "desc": "Amount of gaussian blur(Less blur gives more detail, typically 0-5)",
+            "default": "2",
+            "min": "0",
+            "max": "5",
+            "step": "0.25"
         },
         "highThresholdRatio":{
             "type": "float",
@@ -49623,10 +66656,11 @@ module.exports={
             "desc": "The low threshold value for the image",
             "default": 0.15
         }
-    }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],184:[function(require,module,exports){
+},{}],215:[function(require,module,exports){
 /*
  * Resolves Fisheye Effect
  */
@@ -49698,9 +66732,9 @@ module.exports = function DoNothing(options,UI) {
   }
 }
 
-},{"fisheyegl":15}],185:[function(require,module,exports){
-arguments[4][147][0].apply(exports,arguments)
-},{"./Module":184,"./info.json":186,"dup":147}],186:[function(require,module,exports){
+},{"fisheyegl":21}],216:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":215,"./info.json":217,"dup":162}],217:[function(require,module,exports){
 module.exports={
   "name": "Fisheye GL",
   "description": "Correct fisheye, or barrel distortion, in images (with WebGL -- adapted from fisheye-correction-webgl by @bluemir).",
@@ -49757,18 +66791,81 @@ module.exports={
     },
     "fragmentSrc": {
       "type": "PATH",
-      "desc": "Patht to a WebGL fragment shader file",
+      "desc": "Path to a WebGL fragment shader file",
       "default": "(inbuilt)"
     },
     "vertexSrc": {
       "type": "PATH",
-      "desc": "Patht to a WebGL vertex shader file",
+      "desc": "Path to a WebGL vertex shader file",
       "default": "(inbuilt)"
     }
-  }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],187:[function(require,module,exports){
+},{}],218:[function(require,module,exports){
+module.exports = function Gamma(options,UI){
+
+    var output;
+
+    function draw(input,callback,progressObj){
+
+        progressObj.stop(true);
+        progressObj.overrideFlag = true;
+
+        var step = this;
+
+        function changePixel(r, g, b, a){
+            var val = options.adjustment || 0.2;
+
+            r = Math.pow(r / 255, val) * 255;
+            g = Math.pow(g / 255, val) * 255;
+            b = Math.pow(b / 255, val) * 255;
+
+            return [r , g, b, a];
+        }
+
+        function output(image,datauri,mimetype){
+
+            step.output = {src:datauri,format:mimetype};
+
+        }
+
+        return require('../_nomodule/PixelManipulation.js')(input, {
+            output: output,
+            changePixel: changePixel,
+            format: input.format,
+            image: options.image,
+            inBrowser: options.inBrowser,
+            callback: callback
+        });
+
+    }
+    return {
+        options: options,
+        draw:  draw,
+        output: output,
+        UI: UI
+    }
+}
+
+},{"../_nomodule/PixelManipulation.js":253}],219:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":218,"./info.json":220,"dup":162}],220:[function(require,module,exports){
+module.exports={
+    "name": "Gamma Correction",
+    "description": "Apply gamma correction on the image <a href='https://en.wikipedia.org/wiki/Gamma_correction'>Read more</a>",
+    "inputs": {
+        "adjustment": {
+            "type": "float",
+            "desc": "gamma correction (inverse of actual gamma factor) for the new image",
+            "default": 0.2
+        }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+}
+
+},{}],221:[function(require,module,exports){
 (function (Buffer){
 module.exports = function Invert(options, UI) {
 
@@ -49834,15 +66931,133 @@ module.exports = function Invert(options, UI) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":4,"get-pixels":23,"save-pixels":111}],188:[function(require,module,exports){
-arguments[4][147][0].apply(exports,arguments)
-},{"./Module":187,"./info.json":189,"dup":147}],189:[function(require,module,exports){
+},{"buffer":47,"get-pixels":29,"save-pixels":138}],222:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":221,"./info.json":223,"dup":162}],223:[function(require,module,exports){
 module.exports={
     "name": "Gradient",
     "description": "Gives a gradient of the image",
-    "inputs": {}
+    "inputs": {},
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
-},{}],190:[function(require,module,exports){
+},{}],224:[function(require,module,exports){
+/*
+ * Calculates the histogram of the image
+ */
+module.exports = function Channel(options, UI) {
+
+    var output;
+
+    function draw(input, callback, progressObj) {
+
+        options.gradient = options.gradient || "true";
+        options.gradient = JSON.parse(options.gradient);
+
+        progressObj.stop(true);
+        progressObj.overrideFlag = true;
+
+        var step = this, hist = new Array(256).fill(0);
+
+        function changePixel(r, g, b, a) {
+            let pixVal = Math.round((r + g + b) / 3);
+            hist[pixVal]++;
+            return [r, g, b, a];
+        }
+
+        function extraManipulation(pixels) {
+            // if (!options.inBrowser)
+            //     require('fs').writeFileSync('./output/histo.txt', hist.reduce((tot, cur, idx) => `${tot}\n${idx} : ${cur}`, ``));
+            var newarray = new Uint8Array(4 * 256 * 256);
+            pixels.data = newarray;
+            pixels.shape = [256, 256, 4];
+            pixels.stride[1] = 4 * 256;
+
+            for (let x = 0; x < 256; x++) {
+                for (let y = 0; y < 256; y++) {
+                    pixels.set(x, y, 0, 255);
+                    pixels.set(x, y, 1, 255);
+                    pixels.set(x, y, 2, 255);
+                    pixels.set(x, y, 3, 255);
+                }
+            }
+
+            let startY = options.gradient ? 10 : 0;
+            if (options.gradient) {
+                for (let x = 0; x < 256; x++) {
+                    for (let y = 0; y < 10; y++) {
+                        pixels.set(x, 255 - y, 0, x);
+                        pixels.set(x, 255 - y, 1, x);
+                        pixels.set(x, 255 - y, 2, x);
+                    }
+                }
+            }
+
+            let convfactor = (256 - startY) / Math.max(...hist);
+
+            for (let x = 0; x < 256; x++) {
+                let pixCount = Math.round(convfactor * hist[x]);
+
+                for (let y = startY; y < pixCount; y++) {
+                    pixels.set(x, 255 - y, 0, 204);
+                    pixels.set(x, 255 - y, 1, 255);
+                    pixels.set(x, 255 - y, 2, 153);
+                }
+            }
+
+            return pixels;
+        }
+
+        function output(image, datauri, mimetype) {
+
+            // This output is accesible by Image Sequencer
+            step.output = { src: datauri, format: mimetype };
+
+        }
+
+        return require('../_nomodule/PixelManipulation.js')(input, {
+            output: output,
+            changePixel: changePixel,
+            extraManipulation: extraManipulation,
+            format: input.format,
+            image: options.image,
+            inBrowser: options.inBrowser,
+            callback: callback
+        });
+
+    }
+
+    return {
+        options: options,
+        //setup: setup, // optional
+        draw: draw,
+        output: output,
+        UI: UI
+    }
+}
+
+},{"../_nomodule/PixelManipulation.js":253}],225:[function(require,module,exports){
+module.exports = [
+    require('./Module.js'),
+    require('./info.json')
+]
+},{"./Module.js":224,"./info.json":226}],226:[function(require,module,exports){
+module.exports={
+    "name": "Histogram",
+    "description": "Calculates the histogram for the image",
+    "inputs": {
+        "gradient": {
+            "type": "select",
+            "desc": "Toggle the gradient along x-axis",
+            "default": "true",
+            "values": [
+                "true",
+                "false"
+            ]
+        }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+}
+},{}],227:[function(require,module,exports){
 /*
  * Import Image module; this fetches a given remote or local image via URL
  * or data-url, and overwrites the current one. It saves the original as
@@ -49902,7 +67117,7 @@ module.exports = function ImportImageModule(options, UI) {
   }
 }
 
-},{"../../util/GetFormat":211,"./Ui.js":191}],191:[function(require,module,exports){
+},{"../../util/GetFormat":257,"./Ui.js":228}],228:[function(require,module,exports){
 // hide on save
 module.exports = function ImportImageModuleUi(step, ui) {
 
@@ -49958,9 +67173,9 @@ module.exports = function ImportImageModuleUi(step, ui) {
   }
 }
 
-},{}],192:[function(require,module,exports){
-arguments[4][147][0].apply(exports,arguments)
-},{"./Module":190,"./info.json":193,"dup":147}],193:[function(require,module,exports){
+},{}],229:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":227,"./info.json":230,"dup":162}],230:[function(require,module,exports){
 module.exports={
   "name": "Import Image",
   "description": "Import a new image and replace the original with it. Future versions may enable a blend mode. Specify an image by URL or by file selector.",
@@ -49971,9 +67186,10 @@ module.exports={
       "desc": "URL of image to import",
       "default": "./images/monarch.png"
     }
-  }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
-},{}],194:[function(require,module,exports){
+},{}],231:[function(require,module,exports){
 /*
  * Sample Meta Module for demonstration purpose only
  */
@@ -49983,16 +67199,17 @@ module.exports = function NdviColormapfunction() {
         isMeta: true
     }
 }
-},{}],195:[function(require,module,exports){
-arguments[4][147][0].apply(exports,arguments)
-},{"./Module":194,"./info.json":196,"dup":147}],196:[function(require,module,exports){
+},{}],232:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":231,"./info.json":233,"dup":162}],233:[function(require,module,exports){
 module.exports={
     "name": "NDVI-Colormap",
     "description": "Sequentially Applies NDVI and Colormap steps",
     "inputs": {},
-    "length": 2
+    "length": 2,
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
-},{}],197:[function(require,module,exports){
+},{}],234:[function(require,module,exports){
 /*
  * NDVI with red filter (blue channel is infrared)
  */
@@ -50052,7 +67269,7 @@ module.exports = function Ndvi(options, UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":207,"./Ui.js":198}],198:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":253,"./Ui.js":235}],235:[function(require,module,exports){
 // hide on save
 module.exports = function CropModuleUi(step, ui) {
 
@@ -50088,9 +67305,9 @@ module.exports = function CropModuleUi(step, ui) {
     }
 }
 
-},{}],199:[function(require,module,exports){
-arguments[4][147][0].apply(exports,arguments)
-},{"./Module":197,"./info.json":200,"dup":147}],200:[function(require,module,exports){
+},{}],236:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":234,"./info.json":237,"dup":162}],237:[function(require,module,exports){
 module.exports={
   "name": "NDVI",
   "description": "Normalized Difference Vegetation Index, or NDVI, is an image analysis technique used with aerial photography. It's a way to visualize the amounts of infrared and other wavelengths of light reflected from vegetation by comparing ratios of blue and red light absorbed versus green and IR light reflected. NDVI is used to evaluate the health of vegetation in satellite imagery, where it correlates with how much photosynthesis is happening. This is helpful in assessing vegetative health or stress. <a href='https://publiclab.org/ndvi'>Read more</a>.<br /><br/>This is designed for use with red-filtered single camera <a href='http://publiclab.org/infragram'>DIY Infragram cameras</a>; change to 'blue' for blue filters",
@@ -50101,10 +67318,11 @@ module.exports={
       "default": "red",
       "values": ["red", "blue"]
     }
-  }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],201:[function(require,module,exports){
+},{}],238:[function(require,module,exports){
 module.exports = function Dynamic(options, UI, util) {
 
     options.x = options.x || 0;
@@ -50122,13 +67340,25 @@ module.exports = function Dynamic(options, UI, util) {
 
         var step = this;
 
+        var parseCornerCoordinateInputs = require('../../util/ParseInputCoordinates');
+
+        //parse the inputs
+        parseCornerCoordinateInputs(options, {
+            src: input.src,
+            x: { valInp: options.x, type: 'horizontal' },
+            y: { valInp: options.y, type: 'vertical' },
+        }, function (options, input) {
+            options.x = parseInt(input.x.valInp);
+            options.y = parseInt(input.y.valInp);
+        });
+
         // save the pixels of the base image
         var baseStepImage = this.getStep(options.offset).image;
         var baseStepOutput = this.getOutput(options.offset);
 
         var getPixels = require('get-pixels');
 
-        getPixels(input.src, function(err, pixels) {
+        getPixels(input.src, function (err, pixels) {
             options.secondImagePixels = pixels;
 
             function changePixel(r1, g1, b1, a1, x, y) {
@@ -50176,12 +67406,12 @@ module.exports = function Dynamic(options, UI, util) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":207,"get-pixels":23}],202:[function(require,module,exports){
-arguments[4][147][0].apply(exports,arguments)
-},{"./Module":201,"./info.json":203,"dup":147}],203:[function(require,module,exports){
+},{"../../util/ParseInputCoordinates":258,"../_nomodule/PixelManipulation.js":253,"get-pixels":29}],239:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":238,"./info.json":240,"dup":162}],240:[function(require,module,exports){
 module.exports={
     "name": "Overlay",
-    "description": "Overlays an Image over another at a given position(x,y)",
+    "description": "Overlays an Image over another at a given position(x,y) in pixels or in %",
     "inputs": {
         "x": {
             "type": "integer",
@@ -50198,9 +67428,180 @@ module.exports={
             "desc": "offset to the output of the step on which the output of the last step is overlayed",
             "default": -2
         }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+}
+},{}],241:[function(require,module,exports){
+/*
+ * Resize the image by given percentage value
+ */
+module.exports = function Resize(options, UI) {
+
+    var output;
+
+    function draw(input, callback, progressObj) {
+
+        options.resize = options.resize || "125%";
+
+        progressObj.stop(true);
+        progressObj.overrideFlag = true;
+
+        var step = this;
+
+        var imagejs = require('imagejs');
+
+        function changePixel(r, g, b, a) {
+            return [r, g, b, a]
+        }
+
+        function extraManipulation(pixels) {
+            // value above 100% scales up, and below 100% scales down
+            var resize_value = parseInt(options.resize.slice(0, -1));
+
+            var new_width,
+                new_height;
+
+            new_width = Math.round(pixels.shape[0] * (resize_value / 100));
+            new_height = Math.round(pixels.shape[1] * (resize_value / 100));
+
+            var bitmap = new imagejs.Bitmap({width: pixels.shape[0], height: pixels.shape[1]});
+            bitmap._data.data = pixels.data;
+
+
+            var resized = bitmap.resize({
+                width: new_width, height: new_height,
+                algorithm: "bicubicInterpolation"
+            });
+
+            pixels.data = resized._data.data;
+            pixels.shape = [new_width,new_height,4];
+            pixels.stride[1] = 4 * new_width;
+
+            return pixels;
+        }
+
+        function output(image, datauri, mimetype) {
+            // This output is accesible by Image Sequencer
+            step.output = { src: datauri, format: mimetype };
+        }
+
+        return require('../_nomodule/PixelManipulation.js')(input, {
+            output: output,
+            changePixel: changePixel,
+            extraManipulation: extraManipulation,
+            format: input.format,
+            image: options.image,
+            inBrowser: options.inBrowser,
+            callback: callback
+        });
+    }
+
+    return {
+        options: options,
+        draw: draw,
+        output: output,
+        UI: UI
     }
 }
-},{}],204:[function(require,module,exports){
+
+},{"../_nomodule/PixelManipulation.js":253,"imagejs":62}],242:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":241,"./info.json":243,"dup":162}],243:[function(require,module,exports){
+module.exports={
+  "name": "Resize",
+  "description": "Resize image by given percentage value",
+  "inputs": {
+    "resize": {
+      "type": "string",
+      "desc": "Percentage value of the resize",
+      "default": "125%"
+    }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+}
+},{}],244:[function(require,module,exports){
+/*
+ * Rotates image 
+ */
+module.exports = function Rotate(options, UI) {
+
+    var output;
+
+    function draw(input, callback, progressObj) {
+
+        options.rotate = parseInt(options.rotate) || 0;
+
+        progressObj.stop(true);
+        progressObj.overrideFlag = true;
+
+        var step = this;
+
+        var imagejs = require('imagejs');
+
+        function changePixel(r, g, b, a) {
+            return [r, g, b, a]
+        }
+
+        function extraManipulation(pixels) {
+            var rotate_value = (options.rotate)%360;
+
+            if(rotate_value%360 == 0)
+            return pixels;
+
+            var bitmap = new imagejs.Bitmap({width: pixels.shape[0], height: pixels.shape[1]});
+            bitmap._data.data = pixels.data;
+
+            var rotated = bitmap.rotate({
+                degrees: rotate_value, 
+            });
+            pixels.data = rotated._data.data;
+            
+            return pixels;
+        }
+
+        function output(image, datauri, mimetype) {
+            // This output is accesible by Image Sequencer
+            step.output = { src: datauri, format: mimetype };
+        }
+
+        return require('../_nomodule/PixelManipulation.js')(input, {
+            output: output,
+            changePixel: changePixel,
+            extraManipulation: extraManipulation,
+            format: input.format,
+            image: options.image,
+            inBrowser: options.inBrowser,
+            callback: callback
+        });
+    }
+
+    return {
+        options: options,
+        draw: draw,
+        output: output,
+        UI: UI
+    }
+}
+
+},{"../_nomodule/PixelManipulation.js":253,"imagejs":62}],245:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":244,"./info.json":246,"dup":162}],246:[function(require,module,exports){
+module.exports={
+    "name": "Rotate",
+    "description": "Rotates image by specified degrees",
+    "inputs": {
+      "rotate": {
+        "type": "range",
+        "desc": "Angular value for rotation in degrees",
+        "default": "0",
+        "min": "0",
+        "max": "360",
+        "step": "1"
+      }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  }
+},{}],247:[function(require,module,exports){
 /*
  * Saturate an image with a value from 0 to 1
  */
@@ -50258,22 +67659,128 @@ module.exports = function Saturation(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":207}],205:[function(require,module,exports){
-arguments[4][147][0].apply(exports,arguments)
-},{"./Module":204,"./info.json":206,"dup":147}],206:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":253}],248:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":247,"./info.json":249,"dup":162}],249:[function(require,module,exports){
 module.exports={
     "name": "Saturation",
     "description": "Change the saturation of the image by given value, from 0-1, with 1 being 100% saturated.",
     "inputs": {
         "saturation": {
-            "type": "integer",
+            "type": "range",
             "desc": "saturation for the new image between 0 and 2, 0 being black and white and 2 being highly saturated",
-            "default": 0
+            "default": "0.5",
+            "min": "0",
+            "max": "2",
+            "step": "0.1"
         }
-    }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],207:[function(require,module,exports){
+},{}],250:[function(require,module,exports){
+module.exports = function Balance(options, UI) {
+
+    var output;
+
+    function draw (input, callback, progressObj) {
+
+      options.temperature = (options.temperature > "40000") ? "40000" : options.temperature
+
+        progressObj.stop(true);
+        progressObj.overrideFlag = true;
+
+        var step = this;
+
+        function changePixel(r, g, b, a) {
+            return [r, g, b ,a]
+        }
+
+        function extraManipulation(pixels) {
+
+            let temp = parseInt(options.temperature)
+            temp /= 100
+
+            let r, g, b;
+
+            if (temp <= 66) {
+                r = 255;
+                g = Math.min(Math.max(99.4708025861 * Math.log(temp) - 161.1195681661, 0), 255);
+            } else {
+                r = Math.min(Math.max(329.698727446 * Math.pow(temp - 60, -0.1332047592), 0), 255);
+                g = Math.min(Math.max(288.1221695283 * Math.pow(temp - 60, -0.0755148492), 0), 255);
+            }
+
+            if (temp >= 66) {
+                b = 255;
+            } else if (temp <= 19) {
+                b = 0;
+            } else {
+                b = temp - 10;
+                b = Math.min(Math.max(138.5177312231 * Math.log(b) - 305.0447927307, 0), 255);
+            }
+
+            for(let i=0; i<pixels.shape[0]; i++) {
+              for (let j=0; j<pixels.shape[1]; j++) {
+
+                  r_data = pixels.get(i,j,0)
+                  r_new_data = (255/r) * r_data
+                  pixels.set(i,j,0,r_new_data)
+
+                  g_data = pixels.get(i,j,1)
+                  g_new_data = (255/g) * g_data
+                  pixels.set(i,j,1,g_new_data)
+
+                  b_data = pixels.get(i,j,2)
+                  b_new_data = (255/b) * b_data
+                  pixels.set(i,j,2,b_new_data)
+              }
+            }
+
+          return pixels
+        }
+
+        function output (image, datauri, mimetype){
+
+            step.output = {src:datauri,format:mimetype};
+
+        }
+
+        return require('../_nomodule/PixelManipulation.js')(input, {
+            output: output,
+            changePixel: changePixel,
+            extraManipulation: extraManipulation,
+            format: input.format,
+            image: options.image,
+            inBrowser: options.inBrowser,
+            callback: callback
+        });
+    }
+
+    return {
+        options: options,
+        draw: draw,
+        output: output,
+        UI: UI
+    }
+
+}
+},{"../_nomodule/PixelManipulation.js":253}],251:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":250,"./info.json":252,"dup":162}],252:[function(require,module,exports){
+module.exports={
+    "name": "White Balance",
+    "description": "Change the colour balance of the image by adjusting the colour temperature.",
+    "inputs": {
+      "temperature": {
+        "type": "string",
+        "desc": "Temperature between 0 - 40,000 Kelvin",
+        "default": "6000"
+      }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+}
+},{}],253:[function(require,module,exports){
 (function (process,Buffer){
 /*
 * General purpose per-pixel manipulation
@@ -50374,7 +67881,7 @@ module.exports = function PixelManipulation(image, options) {
 };
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"_process":98,"buffer":4,"get-pixels":23,"pace":74,"save-pixels":111}],208:[function(require,module,exports){
+},{"_process":117,"buffer":47,"get-pixels":29,"pace":94,"save-pixels":138}],254:[function(require,module,exports){
 // special module to load an image into the start of the sequence; used in the HTML UI
 function LoadImage(ref, name, src, main_callback) {
   function makeImage(datauri) {
@@ -50481,7 +67988,7 @@ function LoadImage(ref, name, src, main_callback) {
 
 module.exports = LoadImage;
 
-},{"urify":132}],209:[function(require,module,exports){
+},{"urify":147}],255:[function(require,module,exports){
 // TODO: potentially move this into ImportImage module
 function setInputStepInit() {
 
@@ -50489,9 +67996,11 @@ function setInputStepInit() {
 
     var dropzone = $(options.dropZoneSelector);
     var fileInput = $(options.fileInputSelector);
+    var takePhoto = $(options.takePhotoSelector);
  
     var onLoad = options.onLoad;
- 
+    var onTakePhoto = options.onTakePhoto;
+
     var reader = new FileReader();
  
     function handleFile(e) {
@@ -50509,8 +68018,53 @@ function setInputStepInit() {
  
       reader.readAsDataURL(file);
     }
+
+    function runVideo(){
+      /* event handler for Take-Photo */
+      document.getElementById('video').style.display='inline';
+      document.getElementById('capture').style.display='inline';
+      document.getElementById('close').style.display='inline';
+      
+      var video = document.getElementById('video');
+      canvas = document.getElementById('canvas'),
+      context = canvas.getContext('2d'),
+      vendorUrl = window.URL || window.webkitURL;
+
+      const constraints = { audio: false,video: true};
+
+      function handleSuccess(stream) {
+        window.stream = stream; // make stream available to browser console
+        video.srcObject = stream;
+        video.onloadedmetadata = function(e) {
+          video.play();
+        };
+        document.getElementById('close').addEventListener('click', function () {
+          stopStream(stream);
+         });
+      }
+      function handleError(error) {
+        console.log('navigator.getUserMedia error: ', error);
+      }
+  navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError);
+  
+
+  document.getElementById('capture').addEventListener('click', function(stream){
+    context.drawImage(video, 0, 0, 400, 300);
+    options.onTakePhoto(canvas.toDataURL());
+  });
+
+  function stopStream(stream) {
+    stream.getVideoTracks().forEach(function (track) {
+        track.stop();
+    });
+    document.getElementById('video').style.display='none';
+    document.getElementById('capture').style.display='none';
+    document.getElementById('close').style.display='none';
+  }
+}
  
     fileInput.on('change', handleFile);
+    takePhoto.on('click', runVideo);
  
     dropzone[0].addEventListener('drop', handleFile, false);
  
@@ -50533,7 +68087,7 @@ function setInputStepInit() {
 }
 module.exports = setInputStepInit;
 
-},{}],210:[function(require,module,exports){
+},{}],256:[function(require,module,exports){
 /*
  * User Interface Handling Module
  */
@@ -50593,7 +68147,7 @@ module.exports = function UserInterface(events = {}) {
 
 }
 
-},{}],211:[function(require,module,exports){
+},{}],257:[function(require,module,exports){
 /*
 * Determine format from a URL or data-url, return "jpg" "png" "gif" etc
 * TODO: write a test for this using the examples
@@ -50635,7 +68189,32 @@ module.exports = function GetFormat(src) {
 
 }
 
-},{}],212:[function(require,module,exports){
+},{}],258:[function(require,module,exports){
+module.exports = function parseCornerCoordinateInputs(options,coord,callback) {
+    var getPixels = require('get-pixels');
+    getPixels(coord.src, function(err, pixels) {
+      var iw = pixels.shape[0],
+        ih = pixels.shape[1];
+      if (!coord.x.valInp) {
+        return
+      }
+      else {
+        Object.keys(coord).forEach(convert);
+        function convert(key) {
+          var val = coord[key];
+          if (val.valInp && val.valInp.slice(-1) === "%") {
+            val.valInp = parseInt(val.valInp, 10);
+            if (val.type === 'horizontal')
+              val.valInp = val.valInp * iw / 100;
+            else
+              val.valInp = val.valInp * ih / 100;
+          }
+        }
+      }
+      callback(options, coord);
+    })
+  }
+},{"get-pixels":29}],259:[function(require,module,exports){
 module.exports = {
     getPreviousStep: function() {
         return this.getStep(-1);

@@ -84,6 +84,10 @@ h1 {
   font-size: 2em;
   color: #444;
 }
+.load-spin{
+  position: absolute;
+  right: 0px;
+}
 
 #addStep {
   max-width: 500px;

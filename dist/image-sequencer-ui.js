@@ -435,14 +435,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
     <div class="row step">\
     <form class="input-form">\
     <div class="col-md-4 details">\
-    <h3>' +step.name + 
-    ' <span class="toggle"><i class="fa fa-caret-up" aria-hidden="true"></i></span>' +
-      '</h3><div class="collapse"><p><i>"'+
+    <h3>\
+    <span class = "toggle">' +step.name + ' <i class="fa fa-caret-up toggleIcon" aria-hidden="true"></i></span>' +
+      '</h3><div class="cal"><p><i>"'+
       (step.description || "") +
       '</i></p></div>\
     </div>\
     </form>\
-    <div class="col-md-8 collapse">\
+    <div class="col-md-8 cal">\
     <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
     <a><img alt="" style="max-width=100%" class="img-thumbnail step-thumbnail"/></a>\
     </div>\
@@ -451,7 +451,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     </div>';
 
     var tools =
-      '<div class="collapse"><div class="tools btn-group">\
+      '<div class="cal"><div class="tools btn-group">\
        <button confirm="Are you sure?" onclick="stepRemovedNotify()" class="remove btn btn btn-default">\
          <i class="fa fa-trash"></i>\
        </button>\
@@ -516,7 +516,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         div.setAttribute("name", paramName);
         var description = inputs[paramName].desc || paramName;
         div.innerHTML =
-          "<div class='det collapse'>\
+          "<div class='det cal'>\
                            <label for='" +
           paramName +
           "'>" +
@@ -530,7 +530,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       }
 
       $(step.ui.querySelector("div.details")).append(
-        '<div class="collapse"><p><button type="submit" class="btn btn-default btn-save" disabled = "true" >Apply</button><span> Press apply to see changes</span></p></div>'
+        '<div class="cal"><p><button type="submit" class="btn btn-default btn-save" disabled = "true" >Apply</button><span> Press apply to see changes</span></p></div>'
       );
 
       
@@ -557,18 +557,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
     else {
       $("#load-image").append(step.ui);
     }
-    $(step.ui.querySelector(".toggle")).on("click", (e) => {
-      var className = e.target.className;
-      console.log("ele "+element)
-      if(className=="fa fa-caret-up"){
-        $(step.ui.querySelectorAll(".collapse")).show();
-        e.target.className="fa fa-caret-down";
-      }
-      else{ 
-        $(step.ui.querySelectorAll(".collapse")).hide();
-        //e.target.localName.toggleClass('fa-caret-up');
-        e.target.className="fa fa-caret-up";
-      }
+    $(step.ui.querySelector(".toggle")).on("click", () => {
+      $(step.ui.querySelector('.toggleIcon')).toggleClass('fa-caret-up').toggleClass('fa-caret-down');
+      $(step.ui.querySelectorAll(".cal")).toggleClass("collapse");
     });
     
 

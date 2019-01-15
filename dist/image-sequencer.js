@@ -65962,12 +65962,6 @@ module.exports = function Dynamic(options, UI, util) {
         // save first image's pixels
         var priorStep = this.getStep(options.offset);
 
-        if (priorStep.output === undefined) {
-            this.output = input;
-            UI.notify('Offset Unavailable','offset-notification');
-            callback();
-        } 
-
         getPixels(priorStep.output.src, function(err, pixels) {
             options.firstImagePixels = pixels;
 
@@ -67204,7 +67198,10 @@ module.exports = function DoNothing(options,UI) {
   var getPixels = require('get-pixels');
 
   // This function is called everytime a step has to be redrawn
-  function draw(input,callback) {
+  function draw(input,callback,progressObj) {
+
+    progressObj.stop(true);
+    progressObj.overrideFlag = true;
 
     var step = this;
 
@@ -67214,16 +67211,25 @@ module.exports = function DoNothing(options,UI) {
 
       var w = pixels.shape[0];
       var h = pixels.shape[1];
-      var decoded = jsQR.decodeQRFromImage(pixels.data,w,h);
+      var decoded = jsQR(pixels.data,w,h);
 
-      // This output is accessible to Image Sequencer
-      step.output = input;
-      step.output.data = decoded;
 
       // Tell Image Sequencer that this step is complete
-      callback();
-      options.step.qrval = decoded;
+      options.step.qrval = (decoded)?decoded.data:"undefined";
+    });
 
+    function output(image, datauri, mimetype){
+      // This output is accessible by Image Sequencer
+      step.output = {
+        src: datauri,
+        format: mimetype
+      };
+    }
+    return require('../_nomodule/PixelManipulation.js')(input, {
+      output: output,
+      format: input.format,
+      image: options.image,
+      callback: callback
     });
 
   }
@@ -67236,7 +67242,7 @@ module.exports = function DoNothing(options,UI) {
   }
 }
 
-},{"get-pixels":29,"jsqr":74}],198:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":253,"get-pixels":29,"jsqr":74}],198:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":197,"./info.json":199,"dup":162}],199:[function(require,module,exports){
 module.exports={
@@ -69749,10 +69755,6 @@ module.exports = function UserInterface(events = {}) {
       // Delete the NodeJS Object
       console.log('\x1b[31m%s\x1b[0m',"Removing Step \""+step.name+"\" of \""+step.imageName+"\".");
     }
-  }
-
-  events.notify = events.notify || function(msg) {
-     console.log(msg);
   }
 
   return events;

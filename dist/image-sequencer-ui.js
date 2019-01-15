@@ -197,7 +197,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       for (var paramName in merged) {
         var isInput = inputs.hasOwnProperty(paramName);
         var html = "";
-        var inputDesc = isInput ? inputs[paramName] : {};
+        var inputDesc = isInput ? mapHtmlTypes(inputs[paramName]) : {};
         if (!isInput) {
           html += '<span class="output"></span>';
         } else if (inputDesc.type.toLowerCase() == "select") {
@@ -225,7 +225,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
               '"max="' +
               inputDesc.max +
               '"step="' +
-              inputDesc.step + '">' + '<span>' + paramVal + '</span>';
+              (inputDesc.step ? inputDesc.step : 1)+ '">' + '<span>' + paramVal + '</span>';
 
           }
           else html += '">';
@@ -548,6 +548,25 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
   return {
     insertStep
   }
+}
+function mapHtmlTypes(inputInfo){
+  var htmlType;
+  switch(inputInfo.type.toLowerCase()){
+    case 'integer':
+      inputInfo.type = inputInfo.min != undefined ? 'range' : 'number';
+    case 'string':
+      inputInfo.type = 'text';
+    case 'select':
+      inputInfo.type = 'select';
+    case 'percentage':
+      inputInfo.type = 'number'
+    case 'float':
+      inputInfo.type = inputInfo.min != undefined ? 'range' : 'text';
+    default:
+      inputInfo.type = 'text';
+  }
+  console.log(inputInfo.type, htmlType);
+  return inputInfo;
 }
 $(document).ready(function($){
 	$(function(){

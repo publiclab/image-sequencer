@@ -3,13 +3,13 @@
     "description": "It draws a rectangle on the image",
     "inputs": {
   		"startingX":{
-  			"type": "Number",
+  			"type": "integer",
   			"desc": "starting x position of the rectangle",
   			"default": 0
   		},
         
       "startingY": {
-        "type": "Number",
+        "type": "integer",
         "desc": "starting y position of the rectangle",
         "default": 0
       },
@@ -33,7 +33,7 @@
       },
 
       "color":{
-        "type": "String",
+        "type": "string",
         "desc": "RGBA values separated by a space",
         "default": "0 0 0 255"
       }

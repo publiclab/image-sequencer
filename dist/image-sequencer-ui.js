@@ -550,23 +550,32 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
   }
 }
 function mapHtmlTypes(inputInfo){
+  console.log(inputInfo.type);
   var htmlType;
   switch(inputInfo.type.toLowerCase()){
     case 'integer':
-      inputInfo.type = inputInfo.min != undefined ? 'range' : 'number';
+      htmlType = inputInfo.min != undefined ? 'range' : 'number';
+      break;
     case 'string':
-      inputInfo.type = 'text';
+      htmlType = 'text';
+      break;
     case 'select':
-      inputInfo.type = 'select';
+      htmlType = 'select';
+      break;
     case 'percentage':
-      inputInfo.type = 'number'
+      htmlType = 'number';
+      break;
     case 'float':
-      inputInfo.type = inputInfo.min != undefined ? 'range' : 'text';
+      htmlType = inputInfo.min != undefined ? 'range' : 'text';
+      break;
     default:
-      inputInfo.type = 'text';
+      htmlType = 'text';
+      break;
   }
-  console.log(inputInfo.type, htmlType);
-  return inputInfo;
+  return {
+    ...inputInfo,
+    type: htmlType
+  }
 }
 $(document).ready(function($){
 	$(function(){

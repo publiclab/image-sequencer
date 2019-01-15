@@ -1,5 +1,4 @@
 function mapHtmlTypes(inputInfo){
-  console.log(inputInfo.type);
   var htmlType;
   switch(inputInfo.type.toLowerCase()){
     case 'integer':

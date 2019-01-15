@@ -176,7 +176,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
          <i class="fa fa-trash"></i>\
        </button>\
        <button class="btn insert-step" style="margin-left:10px;border-radius:6px;background-color:#fff;border:solid #bababa 1.1px;" >\
-         <span class="insert-text"><i class="fa fa-plus"></i> Add</span><span class="no-insert-text" style="display:none;"><i class="fa fa-times" aria-hidden="true"></i> Close</span>\
+         <i class="fa fa-plus"></i> Add\
        </button>\
        </div>\
        </div>';
@@ -415,7 +415,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
 function IntermediateHtmlStepUi(_sequencer, step, options) {
   function stepUI() {
-    return '<div class="row insertDiv" style="display:none;">\
+    return '<div class="row insertDiv">\
         <div class="col-md-6" style="margin-top:5%">\
         <section id="insertStep" class="panel panel-primary">\
           <div class="form-inline">\
@@ -475,29 +475,11 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     var parser = new DOMParser();
     var addStepUI = stepUI();
     addStepUI = parser.parseFromString(addStepUI, "text/html").querySelector("div")
-
-    var toggleDiv = function(){
-      $(step.ui.querySelector('.insertDiv')).fadeToggle(200).collapse('toggle')
-      if ($(step.ui.querySelector('.insert-text')).css('display') != "none"){
-        $(step.ui.querySelector('.insert-text')).fadeToggle(200, function(){$(step.ui.querySelector('.no-insert-text')).fadeToggle(200)})
-      }
-      else {
-        $(step.ui.querySelector('.no-insert-text')).fadeToggle(200, function(){$(step.ui.querySelector('.insert-text')).fadeToggle(200)})
-      }
-    }
-
-    if ($(step.ui.querySelector('.insertDiv')).length > 0){
-      toggleDiv();
-    }
-    else {
-      step.ui
+    step.ui
       .querySelector("div.step")
       .insertAdjacentElement('afterend',
         addStepUI
       );
-      toggleDiv();
-    }
-    
     var insertStepSelect = $("#insertStep select");
     insertStepSelect.html("");
     // Add modules to the insertStep dropdown

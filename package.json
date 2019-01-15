@@ -1,6 +1,6 @@
 {
   "name": "image-sequencer",
-  "version": "2.2.3",
+  "version": "2.3.1",
   "description": "A modular JavaScript image manipulation library modeled on a storyboard.",
   "main": "src/ImageSequencer.js",
   "scripts": {
@@ -35,7 +35,7 @@
     "imagejs": "0.0.9",
     "imgareaselect": "git://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2",
     "jquery": "^3.3.1",
-    "jsqr": "^0.2.2",
+    "jsqr": "^1.1.1",
     "lodash": "^4.17.5",
     "ndarray-gaussian-filter": "^1.0.0",
     "ora": "^3.0.0",
@@ -54,10 +54,10 @@
     "grunt-contrib-watch": "^1.1.0",
     "image-filter-core": "~2.0.2",
     "image-filter-threshold": "~2.0.1",
-    "looks-same": "^4.1.0",
+    "looks-same": "^5.0.1",
     "matchdep": "^2.0.0",
     "tap-spec": "^5.0.0",
-    "tape": ">=4.7.0",
+    "tape": "^4.9.2",
     "tape-run": "^5.0.0",
     "uglify-es": "^3.3.7"
   },

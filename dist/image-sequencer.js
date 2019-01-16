@@ -58246,7 +58246,7 @@ ImageSequencer = function ImageSequencer(options) {
 }
 module.exports = ImageSequencer;
 
-},{"./AddStep":151,"./ExportBin":152,"./FormatInput":153,"./InsertStep":155,"./Modules":156,"./ReplaceImage":157,"./Run":158,"./SavedSequences.json":160,"./ui/LoadImage":254,"./ui/SetInputStep":255,"./ui/UserInterface":256,"./util/getStep.js":260,"fs":46}],155:[function(require,module,exports){
+},{"./AddStep":151,"./ExportBin":152,"./FormatInput":153,"./InsertStep":155,"./Modules":156,"./ReplaceImage":157,"./Run":158,"./SavedSequences.json":160,"./ui/LoadImage":254,"./ui/SetInputStep":255,"./ui/UserInterface":256,"./util/getStep.js":259,"fs":46}],155:[function(require,module,exports){
 const getStepUtils = require('./util/getStep.js');
 
 // insert one or more steps at a given index in the sequencer
@@ -58313,7 +58313,7 @@ function InsertStep(ref, image, index, name, o) {
 }
 module.exports = InsertStep;
 
-},{"./util/getStep.js":260}],156:[function(require,module,exports){
+},{"./util/getStep.js":259}],156:[function(require,module,exports){
 /*
 * Core modules and their info files
 */
@@ -58504,7 +58504,7 @@ function Run(ref, json_q, callback, ind, progressObj) {
 }
 module.exports = Run;
 
-},{"./RunToolkit":159,"./util/getStep.js":260}],159:[function(require,module,exports){
+},{"./RunToolkit":159,"./util/getStep.js":259}],159:[function(require,module,exports){
 const getPixels = require('get-pixels');
 const pixelManipulation = require('./modules/_nomodule/PixelManipulation');
 const lodash = require('lodash');
@@ -58792,10 +58792,10 @@ module.exports = exports = function(pixels, blur) {
 /*
 * Blur an Image
 */
-const getDefaults = require('./../../util/getDefaults.js');
+const info = require('./info.json');
 module.exports = function Blur(options, UI) {
 
-    const defaults = getDefaults('Blur');
+    const defaults = info.inputs;
     options.blur = options.blur || defaults.blur.default;
     var output;
 
@@ -58840,7 +58840,7 @@ module.exports = function Blur(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":253,"./../../util/getDefaults.js":259,"./Blur":167}],169:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":253,"./Blur":167,"./info.json":170}],169:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":168,"./info.json":170,"dup":162}],170:[function(require,module,exports){
 module.exports={
@@ -58863,12 +58863,13 @@ module.exports={
 /*
 * Changes the Image Brightness
 */
-const getDefaults = require('./../../util/getDefaults.js');
+const info = require('./info.json');
 module.exports = function Brightness(options,UI){
 
 
     var output;
-    const defaults = getDefaults('Brightness');
+    const defaults = info.inputs;
+
 
 
     function draw(input,callback,progressObj){
@@ -58919,7 +58920,7 @@ module.exports = function Brightness(options,UI){
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":253,"./../../util/getDefaults.js":259}],172:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":253,"./info.json":173}],172:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":171,"./info.json":173,"dup":162}],173:[function(require,module,exports){
 module.exports={
@@ -62124,20 +62125,6 @@ module.exports = function parseCornerCoordinateInputs(options,coord,callback) {
     })
   }
 },{"get-pixels":29}],259:[function(require,module,exports){
-const Brightness = require('./../modules/Brightness/info.json');
-const Blur = require('./../modules/Blur/info.json');
-
-const defaults = {
-	Blur,
-	Brightness
-}
-
-const getDefaults = function(module_name){
-	return defaults[module_name].inputs;
-}
-
-module.exports = getDefaults;
-},{"./../modules/Blur/info.json":170,"./../modules/Brightness/info.json":173}],260:[function(require,module,exports){
 module.exports = {
     getPreviousStep: function() {
         return this.getStep(-1);

@@ -1,12 +1,13 @@
 /*
 * Changes the Image Brightness
 */
-const getDefaults = require('./../../util/getDefaults.js');
+const info = require('./info.json');
 module.exports = function Brightness(options,UI){
 
 
     var output;
-    const defaults = getDefaults('Brightness');
+    const defaults = info.inputs;
+
 
 
     function draw(input,callback,progressObj){

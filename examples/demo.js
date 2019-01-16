@@ -52,6 +52,25 @@ window.onload = function() {
   }
   refreshOptions();
 
+  $(window).on('scroll', scrollFunction);
+
+  function scrollFunction() {
+    var shouldDisplay = $('body').scrollTop() > 20 || $(':root').scrollTop() > 20;
+
+    $('#move-up').css({
+       display: shouldDisplay ? 'block' : 'none'
+    });
+  }
+
+
+  function topFunction() {
+    $('body').animate({scrollTop: 0});
+    $(':root').animate({scrollTop: 0});
+  }
+
+  $('#move-up').on("click",topFunction);
+
+
   // UI for each step:
   sequencer.setUI(DefaultHtmlStepUi(sequencer));
 

@@ -9,7 +9,7 @@
 // See documetation for more details.
 
 function DefaultHtmlStepUi(_sequencer, options) {
-
+  
   options = options || {};
   var stepsEl = options.stepsEl || document.querySelector("#steps");
   var selectStepSel = options.selectStepSel = options.selectStepSel || "#selectStep";
@@ -293,5 +293,11 @@ function DefaultHtmlStepUi(_sequencer, options) {
     onRemove: onRemove,
     onDraw: onDraw, 
     notify: notify
+  }
+}
+
+if(typeof window === "undefined"){
+  module.exports={
+    DefaultHtmlStepUi: DefaultHtmlStepUi
   }
 }

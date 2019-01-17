@@ -1,6 +1,4 @@
 function IntermediateHtmlStepUi(_sequencer, step, options) {
-  console.log(step)
-  console.log(_sequencer)
   function stepUI() {
     return '<div class="row insertDiv">\
         <div class="col-md-6 col-md-offset-2" style="margin-top:5%">\

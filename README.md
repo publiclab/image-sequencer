@@ -549,6 +549,10 @@ for a module. This can be used, for instance, to update the DIV with the new ima
 and remove the loading GIF generated above.
 * `onRemove` : This event is triggered when a module is removed. This can be used,
 for instance, to remove the DIV generated above.
+* `notify` : This event is triggered whenever we need to shoot a notification to the
+user-interface.For example when the step is not available, we can shoot a notification,
+by sending appropriate message.For HTML UI it adds a DOM node to the browser, for CLI 
+and node , it logs the notification output to the respective console.
 
 How to define these functions:
 
@@ -557,7 +561,8 @@ sequencer.setUI({
   onSetup: function(step) {},
   onDraw: function(step) {},
   onComplete: function(step) {},
-  onRemove: function(step) {}
+  onRemove: function(step) {},
+  notify: function(msg,id) {}
 });
 ```
 
@@ -607,3 +612,5 @@ not specified, the name of a loaded image defaults to a name like "image1",
 
 Details of all modules can be sought using `sequencer.modulesInfo()`.
 This method returns an object which defines the name and inputs of the modules. If a module name (hyphenated) is passed in the method, then only the details of that module are returned.
+
+The `notify` function takes two parameters `msg` and `id`, former being the message to be displayed on console (in case of CLI and node ) and a HTML component(in browser). The id is optional and is useful for HTML interface to give appropriate IDs.

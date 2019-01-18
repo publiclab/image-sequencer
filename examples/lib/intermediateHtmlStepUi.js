@@ -1,7 +1,7 @@
 function IntermediateHtmlStepUi(_sequencer, step, options) {
   function stepUI() {
     return '<div class="row insertDiv">\
-        <div class="col-md-6" style="margin-top:5%">\
+        <div class="col-md-6 col-md-offset-2" style="margin-top:5%">\
         <section id="insertStep" class="panel panel-primary">\
           <div class="form-inline">\
             <div class="panel-body">\
@@ -51,56 +51,6 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
         </div>';
   }
 
-  function generatePreview(previewStepName, customValues, path) {
-
-    var previewSequencer = ImageSequencer();
-    function insertPreview(src) {
-      var img = document.createElement('img');
-      img.classList.add('img-thumbnail')
-      img.classList.add('no-border');
-      img.src = src;
-      $(img).css("max-width", "200%");
-      $(img).css("transform", "translateX(-20%)");
-      var stepDiv = $('#insertStep .row').find('div').each(function() {
-        if ($(this).find('div').attr('data-value') === previewStepName) {
-          $(this).find('div').append(img);
-        }
-      });
-    }
-
-    function loadPreview() {
-      previewSequencer = previewSequencer.addSteps('resize', { resize: "40%" });
-      if (previewStepName === "crop") {
-        previewSequencer.addSteps(previewStepName, customValues).run(insertPreview);
-      }
-      else {
-        previewSequencer.addSteps(previewStepName, { [previewStepName]: customValues }).run(insertPreview);
-      }
-    }
-    previewSequencer.loadImage(path, loadPreview);
-  }
-
-  function updatePreviews(src) {
-    $('#insertStep img').remove();
-
-    var previewSequencerSteps = {
-      "brightness": "20",
-      "saturation": "5",
-      "rotate": 90,
-      "contrast": 90,
-      "crop": {
-        "x": 0,
-        "y": 0,
-        "w": "(50%)",
-        "h": "(50%)",
-        "noUI": true
-      }
-    }
-
-    Object.keys(previewSequencerSteps).forEach(function (step, index) {
-      generatePreview(step, Object.values(previewSequencerSteps)[index], src);
-    });
-  }
 
   function selectNewStepUi() {
     var m = $("#insertStep select").val();
@@ -117,7 +67,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       .insertAdjacentElement('afterend',
         addStepUI
       );
-    updateThumbnails();
+      updatePreviews(_sequencer.images.image1.steps[0].options.step.imgElement.src,'insertStep');
     var insertStepSelect = $("#insertStep select");
     insertStepSelect.html("");
     // Add modules to the insertStep dropdown
@@ -166,11 +116,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
 
   }
 
-  function updateThumbnails(){
-    updatePreviews(_sequencer.images.image1.steps[0].options.step.imgElement.src)
-  }
   return {
-    insertStep,
-    updateThumbnails
+    insertStep
   }
 }

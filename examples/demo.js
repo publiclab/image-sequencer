@@ -195,6 +195,7 @@ window.onload = function() {
       });
     }
     catch (e) {
+      console.error(e);
       button.disabled = false;
       isWorkingOnGifGeneration = false;
 

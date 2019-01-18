@@ -146,23 +146,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
     else {
       $("#load-image").append(step.ui);
     }
-<<<<<<< HEAD
     $(step.ui.querySelector(".toggle")).on("click", () => {
       $(step.ui.querySelector('.toggleIcon')).toggleClass('fa-caret-up').toggleClass('fa-caret-down');
       $(step.ui.querySelectorAll(".cal")).toggleClass("collapse");
-=======
-    $(step.ui.querySelector(".toggle")).on("click", (e) => {
-      var className = e.target.className;
-      if(className=="fa fa-caret-up"){
-        $(step.ui.querySelectorAll(".collapse")).show();
-        e.target.className="fa fa-caret-down";
-      }
-      else{ 
-        $(step.ui.querySelectorAll(".collapse")).hide();
-        //e.target.localName.toggleClass('fa-caret-up');
-        e.target.className="fa fa-caret-up";
-      }
->>>>>>> Refactored code and made pane to the centre
     });
     
 

@@ -9,29 +9,22 @@ module.exports = exports = function(pixels, options){
 	  ey = options.endY = Number(options.endY) || ih - 1,
     thickness = Number(options.thickness) || 1,
     color = options.color || "0 0 0 255";
+    color = color.split(" ");
 
-  color = color.split(" ");
-
-  var drawSide = function(startY, startX, endY, endX, yIncrement, xIncrement, sign, incrementFactor = 1){
-    for(var i = 0; i<thickness; i++){
-      for(
-        var n = (startY + i*yIncrement*sign)*4*iw + 4*(startX + i*xIncrement*sign);
-        n <= (endY + i*yIncrement*sign)*4*iw + 4*(endX + i*xIncrement*sign);
-        n = n+4*(incrementFactor)
-      )
-      {
-        pixels.data[n] = color[0];
-        pixels.data[n+1] = color[1];
-        pixels.data[n+2] = color[2];
-        pixels.data[n+3] = color[3];
+  var drawSide = function(startX, startY, endX, endY){
+    for (var n=startX; n <= endX+thickness; n++){
+      for (var k=startY; k <= endY+thickness; k++){
+        pixels.set(n, k, 0, 255);
+        pixels.set(n, k, 1, 255);
+        pixels.set(n, k, 2, 255);
+        pixels.set(n, k, 3, 255);
       }
     }
   }
 
-  drawSide(oy, ox, oy, ex, 1, 0, 1); // Top
-  drawSide(ey, ox, ey, ex, 1, 0, -1); // Bottom
-  drawSide(oy, ox, ey, ox, 0, 1, 1, iw); // Left
-  drawSide(oy, ex, ey, ex, 0, 1, -1, iw); // Right
-
+  drawSide(ox, oy, ox, ey); // Left
+  drawSide(ex, oy, ex, ey); // Right
+  drawSide(ox, oy, ex, oy); // Top
+  drawSide(ox, ey, ex, ey); // Bottom
   return pixels;
 }

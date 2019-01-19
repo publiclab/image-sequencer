@@ -4,10 +4,6 @@ module.exports = function PaintBucket(options, UI) {
 
     function draw(input, callback, progressObj) {
 
-        options.startingX = parseInt(options.startingX) || 10;
-        options.startingY = parseInt(options.startingY) || 10;
-        options.fillColor = options.fillColor || '100 100 100 255';
-
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
@@ -21,7 +17,7 @@ module.exports = function PaintBucket(options, UI) {
         function extraManipulation(pixels) {
             
 
-            pixels = require('./PaintBucket')(pixels, options.startingX, options.startingY, options.fillColor)
+            pixels = require('./PaintBucket')(pixels, options)
             return pixels
             
         }

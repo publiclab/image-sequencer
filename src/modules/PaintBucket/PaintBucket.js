@@ -1,8 +1,8 @@
-module.exports = exports = function(pixels, startingX, startingY, fillColor){
+module.exports = exports = function(pixels, options){
 
-      fillColor = fillColor.split(" ");
-      var x = startingX,
-          y = startingY,
+      var fillColor = options.fillColor || '100 100 100 255',
+          x = parseInt(options.startingX) || 10,
+          y = parseInt(options.startingY) || 10,
           height = pixels.shape[1],
           width = pixels.shape[0],
           r = pixels.get(x, y, 0),
@@ -15,10 +15,11 @@ module.exports = exports = function(pixels, startingX, startingY, fillColor){
           north,
           south,
           n,
-          tolerance = 5,
+          tolerance = parseInt(options.tolerance) || 10,
           maxFactor = (1 + tolerance/100),
           minFactor = (1 - tolerance/100);
 
+      fillColor = fillColor.split(" ");
       function isSimilar(currx, curry){
         return (pixels.get(currx, curry, 0) > r*minFactor && pixels.get(currx, curry, 0) < r*maxFactor &&
                 pixels.get(currx, curry, 1) > g*minFactor && pixels.get(currx, curry, 1) < g*maxFactor &&

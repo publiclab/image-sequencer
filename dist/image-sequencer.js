@@ -68717,10 +68717,6 @@ module.exports = function PaintBucket(options, UI) {
 
     function draw(input, callback, progressObj) {
 
-        options.startingX = parseInt(options.startingX) || 10;
-        options.startingY = parseInt(options.startingY) || 10;
-        options.fillColor = options.fillColor || '100 100 100 255';
-
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
@@ -68734,7 +68730,7 @@ module.exports = function PaintBucket(options, UI) {
         function extraManipulation(pixels) {
             
 
-            pixels = require('./PaintBucket')(pixels, options.startingX, options.startingY, options.fillColor)
+            pixels = require('./PaintBucket')(pixels, options)
             return pixels
             
         }
@@ -68764,11 +68760,11 @@ module.exports = function PaintBucket(options, UI) {
 }
 
 },{"../_nomodule/PixelManipulation.js":259,"./PaintBucket":244}],244:[function(require,module,exports){
-module.exports = exports = function(pixels, startingX, startingY, fillColor){
+module.exports = exports = function(pixels, options){
 
-      fillColor = fillColor.split(" ");
-      var x = startingX,
-          y = startingY,
+      var fillColor = options.fillColor || '100 100 100 255',
+          x = parseInt(options.startingX) || 10,
+          y = parseInt(options.startingY) || 10,
           height = pixels.shape[1],
           width = pixels.shape[0],
           r = pixels.get(x, y, 0),
@@ -68781,10 +68777,11 @@ module.exports = exports = function(pixels, startingX, startingY, fillColor){
           north,
           south,
           n,
-          tolerance = 5,
+          tolerance = parseInt(options.tolerance) || 10,
           maxFactor = (1 + tolerance/100),
           minFactor = (1 - tolerance/100);
 
+      fillColor = fillColor.split(" ");
       function isSimilar(currx, curry){
         return (pixels.get(currx, curry, 0) > r*minFactor && pixels.get(currx, curry, 0) < r*maxFactor &&
                 pixels.get(currx, curry, 1) > g*minFactor && pixels.get(currx, curry, 1) < g*maxFactor &&
@@ -68850,6 +68847,14 @@ module.exports={
         "desc": "four space separated numbers representing the RGBA values of fill-color",
         "default": "100 100 100 255",
         "placeholder": "100 100 100 255"
+      },
+      "tolerance": {
+        "type": "range",
+        "desc": "% tolerance",
+        "default": "10",
+        "min": "5",
+        "max": "15",
+        "step": "1"
       }
   } 
 }

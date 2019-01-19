@@ -58640,6 +58640,12 @@ module.exports = function Dynamic(options, UI, util) {
         // save first image's pixels
         var priorStep = this.getStep(options.offset);
 
+        if (priorStep.output === undefined) {
+            this.output = input;
+            UI.notify('Offset Unavailable','offset-notification');
+            callback();
+        } 
+
         getPixels(priorStep.output.src, function(err, pixels) {
             options.firstImagePixels = pixels;
 
@@ -62046,6 +62052,10 @@ module.exports = function UserInterface(events = {}) {
       // Delete the NodeJS Object
       console.log('\x1b[31m%s\x1b[0m',"Removing Step \""+step.name+"\" of \""+step.imageName+"\".");
     }
+  }
+
+  events.notify = events.notify || function(msg) {
+     console.log(msg);
   }
 
   return events;

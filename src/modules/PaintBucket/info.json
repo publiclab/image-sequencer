@@ -1,0 +1,30 @@
+{
+  "name": "PaintBucket",
+  "description": "Fill color in pixels",
+  "inputs": {
+      "startingX": {
+          "type": "integer",
+          "desc": "value of the starting x-coordinate",
+          "default": "10"
+      },
+      "startingY": {
+          "type": "integer",
+          "desc": "value of the starting y-coordinate",
+          "default": "10"
+      },
+      "fillColor": {
+        "type": "String",
+        "desc": "four space separated numbers representing the RGBA values of fill-color",
+        "default": "100 100 100 255",
+        "placeholder": "100 100 100 255"
+      },
+      "tolerance": {
+        "type": "range",
+        "desc": "% tolerance",
+        "default": "10",
+        "min": "5",
+        "max": "15",
+        "step": "1"
+      }
+  } 
+}

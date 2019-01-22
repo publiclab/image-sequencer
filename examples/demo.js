@@ -1,11 +1,9 @@
 window.onload = function() {
-  
   sequencer = ImageSequencer();
 
   function refreshOptions() {
     // Load information of all modules (Name, Inputs, Outputs)
     var modulesInfo = sequencer.modulesInfo();
-    console.log(modulesInfo)
 
     var addStepSelect = $("#addStep select");
     addStepSelect.html("");
@@ -69,7 +67,6 @@ window.onload = function() {
     $(this).parent().find('.radio').removeClass('selected');
     $(this).addClass('selected');
     newStep = $(this).attr('data-value');
-    console.log(newStep);
     //$("#addStep option[value=" + newStep + "]").attr('selected', 'selected');
     $("#addStep select").val(newStep);
     ui.selectNewStepUi();

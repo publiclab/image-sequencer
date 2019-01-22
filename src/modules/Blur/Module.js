@@ -1,11 +1,10 @@
 /*
 * Blur an Image
 */
-const info = require('./info.json');
 module.exports = function Blur(options, UI) {
 
-    const defaults = info.inputs;
-    options.blur = options.blur || defaults.blur.default;
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+    options.blur = options.blur || defaults.blur;
     var output;
 
     function draw(input, callback, progressObj) {

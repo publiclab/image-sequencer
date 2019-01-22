@@ -68813,8 +68813,8 @@ module.exports={
         "type": "range",
         "desc": "% tolerance",
         "default": "10",
-        "min": "5",
-        "max": "15",
+        "min": "0",
+        "max": "100",
         "step": "1"
       }
   } 

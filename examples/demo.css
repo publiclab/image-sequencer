@@ -42,7 +42,7 @@ h1 {
   margin: 0 !important;
 }
 
-.form-control {
+.form-control [type="range"] {
   padding: 0px 0px;
 }
 

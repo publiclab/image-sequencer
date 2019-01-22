@@ -65563,7 +65563,11 @@ ImageSequencer = function ImageSequencer(options) {
 }
 module.exports = ImageSequencer;
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"./AddStep":151,"./ExportBin":152,"./FormatInput":153,"./InsertStep":155,"./Modules":156,"./ReplaceImage":157,"./Run":158,"./SavedSequences.json":160,"./ui/LoadImage":262,"./ui/SetInputStep":263,"./ui/UserInterface":264,"./util/getStep.js":268,"fs":46}],155:[function(require,module,exports){
+=======
+},{"./AddStep":153,"./ExportBin":154,"./FormatInput":155,"./InsertStep":157,"./Modules":158,"./ReplaceImage":159,"./Run":160,"./SavedSequences.json":162,"./ui/LoadImage":263,"./ui/SetInputStep":264,"./ui/UserInterface":265,"./util/getStep.js":268,"fs":11}],157:[function(require,module,exports){
+>>>>>>> Add tint module
 const getStepUtils = require('./util/getStep.js');
 
 // insert one or more steps at a given index in the sequencer
@@ -65630,7 +65634,11 @@ function InsertStep(ref, image, index, name, o) {
 }
 module.exports = InsertStep;
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"./util/getStep.js":268}],156:[function(require,module,exports){
+=======
+},{"./util/getStep.js":268}],158:[function(require,module,exports){
+>>>>>>> Add tint module
 /*
 * Core modules and their info files
 */
@@ -65663,10 +65671,18 @@ module.exports = {
   'resize': require('./modules/Resize'),
   'rotate': require('./modules/Rotate'),
   'saturation': require('./modules/Saturation'),
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
   'threshold': require('./modules/Threshold'),
   'white-balance': require('./modules/WhiteBalance')
 }
 },{"./modules/Average":162,"./modules/Blend":165,"./modules/Blur":169,"./modules/Brightness":172,"./modules/Channel":175,"./modules/Colorbar":178,"./modules/Colormap":182,"./modules/Contrast":186,"./modules/Convolution":190,"./modules/Crop":195,"./modules/DecodeQr":198,"./modules/Dither":202,"./modules/DrawRectangle":206,"./modules/Dynamic":209,"./modules/EdgeDetect":213,"./modules/FisheyeGl":216,"./modules/GammaCorrection":219,"./modules/Gradient":222,"./modules/Histogram":225,"./modules/ImportImage":229,"./modules/Ndvi":233,"./modules/NdviColormap":236,"./modules/Overlay":239,"./modules/PaintBucket":243,"./modules/Resize":246,"./modules/Rotate":249,"./modules/Saturation":252,"./modules/Threshold":256,"./modules/WhiteBalance":259,"image-sequencer-invert":61}],157:[function(require,module,exports){
+=======
+  'tint': require('./modules/Tint'),
+  'white-balance': require('./modules/WhiteBalance')
+}
+
+},{"./modules/Average":164,"./modules/Blend":167,"./modules/Blur":171,"./modules/Brightness":174,"./modules/Channel":177,"./modules/Colorbar":180,"./modules/Colormap":184,"./modules/Contrast":188,"./modules/Convolution":192,"./modules/Crop":197,"./modules/DecodeQr":200,"./modules/Dither":204,"./modules/DrawRectangle":208,"./modules/Dynamic":211,"./modules/EdgeDetect":215,"./modules/FisheyeGl":218,"./modules/GammaCorrection":221,"./modules/Gradient":224,"./modules/Histogram":227,"./modules/ImportImage":231,"./modules/Ndvi":235,"./modules/NdviColormap":238,"./modules/Overlay":241,"./modules/PaintBucket":245,"./modules/Resize":248,"./modules/Rotate":251,"./modules/Saturation":254,"./modules/Tint":257,"./modules/WhiteBalance":260,"image-sequencer-invert":46}],159:[function(require,module,exports){
+>>>>>>> Add tint module
 // Uses a given image as input and replaces it with the output.
 // Works only in the browser.
 function ReplaceImage(ref,selector,steps,options) {
@@ -65822,7 +65838,11 @@ function Run(ref, json_q, callback, ind, progressObj) {
 }
 module.exports = Run;
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"./RunToolkit":159,"./util/getStep.js":268}],159:[function(require,module,exports){
+=======
+},{"./RunToolkit":161,"./util/getStep.js":268}],161:[function(require,module,exports){
+>>>>>>> Add tint module
 const getPixels = require('get-pixels');
 const pixelManipulation = require('./modules/_nomodule/PixelManipulation');
 const lodash = require('lodash');
@@ -65837,7 +65857,11 @@ module.exports = function(input) {
     input.savePixels = savePixels;
     return input;
 }
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"./modules/_nomodule/PixelManipulation":261,"data-uri-to-buffer":19,"get-pixels":29,"lodash":75,"save-pixels":138}],160:[function(require,module,exports){
+=======
+},{"./modules/_nomodule/PixelManipulation":262,"data-uri-to-buffer":21,"get-pixels":32,"lodash":60,"save-pixels":127}],162:[function(require,module,exports){
+>>>>>>> Add tint module
 module.exports={"sample":[{"name":"invert","options":{}},{"name":"channel","options":{"channel":"red"}},{"name":"blur","options":{"blur":"5"}}]}
 },{}],161:[function(require,module,exports){
 /*
@@ -65917,7 +65941,11 @@ module.exports = function Average(options, UI){
     }
 }
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"../_nomodule/PixelManipulation.js":261}],162:[function(require,module,exports){
+=======
+},{"../_nomodule/PixelManipulation.js":262}],164:[function(require,module,exports){
+>>>>>>> Add tint module
 module.exports = [
     require('./Module'),
     require('./info.json')
@@ -66008,9 +66036,15 @@ module.exports = function Dynamic(options, UI, util) {
     }
 }
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"../_nomodule/PixelManipulation.js":261,"./../../util/getDefaults.js":267,"./info.json":166,"get-pixels":29}],165:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":164,"./info.json":166,"dup":162}],166:[function(require,module,exports){
+=======
+},{"../_nomodule/PixelManipulation.js":262,"get-pixels":32}],167:[function(require,module,exports){
+arguments[4][164][0].apply(exports,arguments)
+},{"./Module":166,"./info.json":168,"dup":164}],168:[function(require,module,exports){
+>>>>>>> Add tint module
 module.exports={
   "name": "Blend",
   "description": "Blend two chosen image steps with the given function. Defaults to using the red channel from image 1 and the green and blue and alpha channels of image 2. Easier to use interfaces coming soon!",
@@ -66165,9 +66199,15 @@ module.exports = function Blur(options, UI) {
     }
 }
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"../_nomodule/PixelManipulation.js":261,"./../../util/getDefaults.js":267,"./Blur":167,"./info.json":170}],169:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":168,"./info.json":170,"dup":162}],170:[function(require,module,exports){
+=======
+},{"../_nomodule/PixelManipulation.js":262,"./Blur":169}],171:[function(require,module,exports){
+arguments[4][164][0].apply(exports,arguments)
+},{"./Module":170,"./info.json":172,"dup":164}],172:[function(require,module,exports){
+>>>>>>> Add tint module
 module.exports={
     "name": "Blur",
     "description": "Applies a Gaussian blur given by the intensity value",
@@ -66243,9 +66283,15 @@ module.exports = function Brightness(options,UI){
     }
 }
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"../_nomodule/PixelManipulation.js":261,"./../../util/getDefaults.js":267,"./info.json":173}],172:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":171,"./info.json":173,"dup":162}],173:[function(require,module,exports){
+=======
+},{"../_nomodule/PixelManipulation.js":262}],174:[function(require,module,exports){
+arguments[4][164][0].apply(exports,arguments)
+},{"./Module":173,"./info.json":175,"dup":164}],175:[function(require,module,exports){
+>>>>>>> Add tint module
 module.exports={
   "name": "Brightness",
   "description": "Change the brightness of the image by given percent value",
@@ -66314,9 +66360,15 @@ module.exports = function Channel(options, UI) {
   }
 }
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"../_nomodule/PixelManipulation.js":261,"./../../util/getDefaults.js":267,"./info.json":176}],175:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":174,"./info.json":176,"dup":162}],176:[function(require,module,exports){
+=======
+},{"../_nomodule/PixelManipulation.js":262}],177:[function(require,module,exports){
+arguments[4][164][0].apply(exports,arguments)
+},{"./Module":176,"./info.json":178,"dup":164}],178:[function(require,module,exports){
+>>>>>>> Add tint module
 module.exports={
   "name": "Channel",
   "description": "Displays only one color channel of an image -- default is green",
@@ -66629,9 +66681,15 @@ module.exports = function Colormap(options,UI) {
   }
 }
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"../_nomodule/PixelManipulation.js":261,"./Colormap":180}],182:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":181,"./info.json":183,"dup":162}],183:[function(require,module,exports){
+=======
+},{"../_nomodule/PixelManipulation.js":262,"./Colormap":182}],184:[function(require,module,exports){
+arguments[4][164][0].apply(exports,arguments)
+},{"./Module":183,"./info.json":185,"dup":164}],185:[function(require,module,exports){
+>>>>>>> Add tint module
 module.exports={
   "name": "Colormap",
   "description": "Maps brightness values (average of red, green & blue) to a given color lookup table, made up of a set of one more color gradients.\n\nFor example, 'cooler' colors like blue could represent low values, while 'hot' colors like red could represent high values.",
@@ -66746,9 +66804,15 @@ module.exports = function Contrast(options, UI) {
     }
 }
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"../_nomodule/PixelManipulation.js":261,"./../../util/getDefaults.js":267,"./Contrast":184,"./info.json":187}],186:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":185,"./info.json":187,"dup":162}],187:[function(require,module,exports){
+=======
+},{"../_nomodule/PixelManipulation.js":262,"./Contrast":186}],188:[function(require,module,exports){
+arguments[4][164][0].apply(exports,arguments)
+},{"./Module":187,"./info.json":189,"dup":164}],189:[function(require,module,exports){
+>>>>>>> Add tint module
 module.exports={
     "name": "Contrast",
     "description": "Change the contrast of the image by given value",
@@ -66886,9 +66950,15 @@ module.exports = function Convolution(options, UI) {
     }
 }
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"../_nomodule/PixelManipulation.js":261,"./../../util/getDefaults.js":267,"./Convolution":188,"./info.json":191}],190:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":189,"./info.json":191,"dup":162}],191:[function(require,module,exports){
+=======
+},{"../_nomodule/PixelManipulation.js":262,"./Convolution":190}],192:[function(require,module,exports){
+arguments[4][164][0].apply(exports,arguments)
+},{"./Module":191,"./info.json":193,"dup":164}],193:[function(require,module,exports){
+>>>>>>> Add tint module
 module.exports={
     "name": "Convolution",
     "description": "Image Convolution using a given 3x3 kernel matrix <a href='https://en.wikipedia.org/wiki/Kernel_(image_processing)'>Read more</a>",
@@ -67054,7 +67124,11 @@ module.exports = function CropModule(options, UI) {
   }
 }
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"../../util/ParseInputCoordinates":266,"./Crop":192,"./Ui.js":194}],194:[function(require,module,exports){
+=======
+},{"../../util/ParseInputCoordinates":267,"./Crop":194,"./Ui.js":196}],196:[function(require,module,exports){
+>>>>>>> Add tint module
 // hide on save
 module.exports = function CropModuleUi(step, ui) {
 
@@ -67359,9 +67433,15 @@ module.exports = function Dither(options, UI){
         UI: UI
     }
 }
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"../_nomodule/PixelManipulation.js":261,"./Dither":200}],202:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":201,"./info.json":203,"dup":162}],203:[function(require,module,exports){
+=======
+},{"../_nomodule/PixelManipulation.js":262,"./Dither":202}],204:[function(require,module,exports){
+arguments[4][164][0].apply(exports,arguments)
+},{"./Module":203,"./info.json":205,"dup":164}],205:[function(require,module,exports){
+>>>>>>> Add tint module
 module.exports={
     "name": "Dither",
     "description": "Approximates a color from a mixture of other colors when the required color is not available, creating illusions of the color that is not present actually.<a href='https://en.wikipedia.org/wiki/Dither'>Read more</a>",
@@ -67452,9 +67532,15 @@ module.exports = function DrawRectangle(options, UI) {
     }
 }
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"../_nomodule/PixelManipulation.js":261,"./DrawRectangle":204}],206:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":205,"./info.json":207,"dup":162}],207:[function(require,module,exports){
+=======
+},{"../_nomodule/PixelManipulation.js":262,"./DrawRectangle":206}],208:[function(require,module,exports){
+arguments[4][164][0].apply(exports,arguments)
+},{"./Module":207,"./info.json":209,"dup":164}],209:[function(require,module,exports){
+>>>>>>> Add tint module
 module.exports={
     "name": "Draw Rectangle",
     "description": "It draws a rectangle on the image",
@@ -67598,9 +67684,15 @@ module.exports = function Dynamic(options,UI) {
   }
 }
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"../_nomodule/PixelManipulation.js":261}],209:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":208,"./info.json":210,"dup":162}],210:[function(require,module,exports){
+=======
+},{"../_nomodule/PixelManipulation.js":262}],211:[function(require,module,exports){
+arguments[4][164][0].apply(exports,arguments)
+},{"./Module":210,"./info.json":212,"dup":164}],212:[function(require,module,exports){
+>>>>>>> Add tint module
 module.exports={
   "name": "Dynamic",
   "description": "A module which accepts JavaScript math expressions to produce each color channel based on the original image's color. See <a href='https://publiclab.org/wiki/infragram-sandbox'>Infragrammar</a>.",
@@ -67865,9 +67957,15 @@ module.exports = function edgeDetect(options, UI) {
   }
 }
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"../_nomodule/PixelManipulation.js":261,"./../../util/getDefaults.js":267,"./EdgeUtils":211,"./info.json":214,"ndarray-gaussian-filter":80}],213:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":212,"./info.json":214,"dup":162}],214:[function(require,module,exports){
+=======
+},{"../_nomodule/PixelManipulation.js":262,"./EdgeUtils":213,"ndarray-gaussian-filter":65}],215:[function(require,module,exports){
+arguments[4][164][0].apply(exports,arguments)
+},{"./Module":214,"./info.json":216,"dup":164}],216:[function(require,module,exports){
+>>>>>>> Add tint module
 module.exports={
     "name": "Detect Edges",
     "description": "This module detects edges using the Canny method, which first Gaussian blurs the image to reduce noise (amount of blur configurable in settings as `options.blur`), then applies a number of steps to highlight edges, resulting in a greyscale image where the brighter the pixel, the stronger the detected edge.<a href='https://en.wikipedia.org/wiki/Canny_edge_detector'> Read more. </a>",
@@ -68085,9 +68183,15 @@ module.exports = function Gamma(options,UI){
     }
 }
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"../_nomodule/PixelManipulation.js":261,"./../../util/getDefaults.js":267,"./info.json":220}],219:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":218,"./info.json":220,"dup":162}],220:[function(require,module,exports){
+=======
+},{"../_nomodule/PixelManipulation.js":262}],221:[function(require,module,exports){
+arguments[4][164][0].apply(exports,arguments)
+},{"./Module":220,"./info.json":222,"dup":164}],222:[function(require,module,exports){
+>>>>>>> Add tint module
 module.exports={
     "name": "Gamma Correction",
     "description": "Apply gamma correction on the image <a href='https://en.wikipedia.org/wiki/Gamma_correction'>Read more</a>",
@@ -68272,7 +68376,11 @@ module.exports = function Channel(options, UI) {
     }
 }
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"../_nomodule/PixelManipulation.js":261,"./../../util/getDefaults.js":267,"./info.json":226}],225:[function(require,module,exports){
+=======
+},{"../_nomodule/PixelManipulation.js":262}],227:[function(require,module,exports){
+>>>>>>> Add tint module
 module.exports = [
     require('./Module.js'),
     require('./info.json')
@@ -68355,7 +68463,11 @@ module.exports = function ImportImageModule(options, UI) {
   }
 }
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"../../util/GetFormat":265,"./../../util/getDefaults.js":267,"./Ui.js":228,"./info.json":230}],228:[function(require,module,exports){
+=======
+},{"../../util/GetFormat":266,"./Ui.js":230}],230:[function(require,module,exports){
+>>>>>>> Add tint module
 // hide on save
 module.exports = function ImportImageModuleUi(step, ui) {
 
@@ -68488,7 +68600,11 @@ module.exports = function Ndvi(options, UI) {
   }
 }
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"../_nomodule/PixelManipulation.js":261,"./../../util/getDefaults.js":267,"./Ui.js":232,"./info.json":234}],232:[function(require,module,exports){
+=======
+},{"../_nomodule/PixelManipulation.js":262,"./Ui.js":234}],234:[function(require,module,exports){
+>>>>>>> Add tint module
 // hide on save
 module.exports = function CropModuleUi(step, ui) {
 
@@ -68646,9 +68762,15 @@ module.exports = function Dynamic(options, UI, util) {
     }
 }
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"../../util/ParseInputCoordinates":266,"../_nomodule/PixelManipulation.js":261,"./../../util/getDefaults.js":267,"./info.json":240,"get-pixels":29}],239:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":238,"./info.json":240,"dup":162}],240:[function(require,module,exports){
+=======
+},{"../../util/ParseInputCoordinates":267,"../_nomodule/PixelManipulation.js":262,"get-pixels":32}],241:[function(require,module,exports){
+arguments[4][164][0].apply(exports,arguments)
+},{"./Module":240,"./info.json":242,"dup":164}],242:[function(require,module,exports){
+>>>>>>> Add tint module
 module.exports={
     "name": "Overlay",
     "description": "Overlays an Image over another at a given position(x,y) in pixels or in %",
@@ -68720,7 +68842,11 @@ module.exports = function PaintBucket(options, UI) {
     }
 }
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"../_nomodule/PixelManipulation.js":261,"./PaintBucket":242}],242:[function(require,module,exports){
+=======
+},{"../_nomodule/PixelManipulation.js":262,"./PaintBucket":244}],244:[function(require,module,exports){
+>>>>>>> Add tint module
 module.exports = exports = function(pixels, options){
   var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
       var fillColor = options.fillColor || defaults.fillColor,
@@ -68893,9 +69019,15 @@ module.exports = function Resize(options, UI) {
     }
 }
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"../_nomodule/PixelManipulation.js":261,"./../../util/getDefaults.js":267,"./info.json":247,"imagejs":62}],246:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":245,"./info.json":247,"dup":162}],247:[function(require,module,exports){
+=======
+},{"../_nomodule/PixelManipulation.js":262,"imagejs":47}],248:[function(require,module,exports){
+arguments[4][164][0].apply(exports,arguments)
+},{"./Module":247,"./info.json":249,"dup":164}],249:[function(require,module,exports){
+>>>>>>> Add tint module
 module.exports={
   "name": "Resize",
   "description": "Resize image by given percentage value",
@@ -68973,9 +69105,15 @@ module.exports = function Rotate(options, UI) {
     }
 }
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"../_nomodule/PixelManipulation.js":261,"./../../util/getDefaults.js":267,"./info.json":250,"imagejs":62}],249:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":248,"./info.json":250,"dup":162}],250:[function(require,module,exports){
+=======
+},{"../_nomodule/PixelManipulation.js":262,"imagejs":47}],251:[function(require,module,exports){
+arguments[4][164][0].apply(exports,arguments)
+},{"./Module":250,"./info.json":252,"dup":164}],252:[function(require,module,exports){
+>>>>>>> Add tint module
 module.exports={
     "name": "Rotate",
     "description": "Rotates image by specified degrees",
@@ -69049,9 +69187,15 @@ module.exports = function Saturation(options,UI) {
   }
 }
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"../_nomodule/PixelManipulation.js":261}],252:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":251,"./info.json":253,"dup":162}],253:[function(require,module,exports){
+=======
+},{"../_nomodule/PixelManipulation.js":262}],254:[function(require,module,exports){
+arguments[4][164][0].apply(exports,arguments)
+},{"./Module":253,"./info.json":255,"dup":164}],255:[function(require,module,exports){
+>>>>>>> Add tint module
 module.exports={
     "name": "Saturation",
     "description": "Change the saturation of the image by given value, from 0-1, with 1 being 100% saturated.",
@@ -69182,6 +69326,7 @@ return threshold;
 
 }
 },{}],256:[function(require,module,exports){
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":254,"./info.json":257,"dup":162}],257:[function(require,module,exports){
 module.exports={
@@ -69206,6 +69351,87 @@ module.exports={
 }
 
 },{}],258:[function(require,module,exports){
+=======
+module.exports = function Tint(options,UI){
+
+
+    var output;
+
+    function draw(input,callback,progressObj){
+
+        var color = options.color || '0 0 255';
+        color = color.split(" "); 
+        var factor = options.factor || 0.5;
+
+        progressObj.stop(true);
+        progressObj.overrideFlag = true;
+
+        /*
+        In this case progress is handled by changepixel internally otherwise progressObj
+        needs to be overriden and used
+        For eg. progressObj = new SomeProgressModule()
+        */
+
+        var step = this;
+
+        function changePixel(r, g, b, a){
+
+            r -= (r - color[0])*factor;
+            g -= (g - color[1])*factor;
+            b -= (b - color[2])*factor;
+            return [r, g, b, a]
+        }
+
+        function output(image,datauri,mimetype){
+
+            // This output is accessible by Image Sequencer
+            step.output = {src:datauri,format:mimetype};
+
+        }
+
+        return require('../_nomodule/PixelManipulation.js')(input, {
+            output: output,
+            changePixel: changePixel,
+            format: input.format,
+            image: options.image,
+            inBrowser: options.inBrowser,
+            callback: callback
+        });
+
+    }
+    return {
+        options: options,
+        draw:  draw,
+        output: output,
+        UI: UI
+    }
+}
+
+},{"../_nomodule/PixelManipulation.js":262}],257:[function(require,module,exports){
+arguments[4][164][0].apply(exports,arguments)
+},{"./Module":256,"./info.json":258,"dup":164}],258:[function(require,module,exports){
+module.exports={
+  "name": "Tint",
+  "description": "Add color tint to an image",
+  "inputs": {
+      "color":{
+        "type": "String",
+        "desc": "RGB values separated by a space",
+        "default": "0 0 255"
+      },
+      "factor": {
+          "type": "range",
+          "desc": "Amount of tint",
+          "default": "0.5",
+          "min": "0",
+          "max": "1",
+          "step": "0.01"
+      }
+  }
+}
+
+},{}],259:[function(require,module,exports){
+>>>>>>> Add tint module
 module.exports = function Balance(options, UI) {
 
     var output;
@@ -69292,9 +69518,15 @@ module.exports = function Balance(options, UI) {
     }
 
 }
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"../_nomodule/PixelManipulation.js":261}],259:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":258,"./info.json":260,"dup":162}],260:[function(require,module,exports){
+=======
+},{"../_nomodule/PixelManipulation.js":262}],260:[function(require,module,exports){
+arguments[4][164][0].apply(exports,arguments)
+},{"./Module":259,"./info.json":261,"dup":164}],261:[function(require,module,exports){
+>>>>>>> Add tint module
 module.exports={
     "name": "White Balance",
     "description": "Change the colour balance of the image by adjusting the colour temperature.",
@@ -69307,7 +69539,11 @@ module.exports={
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{}],261:[function(require,module,exports){
+=======
+},{}],262:[function(require,module,exports){
+>>>>>>> Add tint module
 (function (process,Buffer){
 /*
 * General purpose per-pixel manipulation
@@ -69408,7 +69644,11 @@ module.exports = function PixelManipulation(image, options) {
 };
 
 }).call(this,require('_process'),require("buffer").Buffer)
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"_process":117,"buffer":47,"get-pixels":29,"pace":94,"save-pixels":138}],262:[function(require,module,exports){
+=======
+},{"_process":114,"buffer":12,"get-pixels":32,"pace":79,"save-pixels":127}],263:[function(require,module,exports){
+>>>>>>> Add tint module
 // special module to load an image into the start of the sequence; used in the HTML UI
 function LoadImage(ref, name, src, main_callback) {
   function makeImage(datauri) {
@@ -69515,7 +69755,11 @@ function LoadImage(ref, name, src, main_callback) {
 
 module.exports = LoadImage;
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"urify":147}],263:[function(require,module,exports){
+=======
+},{"urify":149}],264:[function(require,module,exports){
+>>>>>>> Add tint module
 // TODO: potentially move this into ImportImage module
 function setInputStepInit() {
 
@@ -69614,7 +69858,11 @@ function setInputStepInit() {
 }
 module.exports = setInputStepInit;
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{}],264:[function(require,module,exports){
+=======
+},{}],265:[function(require,module,exports){
+>>>>>>> Add tint module
 /*
  * User Interface Handling Module
  */
@@ -69678,7 +69926,11 @@ module.exports = function UserInterface(events = {}) {
 
 }
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{}],265:[function(require,module,exports){
+=======
+},{}],266:[function(require,module,exports){
+>>>>>>> Add tint module
 /*
 * Determine format from a URL or data-url, return "jpg" "png" "gif" etc
 * TODO: write a test for this using the examples
@@ -69720,7 +69972,11 @@ module.exports = function GetFormat(src) {
 
 }
 
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{}],266:[function(require,module,exports){
+=======
+},{}],267:[function(require,module,exports){
+>>>>>>> Add tint module
 module.exports = function parseCornerCoordinateInputs(options,coord,callback) {
     var getPixels = require('get-pixels');
     getPixels(coord.src, function(err, pixels) {
@@ -69745,6 +70001,7 @@ module.exports = function parseCornerCoordinateInputs(options,coord,callback) {
       callback(options, coord);
     })
   }
+<<<<<<< 90c57af3321be87411e6bf2fafe08204f9887db4
 },{"get-pixels":29}],267:[function(require,module,exports){
 module.exports = function(info){
 	var defaults = {};
@@ -69756,6 +70013,9 @@ module.exports = function(info){
 	return defaults;
 }
 },{}],268:[function(require,module,exports){
+=======
+},{"get-pixels":32}],268:[function(require,module,exports){
+>>>>>>> Add tint module
 module.exports = {
     getPreviousStep: function() {
         return this.getStep(-1);

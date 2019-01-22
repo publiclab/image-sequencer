@@ -9,7 +9,6 @@
     "setup": "npm i && npm i -g grunt grunt-cli",
     "start": "grunt serve"
   },
-  
   "repository": {
     "type": "git",
     "url": "git+https://github.com/publiclab/image-sequencer.git"

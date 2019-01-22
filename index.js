@@ -69,6 +69,9 @@ if (program.saveSequence) {
       for (var output in step.info.outputs) {
         console.log("[" + program.step + "]: " + output + " = " + step[output]);
       }
+    },
+    notify: function(msg) {
+      console.log('\x1b[36m%s\x1b[0m','🌟  '+msg);
     }
   });
 

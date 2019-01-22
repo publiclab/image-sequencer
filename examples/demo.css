@@ -196,13 +196,16 @@ h1 {
   overflow: auto;
 }
 
+.no-border {
+  border: 0px;
+}
 
 .savesequencemsg{
   display: none;
   text-align: center;
   }
 
-#stepRemovedNotification {
+.notification {
   background-color: #808b96;
   padding:4px;
   color:white;
@@ -219,10 +222,6 @@ h1 {
 
 #resetButton {
   margin-top: 20px;
-}
-
-.no-border {
-  border: 0px;
 }
 
 .i-over {

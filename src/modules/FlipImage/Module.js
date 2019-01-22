@@ -1,8 +1,8 @@
 /*
- * Display only one color channel
+ * Flip the image on vertical/horizontal axis.
  */
-module.exports = function Channel(options, UI) {
-  options.axis = options.axis || require('./info.json').inputs.axis.default;
+module.exports = function FlipImage(options, UI) {
+  options.Axis = options.Axis || require('./info.json').inputs.Axis.default;
 
 	var output,
     getPixels = require('get-pixels');
@@ -23,7 +23,7 @@ module.exports = function Channel(options, UI) {
           console.log(err);
           return;
         }
-        return require('./flipImage')(oldPixels, pixels, options.axis);
+        return require('./flipImage')(oldPixels, pixels, options.Axis);
       }
       function output(image, datauri, mimetype) {
         step.output = { src: datauri, format: mimetype };

@@ -1,47 +1,16 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js');
-var setupCache = require('./lib/cache.js');
-var DefaultHtmlStepUi = require('./lib/defaultHtmlStepUi.js');
-var urlHash = require('./lib/urlHash.js');
+var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js'),
+    setupCache = require('./lib/cache.js'),
+    DefaultHtmlStepUi = require('./lib/defaultHtmlStepUi.js'),
+    urlHash = require('./lib/urlHash.js'),
+    insertPreview = require('./lib/insertPreview.js');
 
 window.onload = function() {
-  function generatePreview(previewStepName, customValues, path) {
-    var previewSequencer = ImageSequencer();
-
-    function insertPreview(src) {
-      var img = document.createElement('img');
-      img.classList.add('img-thumbnail')
-      img.classList.add('no-border');
-      img.src = src;
-      $(img).css("max-width", "200%");
-      $(img).css("transform", "translateX(-20%)");
-      var stepDiv = $('#addStep .row').find('div').each(function() {
-        if ($(this).find('div').attr('data-value') === previewStepName) {
-          $(this).find('div').append(img);
-        }
-      });
-    }
-    function loadPreview() {
-      previewSequencer = previewSequencer.addSteps('resize', { resize: "40%" });
-
-      if (previewStepName === "crop") {
-        console.log(customValues);
-        previewSequencer.addSteps(previewStepName, customValues).run(insertPreview);
-      }
-      else {
-        previewSequencer.addSteps(previewStepName, { [previewStepName]: customValues }).run(insertPreview);
-      }
-    }
-    previewSequencer.loadImage(path, loadPreview);
-  }
-
-
   sequencer = ImageSequencer();
 
   function refreshOptions() {
     // Load information of all modules (Name, Inputs, Outputs)
     var modulesInfo = sequencer.modulesInfo();
-    console.log(modulesInfo)
 
     var addStepSelect = $("#addStep select");
     addStepSelect.html("");
@@ -105,7 +74,6 @@ window.onload = function() {
     $(this).parent().find('.radio').removeClass('selected');
     $(this).addClass('selected');
     newStep = $(this).attr('data-value');
-    console.log(newStep);
     //$("#addStep option[value=" + newStep + "]").attr('selected', 'selected');
     $("#addStep select").val(newStep);
     ui.selectNewStepUi();
@@ -219,10 +187,12 @@ window.onload = function() {
     onLoad: function onFileReaderLoad(progress) {
       var reader = progress.target;
       var step = sequencer.images.image1.steps[0];
+      var util=IntermediateHtmlStepUi(sequencer);
       step.output.src = reader.result;
       sequencer.run({ index: 0 });
       step.options.step.imgElement.src = reader.result;
-      updatePreviews(reader.result);
+      insertPreview.updatePreviews(reader.result,'addStep');
+      insertPreview.updatePreviews(sequencer.images.image1.steps[0].options.step.imgElement.src,'insertStep');
     },
     onTakePhoto: function (url) {
       var step = sequencer.images.image1.steps[0];
@@ -233,37 +203,14 @@ window.onload = function() {
   });
 
   setupCache();
-  
-  function updatePreviews(src) {
-    $('#addStep img').remove();
-
-    var previewSequencerSteps = {
-      "brightness": "175",
-      "saturation": "0.5",
-      "rotate": 90,
-      "contrast": 90,
-      "crop": {
-        "x": 0,
-        "y": 0,
-        "w": "(50%)",
-        "h": "(50%)",
-        "noUI": true
-      }
-    }
-
-    Object.keys(previewSequencerSteps).forEach(function(step, index) {
-      generatePreview(step, Object.values(previewSequencerSteps)[index], src);
-    });
-  }
 
   if (urlHash.getUrlHashParameter('src')) {
-    updatePreviews(urlHash.getUrlHashParameter('src'));
+    insertPreview.updatePreviews(urlHash.getUrlHashParameter('src'),'addStep');
   } else {
-    updatePreviews("images/tulips.png");
+    insertPreview.updatePreviews("images/tulips.png",'addStep');
   }
 };
-
-},{"./lib/cache.js":2,"./lib/defaultHtmlSequencerUi.js":3,"./lib/defaultHtmlStepUi.js":4,"./lib/urlHash.js":6}],2:[function(require,module,exports){
+},{"./lib/cache.js":2,"./lib/defaultHtmlSequencerUi.js":3,"./lib/defaultHtmlStepUi.js":4,"./lib/insertPreview.js":5,"./lib/urlHash.js":7}],2:[function(require,module,exports){
 var setupCache = function() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js', { scope: '/examples/' })
@@ -393,7 +340,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
 module.exports = DefaultHtmlSequencerUi;
 
 
-},{"./urlHash.js":6}],4:[function(require,module,exports){
+},{"./urlHash.js":7}],4:[function(require,module,exports){
 // Set the UI in sequencer. This Will generate HTML based on
 // Image Sequencer events :
 // onSetup : Called every time a step is added
@@ -407,20 +354,8 @@ module.exports = DefaultHtmlSequencerUi;
 var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js');
 var urlHash = require('./urlHash.js');
 
-function stepRemovedNotify() {
-    if ($('#stepRemovedNotification').length == 0) {
-      var notification = document.createElement('span');
-      notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> Step Removed ';
-      notification.id = 'stepRemovedNotification';
-
-      $('body').append(notification);
-    }
-
-    $('#stepRemovedNotification').fadeIn(500).delay(200).fadeOut(500);
-  }
-
 function DefaultHtmlStepUi(_sequencer, options) {
-
+  
   options = options || {};
   var stepsEl = options.stepsEl || document.querySelector("#steps");
   var selectStepSel = options.selectStepSel = options.selectStepSel || "#selectStep";
@@ -451,15 +386,15 @@ function DefaultHtmlStepUi(_sequencer, options) {
     </div>';
 
     var tools =
-      '<div class="cal"><div class="tools btn-group">\
-       <button confirm="Are you sure?" onclick="stepRemovedNotify()" class="remove btn btn btn-default">\
-         <i class="fa fa-trash"></i>\
-       </button>\
-       <button class="btn  insert-step" style="margin-left:10px;border-radius:6px;background-color:#fff;border:solid #bababa 1.1px;" >\
-         <i class="fa fa-plus"></i> Add\
-       </button>\
-       </div>\
-       </div>';
+    '<div class="cal"><div class="tools btn-group">\
+    <button confirm="Are you sure?" class="remove btn btn btn-default">\
+      <i class="fa fa-trash"></i>\
+    </button>\
+    <button class="btn  insert-step" style="margin-left:10px;border-radius:6px;background-color:#fff;border:solid #bababa 1.1px;" >\
+      <i class="fa fa-plus"></i> Add\
+    </button>\
+    </div>\
+    </div>';
 
     var util = intermediateHtmlStepUi(_sequencer, step);
 
@@ -542,6 +477,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         .appendChild(
           parser.parseFromString(tools, "text/html").querySelector("div")
         );
+      $(step.ui.querySelectorAll(".remove")).on('click', function() {notify('Step Removed','remove-notification')});  
       $(step.ui.querySelectorAll(".insert-step")).on('click', function() { util.insertStep(step.ID) });
 
       // Insert the step's UI in the right place
@@ -684,57 +620,133 @@ function DefaultHtmlStepUi(_sequencer, options) {
     return step.imgElement;
   }
 
+  function notify(msg,id){
+    if ($('#'+id).length == 0) {
+      var notification = document.createElement('span');
+      notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> ' + msg ;
+      notification.id = id;
+      notification.classList.add("notification");
+  
+      $('body').append(notification);
+    }
+  
+    $('#'+id).fadeIn(500).delay(200).fadeOut(500);
+  }
+
   return {
     getPreview: getPreview,
     onSetup: onSetup,
     onComplete: onComplete,
     onRemove: onRemove,
-    onDraw: onDraw
+    onDraw: onDraw, 
+    notify: notify
+  }
+}
+
+if(typeof window === "undefined"){
+  module.exports={
+    DefaultHtmlStepUi: DefaultHtmlStepUi
   }
 }
 
 module.exports = DefaultHtmlStepUi;
 
 
-},{"./intermediateHtmlStepUi.js":5,"./urlHash.js":6}],5:[function(require,module,exports){
+},{"./intermediateHtmlStepUi.js":6,"./urlHash.js":7}],5:[function(require,module,exports){
+function generatePreview(previewStepName, customValues, path, selector) {
+
+    var previewSequencer = ImageSequencer();
+    function insertPreview(src) {
+      var img = document.createElement('img');
+      img.classList.add('img-thumbnail')
+      img.classList.add('no-border');
+      img.src = src;
+      $(img).css("max-width", "200%");
+      $(img).css("transform", "translateX(-20%)");
+      var stepDiv = $('#'+selector+' .row').find('div').each(function() {
+        if ($(this).find('div').attr('data-value') === previewStepName) {
+          $(this).find('div').append(img);
+        }
+      });
+    }
+
+    function loadPreview() {
+      previewSequencer = previewSequencer.addSteps('resize', { resize: "40%" });
+      if (previewStepName === "crop") {
+        previewSequencer.addSteps(previewStepName, customValues).run(insertPreview);
+      }
+      else {
+        previewSequencer.addSteps(previewStepName, { [previewStepName]: customValues }).run(insertPreview);
+      }
+    }
+    previewSequencer.loadImage(path, loadPreview);
+  }
+
+  function updatePreviews(src, selector) {
+    $('#'+selector+' img').remove();
+
+    var previewSequencerSteps = {
+      "brightness": "20",
+      "saturation": "5",
+      "rotate": 90,
+      "contrast": 90,
+      "crop": {
+        "x": 0,
+        "y": 0,
+        "w": "(50%)",
+        "h": "(50%)",
+        "noUI": true
+      }
+    }
+
+    Object.keys(previewSequencerSteps).forEach(function (step, index) {
+      generatePreview(step, Object.values(previewSequencerSteps)[index], src, selector);
+    });
+  }
+
+module.exports = {
+  generatePreview : generatePreview,
+  updatePreviews : updatePreviews
+}
+},{}],6:[function(require,module,exports){
 var urlHash = require('./urlHash.js');
 function IntermediateHtmlStepUi(_sequencer, step, options) {
   function stepUI() {
     return '<div class="row insertDiv">\
-        <div class="col-md-6" style="margin-top:5%">\
+        <div class="col-md-6 col-md-offset-2" style="margin-top:5%">\
         <section id="insertStep" class="panel panel-primary">\
           <div class="form-inline">\
             <div class="panel-body">\
               <p class="info">Select a new module to add to your sequence.</p>\
               <div class="row center-align radio-group">\
                 <div>\
-                  <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="brightness">\
-                    <i class="fa fa-sun-o fa-4x"></i>\
-                  </button>\
+                <div class="radio" data-value="brightness">\
+                <i class="fa fa-sun-o fa-4x i-over"></i>\
+              </div>\
                   <p>Brightness</p>\
                 </div>\
                 <div>\
-                  <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="contrast">\
-                    <i class="fa fa-adjust fa-4x"></i>\
-                  </button>\
+                <div class="radio" data-value="contrast">\
+                <i class="fa fa-adjust fa-4x i-over"></i>\
+              </div>\
                   <p>Contrast</p>\
                 </div>\
                 <div>\
-                  <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="saturation">\
-                    <i class="fa fa-tint fa-4x"></i>\
-                  </button>\
+                <div class="radio" data-value="saturation">\
+                <i class="fa fa-tint fa-4x i-over i-small"></i>\
+              </div>\
                   <p>Saturation</p>\
                 </div>\
                 <div>\
-                  <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="rotate">\
-                    <i class="fa fa-rotate-right fa-4x"></i>\
-                  </button>\
+                <div class="radio" data-value="rotate">\
+                <i class="fa fa-rotate-right fa-4x i-over"></i>\
+              </div>\
                   <p>Rotate</p>\
                 </div>\
                 <div>\
-                  <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="crop">\
-                    <i class="fa fa-crop fa-4x"></i>\
-                  </button>\
+                <div class="radio" data-value="crop">\
+                <i class="fa fa-crop fa-4x i-over"></i>\
+              </div>\
                   <p>Crop</p>\
                 </div>\
               </div>\
@@ -750,12 +762,14 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
         </section>\
         </div>';
   }
+
+
   function selectNewStepUi() {
     var m = $("#insertStep select").val();
     $("#insertStep .info").html(_sequencer.modulesInfo(m).description);
     $("#insertStep #add-step-btn").prop("disabled", false);
   }
-  insertStep = function(id) {
+  insertStep = function (id) {
     var modulesInfo = _sequencer.modulesInfo();
     var parser = new DOMParser();
     var addStepUI = stepUI();
@@ -765,6 +779,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       .insertAdjacentElement('afterend',
         addStepUI
       );
+      updatePreviews(step.output,'insertStep');
     var insertStepSelect = $("#insertStep select");
     insertStepSelect.html("");
     // Add modules to the insertStep dropdown
@@ -778,7 +793,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     $('#insertStep #add-step-btn').prop('disabled', true);
 
     insertStepSelect.append('<option value="none" disabled selected>More modules...</option>');
-    $('#insertStep .radio-group .radio').on("click", function() {
+    $('#insertStep .radio-group .radio').on("click", function () {
       $(this).parent().find('.radio').removeClass('selected');
       $(this).addClass('selected');
       newStep = $(this).attr('data-value');
@@ -788,7 +803,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       $(this).removeClass('selected');
     });
     $(step.ui.querySelector("#insertStep select")).on('change', selectNewStepUi);
-    $(step.ui.querySelector("#insertStep #add-step-btn")).on('click', function() { insert(id) });
+    $(step.ui.querySelector("#insertStep #add-step-btn")).on('click', function () { insert(id) });
   }
 
   function insert(id) {
@@ -812,13 +827,15 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     urlHash.setUrlHashParameter("steps", _sequencer.toString());
 
   }
+
   return {
     insertStep
   }
 }
-
 module.exports = IntermediateHtmlStepUi;
-},{"./urlHash.js":6}],6:[function(require,module,exports){
+
+
+},{"./urlHash.js":7}],7:[function(require,module,exports){
 function getUrlHashParameter(param) {
 
   var params = getUrlHashParameters();

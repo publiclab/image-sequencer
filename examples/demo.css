@@ -59,7 +59,7 @@ h1 {
   background: #eee;
 }
 
-#dropzone input {
+.dropzone input {
   max-width: 100%;
 }
 

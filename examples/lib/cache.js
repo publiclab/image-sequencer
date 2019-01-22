@@ -35,3 +35,5 @@ var setupCache = function() {
     location.reload();
   });
 }
+
+module.exports = setupCache;

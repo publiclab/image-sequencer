@@ -4,6 +4,7 @@ require('./src/ImageSequencer');
 sequencer = ImageSequencer({ ui: false });
 var fs = require('fs')
 var program = require('commander');
+var utils = require('./src/CliUtils')
 
 var saveSequence = require('./src/cli/saveSequence.js')
 var installModule = require('./src/cli/installModule.js')
@@ -43,7 +44,7 @@ else {
   });
 
   // User must input a step. If steps exist, check that every step is a valid step.
-  if (!program.step || !(require('./src/CliUtils').validateSteps(program.step, sequencer)))
+  if (!program.step || !(utils.validateSteps(program.step, sequencer)))
     exit("Please ensure all steps are valid.");
 
   // If there's no user defined output directory, select a default directory.

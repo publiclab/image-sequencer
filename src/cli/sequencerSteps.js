@@ -1,8 +1,9 @@
 var Spinner = require('ora');
 var readlineSync = require('readline-sync');
+var utils  = require('../CliUtils')
 
 module.exports = function (program, sequencer, outputFilename) {
-  require("../CliUtils").makedir(program.output, () => {
+  utils.makedir(program.output, () => {
     console.log('Files will be exported to "' + program.output + '"');
 
     if (program.basic)
@@ -42,7 +43,7 @@ module.exports = function (program, sequencer, outputFilename) {
           console.log(e);
         }
       }
-      if (program.config && require("../CliUtils").validateConfig(config, options)) {
+      if (program.config && utils.validateConfig(config, options)) {
         console.log("Now using Options object");
         Object.keys(options).forEach(function(input) {
           options[input] = config[input];

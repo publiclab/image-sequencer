@@ -71526,10 +71526,10 @@ module.exports={
 
 },{}],252:[function(require,module,exports){
 /*
- * Display only one color channel
+ * Flip the image on vertical/horizontal axis.
  */
-module.exports = function Channel(options, UI) {
-  options.axis = options.axis || require('./info.json').inputs.axis.default;
+module.exports = function FlipImage(options, UI) {
+  options.Axis = options.Axis || require('./info.json').inputs.Axis.default;
 
 	var output,
     getPixels = require('get-pixels');
@@ -71550,7 +71550,7 @@ module.exports = function Channel(options, UI) {
           console.log(err);
           return;
         }
-        return require('./flipImage')(oldPixels, pixels, options.axis);
+        return require('./flipImage')(oldPixels, pixels, options.Axis);
       }
       function output(image, datauri, mimetype) {
         step.output = { src: datauri, format: mimetype };
@@ -71576,6 +71576,7 @@ module.exports = function Channel(options, UI) {
     UI: UI
   }
 }
+
 },{"../_nomodule/PixelManipulation.js":302,"./flipImage":253,"./info.json":255,"get-pixels":30}],253:[function(require,module,exports){
 module.exports = function flipImage(oldPixels, pixels, axis) {
     var width = oldPixels.shape[0],
@@ -71615,7 +71616,7 @@ module.exports={
   "name": "Flip Image",
   "description": "Flip The Image On The Selected Axis.",
   "inputs": {
-    "axis": {
+    "Axis": {
       "type": "select",
       "desc": "Axis",
       "default": "Vertical",

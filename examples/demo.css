@@ -245,3 +245,16 @@ a.name-header{
   text-decoration: none;
   color: #445;
 }
+
+.crop-column{
+    height:648.19px; 
+    display:flex; 
+    flex-direction:row; 
+    align-items:center
+}
+.crop-image{
+    width:100%; 
+    display:flex; 
+    flex-direction:column; 
+    align-items:center
+}

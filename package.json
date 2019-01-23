@@ -36,7 +36,7 @@
     "imagejs": "0.0.9",
     "imgareaselect": "git://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2",
     "jquery": "^3.3.1",
-    "jsdom": "^11.12.0",
+    "jsdom": "^13.1.0",
     "jsqr": "^1.1.1",
     "lodash": "^4.17.5",
     "ndarray-gaussian-filter": "^1.0.0",

@@ -36,9 +36,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
     </form>\
     <div class="col-md-8 cal crop-column">\
       <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
-      <div class="crop-image">
+      <div class="crop-image">\
         <a><img alt="" style="max-width=100%" class="img-thumbnail step-thumbnail"/></a>\
-      </div>
+      </div>\
     </div>\
     </div>\
     </div>\

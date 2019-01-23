@@ -79,7 +79,6 @@ window.onload = function() {
     ui.selectNewStepUi();
     ui.addStepUi();
     $(this).removeClass('selected');
-    // ui.removeStepUi();
   });
 
   $('#download-btn').click(function() {

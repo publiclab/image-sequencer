@@ -210,7 +210,7 @@ window.onload = function() {
     insertPreview.updatePreviews("images/tulips.png",'addStep');
   }
 };
-},{"./lib/cache.js":2,"./lib/defaultHtmlSequencerUi.js":3,"./lib/defaultHtmlStepUi.js":4,"./lib/insertPreview.js":5,"./lib/urlHash.js":7}],2:[function(require,module,exports){
+},{"./lib/cache.js":2,"./lib/defaultHtmlSequencerUi.js":3,"./lib/defaultHtmlStepUi.js":4,"./lib/insertPreview.js":5,"./lib/urlHash.js":8}],2:[function(require,module,exports){
 var setupCache = function() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js', { scope: '/examples/' })
@@ -340,7 +340,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
 module.exports = DefaultHtmlSequencerUi;
 
 
-},{"./urlHash.js":7}],4:[function(require,module,exports){
+},{"./urlHash.js":8}],4:[function(require,module,exports){
 // Set the UI in sequencer. This Will generate HTML based on
 // Image Sequencer events :
 // onSetup : Called every time a step is added
@@ -351,11 +351,14 @@ module.exports = DefaultHtmlSequencerUi;
 // output values, step information.
 // See documetation for more details.
 
-var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js');
-var urlHash = require('./urlHash.js');
+var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js'),
+  urlHash = require('./urlHash.js'),
+  stepSelector = require('./stepSelector'),
+  $stepAll,
+  $step;
 
 function DefaultHtmlStepUi(_sequencer, options) {
-  
+
   options = options || {};
   var stepsEl = options.stepsEl || document.querySelector("#steps");
   var selectStepSel = options.selectStepSel = options.selectStepSel || "#selectStep";
@@ -404,6 +407,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
     step.ui = step.ui.querySelector("div.container");
     step.linkElements = step.ui.querySelectorAll("a");
     step.imgElement = step.ui.querySelector("a img");
+    $step = stepSelector.stepSelector(step.ui);
+    $stepAll = stepSelector.stepSelectorAll(step.ui);
+
 
     if (_sequencer.modulesInfo().hasOwnProperty(step.name)) {
       var inputs = _sequencer.modulesInfo(step.name).inputs;
@@ -465,7 +471,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         step.ui.querySelector("div.details").appendChild(div);
       }
 
-      $(step.ui.querySelector("div.details")).append(
+      $step("div.details").append(
         '<div class="cal"><p><button type="submit" class="btn btn-default btn-save" disabled = "true" >Apply</button><span> Press apply to see changes</span></p></div>'
       );
 
@@ -478,8 +484,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
         .appendChild(
           parser.parseFromString(tools, "text/html").querySelector("div")
         );
-      $(step.ui.querySelectorAll(".remove")).on('click', function() {notify('Step Removed','remove-notification')});  
-      $(step.ui.querySelectorAll(".insert-step")).on('click', function() { util.insertStep(step.ID) });
+      $step(".remove").on('click', function() {notify('Step Removed','remove-notification')})
+        .stepAll(".insert-step").on('click', function() { util.insertStep(step.ID) });
 
       // Insert the step's UI in the right place
       if (stepOptions.index == _sequencer.images.image1.steps.length) {
@@ -494,16 +500,16 @@ function DefaultHtmlStepUi(_sequencer, options) {
     else {
       $("#load-image").append(step.ui);
     }
-    $(step.ui.querySelector(".toggle")).on("click", () => {
-      $(step.ui.querySelector('.toggleIcon')).toggleClass('fa-caret-up').toggleClass('fa-caret-down');
-      $(step.ui.querySelectorAll(".cal")).toggleClass("collapse");
+    $step(".toggle").on("click", () => {
+      $step('.toggleIcon').toggleClass('fa-caret-up').toggleClass('fa-caret-down')
+        .stepAll(".cal").toggleClass("collapse");
     });
     
 
     function saveOptions(e) {
       e.preventDefault();
       if (optionsChanged){
-        $(step.ui.querySelector("div.details"))
+        $step("div.details")
           .find("input,select")
           .each(function(i, input) {
             $(input)
@@ -517,7 +523,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         urlHash.setUrlHashParameter("steps", _sequencer.toString());
 
         // disable the save button
-        $(step.ui.querySelector('.btn-save')).prop('disabled', true);
+        $step('.btn-save').prop('disabled', true);
         optionsChanged = false;
         changedInputs = 0;
       }
@@ -528,29 +534,29 @@ function DefaultHtmlStepUi(_sequencer, options) {
       changedInputs += hasChangedBefore ? inputChanged ? 0 : -1 : inputChanged ? 1 : 0;
       optionsChanged = changedInputs > 0;
 
-      $(step.ui.querySelector('.btn-save')).prop('disabled', !optionsChanged);
+      $step('.btn-save').prop('disabled', !optionsChanged);
       return inputChanged;
     }
 
     var 
       changedInputs = 0,
       optionsChanged = false;
-    $(step.ui.querySelector('.input-form')).on('submit', saveOptions);
-    $(step.ui.querySelectorAll('.target')).each(function(i, input) {
-      $(input)
-        .data('initValue', $(input).val())
-        .data('hasChangedBefore', false)
-        .on('input', function() {
-          $(this)
-            .focus()
-            .data('hasChangedBefore',
-              handleInputValueChange(
-                $(this).val(),
-                $(this).data('initValue'),
-                $(this).data('hasChangedBefore')
+    $step('.input-form').on('submit', saveOptions)
+      .stepAll('.target').each(function(i, input) {
+        $(input)
+          .data('initValue', $(input).val())
+          .data('hasChangedBefore', false)
+          .on('input', function() {
+            $(this)
+              .focus()
+              .data('hasChangedBefore',
+                handleInputValueChange(
+                  $(this).val(),
+                  $(this).data('initValue'),
+                  $(this).data('hasChangedBefore')
+              )
             )
-          )
-        })
+          })
     })
 
 
@@ -561,19 +567,19 @@ function DefaultHtmlStepUi(_sequencer, options) {
   }
 
 
-  function onDraw(step) {
-    $(step.ui.querySelector(".load")).show();
-    $(step.ui.querySelector("img")).hide();
-    if( $(step.ui.querySelector(".toggleIcon")).hasClass("fa-caret-down") )
-    {
-      $(step.ui.querySelector(".load-spin")).show();
-    }
+  function onDraw() {
+    $step(".load").show()
+      .step("img").hide();
+      if( $step(".toggleIcon").hasClass("fa-caret-down") )
+      {
+        $step(".load-spin").show();
+      }
   }
 
   function onComplete(step) {
-    $(step.ui.querySelector(".load")).hide();
-    $(step.ui.querySelector("img")).show();
-    $(step.ui.querySelector(".load-spin")).hide();
+    $step(".load").hide()
+      .step("img").show()
+      .step(".load-spin").hide();
 
     step.imgElement.src = step.output;
     var imgthumbnail = step.ui.querySelector(".img-thumbnail");
@@ -599,18 +605,18 @@ function DefaultHtmlStepUi(_sequencer, options) {
       for (var i in inputs) {
         if (step.options[i] !== undefined) {
           if (inputs[i].type.toLowerCase() === "input")
-            $(step.ui.querySelector('div[name="' + i + '"] input'))
+            $step('div[name="' + i + '"] input')
               .val(step.options[i])
               .data('initValue', step.options[i]);
           if (inputs[i].type.toLowerCase() === "select")
-            $(step.ui.querySelector('div[name="' + i + '"] select'))
+            $step('div[name="' + i + '"] select')
               .val(step.options[i])
               .data('initValue', step.options[i]);
         }
       }
       for (var i in outputs) {
         if (step[i] !== undefined)
-          $(step.ui.querySelector('div[name="' + i + '"] input'))
+          $step('div[name="' + i + '"] input')
             .val(step[i]);
       }
     }
@@ -658,7 +664,7 @@ if(typeof window === "undefined"){
 module.exports = DefaultHtmlStepUi;
 
 
-},{"./intermediateHtmlStepUi.js":6,"./urlHash.js":7}],5:[function(require,module,exports){
+},{"./intermediateHtmlStepUi.js":6,"./stepSelector":7,"./urlHash.js":8}],5:[function(require,module,exports){
 function generatePreview(previewStepName, customValues, path, selector) {
 
     var previewSequencer = ImageSequencer();
@@ -841,7 +847,50 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
 module.exports = IntermediateHtmlStepUi;
 
 
-},{"./urlHash.js":7}],7:[function(require,module,exports){
+},{"./urlHash.js":8}],7:[function(require,module,exports){
+function $step(scope) {
+  return function(queryString){
+    var element = $(scope.querySelector(queryString));
+
+    element.step = function(queryString){
+      return new $step(scope)(queryString);
+    }
+    element.stepAll = function(queryString){
+      return new $stepAll(scope)(queryString);
+    }
+
+    return element;
+  }
+}
+
+function $stepAll(scope){
+  return function(queryString){
+    var element = $(scope.querySelectorAll(queryString));
+
+    element.step = function(queryString){
+      return new $step(scope)(queryString);
+    }
+    element.stepAll = function(queryString){
+      return new $stepAll(scope)(queryString);
+    }
+
+    return element;
+  }
+}
+
+function stepSelector(scope){
+  return $step(scope);
+}
+
+function stepSelectorAll(scope){
+  return $stepAll(scope);
+}
+
+module.exports = {
+  stepSelector: stepSelector,
+  stepSelectorAll: stepSelectorAll
+}
+},{}],8:[function(require,module,exports){
 function getUrlHashParameter(param) {
 
   var params = getUrlHashParameters();

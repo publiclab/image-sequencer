@@ -814,8 +814,8 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       insert(id);
       $(this).removeClass('selected');
     });
-    $(step.ui.querySelector("#insertStep select")).on('change', selectNewStepUi);
-    $(step.ui.querySelector("#insertStep #add-step-btn")).on('click', function () { insert(id) });
+    $step("#insertStep select").on('change', selectNewStepUi)
+    .step("#insertStep #add-step-btn").on('click', function () { insert(id) });
   }
 
   function insert(id) {

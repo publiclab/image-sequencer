@@ -246,13 +246,12 @@ a.name-header{
   color: #445;
 }
 
-.crop-column{
-    height:648.19px; 
+.step-column{ 
     display:flex; 
     flex-direction:row; 
     align-items:center
 }
-.crop-image{
+.step-image{
     width:100%; 
     display:flex; 
     flex-direction:column; 

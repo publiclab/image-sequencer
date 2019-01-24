@@ -231,7 +231,7 @@ ImageSequencer = function ImageSequencer(options) {
     return modulesdata;
   }
 
-  var str = require('./Strings.js')(sequencer.steps, sequencer.images, modulesInfo, addSteps, copy);
+  var str = require('./Strings.js')(modulesInfo, addSteps, copy);
 
   function loadNewModule(name, options) {
 

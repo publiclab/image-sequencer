@@ -1,29 +1,29 @@
-module.exports = {
+module.exports = function(steps, images, modulesInfo, addSteps, copy){
   // Genates a CLI string for the current sequence
-  toCliString : function() {
+  function toCliString() {
     var cliStringSteps = `"`, cliOptions = {};
-    for (var step in this.steps) {
-      if (this.steps[step].options.name !== "load-image")
-        cliStringSteps += `${this.steps[step].options.name} `;
-      for (var inp in modulesInfo(this.steps[step].options.name).inputs) {
-        cliOptions[inp] = this.steps[step].options[inp];
+    for (var step in steps) {
+      if (steps[step].options.name !== "load-image")
+        cliStringSteps += `${steps[step].options.name} `;
+      for (var inp in modulesInfo(steps[step].options.name).inputs) {
+        cliOptions[inp] = steps[step].options[inp];
       }
     }
     cliStringSteps = cliStringSteps.substr(0, cliStringSteps.length - 1) + `"`;
     return `sequencer -i [PATH] -s ${cliStringSteps} -d '${JSON.stringify(cliOptions)}'`
-  },
+  }
 
   // Strigifies the current sequence
-  toString : function(step) {
+  function toString(step) {
     if (step) {
       return stepToString(step);
     } else {
-      return copy(this.images.image1.steps).map(stepToString).slice(1).join(',');
+      return copy(images.image1.steps).map(stepToString).slice(1).join(',');
     }
-  },
+  }
 
   // Stringifies one step of the sequence
-  stepToString: function(step) {
+  function stepToString(step) {
     let inputs = copy(modulesInfo(step.options.name).inputs);
     inputs = inputs || {};
 
@@ -34,25 +34,25 @@ module.exports = {
 
     var configurations = Object.keys(inputs).map(key => key + ':' + inputs[key]).join('|');
     return `${step.options.name}{${configurations}}`;
-  },
+  }
 
   // exports the current sequence as an array of JSON steps
-  toJSON: function() {
-    return this.stringToJSON(this.toString());
-  },
+  function toJSON() {
+    return stringToJSON(toString());
+  }
 
   // Coverts stringified sequence into an array of JSON steps
-  stringToJSON: function(str) {
+  function stringToJSON(str) {
     let steps;
     if (str.includes(','))
       steps = str.split(',');
     else
       steps = [str];
     return steps.map(stringToJSONstep);
-  },
+  }
 
   // Converts one stringified step into JSON
-  stringToJSONstep: function(str) {
+  function stringToJSONstep(str) {
     var bracesStrings;
     if (str.includes('{'))
       if (str.includes('(') && str.indexOf('(') < str.indexOf('{'))
@@ -88,10 +88,10 @@ module.exports = {
       name: moduleName,
       options: stepSettings
     }
-  },
+  }
 
   // imports a string into the sequencer steps
-  importString: function(str) {
+  function importString(str) {
     let sequencer = this;
     if (this.name != "ImageSequencer")
       sequencer = this.sequencer;
@@ -99,15 +99,26 @@ module.exports = {
     stepsFromString.forEach(function eachStep(stepObj) {
       sequencer.addSteps(stepObj.name, stepObj.options);
     });
-  },
+  }
 
   // imports a array of JSON steps into the sequencer steps
-  importJSON: function(obj) {
+  function importJSON(obj) {
     let sequencer = this;
     if (this.name != "ImageSequencer")
       sequencer = this.sequencer;
     obj.forEach(function eachStep(stepObj) {
       sequencer.addSteps(stepObj.name, stepObj.options);
     });
+  }
+
+  return {
+    toCliString : toCliString,
+    toString : toString,
+    stepToString : stepToString,
+    toJSON : toJSON,
+    stringToJSON : stringToJSON,
+    stringToJSONstep : stringToJSONstep,
+    importString : importString,
+    importJSON : importJSON
   }
 }

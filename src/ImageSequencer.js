@@ -1,7 +1,6 @@
 if (typeof window !== 'undefined') { isBrowser = true }
 else { var isBrowser = false }
 require('./util/getStep.js');
-var str = require('./Strings.js');
 
 ImageSequencer = function ImageSequencer(options) {
 
@@ -258,6 +257,9 @@ ImageSequencer = function ImageSequencer(options) {
     return this;
   }
 
+  sequencer = (this.name == "ImageSequencer") ? this : this.sequencer;
+  var str = require('./Strings.js')(sequencer.steps, sequencer.images, modulesInfo, addSteps, copy);
+
   function saveNewModule(name, path) {
     if (options.inBrowser) {
       // Not for browser context
@@ -306,6 +308,7 @@ ImageSequencer = function ImageSequencer(options) {
     else
       this.sequences = require('./SavedSequences.json');
   }
+
 
   return {
     //literals and objects

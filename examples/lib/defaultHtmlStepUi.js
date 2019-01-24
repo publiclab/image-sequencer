@@ -26,7 +26,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       <div class="container">\
     <div class="row step" style="display:flex">\
     <form class="input-form">\
-    <div class="col-md-4 details">\
+    <div class="col-md-4 details" style="flex:1">\
     <h3>\
     <span class = "toggle">' +step.name + ' <i class="fa fa-caret-up toggleIcon" aria-hidden="true"></i></span>' +
       '</h3><div class="cal"><p><i>"'+

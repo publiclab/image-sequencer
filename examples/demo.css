@@ -249,11 +249,11 @@ a.name-header{
 .step-column{ 
     display:flex; 
     flex-direction:row; 
-    align-items:center
+    align-items:center;
 }
 .step-image{
     width:100%; 
     display:flex; 
     flex-direction:column; 
-    align-items:center
+    align-items:center;
 }

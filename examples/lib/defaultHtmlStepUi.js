@@ -24,7 +24,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     step.ui =
       '\
       <div class="container">\
-    <div class="row step">\
+    <div class="row step" style="display:flex">\
     <form class="input-form">\
     <div class="col-md-4 details">\
     <h3>\
@@ -34,9 +34,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
       '</i></p></div>\
     </div>\
     </form>\
-    <div class="col-md-8 cal crop-column">\
+    <div class="col-md-8 cal step-column">\
       <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
-      <div class="crop-image">\
+      <div class="step-image">\
         <a><img alt="" style="max-width=100%" class="img-thumbnail step-thumbnail"/></a>\
       </div>\
     </div>\

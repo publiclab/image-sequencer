@@ -7,5 +7,6 @@
             "desc": "gamma correction (inverse of actual gamma factor) for the new image",
             "default": 0.2
         }
-    } 
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }

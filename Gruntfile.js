@@ -24,6 +24,10 @@ module.exports = function(grunt) {
       dist: {
         src: ["src/ImageSequencer.js"],
         dest: "dist/image-sequencer.js"
+      }, 
+      js: {
+        src: ["examples/demo.js"],
+        dest: "dist/image-sequencer-ui.js"
       }
     },
 
@@ -31,6 +35,10 @@ module.exports = function(grunt) {
       dist: {
         src: ["./dist/image-sequencer.js"],
         dest: "./dist/image-sequencer.min.js"
+      },
+      js: {
+        src: ['dist/image-sequencer-ui.js'],
+        dest: 'dist/image-sequencer-ui.min.js'
       }
     },
     browserSync: {
@@ -46,5 +54,5 @@ module.exports = function(grunt) {
   /* Default (development): Watch files and build on change. */
   grunt.registerTask("default", ["watch"]);
   grunt.registerTask("build", ["browserify:dist", "uglify:dist"]);
-  grunt.registerTask("serve", ["browserify:dist", "uglify:dist", "browserSync", "watch"]);
+  grunt.registerTask("serve", ["browserify:dist","browserify:js","uglify:dist","uglify:js","browserSync", "watch"]);
 };

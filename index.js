@@ -39,6 +39,7 @@ if (program.saveSequence) {
   sequencer.saveNewModule(params[0], params[1]);
   sequencer.loadNewModule(params[0], require(params[1]));
   spinner.stop();
+  console.log("\x1b[32m%s\x1b[0m", "Your module was installed successfully!!");
 } else {
   // Parse step into an array to allow for multiple steps.
   if (!program.step) exit("No steps passed");
@@ -68,6 +69,9 @@ if (program.saveSequence) {
       for (var output in step.info.outputs) {
         console.log("[" + program.step + "]: " + output + " = " + step[output]);
       }
+    },
+    notify: function(msg) {
+      console.log('\x1b[36m%s\x1b[0m','🌟  '+msg);
     }
   });
 

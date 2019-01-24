@@ -1,3 +1,9 @@
+var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js'),
+    setupCache = require('./lib/cache.js'),
+    DefaultHtmlStepUi = require('./lib/defaultHtmlStepUi.js'),
+    urlHash = require('./lib/urlHash.js'),
+    insertPreview = require('./lib/insertPreview.js');
+
 window.onload = function() {
   sequencer = ImageSequencer();
 
@@ -10,40 +16,92 @@ window.onload = function() {
 
     // Add modules to the addStep dropdown
     for (var m in modulesInfo) {
-      addStepSelect.append(
-        '<option value="' + m + '">' + modulesInfo[m].name + "</option>"
-      );
+      if (modulesInfo[m] && modulesInfo[m].name)
+        addStepSelect.append(
+          '<option value="' + m + '">' + modulesInfo[m].name + "</option>"
+        );
     }
+    // Null option
+    addStepSelect.append('<option value="none" disabled selected>More modules...</option>');
   }
   refreshOptions();
+
+  $(window).on('scroll', scrollFunction);
+
+  function scrollFunction() {
+    var shouldDisplay = $('body').scrollTop() > 20 || $(':root').scrollTop() > 20;
+
+    $('#move-up').css({
+       display: shouldDisplay ? 'block' : 'none'
+    });
+  }
+
+
+  function topFunction() {
+    $('body').animate({scrollTop: 0});
+    $(':root').animate({scrollTop: 0});
+  }
+
+  $('#move-up').on("click",topFunction);
+
 
   // UI for each step:
   sequencer.setUI(DefaultHtmlStepUi(sequencer));
 
   // UI for the overall demo:
-  var ui = DefaultHtmlSequencerUi(sequencer);
+  var ui = defaultHtmlSequencerUi(sequencer);
 
   // find any `src` parameters in URL hash and attempt to source image from them and run the sequencer
-  if (getUrlHashParameter('src')) {
-    sequencer.loadImage(getUrlHashParameter('src'), ui.onLoad);
+  if (urlHash.getUrlHashParameter('src')) {
+    sequencer.loadImage(urlHash.getUrlHashParameter('src'), ui.onLoad);
   } else {
     sequencer.loadImage("images/tulips.png", ui.onLoad);
   }
 
+  var resetSequence = function(){
+    var r=confirm("Do you want to reset the sequence?");
+    if (r)
+      window.location = "/";
+  }
+
   $("#addStep select").on("change", ui.selectNewStepUi);
   $("#addStep #add-step-btn").on("click", ui.addStepUi);
+  $("#resetButton").on("click",resetSequence);
+
+  //Module button radio selection
+  $('.radio-group .radio').on("click", function() {
+    $(this).parent().find('.radio').removeClass('selected');
+    $(this).addClass('selected');
+    newStep = $(this).attr('data-value');
+    //$("#addStep option[value=" + newStep + "]").attr('selected', 'selected');
+    $("#addStep select").val(newStep);
+    ui.selectNewStepUi();
+    ui.addStepUi();
+    $(this).removeClass('selected');
+  });
 
   $('#download-btn').click(function() {
-    $('.img-thumbnail:last()').trigger("click");
-
+    $('.step-thumbnail:last()').trigger("click");
     return false;
   });
 
+  function displayMessageOnSaveSequence(){
+      $(".savesequencemsg").fadeIn();
+      setTimeout(function() {
+          $(".savesequencemsg").fadeOut();
+      }, 1000);
+    }
+
   $('body').on('click', 'button.remove', ui.removeStepUi);
   $('#save-seq').click(() => {
-    sequencer.saveSequence(window.prompt("Please give a name to your sequence..."), sequencer.toString());
-    sequencer.loadModules();
-    refreshOptions();
+    var result = window.prompt("Please give a name to your sequence... (Saved sequence will only be available in this browser).");
+    if(result){
+      result = result + " (local)";
+      sequencer.saveSequence(result, sequencer.toString());
+      sequencer.loadModules();
+      displayMessageOnSaveSequence();
+      refreshOptions();
+    }
   });
 
   var isWorkingOnGifGeneration = false;
@@ -60,7 +118,7 @@ window.onload = function() {
 
     try {
       // Select all images from previous steps
-      var imgs = document.getElementsByClassName("img-thumbnail");
+      var imgs = document.getElementsByClassName("step-thumbnail");
 
       var imgSrcs = [];
 
@@ -76,7 +134,7 @@ window.onload = function() {
       }
 
       gifshot.createGIF(options, function(obj) {
-        if(!obj.error) {
+        if (!obj.error) {
           // Final gif encoded with base64 format
           var image = obj.image;
           var animatedImage = document.createElement('img');
@@ -112,7 +170,7 @@ window.onload = function() {
         }
       });
     }
-    catch(e) {
+    catch (e) {
       console.error(e);
       button.disabled = false;
       isWorkingOnGifGeneration = false;
@@ -124,12 +182,30 @@ window.onload = function() {
   sequencer.setInputStep({
     dropZoneSelector: "#dropzone",
     fileInputSelector: "#fileInput",
+    takePhotoSelector: "#take-photo",
     onLoad: function onFileReaderLoad(progress) {
       var reader = progress.target;
       var step = sequencer.images.image1.steps[0];
+      var util=IntermediateHtmlStepUi(sequencer);
       step.output.src = reader.result;
       sequencer.run({ index: 0 });
       step.options.step.imgElement.src = reader.result;
+      insertPreview.updatePreviews(reader.result,'addStep');
+      insertPreview.updatePreviews(sequencer.images.image1.steps[0].options.step.imgElement.src,'insertStep');
+    },
+    onTakePhoto: function (url) {
+      var step = sequencer.images.image1.steps[0];
+      step.output.src = url;
+      sequencer.run({ index: 0 });
+      step.options.step.imgElement.src = url;
     }
   });
+
+  setupCache();
+
+  if (urlHash.getUrlHashParameter('src')) {
+    insertPreview.updatePreviews(urlHash.getUrlHashParameter('src'),'addStep');
+  } else {
+    insertPreview.updatePreviews("images/tulips.png",'addStep');
+  }
 };

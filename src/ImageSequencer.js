@@ -219,7 +219,7 @@ ImageSequencer = function ImageSequencer(options) {
         modulesdata[modulename] = modules[modulename][1];
       }
       for (var sequencename in this.sequences) {
-        modulesdata[sequencename] = { name: sequencename, steps: sequences[sequencename] };
+        modulesdata[sequencename] = { name: sequencename, steps: this.sequences[sequencename] };
       }
     }
     else {
@@ -230,6 +230,8 @@ ImageSequencer = function ImageSequencer(options) {
     }
     return modulesdata;
   }
+
+  var str = require('./Strings.js')(sequencer.steps, sequencer.images, modulesInfo, addSteps, copy);
 
   function loadNewModule(name, options) {
 
@@ -256,9 +258,6 @@ ImageSequencer = function ImageSequencer(options) {
     }
     return this;
   }
-
-  sequencer = (this.name == "ImageSequencer") ? this : this.sequencer;
-  var str = require('./Strings.js')(sequencer.steps, sequencer.images, modulesInfo, addSteps, copy);
 
   function saveNewModule(name, path) {
     if (options.inBrowser) {
@@ -344,7 +343,7 @@ ImageSequencer = function ImageSequencer(options) {
     createMetaModule: createMetaModule,
     saveSequence: saveSequence,
     loadModules: loadModules,
-
+    
     //other functions
     log: log,
     objTypeOf: objTypeOf,

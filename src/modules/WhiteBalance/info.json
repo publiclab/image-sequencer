@@ -1,0 +1,12 @@
+{
+    "name": "White Balance",
+    "description": "Change the colour balance of the image by adjusting the colour temperature.",
+    "inputs": {
+      "temperature": {
+        "type": "string",
+        "desc": "Temperature between 0 - 40,000 Kelvin",
+        "default": "6000"
+      }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+}

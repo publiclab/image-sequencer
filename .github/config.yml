@@ -10,7 +10,7 @@ newIssueWelcomeComment: |
 
 # Comment to be posted to on PRs from first time contributors in your repository
 newPRWelcomeComment: |
- Thanks for opening this pull request! `Dangerbot` will test out your code and reply in a bit with some pointers and requests.
+ Thanks for opening this pull request!
  There may be some errors, **but don't worry!** We're here to help! 👍🎉😄
 # Configuration for first-pr-merge - https://github.com/behaviorbot/first-pr-merge
 

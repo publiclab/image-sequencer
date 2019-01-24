@@ -46,7 +46,7 @@ h1 {
   padding: 0px 0px;
 }
 
-#dropzone {
+.dropzone {
   padding: 30px;
   margin: 0 20% 30px;
   border: 4px dashed #ccc;
@@ -59,7 +59,7 @@ h1 {
   background: #eee;
 }
 
-#dropzone input {
+.dropzone input {
   max-width: 100%;
 }
 

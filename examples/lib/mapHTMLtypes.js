@@ -4,9 +4,6 @@ function mapHtmlTypes(inputInfo){
     case 'integer':
       htmlType = inputInfo.min != undefined ? 'range' : 'number';
       break;
-    case 'string':
-      htmlType = 'text';
-      break;
     case 'select':
       htmlType = 'select';
       break;
@@ -15,6 +12,12 @@ function mapHtmlTypes(inputInfo){
       break;
     case 'float':
       htmlType = inputInfo.min != undefined ? 'range' : 'text';
+      break;
+    case 'range':
+      htmlType = 'range';
+      break;
+    case 'number':
+      htmlType = 'number';
       break;
     default:
       htmlType = 'text';

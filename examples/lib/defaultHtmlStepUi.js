@@ -8,11 +8,16 @@
 // output values, step information.
 // See documetation for more details.
 
-function DefaultHtmlStepUi(_sequencer, options) {
+var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js');
+var urlHash = require('./urlHash.js');
+var mapHtmlTypes = require('./mapHTMLtypes');
 
+function DefaultHtmlStepUi(_sequencer, options) {
+  
   options = options || {};
   var stepsEl = options.stepsEl || document.querySelector("#steps");
   var selectStepSel = options.selectStepSel = options.selectStepSel || "#selectStep";
+
   function onSetup(step, stepOptions) {
     if (step.options && step.options.description)
       step.description = step.options.description;
@@ -49,7 +54,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     </div>\
     </div>';
 
-    var util = IntermediateHtmlStepUi(_sequencer, step);
+    var util = intermediateHtmlStepUi(_sequencer, step);
 
     var parser = new DOMParser();
     step.ui = parser.parseFromString(step.ui, "text/html");
@@ -166,7 +171,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         _sequencer.run({ index: step.index - 1 });
 
         // modify the url hash
-        setUrlHashParameter("steps", _sequencer.toString());
+        urlHash.setUrlHashParameter("steps", _sequencer.toString());
 
         // disable the save button
         $(step.ui.querySelector('.btn-save')).prop('disabled', true);
@@ -295,3 +300,12 @@ function DefaultHtmlStepUi(_sequencer, options) {
     notify: notify
   }
 }
+
+if(typeof window === "undefined"){
+  module.exports={
+    DefaultHtmlStepUi: DefaultHtmlStepUi
+  }
+}
+
+module.exports = DefaultHtmlStepUi;
+

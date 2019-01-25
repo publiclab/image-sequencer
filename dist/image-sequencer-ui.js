@@ -353,7 +353,7 @@ module.exports = DefaultHtmlSequencerUi;
 
 var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js');
 var urlHash = require('./urlHash.js');
-var mapHtmlTypes = require('./mapHTMLtypes');
+var mapHtmlTypes = require('./mapHtmltypes');
 
 function DefaultHtmlStepUi(_sequencer, options) {
   
@@ -659,7 +659,7 @@ if(typeof window === "undefined"){
 module.exports = DefaultHtmlStepUi;
 
 
-},{"./intermediateHtmlStepUi.js":6,"./mapHTMLtypes":7,"./urlHash.js":8}],5:[function(require,module,exports){
+},{"./intermediateHtmlStepUi.js":6,"./mapHtmltypes":7,"./urlHash.js":8}],5:[function(require,module,exports){
 function generatePreview(previewStepName, customValues, path, selector) {
 
     var previewSequencer = ImageSequencer();
@@ -873,6 +873,8 @@ function mapHtmlTypes(inputInfo){
     type: htmlType
   }
 }
+
+module.exports = mapHtmlTypes;
 },{}],8:[function(require,module,exports){
 function getUrlHashParameter(param) {
 

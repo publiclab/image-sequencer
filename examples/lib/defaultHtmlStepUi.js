@@ -10,7 +10,7 @@
 
 var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js');
 var urlHash = require('./urlHash.js');
-var mapHtmlTypes = require('./mapHTMLtypes');
+var mapHtmlTypes = require('./mapHtmltypes');
 
 function DefaultHtmlStepUi(_sequencer, options) {
   

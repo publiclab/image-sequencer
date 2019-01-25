@@ -25,3 +25,5 @@ function mapHtmlTypes(inputInfo){
     type: htmlType
   }
 }
+
+module.exports = mapHtmlTypes;

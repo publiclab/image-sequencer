@@ -92,7 +92,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       $(this).removeClass('selected');
     });
     $step("#insertStep select").on('change', selectNewStepUi)
-    .step("#insertStep #add-step-btn").on('click', function () { insert(id) });
+    .elem("#insertStep #add-step-btn").on('click', function () { insert(id) });
   }
 
   function insert(id) {

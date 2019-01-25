@@ -10,7 +10,7 @@
 
 var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js'),
   urlHash = require('./urlHash.js'),
-  stepSelector = require('./stepSelector'),
+  scopeQuery = require('./scopeQuery'),
   $stepAll,
   $step;
 
@@ -64,8 +64,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
     step.ui = step.ui.querySelector("div.container");
     step.linkElements = step.ui.querySelectorAll("a");
     step.imgElement = step.ui.querySelector("a img");
-    $step = stepSelector.stepSelector(step.ui);
-    $stepAll = stepSelector.stepSelectorAll(step.ui);
+    $step = scopeQuery.scopeSelector(step.ui);
+    $stepAll = scopeQuery.scopeSelectorAll(step.ui);
 
 
     if (_sequencer.modulesInfo().hasOwnProperty(step.name)) {
@@ -142,7 +142,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
           parser.parseFromString(tools, "text/html").querySelector("div")
         );
       $step(".remove").on('click', function() {notify('Step Removed','remove-notification')})
-        .stepAll(".insert-step").on('click', function() { util.insertStep(step.ID) });
+        .elemAll(".insert-step").on('click', function() { util.insertStep(step.ID) });
 
       // Insert the step's UI in the right place
       if (stepOptions.index == _sequencer.images.image1.steps.length) {
@@ -159,7 +159,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     }
     $step(".toggle").on("click", () => {
       $step('.toggleIcon').toggleClass('fa-caret-up').toggleClass('fa-caret-down')
-        .stepAll(".cal").toggleClass("collapse");
+        .elemAll(".cal").toggleClass("collapse");
     });
     
 
@@ -199,7 +199,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       changedInputs = 0,
       optionsChanged = false;
     $step('.input-form').on('submit', saveOptions)
-      .stepAll('.target').each(function(i, input) {
+      .elemAll('.target').each(function(i, input) {
         $(input)
           .data('initValue', $(input).val())
           .data('hasChangedBefore', false)
@@ -226,7 +226,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
   function onDraw() {
     $step(".load").show()
-      .step("img").hide();
+      .elem("img").hide();
       if( $step(".toggleIcon").hasClass("fa-caret-down") )
       {
         $step(".load-spin").show();
@@ -235,8 +235,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
   function onComplete(step) {
     $step(".load").hide()
-      .step("img").show()
-      .step(".load-spin").hide();
+      .elem("img").show()
+      .elem(".load-spin").hide();
 
     step.imgElement.src = step.output;
     var imgthumbnail = step.ui.querySelector(".img-thumbnail");

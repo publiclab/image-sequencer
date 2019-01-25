@@ -5,7 +5,7 @@
   "main": "src/ImageSequencer.js",
   "scripts": {
     "debug": "TEST=true node ./index.js -i ./examples/images/monarch.png -s invert",
-    "test": "TEST=true tape test/**/*.js test/*.js | tap-spec; browserify test/modules/image-sequencer.js test/modules/chain.js test/modules/meta-modules.js test/modules/replace.js test/modules/import-export.js test/modules/run.js test/modules/dynamic-imports.js | tape-run --render=\"tap-spec\"",
+    "test": "TEST=true tape test/ui/*.js test/**/*.js test/*.js test/ui/user-interface.js | tap-spec; browserify test/modules/image-sequencer.js test/modules/chain.js test/modules/meta-modules.js test/modules/replace.js test/modules/import-export.js test/modules/run.js test/modules/dynamic-imports.js test/util/parse-input.js | tape-run --render=\"tap-spec\"",
     "setup": "npm i && npm i -g grunt grunt-cli",
     "start": "grunt serve"
   },
@@ -31,10 +31,12 @@
     "fisheyegl": "^0.1.2",
     "font-awesome": "~4.7.0",
     "get-pixels": "~3.3.0",
+    "gifshot": "^0.4.5",
     "image-sequencer-invert": "^1.0.0",
     "imagejs": "0.0.9",
     "imgareaselect": "git://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2",
     "jquery": "^3.3.1",
+    "jsdom": "^13.1.0",
     "jsqr": "^1.1.1",
     "lodash": "^4.17.5",
     "ndarray-gaussian-filter": "^1.0.0",

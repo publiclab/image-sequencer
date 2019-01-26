@@ -2,6 +2,10 @@ var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js'),
     setupCache = require('./lib/cache.js'),
     DefaultHtmlStepUi = require('./lib/defaultHtmlStepUi.js'),
     urlHash = require('./lib/urlHash.js'),
+    gifshot = require('gifshot'),
+    initComponents = require('./lib/initializeComponents'),
+    initializeSelect = initComponents.initializeSelect,
+    initializeModal = initComponents.initializeModal,
     insertPreview = require('./lib/insertPreview.js');
 
 window.onload = function() {
@@ -11,7 +15,7 @@ window.onload = function() {
     // Load information of all modules (Name, Inputs, Outputs)
     var modulesInfo = sequencer.modulesInfo();
 
-    var addStepSelect = $("#addStep select");
+    var addStepSelect = $("#selectStep");
     addStepSelect.html("");
 
     // Add modules to the addStep dropdown
@@ -22,7 +26,7 @@ window.onload = function() {
         );
     }
     // Null option
-    addStepSelect.append('<option value="none" disabled selected>More modules...</option>');
+    addStepSelect.append('<label value="none" disabled selected>More modules...</label>');
   }
   refreshOptions();
 
@@ -146,11 +150,14 @@ window.onload = function() {
           var modal = $('#js-download-gif-modal');
 
           $("#js-download-as-gif-button").one("click", function() {
+            // Close modal
+            modal.modal('close');
+
             // Trigger download
             download(image, "index.gif", "image/gif");
-
-            // Close modal
-            modal.modal('hide');
+          })
+          $('.gif-close').click(function(){
+            modal.modal('close');
           })
 
           var gifContainer = document.getElementById("js-download-modal-gif-container");
@@ -163,7 +170,7 @@ window.onload = function() {
 
 
           // Open modal
-          modal.modal();
+          modal.modal('open');
 
           button.disabled = false;
           isWorkingOnGifGeneration = false;
@@ -208,4 +215,6 @@ window.onload = function() {
   } else {
     insertPreview.updatePreviews("images/tulips.png",'addStep');
   }
+  initializeSelect();
+  initializeModal();
 };

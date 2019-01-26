@@ -10,11 +10,16 @@
 
 var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js');
 var urlHash = require('./urlHash.js');
+var initSelect = require('./initializeComponents').initializeSelect;
+var initCollapsible = require('./initializeComponents').initializeCollapsible;
+function capitalize(str){
+  return str.charAt(0).toUpperCase() + str.substr(1);
+}
 
 function DefaultHtmlStepUi(_sequencer, options) {
   
   options = options || {};
-  var stepsEl = options.stepsEl || document.querySelector("#steps");
+  var stepsEl = options.stepsEl || document.querySelector("#steps ul");
   var selectStepSel = options.selectStepSel = options.selectStepSel || "#selectStep";
 
   function onSetup(step, stepOptions) {
@@ -22,34 +27,39 @@ function DefaultHtmlStepUi(_sequencer, options) {
       step.description = step.options.description;
 
     step.ui =
-      '\
-      <div class="container">\
-    <div class="row step">\
-    <form class="input-form">\
-    <div class="col-md-4 details">\
-    <h3>\
-    <span class = "toggle">' +step.name + ' <i class="fa fa-caret-up toggleIcon" aria-hidden="true"></i></span>' +
-    '<span class="load-spin" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></span>' +
-    '</h3><div class="cal"><p><i>"'+
-      (step.description || "") +
-      '</i></p></div>\
-    </div>\
-    </form>\
-    <div class="col-md-8 cal">\
-    <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
-    <a><img alt="" style="max-width=100%" class="img-thumbnail step-thumbnail"/></a>\
-    </div>\
-    </div>\
-    </div>\
-    </div>';
+      '<li class="active">\
+        <div class="collapsible-header">'+capitalize(step.name)+'</div>\
+        <div class="collapsible-body" style="display:block;">\
+          <div class="container">\
+            <div class="row step">\
+              <form class="input-form">\
+                <div class="col m4 details">\
+                  <div class="cal">\
+                    <p>\
+                      <i>'+
+                      (step.description || "") +
+                      '</i>\
+                    </p>\
+                  </div>\
+                </div>\
+              </form>\
+              <div class="col m8 cal">\
+                <div class="load" style="display:none;"><i class="material-icons spin toggleIcon">donut_large</i></div>\
+                <a><img alt="" style="max-width=100%" class="img-thumbnail step-thumbnail"/></a>\
+                </div>\
+              </div>\
+            </div>\
+          </div>\
+        </div>\
+      </li>';
 
     var tools =
-    '<div class="cal"><div class="tools btn-group">\
-    <button confirm="Are you sure?" class="remove btn btn btn-default">\
-      <i class="fa fa-trash"></i>\
+    '<div class="cal"><div class="tools">\
+    <button class="remove btn-floating waves-effect waves-light red z-depth-0">\
+      <i class="material-icons">delete</i>\
     </button>\
-    <button class="btn  insert-step" style="margin-left:10px;border-radius:6px;background-color:#fff;border:solid #bababa 1.1px;" >\
-      <i class="fa fa-plus"></i> Add\
+    <button class="btn insert-step btn-floating waves-effect waves-light green z-depth-0">\
+      <i class="material-icons">add_circle</i>\
     </button>\
     </div>\
     </div>';
@@ -58,7 +68,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     var parser = new DOMParser();
     step.ui = parser.parseFromString(step.ui, "text/html");
-    step.ui = step.ui.querySelector("div.container");
+    step.ui = step.ui.querySelector("li");
     step.linkElements = step.ui.querySelectorAll("a");
     step.imgElement = step.ui.querySelector("a img");
 
@@ -74,17 +84,20 @@ function DefaultHtmlStepUi(_sequencer, options) {
         if (!isInput) {
           html += '<span class="output"></span>';
         } else if (inputDesc.type.toLowerCase() == "select") {
-          html += '<select class="form-control target" name="' + paramName + '">';
+          html += '<div name='+paramName+'class="input-field"><select class="target" name="' + paramName + '">';
           for (var option in inputDesc.values) {
-            html += "<option>" + inputDesc.values[option] + "</option>";
+            html += "<option value="+inputDesc.values[option]+">" + inputDesc.values[option] + "</option>";
           }
-          html += "</select>";
+          html += "</select></div>";
         } else {
           let paramVal = step.options[paramName] || inputDesc.default;
-          html =
-            '<input class="form-control target" type="' +
+
+          html +=
+            '<div class="input-field"><input class="validate target" type="' +
             inputDesc.type +
             '" name="' +
+            paramName +
+            '" id="' +
             paramName +
             '" value="' +
             paramVal +
@@ -98,16 +111,16 @@ function DefaultHtmlStepUi(_sequencer, options) {
               '"max="' +
               inputDesc.max +
               '"step="' +
-              inputDesc.step + '">' + '<span>' + paramVal + '</span>';
+              inputDesc.step + '"><span>'+ paramVal + '</span></div>';
 
           }
-          else html += '">';
+          else html += '"><label for="'+paramName+'">'+capitalize(paramName)+'</label></div>';
         }
 
         var div = document.createElement("div");
         div.className = "row";
         div.setAttribute("name", paramName);
-        var description = inputs[paramName].desc || paramName;
+        var description = inputDesc.desc || "";
         div.innerHTML =
           "<div class='det cal'>\
                            <label for='" +
@@ -123,10 +136,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
       }
 
       $(step.ui.querySelector("div.details")).append(
-        '<div class="cal"><p><button type="submit" class="btn btn-default btn-save" disabled = "true" >Apply</button><span> Press apply to see changes</span></p></div>'
+        '<div class="cal"><p><button type="submit" class="btn btn-save" disabled="true" >Apply</button><span> Press apply to see changes</span></p></div>'
       );
 
-      
     }
 
     if (step.name != "load-image") {
@@ -140,22 +152,17 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
       // Insert the step's UI in the right place
       if (stepOptions.index == _sequencer.images.image1.steps.length) {
-        stepsEl.appendChild(step.ui);
-        $("#steps .container:nth-last-child(1) .insert-step").prop('disabled',true);
-        if($("#steps .container:nth-last-child(2)"))
-        $("#steps .container:nth-last-child(2) .insert-step").prop('disabled',false);
+        $(stepsEl).append(step.ui);
+        $("#steps ul li:nth-last-child(1) .insert-step").prop('disabled',true);
+        if($("#steps ul li:nth-last-child(2)"))
+          $("#steps ul li:nth-last-child(2) .insert-step").prop('disabled',false);
       } else {
         stepsEl.insertBefore(step.ui, $(stepsEl).children()[stepOptions.index]);
       }
     }
     else {
-      $("#load-image").append(step.ui);
+      $(stepsEl).append(step.ui);
     }
-    $(step.ui.querySelector(".toggle")).on("click", () => {
-      $(step.ui.querySelector('.toggleIcon')).toggleClass('fa-caret-up').toggleClass('fa-caret-down');
-      $(step.ui.querySelectorAll(".cal")).toggleClass("collapse");
-    });
-    
 
     function saveOptions(e) {
       e.preventDefault();
@@ -164,7 +171,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
           .find("input,select")
           .each(function(i, input) {
             $(input)
-              .data('initValue', $(input).val())
+              .data('initValue', $(this).val())
               .data('hasChangedBefore', false);
             step.options[$(input).attr("name")] = $(input).val();
           });
@@ -193,11 +200,12 @@ function DefaultHtmlStepUi(_sequencer, options) {
       changedInputs = 0,
       optionsChanged = false;
     $(step.ui.querySelector('.input-form')).on('submit', saveOptions);
-    $(step.ui.querySelectorAll('.target')).each(function(i, input) {
+
+    function initializeInputs(i ,input){
       $(input)
         .data('initValue', $(input).val())
         .data('hasChangedBefore', false)
-        .on('input', function() {
+        .on('input change', function() {
           $(this)
             .focus()
             .data('hasChangedBefore',
@@ -208,13 +216,15 @@ function DefaultHtmlStepUi(_sequencer, options) {
             )
           )
         })
-    })
+    }
 
-
+    $(step.ui.querySelectorAll('.target')).each(initializeInputs);
 
     $('input[type="range"]').on('input', function() {
         $(this).next().html($(this).val());
     })
+    initSelect();
+    initCollapsible();
   }
 
 
@@ -261,8 +271,10 @@ function DefaultHtmlStepUi(_sequencer, options) {
               .data('initValue', step.options[i]);
           if (inputs[i].type.toLowerCase() === "select")
             $(step.ui.querySelector('div[name="' + i + '"] select'))
-              .val(step.options[i])
-              .data('initValue', step.options[i]);
+              .data('initValue', step.options[i])
+              .find('option[value="'+step.options[i]+'"]')
+              .prop('selected', true);
+            $(step.ui.querySelector('div[name="' + i + '"] select')).formSelect();
         }
       }
       for (var i in outputs) {

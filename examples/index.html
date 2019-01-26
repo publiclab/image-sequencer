@@ -20,7 +20,6 @@
   <script src="../dist/image-sequencer-ui.js" charset="utf-8"></script>
   <!-- for crop module: -->
   <script src="../node_modules/imgareaselect/jquery.imgareaselect.dev.js"></script>
-  <script src="../node_modules/gifshot/dist/gifshot.min.js" type="text/javascript"></script>
 
   <!-- Download.js for large files -->
   <script src="../node_modules/downloadjs/download.min.js" type="text/javascript"/>
@@ -34,6 +33,8 @@
 
   <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="../node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="../node_modules/materialize-css/dist/css/materialize.min.css" rel="stylesheet">
+  <link href="../node_modules/material-design-icons/iconfont/material-icons.css" rel="stylesheet">
 
   <!-- for crop module: -->
   <link href="../node_modules/imgareaselect/distfiles/css/imgareaselect-default.css" rel="stylesheet">
@@ -72,55 +73,59 @@
     </div>
 
     <section id="steps" class="row">
-      <div id="load-image"></div>
+      <ul class="collapsible popout expandable"></ul>
     </section>
 
     <hr />
-  <p class = "alert alert-success savesequencemsg">Saved Sequence Success. Sequence can be found among other modules.</p>
+  <p class = "alert green savesequencemsg">Saved Sequence Success. Sequence can be found among other modules.</p>
   <div class="row">
-    <div class="col-sm-8">
-    <section id="addStep" class="panel panel-primary">
+    <div class="col s8">
+    <section id="addStep" class="card">
       <div class="form-inline">
-        <div class="panel-body">
-          <p class="info">Select a new module to add to your sequence.</p>
+        <div class="card-content center">
+          <span class="card-title">Select A Module</span>
+          <p class="info"></p>
           <div class="row center-align radio-group">
             <div>
               <div class="radio" data-value="brightness">
-                <i class="fa fa-sun-o fa-4x i-over"></i>
+                <i class="material-icons i-over">brightness_high</i>
               </div>
               <p>Brightness</p>
             </div>
             <div>
               <div class="radio" data-value="contrast">
-                <i class="fa fa-adjust fa-4x i-over"></i>
+                <i class="material-icons i-over">tonality</i>
               </div>
               <p>Contrast</p>
             </div>
             <div>
               <div class="radio" data-value="saturation">
-                <i class="fa fa-tint fa-4x i-over i-small"></i>
+                <i class="material-icons i-over">colorize</i>
               </div>
               <p>Saturation</p>
             </div>
             <div>
               <div class="radio" data-value="rotate">
-                <i class="fa fa-rotate-right fa-4x i-over"></i>
+                <i class="material-icons i-over">rotate_left</i>
               </div>
               <p>Rotate</p>
             </div>
             <div>
               <div class="radio" data-value="crop">
-                <i class="fa fa-crop fa-4x i-over"></i>
+                <i class="material-icons i-over">crop</i>
               </div>
               <p>Crop</p>
             </div>
           </div>
           <div class="center-align">
-            <select class="form-control input-lg" id="selectStep">
-              <!-- The default null selection has been appended manually in demo.js
-              This is because the options in select are overritten when options are appended.-->
-            </select>
-            <button class="btn btn-success btn-lg" name="add" id="add-step-btn">Add Step</button>
+            <div class="input-field">
+              <select id="selectStep">
+                <!-- The default null selection has been appended manually in demo.js
+                This is because the options in select are overritten when options are appended.-->
+              </select>
+              <label>More Modules...</label>
+            </div>
+            <button class="btn waves-effect green accent-4" name="add" id="add-step-btn">Add Step</button>
           </div>
         </div>
       </div>
@@ -130,29 +135,26 @@
       <div class="panel-body">
 
         <div class="row center-align">
-          <button class="btn btn-primary btn-block btn-lg" name="save-sequence" id="save-seq">Save Sequence</button>
-          <button class="btn btn-primary btn-block btn-lg js-view-as-gif" id="gif">View GIF</button>
+          <button class="btn waves-effect blue darken-2" name="save-sequence" id="save-seq">Save Sequence</button>
+          <button class="btn waves-effect blue darken-2 js-view-as-gif" id="gif">View GIF</button>
         </div>
 
 
-        <div class="modal fade" id="js-download-gif-modal" tabindex="-1" role="dialog">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Your gif is ready</h4>
-              </div>
-              <div class="modal-body">
-                <div id="js-download-modal-gif-container">
-                  <!-- Gif should appear here -->
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
-
-                <button id="js-download-as-gif-button" class="btn btn-primary">Download</button>
-              </div>
+        <div class="modal fade" id="js-download-gif-modal">
+          <div class="modal-header">
+            <h4 class="modal-title">
+              Your gif is ready
+              <button type="button" class="gif-close close"><span aria-hidden="true">&times;</span></button>
+            </h4>
+          </div>
+          <div class="modal-content">
+            <div id="js-download-modal-gif-container">
+              <!-- Gif should appear here -->
             </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn gif-close">Done</button>
+            <button id="js-download-as-gif-button" class="btn green">Download</button>
           </div>
         </div>
 
@@ -160,13 +162,15 @@
     </section>
 
     </div>
-    <div class="col-sm-4">
-    <section id="dwnld" class="panel panel-primary">
+    <div class="col s4">
+    <section id="dwnld" class="card">
       <div class="form-inline">
         <div class="panel-body">
           <div style="text-align:center;">
-            <button class="btn btn-success btn-lg" id="download-btn" name="download">Download PNG</button>
-            <button id="resetButton" class="btn btn-default btn-lg">Clear All Steps</button>
+            <div class="container">
+              <div class="row s12" style="margin-bottom: 0;"><button class="btn teal lighten-2" id="download-btn" name="download">Download PNG</button></div>
+              <div class="row s12" style="margin-bottom: 0;"><button id="resetButton" class="btn teal lighten-2">Clear All Steps</button></div>
+            </div>
           </div>
         </div>
       </div>
@@ -175,11 +179,12 @@
   </div>
 
   <footer>
-    <hr style="margin:20px;"><center><a class="color:grey;" id="clear-cache">Clear offline cache</a></center>
+    <hr style="margin:20px;"><center><a id="clear-cache">Clear offline cache</a></center>
   </footer>
 
   <button id="move-up"><i class="fa fa-arrow-circle-o-up"></i></button>
 
+  <script src="../node_modules/materialize-css/dist/js/materialize.min.js"></script>
   <script type="text/javascript">
     $(function() {
       var sequencer;

@@ -1,4 +1,4 @@
-describe('Default HTML sequencer step', function() {
+describe('Default sequencer HTML', function() {
 
   var DefaultHtmlSequencerUi = require('../examples/lib/defaultHtmlSequencerUi')
   var sequencer = require('../src/ImageSequencer')()
@@ -20,23 +20,23 @@ describe('Default HTML sequencer step', function() {
     defaultHtmlSequencerUi.importStepsFromUrlHash()
   })
 
-  it('load ui method works', function() {
+  it('load default ui', function() {
     expect(defaultHtmlSequencerUi.onLoad).toHaveBeenCalled()
   })
 
-  it('select step ui method works', function() {
+  it('select step ui', function() {
     expect(defaultHtmlSequencerUi.selectNewStepUi).toHaveBeenCalled()
   })
 
-  it('add step ui method works', function() {
+  it('add step ui', function() {
     expect(defaultHtmlSequencerUi.addStepUi).toHaveBeenCalled()
   })
 
-  it('remove step ui method works', function() {
+  it('remove step ui', function() {
     expect(defaultHtmlSequencerUi.removeStepUi).toHaveBeenCalled()
   })
 
-  it('importing from url works', function() {
+  it('import options from url', function() {
     expect(defaultHtmlSequencerUi.importStepsFromUrlHash).toHaveBeenCalled()
   })
 })

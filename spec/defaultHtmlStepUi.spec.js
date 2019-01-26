@@ -1,5 +1,4 @@
-var jsdom = require('jsdom');
-var JSDOM = jsdom.JSDOM;
+var { JSDOM } = require('jsdom');
 var DOM = new JSDOM(`<body></body>`);
 
 global.document = DOM.window.document;

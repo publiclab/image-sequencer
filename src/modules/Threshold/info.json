@@ -1,6 +1,20 @@
 {
-  "name": "Threshold image",
-  "description": "...",
+  "name": "Threshold",
+  "description": "Thresholding is used to create binary images",
   "inputs": {
+    "threshold": {
+      "type": "select",
+      "desc": "Type of Thresholding",
+      "default": "Manual Thresholding",
+      "values": ["Manual Thresholding", "Automatic Thresholding"]
+    },
+    "input": {
+      "type": "range",
+      "desc": "Threshold Value",
+      "default": "120",
+      "min": "0",
+      "max": "255",
+      "step": "1"
+    }
   }
 }

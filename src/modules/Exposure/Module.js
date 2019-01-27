@@ -2,7 +2,7 @@
 * Changes the Image Exposure
 */
 
-module.exports = function Brightness(options,UI){
+module.exports = function Exposure(options,UI){
 
 
     var output;
@@ -13,12 +13,6 @@ module.exports = function Brightness(options,UI){
         var exposure = Math.pow(2, options.exposure);
         progressObj.stop(true);
         progressObj.overrideFlag = true;
-
-        /*
-        In this case progress is handled by changepixel internally otherwise progressObj
-        needs to be overriden and used
-        For eg. progressObj = new SomeProgressModule()
-        */
 
         var step = this;
 

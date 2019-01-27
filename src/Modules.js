@@ -17,6 +17,7 @@ module.exports = {
   'draw-rectangle': require('./modules/DrawRectangle'),
   'dynamic': require('./modules/Dynamic'),
   'edge-detect': require('./modules/EdgeDetect'),
+  'exposure': require('./modules/Exposure'),
   'fisheye-gl': require('./modules/FisheyeGl'),
   'histogram': require('./modules/Histogram'),
   'gamma-correction': require('./modules/GammaCorrection'),

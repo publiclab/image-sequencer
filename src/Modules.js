@@ -10,6 +10,7 @@ module.exports = {
   'channel': require('./modules/Channel'),
   'colorbar': require('./modules/Colorbar'),
   'colormap': require('./modules/Colormap'),
+  'color-separation': require('./modules/ColorSeparation'),
   'contrast': require('./modules/Contrast'),
   'convolution': require('./modules/Convolution'),
   'crop': require('./modules/Crop'),

@@ -69896,7 +69896,7 @@ module.exports={
     "name": "ColorSeparation",
     "description": "Replace color with grey",
     "inputs": {
-        "Color": {
+        "color": {
           "type": "String",
           "desc": "three space separated numbers representing the RGB values of fill-color",
           "default": "228 86 81",

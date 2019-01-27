@@ -69894,7 +69894,7 @@ arguments[4][193][0].apply(exports,arguments)
 },{"./Module":212,"./info.json":214,"dup":193}],214:[function(require,module,exports){
 module.exports={
     "name": "ColorSeparation",
-    "description": "Fill color in pixels",
+    "description": "Replace color with grey",
     "inputs": {
         "Color": {
           "type": "String",

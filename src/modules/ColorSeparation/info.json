@@ -1,6 +1,6 @@
 {
     "name": "ColorSeparation",
-    "description": "Fill color in pixels",
+    "description": "Replace color with grey",
     "inputs": {
         "Color": {
           "type": "String",

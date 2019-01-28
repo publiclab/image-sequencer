@@ -782,13 +782,13 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     var addStepUI = stepUI();
     addStepUI = parser.parseFromString(addStepUI, "text/html").querySelector("div")
 
-    var toggleDiv = function(){
+    var toggleDiv = function(callback){
       $(step.ui.querySelector('.insertDiv')).fadeToggle(200).collapse('toggle')
       if ($(step.ui.querySelector('.insert-text')).css('display') != "none"){
-        $(step.ui.querySelector('.insert-text')).fadeToggle(200, function(){$(step.ui.querySelector('.no-insert-text')).fadeToggle(200)})
+        $(step.ui.querySelector('.insert-text')).fadeToggle(200, function(){$(step.ui.querySelector('.no-insert-text')).fadeToggle(200, callback)})
       }
       else {
-        $(step.ui.querySelector('.no-insert-text')).fadeToggle(200, function(){$(step.ui.querySelector('.insert-text')).fadeToggle(200)})
+        $(step.ui.querySelector('.no-insert-text')).fadeToggle(200, function(){$(step.ui.querySelector('.insert-text')).fadeToggle(200, callback)})
       }
     }
 
@@ -801,10 +801,11 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       .insertAdjacentElement('afterend',
         addStepUI
       );
-      toggleDiv();
+      toggleDiv(function(){
+        updatePreviews(step.output,'insertStep');
+      });
     }
     
-    updatePreviews(step.output,'insertStep');
     var insertStepSelect = $("#insertStep select");
     insertStepSelect.html("");
     // Add modules to the insertStep dropdown

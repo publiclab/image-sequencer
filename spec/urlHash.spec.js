@@ -10,10 +10,12 @@ describe('URL manipulation methods', function() {
     spyOn(urlHash,'getUrlHashParameters')
     spyOn(urlHash,'getUrlHashParameter')
     spyOn(urlHash,'setUrlHashParameters')
+    spyOn(urlHash,'setUrlHashParameter')
 
     urlHash.getUrlHashParameters()
     urlHash.getUrlHashParameter('value')
     urlHash.setUrlHashParameters(params)
+    urlHash.setUrlHashParameter('who','me')
   })
 
   it('gets url hash params from window hash', function() {
@@ -26,6 +28,10 @@ describe('URL manipulation methods', function() {
 
   it('accepts param object and sets url hash params', function() {
     expect(urlHash.setUrlHashParameters).toHaveBeenCalledWith(params)
+  })
+
+  it('accepts param key-value pair and sets url hash params', function() {
+    expect(urlHash.setUrlHashParameter).toHaveBeenCalledWith('who','me')
   })
 
 })

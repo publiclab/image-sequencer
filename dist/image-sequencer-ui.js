@@ -86,7 +86,7 @@ window.onload = function() {
   });
 
   $('#download-btn').click(function() {
-    download($('.step-thumbnail:last()').attr('src'), $('.step-thumbnail:last()').attr('alt'), 'image/png');
+    download($('.step-thumbnail:last()').attr('src'), $('.step-thumbnail:last()').attr('alt') + '.png', 'image/png');
     return false;
   });
 

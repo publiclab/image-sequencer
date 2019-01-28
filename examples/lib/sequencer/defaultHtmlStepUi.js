@@ -8,10 +8,12 @@
 // output values, step information.
 // See documetation for more details.
 
-var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js');
-var urlHash = require('./urlHash.js');
-var initSelect = require('./initializeComponents').initializeSelect;
-var initCollapsible = require('./initializeComponents').initializeCollapsible;
+var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js'),
+  urlHash = require('./urlHash.js'),
+  initAll = require('../DOM/initializeComponents').initializeAll,
+  getStepTemplate = require('../DOM/htmlTemplates').getStepTemplate,
+  toolsTemplate = require('../DOM/htmlTemplates').toolsTemplate;
+
 function capitalize(str){
   return str.charAt(0).toUpperCase() + str.substr(1);
 }
@@ -20,57 +22,22 @@ function DefaultHtmlStepUi(_sequencer, options) {
   
   options = options || {};
   var stepsEl = options.stepsEl || document.querySelector("#steps ul");
-  var selectStepSel = options.selectStepSel = options.selectStepSel || "#selectStep";
 
   function onSetup(step, stepOptions) {
     if (step.options && step.options.description)
       step.description = step.options.description;
 
-    step.ui =
-      '<li class="active">\
-        <div class="collapsible-header">'+capitalize(step.name)+'</div>\
-        <div class="collapsible-body" style="display:block;">\
-          <div class="container">\
-            <div class="row step">\
-              <form class="input-form">\
-                <div class="col m4 details">\
-                  <div class="cal">\
-                    <p>\
-                      <i>'+
-                      (step.description || "") +
-                      '</i>\
-                    </p>\
-                  </div>\
-                </div>\
-              </form>\
-              <div class="col m8 cal">\
-                <div class="load" style="display:none;"><i class="material-icons spin toggleIcon">donut_large</i></div>\
-                <a><img alt="" style="max-width=100%" class="img-thumbnail step-thumbnail"/></a>\
-                </div>\
-              </div>\
-            </div>\
-          </div>\
-        </div>\
-      </li>';
+    step.ui = getStepTemplate(step);
 
-    var tools =
-    '<div class="cal"><div class="tools">\
-    <button class="remove btn-floating waves-effect waves-light red z-depth-0">\
-      <i class="material-icons">delete</i>\
-    </button>\
-    <button class="btn insert-step btn-floating waves-effect waves-light green z-depth-0">\
-      <i class="material-icons">add_circle</i>\
-    </button>\
-    </div>\
-    </div>';
-
+    var tools = toolsTemplate;
     var util = intermediateHtmlStepUi(_sequencer, step);
 
     var parser = new DOMParser();
     step.ui = parser.parseFromString(step.ui, "text/html");
-    step.ui = step.ui.querySelector("li");
+    step.ui = step.ui.querySelector(".step-wrapper");
     step.linkElements = step.ui.querySelectorAll("a");
-    step.imgElement = step.ui.querySelector("a img");
+    step.imgElement = step.ui.querySelector(".step-thumbnail");
+    step.imgElement.alt = step.name;
 
     if (_sequencer.modulesInfo().hasOwnProperty(step.name)) {
       var inputs = _sequencer.modulesInfo(step.name).inputs;
@@ -148,14 +115,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
           parser.parseFromString(tools, "text/html").querySelector("div")
         );
       $(step.ui.querySelectorAll(".remove")).on('click', function() {notify('Step Removed','remove-notification')});  
-      $(step.ui.querySelectorAll(".insert-step")).on('click', function() { util.insertStep(step.ID) });
+      $(step.ui.querySelectorAll(".insert-step-btn")).on('click', function() { util.insertStep(step.ID) });
 
       // Insert the step's UI in the right place
       if (stepOptions.index == _sequencer.images.image1.steps.length) {
         $(stepsEl).append(step.ui);
-        $("#steps ul li:nth-last-child(1) .insert-step").prop('disabled',true);
+        $("#steps ul li:nth-last-child(1) .insert-step-btn").prop('disabled',true);
         if($("#steps ul li:nth-last-child(2)"))
-          $("#steps ul li:nth-last-child(2) .insert-step").prop('disabled',false);
+          $("#steps ul li:nth-last-child(2) .insert-step-btn").prop('disabled',false);
       } else {
         stepsEl.insertBefore(step.ui, $(stepsEl).children()[stepOptions.index]);
       }
@@ -223,8 +190,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     $('input[type="range"]').on('input', function() {
         $(this).next().html($(this).val());
     })
-    initSelect();
-    initCollapsible();
+    initAll();
   }
 
 
@@ -243,6 +209,11 @@ function DefaultHtmlStepUi(_sequencer, options) {
     $(step.ui.querySelector(".load-spin")).hide();
 
     step.imgElement.src = step.output;
+
+    $(step.ui.querySelector('.download-step-btn')).on('click', function(){
+      download(step.output, step.name + '.png', 'image/png')
+    })
+
     var imgthumbnail = step.ui.querySelector(".img-thumbnail");
     for (let index = 0; index < step.linkElements.length; index++) {
       if (step.linkElements[index].contains(imgthumbnail))
@@ -287,7 +258,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
   function onRemove(step) {
     step.ui.remove();
-    $("#steps .container:nth-last-child(1) .insert-step").prop('disabled',true);
+    $("#steps .container:nth-last-child(1) .insert-step-btn").prop('disabled',true);
     $('div[class^=imgareaselect-]').remove();
   }
 

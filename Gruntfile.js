@@ -15,8 +15,8 @@ module.exports = function(grunt) {
         livereload: true
       },
       source: {
-        files: ["src/**/*", "Gruntfile.js"],
-        tasks: ["build:js"]
+        files: ["src/**/*", "examples/lib/**/*.js", "examples/demo.js", "Gruntfile.js"],
+        tasks: ["compile:js"]
       }
     },
 
@@ -53,6 +53,7 @@ module.exports = function(grunt) {
 
   /* Default (development): Watch files and build on change. */
   grunt.registerTask("default", ["watch"]);
-  grunt.registerTask("build", ["browserify:dist", "uglify:dist"]);
+  grunt.registerTask("compile", ["browserify:dist", "browserify:js"])
+  grunt.registerTask("build", ["browserify:dist", "uglify:dist", "browserify:js", "uglify:js"]);
   grunt.registerTask("serve", ["browserify:dist","browserify:js","uglify:dist","uglify:js","browserSync", "watch"]);
 };

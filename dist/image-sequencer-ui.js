@@ -1,13 +1,13 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js'),
-    setupCache = require('./lib/cache.js'),
-    DefaultHtmlStepUi = require('./lib/defaultHtmlStepUi.js'),
-    urlHash = require('./lib/urlHash.js'),
+var defaultHtmlSequencerUi = require('./lib/sequencer/defaultHtmlSequencerUi'),
+    setupCache = require('./lib/sw/cache.js'),
+    DefaultHtmlStepUi = require('./lib/sequencer/defaultHtmlStepUi.js'),
+    urlHash = require('./lib/sequencer/urlHash.js'),
     gifshot = require('gifshot'),
-    initComponents = require('./lib/initializeComponents'),
+    initComponents = require('./lib/DOM/initializeComponents'),
     initializeSelect = initComponents.initializeSelect,
     initializeModal = initComponents.initializeModal,
-    insertPreview = require('./lib/insertPreview.js');
+    insertPreview = require('./lib/DOM/insertPreview.js');
 
 window.onload = function() {
   sequencer = ImageSequencer();
@@ -86,7 +86,7 @@ window.onload = function() {
   });
 
   $('#download-btn').click(function() {
-    $('.step-thumbnail:last()').trigger("click");
+    download($('.step-thumbnail:last()').attr('src'), $('.step-thumbnail:last()').attr('alt'), 'image/png');
     return false;
   });
 
@@ -198,8 +198,8 @@ window.onload = function() {
       step.output.src = reader.result;
       sequencer.run({ index: 0 });
       step.options.step.imgElement.src = reader.result;
-      insertPreview.updatePreviews(reader.result,'addStep');
-      insertPreview.updatePreviews(sequencer.images.image1.steps[0].options.step.imgElement.src,'insertStep');
+      insertPreview.updatePreviews(reader.result,'#addStep');
+      insertPreview.updatePreviews(sequencer.images.image1.steps[0].options.step.imgElement.src,'.insert-step');
     },
     onTakePhoto: function (url) {
       var step = sequencer.images.image1.steps[0];
@@ -212,54 +212,232 @@ window.onload = function() {
   setupCache();
 
   if (urlHash.getUrlHashParameter('src')) {
-    insertPreview.updatePreviews(urlHash.getUrlHashParameter('src'),'addStep');
+    insertPreview.updatePreviews(urlHash.getUrlHashParameter('src'),'#addStep');
   } else {
-    insertPreview.updatePreviews("images/tulips.png",'addStep');
+    insertPreview.updatePreviews("images/tulips.png",'#addStep');
   }
   initializeSelect();
   initializeModal();
 };
-},{"./lib/cache.js":2,"./lib/defaultHtmlSequencerUi.js":3,"./lib/defaultHtmlStepUi.js":4,"./lib/initializeComponents":5,"./lib/insertPreview.js":6,"./lib/urlHash.js":8,"gifshot":9}],2:[function(require,module,exports){
-var setupCache = function() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js', { scope: '/examples/' })
-      .then(function(registration) {
-        const installingWorker = registration.installing;
-        installingWorker.onstatechange = () => {
-          console.log(installingWorker)
-          if (installingWorker.state === 'installed') {
-            location.reload();
-          }
+},{"./lib/DOM/initializeComponents":4,"./lib/DOM/insertPreview.js":5,"./lib/sequencer/defaultHtmlSequencerUi":6,"./lib/sequencer/defaultHtmlStepUi.js":7,"./lib/sequencer/urlHash.js":9,"./lib/sw/cache.js":10,"gifshot":11}],2:[function(require,module,exports){
+module.exports = function Collapse(elem, cmd, callback){
+  switch (cmd){
+    case 'show':
+      $(elem).addClass('custom-show');
+      break;
+    case 'hide':
+      $(elem).removeClass('custom-show');
+      break;
+    default:
+      $(elem).toggleClass('custom-show');
+      break;
+  }
+}
+},{}],3:[function(require,module,exports){
+function capitalize(str){
+  return str.charAt(0).toUpperCase() + str.substr(1);
+}
+
+var getStepTemplate = function(step){
+  return '<li class="active step-wrapper">\
+            <div class="collapsible-header"><b>'+capitalize(step.name)+'</b></div>\
+            <div class="collapsible-body" style="display:block;">\
+              <div class="container">\
+                <div class="row step">\
+                  <form class="input-form">\
+                    <div class="col m4 details">\
+                      <div>\
+                        <p>\
+                          <i>'+
+                          (step.description || "") +
+                          '</i>\
+                        </p>\
+                      </div>\
+                    </div>\
+                  </form>\
+                  <div class="col m8">\
+                    <div class="load" style="display:none;"><i class="material-icons spin toggleIcon">donut_large</i></div>\
+                    <img style="max-width=100%" class="img-thumbnail step-thumbnail materialboxed"/>\
+                    </div>\
+                  </div>\
+                </div>\
+              </div>\
+            </div>\
+          </li>'
+}
+
+var stepInsertTemplate = '<div class="row center-align insertDiv flex-collapse" style="display:none;">\
+                            <div class="col s8 center-align" style="margin-top:5%;margin-left:0;">\
+                              <section class="insert-step card">\
+                                <div class="form-inline">\
+                                  <div class="card-content center">\
+                                    <span class="card-title">Select A Module</span>\
+                                    <p class="info"></p>\
+                                    <div class="row center-align radio-group">\
+                                    <div>\
+                                      <div class="radio" data-value="brightness">\
+                                        <i class="material-icons i-over">brightness_high</i>\
+                                      </div>\
+                                      <p>Brightness</p>\
+                                      </div>\
+                                      <div>\
+                                        <div class="radio" data-value="contrast">\
+                                          <i class="material-icons i-over">tonality</i>\
+                                        </div>\
+                                        <p>Contrast</p>\
+                                      </div>\
+                                      <div>\
+                                        <div class="radio" data-value="saturation">\
+                                          <i class="material-icons i-over">colorize</i>\
+                                        </div>\
+                                        <p>Saturation</p>\
+                                      </div>\
+                                      <div>\
+                                        <div class="radio" data-value="rotate">\
+                                          <i class="material-icons i-over">rotate_left</i>\
+                                        </div>\
+                                        <p>Rotate</p>\
+                                      </div>\
+                                      <div>\
+                                        <div class="radio" data-value="crop">\
+                                          <i class="material-icons i-over">crop</i>\
+                                        </div>\
+                                        <p>Crop</p>\
+                                      </div>\
+                                    </div>\
+                                    <div class="center input-field center-align">\
+                                      <select>\
+                                        <!-- The default null selection has been appended manually in demo.js\
+                                        This is because the options in select are overritten when options are appended.-->\
+                                      </select>\
+                                    </div>\
+                                    <button class="btn waves-effect green accent-4 add-step-btn" name="add">Add Step</button>\
+                                  </div>\
+                                </div>\
+                              </section>\
+                            </div>\
+                          </div>';
+
+var toolsTemplate = '<div>\
+                      <div class="tools right">\
+                        <button class="btn download-step-btn btn-floating waves-effect waves-light blue darken-3 z-depth-0">\
+                          <i class="material-icons">file_download</i>\
+                        </button>\
+                        <button class="remove btn-floating waves-effect waves-light red z-depth-0">\
+                          <i class="material-icons">delete</i>\
+                        </button>\
+                        <button class="btn insert-step-btn btn-floating waves-effect waves-light green z-depth-0">\
+                          <span class="insert-text">\
+                            <i class="material-icons">add_circle</i>\
+                          </span>\
+                          <span class="no-insert-text" style="display:none;">\
+                            <i class="material-icons">remove_circle</i>\
+                          </span>\
+                        </button>\
+                      </div>\
+                    </div>'
+
+
+module.exports = {
+  getStepTemplate,
+  toolsTemplate,
+  stepInsertTemplate
+}
+},{}],4:[function(require,module,exports){
+// initialize Form Selects
+function initializeSelect(){
+  M.FormSelect.init(document.querySelectorAll('select'), {classes: "target"})
+  $(".dropdown-content>li>span").addClass('blue-grey-text');
+}
+
+// initialize Modals
+function initializeModal(){
+  $('.modal').modal();
+}
+
+// initialize Collapsibles
+function initializeCollapsible(){
+  var elem = document.querySelector('.collapsible.expandable');
+  var instance = M.Collapsible.init(elem, {
+    accordion: false
+  });   
+}
+
+function inintializeMaterialBoxImg(){
+  $('.materialboxed').materialbox();
+}
+
+function initializeAll(){
+  initializeCollapsible();
+  initializeModal();
+  initializeSelect();
+  inintializeMaterialBoxImg();
+}
+
+module.exports = {
+  initializeSelect,
+  initializeModal,
+  initializeCollapsible,
+  inintializeMaterialBoxImg,
+  initializeAll
+}
+},{}],5:[function(require,module,exports){
+function generatePreview(previewStepName, customValues, path, selector) {
+
+    var previewSequencer = ImageSequencer();
+    function insertPreview(src) {
+      var img = document.createElement('img');
+      img.classList.add('img-thumbnail')
+      img.classList.add('no-border');
+      img.src = src;
+      $(img).css("max-width", "200%");
+      $(img).css("transform", "translateX(-20%)");
+      var stepDiv = $(selector + ' .radio-group').find('div').each(function() {
+        if ($(this).find('.radio').attr('data-value') === previewStepName) {
+          $(this).find('.radio').append(img);
         }
-        console.log('Registration successful, scope is:', registration.scope);
-      })
-      .catch(function(error) {
-        console.log('Service worker registration failed, error:', error);
       });
+    }
+
+    function loadPreview() {
+      previewSequencer = previewSequencer.addSteps('resize', { resize: "40%" });
+      if (previewStepName === "crop") {
+        previewSequencer.addSteps(previewStepName, customValues).run(insertPreview);
+      }
+      else {
+        previewSequencer.addSteps(previewStepName, { [previewStepName]: customValues }).run(insertPreview);
+      }
+    }
+    previewSequencer.loadImage(path, loadPreview);
   }
 
-  if ('serviceWorker' in navigator) {
-    caches.keys().then(function(cacheNames) {
-      cacheNames.forEach(function(cacheName) {
-        $("#clear-cache").append(" " + cacheName);
-      });
+  function updatePreviews(src, selector) {
+    $(selector+' img').remove();
+
+    var previewSequencerSteps = {
+      "brightness": "20",
+      "saturation": "5",
+      "rotate": 90,
+      "contrast": 90,
+      "crop": {
+        "x": 0,
+        "y": 0,
+        "w": "(50%)",
+        "h": "(50%)",
+        "noUI": true
+      }
+    }
+
+    Object.keys(previewSequencerSteps).forEach(function (step, index) {
+      generatePreview(step, Object.values(previewSequencerSteps)[index], src, selector);
     });
   }
 
-  $("#clear-cache").click(function() {
-    if ('serviceWorker' in navigator) {
-      caches.keys().then(function(cacheNames) {
-        cacheNames.forEach(function(cacheName) {
-          caches.delete(cacheName);
-        });
-      });
-    }
-    location.reload();
-  });
+module.exports = {
+  generatePreview,
+  updatePreviews
 }
-
-module.exports = setupCache;
-},{}],3:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 var urlHash = require('./urlHash.js');
 function DefaultHtmlSequencerUi(_sequencer, options) {
 
@@ -349,7 +527,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
 module.exports = DefaultHtmlSequencerUi;
 
 
-},{"./urlHash.js":8}],4:[function(require,module,exports){
+},{"./urlHash.js":9}],7:[function(require,module,exports){
 // Set the UI in sequencer. This Will generate HTML based on
 // Image Sequencer events :
 // onSetup : Called every time a step is added
@@ -360,10 +538,12 @@ module.exports = DefaultHtmlSequencerUi;
 // output values, step information.
 // See documetation for more details.
 
-var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js');
-var urlHash = require('./urlHash.js');
-var initSelect = require('./initializeComponents').initializeSelect;
-var initCollapsible = require('./initializeComponents').initializeCollapsible;
+var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js'),
+  urlHash = require('./urlHash.js'),
+  initAll = require('../DOM/initializeComponents').initializeAll,
+  getStepTemplate = require('../DOM/htmlTemplates').getStepTemplate,
+  toolsTemplate = require('../DOM/htmlTemplates').toolsTemplate;
+
 function capitalize(str){
   return str.charAt(0).toUpperCase() + str.substr(1);
 }
@@ -372,57 +552,22 @@ function DefaultHtmlStepUi(_sequencer, options) {
   
   options = options || {};
   var stepsEl = options.stepsEl || document.querySelector("#steps ul");
-  var selectStepSel = options.selectStepSel = options.selectStepSel || "#selectStep";
 
   function onSetup(step, stepOptions) {
     if (step.options && step.options.description)
       step.description = step.options.description;
 
-    step.ui =
-      '<li class="active">\
-        <div class="collapsible-header">'+capitalize(step.name)+'</div>\
-        <div class="collapsible-body" style="display:block;">\
-          <div class="container">\
-            <div class="row step">\
-              <form class="input-form">\
-                <div class="col m4 details">\
-                  <div class="cal">\
-                    <p>\
-                      <i>'+
-                      (step.description || "") +
-                      '</i>\
-                    </p>\
-                  </div>\
-                </div>\
-              </form>\
-              <div class="col m8 cal">\
-                <div class="load" style="display:none;"><i class="material-icons spin toggleIcon">donut_large</i></div>\
-                <a><img alt="" style="max-width=100%" class="img-thumbnail step-thumbnail"/></a>\
-                </div>\
-              </div>\
-            </div>\
-          </div>\
-        </div>\
-      </li>';
+    step.ui = getStepTemplate(step);
 
-    var tools =
-    '<div class="cal"><div class="tools">\
-    <button class="remove btn-floating waves-effect waves-light red z-depth-0">\
-      <i class="material-icons">delete</i>\
-    </button>\
-    <button class="btn insert-step btn-floating waves-effect waves-light green z-depth-0">\
-      <i class="material-icons">add_circle</i>\
-    </button>\
-    </div>\
-    </div>';
-
+    var tools = toolsTemplate;
     var util = intermediateHtmlStepUi(_sequencer, step);
 
     var parser = new DOMParser();
     step.ui = parser.parseFromString(step.ui, "text/html");
-    step.ui = step.ui.querySelector("li");
+    step.ui = step.ui.querySelector(".step-wrapper");
     step.linkElements = step.ui.querySelectorAll("a");
-    step.imgElement = step.ui.querySelector("a img");
+    step.imgElement = step.ui.querySelector(".step-thumbnail");
+    step.imgElement.alt = step.name;
 
     if (_sequencer.modulesInfo().hasOwnProperty(step.name)) {
       var inputs = _sequencer.modulesInfo(step.name).inputs;
@@ -500,14 +645,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
           parser.parseFromString(tools, "text/html").querySelector("div")
         );
       $(step.ui.querySelectorAll(".remove")).on('click', function() {notify('Step Removed','remove-notification')});  
-      $(step.ui.querySelectorAll(".insert-step")).on('click', function() { util.insertStep(step.ID) });
+      $(step.ui.querySelectorAll(".insert-step-btn")).on('click', function() { util.insertStep(step.ID) });
 
       // Insert the step's UI in the right place
       if (stepOptions.index == _sequencer.images.image1.steps.length) {
         $(stepsEl).append(step.ui);
-        $("#steps ul li:nth-last-child(1) .insert-step").prop('disabled',true);
+        $("#steps ul li:nth-last-child(1) .insert-step-btn").prop('disabled',true);
         if($("#steps ul li:nth-last-child(2)"))
-          $("#steps ul li:nth-last-child(2) .insert-step").prop('disabled',false);
+          $("#steps ul li:nth-last-child(2) .insert-step-btn").prop('disabled',false);
       } else {
         stepsEl.insertBefore(step.ui, $(stepsEl).children()[stepOptions.index]);
       }
@@ -575,8 +720,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     $('input[type="range"]').on('input', function() {
         $(this).next().html($(this).val());
     })
-    initSelect();
-    initCollapsible();
+    initAll();
   }
 
 
@@ -595,6 +739,11 @@ function DefaultHtmlStepUi(_sequencer, options) {
     $(step.ui.querySelector(".load-spin")).hide();
 
     step.imgElement.src = step.output;
+
+    $(step.ui.querySelector('.download-step-btn')).on('click', function(){
+      download(step.output, step.name + '.png', 'image/png')
+    })
+
     var imgthumbnail = step.ui.querySelector(".img-thumbnail");
     for (let index = 0; index < step.linkElements.length; index++) {
       if (step.linkElements[index].contains(imgthumbnail))
@@ -639,7 +788,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
   function onRemove(step) {
     step.ui.remove();
-    $("#steps .container:nth-last-child(1) .insert-step").prop('disabled',true);
+    $("#steps .container:nth-last-child(1) .insert-step-btn").prop('disabled',true);
     $('div[class^=imgareaselect-]').remove();
   }
 
@@ -679,164 +828,88 @@ if(typeof window === "undefined"){
 module.exports = DefaultHtmlStepUi;
 
 
-},{"./initializeComponents":5,"./intermediateHtmlStepUi.js":7,"./urlHash.js":8}],5:[function(require,module,exports){
-// initialize Form Selects
-function initializeSelect(){
-  $(document).ready(function(){
-    M.FormSelect.init(document.querySelectorAll('select'), {classes: "target"})
-    $(".dropdown-content>li>span").addClass('blue-grey-text');
-  });
-}
-
-function initializeModal(){
-  $(document).ready(function(){
-    $('.modal').modal();
-  });
-}
-
-function initializeCollapsible(){
-  var elem = document.querySelector('.collapsible.expandable');
-  var instance = M.Collapsible.init(elem, {
-    accordion: false
-  });   
-}
-
-module.exports = {
-  initializeSelect,
-  initializeModal,
-  initializeCollapsible
-}
-},{}],6:[function(require,module,exports){
-function generatePreview(previewStepName, customValues, path, selector) {
-
-    var previewSequencer = ImageSequencer();
-    function insertPreview(src) {
-      var img = document.createElement('img');
-      img.classList.add('img-thumbnail')
-      img.classList.add('no-border');
-      img.src = src;
-      $(img).css("max-width", "200%");
-      $(img).css("transform", "translateX(-20%)");
-      var stepDiv = $('#'+selector+' .row').find('div').each(function() {
-        if ($(this).find('div').attr('data-value') === previewStepName) {
-          $(this).find('div').append(img);
-        }
-      });
-    }
-
-    function loadPreview() {
-      previewSequencer = previewSequencer.addSteps('resize', { resize: "40%" });
-      if (previewStepName === "crop") {
-        previewSequencer.addSteps(previewStepName, customValues).run(insertPreview);
-      }
-      else {
-        previewSequencer.addSteps(previewStepName, { [previewStepName]: customValues }).run(insertPreview);
-      }
-    }
-    previewSequencer.loadImage(path, loadPreview);
-  }
-
-  function updatePreviews(src, selector) {
-    $('#'+selector+' img').remove();
-
-    var previewSequencerSteps = {
-      "brightness": "20",
-      "saturation": "5",
-      "rotate": 90,
-      "contrast": 90,
-      "crop": {
-        "x": 0,
-        "y": 0,
-        "w": "(50%)",
-        "h": "(50%)",
-        "noUI": true
-      }
-    }
-
-    Object.keys(previewSequencerSteps).forEach(function (step, index) {
-      generatePreview(step, Object.values(previewSequencerSteps)[index], src, selector);
-    });
-  }
-
-module.exports = {
-  generatePreview : generatePreview,
-  updatePreviews : updatePreviews
-}
-},{}],7:[function(require,module,exports){
-var urlHash = require('./urlHash.js');
+},{"../DOM/htmlTemplates":3,"../DOM/initializeComponents":4,"./intermediateHtmlStepUi.js":8,"./urlHash.js":9}],8:[function(require,module,exports){
+var urlHash = require('./urlHash.js'),
+  updatePreviews =require('../DOM/insertPreview').updatePreviews,
+  initSelect = require('../DOM/initializeComponents').initializeSelect,
+  Collapse = require('../DOM/collapse'),
+  stepInsertTemplate = require('../DOM/htmlTemplates').stepInsertTemplate;
 function IntermediateHtmlStepUi(_sequencer, step, options) {
   function stepUI() {
-    return '<div class="row insertDiv">\
-        <div class="col-md-6 col-md-offset-2" style="margin-top:5%">\
-        <section id="insertStep" class="panel panel-primary">\
-          <div class="form-inline">\
-            <div class="panel-body">\
-              <p class="info">Select a new module to add to your sequence.</p>\
-              <div class="row center-align radio-group">\
-                <div>\
-                <div class="radio" data-value="brightness">\
-                <i class="fa fa-sun-o fa-4x i-over"></i>\
-              </div>\
-                  <p>Brightness</p>\
-                </div>\
-                <div>\
-                <div class="radio" data-value="contrast">\
-                <i class="fa fa-adjust fa-4x i-over"></i>\
-              </div>\
-                  <p>Contrast</p>\
-                </div>\
-                <div>\
-                <div class="radio" data-value="saturation">\
-                <i class="fa fa-tint fa-4x i-over i-small"></i>\
-              </div>\
-                  <p>Saturation</p>\
-                </div>\
-                <div>\
-                <div class="radio" data-value="rotate">\
-                <i class="fa fa-rotate-right fa-4x i-over"></i>\
-              </div>\
-                  <p>Rotate</p>\
-                </div>\
-                <div>\
-                <div class="radio" data-value="crop">\
-                <i class="fa fa-crop fa-4x i-over"></i>\
-              </div>\
-                  <p>Crop</p>\
-                </div>\
-              </div>\
-              <div class="center-align">\
-                <select class="form-control input-lg" id="selectStep">\
-                  <!-- The default null selection has been appended manually in demo.js\
-                  This is because the options in select are overritten when options are appended.-->\
-                </select>\
-                <button class="btn btn-success btn-lg" name="add" id="add-step-btn">Add Step</button>\
-              </div>\
-            </div>\
-          </div>\
-        </section>\
-        </div>';
+    return stepInsertTemplate;
   }
 
+  function insert(id) {
+    options = options || {};
+    var insertStepSelect = $(".insert-step select");
+    if (insertStepSelect.val() == "none") return;
+
+    var newStepName = insertStepSelect.val()
+    $('div.insertDiv').remove();
+    var sequenceLength = 1;
+    if (sequencer.sequences[newStepName]) {
+      sequenceLength = sequencer.sequences[newStepName].length;
+    } else if (sequencer.modules[newStepName][1]['length']) {
+      sequenceLength = sequencer.modules[newStepName][1]['length'];
+    }
+    _sequencer
+      .insertSteps(id + 1, newStepName).run({ index: id });
+
+    // add to URL hash too
+    urlHash.setUrlHashParameter('steps', _sequencer.toString());
+  }
 
   function selectNewStepUi() {
-    var m = $("#insertStep select").val();
-    $("#insertStep .info").html(_sequencer.modulesInfo(m).description);
-    $("#insertStep #add-step-btn").prop("disabled", false);
+    if ($(step.ui.querySelector('div.insertDiv')).length > 0){
+      $(step.ui.querySelector('div.insertDiv').collapse('toggle'));
+      return;
+    }
+    else {
+      step.ui
+        .querySelector("div.step")
+        .insertAdjacentElement('afterend',
+          addStepUI
+      );
+      $(step.ui.querySelector('div.insertDiv').collapse('toggle'));
+    }
+    var m = $(".insert-step select").val();
+    $(".insert-step .info").html(_sequencer.modulesInfo(m).description);
+    $(".insert-step .add-step-btn").prop("disabled", false);
   }
   insertStep = function (id) {
     var modulesInfo = _sequencer.modulesInfo();
     var parser = new DOMParser();
     var addStepUI = stepUI();
-    addStepUI = parser.parseFromString(addStepUI, "text/html").querySelector("div")
-    step.ui
-      .querySelector("div.step")
-      .insertAdjacentElement('afterend',
-        addStepUI
-      );
-      updatePreviews(step.output,'insertStep');
-    var insertStepSelect = $("#insertStep select");
-    insertStepSelect.html("");
-    // Add modules to the insertStep dropdown
+    addStepUI = parser.parseFromString(addStepUI, "text/html").querySelector("div");
+
+    var toggleDiv = function(callback){
+      $(step.ui.querySelector('.insert-step-btn')).animate({opacity: 0.5}, 200).toggleClass('green').toggleClass('amber').animate({opacity: 1}, 200);
+      Collapse($(step.ui.querySelector('.insertDiv')).fadeToggle(200), 'toggle');
+      if ($(step.ui.querySelector('.insert-text')).css('display') != "none"){
+        $(step.ui.querySelector('.insert-text')).fadeToggle(200, function(){$(step.ui.querySelector('.no-insert-text')).fadeToggle(200, callback)})
+      }
+      else {
+        $(step.ui.querySelector('.no-insert-text')).fadeToggle(200, function(){$(step.ui.querySelector('.insert-text')).fadeToggle(200, callback)})
+      }
+    }
+
+    if ($(step.ui.querySelector('.insertDiv')).length > 0){
+      toggleDiv();
+    }
+    else {
+      step.ui
+        .querySelector("div.step")
+        .insertAdjacentElement('afterend',
+          addStepUI
+        );
+      toggleDiv(function(){
+        updatePreviews(step.output,'.insert-step');
+      });
+    }
+
+    var insertStepSelect = $('.insert-step select');
+    insertStepSelect.html('');
+    // Add modules to the insert-step dropdown
     for (var m in modulesInfo) {
       if (modulesInfo[m] !== undefined)
         insertStepSelect.append(
@@ -844,10 +917,10 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
         );
     }
 
-    $('#insertStep #add-step-btn').prop('disabled', true);
+    $('.insert-step .add-step-btn').prop('disabled', true);
 
     insertStepSelect.append('<option value="none" disabled selected>More modules...</option>');
-    $('#insertStep .radio-group .radio').on("click", function () {
+    $('.insert-step .radio-group .radio').on("click", function () {
       $(this).parent().find('.radio').removeClass('selected');
       $(this).addClass('selected');
       newStep = $(this).attr('data-value');
@@ -856,30 +929,9 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       insert(id);
       $(this).removeClass('selected');
     });
-    $(step.ui.querySelector("#insertStep select")).on('change', selectNewStepUi);
-    $(step.ui.querySelector("#insertStep #add-step-btn")).on('click', function () { insert(id) });
-  }
-
-  function insert(id) {
-
-    options = options || {};
-    var insertStepSelect = $("#insertStep select");
-    if (insertStepSelect.val() == "none") return;
-
-    var newStepName = insertStepSelect.val()
-    $('div .insertDiv').remove();
-    var sequenceLength = 1;
-    if (sequencer.sequences[newStepName]) {
-      sequenceLength = sequencer.sequences[newStepName].length;
-    } else if (sequencer.modules[newStepName][1]["length"]) {
-      sequenceLength = sequencer.modules[newStepName][1]["length"];
-    }
-    _sequencer
-      .insertSteps(id + 1, newStepName).run({ index: id });
-
-    // add to URL hash too
-    urlHash.setUrlHashParameter("steps", _sequencer.toString());
-
+    $(step.ui.querySelector(".insert-step select")).on('change', selectNewStepUi);
+    $(step.ui.querySelector(".insert-step .add-step-btn")).on('click', function () { insert(id) });
+    initSelect();
   }
 
   return {
@@ -889,7 +941,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
 module.exports = IntermediateHtmlStepUi;
 
 
-},{"./urlHash.js":8}],8:[function(require,module,exports){
+},{"../DOM/collapse":2,"../DOM/htmlTemplates":3,"../DOM/initializeComponents":4,"../DOM/insertPreview":5,"./urlHash.js":9}],9:[function(require,module,exports){
 function getUrlHashParameter(param) {
 
   var params = getUrlHashParameters();
@@ -940,7 +992,47 @@ module.exports =  {
                     setUrlHashParameters: setUrlHashParameters
                   }
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
+var setupCache = function() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js', { scope: '/examples/' })
+      .then(function(registration) {
+        const installingWorker = registration.installing;
+        installingWorker.onstatechange = () => {
+          console.log(installingWorker)
+          if (installingWorker.state === 'installed') {
+            location.reload();
+          }
+        }
+        console.log('Registration successful, scope is:', registration.scope);
+      })
+      .catch(function(error) {
+        console.log('Service worker registration failed, error:', error);
+      });
+  }
+
+  if ('serviceWorker' in navigator) {
+    caches.keys().then(function(cacheNames) {
+      cacheNames.forEach(function(cacheName) {
+        $("#clear-cache").append(" " + cacheName);
+      });
+    });
+  }
+
+  $("#clear-cache").click(function() {
+    if ('serviceWorker' in navigator) {
+      caches.keys().then(function(cacheNames) {
+        cacheNames.forEach(function(cacheName) {
+          caches.delete(cacheName);
+        });
+      });
+    }
+    location.reload();
+  });
+}
+
+module.exports = setupCache;
+},{}],11:[function(require,module,exports){
 /*Copyrights for code authored by Yahoo Inc. is licensed under the following terms:
 MIT License
 Copyright  2017 Yahoo Inc.

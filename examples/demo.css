@@ -149,11 +149,11 @@ h1 {
   margin-left: 5px;
 }
 
-/* #gif_element {
+#gif_element {
   margin: 0 auto;
   width: 100%;
   height: auto;
-} */
+}
 
 #move-up {
     position: fixed;
@@ -265,4 +265,30 @@ a.name-header{
 @keyframes spin {
   from {transform:rotate(0deg);}
   to {transform:rotate(360deg);}
+}
+
+
+
+/* Bootstrap Collapse Mimick */
+*, ::after, ::before {
+  box-sizing: border-box;
+}
+
+.custom-collapse {
+  display: block;
+  max-height: 0px;
+  overflow: hidden;
+  transition: max-height .5s cubic-bezier(0, 1, 0, 1);
+}
+
+.flex-collapse {
+  display: flex;
+  max-height: 0px;
+  overflow: hidden;
+  transition: max-height .5s cubic-bezier(0, 1, 0, 1);
+}
+
+.custom-show {
+  max-height: 99em;
+  transition: max-height .5s ease-in-out;
 }

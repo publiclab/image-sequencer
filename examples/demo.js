@@ -1,12 +1,12 @@
-var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js'),
-    setupCache = require('./lib/cache.js'),
-    DefaultHtmlStepUi = require('./lib/defaultHtmlStepUi.js'),
-    urlHash = require('./lib/urlHash.js'),
+var defaultHtmlSequencerUi = require('./lib/sequencer/defaultHtmlSequencerUi'),
+    setupCache = require('./lib/sw/cache.js'),
+    DefaultHtmlStepUi = require('./lib/sequencer/defaultHtmlStepUi.js'),
+    urlHash = require('./lib/sequencer/urlHash.js'),
     gifshot = require('gifshot'),
-    initComponents = require('./lib/initializeComponents'),
+    initComponents = require('./lib/DOM/initializeComponents'),
     initializeSelect = initComponents.initializeSelect,
     initializeModal = initComponents.initializeModal,
-    insertPreview = require('./lib/insertPreview.js');
+    insertPreview = require('./lib/DOM/insertPreview.js');
 
 window.onload = function() {
   sequencer = ImageSequencer();
@@ -85,7 +85,7 @@ window.onload = function() {
   });
 
   $('#download-btn').click(function() {
-    $('.step-thumbnail:last()').trigger("click");
+    download($('.step-thumbnail:last()').attr('src'), $('.step-thumbnail:last()').attr('alt'), 'image/png');
     return false;
   });
 
@@ -197,8 +197,8 @@ window.onload = function() {
       step.output.src = reader.result;
       sequencer.run({ index: 0 });
       step.options.step.imgElement.src = reader.result;
-      insertPreview.updatePreviews(reader.result,'addStep');
-      insertPreview.updatePreviews(sequencer.images.image1.steps[0].options.step.imgElement.src,'insertStep');
+      insertPreview.updatePreviews(reader.result,'#addStep');
+      insertPreview.updatePreviews(sequencer.images.image1.steps[0].options.step.imgElement.src,'.insert-step');
     },
     onTakePhoto: function (url) {
       var step = sequencer.images.image1.steps[0];
@@ -211,9 +211,9 @@ window.onload = function() {
   setupCache();
 
   if (urlHash.getUrlHashParameter('src')) {
-    insertPreview.updatePreviews(urlHash.getUrlHashParameter('src'),'addStep');
+    insertPreview.updatePreviews(urlHash.getUrlHashParameter('src'),'#addStep');
   } else {
-    insertPreview.updatePreviews("images/tulips.png",'addStep');
+    insertPreview.updatePreviews("images/tulips.png",'#addStep');
   }
   initializeSelect();
   initializeModal();

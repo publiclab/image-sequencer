@@ -12,9 +12,20 @@
 }
 
 body {
-  margin: 0 auto 200px;
-  max-width: 80vw;
   background: #f8f8fa;
+}
+
+#main-container {
+  margin: 0 auto;
+  max-width: 80vw;
+}
+
+button::-moz-focus-inner {
+  border: 0;
+}
+
+a:focus {
+  outline: none;
 }
 
 h1 {
@@ -41,9 +52,9 @@ h1 {
   margin: 0 !important;
 }
 
-.form-control[type="range"] {
+/* .form-control[type="range"] {
   padding: 0px 0px;
-}
+} */
 
 .dropzone {
   padding: 30px;
@@ -238,14 +249,18 @@ h1 {
   left: 25px;
 }
 
+input[type=range]::-moz-focus-outer {
+  border: 0;
+}
+
+.thumb > .value{
+  margin-bottom: 1px;
+}
+
 @media all and (max-width: 767px) {
   .center-align {
     justify-content: space-between;
   }
-}
-a.name-header{
-  text-decoration: none;
-  color: #445;
 }
 
 .spin{

@@ -66000,7 +66000,7 @@ module.exports={
       "default": -2
     },
     "blend": {
-      "type": "input",
+      "type": "string",
       "desc": "Function to use to blend the two images.",
       "default": "function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] }"
     }
@@ -66151,12 +66151,12 @@ module.exports={
     "description": "Applies a Gaussian blur given by the intensity value",
     "inputs": {
         "blur": {
-            "type": "range",
+            "type": "float",
             "desc": "Amount of gaussian blur(Less blur gives more detail, typically 0-5)",
-            "default": "2",
-            "min": "0",
-            "max": "5",
-            "step": "0.25"
+            "default": 2,
+            "min": 0,
+            "max": 5,
+            "step": 0.25
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -66228,12 +66228,11 @@ module.exports={
   "description": "Change the brightness of the image by given percent value",
   "inputs": {
       "brightness": {
-          "type": "range",
+          "type": "integer",
           "desc": "% brightness for the new image",
-          "default": "175",
-          "min": "0",
-          "max": "200",
-          "step": "1"
+          "default": 175,
+          "min": 0,
+          "max": 200
       }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -66352,7 +66351,7 @@ module.exports={
             "default": 0
         },
         "h": {
-            "type": "iinteger",
+            "type": "integer",
             "desc": "height of the colorbar",
             "default": 10
         }
@@ -66726,12 +66725,11 @@ module.exports={
     "description": "Change the contrast of the image by given value",
     "inputs": {
         "contrast": {
-            "type": "range",
+            "type": "integer",
             "desc": "contrast for the new image, typically -100 to 100",
-            "default": "70",
-            "min": "-100",
-            "max": "100",
-            "step": "1"
+            "default": 70,
+            "min": -100,
+            "max": 100
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -66864,14 +66862,14 @@ module.exports={
     "description": "Image Convolution using a given 3x3 kernel matrix <a href='https://en.wikipedia.org/wiki/Kernel_(image_processing)'>Read more</a>",
     "inputs": {
   		"constantFactor":{
-  			"type": "Float",
+  			"type": "float",
   			"desc": "a constant factor, multiplies all the kernel values by that factor",
   			"default": 0.1111,
         "placeholder": 0.1111
   		},
         
       "kernelValues": {
-        "type": "String",
+        "type": "string",
         "desc": "nine space separated numbers representing the kernel values in left to right and top to bottom format.",
         "default": "1 1 1 1 1 1 1 1 1",
         "placeholder": "1 1 1 1 1 1 1 1 1"
@@ -67214,7 +67212,7 @@ module.exports={
   },
   "outputs": {
     "qrval": {
-      "type": "text"
+      "type": "string"
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -67437,13 +67435,13 @@ module.exports={
     "description": "It draws a rectangle on the image",
     "inputs": {
   		"startingX":{
-  			"type": "Number",
+  			"type": "integer",
   			"desc": "starting x position of the rectangle",
   			"default": 0
   		},
         
       "startingY": {
-        "type": "Number",
+        "type": "integer",
         "desc": "starting y position of the rectangle",
         "default": 0
       },
@@ -67451,13 +67449,15 @@ module.exports={
       "endX":{
         "type": "integer",
         "desc": "last x position of the rectangle",
-        "default": "width"
+        "placeholder": "width",
+        "default": 100
       },
 
       "endY":{
         "type": "integer",
         "desc": "last y position of the rectangle",
-        "default": "height"
+        "placeholder": "height",
+        "default": 100
       },
 
       "thickness":{
@@ -67467,7 +67467,7 @@ module.exports={
       },
 
       "color":{
-        "type": "String",
+        "type": "string",
         "desc": "RGBA values separated by a space",
         "default": "0 0 0 255"
       }
@@ -67583,22 +67583,22 @@ module.exports={
   "description": "A module which accepts JavaScript math expressions to produce each color channel based on the original image's color. See <a href='https://publiclab.org/wiki/infragram-sandbox'>Infragrammar</a>.",
   "inputs": {
     "red": {
-      "type": "input",
+      "type": "string",
       "desc": "Expression to return for red channel with R, G, B, and A inputs",
       "default": "r"
     },
     "green": {
-      "type": "input",
+      "type": "string",
       "desc": "Expression to return for green channel with R, G, B, and A inputs",
       "default": "g"
     },
     "blue": {
-      "type": "input",
+      "type": "string",
       "desc": "Expression to return for blue channel with R, G, B, and A inputs",
       "default": "b"
     },
     "monochrome (fallback)": {
-      "type": "input",
+      "type": "string",
       "desc": "Expression to return with R, G, B, and A inputs; fallback for other channels if none provided",
       "default": "r + g + b"
     }
@@ -67849,22 +67849,28 @@ module.exports={
     "description": "This module detects edges using the Canny method, which first Gaussian blurs the image to reduce noise (amount of blur configurable in settings as `options.blur`), then applies a number of steps to highlight edges, resulting in a greyscale image where the brighter the pixel, the stronger the detected edge.<a href='https://en.wikipedia.org/wiki/Canny_edge_detector'> Read more. </a>",
     "inputs": {
         "blur": {
-            "type": "range",
+            "type": "float",
             "desc": "Amount of gaussian blur(Less blur gives more detail, typically 0-5)",
-            "default": "2",
-            "min": "0",
-            "max": "5",
-            "step": "0.25"
+            "default": 2,
+            "min": 0,
+            "max": 5,
+            "step": 0.25
         },
         "highThresholdRatio":{
             "type": "float",
             "desc": "The high threshold ratio for the image",
-            "default": 0.2
+            "default": 0.2,
+            "min": 0,
+            "max": 1,
+            "step": 0.25
         },
         "lowThresholdRatio": {
             "type": "float",
             "desc": "The low threshold value for the image",
-            "default": 0.15
+            "default": 0.15,
+            "min": 0,
+            "max": 1,
+            "step": 0.05
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -68069,7 +68075,9 @@ module.exports={
         "adjustment": {
             "type": "float",
             "desc": "gamma correction (inverse of actual gamma factor) for the new image",
-            "default": 0.2
+            "default": 0.2,
+            "min": 0,
+            "max": 1
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -68774,13 +68782,13 @@ module.exports={
           "default": "10"
       },
       "fillColor": {
-        "type": "String",
+        "type": "string",
         "desc": "four space separated numbers representing the RGBA values of fill-color",
         "default": "100 100 100 255",
         "placeholder": "100 100 100 255"
       },
       "tolerance": {
-        "type": "range",
+        "type": "integer",
         "desc": "% tolerance",
         "default": "10",
         "min": "5",
@@ -68870,7 +68878,7 @@ module.exports={
   "description": "Resize image by given percentage value",
   "inputs": {
     "resize": {
-      "type": "string",
+      "type": "integer",
       "desc": "Percentage value of the resize",
       "default": "125%"
     }
@@ -68949,12 +68957,11 @@ module.exports={
     "description": "Rotates image by specified degrees",
     "inputs": {
       "rotate": {
-        "type": "range",
+        "type": "integer",
         "desc": "Angular value for rotation in degrees",
-        "default": "0",
-        "min": "0",
-        "max": "360",
-        "step": "1"
+        "default": 0,
+        "min": 0,
+        "max": 360
       }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -69025,12 +69032,12 @@ module.exports={
     "description": "Change the saturation of the image by given value, from 0-1, with 1 being 100% saturated.",
     "inputs": {
         "saturation": {
-            "type": "range",
+            "type": "float",
             "desc": "saturation for the new image between 0 and 2, 0 being black and white and 2 being highly saturated",
-            "default": "0.5",
-            "min": "0",
-            "max": "2",
-            "step": "0.1"
+            "default": 0.5,
+            "min": 0,
+            "max": 2,
+            "step": 0.1
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -69131,9 +69138,9 @@ module.exports={
     "description": "Change the colour balance of the image by adjusting the colour temperature.",
     "inputs": {
       "temperature": {
-        "type": "string",
+        "type": "integer",
         "desc": "Temperature between 0 - 40,000 Kelvin",
-        "default": "6000"
+        "default": 6000
       }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

@@ -3,7 +3,7 @@
   "description": "Resize image by given percentage value",
   "inputs": {
     "resize": {
-      "type": "string",
+      "type": "integer",
       "desc": "Percentage value of the resize",
       "default": "125%"
     }

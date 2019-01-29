@@ -21,7 +21,7 @@ var getStepTemplate = function(step){
                   </form>\
                   <div class="col m8">\
                     <div class="load" style="display:none;"><i class="material-icons spin toggleIcon">donut_large</i></div>\
-                    <img style="max-width=100%" class="img-thumbnail step-thumbnail materialboxed"/>\
+                    <img style="max-width=100%" class="img-thumbnail step-thumbnail responsive-img materialboxed"/>\
                     </div>\
                   </div>\
                 </div>\

@@ -31,32 +31,31 @@
 
 <body>
 
-  <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="../node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="../node_modules/materialize-css/dist/css/materialize.min.css" rel="stylesheet">
   <link href="../node_modules/material-design-icons/iconfont/material-icons.css" rel="stylesheet">
-
   <!-- for crop module: -->
   <link href="../node_modules/imgareaselect/distfiles/css/imgareaselect-default.css" rel="stylesheet">
   <link rel="stylesheet" href="demo.css">
 
-  <div class="container-fluid">
+  <div class="navbar-fixed">
+    <nav>
+      <div class="nav-wrapper deep-purple lighten-1">
+        <a href="/" target="_blank" class="brand-logo center">Image Sequencer</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li><a href="https://github.com/publiclab/image-sequencer">Github</a></li>
+          <li><a href="https://publiclab.org/wiki/image-sequencer">Learn More</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
 
-    <header class="text-center">
-      <h1><a href="/" target='_blank' class="name-header">Image Sequencer</a></h1>
-      <p>
-        A pure JavaScript sequential image processing system, inspired by storyboards. Instead of modifying the original image, it
-        creates a new image at each step in a sequence.
-        <a href="https://publiclab.org/image-sequencer">Learn more</a>
-      </p>
-      <p>
-        Open Source
-        <a href="https://github.com/publiclab/image-sequencer">
-          <i class="fa fa-github"></i>
-        </a>
-       by <a href= "https://publiclab.org" title = "Publiclab Website"><i class = "fa fa-globe"></i> Publiclab</a>
-      </p>
-    </header>
+  <div class="container-fluid" id="main-container">
+    <p>
+      Image Sequencer is a pure JavaScript sequential image processing system, inspired by storyboards. Instead of modifying the original image, it
+      creates a new image at each step in a sequence.
+      <a href="https://publiclab.org/image-sequencer">Learn more</a>
+    </p>
 
     <div id="dropzone" class="dropzone">
       <p>
@@ -76,112 +75,121 @@
       <ul class="collapsible popout expandable"></ul>
     </section>
 
-    <hr />
-  <p class = "alert green savesequencemsg">Saved Sequence Success. Sequence can be found among other modules.</p>
-  <div class="row">
-    <div class="col s8">
-    <section id="addStep" class="card">
-      <div class="form-inline">
-        <div class="card-content center">
-          <span class="card-title">Select A Module</span>
-          <p class="info"></p>
-          <div class="row center-align radio-group">
-            <div>
-              <div class="radio" data-value="brightness">
-                <i class="material-icons i-over">brightness_high</i>
+    <p class = "alert green savesequencemsg">Saved Sequence Success. Sequence can be found among other modules.</p>
+    <div class="row">
+      <div class="col s12 m8">
+        <section id="addStep" class="card">
+          <div class="card-content center">
+            <span class="card-title">Select A Module</span>
+            <p class="info"></p>
+            <div class="row center-align radio-group">
+              <div>
+                <div class="radio" data-value="brightness">
+                  <i class="material-icons i-over">brightness_high</i>
+                </div>
+                <p>Brightness</p>
               </div>
-              <p>Brightness</p>
+              <div>
+                <div class="radio" data-value="contrast">
+                  <i class="material-icons i-over">tonality</i>
+                </div>
+                <p>Contrast</p>
+              </div>
+              <div>
+                <div class="radio" data-value="saturation">
+                  <i class="material-icons i-over">colorize</i>
+                </div>
+                <p>Saturation</p>
+              </div>
+              <div>
+                <div class="radio" data-value="rotate">
+                  <i class="material-icons i-over">rotate_left</i>
+                </div>
+                <p>Rotate</p>
+              </div>
+              <div>
+                <div class="radio" data-value="crop">
+                  <i class="material-icons i-over">crop</i>
+                </div>
+                <p>Crop</p>
+              </div>
             </div>
-            <div>
-              <div class="radio" data-value="contrast">
-                <i class="material-icons i-over">tonality</i>
+            <div class="center">
+              <div class="input-field center-align">
+                <select id="selectStep">
+                  <!-- The default null selection has been appended manually in demo.js
+                  This is because the options in select are overritten when options are appended.-->
+                </select>
               </div>
-              <p>Contrast</p>
-            </div>
-            <div>
-              <div class="radio" data-value="saturation">
-                <i class="material-icons i-over">colorize</i>
-              </div>
-              <p>Saturation</p>
-            </div>
-            <div>
-              <div class="radio" data-value="rotate">
-                <i class="material-icons i-over">rotate_left</i>
-              </div>
-              <p>Rotate</p>
-            </div>
-            <div>
-              <div class="radio" data-value="crop">
-                <i class="material-icons i-over">crop</i>
-              </div>
-              <p>Crop</p>
+              <button class="btn waves-effect green accent-4" name="add" id="add-step-btn">Add Step</button>
             </div>
           </div>
-          <div class="center">
-            <div class="input-field center-align">
-              <select id="selectStep">
-                <!-- The default null selection has been appended manually in demo.js
-                This is because the options in select are overritten when options are appended.-->
-              </select>
-            </div>
-            <button class="btn waves-effect green accent-4" name="add" id="add-step-btn">Add Step</button>
+        </section>
+
+        <section id="sequence-actions">
+          <div class="row center-align">
+            <button class="btn waves-effect blue darken-2" name="save-sequence" id="save-seq">Save Sequence</button>
+            <button class="btn waves-effect blue darken-2 js-view-as-gif" id="gif">View GIF</button>
           </div>
-        </div>
+
+
+          <div class="modal fade" id="js-download-gif-modal">
+            <div class="modal-header">
+              <h4 class="modal-title">
+                Your gif is ready
+                <button type="button" class="gif-close close"><span aria-hidden="true">&times;</span></button>
+              </h4>
+            </div>
+            <div class="modal-content">
+              <div id="js-download-modal-gif-container">
+                <!-- Gif should appear here -->
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn gif-close">Done</button>
+              <button id="js-download-as-gif-button" class="btn green">Download</button>
+            </div>
+          </div>
+        </section>
       </div>
-    </section>
 
-    <section id="sequence-actions" class="panel">
-      <div class="panel-body">
+      <div class="col s12 m4">
+        <section id="dwnld" class="card">
+          <div class="container" style="margin-bottom: 1rem;">
 
-        <div class="row center-align">
-          <button class="btn waves-effect blue darken-2" name="save-sequence" id="save-seq">Save Sequence</button>
-          <button class="btn waves-effect blue darken-2 js-view-as-gif" id="gif">View GIF</button>
-        </div>
-
-
-        <div class="modal fade" id="js-download-gif-modal">
-          <div class="modal-header">
-            <h4 class="modal-title">
-              Your gif is ready
-              <button type="button" class="gif-close close"><span aria-hidden="true">&times;</span></button>
-            </h4>
-          </div>
-          <div class="modal-content">
-            <div id="js-download-modal-gif-container">
-              <!-- Gif should appear here -->
+            <div class="row center-align" style="margin-bottom: 0;">
+              <div class="col s12">
+                <button class="btn teal lighten-2" id="download-btn" name="download">Download PNG</button>
+              </div>
             </div>
+            <div class="row center-align">
+              <div class="col s12">
+                <button id="resetButton" style="margin-bottom: 1rem;" class="btn teal lighten-2">Clear All Steps</button>
+              </div>
+            </div>
+              
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn gif-close">Done</button>
-            <button id="js-download-as-gif-button" class="btn green">Download</button>
-          </div>
-        </div>
-
+        </section>
       </div>
-    </section>
-
     </div>
-    <div class="col s4">
-    <section id="dwnld" class="card">
-      <div class="form-inline">
-        <div class="panel-body">
-          <div style="text-align:center;">
-            <div class="container">
-              <div class="row s12" style="margin-bottom: 0;"><button class="btn teal lighten-2" id="download-btn" name="download">Download PNG</button></div>
-              <div class="row s12" style="margin-bottom: 0;"><button id="resetButton" class="btn teal lighten-2">Clear All Steps</button></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    </div>
+    <button id="move-up"><i class="material-icons">arrow_upward</i></button>
   </div>
-
-  <footer>
-    <hr style="margin:20px;"><center><a id="clear-cache">Clear offline cache</a></center>
+  
+  <footer class="page-footer deep-purple lighten-1">
+    <div class="container">
+      <div class="row">
+        <div class="col s12 center">
+          <h5 class="white-text">Image Sequencer</h5><br />
+          <button class="btn-flat white-text" id="clear-cache">Clear offline cache</button>
+        </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+      Open Source by Publiclab
+      <a class="grey-text text-lighten-4 right" href="https://publiclab.org">Publiclab</a>
+      </div>
+    </div>
   </footer>
-
-  <button id="move-up"><i class="fa fa-arrow-circle-o-up"></i></button>
 
   <script src="../node_modules/materialize-css/dist/js/materialize.min.js"></script>
   <script type="text/javascript">

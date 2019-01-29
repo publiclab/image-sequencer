@@ -17,21 +17,42 @@ function initializeCollapsible(){
   });   
 }
 
-function inintializeMaterialBoxImg(){
+function initializeRange(){
+  var elems  = document.querySelectorAll("input[type=range]");
+  M.Range.init(elems);
+}
+
+function initializeMaterialBoxImg(){
   $('.materialboxed').materialbox();
+}
+
+function initializeTextInputs(){
+  M.updateTextFields();
+}
+
+function updateTextArea(){
+  if ($('textarea').length > 0){
+    M.textareaAutoResize($('textarea'));
+  }
 }
 
 function initializeAll(){
   initializeCollapsible();
   initializeModal();
   initializeSelect();
-  inintializeMaterialBoxImg();
+  initializeRange();
+  initializeMaterialBoxImg();
+  initializeTextInputs();
+  updateTextArea();
 }
 
 module.exports = {
   initializeSelect,
   initializeModal,
   initializeCollapsible,
-  inintializeMaterialBoxImg,
+  initializeMaterialBoxImg,
+  initializeRange,
+  initializeTextInputs,
+  updateTextArea,
   initializeAll
 }

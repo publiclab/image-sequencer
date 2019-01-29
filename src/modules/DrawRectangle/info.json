@@ -3,13 +3,13 @@
     "description": "It draws a rectangle on the image",
     "inputs": {
   		"startingX":{
-  			"type": "Number",
+  			"type": "integer",
   			"desc": "starting x position of the rectangle",
   			"default": 0
   		},
         
       "startingY": {
-        "type": "Number",
+        "type": "integer",
         "desc": "starting y position of the rectangle",
         "default": 0
       },
@@ -17,13 +17,15 @@
       "endX":{
         "type": "integer",
         "desc": "last x position of the rectangle",
-        "default": "width"
+        "placeholder": "width",
+        "default": 100
       },
 
       "endY":{
         "type": "integer",
         "desc": "last y position of the rectangle",
-        "default": "height"
+        "placeholder": "height",
+        "default": 100
       },
 
       "thickness":{
@@ -33,7 +35,7 @@
       },
 
       "color":{
-        "type": "String",
+        "type": "string",
         "desc": "RGBA values separated by a space",
         "default": "0 0 0 255"
       }

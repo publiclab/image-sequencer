@@ -8,6 +8,12 @@ describe('Sequencer step HTML', function() {
   var DefaultHtmlStepUi = require('../examples/lib/defaultHtmlStepUi')
   var sequencer = require('../src/ImageSequencer')()
   var defaultHtmlStepUi;
+  var step = 'brightness'
+  var options = {
+    name: "Brightness",
+    description: "Change the brightness of the image by given percent value"
+  }
+  // options = JSON.parse(options)
 
   beforeEach(()=>{
     defaultHtmlStepUi = new DefaultHtmlStepUi(sequencer)
@@ -15,39 +21,41 @@ describe('Sequencer step HTML', function() {
     spyOn(defaultHtmlStepUi,'getPreview')
     spyOn(defaultHtmlStepUi,'onSetup')
     spyOn(defaultHtmlStepUi,'onComplete')
-    spyOn(defaultHtmlStepUi,'onRemove')
     spyOn(defaultHtmlStepUi,'onDraw')
+    spyOn(defaultHtmlStepUi,'onRemove')
     spyOn(defaultHtmlStepUi,'notify')
 
     defaultHtmlStepUi.getPreview()
-    defaultHtmlStepUi.onSetup()
-    defaultHtmlStepUi.onComplete()
-    defaultHtmlStepUi.onRemove()
-    defaultHtmlStepUi.onDraw()
-    defaultHtmlStepUi.notify()
+    defaultHtmlStepUi.onSetup(step,options)
+    defaultHtmlStepUi.onComplete(step)
+    defaultHtmlStepUi.onDraw(step)
+    defaultHtmlStepUi.onRemove(step)
+    defaultHtmlStepUi.notify('Step removed','remove-notification')
   })
 
-  it('load initial setup ui', function() {
-    expect(defaultHtmlStepUi.onSetup).toHaveBeenCalled()
-  })
-
-  it('load completion ui', function() {
-    expect(defaultHtmlStepUi.onComplete).toHaveBeenCalled()
-  })
-
-  it('remove step ui', function() {
-    expect(defaultHtmlStepUi.onRemove).toHaveBeenCalled()
-  })
-
-  it('draw step ui', function() {
-    expect(defaultHtmlStepUi.onDraw).toHaveBeenCalled()
-  })
-
-  it('notification ui', function() {
-    expect(defaultHtmlStepUi.notify).toHaveBeenCalled()
-  })
 
   it('result preview ui', function() {
     expect(defaultHtmlStepUi.getPreview).toHaveBeenCalled()
   })
+
+  it('load initial setup ui', function() {
+    expect(defaultHtmlStepUi.onSetup).toHaveBeenCalledWith(step,options)
+  })
+
+  it('load completion ui', function() {
+    expect(defaultHtmlStepUi.onComplete).toHaveBeenCalledWith(step)
+  })
+
+  it('draw step ui', function() {
+    expect(defaultHtmlStepUi.onDraw).toHaveBeenCalledWith(step)
+  })
+
+  it('remove step ui', function() {
+    expect(defaultHtmlStepUi.onRemove).toHaveBeenCalledWith(step)
+  })
+
+  it('notification ui', function() {
+    expect(defaultHtmlStepUi.notify).toHaveBeenCalledWith('Step removed','remove-notification')
+  })
+
 })

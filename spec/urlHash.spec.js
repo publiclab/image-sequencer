@@ -2,7 +2,10 @@ describe('URL manipulation methods', function() {
 
   var UrlHash = require('../examples/lib/urlHash')
   var urlHash;
-  var params = { who: 'me' }
+  var params = {
+    module: 'brightness',
+    brightness: 50
+  }
 
   beforeEach(()=>{
     urlHash = UrlHash
@@ -13,9 +16,9 @@ describe('URL manipulation methods', function() {
     spyOn(urlHash,'setUrlHashParameter')
 
     urlHash.getUrlHashParameters()
-    urlHash.getUrlHashParameter('value')
+    urlHash.getUrlHashParameter('module')
     urlHash.setUrlHashParameters(params)
-    urlHash.setUrlHashParameter('who','me')
+    urlHash.setUrlHashParameter('module','brightness')
   })
 
   it('gets url hash params from window hash', function() {
@@ -23,7 +26,7 @@ describe('URL manipulation methods', function() {
   })
 
   it('gets url hash param from params object', function() {
-    expect(urlHash.getUrlHashParameter).toHaveBeenCalledWith('value')
+    expect(urlHash.getUrlHashParameter).toHaveBeenCalledWith('module')
   })
 
   it('accepts param object and sets url hash params', function() {
@@ -31,7 +34,7 @@ describe('URL manipulation methods', function() {
   })
 
   it('accepts param key-value pair and sets url hash params', function() {
-    expect(urlHash.setUrlHashParameter).toHaveBeenCalledWith('who','me')
+    expect(urlHash.setUrlHashParameter).toHaveBeenCalledWith('module','brightness')
   })
 
 })

@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="content-type" content="text/html; charset=UTF8">
-  <meta name="theme-color" content="#428bca">
+  <meta name="theme-color" content="#7e57c2">
   <link rel="icon" sizes="192x192" href="../icons/ic_192.png">
   <link rel="manifest" href="manifest.json">
 
@@ -18,6 +18,11 @@
   <script src="../src/ui/prepareDynamic.js"></script>
   <script src="../dist/image-sequencer.js" charset="utf-8"></script>
   <script src="../dist/image-sequencer-ui.js" charset="utf-8"></script>
+
+  <!-- Font Import-->
+  <link href="https://fonts.googleapis.com/css?family=Libre+Franklin" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css?family=Asap" rel="stylesheet"> 
+
   <!-- for crop module: -->
   <script src="../node_modules/imgareaselect/jquery.imgareaselect.dev.js"></script>
 
@@ -52,7 +57,7 @@
 
   <div class="container-fluid" id="main-container">
     <p>
-      Image Sequencer is a pure JavaScript sequential image processing system, inspired by storyboards. Instead of modifying the original image, it
+      <b>Image Sequencer</b> is a pure JavaScript sequential image processing system, inspired by storyboards. Instead of modifying the original image, it
       creates a new image at each step in a sequence.
       <a href="https://publiclab.org/image-sequencer">Learn more</a>
     </p>
@@ -155,10 +160,10 @@
 
       <div class="col s12 m4">
         <section id="dwnld" class="card">
-          <div class="container" style="margin-bottom: 1rem;">
+          <div class="container">
 
             <div class="row center-align" style="margin-bottom: 0;">
-              <div class="col s12">
+              <div class="col s12" style="margin-top: 1rem;">
                 <button class="btn teal lighten-2" id="download-btn" name="download">Download PNG</button>
               </div>
             </div>

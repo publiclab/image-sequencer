@@ -1,18 +1,20 @@
 /* https://github.com/theleagueof/league-spartan */
-@font-face {
-    font-family: 'League Spartan';
-    src: url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.eot');
-    src: url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.eot?#iefix') format('embedded-opentype'),
-         url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.woff2') format('woff2'),
-         url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.woff') format('woff'),
-         url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.ttf') format('truetype'),
-         url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.svg#league_spartanbold') format('svg');
-    font-weight: bold;
-    font-style: normal;
-}
+/* font-family: 'League Spartan';
+src: url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.eot');
+src: url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.eot?#iefix') format('embedded-opentype'),
+     url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.woff2') format('woff2'),
+     url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.woff') format('woff'),
+     url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.ttf') format('truetype'),
+     url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.svg#league_spartanbold') format('svg'); */
 
 body {
   background: #f8f8fa;
+  height: 100vh;
+  font-family: 'Asap', sans-serif;
+}
+
+body * {
+  font-family: 'Asap', sans-serif;
 }
 
 #main-container {
@@ -29,7 +31,6 @@ a:focus {
 }
 
 h1 {
-  font-family: 'League Spartan';
   color: #445;
 }
 
@@ -39,22 +40,10 @@ h1 {
   text-align:center;
 }
 
-.header {
-  text-align: center;
-}
-
 .panel {
   margin-left: 20px;
   margin-right: 20px;
 }
-
-.nomargin {
-  margin: 0 !important;
-}
-
-/* .form-control[type="range"] {
-  padding: 0px 0px;
-} */
 
 .dropzone {
   padding: 30px;
@@ -136,65 +125,44 @@ h1 {
   }
 }
 
-#addStep .add {
-  text-align: center;
-  margin: 10px;
-}
 #save-seq {
   display: block;
   margin: 0px 10px 0px 0px;
   width: 250px;
 }
+
 .info {
   padding: 8px;
   text-align: center;
 }
+
 #gif {
   display: block;
   margin: 0px 0px 0px 10px;
   width: 250px;
 }
+
 #dwnld {
   max-width: 500px;
   margin: 20px auto;
-  margin-left: 5px;
-}
-
-#gif_element {
-  margin: 0 auto;
-  width: 100%;
-  height: auto;
 }
 
 #move-up {
-    position: fixed;
-    bottom: 50px;
-    right: 40px;
-    z-index: 550;
-    display: none;
-    background:transparent;
-    border:none;
+  position: fixed;
+  bottom: 50px;
+  right: 40px;
+  z-index: 550;
+  display: none;
+  background: transparent;
+  border: none;
 }
 
 #move-up i {
-    font-size:60px;
-    opacity:0.7;
-    color:#BABABA;
+  font-size: 60px;
+  opacity: 0.7;
+  color :#BABABA;
 }
 
-.btn-circle{
-  min-width: 80px;
-  min-height: 80px;
-  text-align: center;
-  display: flex !important;
-  flex-direction: column;
-  padding: 6px 0;
-  font-size: 12px;
-  line-height: 1.42;
-  border-radius: 10px;
-  margin-left: 5px;
-  margin-right: 5px;
-}
 .radio{
   cursor:pointer;
   overflow: hidden;
@@ -209,14 +177,10 @@ h1 {
   overflow: auto;
 }
 
-.no-border {
-  border: 0px;
-}
-
 .savesequencemsg{
   display: none;
   text-align: center;
-  }
+}
 
 .notification {
   background-color: #808b96;
@@ -245,16 +209,8 @@ h1 {
   color: white;
 }
 
-.i-small {
-  left: 25px;
-}
-
 input[type=range]::-moz-focus-outer {
   border: 0;
-}
-
-.thumb > .value{
-  margin-bottom: 1px;
 }
 
 @media all and (max-width: 767px) {
@@ -281,8 +237,6 @@ input[type=range]::-moz-focus-outer {
   from {transform:rotate(0deg);}
   to {transform:rotate(360deg);}
 }
-
-
 
 /* Bootstrap Collapse Mimick */
 *, ::after, ::before {

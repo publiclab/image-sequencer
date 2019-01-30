@@ -92,7 +92,7 @@ window.onload = function() {
   function displayMessageOnSaveSequence(){
       $(".savesequencemsg").fadeIn();
       setTimeout(function() {
-          $(".savesequencemsg").fadeOut();
+        $(".savesequencemsg").fadeOut();
       }, 1000);
     }
 
@@ -143,7 +143,7 @@ window.onload = function() {
           var image = obj.image;
           var animatedImage = document.createElement('img');
 
-          animatedImage.id = "gif_element";
+          animatedImage.classList.add('responsive-img');
           animatedImage.src = image;
 
 

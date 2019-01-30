@@ -4,7 +4,6 @@ function generatePreview(previewStepName, customValues, path, selector) {
     function insertPreview(src) {
       var img = document.createElement('img');
       img.classList.add('img-thumbnail')
-      img.classList.add('no-border');
       img.src = src;
       $(img).css("max-width", "200%");
       $(img).css("transform", "translateX(-20%)");

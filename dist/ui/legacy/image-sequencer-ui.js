@@ -8,7 +8,11 @@ var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js'),
 window.onload = function() {
   sequencer = ImageSequencer();
 
-  $('a#new-ui').prop('href', '/examples/new/#steps=' + urlHash.getUrlHashParameter('steps'))
+  $('button#new-ui').on('click', function(){
+    var loc = window.location.toString();
+    var newLoc  = loc.substr(0, loc.indexOf('examples/') + 9) + 'new/#steps=' + urlHash.getUrlHashParameter('steps');
+    window.location = newLoc;
+  })
 
   function refreshOptions() {
     // Load information of all modules (Name, Inputs, Outputs)
@@ -560,7 +564,6 @@ function DefaultHtmlStepUi(_sequencer, options) {
     $('input[type="range"]').on('input', function() {
         $(this).next().html($(this).val());
     })
-    $('a#new-ui').prop('href', '/examples/new/#steps=' + urlHash.getUrlHashParameter('steps'))
   }
 
 

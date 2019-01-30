@@ -11,7 +11,11 @@ var defaultHtmlSequencerUi = require('./lib/sequencer/defaultHtmlSequencerUi'),
 window.onload = function() {
   sequencer = ImageSequencer();
 
-  $('a#old-ui').prop('href', '/examples/legacy/#steps=' + urlHash.getUrlHashParameter('steps'))
+  $('button#old-ui').on('click', function(){
+    var loc = window.location.toString();
+    var oldLoc  = loc.substr(0, loc.indexOf('examples/') + 9) + 'legacy/#steps=' + urlHash.getUrlHashParameter('steps');
+    window.location = oldLoc;
+  })
 
   var key1, key2;
   $(document).on('keydown', function(e){

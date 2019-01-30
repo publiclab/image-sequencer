@@ -215,7 +215,6 @@ function DefaultHtmlStepUi(_sequencer, options) {
     $('input[type="range"]').on('input', function() {
         $(this).next().html($(this).val());
     })
-    $('a#new-ui').prop('href', '/examples/new/#steps=' + urlHash.getUrlHashParameter('steps'))
   }
 
 

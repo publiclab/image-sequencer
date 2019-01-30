@@ -160,6 +160,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     $(step.ui.querySelector('.input-form')).on('submit', saveOptions);
     $(step.ui.querySelectorAll('.target')).each(function(i, input){initializeInputs(input, step)});
+    $('a#old-ui').prop('href', '/examples/legacy/#steps=' + urlHash.getUrlHashParameter('steps'))
     initAll();
   }
 

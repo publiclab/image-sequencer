@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <title>Replace Image Demo | Image Sequencer</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="content-type" content="text/html; charset=UTF8">
+
+    <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="demo-old.css" rel="stylesheet">
+
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../dist/image-sequencer.js"></script>
+
+  </head>
+
+  <body>
+
+    <div class="header">
+
+      <h1>Image Sequencer</h1>
+      <h3>
+        <a href="https://github.com/publiclab/image-sequencer"><i class="fa fa-github"></i></a>
+      </h3>
+
+    </div>
+
+    <p style="display:none;" class="spinner"><i class="fa fa-spinner fa-spin"></i></p>
+
+    <div class="panels">
+
+      <div class="panel ismod-image-select" style="display:flex;justify-content:center">
+        <img src="images/replace.jpg" id="pencils" style="cursor:pointer">
+      </div>
+
+    </div>
+
+    <div class="mod-new-panel" style="display:flex;justify-content:center">
+      <p class="lead" style="text-align:center">
+        Click on the image above to invert it.<br>
+        (This may take a few seconds)<br>
+        Syntax:</p>
+    </div>
+
+    <div class="log">
+      <h4>var sequencer = new ImageSequencer();</h4><br>
+      <h4>sequencer.replaceImage('#pencils','invert');</h4>
+    </div>
+
+    <script>
+
+      var sequencer = ImageSequencer();
+      document.querySelector('#pencils').onclick = function() {
+        sequencer.replaceImage('#pencils','invert');
+      }
+
+    </script>
+
+  </body>
+</html>

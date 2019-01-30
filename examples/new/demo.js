@@ -11,6 +11,13 @@ var defaultHtmlSequencerUi = require('./lib/sequencer/defaultHtmlSequencerUi'),
 window.onload = function() {
   sequencer = ImageSequencer();
 
+  $('a#old-ui').prop('href', '/examples/legacy/#steps=' + urlHash.getUrlHashParameter('steps'))
+
+  var key1, key2;
+  $(document).on('keydown', function(e){
+    var key = String.fromCharCode(e.which);
+  })
+
   function refreshOptions() {
     // Load information of all modules (Name, Inputs, Outputs)
     var modulesInfo = sequencer.modulesInfo();

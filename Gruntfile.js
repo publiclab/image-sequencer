@@ -14,9 +14,20 @@ module.exports = function(grunt) {
       options: {
         livereload: true
       },
-      source: {
-        files: ["src/**/*", "examples/lib/**/*.js", "examples/demo.js", "Gruntfile.js"],
-        tasks: ["compile:js"]
+
+      new: {
+        files: ["examples/new/lib/**/*.js", "examples/new/demo.js", "Gruntfile.js"],
+        tasks: ["browserify:new"]
+      },
+
+      old: {
+        files: ["examples/legacy/lib/*.js", "examples/legacy/demo.js", "Gruntfile.js"],
+        tasks: ["browserify:old"]
+      },
+
+      dist: {
+        files: ["src/**/*", "Gruntfile.js"],
+        tasks: ["browserify:dist"]
       }
     },
 
@@ -25,9 +36,13 @@ module.exports = function(grunt) {
         src: ["src/ImageSequencer.js"],
         dest: "dist/image-sequencer.js"
       }, 
-      js: {
-        src: ["examples/demo.js"],
-        dest: "dist/image-sequencer-ui.js"
+      new: {
+        src: ["examples/new/demo.js"],
+        dest: "dist/ui/new/image-sequencer-ui.js"
+      },
+      old: {
+        src: ["examples/legacy/demo.js"],
+        dest: "dist/ui/legacy/image-sequencer-ui.js"
       }
     },
 
@@ -36,11 +51,16 @@ module.exports = function(grunt) {
         src: ["./dist/image-sequencer.js"],
         dest: "./dist/image-sequencer.min.js"
       },
-      js: {
-        src: ['dist/image-sequencer-ui.js'],
-        dest: 'dist/image-sequencer-ui.min.js'
+      new: {
+        src: ["examples/new/demo.js"],
+        dest: "dist/ui/new/image-sequencer-ui.min.js"
+      },
+      old: {
+        src: ["examples/legacy/demo.js"],
+        dest: "dist/ui/legacy/image-sequencer-ui.min.js"
       }
     },
+
     browserSync: {
       dev: {
         options: {
@@ -53,7 +73,7 @@ module.exports = function(grunt) {
 
   /* Default (development): Watch files and build on change. */
   grunt.registerTask("default", ["watch"]);
-  grunt.registerTask("compile", ["browserify:dist", "browserify:js"])
-  grunt.registerTask("build", ["browserify:dist", "uglify:dist", "browserify:js", "uglify:js"]);
-  grunt.registerTask("serve", ["browserify:dist","browserify:js","uglify:dist","uglify:js","browserSync", "watch"]);
+  grunt.registerTask("compile", ["browserify"])
+  grunt.registerTask("build", ["browserify", "uglify"]);
+  grunt.registerTask("serve", ["browserify", "uglify", "browserSync", "watch"]);
 };

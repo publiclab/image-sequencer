@@ -12,6 +12,13 @@ var defaultHtmlSequencerUi = require('./lib/sequencer/defaultHtmlSequencerUi'),
 window.onload = function() {
   sequencer = ImageSequencer();
 
+  $('a#old-ui').prop('href', '/examples/legacy/#steps=' + urlHash.getUrlHashParameter('steps'))
+
+  var key1, key2;
+  $(document).on('keydown', function(e){
+    var key = String.fromCharCode(e.which);
+  })
+
   function refreshOptions() {
     // Load information of all modules (Name, Inputs, Outputs)
     var modulesInfo = sequencer.modulesInfo();
@@ -450,10 +457,8 @@ function generatePreview(previewStepName, customValues, path, selector) {
     var previewSequencer = ImageSequencer();
     function insertPreview(src) {
       var img = document.createElement('img');
-      img.classList.add('img-thumbnail')
+      img.classList.add('preview-thumbnail');
       img.src = src;
-      $(img).css("max-width", "200%");
-      $(img).css("transform", "translateX(-20%)");
       var stepDiv = $(selector + ' .radio-group').find('div').each(function() {
         if ($(this).find('.radio').attr('data-value') === previewStepName) {
           $(this).find('.radio').append(img);
@@ -766,6 +771,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     $(step.ui.querySelector('.input-form')).on('submit', saveOptions);
     $(step.ui.querySelectorAll('.target')).each(function(i, input){initializeInputs(input, step)});
+    $('a#old-ui').prop('href', '/examples/legacy/#steps=' + urlHash.getUrlHashParameter('steps'))
     initAll();
   }
 
@@ -1021,10 +1027,9 @@ function getUrlHashParameter(param) {
 }
 
 function getUrlHashParameters() {
-
   var sPageURL = window.location.hash;
   if (sPageURL) sPageURL = sPageURL.split('#')[1];
-  var pairs = sPageURL.split('&');
+  var pairs = sPageURL.includes('&') ? sPageURL.split('&') : [sPageURL];
   var object = {};
   pairs.forEach(function(pair, i) {
     pair = pair.split('=');
@@ -1066,7 +1071,7 @@ module.exports =  {
 },{}],13:[function(require,module,exports){
 var setupCache = function() {
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js', { scope: '/examples/' })
+    navigator.serviceWorker.register('sw.js', { scope: '/examples/new/' })
       .then(function(registration) {
         const installingWorker = registration.installing;
         installingWorker.onstatechange = () => {

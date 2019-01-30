@@ -1,6 +1,6 @@
 var setupCache = function() {
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js', { scope: '/examples/' })
+    navigator.serviceWorker.register('sw.js', { scope: '/examples/new/' })
       .then(function(registration) {
         const installingWorker = registration.installing;
         installingWorker.onstatechange = () => {

@@ -3,10 +3,8 @@ function generatePreview(previewStepName, customValues, path, selector) {
     var previewSequencer = ImageSequencer();
     function insertPreview(src) {
       var img = document.createElement('img');
-      img.classList.add('img-thumbnail')
+      img.classList.add('preview-thumbnail');
       img.src = src;
-      $(img).css("max-width", "200%");
-      $(img).css("transform", "translateX(-20%)");
       var stepDiv = $(selector + ' .radio-group').find('div').each(function() {
         if ($(this).find('.radio').attr('data-value') === previewStepName) {
           $(this).find('.radio').append(img);

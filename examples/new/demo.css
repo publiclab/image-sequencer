@@ -9,7 +9,7 @@ src: url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_w
 
 body {
   background: #f8f8fa;
-  height: 100vh;
+  min-height: 100%;
   font-family: 'Asap', sans-serif;
 }
 
@@ -202,11 +202,16 @@ h1 {
 }
 
 .i-over {
-  position: absolute;
-  margin: 18px 18px;
   font-size: 3rem;
+  transform: translateY(50%);
   z-index: 25;
   color: white;
+}
+
+.preview-thumbnail {
+  transform: translate(-20%, -50%);
+  max-height: 200%;
+  max-width: 200%;
 }
 
 input[type=range]::-moz-focus-outer {

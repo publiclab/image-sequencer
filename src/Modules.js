@@ -2,6 +2,7 @@
 * Core modules and their info files
 */
 module.exports = {
+  'add-qr': require('./modules/AddQR'),
   'average': require('./modules/Average'),
   'blend': require('./modules/Blend'),
   'blur': require('./modules/Blur'),

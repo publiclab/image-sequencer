@@ -25,7 +25,8 @@ function initializeRange(){
 
 // initialize material box for step images
 function initializeMaterialBoxImg(){
-  $('.materialboxed').materialbox();
+  var elems = document.querySelectorAll('.materialboxed');
+  var instances = M.Materialbox.init(elems, {});
 }
 
 // initlialize text inputs

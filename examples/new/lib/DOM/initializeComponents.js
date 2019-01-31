@@ -6,7 +6,8 @@ function initializeSelect(){
 
 // initialize modals
 function initializeModal(){
-  $('.modal').modal();
+  var elems = document.querySelectorAll('.modal');
+  var instances = M.Modal.init(elems, {});
 }
 
 // initialize collapsibles

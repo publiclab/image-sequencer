@@ -4,7 +4,7 @@ var defaultHtmlSequencerUi = require('./lib/sequencer/sequence/defaultHtmlSequen
     DefaultHtmlStepUi = require('./lib/sequencer/step/defaultHtmlStepUi.js'),
     { setModuleSelector } = require('./lib/sequencer/sequence/setModuleSelector'),
     { getUrlHashParameter } = require('./lib/sequencer/sequence/urlHash.js'),
-    { initializeSelect, initializeModal, initializeTooltips } = require('./lib/DOM/initializeComponents'),
+    { initializeSelect, initializeTooltips } = require('./lib/DOM/initializeComponents'),
     { setScrollBtn, setCacheShortcut } = require('./lib/DOM/helpers'),
     setGifGenerator = require('./lib/sequencer/sequence/gif'),
     setSaveSequence = require('./lib/sequencer/sequence/saveSequence')
@@ -87,7 +87,6 @@ window.onload = function() {
     insertPreview.updatePreviews("images/tulips.png",'#addStep');
   }
   initializeSelect();
-  initializeModal();
 };
 },{"./lib/DOM/helpers":3,"./lib/DOM/initializeComponents":5,"./lib/DOM/insertPreview":6,"./lib/sequencer/sequence/defaultHtmlSequencerUi":7,"./lib/sequencer/sequence/gif":8,"./lib/sequencer/sequence/saveSequence":9,"./lib/sequencer/sequence/setModuleSelector":10,"./lib/sequencer/sequence/urlHash.js":11,"./lib/sequencer/step/defaultHtmlStepUi.js":12,"./lib/sw/cache.js":15}],2:[function(require,module,exports){
 function handleInputValueChange(step, currentValue, initValue, hasChangedBefore) {
@@ -348,7 +347,8 @@ function initializeSelect(){
 
 // initialize modals
 function initializeModal(){
-  $('.modal').modal();
+  var elems = document.querySelectorAll('.modal');
+  var instances = M.Modal.init(elems, {});
 }
 
 // initialize collapsibles

@@ -3,7 +3,7 @@ var defaultHtmlSequencerUi = require('./lib/sequencer/sequence/defaultHtmlSequen
     DefaultHtmlStepUi = require('./lib/sequencer/step/defaultHtmlStepUi.js'),
     { setModuleSelector } = require('./lib/sequencer/sequence/setModuleSelector'),
     { getUrlHashParameter } = require('./lib/sequencer/sequence/urlHash.js'),
-    { initializeSelect, initializeModal, initializeTooltips } = require('./lib/DOM/initializeComponents'),
+    { initializeSelect, initializeTooltips } = require('./lib/DOM/initializeComponents'),
     { setScrollBtn, setCacheShortcut } = require('./lib/DOM/helpers'),
     setGifGenerator = require('./lib/sequencer/sequence/gif'),
     setSaveSequence = require('./lib/sequencer/sequence/saveSequence')
@@ -86,5 +86,4 @@ window.onload = function() {
     insertPreview.updatePreviews("images/tulips.png",'#addStep');
   }
   initializeSelect();
-  initializeModal();
 };

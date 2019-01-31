@@ -69026,7 +69026,6 @@ module.exports = {
   'tint': require('./modules/Tint'),
   'white-balance': require('./modules/WhiteBalance')
 }
-
 },{"./modules/AddQR":193,"./modules/Average":196,"./modules/Blend":199,"./modules/Blur":203,"./modules/Brightness":206,"./modules/Channel":209,"./modules/Colorbar":212,"./modules/Colormap":216,"./modules/Contrast":220,"./modules/Convolution":224,"./modules/Crop":229,"./modules/DecodeQr":232,"./modules/Dither":236,"./modules/DrawRectangle":240,"./modules/Dynamic":243,"./modules/EdgeDetect":247,"./modules/FisheyeGl":250,"./modules/FlipImage":254,"./modules/GammaCorrection":257,"./modules/Gradient":260,"./modules/Histogram":263,"./modules/ImportImage":267,"./modules/Ndvi":271,"./modules/NdviColormap":274,"./modules/Overlay":277,"./modules/PaintBucket":281,"./modules/Resize":284,"./modules/Rotate":287,"./modules/Saturation":290,"./modules/Threshold":294,"./modules/Tint":297,"./modules/WhiteBalance":300,"image-sequencer-invert":62}],187:[function(require,module,exports){
 // Uses a given image as input and replaces it with the output.
 // Works only in the browser.

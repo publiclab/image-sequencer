@@ -52,11 +52,11 @@ module.exports = function(grunt) {
         dest: "./dist/image-sequencer.min.js"
       },
       new: {
-        src: ["examples/new/demo.js"],
+        src: ["dist/ui/new/image-sequencer-ui.js"],
         dest: "dist/ui/new/image-sequencer-ui.min.js"
       },
       old: {
-        src: ["examples/legacy/demo.js"],
+        src: ["dist/ui/legacy/image-sequencer-ui.js"],
         dest: "dist/ui/legacy/image-sequencer-ui.min.js"
       }
     },

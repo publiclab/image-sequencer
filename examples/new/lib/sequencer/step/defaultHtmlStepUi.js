@@ -8,14 +8,14 @@
 // output values, step information.
 // See documetation for more details.
 
-var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js'),
-  urlHash = require('./urlHash.js'),
+var intermediateHtmlStepUi = require('../step/intermediateHtmlStepUi'),
+  urlHash = require('../sequence/urlHash'),
   mapTypes = require('./mapHtmlTypes'),
-  notify = require('../DOM/notify.js'),
-  initAll = require('../DOM/initializeComponents').initializeAll,
-  { initializeInputs, updateInputs } = require('../DOM/handleInputChanges'),
-  { updateTextArea } = require('../DOM/initializeComponents'),
-  { getStepTemplate, toolsTemplate } = require('../DOM/htmlTemplates');
+  { notify } = require('../../DOM/helpers'),
+  initAll = require('../../DOM/initializeComponents').initializeAll,
+  { initializeInputs, updateInputs } = require('../../DOM/handleInputChanges'),
+  { updateTextArea } = require('../../DOM/initializeComponents'),
+  { getStepTemplate, toolsTemplate } = require('../../DOM/htmlTemplates');
 
 function capitalize(str){
   return str.charAt(0).toUpperCase() + str.substr(1);

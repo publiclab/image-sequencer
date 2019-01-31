@@ -1,8 +1,8 @@
-var urlHash = require('./urlHash.js'),
-  updatePreviews =require('../DOM/insertPreview').updatePreviews,
-  initSelect = require('../DOM/initializeComponents').initializeSelect,
-  Collapse = require('../DOM/collapse'),
-  stepInsertTemplate = require('../DOM/htmlTemplates').stepInsertTemplate;
+var urlHash = require('../sequence/urlHash'),
+  initSelect = require('../../DOM/initializeComponents').initializeSelect,
+  { updatePreviews } = require('../../DOM/insertPreview'),
+  { Collapse } = require('../../DOM/helpers'),
+  { stepInsertTemplate } = require('../../DOM/htmlTemplates');
 function IntermediateHtmlStepUi(_sequencer, step, options) {
   function stepUI() {
     return stepInsertTemplate;
@@ -16,6 +16,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     var newStepName = insertStepSelect.val()
     $('div.insertDiv').remove();
     var sequenceLength = 1;
+    
     if (sequencer.sequences[newStepName]) {
       sequenceLength = sequencer.sequences[newStepName].length;
     } else if (sequencer.modules[newStepName][1]['length']) {
@@ -30,17 +31,17 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
 
   function selectNewStepUi() {
     if ($(step.ui.querySelector('div.insertDiv')).length > 0){
-      $(step.ui.querySelector('div.insertDiv').collapse('toggle'));
+      window.step = step.ui;
+      $(step.ui.querySelector('div.insertDiv')).collapse('toggle');
       return;
     }
-    else {
-      step.ui
-        .querySelector("div.step")
-        .insertAdjacentElement('afterend',
-          addStepUI
-      );
-      $(step.ui.querySelector('div.insertDiv').collapse('toggle'));
-    }
+    step.ui
+      .querySelector("div.step")
+      .insertAdjacentElement('afterend',
+        addStepUI
+    );
+    $(step.ui.querySelector('div.insertDiv').collapse('toggle'));
+
     var m = $(".insert-step select").val();
     $(".insert-step .info").html(_sequencer.modulesInfo(m).description);
     $(".insert-step .add-step-btn").prop("disabled", false);

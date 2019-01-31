@@ -2,6 +2,7 @@
 var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js'),
     setupCache = require('./lib/cache.js'),
     DefaultHtmlStepUi = require('./lib/defaultHtmlStepUi.js'),
+    intermediateHtmlStepUi = require('./lib/intermediateHtmlStepUi'),
     urlHash = require('./lib/urlHash.js'),
     insertPreview = require('./lib/insertPreview.js');
 
@@ -193,7 +194,7 @@ window.onload = function() {
     onLoad: function onFileReaderLoad(progress) {
       var reader = progress.target;
       var step = sequencer.images.image1.steps[0];
-      var util=IntermediateHtmlStepUi(sequencer);
+      var util=intermediateHtmlStepUi(sequencer);
       step.output.src = reader.result;
       sequencer.run({ index: 0 });
       step.options.step.imgElement.src = reader.result;
@@ -216,7 +217,7 @@ window.onload = function() {
     insertPreview.updatePreviews("images/tulips.png",'addStep');
   }
 };
-},{"./lib/cache.js":2,"./lib/defaultHtmlSequencerUi.js":3,"./lib/defaultHtmlStepUi.js":4,"./lib/insertPreview.js":5,"./lib/urlHash.js":7}],2:[function(require,module,exports){
+},{"./lib/cache.js":2,"./lib/defaultHtmlSequencerUi.js":3,"./lib/defaultHtmlStepUi.js":4,"./lib/insertPreview.js":5,"./lib/intermediateHtmlStepUi":6,"./lib/urlHash.js":7}],2:[function(require,module,exports){
 var setupCache = function() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js', { scope: '/examples/legacy/' })

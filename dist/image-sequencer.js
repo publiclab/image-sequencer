@@ -69260,20 +69260,6 @@ module.exports = exports = function (options, pixels, oldPixels, callback) {
             qrPixels.data = resized._data.data;
             qrPixels.shape = [options.size, options.size, 4];
             qrPixels.stride[1] = 4 * options.size;
-            function copyPixel(x1, y1, x2, y2, pixelType) {
-                if (pixelType == 'qr') {
-                    pixels.set(x1, y1, 0, qrPixels.get(x2, y2, 0))
-                    pixels.set(x1, y1, 1, qrPixels.get(x2, y2, 1))
-                    pixels.set(x1, y1, 2, qrPixels.get(x2, y2, 2))
-                    pixels.set(x1, y1, 3, qrPixels.get(x2, y2, 3))
-                }
-                else {
-                    pixels.set(x1, y1, 0, oldPixels.get(x2, y2, 0))
-                    pixels.set(x1, y1, 1, oldPixels.get(x2, y2, 1))
-                    pixels.set(x1, y1, 2, oldPixels.get(x2, y2, 2))
-                    pixels.set(x1, y1, 3, oldPixels.get(x2, y2, 3))
-                }
-            }
 
             var width = oldPixels.shape[0],
                 height = oldPixels.shape[1];
@@ -69281,13 +69267,23 @@ module.exports = exports = function (options, pixels, oldPixels, callback) {
                 ye = height - options.size;
             for (var m = 0; m < width; m++) {
                 for (var n = 0; n < height; n++) {
-                    if (m >= xe && n >= ye)
-                        copyPixel(m, n, m - xe, n - ye, 'qr');
-                    else
-                        copyPixel(m, n, m, n, 'old');
+                    if (m >= xe && n >= ye) {
+                        pixels.set(m, n, 0, qrPixels.get(m - xe, n - ye, 0))
+                        pixels.set(m, n, 1, qrPixels.get(m - xe, n - ye, 1))
+                        pixels.set(m, n, 2, qrPixels.get(m - xe, n - ye, 2))
+                        pixels.set(m, n, 3, qrPixels.get(m - xe, n - ye, 3))
+                    }
+
+                    else {
+                        pixels.set(m, n, 0, oldPixels.get(m, n, 0))
+                        pixels.set(m, n, 1, oldPixels.get(m, n, 1))
+                        pixels.set(m, n, 2, oldPixels.get(m, n, 2))
+                        pixels.set(m, n, 3, oldPixels.get(m, n, 3))
+                    }
+
                 }
             }
-            callback();            
+            callback();
 
         })
     })

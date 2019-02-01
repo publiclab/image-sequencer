@@ -65209,7 +65209,7 @@ ImageSequencer = function ImageSequencer(options) {
   // Config is an object which contains the runtime configuration like progress bar
   // information and index from which the sequencer should run
   function run(config, t_image, t_from) {
-    let progressObj, index = 0;
+    var progressObj, index = 0;
     config = config || { mode: 'no-arg' };
     if (config.index) index = config.index;
 
@@ -65532,7 +65532,7 @@ ImageSequencer = function ImageSequencer(options) {
     createMetaModule: createMetaModule,
     saveSequence: saveSequence,
     loadModules: loadModules,
-    
+
     //other functions
     log: log,
     objTypeOf: objTypeOf,
@@ -65646,7 +65646,10 @@ module.exports = {
   'saturation': require('./modules/Saturation'),
   'white-balance': require('./modules/WhiteBalance')
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> upstream/main
 },{"./modules/Average":162,"./modules/Blend":165,"./modules/Blur":169,"./modules/Brightness":172,"./modules/Channel":175,"./modules/Colorbar":178,"./modules/Colormap":182,"./modules/Contrast":186,"./modules/Convolution":190,"./modules/Crop":195,"./modules/DecodeQr":198,"./modules/Dither":202,"./modules/DrawRectangle":206,"./modules/Dynamic":209,"./modules/EdgeDetect":213,"./modules/FisheyeGl":216,"./modules/GammaCorrection":219,"./modules/Gradient":222,"./modules/Histogram":225,"./modules/ImportImage":229,"./modules/Ndvi":233,"./modules/NdviColormap":236,"./modules/Overlay":239,"./modules/PaintBucket":243,"./modules/Resize":246,"./modules/Rotate":249,"./modules/Saturation":252,"./modules/WhiteBalance":255,"image-sequencer-invert":61}],157:[function(require,module,exports){
 // Uses a given image as input and replaces it with the output.
 // Works only in the browser.

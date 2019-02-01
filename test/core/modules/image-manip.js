@@ -7,7 +7,7 @@ var DataURItoBuffer = require('data-uri-to-buffer');
 // We should only test headless code here.
 // http://stackoverflow.com/questions/21358015/error-jquery-requires-a-window-with-a-document#25622933
 
-require('../../src/ImageSequencer.js');
+require('../../../src/ImageSequencer.js');
 
 //require image files as DataURLs so they can be tested alike on browser and Node.
 var sequencer = ImageSequencer({ ui: false });

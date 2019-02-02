@@ -1,5 +1,5 @@
 var test = require('tape');
-require('../../src/ImageSequencer.js');
+require('../../../src/ImageSequencer.js');
 
 var sequencer1 = ImageSequencer({ ui: false });
 var options = {brightness : 50};

@@ -1,4 +1,4 @@
-module.exports = function ColorSeparation(options, UI) {
+module.exports = function ReplaceColor(options, UI) {
 
     var output;
 
@@ -14,7 +14,7 @@ module.exports = function ColorSeparation(options, UI) {
         }
 
         function extraManipulation(pixels) {
-            pixels = require('./ColorSeparation')(pixels, options)
+            pixels = require('./ReplaceColor')(pixels, options)
             return pixels
         }
 

@@ -1,6 +1,10 @@
 module.exports = exports = function(pixels, options){
     var color = options.color || '228 86 81';
+    var replaceColor = options.replaceColor || '0 0 255';
+    var replaceMethod = options.replaceMethod || 'greyscale';
     color = color.split(' ');
+    replaceColor = replaceColor.split(' ');
+
 
     var cr = color[0],
         cg = color[1],
@@ -22,10 +26,16 @@ module.exports = exports = function(pixels, options){
                 g = pixels.get(i,j,1),
                 b = pixels.get(i,j,2);
             if(isSimilar(r,g,b)){
-                var avg = (r + g + b)/3;
-                pixels.set(i,j,0,avg);
-                pixels.set(i,j,1,avg);
-                pixels.set(i,j,2,avg);
+                if (replaceMethod == "greyscale"){
+                    var avg = (r + g + b)/3;
+                    pixels.set(i,j,0,avg);
+                    pixels.set(i,j,1,avg);
+                    pixels.set(i,j,2,avg);
+                }else {
+                    pixels.set(i,j,0,replaceColor[0]);
+                    pixels.set(i,j,1,replaceColor[1]);
+                    pixels.set(i,j,2,replaceColor[2]);
+                }
             }
         }
     }

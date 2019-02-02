@@ -72520,7 +72520,7 @@ module.exports={
         "default": "greyscale",
         "values": ["greyscale","replaceByColor"]
       },
-      "Replacecolor": {
+      "replaceColor": {
         "type": "String",
         "desc": "three space separated numbers representing the RGB values of color to be filled",
         "default": "0 0 255",

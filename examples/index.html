@@ -82,6 +82,8 @@
     <section id="addStep" class="panel panel-primary">
       <div class="form-inline">
         <div class="panel-body">
+          <div style="display:flex; justify-content:center;">
+          </div>
           <p class="info">Select a new module to add to your sequence.</p>
           <div class="row center-align radio-group">
             <div>
@@ -122,6 +124,9 @@
             </select>
             <button class="btn btn-success btn-lg" name="add" id="add-step-btn">Add Step</button>
           </div>
+          <div class="row center-align">
+          <button id="resetButton" class="btn btn-default btn-lg" style=" margin: 20px 35px 0px 35px; width:100%;">Clear All Steps</button>
+        </div>
         </div>
       </div>
     </section>
@@ -130,8 +135,9 @@
       <div class="panel-body">
 
         <div class="row center-align">
-          <button class="btn btn-primary btn-block btn-lg" name="save-sequence" id="save-seq">Save Sequence</button>
-          <button class="btn btn-primary btn-block btn-lg js-view-as-gif" id="gif">View GIF</button>
+          <!--<button class="btn btn-primary btn-block btn-lg" name="save-sequence" id="save-seq">Save Sequence</button> -->
+            <!--<button class="btn btn-primary btn-block btn-lg" id="download-btn" name="download" style="display: block; margin: 0px 10px 0px 0px; width: 250px;">Download PNG</button> -->
+          <button class="btn btn-primary btn-block btn-lg js-view-as-gif" id="gif" style="margin: 0px 35px 0px 35px;width:100%;">View GIF</button>
         </div>
 
 
@@ -165,8 +171,15 @@
       <div class="form-inline">
         <div class="panel-body">
           <div style="text-align:center;">
-            <button class="btn btn-success btn-lg" id="download-btn" name="download">Download PNG</button>
-            <button id="resetButton" class="btn btn-default btn-lg">Clear All Steps</button>
+            <h2 style="margin-top:20px">Save</h2>
+            <p>Or click ARROW to save the entire sequence as a workflow for future use.</p>
+              <select class="form-control input-lg" id="selectSaveOption" style="margin-top:20px">
+                <option>Save as PNG</option>
+                <option>Save as GIF (all steps)</option>
+                <option>Save sequence</option>
+                <option>Save sequence string</option>
+              </select>
+                <button id="saveButton" class="btn btn-primary btn-lg" style="margin-top:20px; margin-bottom:0px;align:center; width:100%;">Save</button>
           </div>
         </div>
       </div>

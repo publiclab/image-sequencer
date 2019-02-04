@@ -14,9 +14,20 @@ module.exports = function(grunt) {
       options: {
         livereload: true
       },
-      source: {
+
+      uiUtils: {
+        files: ["ui/**/*.js", "Gruntfile.js"],
+        tasks: ["browserify:ui"]
+      },
+
+      src: {
         files: ["src/**/*", "Gruntfile.js"],
-        tasks: ["build:js"]
+        tasks: ["browserify:dist"]
+      },
+
+      renderers: {
+        files: ["examples/renderers/**/*.js"],
+        tasks: ["browserify:rendererMaterialize", "browserify:rendererBootstrap"]
       }
     },
 
@@ -25,9 +36,20 @@ module.exports = function(grunt) {
         src: ["src/ImageSequencer.js"],
         dest: "dist/image-sequencer.js"
       }, 
-      js: {
-        src: ["examples/demo.js"],
-        dest: "dist/image-sequencer-ui.js"
+
+      ui: {
+        src: ["ui/index.js"],
+        dest: "dist/ui/image-sequencer-ui-utils.js"
+      },
+
+      rendererMaterialize: {
+        src: ["examples/renderers/materialize/index.js"],
+        dest: "examples/renderers/materialize/dist/renderer.js"
+      },
+
+      rendererBootstrap: {
+        src: ["examples/renderers/bootstrap/index.js"],
+        dest: "examples/renderers/bootstrap/dist/renderer.js"
       }
     },
 
@@ -36,11 +58,23 @@ module.exports = function(grunt) {
         src: ["./dist/image-sequencer.js"],
         dest: "./dist/image-sequencer.min.js"
       },
-      js: {
-        src: ['dist/image-sequencer-ui.js'],
-        dest: 'dist/image-sequencer-ui.min.js'
+
+      ui: {
+        src: ["./dist/ui/image-sequencer-ui-utils.js"],
+        dest: "dist/ui/image-sequencer-ui-utils.min.js"
+      },
+
+      rendererMaterialize: {
+        src: ["examples/renderers/materialize/dist/renderer.js"],
+        dest: "examples/renderers/materialize/dist/renderer.min.js"
+      },
+
+      rendererBootstrap: {
+        src: ["examples/renderers/bootstrap/dist/renderer.js"],
+        dest: "examples/renderers/bootstrap/dist/renderer.min.js"
       }
     },
+
     browserSync: {
       dev: {
         options: {
@@ -53,6 +87,7 @@ module.exports = function(grunt) {
 
   /* Default (development): Watch files and build on change. */
   grunt.registerTask("default", ["watch"]);
-  grunt.registerTask("build", ["browserify:dist", "uglify:dist"]);
-  grunt.registerTask("serve", ["browserify:dist","browserify:js","uglify:dist","uglify:js","browserSync", "watch"]);
+  grunt.registerTask("compile", ["browserify"]);
+  grunt.registerTask("build", ["browserify", "uglify"]);
+  grunt.registerTask("serve", ["browserify", "uglify", "browserSync", "watch"]);
 };

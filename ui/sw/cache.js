@@ -1,6 +1,6 @@
-var setupCache = function() {
+var setupCache = function(scope, clearCacheSelector) {
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js', { scope: '/examples/' })
+    navigator.serviceWorker.register('sw.js', { scope: scope })
       .then(function(registration) {
         const installingWorker = registration.installing;
         installingWorker.onstatechange = () => {
@@ -19,12 +19,12 @@ var setupCache = function() {
   if ('serviceWorker' in navigator) {
     caches.keys().then(function(cacheNames) {
       cacheNames.forEach(function(cacheName) {
-        $("#clear-cache").append(" " + cacheName);
+        $(clearCacheSelector).append(" " + cacheName);
       });
     });
   }
 
-  $("#clear-cache").click(function() {
+  $(clearCacheSelector).click(function() {
     if ('serviceWorker' in navigator) {
       caches.keys().then(function(cacheNames) {
         cacheNames.forEach(function(cacheName) {

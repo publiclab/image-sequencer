@@ -9,7 +9,7 @@ function getUrlHashParameters() {
 
   var sPageURL = window.location.hash;
   if (sPageURL) sPageURL = sPageURL.split('#')[1];
-  var pairs = sPageURL.split('&');
+  var pairs = sPageURL.includes('&') ? sPageURL.split('&') : [sPageURL];
   var object = {};
   pairs.forEach(function(pair, i) {
     pair = pair.split('=');

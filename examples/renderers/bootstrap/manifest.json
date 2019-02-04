@@ -3,19 +3,19 @@
   "name": "Image Sequencer",
   "icons": [
     {
-      "src": "../icons/ic_192.png",
+      "src": "../../icons/ic_192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "../icons/ic_512.png",
+      "src": "../../icons/ic_512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
   ],
-  "start_url": "/examples/#steps=",
+  "start_url": "/examples/legacy/#steps=",
   "background_color": "#428bca",
   "display": "standalone",
-  "scope": "/examples/",
+  "scope": "/examples/legacy/",
   "theme_color": "#428bca"
 }

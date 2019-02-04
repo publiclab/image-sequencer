@@ -39,6 +39,8 @@
     "jsdom": "^13.1.0",
     "jsqr": "^1.1.1",
     "lodash": "^4.17.5",
+    "material-design-icons": "^3.0.1",
+    "materialize-css": "^1.0.0-rc.2",
     "ndarray-gaussian-filter": "^1.0.0",
     "ora": "^3.0.0",
     "pace": "0.0.4",

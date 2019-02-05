@@ -24,7 +24,7 @@ test('Contrast module loads with correct options', function(t) {
   t.end()
 })
 
-test('Brightness module works correctly', function(t) {
+test('Contrast module works correctly', function(t) {
   sequencer.run({mode:'test'}, function(out) {
     var result = sequencer.images.test.steps[2].output.src
     base64Img.imgSync(result, target, 'result')

@@ -48,6 +48,7 @@
     "urify": "^2.1.1"
   },
   "devDependencies": {
+    "base64-img": "^1.0.4",
     "browserify": "16.2.3",
     "grunt": "^1.0.3",
     "grunt-browser-sync": "^2.2.0",

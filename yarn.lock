@@ -3466,10 +3466,10 @@ longest@^1.0.1:
   resolved "https://registry.yarnpkg.com/longest/-/longest-1.0.1.tgz#30a0b2da38f73770e8294a0d22e6625ed77d0097"
   integrity sha1-MKCy2jj3N3DoKUoNIuZiXtd9AJc=
 
-looks-same@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/looks-same/-/looks-same-6.0.0.tgz#aa8f24291b78b966eb6fc315a41b33adeb3fc068"
-  integrity sha512-143Xf0qKRubHjVlWiPI2VMOMbvS94ldHsYrccXvihe6nCI7Z/JFy5ZskQzpLtYy4TFX2vbSJM1uAn5gShvqlcw==
+looks-same@^5.0.1:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/looks-same/-/looks-same-5.1.0.tgz#5cb2a797ca9db3d7996e5cc6e68489c27a6aae70"
+  integrity sha512-a/BdaF+Q7mqpJZ5Xz1VM9Nb+LnDu8l1A+2ZKEoaqmb9B+nlap1dKeUG8YeVUkQh4pnqsAs6mcSDUp35wkvxozw==
   dependencies:
     color-diff "^1.1.0"
     concat-stream "^1.6.2"

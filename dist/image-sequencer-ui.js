@@ -211,7 +211,11 @@ window.onload = function() {
     insertPreview.updatePreviews("images/tulips.png",'addStep');
   }
 };
+<<<<<<< fix-insert-step
 },{"./lib/cache.js":2,"./lib/defaultHtmlSequencerUi.js":3,"./lib/defaultHtmlStepUi.js":4,"./lib/insertPreview.js":5,"./lib/intermediateHtmlStepUi.js":6,"./lib/urlHash.js":8}],2:[function(require,module,exports){
+=======
+},{"./lib/cache.js":2,"./lib/defaultHtmlSequencerUi.js":3,"./lib/defaultHtmlStepUi.js":4,"./lib/insertPreview.js":5,"./lib/intermediateHtmlStepUi.js":6,"./lib/urlHash.js":7}],2:[function(require,module,exports){
+>>>>>>> Fix choose file option and insert step functionality (#712)
 var setupCache = function() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js', { scope: '/examples/' })
@@ -846,6 +850,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
 module.exports = IntermediateHtmlStepUi;
 
 
+<<<<<<< fix-insert-step
 },{"./insertPreview.js":5,"./urlHash.js":8}],7:[function(require,module,exports){
 function mapHtmlTypes(inputInfo){
   var htmlType;
@@ -880,6 +885,9 @@ function mapHtmlTypes(inputInfo){
 
 module.exports = mapHtmlTypes;
 },{}],8:[function(require,module,exports){
+=======
+},{"./insertPreview.js":5,"./urlHash.js":7}],7:[function(require,module,exports){
+>>>>>>> Fix choose file option and insert step functionality (#712)
 function getUrlHashParameter(param) {
 
   var params = getUrlHashParameters();

@@ -7,22 +7,16 @@
 // The variable 'step' stores useful data like input and
 // output values, step information.
 // See documetation for more details.
-function stepRemovedNotify() {
-  if ($('#stepRemovedNotification').length == 0) {
-    var notification = document.createElement('span');
-    notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> Step Removed ';
-    notification.id = 'stepRemovedNotification';
 
-    $('body').append(notification);
-  }
+var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js');
+var urlHash = require('./urlHash.js');
 
-  $('#stepRemovedNotification').fadeIn(500).delay(200).fadeOut(500);
-}
 function DefaultHtmlStepUi(_sequencer, options) {
-
+  
   options = options || {};
   var stepsEl = options.stepsEl || document.querySelector("#steps");
   var selectStepSel = options.selectStepSel = options.selectStepSel || "#selectStep";
+
   function onSetup(step, stepOptions) {
     if (step.options && step.options.description)
       step.description = step.options.description;
@@ -35,7 +29,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
     <div class="col-md-4 details">\
     <h3>\
     <span class = "toggle">' +step.name + ' <i class="fa fa-caret-up toggleIcon" aria-hidden="true"></i></span>' +
-      '</h3><div class="cal"><p><i>"'+
+    '<span class="load-spin" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></span>' +
+    '</h3><div class="cal"><p><i>"'+
       (step.description || "") +
       '</i></p></div>\
     </div>\
@@ -49,17 +44,17 @@ function DefaultHtmlStepUi(_sequencer, options) {
     </div>';
 
     var tools =
-      '<div class="cal"><div class="tools btn-group">\
-       <button confirm="Are you sure?" onclick="stepRemovedNotify()" class="remove btn btn btn-default">\
-         <i class="fa fa-trash"></i>\
-       </button>\
-       <button class="btn  insert-step" style="margin-left:10px;border-radius:6px;background-color:#fff;border:solid #bababa 1.1px;" >\
-         <i class="fa fa-plus"></i> Add\
-       </button>\
-       </div>\
-       </div>';
+    '<div class="cal"><div class="tools btn-group">\
+    <button confirm="Are you sure?" class="remove btn btn btn-default">\
+      <i class="fa fa-trash"></i>\
+    </button>\
+    <button class="btn  insert-step" style="margin-left:10px;border-radius:6px;background-color:#fff;border:solid #bababa 1.1px;" >\
+      <i class="fa fa-plus"></i> Add\
+    </button>\
+    </div>\
+    </div>';
 
-    var util = IntermediateHtmlStepUi(_sequencer, step);
+    var util = intermediateHtmlStepUi(_sequencer, step);
 
     var parser = new DOMParser();
     step.ui = parser.parseFromString(step.ui, "text/html");
@@ -140,6 +135,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         .appendChild(
           parser.parseFromString(tools, "text/html").querySelector("div")
         );
+      $(step.ui.querySelectorAll(".remove")).on('click', function() {notify('Step Removed','remove-notification')});  
       $(step.ui.querySelectorAll(".insert-step")).on('click', function() { util.insertStep(step.ID) });
 
       // Insert the step's UI in the right place
@@ -175,7 +171,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         _sequencer.run({ index: step.index - 1 });
 
         // modify the url hash
-        setUrlHashParameter("steps", _sequencer.toString());
+        urlHash.setUrlHashParameter("steps", _sequencer.toString());
 
         // disable the save button
         $(step.ui.querySelector('.btn-save')).prop('disabled', true);
@@ -225,11 +221,16 @@ function DefaultHtmlStepUi(_sequencer, options) {
   function onDraw(step) {
     $(step.ui.querySelector(".load")).show();
     $(step.ui.querySelector("img")).hide();
+    if( $(step.ui.querySelector(".toggleIcon")).hasClass("fa-caret-down") )
+    {
+      $(step.ui.querySelector(".load-spin")).show();
+    }
   }
 
   function onComplete(step) {
     $(step.ui.querySelector(".load")).hide();
     $(step.ui.querySelector("img")).show();
+    $(step.ui.querySelector(".load-spin")).hide();
 
     step.imgElement.src = step.output;
     var imgthumbnail = step.ui.querySelector(".img-thumbnail");
@@ -282,11 +283,34 @@ function DefaultHtmlStepUi(_sequencer, options) {
     return step.imgElement;
   }
 
+  function notify(msg,id){
+    if ($('#'+id).length == 0) {
+      var notification = document.createElement('span');
+      notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> ' + msg ;
+      notification.id = id;
+      notification.classList.add("notification");
+  
+      $('body').append(notification);
+    }
+  
+    $('#'+id).fadeIn(500).delay(200).fadeOut(500);
+  }
+
   return {
     getPreview: getPreview,
     onSetup: onSetup,
     onComplete: onComplete,
     onRemove: onRemove,
-    onDraw: onDraw
+    onDraw: onDraw, 
+    notify: notify
   }
 }
+
+if(typeof window === "undefined"){
+  module.exports={
+    DefaultHtmlStepUi: DefaultHtmlStepUi
+  }
+}
+
+module.exports = DefaultHtmlStepUi;
+

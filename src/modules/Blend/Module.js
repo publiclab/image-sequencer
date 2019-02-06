@@ -24,6 +24,12 @@ module.exports = function Dynamic(options, UI, util) {
         // save first image's pixels
         var priorStep = this.getStep(options.offset);
 
+        if (priorStep.output === undefined) {
+            this.output = input;
+            UI.notify('Offset Unavailable','offset-notification');
+            callback();
+        } 
+
         getPixels(priorStep.output.src, function(err, pixels) {
             options.firstImagePixels = pixels;
 

@@ -1,3 +1,4 @@
+var urlHash = require('./urlHash.js');
 function DefaultHtmlSequencerUi(_sequencer, options) {
 
   options = options || {};
@@ -14,13 +15,13 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
 
   // look up needed steps from Url Hash:
   function importStepsFromUrlHash() {
-    var hash = getUrlHashParameter("steps");
+    var hash = urlHash.getUrlHashParameter("steps");
 
     if (hash) {
       _sequencer.importString(hash);
       _sequencer.run({ index: 0 });
     }
-    setUrlHashParameter("steps", sequencer.toString());
+    urlHash.setUrlHashParameter("steps", sequencer.toString());
   }
 
   function selectNewStepUi() {
@@ -33,7 +34,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     var index = $(removeStepSel).index(this) + 1;
     sequencer.removeSteps(index).run({ index: index - 1 });
     // remove from URL hash too
-    setUrlHashParameter("steps", sequencer.toString());
+    urlHash.setUrlHashParameter("steps", sequencer.toString());
     //disable save-sequence button if all steps are removed
     handleSaveSequence();
   }
@@ -58,12 +59,13 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
       .addSteps(newStepName, options)
       .run({ index: _sequencer.images.image1.steps.length - sequenceLength - 1 });
       $(addStepSel + " .info").html("Select a new module to add to your sequence.");
+      $(addStepSel + " select").val("none");
 
     //enable save-sequence button if disabled initially
     handleSaveSequence();
 
     // add to URL hash too
-    setUrlHashParameter("steps", _sequencer.toString());
+    urlHash.setUrlHashParameter("steps", _sequencer.toString());
   }
 
   function handleSaveSequence(){
@@ -82,3 +84,6 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     addStepUi: addStepUi
   }
 }
+
+module.exports = DefaultHtmlSequencerUi;
+

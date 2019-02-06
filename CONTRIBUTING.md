@@ -175,6 +175,7 @@ There are four events in all:
 * `UI.onComplete(options.step)` must be emitted whenever the output of a draw call
 is ready. An argument, that is the DataURL of the output image must be passed in.
 * `UI.onRemove(options.step)` is emitted automatically and the module should not emit it.
+* `UI.notify(msg,id)` must be emmited when a notification has to be produced.
 
 ### Name and description
 

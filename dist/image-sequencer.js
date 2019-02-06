@@ -65983,8 +65983,10 @@ module.exports={
 },{}],166:[function(require,module,exports){
 module.exports = function Dynamic(options, UI, util) {
 
-    options.func = options.func || "function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] }";
-    options.offset = options.offset || -2;
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+
+    options.func = options.func || defaults.func;
+    options.offset = options.offset || defaults.offset;
 
     var output;
 
@@ -66055,7 +66057,7 @@ module.exports = function Dynamic(options, UI, util) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":259,"get-pixels":32}],167:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":259,"./../../util/getDefaults.js":265,"./info.json":168,"get-pixels":32}],167:[function(require,module,exports){
 arguments[4][164][0].apply(exports,arguments)
 },{"./Module":166,"./info.json":168,"dup":164}],168:[function(require,module,exports){
 module.exports={
@@ -66315,7 +66317,9 @@ module.exports={
  */
 module.exports = function Channel(options, UI) {
 
-  options.channel = options.channel || "green";
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+
+  options.channel = options.channel || defaults.channel;
 
   var output;
 
@@ -66359,7 +66363,7 @@ module.exports = function Channel(options, UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":259}],177:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":259,"./../../util/getDefaults.js":265,"./info.json":178}],177:[function(require,module,exports){
 arguments[4][164][0].apply(exports,arguments)
 },{"./Module":176,"./info.json":178,"dup":164}],178:[function(require,module,exports){
 module.exports={
@@ -66379,10 +66383,12 @@ module.exports={
 },{}],179:[function(require,module,exports){
 module.exports = function NdviColormapfunction(options, UI) {
 
-    options.x = options.x || 0;
-    options.y = options.y || 0;
-    options.colormap = options.colormap || "default";
-    options.h = options.h || 10;
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+
+    options.x = options.x || defaults.x;
+    options.y = options.y || defaults.y;
+    options.colormap = options.colormap || defaults.colormap;
+    options.h = options.h || defaults.h;
     this.expandSteps([
         { 'name': 'gradient', 'options': {} },
         { 'name': 'colormap', 'options': { colormap: options.colormap } },
@@ -66393,7 +66399,7 @@ module.exports = function NdviColormapfunction(options, UI) {
         isMeta: true
     }
 }
-},{}],180:[function(require,module,exports){
+},{"./../../util/getDefaults.js":265,"./info.json":181}],180:[function(require,module,exports){
 arguments[4][164][0].apply(exports,arguments)
 },{"./Module":179,"./info.json":181,"dup":164}],181:[function(require,module,exports){
 module.exports={
@@ -66744,7 +66750,8 @@ module.exports = exports = function(pixels , contrast){
 
 module.exports = function Contrast(options, UI) {
 
-    options.contrast = options.contrast || 70
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+    options.contrast = options.contrast || defaults.contrast;
     var output;
 
     function draw(input, callback, progressObj) {
@@ -66788,7 +66795,7 @@ module.exports = function Contrast(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":259,"./Contrast":186}],188:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":259,"./../../util/getDefaults.js":265,"./Contrast":186,"./info.json":189}],188:[function(require,module,exports){
 arguments[4][164][0].apply(exports,arguments)
 },{"./Module":187,"./info.json":189,"dup":164}],189:[function(require,module,exports){
 module.exports={
@@ -66882,8 +66889,10 @@ module.exports = exports = function(pixels, constantFactor, kernelValues){
 },{"lodash":60}],191:[function(require,module,exports){
 module.exports = function Convolution(options, UI) {
 
-    options.kernelValues = options.kernelValues || '1 1 1 1 1 1 1 1 1';
-    options.constantFactor = options.constantFactor || 1/9;
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+
+    options.kernelValues = options.kernelValues || defaults.kernelValues;
+    options.constantFactor = options.constantFactor || defaults.constantFactor;
     var output;
 
     function draw(input, callback, progressObj) {
@@ -66926,7 +66935,7 @@ module.exports = function Convolution(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":259,"./Convolution":190}],192:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":259,"./../../util/getDefaults.js":265,"./Convolution":190,"./info.json":193}],192:[function(require,module,exports){
 arguments[4][164][0].apply(exports,arguments)
 },{"./Module":191,"./info.json":193,"dup":164}],193:[function(require,module,exports){
 module.exports={
@@ -68096,8 +68105,10 @@ module.exports = function Gamma(options,UI){
 
         var step = this;
 
+        var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+
         function changePixel(r, g, b, a){
-            var val = options.adjustment || 0.2;
+            var val = options.adjustment || defaults.adjustment;
 
             r = Math.pow(r / 255, val) * 255;
             g = Math.pow(g / 255, val) * 255;
@@ -68130,7 +68141,7 @@ module.exports = function Gamma(options,UI){
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":259}],221:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":259,"./../../util/getDefaults.js":265,"./info.json":222}],221:[function(require,module,exports){
 arguments[4][164][0].apply(exports,arguments)
 },{"./Module":220,"./info.json":222,"dup":164}],222:[function(require,module,exports){
 module.exports={
@@ -68231,7 +68242,8 @@ module.exports = function Channel(options, UI) {
 
     function draw(input, callback, progressObj) {
 
-        options.gradient = options.gradient || "true";
+        var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+        options.gradient = options.gradient || defaults.gradient;
         options.gradient = JSON.parse(options.gradient);
 
         progressObj.stop(true);
@@ -68316,7 +68328,7 @@ module.exports = function Channel(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":259}],227:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":259,"./../../util/getDefaults.js":265,"./info.json":228}],227:[function(require,module,exports){
 module.exports = [
     require('./Module.js'),
     require('./info.json')
@@ -68349,7 +68361,8 @@ module.exports={
  */
 module.exports = function ImportImageModule(options, UI) {
 
-  options.imageUrl = options.url || "./images/monarch.png";
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+  options.imageUrl = options.url || defaults.url;
 
   var output,
       imgObj = new Image();
@@ -68398,7 +68411,7 @@ module.exports = function ImportImageModule(options, UI) {
   }
 }
 
-},{"../../util/GetFormat":263,"./Ui.js":230}],230:[function(require,module,exports){
+},{"../../util/GetFormat":263,"./../../util/getDefaults.js":265,"./Ui.js":230,"./info.json":232}],230:[function(require,module,exports){
 // hide on save
 module.exports = function ImportImageModuleUi(step, ui) {
 
@@ -68478,7 +68491,8 @@ module.exports = function Ndvi(options, UI) {
 
   if (options.step.inBrowser) var ui = require('./Ui.js')(options.step, UI);
 
-  options.filter = options.filter || "red";
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+  options.filter = options.filter || defaults.filter;
 
   var output;
 
@@ -68530,7 +68544,7 @@ module.exports = function Ndvi(options, UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":259,"./Ui.js":234}],234:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":259,"./../../util/getDefaults.js":265,"./Ui.js":234,"./info.json":236}],234:[function(require,module,exports){
 // hide on save
 module.exports = function CropModuleUi(step, ui) {
 
@@ -68606,8 +68620,9 @@ module.exports={
 },{}],240:[function(require,module,exports){
 module.exports = function Dynamic(options, UI, util) {
 
-    options.x = options.x || 0;
-    options.y = options.y || 0;
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+    options.x = options.x || defaults.x;
+    options.y = options.y || defaults.y;
 
     var output;
 
@@ -68687,7 +68702,7 @@ module.exports = function Dynamic(options, UI, util) {
     }
 }
 
-},{"../../util/ParseInputCoordinates":264,"../_nomodule/PixelManipulation.js":259,"get-pixels":32}],241:[function(require,module,exports){
+},{"../../util/ParseInputCoordinates":264,"../_nomodule/PixelManipulation.js":259,"./../../util/getDefaults.js":265,"./info.json":242,"get-pixels":32}],241:[function(require,module,exports){
 arguments[4][164][0].apply(exports,arguments)
 },{"./Module":240,"./info.json":242,"dup":164}],242:[function(require,module,exports){
 module.exports={
@@ -68763,10 +68778,10 @@ module.exports = function PaintBucket(options, UI) {
 
 },{"../_nomodule/PixelManipulation.js":259,"./PaintBucket":244}],244:[function(require,module,exports){
 module.exports = exports = function(pixels, options){
-
-      var fillColor = options.fillColor || '100 100 100 255',
-          x = parseInt(options.startingX) || 10,
-          y = parseInt(options.startingY) || 10,
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+      var fillColor = options.fillColor || defaults.fillColor,
+          x = parseInt(options.startingX) || defaults.startingX,
+          y = parseInt(options.startingY) || defaults.startingY,
           height = pixels.shape[1],
           width = pixels.shape[0],
           r = pixels.get(x, y, 0),
@@ -68779,7 +68794,7 @@ module.exports = exports = function(pixels, options){
           north,
           south,
           n,
-          tolerance = parseInt(options.tolerance) || 10,
+          tolerance = parseInt(options.tolerance) || defaults.tolerance,
           maxFactor = (1 + tolerance/100),
           minFactor = (1 - tolerance/100);
 
@@ -68827,7 +68842,7 @@ module.exports = exports = function(pixels, options){
       return pixels;
 }
 
-},{}],245:[function(require,module,exports){
+},{"./../../util/getDefaults.js":265,"./info.json":246}],245:[function(require,module,exports){
 arguments[4][164][0].apply(exports,arguments)
 },{"./Module":243,"./info.json":246,"dup":164}],246:[function(require,module,exports){
 module.exports={
@@ -68870,7 +68885,8 @@ module.exports = function Resize(options, UI) {
 
     function draw(input, callback, progressObj) {
 
-        options.resize = options.resize || "125%";
+        var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+        options.resize = options.resize || defaults.resize;
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;
@@ -68933,7 +68949,7 @@ module.exports = function Resize(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":259,"imagejs":47}],248:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":259,"./../../util/getDefaults.js":265,"./info.json":249,"imagejs":47}],248:[function(require,module,exports){
 arguments[4][164][0].apply(exports,arguments)
 },{"./Module":247,"./info.json":249,"dup":164}],249:[function(require,module,exports){
 module.exports={
@@ -68958,7 +68974,8 @@ module.exports = function Rotate(options, UI) {
 
     function draw(input, callback, progressObj) {
 
-        options.rotate = parseInt(options.rotate) || 0;
+        var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+        options.rotate = parseInt(options.rotate) || defaults.rotate;
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;
@@ -69012,7 +69029,7 @@ module.exports = function Rotate(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":259,"imagejs":47}],251:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":259,"./../../util/getDefaults.js":265,"./info.json":252,"imagejs":47}],251:[function(require,module,exports){
 arguments[4][164][0].apply(exports,arguments)
 },{"./Module":250,"./info.json":252,"dup":164}],252:[function(require,module,exports){
 module.exports={

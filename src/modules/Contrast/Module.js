@@ -4,7 +4,8 @@
 
 module.exports = function Contrast(options, UI) {
 
-    options.contrast = options.contrast || 70
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+    options.contrast = options.contrast || defaults.contrast;
     var output;
 
     function draw(input, callback, progressObj) {

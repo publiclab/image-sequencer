@@ -2,7 +2,7 @@ module.exports = function Dynamic(options, UI, util) {
 
     var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
 
-    options.func = options.func || defaults.func;
+    options.func = options.func || defaults.blend;
     options.offset = options.offset || defaults.offset;
 
     var output;

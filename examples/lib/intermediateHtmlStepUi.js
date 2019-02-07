@@ -68,7 +68,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       .insertAdjacentElement('afterend',
         addStepUI
       );
-      updatePreviews(step.output,'insertStep');
+    updatePreviews(step.output,'insertStep');
     var insertStepSelect = $("#insertStep select");
     insertStepSelect.html("");
     // Add modules to the insertStep dropdown
@@ -78,7 +78,9 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
           '<option value="' + m + '">' + modulesInfo[m].name + "</option>"
         );
     }
-
+    $('#insertStep #add-step-btn').selectize({
+      sortField: 'text'
+    });
     $('#insertStep #add-step-btn').prop('disabled', true);
 
     insertStepSelect.append('<option value="none" disabled selected>More modules...</option>');

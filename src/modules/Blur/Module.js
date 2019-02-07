@@ -3,7 +3,8 @@
 */
 module.exports = function Blur(options, UI) {
 
-    options.blur = options.blur || 2
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+    options.blur = options.blur || defaults.blur;
     var output;
 
     function draw(input, callback, progressObj) {

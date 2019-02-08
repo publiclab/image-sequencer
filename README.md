@@ -221,6 +221,12 @@ If only one module is to be added, `modules` is simply the name of the module.
 If multiple images are to be added, `modules` is an array of the names of modules
 which are to be added, in that particular order.
 
+For adding multiple steps as an array, following example can be referred to:
+
+```js
+sequencer.addSteps(['channel', 'invert']);
+```
+
 optional_otions is just additional parameters, in object form, which you might
 want to provide to the modules. It's an optional parameter.
 

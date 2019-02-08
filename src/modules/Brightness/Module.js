@@ -1,15 +1,16 @@
 /*
 * Changes the Image Brightness
 */
-
 module.exports = function Brightness(options,UI){
 
-
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
     var output;
+
+
 
     function draw(input,callback,progressObj){
 
-        options.brightness = parseInt(options.brightness) || 100;
+        options.brightness = parseInt(options.brightness) || defaults.brightness;
         var val = (options.brightness)/100.0;
         progressObj.stop(true);
         progressObj.overrideFlag = true;

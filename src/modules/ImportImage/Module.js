@@ -8,7 +8,8 @@
  */
 module.exports = function ImportImageModule(options, UI) {
 
-  options.imageUrl = options.url || "./images/monarch.png";
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+  options.imageUrl = options.url || defaults.url;
 
   var output,
       imgObj = new Image();

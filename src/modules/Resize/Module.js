@@ -7,7 +7,8 @@ module.exports = function Resize(options, UI) {
 
     function draw(input, callback, progressObj) {
 
-        options.resize = options.resize || "125%";
+        var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+        options.resize = options.resize || defaults.resize;
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;

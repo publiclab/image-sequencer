@@ -9,8 +9,10 @@ module.exports = function Gamma(options,UI){
 
         var step = this;
 
+        var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+
         function changePixel(r, g, b, a){
-            var val = options.adjustment || 0.2;
+            var val = options.adjustment || defaults.adjustment;
 
             r = Math.pow(r / 255, val) * 255;
             g = Math.pow(g / 255, val) * 255;

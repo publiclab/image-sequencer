@@ -6,11 +6,11 @@ var DOM = new JSDOM(`<body></body>`);
 
 global.document = DOM.window.document;
 
-var DefaultHtmlStepUi = require('../../examples/lib/defaultHtmlStepUi').DefaultHtmlStepUi;
-var sequencer = require('../../src/ImageSequencer.js')();
-var UserInterface = require('../../src/ui/UserInterface');
+var DefaultHtmlStepUi = require('../../../examples/lib/defaultHtmlStepUi')
+var sequencer = require('../../../src/ImageSequencer.js')();
+var UserInterface = require('../../../src/ui/UserInterface');
 
-test('Notify function works for all three UIs', function (t) {  
+test('Notify function works for all three UIs', function (t) {
     //Mocking console.log for testing default notify()
     function doesLogMessage(f, message) {
         var oldLog = console.log,

@@ -3,9 +3,10 @@
 */
 module.exports = function edgeDetect(options, UI) {
 
-  options.blur = options.blur || 2;
-  options.highThresholdRatio = options.highThresholdRatio || 0.2;
-  options.lowThresholdRatio = options.lowThresholdRatio || 0.15;
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+  options.blur = options.blur || defaults.blur;
+  options.highThresholdRatio = options.highThresholdRatio || defaults.highThresholdRatio;
+  options.lowThresholdRatio = options.lowThresholdRatio || defaults.lowThresholdRatio;
 
   var output;
 

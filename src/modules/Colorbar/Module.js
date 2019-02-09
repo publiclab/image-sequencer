@@ -1,9 +1,11 @@
 module.exports = function NdviColormapfunction(options, UI) {
 
-    options.x = options.x || 0;
-    options.y = options.y || 0;
-    options.colormap = options.colormap || "default";
-    options.h = options.h || 10;
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+
+    options.x = options.x || defaults.x;
+    options.y = options.y || defaults.y;
+    options.colormap = options.colormap || defaults.colormap;
+    options.h = options.h || defaults.h;
     this.expandSteps([
         { 'name': 'gradient', 'options': {} },
         { 'name': 'colormap', 'options': { colormap: options.colormap } },

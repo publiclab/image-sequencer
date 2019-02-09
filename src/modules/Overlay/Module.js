@@ -1,7 +1,8 @@
 module.exports = function Dynamic(options, UI, util) {
 
-    options.x = options.x || 0;
-    options.y = options.y || 0;
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+    options.x = options.x || defaults.x;
+    options.y = options.y || defaults.y;
 
     var output;
 

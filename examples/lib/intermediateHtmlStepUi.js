@@ -1,4 +1,6 @@
-var urlHash = require('./urlHash.js');
+var urlHash = require('./urlHash.js'),
+    insertPreview = require('./insertPreview.js');
+
 function IntermediateHtmlStepUi(_sequencer, step, options) {
   function stepUI() {
     return '<div class="row insertDiv">\
@@ -68,7 +70,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       .insertAdjacentElement('afterend',
         addStepUI
       );
-      updatePreviews(step.output,'insertStep');
+    insertPreview.updatePreviews(step.output,'insertStep');
     var insertStepSelect = $("#insertStep select");
     insertStepSelect.html("");
     // Add modules to the insertStep dropdown

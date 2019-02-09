@@ -1,28 +1,36 @@
-module.exports = function Gamma(options,UI){
+module.exports = function Tint(options,UI){
+
 
     var output;
 
     function draw(input,callback,progressObj){
 
+        var color = options.color || '0 0 255';
+        color = color.split(" "); 
+        var factor = options.factor || 0.5;
+
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
+        /*
+        In this case progress is handled by changepixel internally otherwise progressObj
+        needs to be overriden and used
+        For eg. progressObj = new SomeProgressModule()
+        */
+
         var step = this;
 
-        var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
-
         function changePixel(r, g, b, a){
-            var val = options.adjustment || defaults.adjustment;
 
-            r = Math.pow(r / 255, val) * 255;
-            g = Math.pow(g / 255, val) * 255;
-            b = Math.pow(b / 255, val) * 255;
-
-            return [r , g, b, a];
+            r -= (r - color[0])*factor;
+            g -= (g - color[1])*factor;
+            b -= (b - color[2])*factor;
+            return [r, g, b, a]
         }
 
         function output(image,datauri,mimetype){
 
+            // This output is accessible by Image Sequencer
             step.output = {src:datauri,format:mimetype};
 
         }

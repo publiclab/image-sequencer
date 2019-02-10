@@ -19,28 +19,29 @@ function Run(ref, json_q, callback, ind, progressObj) {
       var image = drawarray[pos].image;
       var i = drawarray[pos].i;
       var input = ref.images[image].steps[i - 1].output;
+      var step = ref.images[image].steps[i];
 
-      ref.images[image].steps[i].getStep = function getStep(offset) {
+      step.getStep = function getStep(offset) {
         if (i + offset >= ref.images[image].steps.length) return { options: { name: undefined } };
         else return ref.images[image].steps.slice(i + offset)[0];
       };
-      ref.images[image].steps[i].getIndex = function getIndex() {
+      step.getIndex = function getIndex() {
         return i;
       }
 
       for (var util in getStepUtils) {
         if (getStepUtils.hasOwnProperty(util)) {
-          ref.images[image].steps[i][util] = getStepUtils[util];
+          step[util] = getStepUtils[util];
         }
       }
 
       // Tell UI that a step is being drawn.
-      ref.images[image].steps[i].UI.onDraw(ref.images[image].steps[i].options.step);
+      step.UI.onDraw(step.options.step);
 
       // provides a set of standard tools for each step
       var inputForNextStep = require('./RunToolkit')(ref.copy(input));
 
-      ref.images[image].steps[i].draw(
+      step.draw(
         inputForNextStep,
         function onEachStep() {
 

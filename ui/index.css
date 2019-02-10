@@ -1,0 +1,165 @@
+body {
+  background: #f8f8fa;
+  min-height: 100vh;
+  font-family: 'Asap', sans-serif;
+}
+
+body * {
+  font-family: 'Asap', sans-serif;
+}
+
+#main-container {
+  margin: 0 auto;
+  max-width: 80vw;
+}
+
+#fileInput {
+  opacity: 0;
+  z-index: -100;
+}
+
+button::-moz-focus-inner {
+  border: 0;
+}
+
+a:focus {
+  outline: none;
+}
+
+h1 {
+  color: #445;
+}
+
+.notification {
+  background-color: #808b96;
+  padding:4px;
+  color:white;
+  border-radius:3px;
+  font-size:2rem;
+  position:fixed;
+  bottom:2px;
+  left:50%;
+  min-width:14rem;
+  text-align:center;
+  display:none;
+  transform: translate(-50%, -50%);
+}
+
+
+.center-align {
+  display: flex;
+  justify-content: center;
+  text-align:center;
+}
+
+.panel {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.dropzone {
+  padding: 30px;
+  margin: 0 20% 30px;
+  border: 4px dashed #ccc;
+  border-radius: 8px;
+  text-align: center;
+  color: #444;
+}
+
+.hover {
+  background: #eee;
+}
+
+.dropzone input {
+  max-width: 100%;
+}
+
+.step {
+  margin-bottom: 20px;
+}
+
+.step .img-thumbnail {
+  margin-bottom: 20px;
+}
+
+.details {
+  padding-left: 6px;
+}
+
+.details h3 {
+  font-family: monospace;
+  margin-top: 12px;
+  font-size: 1.3em;
+}
+
+.det {
+  padding: 10px 16px;
+  text-decoration: italic;
+}
+
+.tools {
+  margin: 10px 0;
+}
+
+.load {
+  padding: 30px;
+  background: #eee;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 2em;
+  color: #444;
+}
+
+.load-spin{
+  position: absolute;
+  right: 0px;
+}
+
+#addStep {
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+#add-step-btn{
+  margin-left: 10px;
+}
+
+#addStep .labels {
+  text-align: right;
+  padding: 6px;
+  margin: 2px;
+  font-weight: bold;
+}
+
+.radio{
+  cursor:pointer;
+  overflow: hidden;
+  height: 80px;
+  width: 80px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.radio-group {
+  margin-bottom: 20px;
+  overflow: auto;
+}
+
+.spin{
+  animation:  spin linear infinite;
+  -webkit-animation: spin linear infinite;
+  -moz-animation: spin linear infinite;
+}
+
+@-moz-keyframes spin {
+  from { -moz-transform: rotate(0deg); }
+  to { -moz-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+  from { -webkit-transform: rotate(0deg); }
+  to { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+  from {transform:rotate(0deg);}
+  to {transform:rotate(360deg);}
+}

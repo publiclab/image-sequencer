@@ -8,9 +8,9 @@ var insertUi = function(ui){
 window.onload = function() {
   sequencer = ImageSequencer();
 
-  uiUtils.setSequencerUi(sequencer, {});
+  var sequencerUi = uiUtils.generateSequencerUi(sequencer, {});
 
-  uiUtils.setStepUi(sequencer, {
+  var stepUi = uiUtils.generateStepUi(sequencer, {
     getStepTemplate: templates.getStepTemplate,
     getToolsTemplate: templates.getToolsTemplate,
     inputTemplates: templates.inputTemplates,
@@ -18,6 +18,7 @@ window.onload = function() {
     insertUi
   });
 
+  uiUtils.setDefaultSequencer(sequencer, stepUi, sequencerUi, {});
 
   $('#file-input-label').on('click', function(e) {
     $('#fileInput').click();
@@ -25,22 +26,8 @@ window.onload = function() {
   
   // setScrollBtn('#move-up');
   // setCacheShortcut();
-  initializeTooltips();
-  uiUtils.setSaveSequence();
-
-  // UI for each step:
-  sequencer.setUI(DefaultHtmlStepUi(sequencer));
-
-  // UI for the overall demo:
-  var ui = defaultHtmlSequencerUi(sequencer);
-  setModuleSelector(ui);
-
-  // find any `src` parameters in URL hash and attempt to source image from them and run the sequencer
-  if (getUrlHashParameter('src')) {
-    sequencer.loadImage(getUrlHashParameter('src'), ui.onLoad);
-  } else {
-    sequencer.loadImage("images/tulips.png", ui.onLoad);
-  }
+  // initializeTooltips();
+  uiUtils.setSequenceSave();
 
   var resetSequence = function(){
     var r=confirm("Do you want to reset the sequence?");
@@ -54,8 +41,6 @@ window.onload = function() {
     download($('.step-thumbnail:last()').attr('src'), $('.step-thumbnail:last()').attr('alt') + '.png', 'image/png');
     return false;
   });
-
-  $('body').on('click', 'button.remove', ui.removeStepUi);
 
   uiUtils.setGifGenerator(function(gif) {
     var modal = $('#js-download-gif-modal');
@@ -73,38 +58,10 @@ window.onload = function() {
     modal.modal('open');
   });
 
-  // image selection and drag/drop handling from examples/lib/imageSelection.js
-  sequencer.setInputStep({
-    dropZoneSelector: "#dropzone",
-    fileInputSelector: "#fileInput",
-    takePhotoSelector: "#take-photo",
-    onLoad: function onFileReaderLoad(progress) {
-      var reader = progress.target;
-      var step = sequencer.images.image1.steps[0];
-      step.output.src = reader.result;
-      sequencer.run({ index: 0 });
-      step.options.step.imgElement.src = reader.result;
-      insertPreview.updatePreviews(reader.result,'#addStep');
-      insertPreview.updatePreviews(sequencer.images.image1.steps[0].options.step.imgElement.src,'.insert-step');
-    },
-    onTakePhoto: function (url) {
-      var step = sequencer.images.image1.steps[0];
-      step.output.src = url;
-      sequencer.run({ index: 0 });
-      step.options.step.imgElement.src = url;
-    }
-  })
-
   uiUtils.setupCache('examples/', '#clear-cache');
   uiUtils.sw();
-
-  if (getUrlHashParameter('src')) {
-    insertPreview.updatePreviews(getUrlHashParameter('src'),'#addStep');
-  } else {
-    insertPreview.updatePreviews("images/tulips.png",'#addStep');
-  }
-  initializeSelect();
+  // initializeSelect();
 };
 
-require('materialize-css')();
-require('bootstrap')();
+// require('materialize-css')();
+// require('bootstrap')();

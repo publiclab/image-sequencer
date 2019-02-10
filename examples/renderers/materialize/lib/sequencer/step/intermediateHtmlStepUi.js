@@ -1,7 +1,7 @@
 var urlHash = require('../sequence/urlHash'),
   initSelect = require('../../DOM/initializeComponents').initializeSelect,
   { updatePreviews } = require('../../DOM/insertPreview'),
-  { Collapse } = require('../../DOM/helpers'),
+  // { Collapse } = require('../../DOM/helpers'),
   { stepInsertTemplate } = require('../../DOM/htmlTemplates');
 function IntermediateHtmlStepUi(_sequencer, step, options) {
   function stepUI() {
@@ -54,7 +54,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
 
     var toggleDiv = function(callback){
       $(step.ui.querySelector('.insert-step-btn')).animate({opacity: 0.5}, 200).toggleClass('green').toggleClass('amber').animate({opacity: 1}, 200);
-      Collapse($(step.ui.querySelector('.insertDiv')).fadeToggle(200), 'toggle');
+      // Collapse($(step.ui.querySelector('.insertDiv')).fadeToggle(200), 'toggle');
       if ($(step.ui.querySelector('.insert-text')).css('display') != "none"){
         $(step.ui.querySelector('.insert-text')).fadeToggle(200, function(){$(step.ui.querySelector('.no-insert-text')).fadeToggle(200, callback)})
       }

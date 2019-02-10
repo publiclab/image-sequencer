@@ -1,6 +1,5 @@
 var urlHash = require('./urlHash.js');
 function DefaultHtmlSequencerUi(_sequencer, options) {
-
   options = options || {};
   var addStepSel = options.addStepSel || '#addStep',
     removeStepSel = options.removeStepSel || 'button.remove',
@@ -72,6 +71,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
   }
 
   return {
+    sequencer: _sequencer,
     options: options,
     onLoad: onLoad,
     importStepsFromUrlHash: importStepsFromUrlHash,

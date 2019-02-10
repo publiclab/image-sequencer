@@ -1,6 +1,6 @@
 var gifshot = require('gifshot');
 
-function setGifGenerator(viewGifBtn, imgSrcSel, gifClass, gifCb){
+function setGifGenerator(gifCb, viewGifBtn, imgSrcSel, gifClass){
   var isWorkingOnGifGeneration = false;
 
   $(viewGifBtn || '.view-as-gif-btn').on('click', function(event) {

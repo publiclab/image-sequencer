@@ -11,7 +11,7 @@
 var intermediateHtmlStepUi = require('../step/intermediateHtmlStepUi'),
   urlHash = require('../sequence/urlHash'),
   mapTypes = require('./mapHtmlTypes'),
-  { notify } = require('../DOM/helpers'),
+  { notify } = require('../../DOM/helpers');
 
 function DefaultHtmlStepUi(_sequencer, options) {
   
@@ -68,7 +68,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
           html += inputTemplates.getRangeTemplate(paramName, inputDesc);
         }
         else {
-          html += inputTemplates.getDefaultTemplate(paramName);
+          html += inputTemplates.getDefaultTemplate(paramName, inputDesc);
         }
 
         var input = document.createElement("div");
@@ -81,9 +81,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
         $(step.ui.querySelector('div.details')).append(input);
       }
 
-      // $(step.ui.querySelector('div.details')).append(
-      //   '<div><p><button type="submit" class="btn btn-save" disabled="true" >Apply</button><span> Press apply to see changes</span></p></div>'
-      // );
+      $(step.ui.querySelector('div.details')).append(
+        '<div><p><button type="submit" class="btn btn-save" disabled="true" >Apply</button><span> Press apply to see changes</span></p></div>'
+      );
 
     }
 
@@ -93,7 +93,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         .appendChild(
           parser.parseFromString(tools, 'text/html').querySelector('.tools')
         );
-      $(step.ui.querySelectorAll('.remove-btn')).on('click', stepRemovedNotify);  
+      $(step.ui.querySelectorAll('.remove-btn')).on('click', notify('Step Removed', 'step-removed-notification', 'notification'));  
       $(step.ui.querySelectorAll('.insert-step-btn')).on('click', function() { util.insertStep(step.ID) });
 
       // Insert the step's UI in the right place

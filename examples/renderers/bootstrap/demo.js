@@ -1,5 +1,6 @@
 var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js'),
     setupCache = require('./lib/cache.js'),
+    intermediateHtmlStepUi = require('./lib/intermediateHtmlStepUi.js'),
     DefaultHtmlStepUi = require('./lib/defaultHtmlStepUi.js'),
     intermediateHtmlStepUi = require('./lib/intermediateHtmlStepUi'),
     urlHash = require('./lib/urlHash.js'),

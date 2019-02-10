@@ -10,7 +10,7 @@ function notify(msg, id, notificationClasses, duration, icon){
 
     $('body').append(notification);
   }
-  $('#'+id).fadeIn(500).delay(duration != null ? duration : 200).fadeOut(500);
+  $('#'+id).fadeIn(500).delay(duration ? duration : 200).fadeOut(500);
 }
 
 function setCacheShortcut(){

@@ -31,7 +31,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
   }
 
   function selectNewStepUi(addStepUI) {
-    insertUi(addStepUI)
+    insertUi(step, addStepUI)
 
     var m = $(`${insertStepSel} select`).val();
     $(`${insertStepSel} .info`).html(_sequencer.modulesInfo(m).description);

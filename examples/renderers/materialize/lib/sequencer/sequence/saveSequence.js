@@ -1,5 +1,5 @@
-var {notify} = require('../../DOM/helpers'),
-  {refreshOptions} = require('./setModuleSelector');
+var {refreshOptions} = require('./setModuleSelector');
+  // {notify} = require('../../DOM/helpers');
 
 function setSaveSequence(){
   $('#save-seq').click(() => {
@@ -8,7 +8,7 @@ function setSaveSequence(){
       result = result + " (local)";
       sequencer.saveSequence(result, sequencer.toString());
       sequencer.loadModules();
-      notify('Saved Sequence Success. Sequence can be found among other modules.', 'save-seq-notification', 1000);
+      // notify('Saved Sequence Success. Sequence can be found among other modules.', 'save-seq-notification', 1000);
       refreshOptions();
     }
   })

@@ -11,7 +11,7 @@
 var intermediateHtmlStepUi = require('../step/intermediateHtmlStepUi'),
   urlHash = require('../sequence/urlHash'),
   mapTypes = require('./mapHtmlTypes'),
-  { notify } = require('../../DOM/helpers'),
+  // { notify } = require('../../DOM/helpers'),
   initAll = require('../../DOM/initializeComponents').initializeAll,
   { initializeInputs, updateInputs } = require('../../DOM/handleInputChanges'),
   { updateTextArea } = require('../../DOM/initializeComponents'),
@@ -48,51 +48,6 @@ function DefaultHtmlStepUi(_sequencer, options) {
       var merged = Object.assign(inputs, outputs); // combine outputs w inputs
 
       for (var paramName in merged) {
-        var isInput = inputs.hasOwnProperty(paramName);
-        var html = "";
-        var inputDesc = isInput ? mapTypes(inputs[paramName]) : {};
-        if (!isInput) {
-          html += '<span class="output"></span>';
-        } else if (inputDesc.type == "select") {
-            html += `<div name="${paramName} class="input-field"><select class="target" name="${paramName}">`;
-            for (var option in inputDesc.values) {
-              html += `<option value="${inputDesc.values[option]}">${inputDesc.values[option]}</option>`;
-            }
-            html += '</select></div>';
-        } else {
-          let paramVal = step.options[paramName] || inputDesc.default;
-          if (inputDesc.type == 'text'){
-            html +=
-              `<div class="input-field">
-                <textarea
-                  class="materialize-textarea target"\
-                  name="${paramName}"
-                  id="${paramName}"
-                  placeholder="${inputDesc.placeholder || ''}"
-                >${paramVal}</textarea`;
-          }
-          else {
-            html +=
-              `<div class="input-field">\
-                <input class="validate target"\
-                  type="${inputDesc.type}"
-                  name="${paramName}"
-                  id="${paramName}"
-                  value="${paramVal}"
-                  placeholder ="${inputDesc.placeholder || ""}"`;
-          }
-
-          if (inputDesc.type == 'range') {
-            html +=`
-            min="${inputDesc.min}"
-            max="${inputDesc.max}"
-            step="${inputDesc.step ? inputDesc.step : '1'}">
-            </div>`;
-
-          }
-          else html += `><label for="${paramName}">${capitalize(paramName)}</label></div>`;
-        }
-
         var input = document.createElement("div");
         input.className = "row";
         input.setAttribute("name", paramName);
@@ -117,7 +72,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         .appendChild(
           parser.parseFromString(tools, "text/html").querySelector("div")
         );
-      $(step.ui.querySelectorAll(".remove")).on('click', function() {notify('Step Removed','remove-notification')});  
+      // $(step.ui.querySelectorAll(".remove")).on('click', function() {notify('Step Removed','remove-notification')});  
       $(step.ui.querySelectorAll(".insert-step-btn")).on('click', function() { util.insertStep(step.ID) });
 
       // Insert the step's UI in the right place
@@ -247,7 +202,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     onComplete: onComplete,
     onRemove: onRemove,
     onDraw: onDraw, 
-    notify: notify
+    // notify: notify
   }
 }
 

@@ -3,7 +3,9 @@
  */
 module.exports = function Channel(options, UI) {
 
-  options.channel = options.channel || "green";
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+
+  options.channel = options.channel || defaults.channel;
 
   var output;
 

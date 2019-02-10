@@ -1,14 +1,16 @@
 module.exports = exports = function(pixels, options){
-	options.startingX = options.startingX || 0;
-  options.startingY = options.startingY || 0;
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+
+	options.startingX = options.startingX || defaults.startingX;
+  options.startingY = options.startingY || defaults.startingY;
 	var ox = Number(options.startingX),
 	  oy = Number(options.startingY),
 	  iw = pixels.shape[0],
 	  ih = pixels.shape[1],
-    thickness = Number(options.thickness) || 1,
+    thickness = Number(options.thickness) || defaults.thickness,
 	  ex =  options.endX = Number(options.endX) - thickness || iw - 1,
 	  ey = options.endY = Number(options.endY) -thickness || ih - 1,
-    color = options.color || "0 0 0 255";
+    color = options.color || defaults.color;
     color = color.split(" ");
 
   var drawSide = function(startX, startY, endX, endY){

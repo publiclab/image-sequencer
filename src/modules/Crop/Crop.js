@@ -1,15 +1,15 @@
 module.exports = function Crop(input,options,callback) {
-
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
   var getPixels = require('get-pixels'),
       savePixels = require('save-pixels');
 
-  options.x = parseInt(options.x) || 0;
-  options.y = parseInt(options.y) || 0;
+  options.x = parseInt(options.x) || defaults.x;
+  options.y = parseInt(options.y) || defaults.y;
 
   getPixels(input.src,function(err,pixels){
     options.w = parseInt(options.w) || Math.floor(pixels.shape[0]);
     options.h = parseInt(options.h) || Math.floor(pixels.shape[1]);
-    options.backgroundColor = options.backgroundColor || '255 255 255 255';
+    options.backgroundColor = options.backgroundColor || defaults.backgroundColor;
     var ox = options.x;
     var oy = options.y;
     var w = options.w;

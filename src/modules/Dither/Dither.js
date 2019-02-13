@@ -1,5 +1,5 @@
 module.exports = function Dither(pixels, type) {
-  type = type || "none";
+  type = type;
       var bayerThresholdMap = [
           [  15, 135,  45, 165 ],
           [ 195,  75, 225, 105 ],

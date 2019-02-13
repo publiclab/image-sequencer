@@ -57,6 +57,7 @@
     "grunt-browserify": "^5.0.0",
     "grunt-concat-css": "^0.3.2",
     "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-cssmin": "^3.0.0",
     "grunt-contrib-uglify-es": "^3.3.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-css-import": "^0.1.9",

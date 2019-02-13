@@ -3,6 +3,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-contrib-uglify-es");
   grunt.loadNpmTasks("grunt-browser-sync");
   grunt.loadNpmTasks('grunt-css-import');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
 
   require("matchdep")
     .filterDev("grunt-*")
@@ -59,6 +60,21 @@ module.exports = function(grunt) {
       }
     },
 
+    cssmin: {
+      materialize: {
+        files: [{
+          src: ['examples/renderers/materialize/dist/renderer.css'],
+          dest: 'examples/renderers/materialize/dist/renderer.min.css',
+        }]
+      },
+      bootstrap: {
+        files: [{
+          src: ['examples/renderers/bootstrap/dist/renderer.css'],
+          dest: 'examples/renderers/bootstrap/dist/renderer.min.css',
+        }]
+      }
+    },
+
     uglify: {
       dist: {
         src: ["./dist/image-sequencer.js"],
@@ -89,6 +105,6 @@ module.exports = function(grunt) {
   /* Default (development): Watch files and build on change. */
   grunt.registerTask("default", ["watch"]);
   grunt.registerTask("compile", ["browserify", "css_import"]);
-  grunt.registerTask("build", ["browserify", "uglify", "css_import"]);
-  grunt.registerTask("serve", ["browserify", "uglify", "css_import", "browserSync", "watch"]);
+  grunt.registerTask("build", ["browserify", "uglify", "css_import", "cssmin"]);
+  grunt.registerTask("serve", ["browserify", "uglify", "css_import", "cssmin", "browserSync", "watch"]);
 };

@@ -5,9 +5,10 @@
         "contrast": {
             "type": "range",
             "desc": "contrast for the new image, typically -100 to 100",
-            "default": 70,
-            "min": -100,
-            "max": 100
+            "default": "70",
+            "min": "-100",
+            "max": "100",
+            "step": "1"
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

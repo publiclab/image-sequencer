@@ -66256,7 +66256,8 @@ module.exports={
           "desc": "% brightness for the new image",
           "default": "175",
           "min": "0",
-          "max": "200"
+          "max": "200",
+          "step": "1"
       }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -66756,9 +66757,10 @@ module.exports={
         "contrast": {
             "type": "range",
             "desc": "contrast for the new image, typically -100 to 100",
-            "default": 70,
-            "min": -100,
-            "max": 100
+            "default": "70",
+            "min": "-100",
+            "max": "100",
+            "step": "1"
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

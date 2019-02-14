@@ -7,7 +7,8 @@
           "desc": "% brightness for the new image",
           "default": "175",
           "min": "0",
-          "max": "200"
+          "max": "200",
+          "step": "1"
       }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

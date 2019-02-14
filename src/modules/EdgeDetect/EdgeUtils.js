@@ -4,141 +4,176 @@ const _ = require('lodash')
 const kernelx = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]],
     kernely = [[-1, -2, -1], [0, 0, 0], [1, 2, 1]];
 
-module.exports = function(pixels, highThresholdRatio, lowThresholdRatio, inBrowser) {
-    let angles = [], mags = [], strongEdgePixels = [], weakEdgePixels = [], notInUI = !inBrowser;
-    for (var x = 0; x < pixels.shape[0]; x++) {
-        angles.push([]);
-        mags.push([]);
-        for (var y = 0; y < pixels.shape[1]; y++) {
-            var result = changePixel(
-                pixels,
-                pixels.get(x, y, 0),
-                pixels.get(x, y, 3),
-                x,
-                y
-            );
-            let pixel = result.pixel;
+module.exports = function(pixels, highThresholdRatio, lowThresholdRatio) {
+  let angles = [], grads = [], strongEdgePixels = [], weakEdgePixels = [];
+  for (var x = 0; x < pixels.shape[0]; x++) {
+    angles.push([]);
+    grads.push([]);
+    for (var y = 0; y < pixels.shape[1]; y++) {
+      var result = convolvePixel(
+        pixels,
+        x,
+        y
+      );
+      let pixel = result.pixel;
 
-            pixels.set(x, y, 0, pixel[0]);
-            pixels.set(x, y, 1, pixel[1]);
-            pixels.set(x, y, 2, pixel[2]);
-            pixels.set(x, y, 3, pixel[3]);
+      pixels.set(x, y, 0, pixel[0]);
+      pixels.set(x, y, 1, pixel[1]);
+      pixels.set(x, y, 2, pixel[2]);
+      pixels.set(x, y, 3, pixel[3]);
 
-            mags.slice(-1)[0].push(pixel[3]);
-            angles.slice(-1)[0].push(result.angle);
-        }
+      grads.slice(-1)[0].push(pixel[3]);
+      angles.slice(-1)[0].push(result.angle);
     }
-    nonMaxSupress(pixels, mags, angles);
-    doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio, mags, strongEdgePixels, weakEdgePixels);
-    return pixels;
+  }
+  nonMaxSupress(pixels, grads, angles);
+  doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio, grads, strongEdgePixels, weakEdgePixels);
+  hysteresis(pixels, strongEdgePixels, weakEdgePixels);
+  return pixels;
 }
 
-//changepixel function that convolutes every pixel (sobel filter)
-function changePixel(pixels, val, a, x, y) {
-    let magX = 0.0;
-    for (let a = 0; a < 3; a++) {
-        for (let b = 0; b < 3; b++) {
+// convolvePixel function that convolves every pixel (sobel filter)
+function convolvePixel(pixels, x, y) {
+  let val = pixels.get(x, y, 0);
+  let gradX = 0.0;
+  for (let a = -1; a < 2; a++) {
+    for (let b = -1; b < 2; b++) {
 
-            let xn = x + a - 1;
-            let yn = y + b - 1;
+      let xn = x + a;
+      let yn = y + b;
 
-            magX += pixels.get(xn, yn, 0) * kernelx[a][b];
-        }
+      gradX += pixels.get(xn, yn, 0) * kernelx[a+1][b+1];
     }
-    let magY = 0.0;
-    for (let a = 0; a < 3; a++) {
-        for (let b = 0; b < 3; b++) {
+  }
+  let gradY = 0.0;
+  for (let a = -1; a < 2; a++) {
+    for (let b = -1; b < 2; b++) {
 
-            let xn = x + a - 1;
-            let yn = y + b - 1;
+      let xn = x + a;
+      let yn = y + b;
 
-            magY += pixels.get(xn, yn, 0) * kernely[a][b];
-        }
+      gradY += pixels.get(xn, yn, 0) * kernely[a+1][b+1];
     }
-    let mag = Math.sqrt(Math.pow(magX, 2) + Math.pow(magY, 2));
-    let angle = Math.atan2(magY, magX);
-    return {
-        pixel:
-            [val, val, val, mag],
-        angle: angle
-    };
+  }
+  let grad = Math.sqrt(Math.pow(gradX, 2) + Math.pow(gradY, 2));
+  let angle = Math.atan2(gradX, gradY);
+  return {
+    pixel: [val, val, val, grad],
+    angle: angle
+  };
 }
 
-//Non Maximum Supression without interpolation
-function nonMaxSupress(pixels, mags, angles) {
+function categorizeAngle(angle){
+  if ((angle >= -22.5 && angle <= 22.5) || (angle < -157.5 && angle >= -180)) return 1;
+  else if ((angle >= 22.5 && angle <= 67.5) || (angle < -112.5 && angle >= -157.5)) return 2;
+  else if ((angle >= 67.5 && angle <= 112.5) || (angle < -67.5 && angle >= -112.5)) return 3;
+  else if ((angle >= 112.5 && angle <= 157.5) || (angle < -22.5 && angle >= -67.5)) return 4;
 
-    angles = angles.map((arr) => arr.map(convertToDegrees));
+  /* Category Map
+  * 1 => N-S
+  * 2 => NE-SW
+  * 3 => E-W
+  * 4 => SE-NW
+  */  
+}
 
-    for (let i = 1; i < pixels.shape[0] - 1; i++) {
-        for (let j = 1; j < pixels.shape[1] - 1; j++) {
+// Non Maximum Supression without interpolation
+function nonMaxSupress(pixels, grads, angles) {
 
-            let angle = angles[i][j];
-            let pixel = pixels.get(i, j);
+  angles = angles.map((arr) => arr.map(convertToDegrees));
 
-            if ((angle >= -22.5 && angle <= 22.5) ||
-                (angle < -157.5 && angle >= -180))
+  for (let x = 1; x < pixels.shape[0] - 1; x++) {
+    for (let y = 1; y < pixels.shape[1] - 1; y++) {
 
-                if ((mags[i][j] >= mags[i][j + 1]) &&
-                    (mags[i][j] >= mags[i][j - 1]))
-                    pixels.set(i, j, 3, mags[i][j]);
-                else
-                    pixels.set(i, j, 3, 0);
+      let angleCategory = categorizeAngle(angles[x][y]);
 
-            else if ((angle >= 22.5 && angle <= 67.5) ||
-                (angle < -112.5 && angle >= -157.5))
+      switch (angleCategory){
+        case 1:
+          if ((grads[x][y] >= grads[x][y + 1]) && (grads[x][y] >= grads[x][y - 1])) {
+            pixels.set(x, y, 0, grads[x][y]);
+            pixels.set(x, y, 1, grads[x][y]);
+            pixels.set(x, y, 2, grads[x][y]);
+            pixels.set(x, y, 3, grads[x][y]);
+          }
+          else {
+            supress(pixels, x, y);
+          }
 
-                if ((mags[i][j] >= mags[i + 1][j + 1]) &&
-                    (mags[i][j] >= mags[i - 1][j - 1]))
-                    pixels.set(i, j, 3, mags[i][j]);
-                else
-                    pixels.set(i, j, 3, 0);
+          break;
+        
+        case 2:
+          if ((grads[x][y] >= grads[x + 1][y + 1]) && (grads[x][y] >= grads[x - 1][y - 1])){
+            pixels.set(x, y, 0, grads[x][y]);
+            pixels.set(x, y, 1, grads[x][y]);
+            pixels.set(x, y, 2, grads[x][y]);
+            pixels.set(x, y, 3, grads[x][y]);
+          }
+          else {
+            supress(pixels, x, y);
+          }
 
-            else if ((angle >= 67.5 && angle <= 112.5) ||
-                (angle < -67.5 && angle >= -112.5))
+          break;
 
-                if ((mags[i][i] >= mags[i + 1][j]) &&
-                    (mags[i][j] >= mags[i][j]))
-                    pixels.set(i, j, 3, mags[i][j]);
-                else
-                    pixels.set(i, j, 3, 0);
+        case 3:
+          if ((grads[x][y] >= grads[x + 1][y]) && (grads[x][y] >= grads[x - 1][y])) {
+            pixels.set(x, y, 0, grads[x][y]);
+            pixels.set(x, y, 1, grads[x][y]);
+            pixels.set(x, y, 2, grads[x][y]);
+            pixels.set(x, y, 3, grads[x][y]);
+          }
+          else {
+            supress(pixels, x, y);
+          }
 
-            else if ((angle >= 112.5 && angle <= 157.5) ||
-                (angle < -22.5 && angle >= -67.5))
+          break;
 
-                if ((mags[i][j] >= mags[i + 1][j - 1]) &&
-                    (mags[i][j] >= mags[i - 1][j + 1]))
-                    pixels.set(i, j, 3, mags[i][j]);
-                else
-                    pixels.set(i, j, 3, 0);
+        case 4:
+          if ((grads[x][y] >= grads[x + 1][y - 1]) && (grads[x][y] >= grads[x - 1][y + 1])) {
+            pixels.set(x, y, 0, grads[x][y]);
+            pixels.set(x, y, 1, grads[x][y]);
+            pixels.set(x, y, 2, grads[x][y]);
+            pixels.set(x, y, 3, grads[x][y]);
+          }
+          else {
+            supress(pixels, x, y);
+          }
 
-        }
+          break;
+      }
     }
+  }
 }
 //Converts radians to degrees
 var convertToDegrees = radians => (radians * 180) / Math.PI;
 
-//Finds the max value in a 2d array like mags
+//Finds the max value in a 2d array like grads
 var findMaxInMatrix = arr => Math.max(...arr.map(el => el.map(val => !!val ? val : 0)).map(el => Math.max(...el)));
 
 //Applies the double threshold to the image
-function doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio, mags, strongEdgePixels, weakEdgePixels) {
+function doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio, grads, strongEdgePixels, weakEdgePixels) {
 
-    const highThreshold = findMaxInMatrix(mags) * highThresholdRatio;
-    const lowThreshold = highThreshold * lowThresholdRatio;
+  const highThreshold = findMaxInMatrix(grads) * highThresholdRatio;
+  const lowThreshold = highThreshold * lowThresholdRatio;
 
-    for (let i = 0; i < pixels.shape[0]; i++) {
-        for (let j = 0; j < pixels.shape[1]; j++) {
-            let pixelPos = [i, j];
+  for (let x = 0; x < pixels.shape[0]; x++) {
+    for (let y = 0; y < pixels.shape[1]; y++) {
+      let pixelPos = [x, y];
 
-            mags[i][j] > lowThreshold
-                ? mags[i][j] > highThreshold
-                    ? strongEdgePixels.push(pixelPos)
-                    : weakEdgePixels.push(pixelPos)
-                : pixels.set(i, j, 3, 0);
-        }
+      if (grads[x][y] > lowThreshold){
+        if (grads[x][y] <= highThreshold) weakEdgePixels.push(pixelPos);
+        else strongEdgePixels.push(pixelPos);
+      }
+      else {
+        supress(pixels, x, y);
+      }
     }
-
-    strongEdgePixels.forEach(pix => pixels.set(pix[0], pix[1], 3, 255));
+  }
+  strongEdgePixels.forEach(pixel => {
+    // pixels.set(pixel[0], pixel[1], 0, 255);
+    // pixels.set(pixel[0], pixel[1], 1, 255);
+    // pixels.set(pixel[0], pixel[1], 2, 255);
+    // pixels.set(pixel[0], pixel[1], 3, 255);
+  })
 }
 
 //  hysteresis edge tracking algorithm -- not working as of now
@@ -170,5 +205,34 @@ function doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio, mags, st
      return pixels
 } */
 
+function supress(pixels, x, y){
+  pixels.set(x, y, 0, 0);
+  pixels.set(x, y, 0, 0);
+  pixels.set(x, y, 0, 0);
+  pixels.set(x, y, 0, 255);
+}
 
+function hysteresis(pixels, strongEdgePixels, weakEdgePixels){
+  var preservedWeakPixels = [];
+  
+  weakEdgePixels.forEach(pixel => {
+    let pixelX = pixel[0];
+    let pixelY = pixel[1];
 
+    for (var x = pixelX - 1; x <= pixelY + 1; x++){
+      for (var y = pixelY - 1; y <= pixelY + 1; y++){
+        if (x === pixelX && y === pixelY) return;
+        if (strongEdgePixels.includes([x,y])){
+          preservedWeakPixels.push([pixelX, pixelY]);
+          return;
+        }
+      }
+    }
+  })
+
+  weakEdgePixels.forEach(pixel => {
+    if (preservedWeakPixels.includes([pixel[0], pixel[1]])) return;
+    supress(pixels, pixel[0], pixel[1]);
+  })
+
+}

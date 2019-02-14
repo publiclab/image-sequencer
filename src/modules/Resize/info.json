@@ -3,9 +3,9 @@
   "description": "Resize image by given percentage value",
   "inputs": {
     "resize": {
-      "type": "integer",
+      "type": "string",
       "desc": "Percentage value of the resize",
-      "default": "125"
+      "default": "125%"
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

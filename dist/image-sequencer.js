@@ -66022,7 +66022,7 @@ module.exports={
       "default": -2
     },
     "blend": {
-      "type": "string",
+      "type": "input",
       "desc": "Function to use to blend the two images.",
       "default": "function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] }"
     }
@@ -66174,12 +66174,12 @@ module.exports={
     "description": "Applies a Gaussian blur given by the intensity value",
     "inputs": {
         "blur": {
-            "type": "float",
+            "type": "range",
             "desc": "Amount of gaussian blur(Less blur gives more detail, typically 0-5)",
-            "default": 2,
-            "min": 0,
-            "max": 5,
-            "step": 0.25
+            "default": "2",
+            "min": "0",
+            "max": "5",
+            "step": "0.25"
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -66252,7 +66252,7 @@ module.exports={
   "description": "Change the brightness of the image by given percent value",
   "inputs": {
       "brightness": {
-          "type": "integer",
+          "type": "range",
           "desc": "% brightness for the new image",
           "default": "175",
           "min": "0",
@@ -66379,7 +66379,7 @@ module.exports={
             "default": 0
         },
         "h": {
-            "type": "integer",
+            "type": "iinteger",
             "desc": "height of the colorbar",
             "default": 10
         }
@@ -66754,7 +66754,7 @@ module.exports={
     "description": "Change the contrast of the image by given value",
     "inputs": {
         "contrast": {
-            "type": "integer",
+            "type": "range",
             "desc": "contrast for the new image, typically -100 to 100",
             "default": 70,
             "min": -100,
@@ -66893,14 +66893,14 @@ module.exports={
     "description": "Image Convolution using a given 3x3 kernel matrix <a href='https://en.wikipedia.org/wiki/Kernel_(image_processing)'>Read more</a>",
     "inputs": {
   		"constantFactor":{
-  			"type": "float",
+  			"type": "Float",
   			"desc": "a constant factor, multiplies all the kernel values by that factor",
   			"default": 0.1111,
         "placeholder": 0.1111
   		},
         
       "kernelValues": {
-        "type": "string",
+        "type": "String",
         "desc": "nine space separated numbers representing the kernel values in left to right and top to bottom format.",
         "default": "1 1 1 1 1 1 1 1 1",
         "placeholder": "1 1 1 1 1 1 1 1 1"
@@ -67181,7 +67181,7 @@ module.exports={
       "default": "(50%)"
     },
     "backgroundColor": {
-      "type": "string",
+      "type": "String",
       "desc": "Background Color (Four space separated RGBA values)",
       "default": "255 255 255 255",
       "placeholder": "255 255 255 255"
@@ -67255,7 +67255,7 @@ module.exports={
   },
   "outputs": {
     "qrval": {
-      "type": "string"
+      "type": "text"
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -67474,13 +67474,13 @@ module.exports={
     "description": "It draws a rectangle on the image",
     "inputs": {
   		"startingX":{
-  			"type": "integer",
+  			"type": "Number",
   			"desc": "starting x position of the rectangle",
   			"default": 0
   		},
         
       "startingY": {
-        "type": "integer",
+        "type": "Number",
         "desc": "starting y position of the rectangle",
         "default": 0
       },
@@ -67504,7 +67504,7 @@ module.exports={
       },
 
       "color":{
-        "type": "string",
+        "type": "String",
         "desc": "RGBA values separated by a space",
         "default": "0 0 0 255"
       }
@@ -67620,22 +67620,22 @@ module.exports={
   "description": "A module which accepts JavaScript math expressions to produce each color channel based on the original image's color. See <a href='https://publiclab.org/wiki/infragram-sandbox'>Infragrammar</a>.",
   "inputs": {
     "red": {
-      "type": "string",
+      "type": "input",
       "desc": "Expression to return for red channel with R, G, B, and A inputs",
       "default": "r"
     },
     "green": {
-      "type": "string",
+      "type": "input",
       "desc": "Expression to return for green channel with R, G, B, and A inputs",
       "default": "g"
     },
     "blue": {
-      "type": "string",
+      "type": "input",
       "desc": "Expression to return for blue channel with R, G, B, and A inputs",
       "default": "b"
     },
     "monochrome (fallback)": {
-      "type": "string",
+      "type": "input",
       "desc": "Expression to return with R, G, B, and A inputs; fallback for other channels if none provided",
       "default": "r + g + b"
     }
@@ -68153,9 +68153,7 @@ module.exports={
         "adjustment": {
             "type": "float",
             "desc": "gamma correction (inverse of actual gamma factor) for the new image",
-            "default": 0.2,
-            "min": 2,
-            "max": 1
+            "default": 0.2
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -68870,7 +68868,7 @@ module.exports={
         "placeholder": "100 100 100 255"
       },
       "tolerance": {
-        "type": "integer",
+        "type": "range",
         "desc": "% tolerance",
         "default": "10",
         "min": "0",
@@ -68961,9 +68959,9 @@ module.exports={
   "description": "Resize image by given percentage value",
   "inputs": {
     "resize": {
-      "type": "integer",
+      "type": "string",
       "desc": "Percentage value of the resize",
-      "default": "125"
+      "default": "125%"
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -69041,7 +69039,7 @@ module.exports={
     "description": "Rotates image by specified degrees",
     "inputs": {
       "rotate": {
-        "type": "integer",
+        "type": "range",
         "desc": "Angular value for rotation in degrees",
         "default": "90",
         "min": "0",
@@ -69118,12 +69116,12 @@ module.exports={
     "description": "Change the saturation of the image by given value, from 0-1, with 1 being 100% saturated.",
     "inputs": {
         "saturation": {
-            "type": "float",
+            "type": "range",
             "desc": "saturation for the new image between 0 and 2, 0 being black and white and 2 being highly saturated",
-            "default": 0.5,
-            "min": 0,
-            "max": 2,
-            "step": 0.1
+            "default": "0.5",
+            "min": "0",
+            "max": "2",
+            "step": "0.1"
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
@@ -69442,9 +69440,9 @@ module.exports={
     "description": "Change the colour balance of the image by adjusting the colour temperature.",
     "inputs": {
       "temperature": {
-        "type": "integer",
+        "type": "string",
         "desc": "Temperature between 0 - 40,000 Kelvin",
-        "default": 6000
+        "default": "6000"
       }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

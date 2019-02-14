@@ -10,7 +10,6 @@
 
 var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js');
 var urlHash = require('./urlHash.js');
-var mapHtmlTypes = require('./mapHtmltypes');
 
 function DefaultHtmlStepUi(_sequencer, options) {
   
@@ -71,7 +70,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       for (var paramName in merged) {
         var isInput = inputs.hasOwnProperty(paramName);
         var html = "";
-        var inputDesc = isInput ? mapHtmlTypes(inputs[paramName]) : {};
+        var inputDesc = isInput ? inputs[paramName] : {};
         if (!isInput) {
           html += '<span class="output"></span>';
         } else if (inputDesc.type.toLowerCase() == "select") {
@@ -99,7 +98,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
               '"max="' +
               inputDesc.max +
               '"step="' +
-              (inputDesc.step ? inputDesc.step : 1)+ '">' + '<span>' + paramVal + '</span>';
+              inputDesc.step + '">' + '<span>' + paramVal + '</span>';
 
           }
           else html += '">';

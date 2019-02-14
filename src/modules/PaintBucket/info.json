@@ -19,7 +19,7 @@
         "placeholder": "100 100 100 255"
       },
       "tolerance": {
-        "type": "integer",
+        "type": "range",
         "desc": "% tolerance",
         "default": "10",
         "min": "0",

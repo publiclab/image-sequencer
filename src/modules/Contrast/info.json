@@ -3,7 +3,7 @@
     "description": "Change the contrast of the image by given value",
     "inputs": {
         "contrast": {
-            "type": "integer",
+            "type": "range",
             "desc": "contrast for the new image, typically -100 to 100",
             "default": 70,
             "min": -100,

@@ -81,7 +81,7 @@ function sobelFilter(pixels, x, y) {
   }
 
   const grad = Math.sqrt(Math.pow(gradX, 2) + Math.pow(gradY, 2)),
-    angle = Math.atan2(gradX, gradY);
+    angle = Math.atan2(gradY, gradX);
   return {
     pixel: [val, val, val, grad],
     angle: angle

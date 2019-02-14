@@ -1,18 +1,38 @@
-var urlHash = require('./urlHash.js');
+var urlHash = require('./urlHash.js'),
+  setModuleSelector = require('./setModuleSelector').setModuleSelector;
+
 function DefaultHtmlSequencerUi(_sequencer, options) {
   options = options || {};
   var addStepSel = options.addStepSel || '#addStep',
     removeStepSel = options.removeStepSel || 'button.remove',
     selectStepSel = options.selectStepSel || '#selectStep';
+    saveSeqBtn = options.saveSeqBtn || '#save-seq';
 
-  options.addStepBtnSel = options.addStepBtnSel || '.add-step-btn';
-  options.quickBtnsSel = options.quickBtnsSel || '.quick-btns .quick-btn';
+    options.quickBtnsSelect = options.quickBtnsSel || '.quick-btns .quick-btn';
+    options.addStepBtnSel = options.addStepBtnSel || '.add-step-btn';
+    
+  function handleSaveSequence(){
+    var stepCount=sequencer.images.image1.steps.length;
+    if(stepCount<2)
+      $(saveSeqBtn).prop("disabled", true);
+    else
+      $(saveSeqBtn).prop("disabled", false);
+  }
 
   function onLoad(stepAddedCb = function(){}) {
     importStepsFromUrlHash();
     if (!$(selectStepSel).val())
       stepAddedCb();
       handleSaveSequence();
+    setModuleSelector({
+      sequencer: _sequencer,
+      options: options,
+      onLoad: onLoad,
+      importStepsFromUrlHash: importStepsFromUrlHash,
+      selectNewStepUi: selectNewStepUi,
+      removeStepUi: removeStepUi,
+      addStepUi: addStepUi
+    });
   }
 
   // look up needed steps from Url Hash:

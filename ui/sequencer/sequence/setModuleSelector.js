@@ -30,7 +30,7 @@ function quickButtons(ui){
 }
 
 function setModuleSelector(ui){
-  refreshOptions();
+  refreshOptions(ui.options.stepSelectSel);
   quickButtons(ui);
   $(ui.options.stepSelectSel).on('change', ui.selectNewStepUi);
   $(ui.options.addStepBtnSel).on('click', ui.addStepUi);

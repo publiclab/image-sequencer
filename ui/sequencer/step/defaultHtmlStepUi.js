@@ -16,7 +16,7 @@ var intermediateHtmlStepUi = require('../step/intermediateHtmlStepUi'),
 function DefaultHtmlStepUi(_sequencer, options) {
   
   options = options || {};
-  var stepsSel = options.stepsSel || document.querySelector("#steps ul"),
+  var stepsSel = options.stepsSel || '#steps ul',
     getStepTemplate = options.getStepTemplate,
     getToolsTemplate = options.getToolsTemplate,
     stepWrapperSel = options.stepWrapperSel || '.step-wrapper',
@@ -103,7 +103,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         if($(`${stepsSel} li:nth-last-child(2)`))
           $(`${stepsSel} li:nth-last-child(2) .insert-step-btn`).prop('disabled',false);
       } else {
-        stepsSel.insertBefore(step.ui, $(stepsSel).children()[stepOptions.index]);
+        $(stepsSel).insertBefore(step.ui, $(stepsSel).children()[stepOptions.index]);
       }
     }
     else {

@@ -23,7 +23,7 @@ module.exports = function(grunt) {
       },
 
       renderers: {
-        files: ["examples/renderers/**/js/*"],
+        files: ["examples/renderers/**/js/*", "ui/**/*.js"],
         tasks: ["browserify:rendererMaterialize", "browserify:rendererBootstrap"]
       },
 

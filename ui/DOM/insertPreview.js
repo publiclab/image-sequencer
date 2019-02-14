@@ -5,11 +5,12 @@ function generatePreview(previewStepName, customValues, path, selector) {
       var img = document.createElement('img');
       img.classList.add('preview-thumbnail');
       img.src = src;
-      var stepDiv = $(selector).each(function() {
-        if ($(this).attr('data-value') === previewStepName) {
-          $(this).append(img);
+      $(selector).each(function(quickBtn) {
+        if ($(quickBtn).attr('data-value') === previewStepName) {
+          $(quickBtn).append(img);
         }
       });
+      console.log('insertPreview', selector)
     }
 
     function loadPreview() {

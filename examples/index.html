@@ -10,12 +10,176 @@
     <script src="../dist/image-sequencer.js"></script>
   </head>
   <body>
-    
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="../../node_modules/downloadjs/download.min.js" type="text/javascript"/>
     <script src="../../node_modules/imgareaselect/jquery.imgareaselect.dev.js"></script>
-    <script src="../../src/ui/prepareDynamic.js"></script>
     <script src="../../dist/image-sequencer.js" charset="utf-8"></script>
-    <script src="./index.js"></script>
+    <script src="../../src/ui/prepareDynamic.js"></script>
+
+    <!-- The Renderer Markup Goes Here -->
+
+    <div id="renderer-wrapper">
+  <div class="navbar-fixed">
+    <nav>
+      <div class="nav-wrapper deep-purple lighten-1">
+        <a href="/" target="_blank" class="brand-logo center" style="min-width: 80%;">Image Sequencer</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li><a href="https://github.com/publiclab/image-sequencer">Github</a></li>
+          <li><a href="https://publiclab.org/wiki/image-sequencer">Learn More</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+  <div class="container-fluid" id="main-container">
+    <button id="old-ui" class="btn waves-effect waves-light blue right">Switch to old UI</button>
+    <p>
+      <b>Image Sequencer</b> is a pure JavaScript sequential image processing system, inspired by storyboards. Instead of modifying the original image, it
+      creates a new image at each step in a sequence.
+      <a href="https://publiclab.org/image-sequencer">Learn more</a>
+    </p>
+
+    <div id="dropzone" class="dropzone">
+      <p>
+        <i>Select or drag in an image to start!</i>
+      </p>
+        <input type="file" id="fileInput" accept="image/*"><br />
+        <label for="file" id="file-input-label" class="btn btn-small green">Choose a file</label>
+
+        <button class="btn btn-small green" id="take-photo">Take a Photo</button>
+        <video  id="video" width="400" height="300" style="display:none"></video>
+        <a class="btn btn-small" id="capture" style="display:none" class="btn">Click Picture</a>
+        <a class="btn btn-small red" id="close" style="display:none" class="btn">Close</a>
+        <canvas id="canvas" width="400" height="300" style="display:none"></canvas>
+
+    </div>
+
+    <section id="steps" class="row">
+      <ul class="collapsible popout expandable"></ul>
+    </section>
+
+    <div class="row">
+      <div class="col s12 m8">
+        <section id="addStep" class="card">
+          <div class="card-content center">
+            <span class="card-title">Select A Module</span>
+            <p class="info"></p>
+            <div class="row center-align radio-group .quick-btns">
+              <div>
+                <div class="radio .quick-btn" data-value="brightness">
+                  <i class="material-icons i-over">brightness_high</i>
+                </div>
+                <p>Brightness</p>
+              </div>
+              <div>
+                <div class="radio .quick-btn" data-value="contrast">
+                  <i class="material-icons i-over">tonality</i>
+                </div>
+                <p>Contrast</p>
+              </div>
+              <div>
+                <div class="radio .quick-btn" data-value="saturation">
+                  <i class="material-icons i-over">colorize</i>
+                </div>
+                <p>Saturation</p>
+              </div>
+              <div>
+                <div class="radio .quick-btn" data-value="rotate">
+                  <i class="material-icons i-over">rotate_left</i>
+                </div>
+                <p>Rotate</p>
+              </div>
+              <div>
+                <div class="radio .quick-btn" data-value="crop">
+                  <i class="material-icons i-over">crop</i>
+                </div>
+                <p>Crop</p>
+              </div>
+            </div>
+            <div class="center">
+              <div class="input-field center-align">
+                <select id="selectStep">
+                  <!-- The default null selection has been appended manually in demo.js
+                  This is because the options in select are overritten when options are appended.-->
+                </select>
+              </div>
+              <button class="btn waves-effect green accent-4" name="add" id="add-step-btn">Add Step</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="sequence-actions">
+          <div class="row center-align">
+            <button class="btn waves-effect blue darken-2" name="save-sequence" id="save-seq">Save Sequence</button>
+            <button class="btn waves-effect blue darken-2 js-view-as-gif" id="gif">View GIF</button>
+          </div>
+
+
+          <div class="modal fade" id="js-download-gif-modal" style="display: none;">
+            <div class="modal-header">
+              <h4 class="modal-title">
+                Your gif is ready
+                <button type="button" class="gif-close close"><span aria-hidden="true">&times;</span></button>
+              </h4>
+            </div>
+            <div class="modal-content">
+              <div id="js-download-modal-gif-container">
+                <!-- Gif should appear here -->
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn gif-close">Done</button>
+              <button id="js-download-as-gif-button" class="btn green">Download</button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="col s12 m4">
+        <section id="dwnld" class="card">
+          <div class="container">
+
+            <div class="row center-align" style="margin-bottom: 0;">
+              <div class="col s12" style="margin-top: 1rem;">
+                <button class="btn teal lighten-2" id="download-btn" name="download">Download PNG</button>
+              </div>
+            </div>
+            <div class="row center-align">
+              <div class="col s12">
+                <button id="resetButton" style="margin-bottom: 1rem;" class="btn teal lighten-2">Clear All Steps</button>
+              </div>
+            </div>
+              
+          </div>
+        </section>
+      </div>
+    </div>
+    <button id="move-up"><i class="material-icons">arrow_upward</i></button>
+  </div>
+  
+  <footer class="page-footer deep-purple lighten-1">
+    <div class="container">
+      <div class="row">
+        <div class="col s12 center">
+          <h5 class="white-text">Image Sequencer</h5><br />
+          <button class="btn-flat white-text tooltipped deep-purple lighten-2" id="clear-cache" style="overflow: hidden;" data-tooltip="Ctrl/Cmd+E" data-position="top">Clear offline cache</button>
+        </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+      Open Source by <a class="grey-text text-lighten-4" href="https://publiclab.org"><b>Publiclab</b></a>
+        <a class="grey-text text-lighten-4 right" href="https://github.com/publiclab/image-sequencer">Github</a>
+      </div>
+    </div>
+  </footer>
+
+  <script type="text/javascript">
+    $(function() {
+      var sequencer;
+    })
+  </script>
+
+    <script src="renderers/materialize/dist/renderer.js"></script>
+    <link rel="stylesheet" href="renderers/materialize/dist/renderer.css">
   </body>
 </html>

@@ -1,13 +1,13 @@
 module.exports = function Tint(options,UI){
-
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
 
     var output;
 
     function draw(input,callback,progressObj){
 
-        var color = options.color || '0 0 255';
+        var color = options.color || defaults.color;
         color = color.split(" "); 
-        var factor = options.factor || 0.5;
+        var factor = options.factor || defaults.factor;
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;

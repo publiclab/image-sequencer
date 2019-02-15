@@ -203,6 +203,16 @@ ImageSequencer = function ImageSequencer(options) {
     return require('./ReplaceImage')(this, selector, steps, options);
   }
 
+  //returns the steps added
+  function getSteps(){
+    var steps;
+    if(arguments[0])
+    steps= this.images.test.steps;
+    else
+    steps = this.images.image1.steps;
+    return steps;
+  }
+
   function setUI(UI) {
     this.events = require('./ui/UserInterface')(UI);
   }
@@ -455,6 +465,7 @@ ImageSequencer = function ImageSequencer(options) {
     createMetaModule: createMetaModule,
     saveSequence: saveSequence,
     loadModules: loadModules,
+    getSteps:getSteps,
 
     //other functions
     log: log,

@@ -3,7 +3,6 @@
 */
 module.exports = function Average(options, UI){
 
-    options.blur = options.blur || 2
     var output;
 
     options.step.metadata = options.step.metadata || {};

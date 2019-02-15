@@ -21,10 +21,10 @@ module.exports = exports = function(pixels, options){
 
       fillColor = fillColor.split(" ");
       function isSimilar(currx, curry){
-        return (pixels.get(currx, curry, 0) > r*minFactor && pixels.get(currx, curry, 0) < r*maxFactor &&
-                pixels.get(currx, curry, 1) > g*minFactor && pixels.get(currx, curry, 1) < g*maxFactor &&
-                pixels.get(currx, curry, 2) > b*minFactor && pixels.get(currx, curry, 2) < b*maxFactor &&
-                pixels.get(currx, curry, 3) > a*minFactor && pixels.get(currx, curry, 3) < a*maxFactor);
+        return (pixels.get(currx, curry, 0) >= r*minFactor && pixels.get(currx, curry, 0) <= r*maxFactor &&
+                pixels.get(currx, curry, 1) >= g*minFactor && pixels.get(currx, curry, 1) <= g*maxFactor &&
+                pixels.get(currx, curry, 2) >= b*minFactor && pixels.get(currx, curry, 2) <= b*maxFactor &&
+                pixels.get(currx, curry, 3) >= a*minFactor && pixels.get(currx, curry, 3) <= a*maxFactor);
       }
 
       while (queuey.length) {

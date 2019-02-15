@@ -166,12 +166,14 @@ test('insertSteps({image: {index: index, name: "module", o: options} }) inserts 
 
 
 test('getSteps() returns correct array of steps', function(t){
-  var stepsOptionsName = ['load-image', 'channel', 'channel', 'channel', 'channel', 'channel'];
-  var stepsArray = sequencer.getSteps('test');
-  t.equal(stepsArray.length, 6, "getSteps() returns correct length of steps");
+  var sequencer = ImageSequencer({ ui: false });
+  sequencer.loadImages('test', red);
+  sequencer.addSteps(['blur','invert']);
+  var stepsArray = sequencer.getSteps('test');  
+  t.equal(stepsArray.length, sequencer.images.test.steps.length, "getSteps() returns correct length of steps");
   var flag=0;
-  for (var i = 0; i<stepsOptionsName.length; i++){
-    if(stepsArray[i].options.name==(stepsOptionsName[i]))
+  for (var i = 0; i<sequencer.images.test.steps.length; i++){
+    if(stepsArray[i].options.name==(sequencer.images.test.steps[i].options.name))
     continue
     else
     flag=1;

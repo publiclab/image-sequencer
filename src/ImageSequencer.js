@@ -210,7 +210,7 @@ ImageSequencer = function ImageSequencer(options) {
     steps= this.images.test.steps;
     else
     steps = this.images.image1.steps;
-    return steps;
+    return [...steps];
   }
 
   function setUI(UI) {

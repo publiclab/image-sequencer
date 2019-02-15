@@ -493,6 +493,16 @@ sequencer.insertSteps({
 ```
 return value: **`sequencer`** (To allow method chaining)
 
+## Fetching current steps
+
+The `getSteps` method can be used to get the array of current steps in `this` instance of sequencer.For example
+
+```js
+sequencer.getSteps()
+```
+
+returns an array of steps associated with the current sequencer.
+
 ## Saving Sequences
 
 IMAGE SEQUENCER supports saving a sequence of modules and their associated settings in a simple string syntax. These sequences can be saved in the local storage inside the browser and inside a JSON file in node.js. sequences can be saved in node context using the CLI option

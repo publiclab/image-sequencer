@@ -1,8 +1,8 @@
 module.exports = exports = function(pixels, options){
-
-      var fillColor = options.fillColor || '100 100 100 255',
-          x = parseInt(options.startingX) || 10,
-          y = parseInt(options.startingY) || 10,
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+      var fillColor = options.fillColor || defaults.fillColor,
+          x = parseInt(options.startingX) || defaults.startingX,
+          y = parseInt(options.startingY) || defaults.startingY,
           height = pixels.shape[1],
           width = pixels.shape[0],
           r = pixels.get(x, y, 0),
@@ -15,16 +15,16 @@ module.exports = exports = function(pixels, options){
           north,
           south,
           n,
-          tolerance = parseInt(options.tolerance) || 10,
+          tolerance = parseInt(options.tolerance) || defaults.tolerance,
           maxFactor = (1 + tolerance/100),
           minFactor = (1 - tolerance/100);
 
       fillColor = fillColor.split(" ");
       function isSimilar(currx, curry){
-        return (pixels.get(currx, curry, 0) > r*minFactor && pixels.get(currx, curry, 0) < r*maxFactor &&
-                pixels.get(currx, curry, 1) > g*minFactor && pixels.get(currx, curry, 1) < g*maxFactor &&
-                pixels.get(currx, curry, 2) > b*minFactor && pixels.get(currx, curry, 2) < b*maxFactor &&
-                pixels.get(currx, curry, 3) > a*minFactor && pixels.get(currx, curry, 3) < a*maxFactor);
+        return (pixels.get(currx, curry, 0) >= r*minFactor && pixels.get(currx, curry, 0) <= r*maxFactor &&
+                pixels.get(currx, curry, 1) >= g*minFactor && pixels.get(currx, curry, 1) <= g*maxFactor &&
+                pixels.get(currx, curry, 2) >= b*minFactor && pixels.get(currx, curry, 2) <= b*maxFactor &&
+                pixels.get(currx, curry, 3) >= a*minFactor && pixels.get(currx, curry, 3) <= a*maxFactor);
       }
 
       while (queuey.length) {

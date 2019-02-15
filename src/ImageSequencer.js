@@ -6,7 +6,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   var sequencer = (this.name == "ImageSequencer") ? this : this.sequencer;
   options = options || {};
-  options.inBrowser = options.inBrowser || isBrowser;
+  options.inBrowser = options.inBrowser === undefined ? isBrowser : options.inBrowser;
   options.sequencerCounter = 0;
 
   function objTypeOf(object) {

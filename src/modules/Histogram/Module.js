@@ -7,7 +7,8 @@ module.exports = function Channel(options, UI) {
 
     function draw(input, callback, progressObj) {
 
-        options.gradient = options.gradient || "true";
+        var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+        options.gradient = options.gradient || defaults.gradient;
         options.gradient = JSON.parse(options.gradient);
 
         progressObj.stop(true);

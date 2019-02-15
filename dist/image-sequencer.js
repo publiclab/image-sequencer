@@ -65102,7 +65102,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   var sequencer = (this.name == "ImageSequencer") ? this : this.sequencer;
   options = options || {};
-  options.inBrowser = options.inBrowser || isBrowser;
+  options.inBrowser = options.inBrowser === undefined ? isBrowser : options.inBrowser;
   options.sequencerCounter = 0;
 
   function objTypeOf(object) {
@@ -66333,24 +66333,48 @@ module.exports={
 }
 
 },{}],177:[function(require,module,exports){
-module.exports = function NdviColormapfunction(options, UI) {
+module.exports = function Colorbar(options, UI) {
 
-    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+  var output;
 
-    options.x = options.x || defaults.x;
-    options.y = options.y || defaults.y;
-    options.colormap = options.colormap || defaults.colormap;
-    options.h = options.h || defaults.h;
-    this.expandSteps([
-        { 'name': 'gradient', 'options': {} },
-        { 'name': 'colormap', 'options': { colormap: options.colormap } },
-        { 'name': 'crop', 'options': { 'y': 0, 'h': options.h } },
-        { 'name': 'overlay', 'options': { 'x': options.x, 'y': options.y, 'offset': -4 } }
-    ]);
-    return {
-        isMeta: true
-    }
+  options.x = options.x || defaults.x;
+  options.y = options.y || defaults.y;
+  options.colormap = options.colormap || defaults.colormap;
+  options.h = options.h || defaults.h;
+
+  var steps = [
+    { 'name': 'gradient', 'options': {} },
+    { 'name': 'colormap', 'options': { colormap: options.colormap } },
+    { 'name': 'crop', 'options': { 'y': 0, 'h': options.h } },
+    { 'name': 'overlay', 'options': { 'x': options.x, 'y': options.y, 'offset': -4 } }
+  ];
+
+  // ui: false prevents internal logs
+  var internalSequencer = ImageSequencer({ inBrowser: false, ui: false });
+
+  function draw(input, callback) {
+
+    var step = this;
+
+    internalSequencer.loadImage(input.src, function onAddImage() {
+      internalSequencer.importJSON(steps);
+      internalSequencer.run(function onCallback(internalOutput) {
+        step.output = { src: internalOutput, format: input.format };
+        callback();
+      });
+    });
+
+  }
+
+  return {
+    options: options,
+    draw: draw,
+    output: output,
+    UI: UI
+  }
 }
+
 },{"./../../util/getDefaults.js":270,"./info.json":179}],178:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":177,"./info.json":179,"dup":162}],179:[function(require,module,exports){
@@ -66385,8 +66409,7 @@ module.exports={
             "default": 10
         }
     },
-    "length": 4,
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 },{}],180:[function(require,module,exports){
 /*

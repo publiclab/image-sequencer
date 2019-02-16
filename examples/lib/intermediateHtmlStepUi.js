@@ -12,10 +12,10 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
               <div class="row center-align radio-group">\
               <div>\
               <div class="radio" data-value="resize">\
-              <i class="fa icon-resize-full fa-4x"></i>\
+              <i class="fa fa-icon-resize-full fa-4x"></i>\
             </div>\
                 <p>Resize</p>\
-              </div>\
+                </div>\
                 <div>\
                 <div class="radio" data-value="brightness">\
                 <i class="fa fa-sun-o fa-4x i-over"></i>\

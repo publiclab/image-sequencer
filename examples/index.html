@@ -87,6 +87,12 @@
           <p class="info">Select a new module to add to your sequence.</p>
           <div class="row center-align radio-group">
             <div>
+              <div class="radio" data-value="resize">
+                <i class="icon-resize-full fa-4x i-over"></i>
+              </div>
+              <p>Resize</p>
+            </div>
+            <div>
               <div class="radio" data-value="brightness">
                 <i class="fa fa-sun-o fa-4x i-over"></i>
               </div>
@@ -186,19 +192,36 @@
     </section>
     </div>
   </div>
-
+  <button id="move-up"><i class="fa fa-arrow-circle-o-up"></i></button>
+</body>
   <footer>
     <hr style="margin:20px;"><center><a class="color:grey;" id="clear-cache">Clear offline cache</a></center>
+    <div class="row">
+      <div class="col-md-6 col-sm-12">
+        <h2>Need Help?</h2>
+        <p>
+          Post a link to this and ask for help from other community members on <a href="https://publiclab.org/">PublicLab.org</a>
+        </p>
+        <p>
+          <a class="btn btn-primary" href="https://github.com/publiclab/image-sequencer/issues/new">Ask a question &raquo;</a>
+        </p>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <h2>Improve This Tool</h2>
+        <p>
+          This is an open source toolkit which you can help add to and improve on <a href="https://github.com">Github</a>
+        </p>
+        <p>
+          <a class="btn btn-primary" href="https://github.com/publiclab/image-sequencer">View the code &raquo;</a>
+        </p>
+      </div>
   </footer>
 
-  <button id="move-up"><i class="fa fa-arrow-circle-o-up"></i></button>
 
   <script type="text/javascript">
     $(function() {
       var sequencer;
     })
   </script>
-
-</body>
 
 </html>

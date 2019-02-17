@@ -118,6 +118,13 @@ test('addSteps("image","name",o) adds a step', function(t) {
   t.end();
 });
 
+test('addSteps("name, name") adds two steps', function(t) {
+  sequencer.addSteps('channel, invert')
+  t.equal(sequencer.images.test.steps.length, 9, 'Length of steps increase')
+  sequencer.removeSteps('test', [7, 8])
+  t.end()
+})
+
 test('removeSteps("image",position) removes a step', function(t) {
   sequencer.removeSteps('test', 1);
   t.equal(sequencer.images.test.steps.length, 6, "Length of steps reduced");
@@ -164,6 +171,11 @@ test('insertSteps({image: {index: index, name: "module", o: options} }) inserts 
   t.end();
 });
 
+test('insertSteps("name, name") inserts steps', function(t) {
+  sequencer.insertSteps('test', 'channel, invert')
+  t.equal(sequencer.images.test.steps.length, 8, 'Length of steps increased')
+  t.end()
+})
 
 test('run() runs the sequencer and returns output to callback', function(t) {
   sequencer.run({ mode: 'test' }, function(out) {

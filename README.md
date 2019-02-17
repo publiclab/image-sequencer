@@ -48,7 +48,7 @@ A diagram of this running 5 steps on a single sample image may help explain how 
 This library works in the browser, in Node, and on the command line (CLI), which we think is great.
 
 ### Unix based platforms
-You can set up a local environment to test the UI with `sudo npm run setup` followed by `npm start` 
+You can set up a local environment to test the UI with `sudo npm run setup` followed by `npm start`
 
 ### Windows
 Our npm scripts do not support windows shells, please run the following snippet in PowerShell.
@@ -223,6 +223,12 @@ which are to be added, in that particular order.
 
 optional_otions is just additional parameters, in object form, which you might
 want to provide to the modules. It's an optional parameter.
+
+Use string syntax (see below) to add multiple steps and configurations quickly by passing a string to `sequencer.addStep()`:
+
+```js
+sequencer.addSteps('invert, channel');
+```
 
 return value: **`sequencer`** (To allow method chaining)
 
@@ -551,7 +557,7 @@ and remove the loading GIF generated above.
 for instance, to remove the DIV generated above.
 * `notify` : This event is triggered whenever we need to shoot a notification to the
 user-interface.For example when the step is not available, we can shoot a notification,
-by sending appropriate message.For HTML UI it adds a DOM node to the browser, for CLI 
+by sending appropriate message.For HTML UI it adds a DOM node to the browser, for CLI
 and node , it logs the notification output to the respective console.
 
 How to define these functions:

@@ -245,6 +245,32 @@ ImageSequencer = function ImageSequencer(options) {
     return `sequencer -i [PATH] -s ${cliStringSteps} -d '${JSON.stringify(cliOptions)}'`
   }
 
+  // Checks if input is a string of comma separated module names
+  function detectSyntax(str) {
+    let result = str.includes(',') ? true : false
+    return result
+  }
+
+  // Parses input string and returns array of module names
+  function parseSyntax(str) {
+    let stringifiedNames = str.replace(/\s/g, '')
+    let moduleNames = stringifiedNames.split(',')
+    return moduleNames
+  }
+
+  // imports string of comma separated module names to sequencer steps
+  function stringToStep(str) {
+    let sequencer = this;
+    let names = []
+    if (this.name != "ImageSequencer")
+      sequencer = this.sequencer;
+    if (detectSyntax(str))
+      names = parseSyntax(str)
+    names.forEach(function eachStep(stepName) {
+      sequencer.addSteps(stepName, {})
+    })
+  }
+
   // Strigifies the current sequence
   function toString(step) {
     if (step) {
@@ -279,8 +305,8 @@ ImageSequencer = function ImageSequencer(options) {
   // Coverts stringified sequence into an array of JSON steps
   function stringToJSON(str) {
     let steps;
-    if (str.includes(','))
-      steps = str.split(',');
+    if (detectSyntax(str))
+      steps = parseSyntax(str);
     else
       steps = [str];
     return steps.map(stringToJSONstep);
@@ -443,6 +469,9 @@ ImageSequencer = function ImageSequencer(options) {
     exportBin: exportBin,
     modulesInfo: modulesInfo,
     toCliString: toCliString,
+    detectSyntax: detectSyntax,
+    parseSyntax: parseSyntax,
+    stringToStep: stringToStep,
     toString: toString,
     stepToString: stepToString,
     toJSON: toJSON,

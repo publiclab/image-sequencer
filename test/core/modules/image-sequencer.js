@@ -119,7 +119,7 @@ test('addSteps("image","name",o) adds a step', function(t) {
 });
 
 test('addSteps("name, name") adds two steps', function(t) {
-  sequencer.addSteps('channel, invert')
+  sequencer.addSteps('test', 'channel, invert')
   t.equal(sequencer.images.test.steps.length, 9, 'Length of steps increase')
   sequencer.removeSteps('test', [7, 8])
   t.end()
@@ -170,21 +170,6 @@ test('insertSteps({image: {index: index, name: "module", o: options} }) inserts 
   t.equal(sequencer.images.test.steps[1].options.name, "channel", "Correct Step Inserted");
   t.end();
 });
-
-test('insertSteps("name, name") inserts steps', function(t) {
-  sequencer.insertSteps('test', 'channel, invert')
-  t.equal(sequencer.images.test.steps.length, 8, 'Length of steps increased')
-  t.end()
-})
-
-test('run() runs the sequencer and returns output to callback', function(t) {
-  sequencer.run({ mode: 'test' }, function(out) {
-    t.equal(typeof (sequencer.images.test.steps[sequencer.images.test.steps.length - 1].output), "object", "Output is Generated");
-    t.equal(out, sequencer.images.test.steps[sequencer.images.test.steps.length - 1].output.src, "Output callback works");
-    t.end();
-  });
-});
-
 
 test('getStep(offset) returns the step at offset distance relative to current step', function(t) {
   sequencer.addSteps('test', 'invert', {});

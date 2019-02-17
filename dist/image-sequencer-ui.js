@@ -292,7 +292,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     //disable save-sequence button if all steps are removed
     handleSaveSequence();
   }
-
+ 
   function addStepUi() {
     if ($(addStepSel + " select").val() == "none") return;
 
@@ -329,7 +329,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     else
     $(" #save-seq").prop("disabled", false);
   }
-
+  
   return {
     onLoad: onLoad,
     importStepsFromUrlHash: importStepsFromUrlHash,
@@ -395,6 +395,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
     </button>\
     <button class="btn  insert-step" style="margin-left:10px;border-radius:6px;background-color:#fff;border:solid #bababa 1.1px;" >\
       <i class="fa fa-plus"></i> Add\
+    </button>\
+    <button class="btn " style="margin-left:10px;border-radius:6px;background-color:#fff;border:solid #bababa 1.1px;" >\
+      <i class="fa fa-download"></i>Download\
     </button>\
     </div>\
     </div>';

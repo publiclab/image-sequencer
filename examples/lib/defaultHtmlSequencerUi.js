@@ -38,7 +38,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     //disable save-sequence button if all steps are removed
     handleSaveSequence();
   }
-
+ 
   function addStepUi() {
     if ($(addStepSel + " select").val() == "none") return;
 
@@ -75,7 +75,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     else
     $(" #save-seq").prop("disabled", false);
   }
-
+  
   return {
     onLoad: onLoad,
     importStepsFromUrlHash: importStepsFromUrlHash,

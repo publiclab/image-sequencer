@@ -473,8 +473,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
       
     }
-
-    if (step.name != "load-image") {
+    $("#load-image").append(step.ui);
       step.ui
         .querySelector("div.details")
         .appendChild(
@@ -486,16 +485,12 @@ function DefaultHtmlStepUi(_sequencer, options) {
       // Insert the step's UI in the right place
       if (stepOptions.index == _sequencer.images.image1.steps.length) {
         stepsEl.appendChild(step.ui);
-        $("#steps .container:nth-last-child(1) .insert-step").prop('disabled',true);
+        $("#steps .container:nth-last-child(1) .insert-step").prop('disabled',false);
         if($("#steps .container:nth-last-child(2)"))
         $("#steps .container:nth-last-child(2) .insert-step").prop('disabled',false);
       } else {
         stepsEl.insertBefore(step.ui, $(stepsEl).children()[stepOptions.index]);
       }
-    }
-    else {
-      $("#load-image").append(step.ui);
-    }
     $(step.ui.querySelector(".toggle")).on("click", () => {
       $(step.ui.querySelector('.toggleIcon')).toggleClass('fa-caret-up').toggleClass('fa-caret-down');
       $(step.ui.querySelectorAll(".cal")).toggleClass("collapse");

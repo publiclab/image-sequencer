@@ -65299,6 +65299,16 @@ ImageSequencer = function ImageSequencer(options) {
     return require('./ReplaceImage')(this, selector, steps, options);
   }
 
+  //returns the steps added
+  function getSteps(){
+    var steps;
+    if(arguments[0])
+    steps= this.images.test.steps;
+    else
+    steps = this.images.image1.steps;
+    return [...steps];
+  }
+
   function setUI(UI) {
     this.events = require('./ui/UserInterface')(UI);
   }
@@ -65538,6 +65548,7 @@ ImageSequencer = function ImageSequencer(options) {
     createMetaModule: require('./util/createMetaModule'),
     saveSequence: saveSequence,
     loadModules: loadModules,
+    getSteps:getSteps,
 
     //other functions
     log: log,
@@ -68539,21 +68550,25 @@ module.exports={
 /*
  * Sample Meta Module for demonstration purpose only
  */
-module.exports = function NdviColormapfunction() {
-    this.expandSteps([{ 'name': 'ndvi', 'options': {} }, { 'name': 'colormap', options: {} }]);
-    return {
-        isMeta: true
+module.exports = require('../../util/createMetaModule.js')(
+    function mapFunction(options) {
+
+        return [
+            { 'name': 'ndvi', 'options': {} },
+            { 'name': 'colormap', 'options': { colormap: options.colormap } },
+        ];
+    }, {
+        infoJson: require('./info.json')
     }
-}
-},{}],236:[function(require,module,exports){
+)[0];
+},{"../../util/createMetaModule.js":270,"./info.json":237}],236:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":235,"./info.json":237,"dup":162}],237:[function(require,module,exports){
 module.exports={
     "name": "NDVI-Colormap",
     "description": "Sequentially Applies NDVI and Colormap steps",
     "inputs": {},
-    "length": 2,
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 },{}],238:[function(require,module,exports){
 module.exports = function Dynamic(options, UI, util) {

@@ -6,7 +6,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   var sequencer = (this.name == "ImageSequencer") ? this : this.sequencer;
   options = options || {};
-  options.inBrowser = options.inBrowser || isBrowser;
+  options.inBrowser = options.inBrowser === undefined ? isBrowser : options.inBrowser;
   options.sequencerCounter = 0;
 
   function objTypeOf(object) {
@@ -203,6 +203,16 @@ ImageSequencer = function ImageSequencer(options) {
     return require('./ReplaceImage')(this, selector, steps, options);
   }
 
+  //returns the steps added
+  function getSteps(){
+    var steps;
+    if(arguments[0])
+    steps= this.images.test.steps;
+    else
+    steps = this.images.image1.steps;
+    return [...steps];
+  }
+
   function setUI(UI) {
     this.events = require('./ui/UserInterface')(UI);
   }
@@ -382,19 +392,6 @@ ImageSequencer = function ImageSequencer(options) {
     fs.writeFileSync('./src/Modules.js', mods);
   }
 
-  function createMetaModule(stepsCollection, info) {
-    var stepsArr = stepsCollection;
-    if (typeof stepsCollection === 'string')
-      stepsArr = stringToJSON(stepsCollection);
-    var metaMod = function() {
-      this.expandSteps(stepsArr);
-      return {
-        isMeta: true
-      }
-    }
-    return [metaMod, info];
-  }
-
   function saveSequence(name, sequenceString) {
     const sequence = stringToJSON(sequenceString);
     // Save the given sequence string as a module
@@ -452,9 +449,10 @@ ImageSequencer = function ImageSequencer(options) {
     importJSON: importJSON,
     loadNewModule: loadNewModule,
     saveNewModule: saveNewModule,
-    createMetaModule: createMetaModule,
+    createMetaModule: require('./util/createMetaModule'),
     saveSequence: saveSequence,
     loadModules: loadModules,
+    getSteps:getSteps,
 
     //other functions
     log: log,

@@ -9093,7 +9093,6 @@ function dupe(count, value) {
 
 module.exports = dupe
 },{}],22:[function(require,module,exports){
-
 var FisheyeGl = function FisheyeGl(options){
 
   // Defaults:
@@ -9381,12 +9380,6 @@ var FisheyeGl = function FisheyeGl(options){
 
   }
 
-  function getSrc(format) {
-
-    return gl.canvas.toDataURL(format || 'image/jpeg');
-
-  }
-
   // external API:
   var distorter = {
     options:  options,
@@ -9395,8 +9388,7 @@ var FisheyeGl = function FisheyeGl(options){
     fov:      fov,
     run:      run,
     getImage: getImage,
-    setImage: setImage,
-    getSrc:   getSrc
+    setImage: setImage
   }
 
   return distorter;
@@ -9407,6 +9399,7 @@ if (typeof(document) != 'undefined')
   window.FisheyeGl = FisheyeGl;
 else
   module.exports = FisheyeGl;
+
 },{"./shaders":23}],23:[function(require,module,exports){
 module.exports = {
   fragment: require('./shaders/fragment.glfs'),
@@ -25727,9 +25720,6 @@ var BitMatrix = /** @class */ (function () {
             }
         }
     };
-    BitMatrix.prototype.getInverted = function () {
-        return new BitMatrix(this.data.map(function (d) { return d === 0 ? 1 : 0; }), this.width);
-    };
     return BitMatrix;
 }());
 exports.BitMatrix = BitMatrix;
@@ -25979,11 +25969,21 @@ function scan(matrix) {
         },
     };
 }
-function jsQR(data, width, height) {
-    var binarized = binarizer_1.binarize(data, width, height);
-    var result = scan(binarized);
-    if (!result) {
-        result = scan(binarized.getInverted());
+var defaultOptions = {
+    inversionAttempts: "attemptBoth",
+};
+function jsQR(data, width, height, providedOptions) {
+    if (providedOptions === void 0) { providedOptions = {}; }
+    var options = defaultOptions;
+    Object.keys(options || {}).forEach(function (opt) {
+        options[opt] = providedOptions[opt] || options[opt];
+    });
+    var shouldInvert = options.inversionAttempts === "attemptBoth" || options.inversionAttempts === "invertFirst";
+    var tryInvertedFirst = options.inversionAttempts === "onlyInvert" || options.inversionAttempts === "invertFirst";
+    var _a = binarizer_1.binarize(data, width, height, shouldInvert), binarized = _a.binarized, inverted = _a.inverted;
+    var result = scan(tryInvertedFirst ? inverted : binarized);
+    if (!result && (options.inversionAttempts === "attemptBoth" || options.inversionAttempts === "invertFirst")) {
+        result = scan(tryInvertedFirst ? binarized : inverted);
     }
     return result;
 }
@@ -26018,7 +26018,7 @@ var Matrix = /** @class */ (function () {
     };
     return Matrix;
 }());
-function binarize(data, width, height) {
+function binarize(data, width, height, returnInverted) {
     if (data.length !== width * height * 4) {
         throw new Error("Malformed data passed to binarizer.");
     }
@@ -26075,6 +26075,10 @@ function binarize(data, width, height) {
         }
     }
     var binarized = BitMatrix_1.BitMatrix.createEmpty(width, height);
+    var inverted = null;
+    if (returnInverted) {
+        inverted = BitMatrix_1.BitMatrix.createEmpty(width, height);
+    }
     for (var verticalRegion = 0; verticalRegion < verticalRegionCount; verticalRegion++) {
         for (var hortizontalRegion = 0; hortizontalRegion < horizontalRegionCount; hortizontalRegion++) {
             var left = numBetween(hortizontalRegion, 2, horizontalRegionCount - 3);
@@ -26086,15 +26090,23 @@ function binarize(data, width, height) {
                 }
             }
             var threshold = sum / 25;
-            for (var x = 0; x < REGION_SIZE; x++) {
-                for (var y = 0; y < REGION_SIZE; y++) {
-                    var lum = greyscalePixels.get(hortizontalRegion * REGION_SIZE + x, verticalRegion * REGION_SIZE + y);
-                    binarized.set(hortizontalRegion * REGION_SIZE + x, verticalRegion * REGION_SIZE + y, lum <= threshold);
+            for (var xRegion = 0; xRegion < REGION_SIZE; xRegion++) {
+                for (var yRegion = 0; yRegion < REGION_SIZE; yRegion++) {
+                    var x = hortizontalRegion * REGION_SIZE + xRegion;
+                    var y = verticalRegion * REGION_SIZE + yRegion;
+                    var lum = greyscalePixels.get(x, y);
+                    binarized.set(x, y, lum <= threshold);
+                    if (returnInverted) {
+                        inverted.set(x, y, !(lum <= threshold));
+                    }
                 }
             }
         }
     }
-    return binarized;
+    if (returnInverted) {
+        return { binarized: binarized, inverted: inverted };
+    }
+    return { binarized: binarized };
 }
 exports.binarize = binarize;
 
@@ -68451,7 +68463,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   var sequencer = (this.name == "ImageSequencer") ? this : this.sequencer;
   options = options || {};
-  options.inBrowser = options.inBrowser || isBrowser;
+  options.inBrowser = options.inBrowser === undefined ? isBrowser : options.inBrowser;
   options.sequencerCounter = 0;
 
   function objTypeOf(object) {
@@ -68648,6 +68660,16 @@ ImageSequencer = function ImageSequencer(options) {
     return require('./ReplaceImage')(this, selector, steps, options);
   }
 
+  //returns the steps added
+  function getSteps(){
+    var steps;
+    if(arguments[0])
+    steps= this.images.test.steps;
+    else
+    steps = this.images.image1.steps;
+    return [...steps];
+  }
+
   function setUI(UI) {
     this.events = require('./ui/UserInterface')(UI);
   }
@@ -68827,19 +68849,6 @@ ImageSequencer = function ImageSequencer(options) {
     fs.writeFileSync('./src/Modules.js', mods);
   }
 
-  function createMetaModule(stepsCollection, info) {
-    var stepsArr = stepsCollection;
-    if (typeof stepsCollection === 'string')
-      stepsArr = stringToJSON(stepsCollection);
-    var metaMod = function() {
-      this.expandSteps(stepsArr);
-      return {
-        isMeta: true
-      }
-    }
-    return [metaMod, info];
-  }
-
   function saveSequence(name, sequenceString) {
     const sequence = stringToJSON(sequenceString);
     // Save the given sequence string as a module
@@ -68897,9 +68906,10 @@ ImageSequencer = function ImageSequencer(options) {
     importJSON: importJSON,
     loadNewModule: loadNewModule,
     saveNewModule: saveNewModule,
-    createMetaModule: createMetaModule,
+    createMetaModule: require('./util/createMetaModule'),
     saveSequence: saveSequence,
     loadModules: loadModules,
+    getSteps:getSteps,
 
     //other functions
     log: log,
@@ -68912,7 +68922,7 @@ ImageSequencer = function ImageSequencer(options) {
 }
 module.exports = ImageSequencer;
 
-},{"./AddStep":181,"./ExportBin":182,"./FormatInput":183,"./InsertStep":185,"./Modules":186,"./ReplaceImage":187,"./Run":188,"./SavedSequences.json":190,"./ui/LoadImage":299,"./ui/SetInputStep":300,"./ui/UserInterface":301,"./util/getStep.js":305,"fs":47}],185:[function(require,module,exports){
+},{"./AddStep":181,"./ExportBin":182,"./FormatInput":183,"./InsertStep":185,"./Modules":186,"./ReplaceImage":187,"./Run":188,"./SavedSequences.json":190,"./ui/LoadImage":299,"./ui/SetInputStep":300,"./ui/UserInterface":301,"./util/createMetaModule":304,"./util/getStep.js":306,"fs":47}],185:[function(require,module,exports){
 const getStepUtils = require('./util/getStep.js');
 
 // insert one or more steps at a given index in the sequencer
@@ -68953,8 +68963,6 @@ function InsertStep(ref, image, index, name, o) {
     ref.modules[name].expandSteps = function expandSteps(stepsArray) {
       for (var i in stepsArray) {
         let step = stepsArray[i];
-        console.log(step['name'])
-        console.log(step['options'])
         ref.insertSteps(index + Number.parseInt(i), step['name'], step['options']);
         // ref.addSteps(step['name'], step['options']);
       }
@@ -68979,7 +68987,7 @@ function InsertStep(ref, image, index, name, o) {
 }
 module.exports = InsertStep;
 
-},{"./util/getStep.js":305}],186:[function(require,module,exports){
+},{"./util/getStep.js":306}],186:[function(require,module,exports){
 /*
 * Core modules and their info files
 */
@@ -69101,28 +69109,29 @@ function Run(ref, json_q, callback, ind, progressObj) {
       var image = drawarray[pos].image;
       var i = drawarray[pos].i;
       var input = ref.images[image].steps[i - 1].output;
+      var step = ref.images[image].steps[i];
 
-      ref.images[image].steps[i].getStep = function getStep(offset) {
+      step.getStep = function getStep(offset) {
         if (i + offset >= ref.images[image].steps.length) return { options: { name: undefined } };
         else return ref.images[image].steps.slice(i + offset)[0];
       };
-      ref.images[image].steps[i].getIndex = function getIndex() {
+      step.getIndex = function getIndex() {
         return i;
       }
 
       for (var util in getStepUtils) {
         if (getStepUtils.hasOwnProperty(util)) {
-          ref.images[image].steps[i][util] = getStepUtils[util];
+          step[util] = getStepUtils[util];
         }
       }
 
       // Tell UI that a step is being drawn.
-      ref.images[image].steps[i].UI.onDraw(ref.images[image].steps[i].options.step);
+      step.UI.onDraw(step.options.step);
 
       // provides a set of standard tools for each step
       var inputForNextStep = require('./RunToolkit')(ref.copy(input));
 
-      ref.images[image].steps[i].draw(
+      step.draw(
         inputForNextStep,
         function onEachStep() {
 
@@ -69174,7 +69183,7 @@ function Run(ref, json_q, callback, ind, progressObj) {
 }
 module.exports = Run;
 
-},{"./RunToolkit":189,"./util/getStep.js":305}],189:[function(require,module,exports){
+},{"./RunToolkit":189,"./util/getStep.js":306}],189:[function(require,module,exports){
 const getPixels = require('get-pixels');
 const pixelManipulation = require('./modules/_nomodule/PixelManipulation');
 const lodash = require('lodash');
@@ -69321,65 +69330,63 @@ module.exports={
 /*
 * Average all pixel colors
 */
-module.exports = function Average(options, UI){
+module.exports = function Average(options, UI) {
 
-    options.blur = options.blur || 2
     var output;
 
     options.step.metadata = options.step.metadata || {};
 
-    function draw(input,callback,progressObj){
+    function draw(input, callback, progressObj) {
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
         var step = this;
 
-        function changePixel(r, g, b, a){
-            return [r,g,b,a]
-        }
-
         // do the averaging
-        function extraManipulation(pixels){
-            var sum = [0,0,0,0];
-            for (var i = 0; i < pixels.data.length; i += 4) {
-              sum[0] += pixels.data[i + 0];
-              sum[1] += pixels.data[i + 1];
-              sum[2] += pixels.data[i + 2];
-              sum[3] += pixels.data[i + 3];
+        function extraManipulation(pixels) {
+            var i = 0, sum = [0, 0, 0, 0];
+            while (i < pixels.data.length) {
+                sum[0] += pixels.data[i++];
+                sum[1] += pixels.data[i++];
+                sum[2] += pixels.data[i++];
+                sum[3] += pixels.data[i++];
             }
 
-            sum[0] = parseInt(sum[0] / (pixels.data.length / 4));
-            sum[1] = parseInt(sum[1] / (pixels.data.length / 4));
-            sum[2] = parseInt(sum[2] / (pixels.data.length / 4));
-            sum[3] = parseInt(sum[3] / (pixels.data.length / 4));
+            let divisor = pixels.data.length / 4;
 
-            for (var i = 0; i < pixels.data.length; i += 4) {
-              pixels.data[i + 0] = sum[0];
-              pixels.data[i + 1] = sum[1];
-              pixels.data[i + 2] = sum[2];
-              pixels.data[i + 3] = sum[3];
+            sum[0] = Math.floor(sum[0] / divisor);
+            sum[1] = Math.floor(sum[1] / divisor);
+            sum[2] = Math.floor(sum[2] / divisor);
+            sum[3] = Math.floor(sum[3] / divisor);
+
+            i = 0
+            while (i < pixels.data.length) {
+                pixels.data[i++] = sum[0];
+                pixels.data[i++] = sum[1];
+                pixels.data[i++] = sum[2];
+                pixels.data[i++] = sum[3];
             }
+
             // report back and store average in metadata:
             options.step.metadata.averages = sum;
-            console.log("average: ", sum);
+
             // TODO: refactor into a new "display()" method as per https://github.com/publiclab/image-sequencer/issues/242
             if (options.step.inBrowser && options.step.ui) $(options.step.ui).find('.details').append("<p><b>Averages</b> (r, g, b, a): " + sum.join(', ') + "</p>");
             return pixels;
         }
 
-        function output(image, datauri, mimetype){
+        function output(image, datauri, mimetype) {
 
             // This output is accessible by Image Sequencer
             step.output = {
-              src: datauri,
-              format: mimetype
+                src: datauri,
+                format: mimetype
             };
         }
 
         return require('../_nomodule/PixelManipulation.js')(input, {
             output: output,
-            changePixel: changePixel,
             extraManipulation: extraManipulation,
             format: input.format,
             image: options.image,
@@ -69389,7 +69396,7 @@ module.exports = function Average(options, UI){
     }
     return {
         options: options,
-        draw:  draw,
+        draw: draw,
         output: output,
         UI: UI
     }
@@ -69430,23 +69437,23 @@ module.exports = function Dynamic(options, UI, util) {
         var getPixels = require('get-pixels');
 
         // convert offset as string to int
-        if(typeof options.offset === "string") options.offset = parseInt(options.offset);
+        if (typeof options.offset === "string") options.offset = parseInt(options.offset);
 
         // save first image's pixels
         var priorStep = this.getStep(options.offset);
 
         if (priorStep.output === undefined) {
             this.output = input;
-            UI.notify('Offset Unavailable','offset-notification');
+            UI.notify('Offset Unavailable', 'offset-notification');
             callback();
-        } 
+        }
 
         getPixels(priorStep.output.src, function(err, pixels) {
             options.firstImagePixels = pixels;
 
             function changePixel(r2, g2, b2, a2, x, y) {
                 // blend!
-                var p = options.firstImagePixels;
+                let p = options.firstImagePixels;
                 return options.func(
                     r2, g2, b2, a2,
                     p.get(x, y, 0),
@@ -69483,7 +69490,7 @@ module.exports = function Dynamic(options, UI, util) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":304,"./info.json":200,"get-pixels":30}],199:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":305,"./info.json":200,"get-pixels":30}],199:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":198,"./info.json":200,"dup":193}],200:[function(require,module,exports){
 module.exports={
@@ -69506,7 +69513,7 @@ module.exports={
 
 },{}],201:[function(require,module,exports){
 module.exports = exports = function(pixels, blur) {
-    let kernel = kernelGenerator(blur, 1), oldpix = pixels;
+    let kernel = kernelGenerator(blur, 1), oldpix = require('lodash').cloneDeep(pixels);
     kernel = flipKernel(kernel);
 
     for (let i = 0; i < pixels.shape[0]; i++) {
@@ -69589,7 +69596,7 @@ module.exports = exports = function(pixels, blur) {
         return result;
     }
 }
-},{}],202:[function(require,module,exports){
+},{"lodash":76}],202:[function(require,module,exports){
 /*
 * Blur an Image
 */
@@ -69606,13 +69613,9 @@ module.exports = function Blur(options, UI) {
 
         var step = this;
 
-        function changePixel(r, g, b, a) {
-            return [r, g, b, a]
-        }
-
         function extraManipulation(pixels) {
-            pixels = require('./Blur')(pixels, options.blur)
-            return pixels
+            pixels = require('./Blur')(pixels, options.blur);
+            return pixels;
         }
 
         function output(image, datauri, mimetype) {
@@ -69624,7 +69627,6 @@ module.exports = function Blur(options, UI) {
 
         return require('../_nomodule/PixelManipulation.js')(input, {
             output: output,
-            changePixel: changePixel,
             extraManipulation: extraManipulation,
             format: input.format,
             image: options.image,
@@ -69640,7 +69642,7 @@ module.exports = function Blur(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":304,"./Blur":201,"./info.json":204}],203:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":305,"./Blur":201,"./info.json":204}],203:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":202,"./info.json":204,"dup":193}],204:[function(require,module,exports){
 module.exports={
@@ -69663,17 +69665,17 @@ module.exports={
 /*
 * Changes the Image Brightness
 */
-module.exports = function Brightness(options,UI){
+module.exports = function Brightness(options, UI) {
 
     var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
     var output;
 
 
 
-    function draw(input,callback,progressObj){
+    function draw(input, callback, progressObj) {
 
         options.brightness = parseInt(options.brightness) || defaults.brightness;
-        var val = (options.brightness)/100.0;
+
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
@@ -69683,20 +69685,20 @@ module.exports = function Brightness(options,UI){
         For eg. progressObj = new SomeProgressModule()
         */
 
-        var step = this;
+        var step = this, val = (options.brightness) / 100.0;;
 
-        function changePixel(r, g, b, a){
+        function changePixel(r, g, b, a) {
 
-            r = Math.min(val*r, 255)
-            g = Math.min(val*g, 255)
-            b = Math.min(val*b, 255)
-            return [r, g, b, a]
+            r = Math.min(val * r, 255);
+            g = Math.min(val * g, 255);
+            b = Math.min(val * b, 255);
+            return [r, g, b, a];
         }
 
-        function output(image,datauri,mimetype){
+        function output(image, datauri, mimetype) {
 
             // This output is accessible by Image Sequencer
-            step.output = {src:datauri,format:mimetype};
+            step.output = { src: datauri, format: mimetype };
 
         }
 
@@ -69712,13 +69714,13 @@ module.exports = function Brightness(options,UI){
     }
     return {
         options: options,
-        draw:  draw,
+        draw: draw,
         output: output,
         UI: UI
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":304,"./info.json":207}],206:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":305,"./info.json":207}],206:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":205,"./info.json":207,"dup":193}],207:[function(require,module,exports){
 module.exports={
@@ -69757,9 +69759,9 @@ module.exports = function Channel(options, UI) {
     var step = this;
 
     function changePixel(r, g, b, a) {
-      if (options.channel == "red") return [r, 0, 0, a];
-      if (options.channel == "green") return [0, g, 0, a];
-      if (options.channel == "blue") return [0, 0, b, a];
+      if (options.channel === "red") return [r, 0, 0, a];
+      if (options.channel === "green") return [0, g, 0, a];
+      if (options.channel === "blue") return [0, 0, b, a];
     }
 
     function output(image, datauri, mimetype) {
@@ -69789,7 +69791,7 @@ module.exports = function Channel(options, UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":304,"./info.json":210}],209:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":305,"./info.json":210}],209:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":208,"./info.json":210,"dup":193}],210:[function(require,module,exports){
 module.exports={
@@ -69807,25 +69809,22 @@ module.exports={
 }
 
 },{}],211:[function(require,module,exports){
-module.exports = function NdviColormapfunction(options, UI) {
+module.exports = require('../../util/createMetaModule.js')(
+  function mapFunction(options) {
 
-    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+    // return steps with options:
+    return [
+      { 'name': 'gradient', 'options': {} },
+      { 'name': 'colormap', 'options': { colormap: options.colormap } },
+      { 'name': 'crop', 'options': { 'y': 0, 'h': options.h } },
+      { 'name': 'overlay', 'options': { 'x': options.x, 'y': options.y, 'offset': -4 } }
+    ];
+  }, {
+    infoJson: require('./info.json')
+  }
+)[0];
 
-    options.x = options.x || defaults.x;
-    options.y = options.y || defaults.y;
-    options.colormap = options.colormap || defaults.colormap;
-    options.h = options.h || defaults.h;
-    this.expandSteps([
-        { 'name': 'gradient', 'options': {} },
-        { 'name': 'colormap', 'options': { colormap: options.colormap } },
-        { 'name': 'crop', 'options': { 'y': 0, 'h': options.h } },
-        { 'name': 'overlay', 'options': { 'x': options.x, 'y': options.y, 'offset': -4 } }
-    ]);
-    return {
-        isMeta: true
-    }
-}
-},{"./../../util/getDefaults.js":304,"./info.json":213}],212:[function(require,module,exports){
+},{"../../util/createMetaModule.js":304,"./info.json":213}],212:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":211,"./info.json":213,"dup":193}],213:[function(require,module,exports){
 module.exports={
@@ -69859,8 +69858,7 @@ module.exports={
             "default": 10
         }
     },
-    "length": 4,
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 },{}],214:[function(require,module,exports){
 /*
@@ -70061,12 +70059,12 @@ var colormaps = {
  
 }
 },{}],215:[function(require,module,exports){
-module.exports = function Colormap(options,UI) {
+module.exports = function Colormap(options, UI) {
 
   var output;
 
   // This function is called on every draw.
-  function draw(input,callback,progressObj) {
+  function draw(input, callback, progressObj) {
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;
@@ -70079,7 +70077,7 @@ module.exports = function Colormap(options,UI) {
       return [res[0], res[1], res[2], 255];
     }
 
-    function output(image,datauri,mimetype){
+    function output(image, datauri, mimetype) {
 
       // This output is accessible by Image Sequencer
       step.output = { src: datauri, format: mimetype };
@@ -70123,43 +70121,43 @@ module.exports={
 
 },{}],218:[function(require,module,exports){
 var _ = require('lodash');
-module.exports = exports = function(pixels , contrast){
-	let oldpix = _.cloneDeep(pixels);
+
+module.exports = exports = function(pixels, contrast) {
+    let oldpix = _.cloneDeep(pixels);
     contrast = Number(contrast)
-	if (contrast < -100) contrast = -100;
+    if (contrast < -100) contrast = -100;
     if (contrast > 100) contrast = 100;
     contrast = (100.0 + contrast) / 100.0;
     contrast *= contrast;
-        
-    for (let i = 0; i < oldpix.shape[0]; i++) {
-        for (let j = 0; j < oldpix.shape[1]; j++) {
-        	var r = oldpix.get(i,j,0)/255.0;
-        	r -= 0.5;
+
+    for (let i = 0; i < pixels.shape[0]; i++) {
+        for (let j = 0; j < pixels.shape[1]; j++) {
+            var r = oldpix.get(i, j, 0) / 255.0;
+            r -= 0.5;
             r *= contrast;
-        	r += 0.5;
+            r += 0.5;
             r *= 255;
             if (r < 0) r = 0;
             if (r > 255) r = 255;
 
 
-            var g = oldpix.get(i,j,1)/255.0;
+            var g = oldpix.get(i, j, 1) / 255.0;
             g -= 0.5;
             g *= contrast;
             g += 0.5;
             g *= 255;
             if (g < 0) g = 0;
             if (g > 255) g = 255;
-        
 
 
-            var b = oldpix.get(i,j,2)/255.0;
+            var b = oldpix.get(i, j, 2) / 255.0;
             b -= 0.5;
             b *= contrast;
             b += 0.5;
             b *= 255;
             if (b < 0) b = 0;
             if (b > 255) b = 255;
-            
+
 
             pixels.set(i, j, 0, r);
             pixels.set(i, j, 1, g);
@@ -70187,10 +70185,6 @@ module.exports = function Contrast(options, UI) {
 
         var step = this;
 
-        function changePixel(r, g, b, a) {
-            return [r, g, b, a]
-        }
-
         function extraManipulation(pixels) {
             pixels = require('./Contrast')(pixels, options.contrast)
             return pixels
@@ -70205,7 +70199,6 @@ module.exports = function Contrast(options, UI) {
 
         return require('../_nomodule/PixelManipulation.js')(input, {
             output: output,
-            changePixel: changePixel,
             extraManipulation: extraManipulation,
             format: input.format,
             image: options.image,
@@ -70221,7 +70214,7 @@ module.exports = function Contrast(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":304,"./Contrast":218,"./info.json":221}],220:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":305,"./Contrast":218,"./info.json":221}],220:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":219,"./info.json":221,"dup":193}],221:[function(require,module,exports){
 module.exports={
@@ -70242,11 +70235,11 @@ module.exports={
 
 },{}],222:[function(require,module,exports){
 var _ = require('lodash');
-module.exports = exports = function(pixels, constantFactor, kernelValues){
-	let kernel = kernelGenerator(constantFactor, kernelValues), oldpix = _.cloneDeep(pixels);
-	kernel = flipKernel(kernel);
+module.exports = exports = function(pixels, constantFactor, kernelValues) {
+    let kernel = kernelGenerator(constantFactor, kernelValues), oldpix = _.cloneDeep(pixels);
+    kernel = flipKernel(kernel);
 
-	for (let i = 0; i < pixels.shape[0]; i++) {
+    for (let i = 0; i < pixels.shape[0]; i++) {
         for (let j = 0; j < pixels.shape[1]; j++) {
             let neighboutPos = getNeighbouringPixelPositions([i, j]);
             let acc = [0.0, 0.0, 0.0, 0.0];
@@ -70258,9 +70251,9 @@ module.exports = exports = function(pixels, constantFactor, kernelValues){
                     acc[3] += (oldpix.get(neighboutPos[a][b][0], neighboutPos[a][b][1], 3) * kernel[a][b]);
                 }
             }
-            acc[0] = acc[0]%255;
-            acc[1] = acc[1]%255;
-            acc[2] = acc[2]%255;
+            acc[0] = Math.min(acc[0], 255);
+            acc[1] = Math.min(acc[1], 255);
+            acc[2] = Math.min(acc[2], 255);
             pixels.set(i, j, 0, acc[0]);
             pixels.set(i, j, 1, acc[1]);
             pixels.set(i, j, 2, acc[2]);
@@ -70269,25 +70262,25 @@ module.exports = exports = function(pixels, constantFactor, kernelValues){
     return pixels;
 
 
-	function kernelGenerator(constantFactor, kernelValues){
-		kernelValues = kernelValues.split(" ");
-        for(i = 0 ; i < 9; i++){
+    function kernelGenerator(constantFactor, kernelValues) {
+        kernelValues = kernelValues.split(" ");
+        for (i = 0; i < 9; i++) {
             kernelValues[i] = Number(kernelValues[i]) * constantFactor;
         }
         let k = 0;
-		let arr = [];
-		for(i = 0; i < 3; i++){
-			let columns = [];
-			for(j = 0; j < 3; j++){
-				columns.push(kernelValues[k]);
-				k += 1;
-			}
-			arr.push(columns);
-		}
-		return arr;
-	}
+        let arr = [];
+        for (i = 0; i < 3; i++) {
+            let columns = [];
+            for (j = 0; j < 3; j++) {
+                columns.push(kernelValues[k]);
+                k += 1;
+            }
+            arr.push(columns);
+        }
+        return arr;
+    }
 
-	function getNeighbouringPixelPositions(pixelPosition) {
+    function getNeighbouringPixelPositions(pixelPosition) {
         let x = pixelPosition[0], y = pixelPosition[1], result = [];
 
         for (let i = -1; i <= 1; i++) {
@@ -70300,7 +70293,7 @@ module.exports = exports = function(pixels, constantFactor, kernelValues){
         return result;
     }
 
-	function flipKernel(kernel) {
+    function flipKernel(kernel) {
         let result = [];
         for (let i = kernel.length - 1; i >= 0; i--) {
             let arr = [];
@@ -70328,13 +70321,9 @@ module.exports = function Convolution(options, UI) {
 
         var step = this;
 
-        function changePixel(r, g, b, a) {
-            return [r, g, b, a]
-        }
-
         function extraManipulation(pixels) {
-            pixels = require('./Convolution')(pixels, options.constantFactor, options.kernelValues)
-            return pixels
+            pixels = require('./Convolution')(pixels, options.constantFactor, options.kernelValues);
+            return pixels;
         }
 
         function output(image, datauri, mimetype) {
@@ -70345,7 +70334,6 @@ module.exports = function Convolution(options, UI) {
 
         return require('../_nomodule/PixelManipulation.js')(input, {
             output: output,
-            changePixel: changePixel,
             extraManipulation: extraManipulation,
             format: input.format,
             image: options.image,
@@ -70361,7 +70349,7 @@ module.exports = function Convolution(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":304,"./Convolution":222,"./info.json":225}],224:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":305,"./Convolution":222,"./info.json":225}],224:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":223,"./info.json":225,"dup":193}],225:[function(require,module,exports){
 module.exports={
@@ -70388,17 +70376,17 @@ module.exports={
 },{}],226:[function(require,module,exports){
 (function (Buffer){
 module.exports = function Crop(input,options,callback) {
-
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
   var getPixels = require('get-pixels'),
       savePixels = require('save-pixels');
 
-  options.x = parseInt(options.x) || 0;
-  options.y = parseInt(options.y) || 0;
+  options.x = parseInt(options.x) || defaults.x;
+  options.y = parseInt(options.y) || defaults.y;
 
   getPixels(input.src,function(err,pixels){
     options.w = parseInt(options.w) || Math.floor(pixels.shape[0]);
     options.h = parseInt(options.h) || Math.floor(pixels.shape[1]);
-    options.backgroundColor = options.backgroundColor || '255 255 255 255';
+    options.backgroundColor = options.backgroundColor || defaults.backgroundColor;
     var ox = options.x;
     var oy = options.y;
     var w = options.w;
@@ -70442,7 +70430,7 @@ module.exports = function Crop(input,options,callback) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":48,"get-pixels":30,"save-pixels":168}],227:[function(require,module,exports){
+},{"./../../util/getDefaults.js":305,"./info.json":230,"buffer":48,"get-pixels":30,"save-pixels":168}],227:[function(require,module,exports){
 /*
  * Image Cropping module
  * Usage:
@@ -70739,78 +70727,85 @@ module.exports={
 
 },{}],234:[function(require,module,exports){
 module.exports = function Dither(pixels, type) {
-  type = type || "none";
-      var bayerThresholdMap = [
-          [  15, 135,  45, 165 ],
-          [ 195,  75, 225, 105 ],
-          [  60, 180,  30, 150 ],
-          [ 240, 120, 210,  90 ]
-      ];
-      
-      var lumR = [];
-      var lumG = [];
-      var lumB = [];
-      for (var i=0; i<256; i++) {
-          lumR[i] = i*0.299;
-          lumG[i] = i*0.587;
-          lumB[i] = i*0.114;
-      }
-      var threshold = 129;
-      var imageDataLength = pixels.data.length;   //imageData.data.length;
-    
-      // Greyscale luminance (sets r pixels to luminance of rgb)
-      for (var i = 0; i <= imageDataLength; i += 4) {
-        pixels.data[i] = Math.floor(lumR[pixels.data[i]] + lumG[pixels.data[i+1]] + lumB[pixels.data[i+2]]);
-      }
-    
-      var w = pixels.shape[0];
-      var newPixel, err;
-    
-      for (var currentPixel = 0; currentPixel <= imageDataLength; currentPixel+=4) {
-    
-        if (type === "none") {
-          // No dithering
-          pixels.data[currentPixel] = pixels.data[currentPixel] < threshold ? 0 : 255;
-        } else if (type === "bayer") {
-          // 4x4 Bayer ordered dithering algorithm
-          var x = currentPixel/4 % w;
-          var y = Math.floor(currentPixel/4 / w);
-          var map = Math.floor( (pixels.data[currentPixel] + bayerThresholdMap[x%4][y%4]) / 2 );
-          pixels.data[currentPixel] = (map < threshold) ? 0 : 255;
-        } else if (type === "floydsteinberg") {
-          // Floyd–Steinberg dithering algorithm
-          newPixel = pixels.data[currentPixel] < 129 ? 0 : 255;
-          err = Math.floor((pixels.data[currentPixel] - newPixel) / 16);
-          pixels.data[currentPixel] = newPixel;
-    
-          pixels.data[currentPixel       + 4 ] += err*7;
-          pixels.data[currentPixel + 4*w - 4 ] += err*3;
-          pixels.data[currentPixel + 4*w     ] += err*5;
-          pixels.data[currentPixel + 4*w + 4 ] += err*1;
-        } else {
-          // Bill Atkinson's dithering algorithm
-          newPixel = pixels.data[currentPixel] < threshold ? 0 : 255;
-          err = Math.floor((pixels.data[currentPixel] - newPixel) / 8);
-          pixels.data[currentPixel] = newPixel;
-    
-          pixels.data[currentPixel       + 4 ] += err;
-          pixels.data[currentPixel       + 8 ] += err;
-          pixels.data[currentPixel + 4*w - 4 ] += err;
-          pixels.data[currentPixel + 4*w     ] += err;
-          pixels.data[currentPixel + 4*w + 4 ] += err;
-          pixels.data[currentPixel + 8*w     ] += err;
-        }
-    
-        // Set g and b pixels equal to r
-        pixels.data[currentPixel + 1] = pixels.data[currentPixel + 2] = pixels.data[currentPixel];
-      }
-      return pixels;
-  
+  type = type;
+  let bayerThresholdMap = [
+    [15, 135, 45, 165],
+    [195, 75, 225, 105],
+    [60, 180, 30, 150],
+    [240, 120, 210, 90]
+  ];
+
+  let lumR = [];
+  let lumG = [];
+  let lumB = [];
+  for (let i = 0; i < 256; i++) {
+    lumR[i] = i * 0.299;
+    lumG[i] = i * 0.587;
+    lumB[i] = i * 0.114;
   }
-  
+  let threshold = 129;
+  let imageDataLength = pixels.data.length;   //imageData.data.length;
+
+  // Greyscale luminance (sets r pixels to luminance of rgb)
+  for (let i = 0; i <= imageDataLength; i++) {
+    pixels.data[i] = Math.floor(lumR[pixels.data[i++]] + lumG[pixels.data[i++]] + lumB[pixels.data[i++]]);
+  }
+
+  let w = pixels.shape[0];
+  let newPixel, err;
+
+  for (let currentPixel = 0; currentPixel <= imageDataLength; currentPixel += 4) {
+
+    if (type === "none") {
+      // No dithering
+      pixels.data[currentPixel] = pixels.data[currentPixel] < threshold ? 0 : 255;
+
+    } else if (type === "bayer") {
+
+      // 4x4 Bayer ordered dithering algorithm
+      let x = currentPixel / 4 % w;
+      let y = Math.floor(currentPixel / 4 / w);
+      let map = Math.floor((pixels.data[currentPixel] + bayerThresholdMap[x % 4][y % 4]) / 2);
+      pixels.data[currentPixel] = (map < threshold) ? 0 : 255;
+
+    } else if (type === "floydsteinberg") {
+
+      // Floyd–Steinberg dithering algorithm
+      newPixel = pixels.data[currentPixel] < 129 ? 0 : 255;
+      err = Math.floor((pixels.data[currentPixel] - newPixel) / 16);
+      pixels.data[currentPixel] = newPixel;
+
+      pixels.data[currentPixel + 4] += err * 7;
+      pixels.data[currentPixel + 4 * w - 4] += err * 3;
+      pixels.data[currentPixel + 4 * w] += err * 5;
+      pixels.data[currentPixel + 4 * w + 4] += err * 1;
+
+    } else {
+
+      // Bill Atkinson's dithering algorithm
+      newPixel = pixels.data[currentPixel] < threshold ? 0 : 255;
+      err = Math.floor((pixels.data[currentPixel] - newPixel) / 8);
+      pixels.data[currentPixel] = newPixel;
+
+      pixels.data[currentPixel + 4] += err;
+      pixels.data[currentPixel + 8] += err;
+      pixels.data[currentPixel + 4 * w - 4] += err;
+      pixels.data[currentPixel + 4 * w] += err;
+      pixels.data[currentPixel + 4 * w + 4] += err;
+      pixels.data[currentPixel + 8 * w] += err;
+
+    }
+
+    // Set g and b pixels equal to r
+    pixels.data[currentPixel + 1] = pixels.data[currentPixel + 2] = pixels.data[currentPixel];
+  }
+  return pixels;
+
+}
+
 },{}],235:[function(require,module,exports){
 module.exports = function Dither(options, UI){
-
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
     var output;
 
     function draw(input,callback,progressObj){
@@ -70819,6 +70814,7 @@ module.exports = function Dither(options, UI){
         progressObj.overrideFlag = true;
 
         var step = this;
+        options.dither = options.dither || defaults.dither;
 
         function extraManipulation(pixels) {
             pixels = require('./Dither')(pixels, options.dither)
@@ -70846,7 +70842,7 @@ module.exports = function Dither(options, UI){
         UI: UI
     }
 }
-},{"../_nomodule/PixelManipulation.js":298,"./Dither":234}],236:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":305,"./Dither":234,"./info.json":237}],236:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":235,"./info.json":237,"dup":193}],237:[function(require,module,exports){
 module.exports={
@@ -70864,16 +70860,18 @@ module.exports={
   
 },{}],238:[function(require,module,exports){
 module.exports = exports = function(pixels, options){
-	options.startingX = options.startingX || 0;
-  options.startingY = options.startingY || 0;
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+
+	options.startingX = options.startingX || defaults.startingX;
+  options.startingY = options.startingY || defaults.startingY;
 	var ox = Number(options.startingX),
 	  oy = Number(options.startingY),
 	  iw = pixels.shape[0],
 	  ih = pixels.shape[1],
-    thickness = Number(options.thickness) || 1,
+    thickness = Number(options.thickness) || defaults.thickness,
 	  ex =  options.endX = Number(options.endX) - thickness || iw - 1,
 	  ey = options.endY = Number(options.endY) -thickness || ih - 1,
-    color = options.color || "0 0 0 255";
+    color = options.color || defaults.color;
     color = color.split(" ");
 
   var drawSide = function(startX, startY, endX, endY){
@@ -70893,7 +70891,7 @@ module.exports = exports = function(pixels, options){
   drawSide(ox, ey, ex, ey); // Bottom
   return pixels;
 }
-},{}],239:[function(require,module,exports){
+},{"./../../util/getDefaults.js":305,"./info.json":241}],239:[function(require,module,exports){
 module.exports = function DrawRectangle(options, UI) {
 
     
@@ -71352,7 +71350,7 @@ module.exports = function edgeDetect(options, UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":304,"./EdgeUtils":245,"./info.json":248,"ndarray-gaussian-filter":81}],247:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":305,"./EdgeUtils":245,"./info.json":248,"ndarray-gaussian-filter":81}],247:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":246,"./info.json":248,"dup":193}],248:[function(require,module,exports){
 module.exports={
@@ -71525,32 +71523,33 @@ module.exports={
 }
 
 },{}],252:[function(require,module,exports){
-module.exports = function Gamma(options,UI){
+module.exports = function Gamma(options, UI) {
 
     var output;
 
-    function draw(input,callback,progressObj){
+    function draw(input, callback, progressObj) {
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
         var step = this;
 
-        var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+        var defaults = require('./../../util/getDefaults.js')(require('./info.json')),
+            adjustment = options.adjustment || defaults.adjustment;
+        var val = adjustment / defaults.adjustment;
 
-        function changePixel(r, g, b, a){
-            var val = options.adjustment || defaults.adjustment;
+        function changePixel(r, g, b, a) {
 
             r = Math.pow(r / 255, val) * 255;
             g = Math.pow(g / 255, val) * 255;
             b = Math.pow(b / 255, val) * 255;
 
-            return [r , g, b, a];
+            return [r, g, b, a];
         }
 
-        function output(image,datauri,mimetype){
+        function output(image, datauri, mimetype) {
 
-            step.output = {src:datauri,format:mimetype};
+            step.output = { src: datauri, format: mimetype };
 
         }
 
@@ -71566,13 +71565,13 @@ module.exports = function Gamma(options,UI){
     }
     return {
         options: options,
-        draw:  draw,
+        draw: draw,
         output: output,
         UI: UI
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":304,"./info.json":254}],253:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":305,"./info.json":254}],253:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":252,"./info.json":254,"dup":193}],254:[function(require,module,exports){
 module.exports={
@@ -71607,9 +71606,8 @@ module.exports = function Invert(options, UI) {
                 console.log("Bad Image path");
                 return;
             }
-            var width = 0;
 
-            for (var i = 0; i < pixels.shape[0]; i++) width++;
+            var width = pixels.shape[0];
 
             for (var i = 0; i < pixels.shape[0]; i++) {
                 for (var j = 0; j < pixels.shape[1]; j++) {
@@ -71759,7 +71757,7 @@ module.exports = function Channel(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":304,"./info.json":260}],259:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":305,"./info.json":260}],259:[function(require,module,exports){
 module.exports = [
     require('./Module.js'),
     require('./info.json')
@@ -71796,7 +71794,7 @@ module.exports = function ImportImageModule(options, UI) {
   options.imageUrl = options.url || defaults.url;
 
   var output,
-      imgObj = new Image();
+    imgObj = new Image();
 
   // we should get UI to return the image thumbnail so we can attach our own UI extensions
 
@@ -71807,31 +71805,36 @@ module.exports = function ImportImageModule(options, UI) {
   }
 
   // This function is caled everytime the step has to be redrawn
-  function draw(input,callback) {
+  function draw(input, callback) {
 
     var step = this;
 
-    step.metadata = step.metadata || {};
-    // TODO: develop a standard API method for saving each input state,
-    // for reference in future steps (for blending, for example)
-    step.metadata.input = input;
+    if (!options.inBrowser) { // This module is only for browser
+      this.output = input;
+      callback();
+    } else {
+      step.metadata = step.metadata || {};
+      // TODO: develop a standard API method for saving each input state,
+      // for reference in future steps (for blending, for example)
+      step.metadata.input = input;
 
-    function onLoad() {
+      function onLoad() {
 
-      // This output is accessible to Image Sequencer
-      step.output = {
-        src: imgObj.src,
-        format: options.format
+        // This output is accessible to Image Sequencer
+        step.output = {
+          src: imgObj.src,
+          format: options.format
+        }
+
+        // Tell Image Sequencer that step has been drawn
+        callback();
       }
 
-      // Tell Image Sequencer that step has been drawn
-      callback();
+      options.format = require('../../util/GetFormat')(options.imageUrl);
+      imgObj.onload = onLoad;
+      imgObj.src = options.imageUrl;
+
     }
-
-    options.format = require('../../util/GetFormat')(options.imageUrl);
-    imgObj.onload = onLoad;
-    imgObj.src = options.imageUrl;
-
   }
 
   return {
@@ -71842,7 +71845,7 @@ module.exports = function ImportImageModule(options, UI) {
   }
 }
 
-},{"../../util/GetFormat":302,"./../../util/getDefaults.js":304,"./Ui.js":262,"./info.json":264}],262:[function(require,module,exports){
+},{"../../util/GetFormat":302,"./../../util/getDefaults.js":305,"./Ui.js":262,"./info.json":264}],262:[function(require,module,exports){
 // hide on save
 module.exports = function ImportImageModuleUi(step, ui) {
 
@@ -71975,7 +71978,7 @@ module.exports = function Ndvi(options, UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":304,"./Ui.js":266,"./info.json":268}],266:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":305,"./Ui.js":266,"./info.json":268}],266:[function(require,module,exports){
 // hide on save
 module.exports = function CropModuleUi(step, ui) {
 
@@ -72032,21 +72035,25 @@ module.exports={
 /*
  * Sample Meta Module for demonstration purpose only
  */
-module.exports = function NdviColormapfunction() {
-    this.expandSteps([{ 'name': 'ndvi', 'options': {} }, { 'name': 'colormap', options: {} }]);
-    return {
-        isMeta: true
+module.exports = require('../../util/createMetaModule.js')(
+    function mapFunction(options) {
+
+        return [
+            { 'name': 'ndvi', 'options': {} },
+            { 'name': 'colormap', 'options': { colormap: options.colormap } },
+        ];
+    }, {
+        infoJson: require('./info.json')
     }
-}
-},{}],270:[function(require,module,exports){
+)[0];
+},{"../../util/createMetaModule.js":304,"./info.json":271}],270:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":269,"./info.json":271,"dup":193}],271:[function(require,module,exports){
 module.exports={
     "name": "NDVI-Colormap",
     "description": "Sequentially Applies NDVI and Colormap steps",
     "inputs": {},
-    "length": 2,
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 },{}],272:[function(require,module,exports){
 module.exports = function Dynamic(options, UI, util) {
@@ -72133,7 +72140,7 @@ module.exports = function Dynamic(options, UI, util) {
     }
 }
 
-},{"../../util/ParseInputCoordinates":303,"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":304,"./info.json":274,"get-pixels":30}],273:[function(require,module,exports){
+},{"../../util/ParseInputCoordinates":303,"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":305,"./info.json":274,"get-pixels":30}],273:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":272,"./info.json":274,"dup":193}],274:[function(require,module,exports){
 module.exports={
@@ -72170,17 +72177,11 @@ module.exports = function PaintBucket(options, UI) {
 
         var step = this;
 
-
-        function changePixel(r, g, b, a) {
-            return [r, g, b, a]
-        }
-
         function extraManipulation(pixels) {
-            
 
             pixels = require('./PaintBucket')(pixels, options)
             return pixels
-            
+
         }
 
         function output(image, datauri, mimetype) {
@@ -72190,7 +72191,6 @@ module.exports = function PaintBucket(options, UI) {
 
         return require('../_nomodule/PixelManipulation.js')(input, {
             output: output,
-            changePixel: changePixel,
             extraManipulation: extraManipulation,
             format: input.format,
             image: options.image,
@@ -72208,72 +72208,74 @@ module.exports = function PaintBucket(options, UI) {
 }
 
 },{"../_nomodule/PixelManipulation.js":298,"./PaintBucket":276}],276:[function(require,module,exports){
-module.exports = exports = function(pixels, options){
-  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
-      var fillColor = options.fillColor || defaults.fillColor,
-          x = parseInt(options.startingX) || defaults.startingX,
-          y = parseInt(options.startingY) || defaults.startingY,
-          height = pixels.shape[1],
-          width = pixels.shape[0],
-          r = pixels.get(x, y, 0),
-          g = pixels.get(x,y,1),
-          b = pixels.get(x,y,2),
-          a = pixels.get(x, y, 3),
-          queuex = [x],
-          queuey = [y],
-          curry, currx,
-          north,
-          south,
-          n,
-          tolerance = parseInt(options.tolerance) || defaults.tolerance,
-          maxFactor = (1 + tolerance/100),
-          minFactor = (1 - tolerance/100);
+module.exports = exports = function(pixels, options) {
 
-      fillColor = fillColor.split(" ");
-      function isSimilar(currx, curry){
-        return (pixels.get(currx, curry, 0) >= r*minFactor && pixels.get(currx, curry, 0) <= r*maxFactor &&
-                pixels.get(currx, curry, 1) >= g*minFactor && pixels.get(currx, curry, 1) <= g*maxFactor &&
-                pixels.get(currx, curry, 2) >= b*minFactor && pixels.get(currx, curry, 2) <= b*maxFactor &&
-                pixels.get(currx, curry, 3) >= a*minFactor && pixels.get(currx, curry, 3) <= a*maxFactor);
-      }
 
-      while (queuey.length) {
-        currx = queuex.pop()
-        curry = queuey.pop()
-        
+  let defaults = require('./../../util/getDefaults.js')(require('./info.json'));
 
-        if (isSimilar(currx, curry)) {
-          north = south = curry
+  let fillColor = options.fillColor || defaults.fillColor,
+    x = parseInt(options.startingX) || defaults.startingX,
+    y = parseInt(options.startingY) || defaults.startingY,
+    height = pixels.shape[1],
+    width = pixels.shape[0],
+    r = pixels.get(x, y, 0),
+    g = pixels.get(x, y, 1),
+    b = pixels.get(x, y, 2),
+    a = pixels.get(x, y, 3),
+    queuex = [x],
+    queuey = [y],
+    curry, currx,
+    north,
+    south,
+    n,
+    tolerance = parseInt(options.tolerance) || defaults.tolerance,
+    maxFactor = (1 + tolerance / 100),
+    minFactor = (1 - tolerance / 100);
 
-          do {
-            north -= 1
-          } while (isSimilar(currx, north) && north >= 0)
+  fillColor = fillColor.split(" ");
+  function isSimilar(currx, curry) {
+    return (pixels.get(currx, curry, 0) >= r * minFactor && pixels.get(currx, curry, 0) <= r * maxFactor &&
+      pixels.get(currx, curry, 1) >= g * minFactor && pixels.get(currx, curry, 1) <= g * maxFactor &&
+      pixels.get(currx, curry, 2) >= b * minFactor && pixels.get(currx, curry, 2) <= b * maxFactor &&
+      pixels.get(currx, curry, 3) >= a * minFactor && pixels.get(currx, curry, 3) <= a * maxFactor);
+  }
 
-          do {
-            south += 1
-          } while (isSimilar(currx, south) && south < height)
-          
-          for (n = north + 1; n < south; n += 1) {
-            pixels.set(currx, n, 0, fillColor[0]);
-            pixels.set(currx, n, 1, fillColor[1]);
-            pixels.set(currx, n, 2, fillColor[2]);
-            pixels.set(currx, n, 3, fillColor[3]);
-            if (isSimilar(currx - 1, n)) {
-              queuex.push(currx - 1)
-              queuey.push(n)
-            }
-            if (isSimilar(currx + 1, n)) {
-              queuex.push(currx + 1)
-              queuey.push(n)
-            }
-          }
+  while (queuey.length) {
+    currx = queuex.pop()
+    curry = queuey.pop()
+
+    if (isSimilar(currx, curry)) {
+      north = south = curry
+
+      do {
+        north -= 1
+      } while (isSimilar(currx, north) && north >= 0)
+
+      do {
+        south += 1
+      } while (isSimilar(currx, south) && south < height)
+
+      for (n = north + 1; n < south; n += 1) {
+        pixels.set(currx, n, 0, fillColor[0]);
+        pixels.set(currx, n, 1, fillColor[1]);
+        pixels.set(currx, n, 2, fillColor[2]);
+        pixels.set(currx, n, 3, fillColor[3]);
+        if (isSimilar(currx - 1, n)) {
+          queuex.push(currx - 1)
+          queuey.push(n)
+        }
+        if (isSimilar(currx + 1, n)) {
+          queuex.push(currx + 1)
+          queuey.push(n)
         }
       }
+    }
+  }
 
-      return pixels;
+  return pixels;
 }
 
-},{"./../../util/getDefaults.js":304,"./info.json":278}],277:[function(require,module,exports){
+},{"./../../util/getDefaults.js":305,"./info.json":278}],277:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":275,"./info.json":278,"dup":193}],278:[function(require,module,exports){
 module.exports={
@@ -72380,7 +72382,7 @@ module.exports = function Resize(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":304,"./info.json":281,"imagejs":63}],280:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":305,"./info.json":281,"imagejs":63}],280:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":279,"./info.json":281,"dup":193}],281:[function(require,module,exports){
 module.exports={
@@ -72460,7 +72462,7 @@ module.exports = function Rotate(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":304,"./info.json":284,"imagejs":63}],283:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":305,"./info.json":284,"imagejs":63}],283:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":282,"./info.json":284,"dup":193}],284:[function(require,module,exports){
 module.exports={
@@ -72483,37 +72485,37 @@ module.exports={
 /*
  * Saturate an image with a value from 0 to 1
  */
-module.exports = function Saturation(options,UI) {
+module.exports = function Saturation(options, UI) {
 
   var output;
 
-  function draw(input,callback,progressObj) {
+  function draw(input, callback, progressObj) {
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;
 
     var step = this;
 
+    var cR = 0.299;
+    var cG = 0.587;
+    var cB = 0.114;
+
     function changePixel(r, g, b, a) {
 
-      var cR = 0.299;
-      var cG = 0.587;
-      var cB = 0.114;
+      var p = Math.sqrt((cR * (r * r)) + (cG * (g * g)) + (cB * (g * g)));
 
-      var p = Math.sqrt((cR * (r*r)) + (cG * (g*g)) + (cB * (g*g)));
-
-      r = p+(r-p)*(options.saturation);
-      g = p+(g-p)*(options.saturation);
-      b = p+(b-p)*(options.saturation);
+      r = p + (r - p) * (options.saturation);
+      g = p + (g - p) * (options.saturation);
+      b = p + (b - p) * (options.saturation);
 
 
       return [Math.round(r), Math.round(g), Math.round(b), a];
     }
 
-    function output(image,datauri,mimetype){
+    function output(image, datauri, mimetype) {
 
       // This output is accesible by Image Sequencer
-      step.output = {src:datauri,format:mimetype};
+      step.output = { src: datauri, format: mimetype };
 
     }
 
@@ -72531,7 +72533,7 @@ module.exports = function Saturation(options,UI) {
   return {
     options: options,
     //setup: setup, // optional
-    draw:  draw,
+    draw: draw,
     output: output,
     UI: UI
   }
@@ -72565,7 +72567,7 @@ module.exports = function ImageThreshold(options, UI) {
   var output;
 
   function draw(input, callback, progressObj) {
-   
+
     progressObj.stop(true);
     progressObj.overrideFlag = true;
 
@@ -72575,13 +72577,13 @@ module.exports = function ImageThreshold(options, UI) {
       let pixVal = Math.round((r + g + b) / 3);
       hist[pixVal]++;
       return [r, g, b, a];
-  }
+    }
 
     function extraManipulation(pixels) {
       pixels = require('./Threshold')(pixels, options, hist)
       return pixels
     }
-    function output(image,  datauri, mimetype){
+    function output(image, datauri, mimetype) {
       // This output is accessible by Image Sequencer
       step.output = { src: datauri, format: mimetype };
     }
@@ -72592,50 +72594,53 @@ module.exports = function ImageThreshold(options, UI) {
       format: input.format,
       image: options.image,
       callback: callback
-  });
-}
-return {
-  options: options,
-  draw: draw,
-  output: output,
-  UI: UI
-}
+    });
+  }
+  return {
+    options: options,
+    draw: draw,
+    output: output,
+    UI: UI
+  }
 }
 
 },{"../_nomodule/PixelManipulation.js":298,"./Threshold":289}],289:[function(require,module,exports){
 module.exports = function Threshold(pixels, options, histData) {
-    type = options.threshold;
-    threshold = parseInt(options.input) || 120;
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+   
+    type = options.threshold ;
+    threshold = parseInt(options.input) || defaults.input;
     var lumR = [];
     var lumG = [];
     var lumB = [];
-    for (var i=0; i<256; i++) {
-        lumR[i] = i*0.299;
-        lumG[i] = i*0.587;
-        lumB[i] = i*0.114;
+    for (var i = 0; i < 256; i++) {
+        lumR[i] = i * 0.299;
+        lumG[i] = i * 0.587;
+        lumB[i] = i * 0.114;
     }
-    var imageDataLength = pixels.data.length;   //imageData.data.length;
-    for (var i = 0; i <= imageDataLength; i += 4) {
-        pixels.data[i] = Math.floor(lumR[pixels.data[i]] + lumG[pixels.data[i+1]] + lumB[pixels.data[i+2]]);
-      }
 
-    if(type === "Automatic Thresholding")
+    var imageDataLength = pixels.data.length;   //imageData.data.length;
+    for (var i = 0; i <= imageDataLength; i++) {
+        pixels.data[i] = Math.floor(lumR[pixels.data[i++]] + lumG[pixels.data[i++]] + lumB[pixels.data[i++]]);
+    }
+
+    if (type === "Automatic Thresholding")
         threshold = otsu(histData);
 
-    for (var currentPixel = 0; currentPixel <= imageDataLength; currentPixel+=4) {
-  
-      pixels.data[currentPixel] = pixels.data[currentPixel] < threshold ? 0 : 255;
-      pixels.data[currentPixel + 1] = pixels.data[currentPixel + 2] = pixels.data[currentPixel];
+    for (var currentPixel = 0; currentPixel <= imageDataLength; currentPixel += 4) {
+
+        pixels.data[currentPixel] = pixels.data[currentPixel] < threshold ? 0 : 255;
+        pixels.data[currentPixel + 1] = pixels.data[currentPixel + 2] = pixels.data[currentPixel];
     }
     return pixels;
 }
 
-function otsu(histData){
+function otsu(histData) {
     let total = 0;
-    for (let t=0 ; t<256 ; t++) total +=  histData[t];
-    
+    for (let t = 0; t < 256; t++) total += histData[t];
+
     let sum = 0;
-    for (let t=0 ; t<256 ; t++) sum += t * histData[t];
+    for (let t = 0; t < 256; t++) sum += t * histData[t];
 
     let sumB = 0;
     let wB = 0;
@@ -72644,7 +72649,7 @@ function otsu(histData){
     let varMax = 0;
     let threshold = 0;
 
-    for (let t=0 ; t<256 ; t++) {
+    for (let t = 0; t < 256; t++) {
         wB += histData[t];               // Weight Background
         if (wB == 0) continue;
 
@@ -72666,10 +72671,10 @@ function otsu(histData){
         }
     }
 
-return threshold;
+    return threshold;
 
 }
-},{}],290:[function(require,module,exports){
+},{"./../../util/getDefaults.js":305,"./info.json":291}],290:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":288,"./info.json":291,"dup":193}],291:[function(require,module,exports){
 module.exports={
@@ -72694,40 +72699,35 @@ module.exports={
 }
 
 },{}],292:[function(require,module,exports){
-module.exports = function Tint(options,UI){
+module.exports = function Tint(options, UI) {
 
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
 
     var output;
 
-    function draw(input,callback,progressObj){
+    function draw(input, callback, progressObj) {
 
-        var color = options.color || '0 0 255';
-        color = color.split(" "); 
-        var factor = options.factor || 0.5;
+        var color = options.color || defaults.color;
+        color = color.split(" ");
+        var factor = options.factor || defaults.factor;
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
-        /*
-        In this case progress is handled by changepixel internally otherwise progressObj
-        needs to be overriden and used
-        For eg. progressObj = new SomeProgressModule()
-        */
-
         var step = this;
 
-        function changePixel(r, g, b, a){
+        function changePixel(r, g, b, a) {
 
-            r -= (r - color[0])*factor;
-            g -= (g - color[1])*factor;
-            b -= (b - color[2])*factor;
+            r -= (r - color[0]) * factor;
+            g -= (g - color[1]) * factor;
+            b -= (b - color[2]) * factor;
             return [r, g, b, a]
         }
 
-        function output(image,datauri,mimetype){
+        function output(image, datauri, mimetype) {
 
             // This output is accessible by Image Sequencer
-            step.output = {src:datauri,format:mimetype};
+            step.output = { src: datauri, format: mimetype };
 
         }
 
@@ -72743,13 +72743,13 @@ module.exports = function Tint(options,UI){
     }
     return {
         options: options,
-        draw:  draw,
+        draw: draw,
         output: output,
         UI: UI
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":298}],293:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":305,"./info.json":294}],293:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":292,"./info.json":294,"dup":193}],294:[function(require,module,exports){
 module.exports={
@@ -72777,18 +72777,14 @@ module.exports = function Balance(options, UI) {
 
     var output;
 
-    function draw (input, callback, progressObj) {
+    function draw(input, callback, progressObj) {
 
-      options.temperature = (options.temperature > "40000") ? "40000" : options.temperature
+        options.temperature = (options.temperature > "40000") ? "40000" : options.temperature
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
         var step = this;
-
-        function changePixel(r, g, b, a) {
-            return [r, g, b ,a]
-        }
 
         function extraManipulation(pixels) {
 
@@ -72814,35 +72810,34 @@ module.exports = function Balance(options, UI) {
                 b = Math.min(Math.max(138.5177312231 * Math.log(b) - 305.0447927307, 0), 255);
             }
 
-            for(let i=0; i<pixels.shape[0]; i++) {
-              for (let j=0; j<pixels.shape[1]; j++) {
+            for (let i = 0; i < pixels.shape[0]; i++) {
+                for (let j = 0; j < pixels.shape[1]; j++) {
 
-                  r_data = pixels.get(i,j,0)
-                  r_new_data = (255/r) * r_data
-                  pixels.set(i,j,0,r_new_data)
+                    r_data = pixels.get(i, j, 0)
+                    r_new_data = (255 / r) * r_data
+                    pixels.set(i, j, 0, r_new_data)
 
-                  g_data = pixels.get(i,j,1)
-                  g_new_data = (255/g) * g_data
-                  pixels.set(i,j,1,g_new_data)
+                    g_data = pixels.get(i, j, 1)
+                    g_new_data = (255 / g) * g_data
+                    pixels.set(i, j, 1, g_new_data)
 
-                  b_data = pixels.get(i,j,2)
-                  b_new_data = (255/b) * b_data
-                  pixels.set(i,j,2,b_new_data)
-              }
+                    b_data = pixels.get(i, j, 2)
+                    b_new_data = (255 / b) * b_data
+                    pixels.set(i, j, 2, b_new_data)
+                }
             }
 
-          return pixels
+            return pixels
         }
 
-        function output (image, datauri, mimetype){
+        function output(image, datauri, mimetype) {
 
-            step.output = {src:datauri,format:mimetype};
+            step.output = { src: datauri, format: mimetype };
 
         }
 
         return require('../_nomodule/PixelManipulation.js')(input, {
             output: output,
-            changePixel: changePixel,
             extraManipulation: extraManipulation,
             format: input.format,
             image: options.image,
@@ -72884,29 +72879,17 @@ module.exports = function PixelManipulation(image, options) {
 
   // To handle the case where pixelmanipulation is called on the input object itself
   // like input.pixelManipulation(options)
-  if(arguments.length <= 1){
+  if (arguments.length <= 1) {
     options = image;
     image = this;
   }
 
   options = options || {};
-  options.changePixel =
-    options.changePixel ||
-    function changePixel(r, g, b, a) {
-      return [r, g, b, a];
-    };
 
-  //
-  options.extraManipulation =
-    options.extraManipulation ||
-    function extraManipulation(pixels) {
-      return pixels;
-    };
-
-  var getPixels = require("get-pixels"),
+  const getPixels = require("get-pixels"),
     savePixels = require("save-pixels");
 
-  getPixels(image.src, function (err, pixels) {
+  getPixels(image.src, function(err, pixels) {
     if (err) {
       console.log("Bad image path", image);
       return;
@@ -72930,27 +72913,35 @@ module.exports = function PixelManipulation(image, options) {
       }
     }
 
-    for (var x = 0; x < pixels.shape[0]; x++) {
-      for (var y = 0; y < pixels.shape[1]; y++) {
-        var pixel = options.changePixel(
-          pixels.get(x, y, 0),
-          pixels.get(x, y, 1),
-          pixels.get(x, y, 2),
-          pixels.get(x, y, 3),
-          x,
-          y
-        );
+    if (options.preProcess) pixels = options.preProcess(pixels); // Allow for preprocessing
 
-        pixels.set(x, y, 0, pixel[0]);
-        pixels.set(x, y, 1, pixel[1]);
-        pixels.set(x, y, 2, pixel[2]);
-        pixels.set(x, y, 3, pixel[3]);
+    if (options.changePixel) {
 
-        if (!options.inBrowser && !process.env.TEST) pace.op();
+      /* Allows for Flexibility
+       if per pixel manipulation is not required */
+
+      for (var x = 0; x < pixels.shape[0]; x++) {
+        for (var y = 0; y < pixels.shape[1]; y++) {
+          let pixel = options.changePixel(
+            pixels.get(x, y, 0),
+            pixels.get(x, y, 1),
+            pixels.get(x, y, 2),
+            pixels.get(x, y, 3),
+            x,
+            y
+          );
+
+          pixels.set(x, y, 0, pixel[0]);
+          pixels.set(x, y, 1, pixel[1]);
+          pixels.set(x, y, 2, pixel[2]);
+          pixels.set(x, y, 3, pixel[3]);
+
+          if (!options.inBrowser && !process.env.TEST) pace.op();
+        }
       }
     }
-
     // perform any extra operations on the entire array:
+    var res;
     if (options.extraManipulation) res = options.extraManipulation(pixels,generateOutput);
     // there may be a more efficient means to encode an image object,
     // but node modules and their documentation are essentially arcane on this point
@@ -72960,12 +72951,12 @@ module.exports = function PixelManipulation(image, options) {
     
     var r = savePixels(pixels, options.format, { quality: 100 });
 
-    r.on("data", function (chunk) {
+    r.on("data", function(chunk) {
       totalLength += chunk.length;
       chunks.push(chunk);
     });
 
-    r.on("end", function () {
+    r.on("end", function() {
       var data = Buffer.concat(chunks, totalLength).toString("base64");
       var datauri = "data:image/" + options.format + ";base64," + data;
       if (options.output)
@@ -72977,6 +72968,7 @@ module.exports = function PixelManipulation(image, options) {
       pixels=res;
       generateOutput();
     }
+    else if(!options.extraManipulation) generateOutput();
   });
 };
 
@@ -73319,16 +73311,83 @@ module.exports = function parseCornerCoordinateInputs(options,coord,callback) {
     })
   }
 },{"get-pixels":30}],304:[function(require,module,exports){
-module.exports = function(info){
-	var defaults = {};
-	for (var key in info.inputs) {
-	  if (info.inputs.hasOwnProperty(key)) {
-	    defaults[key] = info.inputs[key].default;
-	  }
-	}
-	return defaults;
+module.exports = function createMetaModule(mapFunction, moduleOptions) {
+
+  moduleOptions = moduleOptions || {};
+  moduleOptions.infoJson = moduleOptions.infoJson || {};
+
+  function MetaModule(options, UI) {
+
+    var defaults = require('./getDefaults.js')(moduleOptions.infoJson);
+    var output;
+
+
+    // Parses the options and gets the input which is not available in options from defaults
+    for (key in moduleOptions.infoJson.inputs) {
+      if (moduleOptions.infoJson.inputs.hasOwnProperty(key)) {
+        options[key] = options[key] || defaults[key];
+      }
+    }
+
+    // map inputs to internal step options;
+    // use this to set defaults for internal steps
+    // and to expose internal settings as external meta-module parameters;
+    // it must return a steps object
+    var steps = mapFunction(options);
+
+    /* example:
+    function mapFunction(opt, _defaults) {
+
+      // return steps with options:
+      return [
+        { 'name': 'gradient', 'options': {} },
+        { 'name': 'colormap', 'options': { colormap: options.colormap } },
+        { 'name': 'crop', 'options': { 'y': 0, 'h': options.h } },
+        { 'name': 'overlay', 'options': { 'x': options.x, 'y': options.y, 'offset': -4 } }
+      ];
+    }
+    */
+
+    // ui: false prevents internal logs
+    var internalSequencer = ImageSequencer({ inBrowser: false, ui: false });
+
+    function draw(input, callback) {
+
+      var step = this;
+
+      internalSequencer.loadImage(input.src, function onAddImage() {
+        internalSequencer.importJSON(steps);
+        internalSequencer.run(function onCallback(internalOutput) {
+          step.output = { src: internalOutput, format: input.format };
+          callback();
+        });
+      });
+
+    }
+
+    return {
+      options: options,
+      draw: draw,
+      output: output,
+      UI: UI
+    }
+  }
+
+  return [MetaModule, moduleOptions.infoJson];
 }
-},{}],305:[function(require,module,exports){
+
+},{"./getDefaults.js":305}],305:[function(require,module,exports){
+module.exports = function(info){
+  var defaults = {};
+  for (var key in info.inputs) {
+    if (info.inputs.hasOwnProperty(key)) {
+      defaults[key] = info.inputs[key].default;
+    }
+  }
+  return defaults;
+}
+
+},{}],306:[function(require,module,exports){
 module.exports = {
     getPreviousStep: function() {
         return this.getStep(-1);

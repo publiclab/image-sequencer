@@ -7,10 +7,18 @@ var red = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQ
 
 test('Load ndvi-colormap meta module', function(t) {
     sequencer1.loadImages('image1', red);
-    sequencer2.loadImages('image1', red);
     sequencer1.addSteps('ndvi-colormap');
-    sequencer2.addSteps(['ndvi', 'colormap']);
-    t.equal(sequencer1.images.image1.steps[0].options.name, sequencer2.steps[0].options.name, "First step OK");
-    t.equal(sequencer1.images.image1.steps[1].options.name, sequencer2.steps[1].options.name, "Second step OK");
-    t.end();
+    sequencer1.run((out) => {
+        t.isNotEqual(out, undefined, "Opaque Meta-Module not undefined");
+        t.end();
+    });
+});
+
+test('Load colorbar opaque meta module', function(t) {
+    sequencer2.loadImages('image1', red);
+    sequencer2.addSteps('colorbar'); // this has been refactored as an opaque meta-module https://github.com/publiclab/image-sequencer/issues/315
+    sequencer2.run((out) => {
+        t.isNotEqual(out, undefined, "Opaque Meta-Module not undefined");
+        t.end();
+    });
 });

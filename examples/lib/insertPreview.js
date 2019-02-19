@@ -31,6 +31,7 @@ function generatePreview(previewStepName, customValues, path, selector) {
     $('#'+selector+' img').remove();
 
     var previewSequencerSteps = {
+      "resize": "125%",
       "brightness": "20",
       "saturation": "5",
       "rotate": 90,

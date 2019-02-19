@@ -165,6 +165,24 @@ test('insertSteps({image: {index: index, name: "module", o: options} }) inserts 
 });
 
 
+test('getSteps() returns correct array of steps', function(t){
+  var sequencer = ImageSequencer({ ui: false });
+  sequencer.loadImages('test', red);
+  sequencer.addSteps(['blur','invert']);
+  var stepsArray = sequencer.getSteps('test');  
+  t.equal(stepsArray.length, sequencer.images.test.steps.length, "getSteps() returns correct length of steps");
+  var flag=0;
+  for (var i = 0; i<sequencer.images.test.steps.length; i++){
+    if(stepsArray[i].options.name==(sequencer.images.test.steps[i].options.name))
+    continue
+    else
+    flag=1;
+  }
+  t.equal(flag, 0, "getSteps() returns correct array of steps");
+  t.end();
+})
+
+
 test('run() runs the sequencer and returns output to callback', function(t) {
   sequencer.run({ mode: 'test' }, function(out) {
     t.equal(typeof (sequencer.images.test.steps[sequencer.images.test.steps.length - 1].output), "object", "Output is Generated");

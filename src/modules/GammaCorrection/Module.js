@@ -1,27 +1,30 @@
-module.exports = function Gamma(options,UI){
+module.exports = function Gamma(options, UI) {
 
     var output;
 
-    function draw(input,callback,progressObj){
+    function draw(input, callback, progressObj) {
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
         var step = this;
 
-        function changePixel(r, g, b, a){
-            var val = options.adjustment || 0.2;
+        var defaults = require('./../../util/getDefaults.js')(require('./info.json')),
+            adjustment = options.adjustment || defaults.adjustment;
+        var val = adjustment / defaults.adjustment;
+
+        function changePixel(r, g, b, a) {
 
             r = Math.pow(r / 255, val) * 255;
             g = Math.pow(g / 255, val) * 255;
             b = Math.pow(b / 255, val) * 255;
 
-            return [r , g, b, a];
+            return [r, g, b, a];
         }
 
-        function output(image,datauri,mimetype){
+        function output(image, datauri, mimetype) {
 
-            step.output = {src:datauri,format:mimetype};
+            step.output = { src: datauri, format: mimetype };
 
         }
 
@@ -37,7 +40,7 @@ module.exports = function Gamma(options,UI){
     }
     return {
         options: options,
-        draw:  draw,
+        draw: draw,
         output: output,
         UI: UI
     }

@@ -42,11 +42,11 @@ h1 {
   margin: 0 !important;
 }
 
-.form-control {
+.form-control[type="range"] {
   padding: 0px 0px;
 }
 
-#dropzone {
+.dropzone {
   padding: 30px;
   margin: 0 20% 30px;
   border: 4px dashed #ccc;
@@ -59,7 +59,7 @@ h1 {
   background: #eee;
 }
 
-#dropzone input {
+.dropzone input {
   max-width: 100%;
 }
 
@@ -98,6 +98,11 @@ h1 {
   text-align: center;
   font-size: 2em;
   color: #444;
+}
+
+.load-spin{
+  position: absolute;
+  right: 0px;
 }
 
 #addStep {

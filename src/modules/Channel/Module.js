@@ -3,7 +3,9 @@
  */
 module.exports = function Channel(options, UI) {
 
-  options.channel = options.channel || "green";
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+
+  options.channel = options.channel || defaults.channel;
 
   var output;
 
@@ -15,9 +17,9 @@ module.exports = function Channel(options, UI) {
     var step = this;
 
     function changePixel(r, g, b, a) {
-      if (options.channel == "red") return [r, 0, 0, a];
-      if (options.channel == "green") return [0, g, 0, a];
-      if (options.channel == "blue") return [0, 0, b, a];
+      if (options.channel === "red") return [r, 0, 0, a];
+      if (options.channel === "green") return [0, g, 0, a];
+      if (options.channel === "blue") return [0, 0, b, a];
     }
 
     function output(image, datauri, mimetype) {

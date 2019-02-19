@@ -8,11 +8,15 @@
 // output values, step information.
 // See documetation for more details.
 
+var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js');
+var urlHash = require('./urlHash.js');
+
 function DefaultHtmlStepUi(_sequencer, options) {
   
   options = options || {};
   var stepsEl = options.stepsEl || document.querySelector("#steps");
   var selectStepSel = options.selectStepSel = options.selectStepSel || "#selectStep";
+
   function onSetup(step, stepOptions) {
     if (step.options && step.options.description)
       step.description = step.options.description;
@@ -25,7 +29,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
     <div class="col-md-4 details">\
     <h3>\
     <span class = "toggle">' +step.name + ' <i class="fa fa-caret-up toggleIcon" aria-hidden="true"></i></span>' +
-      '</h3><div class="cal"><p><i>"'+
+    '<span class="load-spin" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></span>' +
+    '</h3><div class="cal"><p><i>"'+
       (step.description || "") +
       '</i></p></div>\
     </div>\
@@ -49,7 +54,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     </div>\
     </div>';
 
-    var util = IntermediateHtmlStepUi(_sequencer, step);
+    var util = intermediateHtmlStepUi(_sequencer, step);
 
     var parser = new DOMParser();
     step.ui = parser.parseFromString(step.ui, "text/html");
@@ -166,7 +171,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         _sequencer.run({ index: step.index - 1 });
 
         // modify the url hash
-        setUrlHashParameter("steps", _sequencer.toString());
+        urlHash.setUrlHashParameter("steps", _sequencer.toString());
 
         // disable the save button
         $(step.ui.querySelector('.btn-save')).prop('disabled', true);
@@ -216,11 +221,16 @@ function DefaultHtmlStepUi(_sequencer, options) {
   function onDraw(step) {
     $(step.ui.querySelector(".load")).show();
     $(step.ui.querySelector("img")).hide();
+    if( $(step.ui.querySelector(".toggleIcon")).hasClass("fa-caret-down") )
+    {
+      $(step.ui.querySelector(".load-spin")).show();
+    }
   }
 
   function onComplete(step) {
     $(step.ui.querySelector(".load")).hide();
     $(step.ui.querySelector("img")).show();
+    $(step.ui.querySelector(".load-spin")).hide();
 
     step.imgElement.src = step.output;
     var imgthumbnail = step.ui.querySelector(".img-thumbnail");
@@ -301,3 +311,6 @@ if(typeof window === "undefined"){
     DefaultHtmlStepUi: DefaultHtmlStepUi
   }
 }
+
+module.exports = DefaultHtmlStepUi;
+

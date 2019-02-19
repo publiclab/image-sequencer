@@ -15,7 +15,7 @@ module.exports = function(grunt) {
         livereload: true
       },
       source: {
-        files: ["src/**/*", "Gruntfile.js"],
+        files: ["src/**/*", "Gruntfile.js", "examples/lib/*","examples/demo.js"],
         tasks: ["build:js"]
       }
     },
@@ -24,16 +24,12 @@ module.exports = function(grunt) {
       dist: {
         src: ["src/ImageSequencer.js"],
         dest: "dist/image-sequencer.js"
-      }
-    },
-
-    concat: {
+      }, 
       js: {
-        src: ['examples/lib/*.js','examples/demo.js'],
-        dest: 'dist/image-sequencer-ui.js'
+        src: ["examples/demo.js"],
+        dest: "dist/image-sequencer-ui.js"
       }
     },
-
 
     uglify: {
       dist: {
@@ -57,6 +53,6 @@ module.exports = function(grunt) {
 
   /* Default (development): Watch files and build on change. */
   grunt.registerTask("default", ["watch"]);
-  grunt.registerTask("build", ["browserify:dist", "uglify:dist"]);
-  grunt.registerTask("serve", ["browserify:dist", "concat:js", "uglify:dist","uglify:js","browserSync", "watch"]);
+  grunt.registerTask("build", ["browserify:dist","browserify:js","uglify:dist","uglify:js"]);
+  grunt.registerTask("serve", ["browserify:dist","browserify:js","uglify:dist","uglify:js","browserSync", "watch"]);
 };

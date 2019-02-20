@@ -18,7 +18,7 @@ module.exports = exports = function(pixels, options) {
     north,
     south,
     n,
-    tolerance = parseInt(options.tolerance) || defaults.tolerance,
+    tolerance = options.tolerance || defaults.tolerance,
     maxFactor = (1 + tolerance / 100),
     minFactor = (1 - tolerance / 100);
 

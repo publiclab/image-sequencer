@@ -69675,7 +69675,7 @@ module.exports = function Brightness(options, UI) {
 
     function draw(input, callback, progressObj) {
 
-        options.brightness = parseInt(options.brightness) || defaults.brightness;
+        options.brightness = options.brightness || defaults.brightness;
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;
@@ -72229,7 +72229,7 @@ module.exports = exports = function(pixels, options) {
     north,
     south,
     n,
-    tolerance = parseInt(options.tolerance) || defaults.tolerance,
+    tolerance = options.tolerance || defaults.tolerance,
     maxFactor = (1 + tolerance / 100),
     minFactor = (1 - tolerance / 100);
 
@@ -72409,7 +72409,7 @@ module.exports = function Rotate(options, UI) {
     function draw(input, callback, progressObj) {
 
         var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
-        options.rotate = parseInt(options.rotate) || defaults.rotate;
+        options.rotate = options.rotate || defaults.rotate;
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;

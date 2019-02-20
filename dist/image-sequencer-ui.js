@@ -621,7 +621,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
   function onRemove(step) {
     step.ui.remove();
     $("#steps .container:nth-last-child(1) .insert-step").prop('disabled',true);
-    $('div[class^=imgareaselect-]').remove();
+    $('div[class*=imgareaselect-]').remove();
   }
 
   function getPreview() {

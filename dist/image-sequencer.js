@@ -69026,7 +69026,7 @@ module.exports = {
   'white-balance': require('./modules/WhiteBalance')
 }
 
-},{"./modules/AddQR":193,"./modules/Average":196,"./modules/Blend":199,"./modules/Blur":203,"./modules/Brightness":206,"./modules/Channel":209,"./modules/Colorbar":212,"./modules/Colormap":216,"./modules/Contrast":220,"./modules/Convolution":224,"./modules/Crop":229,"./modules/DecodeQr":232,"./modules/Dither":236,"./modules/DrawRectangle":240,"./modules/Dynamic":243,"./modules/EdgeDetect":247,"./modules/FisheyeGl":250,"./modules/GammaCorrection":253,"./modules/Gradient":256,"./modules/Histogram":259,"./modules/ImportImage":263,"./modules/Ndvi":267,"./modules/NdviColormap":270,"./modules/Overlay":273,"./modules/PaintBucket":277,"./modules/Resize":280,"./modules/Rotate":283,"./modules/Saturation":286,"./modules/Threshold":290,"./modules/Tint":293,"./modules/WhiteBalance":296,"image-sequencer-invert":62}],187:[function(require,module,exports){
+},{"./modules/AddQR":193,"./modules/Average":196,"./modules/Blend":199,"./modules/Blur":203,"./modules/Brightness":206,"./modules/Channel":209,"./modules/Colorbar":212,"./modules/Colormap":216,"./modules/Contrast":220,"./modules/Convolution":224,"./modules/Crop":229,"./modules/DecodeQr":232,"./modules/Dither":236,"./modules/DrawRectangle":240,"./modules/Dynamic":243,"./modules/EdgeDetect":247,"./modules/FisheyeGl":250,"./modules/GammaCorrection":253,"./modules/Gradient":256,"./modules/Histogram":259,"./modules/ImportImage":263,"./modules/Ndvi":270,"./modules/NdviColormap":266,"./modules/Overlay":273,"./modules/PaintBucket":277,"./modules/Resize":280,"./modules/Rotate":283,"./modules/Saturation":286,"./modules/Threshold":290,"./modules/Tint":293,"./modules/WhiteBalance":296,"image-sequencer-invert":62}],187:[function(require,module,exports){
 // Uses a given image as input and replaces it with the output.
 // Works only in the browser.
 function ReplaceImage(ref,selector,steps,options) {
@@ -71920,6 +71920,30 @@ module.exports={
 }
 },{}],265:[function(require,module,exports){
 /*
+ * Sample Meta Module for demonstration purpose only
+ */
+module.exports = require('../../util/createMetaModule.js')(
+    function mapFunction(options) {
+
+        return [
+            { 'name': 'ndvi', 'options': {} },
+            { 'name': 'colormap', 'options': { colormap: options.colormap } },
+        ];
+    }, {
+        infoJson: require('./info.json')
+    }
+)[0];
+},{"../../util/createMetaModule.js":304,"./info.json":267}],266:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":265,"./info.json":267,"dup":193}],267:[function(require,module,exports){
+module.exports={
+    "name": "NDVI-Colormap",
+    "description": "Sequentially Applies NDVI and Colormap steps",
+    "inputs": {},
+    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+}
+},{}],268:[function(require,module,exports){
+/*
  * NDVI with red filter (blue channel is infrared)
  */
 module.exports = function Ndvi(options, UI) {
@@ -71979,7 +72003,7 @@ module.exports = function Ndvi(options, UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":305,"./Ui.js":266,"./info.json":268}],266:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":305,"./Ui.js":269,"./info.json":271}],269:[function(require,module,exports){
 // hide on save
 module.exports = function CropModuleUi(step, ui) {
 
@@ -72015,9 +72039,9 @@ module.exports = function CropModuleUi(step, ui) {
     }
 }
 
-},{}],267:[function(require,module,exports){
+},{}],270:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
-},{"./Module":265,"./info.json":268,"dup":193}],268:[function(require,module,exports){
+},{"./Module":268,"./info.json":271,"dup":193}],271:[function(require,module,exports){
 module.exports={
   "name": "NDVI",
   "description": "Normalized Difference Vegetation Index, or NDVI, is an image analysis technique used with aerial photography. It's a way to visualize the amounts of infrared and other wavelengths of light reflected from vegetation by comparing ratios of blue and red light absorbed versus green and IR light reflected. NDVI is used to evaluate the health of vegetation in satellite imagery, where it correlates with how much photosynthesis is happening. This is helpful in assessing vegetative health or stress. <a href='https://publiclab.org/ndvi'>Read more</a>.<br /><br/>This is designed for use with red-filtered single camera <a href='http://publiclab.org/infragram'>DIY Infragram cameras</a>; change to 'blue' for blue filters",
@@ -72032,30 +72056,6 @@ module.exports={
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],269:[function(require,module,exports){
-/*
- * Sample Meta Module for demonstration purpose only
- */
-module.exports = require('../../util/createMetaModule.js')(
-    function mapFunction(options) {
-
-        return [
-            { 'name': 'ndvi', 'options': {} },
-            { 'name': 'colormap', 'options': { colormap: options.colormap } },
-        ];
-    }, {
-        infoJson: require('./info.json')
-    }
-)[0];
-},{"../../util/createMetaModule.js":304,"./info.json":271}],270:[function(require,module,exports){
-arguments[4][193][0].apply(exports,arguments)
-},{"./Module":269,"./info.json":271,"dup":193}],271:[function(require,module,exports){
-module.exports={
-    "name": "NDVI-Colormap",
-    "description": "Sequentially Applies NDVI and Colormap steps",
-    "inputs": {},
-    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
-}
 },{}],272:[function(require,module,exports){
 module.exports = function Dynamic(options, UI, util) {
 

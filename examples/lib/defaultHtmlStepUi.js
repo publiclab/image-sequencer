@@ -10,6 +10,7 @@
 
 var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js');
 var urlHash = require('./urlHash.js');
+var _ = require('lodash');
 
 function DefaultHtmlStepUi(_sequencer, options) {
   
@@ -156,6 +157,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $(step.ui.querySelectorAll(".cal")).toggleClass("collapse");
     });
     
+    $(step.imgElement).on("mousemove", _.debounce(() => imageHover(step), 150));
 
     function saveOptions(e) {
       e.preventDefault();
@@ -273,6 +275,25 @@ function DefaultHtmlStepUi(_sequencer, options) {
     }
   }
 
+  function imageHover(step){
+
+    var img = $(step.imgElement);
+
+    img.mousemove(function(e) { 
+      var canvas = document.createElement('canvas');
+      canvas.width = img.width();
+      canvas.height = img.height();
+      var context = canvas.getContext('2d');
+      context.drawImage(this,0,0);
+
+      var offset = $(this).offset();
+      var xPos = e.pageX - offset.left;
+      var yPos = e.pageY - offset.top;
+      var myData = context.getImageData(xPos, yPos, 1, 1);
+      img[0].title = "rgb: " +myData.data[0]+","+ myData.data[1]+","+myData.data[2];//+ rgbdata;
+    }); 
+  }
+
   function onRemove(step) {
     step.ui.remove();
     $("#steps .container:nth-last-child(1) .insert-step").prop('disabled',true);
@@ -302,7 +323,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
     onComplete: onComplete,
     onRemove: onRemove,
     onDraw: onDraw, 
-    notify: notify
+    notify: notify,
+    imageHover: imageHover
   }
 }
 

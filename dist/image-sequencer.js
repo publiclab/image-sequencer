@@ -69203,7 +69203,8 @@ module.exports={"sample":[{"name":"invert","options":{}},{"name":"channel","opti
 },{}],191:[function(require,module,exports){
 module.exports = function AddQR(options, UI) {
 
-    options.size = options.size || 200;
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+    options.size = options.size || defaults.size;
     options.qrCodeString = options.qrCodeString || "https://github.com/publiclab/image-sequencer";
     var output;
     getPixels = require('get-pixels');
@@ -69251,7 +69252,7 @@ module.exports = function AddQR(options, UI) {
         UI: UI
     }
 }
-},{"../_nomodule/PixelManipulation.js":298,"./QR":192,"get-pixels":30}],192:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":305,"./QR":192,"./info.json":194,"get-pixels":30}],192:[function(require,module,exports){
 module.exports = exports = function (options, pixels, oldPixels, callback) {
     var QRCode = require('qrcode')
     QRCode.toDataURL(options.qrCodeString, function (err, url) {

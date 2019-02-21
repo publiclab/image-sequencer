@@ -6,7 +6,7 @@
   "scripts": {
     "debug": "TEST=true node ./index.js -i ./examples/images/monarch.png -s invert",
     "test": "TEST=true tape test/core/*.js test/core/ui/user-interface.js | tap-spec; browserify test/core/modules/image-sequencer.js test/core/modules/chain.js test/core/modules/meta-modules.js test/core/modules/replace.js test/core/modules/import-export.js test/core/modules/run.js test/core/modules/dynamic-imports.js test/core/util/parse-input.js test/core/modules/benchmark.js | tape-run --render=\"tap-spec\"",
-    "test-ui": "jasmine",
+    "test-ui": "jasmine test/spec/*.js",
     "setup": "npm i && npm i -g grunt grunt-cli",
     "start": "grunt serve"
   },

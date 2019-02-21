@@ -1,6 +1,7 @@
 module.exports = function AddQR(options, UI) {
 
-    options.size = options.size || 200;
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+    options.size = options.size || defaults.size;
     options.qrCodeString = options.qrCodeString || "https://github.com/publiclab/image-sequencer";
     var output;
     getPixels = require('get-pixels');

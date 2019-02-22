@@ -12,6 +12,10 @@ Image Sequencer is different from other image processing systems because it's _n
 * allows many images to run through the same sequence of steps
 * works identically in the browser, on Node.js, and on the command line
 
+The following diagrams attempt to explain how the applications various components interconnect:
+
+![general diagram](https://i.imgur.com/S3Dou2M.jpg)
+
 ![workflow diagram](https://raw.githubusercontent.com/publiclab/image-sequencer/master/examples/images/diagram-workflows.png)
 
 It is also for prototyping some other related ideas:
@@ -48,7 +52,7 @@ A diagram of this running 5 steps on a single sample image may help explain how 
 This library works in the browser, in Node, and on the command line (CLI), which we think is great.
 
 ### Unix based platforms
-You can set up a local environment to test the UI with `sudo npm run setup` followed by `npm start` 
+You can set up a local environment to test the UI with `sudo npm run setup` followed by `npm start`
 
 ### Windows
 Our npm scripts do not support windows shells, please run the following snippet in PowerShell.
@@ -561,7 +565,7 @@ and remove the loading GIF generated above.
 for instance, to remove the DIV generated above.
 * `notify` : This event is triggered whenever we need to shoot a notification to the
 user-interface.For example when the step is not available, we can shoot a notification,
-by sending appropriate message.For HTML UI it adds a DOM node to the browser, for CLI 
+by sending appropriate message.For HTML UI it adds a DOM node to the browser, for CLI
 and node , it logs the notification output to the respective console.
 
 How to define these functions:

@@ -49,7 +49,7 @@ A diagram of this running 5 steps on a single sample image may help explain how 
 
 ## Installation
 
-This library works in the browser, in Node, and on the command line (CLI), which we think is great.
+This library works in the browser, in Node, and on the command line (CLI).
 
 ### Unix based platforms
 You can set up a local environment to test the UI with `sudo npm run setup` followed by `npm start`
@@ -66,7 +66,7 @@ npm i -g http-server ; http-server -p 3000
 
 ### Browser
 
-Just include [image-sequencer.js](https://publiclab.github.io/image-sequencer/dist/image-sequencer.js) in the Head section of your web page. See the [demo here](https://publiclab.github.io/image-sequencer/)!
+Include [image-sequencer.js](https://publiclab.github.io/image-sequencer/dist/image-sequencer.js) in the Head section of your web page. See the [demo here](https://publiclab.github.io/image-sequencer/)!
 
 ### Node (via NPM)
 

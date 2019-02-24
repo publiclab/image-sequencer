@@ -1,4 +1,4 @@
 module.exports = [
-    require('./Module'),
+    require('./Module.js'),
     require('./info.json')
 ]

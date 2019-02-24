@@ -1,22 +1,26 @@
 {
     "name": "Shadow",
-    "description": "Generates a shadow behind the image",
+    "description": "Generates a shadow of the image",
     "inputs": {
+        "resize": {
+            "type": "string",
+            "desc": "Percentage value of the resize",
+            "default": "105%"
+        },
         "x": {
             "type": "integer",
-            "desc": "starting X-position of the shadow",
+            "desc": "X-position of the image on which the new image is overlayed",
             "default": 0
         },
         "y": {
             "type": "integer",
-            "desc": "starting Y-position of the shadow",
+            "desc": "Y-position of the image on which the new image is overlayed",
             "default": 0
         },
-        "fillColor": {
-            "type": "String",
-            "desc": "four space separated numbers representing the RGBA values of fill-color",
-            "default": "100 100 100 255",
-            "placeholder": "100 100 100 255"
+        "offset": {
+            "type": "integer",
+            "desc": "offset to the output of the step on which the output of the last step is overlayed",
+            "default": -2
         }
     }
 }

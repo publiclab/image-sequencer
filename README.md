@@ -66,7 +66,7 @@ npm i -g http-server ; http-server -p 3000
 
 ### Browser
 
-Include [image-sequencer.js](https://publiclab.github.io/image-sequencer/dist/image-sequencer.js) in the Head section of your web page. See the [demo here](https://publiclab.github.io/image-sequencer/)!
+Just include [image-sequencer.js](https://publiclab.github.io/image-sequencer/dist/image-sequencer.js) in the Head section of your web page. See the [demo here](https://publiclab.github.io/image-sequencer/)!
 
 ### Node (via NPM)
 

@@ -136,6 +136,10 @@ h1 {
     .row {
         margin-left: 15px;
     }
+
+    #panel-body1 {
+        transform: translateX(0px);
+    }
 }
 
 @media (max-width:768px) {

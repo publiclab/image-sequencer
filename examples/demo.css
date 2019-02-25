@@ -132,6 +132,12 @@ h1 {
   font-weight: bold;
 }
 
+@media (max-width: 1040px) {
+    .row {
+        margin-left: 15px;
+    }
+}
+
 @media (max-width:768px) {
   #addStep .labels {
     text-align: left;

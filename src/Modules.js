@@ -31,7 +31,6 @@ module.exports = {
   'resize': require('./modules/Resize'),
   'rotate': require('./modules/Rotate'),
   'saturation': require('./modules/Saturation'),
-  'shadow': require('./modules/Shadow'),
   'threshold': require('./modules/Threshold'),
   'tint': require('./modules/Tint'),
   'white-balance': require('./modules/WhiteBalance')

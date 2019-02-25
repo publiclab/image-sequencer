@@ -13,10 +13,18 @@
 
 body {
   padding: 20px;
-  margin: 0 auto 200px;
+  margin: 0 auto 0px;
   max-width: 1000px;
   background: #f8f8fa;
-  overflow-x: hidden;
+  overflow-x: auto;
+}
+
+.row {
+    margin-left: -40px;
+}
+
+#panel-body1 {
+    transform: translateX(15px);
 }
 
 h1 {
@@ -85,6 +93,7 @@ h1 {
 
 .det {
   padding: 10px 16px;
+  transform: translateX(25px);
   text-decoration: italic;
 }
 
@@ -107,7 +116,8 @@ h1 {
 }
 
 #addStep {
-  max-width: 500px;
+  max-width: 600px;
+  width: 560px;
   margin: 20px auto;
 }
 

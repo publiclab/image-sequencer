@@ -69411,7 +69411,7 @@ module.exports={
     "description": "Average all pixel color",
     "inputs": {
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#Average-module"
 }
 
 },{}],198:[function(require,module,exports){
@@ -69509,7 +69509,7 @@ module.exports={
       "default": "function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] }"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#Blend-module"
 }
 
 },{}],201:[function(require,module,exports){
@@ -69659,7 +69659,7 @@ module.exports={
             "step": "0.25"
         }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#Blur-module"
 }
 
 },{}],205:[function(require,module,exports){
@@ -69737,7 +69737,7 @@ module.exports={
           "step": "1"
       }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#Brightness-module"
 }
 
 },{}],208:[function(require,module,exports){
@@ -69806,7 +69806,7 @@ module.exports={
       "values": ["red", "green", "blue"]
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#channel-module"
 }
 
 },{}],211:[function(require,module,exports){
@@ -69859,8 +69859,9 @@ module.exports={
             "default": 10
         }
     },
-    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#Colorbar-module"
 }
+
 },{}],214:[function(require,module,exports){
 /*
  * Accepts a value from 0-255 and returns the new color-mapped pixel 
@@ -70117,7 +70118,7 @@ module.exports={
       "values": ["default","greyscale","bluwhtgrngis","stretched","fastie","brntogrn","blutoredjet","colors16"]
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#Colormap-module"
 }
 
 },{}],218:[function(require,module,exports){
@@ -70231,7 +70232,7 @@ module.exports={
             "step": "1"
         }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#Contrast-module"
 }
 
 },{}],222:[function(require,module,exports){
@@ -70371,7 +70372,7 @@ module.exports={
         "placeholder": "1 1 1 1 1 1 1 1 1"
       }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#Convolution-module"
 }
 
 },{}],226:[function(require,module,exports){
@@ -70652,7 +70653,7 @@ module.exports={
       "placeholder": "255 255 255 255"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#Crop-module"
 }
 
 },{}],231:[function(require,module,exports){
@@ -70723,7 +70724,7 @@ module.exports={
       "type": "text"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#DecodeQr-module"
 }
 
 },{}],234:[function(require,module,exports){
@@ -70850,6 +70851,7 @@ module.exports={
     "name": "Dither",
     "description": "Approximates a color from a mixture of other colors when the required color is not available, creating illusions of the color that is not present actually.<a href='https://en.wikipedia.org/wiki/Dither'>Read more</a>",
     "inputs": {
+	"channel":{
       "dither": {
         "type": "select",
         "desc": "Name of the Dithering Algorithm",
@@ -70857,8 +70859,11 @@ module.exports={
         "values": ["none","floydsteinberg","bayer","Atkinson"]
       }
     }
-}
+},
+	"docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#dither-module"
+  }
   
+
 },{}],238:[function(require,module,exports){
 module.exports = exports = function(pixels, options){
   var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
@@ -70945,6 +70950,7 @@ module.exports={
     "name": "Draw Rectangle",
     "description": "It draws a rectangle on the image",
     "inputs": {
+	"channel":{
   		"startingX":{
   			"type": "Number",
   			"desc": "starting x position of the rectangle",
@@ -70981,6 +70987,8 @@ module.exports={
         "default": "0 0 0 255"
       }
     }
+},
+ "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#draw-rectangle-module"
 }
 
 },{}],242:[function(require,module,exports){
@@ -71112,7 +71120,7 @@ module.exports={
       "default": "r + g + b"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#Dynamic-module"
 }
 
 },{}],245:[function(require,module,exports){
@@ -71377,7 +71385,7 @@ module.exports={
             "default": 0.15
         }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#edge-detect-module"
 }
 
 },{}],249:[function(require,module,exports){
@@ -71520,7 +71528,7 @@ module.exports={
       "default": "(inbuilt)"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#fisheyeGl-module"
 }
 
 },{}],252:[function(require,module,exports){
@@ -71585,7 +71593,7 @@ module.exports={
             "default": 0.2
         }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#Gamma-Correction-module"
 }
 
 },{}],255:[function(require,module,exports){
@@ -71660,8 +71668,9 @@ module.exports={
     "name": "Gradient",
     "description": "Gives a gradient of the image",
     "inputs": {},
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#Gradient-module"
 }
+
 },{}],258:[function(require,module,exports){
 /*
  * Calculates the histogram of the image
@@ -71778,8 +71787,9 @@ module.exports={
             ]
         }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#Histogram-module"
 }
+
 },{}],261:[function(require,module,exports){
 /*
  * Import Image module; this fetches a given remote or local image via URL
@@ -71916,8 +71926,9 @@ module.exports={
       "default": "./images/monarch.png"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#Import-image-module"
 }
+
 },{}],265:[function(require,module,exports){
 /*
  * NDVI with red filter (blue channel is infrared)
@@ -72029,7 +72040,7 @@ module.exports={
       "values": ["red", "blue"]
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#Ndvi-module"
 }
 
 },{}],269:[function(require,module,exports){
@@ -72054,8 +72065,9 @@ module.exports={
     "name": "NDVI-Colormap",
     "description": "Sequentially Applies NDVI and Colormap steps",
     "inputs": {},
-    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#Ndvi-Colormap-module"
 }
+
 },{}],272:[function(require,module,exports){
 module.exports = function Dynamic(options, UI, util) {
 
@@ -72164,8 +72176,9 @@ module.exports={
             "default": -2
         }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#overlay-module"
 }
+
 },{}],275:[function(require,module,exports){
 module.exports = function PaintBucket(options, UI) {
 
@@ -72283,6 +72296,7 @@ module.exports={
   "name": "PaintBucket",
   "description": "Fill color in pixels",
   "inputs": {
+	"channel":{
       "startingX": {
           "type": "integer",
           "desc": "value of the starting x-coordinate",
@@ -72308,7 +72322,10 @@ module.exports={
         "step": "1"
       }
   } 
+},
+ "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#paint-bucket-module"
 }
+
 },{}],279:[function(require,module,exports){
 /*
  * Resize the image by given percentage value
@@ -72396,8 +72413,9 @@ module.exports={
       "default": "125%"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#Resize-module"
 }
+
 },{}],282:[function(require,module,exports){
 /*
  * Rotates image 
@@ -72479,7 +72497,7 @@ module.exports={
         "step": "1"
       }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#Rotate-module"
   }
 
 },{}],285:[function(require,module,exports){
@@ -72559,7 +72577,7 @@ module.exports={
             "step": "0.1"
         }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#Saturation-module"
 }
 
 },{}],288:[function(require,module,exports){
@@ -72685,6 +72703,7 @@ module.exports={
   "name": "Threshold",
   "description": "Thresholding is used to create binary images",
   "inputs": {
+	"channel":{
     "threshold": {
       "type": "select",
       "desc": "Type of Thresholding",
@@ -72700,6 +72719,8 @@ module.exports={
       "step": "1"
     }
   }
+},
+ "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#threshold-module"
 }
 
 },{}],292:[function(require,module,exports){
@@ -72760,6 +72781,7 @@ module.exports={
   "name": "Tint",
   "description": "Add color tint to an image",
   "inputs": {
+	"channel":{
       "color":{
         "type": "String",
         "desc": "RGB values separated by a space",
@@ -72774,6 +72796,8 @@ module.exports={
           "step": "0.01"
       }
   }
+},
+ "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#tint-module"
 }
 
 },{}],295:[function(require,module,exports){
@@ -72871,8 +72895,9 @@ module.exports={
         "default": "6000"
       }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#white-balance-module"
 }
+
 },{}],298:[function(require,module,exports){
 (function (process,Buffer){
 /*

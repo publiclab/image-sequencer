@@ -16,20 +16,25 @@ List of Module Documentations
 11. [Contrast](#contrast-module)
 12. [Convolution](#convolutioon-module)
 13. [DecodeQr](#decodeQr-module)
-14. [Dynamic](#dynamic-module)
-15. [Edge-Detect](#edge-detect-module)
-16. [Gamma-Correction](#gamma-correction-module)
-17. [Gradient](#gradient-module)
-18. [Histogram](#histogram-module)
-19. [Import-image](#import-image-module)
-20. [Invert](#invert-module)
-21. [Ndvi](#ndvi-module)
-22. [Ndvi-Colormap](#ndvi-colormap-module)
-23. [Overlay](#overlay-module)
-24. [Resize](#resize-module)
-25. [Rotate](#rotate-module)
-26. [Saturation](#saturation-module)
-
+14. [Dither](#dither-module)
+15. [DrawRectangle](draw-rectangle-module)
+16. [Dynamic](#dynamic-module)
+17. [Edge-Detect](#edge-detect-module)
+18. [Gamma-Correction](#gamma-correction-module)
+19. [Gradient](#gradient-module)
+20. [Histogram](#histogram-module)
+21. [Import-image](#import-image-module)
+22. [Invert](#invert-module)
+23. [Ndvi](#ndvi-module)
+24. [Ndvi-Colormap](#ndvi-colormap-module)
+26. [Overlay](#overlay-module)
+27. [PaintBucket](paint-bucket-module)
+28. [Resize](#resize-module)
+29. [Rotate](#rotate-module)
+30. [Saturation](#saturation-module)
+31. [Threshold](#threshold)
+32. [Tint](#tint)
+33. [WhiteBalance](#white-balance)
 
 
 ## crop-module
@@ -247,6 +252,41 @@ This module is used for decoding a QR in image (if present).
            .addSteps('decode-qr',options)
            .run()
 ```
+
+## dither-module
+
+This module approximates a color from a mixture of other colors when the required color is not available, creating illusions of the color that is not present actually.
+
+[more info on wikipedia](https://en.wikipedia.org/wiki/Dither)
+
+## Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('dither',options)
+           .run()
+```
+
+## draw-rectangle-module
+
+This module helps to draw a rectangle on the image with a starting and ending corner with the specified thickness and color of the border.
+
+## Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('draw-rectangle',options)
+           .run()
+```
+where `options` is an object with the following properties:
+* startingX : starting x position of the rectangle (default 0)
+* startingY : starting y position of the rectangle (default 0)
+* endX      : last x position of the rectangle (default "width")
+* endY      : last y position of the rectangle (default "height")
+* thickness : thickness of the border (default 1)
+* color     : RGBA values separated by a space (default "0 0 0 255") 
+
+
 ## dynamic-module
 
 This module is used for producing each color channel based on the original image's color.
@@ -381,6 +421,30 @@ This module is used for overlaying an Image over another .
            .run()
 ```
 
+## paint-bucket-module
+
+This module fills any polygonal shape with the specified color in pixels.
+
+## Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('paint-bucket',options)
+           .run()
+```
+
+where `options` is an object with the following property:
+* startingX : it is the value of the starting x-cordinate (default 10)
+* startingY : it is the value of the starting y-cordinate (default 10)
+* fillColor : they are four spaced seperated numbers representing the RGBA values of fill-color (default "100 100 100 255")
+* tolerance : it is the % tolerance (default 10)
+
+where `options` is an object with the following properties:
+* x : X-position of the image on which the new image is overlayed (default 0)
+* y : Y-position of the image on which the new image is overlayed (default 0)
+* offset : offset to the step on which the output of the last step is overlayed (default -2)
+
+
 where `options` is an object with the following properties:
 * x : X-position of the image on which the new image is overlayed (default 0)
 * y : Y-position of the image on which the new image is overlayed (default 0)
@@ -427,5 +491,50 @@ This module is used for changing the saturation of the image.
 
 where `options` is an object with the following property:
 * saturation : saturation for the new image (between 0 and 2; default 0)
+## Threshold 
+
+Thresholding is used to create binary images.
+
+## Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('threshold',options)
+           .run()
+```
+where `options` is an object with the following property:
+* type of threshold : it allows to select the types of thresholding (default "manual thresholding")
+* range of threshold : it allows to select the range of thresholding value (default 120)
+
+
+## Tint 
+
+It adds color tint to an image
+
+## Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('tint',options)
+           .run()
+```
+where `options` is an object with the following property:
+* color : RGB values seperated by a space (default "0 0 255")
+* range : amount of tint (default 0.5)
+
+
+## White Balance
+
+This Change the colour balance of the image by adjusting the colour temperature.
+
+## Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('white-balance',options)
+           .run()
+```
+where `options` is an object with the following property:
+* temperature : temperature between 0 - 40,000 kelvin (default 6000)
 
 

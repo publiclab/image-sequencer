@@ -2,6 +2,7 @@
   "name": "PaintBucket",
   "description": "Fill color in pixels",
   "inputs": {
+	"channel":{
       "startingX": {
           "type": "integer",
           "desc": "value of the starting x-coordinate",
@@ -27,4 +28,6 @@
         "step": "1"
       }
   } 
+},
+ "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#paint-bucket-module"
 }

@@ -2,6 +2,7 @@
   "name": "Threshold",
   "description": "Thresholding is used to create binary images",
   "inputs": {
+	"channel":{
     "threshold": {
       "type": "select",
       "desc": "Type of Thresholding",
@@ -17,4 +18,6 @@
       "step": "1"
     }
   }
+},
+ "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#threshold-module"
 }

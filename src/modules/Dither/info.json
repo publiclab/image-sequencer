@@ -2,6 +2,7 @@
     "name": "Dither",
     "description": "Approximates a color from a mixture of other colors when the required color is not available, creating illusions of the color that is not present actually.<a href='https://en.wikipedia.org/wiki/Dither'>Read more</a>",
     "inputs": {
+	"channel":{
       "dither": {
         "type": "select",
         "desc": "Name of the Dithering Algorithm",
@@ -9,5 +10,7 @@
         "values": ["none","floydsteinberg","bayer","Atkinson"]
       }
     }
-}
+},
+	"docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#dither-module"
+  }
   

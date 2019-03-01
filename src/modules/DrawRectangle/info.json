@@ -2,6 +2,7 @@
     "name": "Draw Rectangle",
     "description": "It draws a rectangle on the image",
     "inputs": {
+	"channel":{
   		"startingX":{
   			"type": "Number",
   			"desc": "starting x position of the rectangle",
@@ -38,4 +39,6 @@
         "default": "0 0 0 255"
       }
     }
+},
+ "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#draw-rectangle-module"
 }

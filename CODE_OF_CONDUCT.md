@@ -111,8 +111,4 @@ Staff are bound by their Employment Handbook, you must reference it. Additionall
 * Direct problems that come up among community members to the Conduct Committee.
 * When organizing events, circulate access information regarding wheelchair-accessible ADA bathrooms, non-gendered bathrooms, the presence of stairs or curb ramps in the parking lot, et cetera.
 * During events that you are attending in person, solve accessibility issues by making sure attendees know where bathrooms are located and can access them by wheelchair without being obstructed by things like chairs, kites, contraptions, or cords. 
-<<<<<<< 5d051300ad2603a6735342b36d8cf61d399e2014
 * Watch for people feeling left out and include them.  
-=======
-* Watch for people feeling left out and include them.  
->>>>>>> Merge remote-tracking branch 'upstream/main' into main

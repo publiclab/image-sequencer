@@ -71590,7 +71590,7 @@ module.exports = function flipImage(oldPixels, pixels, axis) {
   }
 
   function flip(){
-    if(axis.toLowerCase() == 'horizontal'){
+    if(axis.toLowerCase() == 'vertical'){
       for (var n=0; n < width; n++){
         for (var m=0; m < height; m++){
           copyPixel(n, m, n, height - m - 1);
@@ -71618,7 +71618,7 @@ module.exports={
   "inputs": {
     "Axis": {
       "type": "select",
-      "desc": "Axis",
+      "desc": "Flips the image over the specified axis",
       "default": "Vertical",
       "values": ["Horizontal", "Vertical"]
     }

@@ -6,7 +6,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   var sequencer = (this.name == "ImageSequencer") ? this : this.sequencer;
   options = options || {};
-  options.inBrowser = options.inBrowser || isBrowser;
+  options.inBrowser = options.inBrowser === undefined ? isBrowser : options.inBrowser;
   options.sequencerCounter = 0;
 
   function objTypeOf(object) {
@@ -132,7 +132,7 @@ ImageSequencer = function ImageSequencer(options) {
   // Config is an object which contains the runtime configuration like progress bar
   // information and index from which the sequencer should run
   function run(config, t_image, t_from) {
-    let progressObj, index = 0;
+    var progressObj, index = 0;
     config = config || { mode: 'no-arg' };
     if (config.index) index = config.index;
 
@@ -455,7 +455,7 @@ ImageSequencer = function ImageSequencer(options) {
     createMetaModule: createMetaModule,
     saveSequence: saveSequence,
     loadModules: loadModules,
-    
+
     //other functions
     log: log,
     objTypeOf: objTypeOf,

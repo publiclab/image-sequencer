@@ -5,7 +5,8 @@ module.exports = function Ndvi(options, UI) {
 
   if (options.step.inBrowser) var ui = require('./Ui.js')(options.step, UI);
 
-  options.filter = options.filter || "red";
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+  options.filter = options.filter || defaults.filter;
 
   var output;
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const cliUtils = require('../src/CliUtils');
+const cliUtils = require('../../src/CliUtils');
 const test = require('tape');
 
 test('Output directory is correctly generated',function(t){

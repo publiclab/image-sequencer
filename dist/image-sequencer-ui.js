@@ -1,6 +1,7 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js'),
     setupCache = require('./lib/cache.js'),
+    intermediateHtmlStepUi = require('./lib/intermediateHtmlStepUi.js'),
     DefaultHtmlStepUi = require('./lib/defaultHtmlStepUi.js'),
     urlHash = require('./lib/urlHash.js'),
     insertPreview = require('./lib/insertPreview.js');
@@ -187,7 +188,7 @@ window.onload = function() {
     onLoad: function onFileReaderLoad(progress) {
       var reader = progress.target;
       var step = sequencer.images.image1.steps[0];
-      var util=IntermediateHtmlStepUi(sequencer);
+      var util= intermediateHtmlStepUi(sequencer);
       step.output.src = reader.result;
       sequencer.run({ index: 0 });
       step.options.step.imgElement.src = reader.result;
@@ -210,7 +211,7 @@ window.onload = function() {
     insertPreview.updatePreviews("images/tulips.png",'addStep');
   }
 };
-},{"./lib/cache.js":2,"./lib/defaultHtmlSequencerUi.js":3,"./lib/defaultHtmlStepUi.js":4,"./lib/insertPreview.js":5,"./lib/urlHash.js":7}],2:[function(require,module,exports){
+},{"./lib/cache.js":2,"./lib/defaultHtmlSequencerUi.js":3,"./lib/defaultHtmlStepUi.js":4,"./lib/insertPreview.js":5,"./lib/intermediateHtmlStepUi.js":6,"./lib/urlHash.js":7}],2:[function(require,module,exports){
 var setupCache = function() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js', { scope: '/examples/' })
@@ -312,6 +313,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
       .addSteps(newStepName, options)
       .run({ index: _sequencer.images.image1.steps.length - sequenceLength - 1 });
       $(addStepSel + " .info").html("Select a new module to add to your sequence.");
+      $(addStepSel + " select").val("none");
 
     //enable save-sequence button if disabled initially
     handleSaveSequence();
@@ -716,7 +718,8 @@ module.exports = {
 }
 },{}],6:[function(require,module,exports){
 var urlHash = require('./urlHash.js'),
-  updatePreviews = require('./insertPreview').updatePreviews;
+    insertPreview = require('./insertPreview.js');
+
 function IntermediateHtmlStepUi(_sequencer, step, options) {
   function stepUI() {
     return '<div class="row insertDiv collapse">\
@@ -802,7 +805,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
         addStepUI
       );
       toggleDiv(function(){
-        updatePreviews(step.output,'insertStep');
+        insertPreview.updatePreviews(step.output,'insertStep');
       });
     }
     
@@ -861,7 +864,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
 module.exports = IntermediateHtmlStepUi;
 
 
-},{"./insertPreview":5,"./urlHash.js":7}],7:[function(require,module,exports){
+},{"./insertPreview.js":5,"./urlHash.js":7}],7:[function(require,module,exports){
 function getUrlHashParameter(param) {
 
   var params = getUrlHashParameters();

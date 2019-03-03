@@ -1,5 +1,6 @@
 var urlHash = require('./urlHash.js'),
-  updatePreviews = require('./insertPreview').updatePreviews;
+    insertPreview = require('./insertPreview.js');
+
 function IntermediateHtmlStepUi(_sequencer, step, options) {
   function stepUI() {
     return '<div class="row insertDiv collapse">\
@@ -85,7 +86,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
         addStepUI
       );
       toggleDiv(function(){
-        updatePreviews(step.output,'insertStep');
+        insertPreview.updatePreviews(step.output,'insertStep');
       });
     }
     

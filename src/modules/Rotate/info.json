@@ -5,7 +5,7 @@
       "rotate": {
         "type": "range",
         "desc": "Angular value for rotation in degrees",
-        "default": "0",
+        "default": "90",
         "min": "0",
         "max": "360",
         "step": "1"

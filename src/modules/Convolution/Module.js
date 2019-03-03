@@ -1,7 +1,9 @@
 module.exports = function Convolution(options, UI) {
 
-    options.kernelValues = options.kernelValues || '1 1 1 1 1 1 1 1 1';
-    options.constantFactor = options.constantFactor || 1/9;
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+
+    options.kernelValues = options.kernelValues || defaults.kernelValues;
+    options.constantFactor = options.constantFactor || defaults.constantFactor;
     var output;
 
     function draw(input, callback, progressObj) {

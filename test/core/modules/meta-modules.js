@@ -1,5 +1,5 @@
 var test = require('tape');
-require('../../src/ImageSequencer.js');
+require('../../../src/ImageSequencer.js');
 
 var sequencer1 = ImageSequencer({ ui: false });
 var sequencer2 = ImageSequencer({ ui: false });
@@ -13,4 +13,13 @@ test('Load ndvi-colormap meta module', function(t) {
     t.equal(sequencer1.images.image1.steps[0].options.name, sequencer2.steps[0].options.name, "First step OK");
     t.equal(sequencer1.images.image1.steps[1].options.name, sequencer2.steps[1].options.name, "Second step OK");
     t.end();
+});
+
+test('Load colorbar opaque meta module', function(t) {
+    sequencer1.loadImages('image1', red);
+    sequencer1.addSteps('colorbar'); // this has been refactored as an opaque meta-module https://github.com/publiclab/image-sequencer/issues/315
+    sequencer1.run((out) => {
+        t.isNotEqual(out, undefined, "Opaque Meta-Module not undefined");
+        t.end();
+    });
 });

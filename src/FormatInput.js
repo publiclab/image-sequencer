@@ -24,22 +24,23 @@ function copy(a) {
 }
 
 function formatInput(args,format,images) {
-  images = [];
-  for (var image in this.images) {
-    images.push(image);
-  }
+  // images = [];
+  // for (var image in this.images) {
+  //   images.push(image);
+  // }
   var json_q = {};
   var format_i = format;
   if (format == "+")
-    format = ['o_string_a', 'string_a', 'o_object'];
+    format = ['string_a', 'o_object'];
   else if (format == "-")
     format = ['o_string_a', 'number_a'];
   else if (format == "^")
     format = ['o_string_a', 'number', 'string', 'o_object'];
   else if (format == "r")
-    format = ['o_string_a', 'o_number'];
+    format = ['o_number'];
   else if (format == "l")
-    format = ['o_string','string','o_function'];
+    format = ['string','o_function'];
+    
 
   /*
     formats:
@@ -74,29 +75,31 @@ function formatInput(args,format,images) {
       args.push(function(){});
   }
 
-  if(format[0] == "o_string_a") {
-    if(args.length == format.length - 1) {
-      var insert = false;
-      for (var i in args) {
-        if (format[parseInt(i)+1].includes( typeof(getPrimitive(args[i])) )){
-          insert = true;
-        }
-        else {insert = false; break;}
-      }
-      if(insert)
-        args.splice(0,0,copy(images));
-    }
-  }
-  else if (format[0] == "o_string" && format_i == "l" && args.length == 2) {
-    if (typeof(args[0]) == "string") {
-      var identifier = "image";
-      var number = 1;
-      while (this.images.hasOwnProperty(identifier+number)) number++;
-      args.splice(0,0,identifier+number);
-    }
-  }
 
-  if(args.length == format.length) {
+  //remember to remove this.
+  // if(format[0] == "o_string_a") {
+  //   if(args.length == format.length - 1) {
+  //     var insert = false;
+  //     for (var i in args) {
+  //       if (format[parseInt(i)+1].includes( typeof(getPrimitive(args[i])) )){
+  //         insert = true;
+  //       }
+  //       else {insert = false; break;}
+  //     }
+  //     if(insert)
+  //       args.splice(0,0,copy(images));
+  //   }
+  // }
+  // else if (format[0] == "o_string" && format_i == "l" && args.length == 2) {
+  //   if (typeof(args[0]) == "string") {
+  //     var identifier = "image";
+  //     var number = 1;
+  //     while (this.images.hasOwnProperty(identifier+number)) number++;
+  //     args.splice(0,0,identifier+number);
+  //   }
+  // }
+
+  if(args.length == format.length) {//making of arrays
     for (var i in format) {
       if (format[i].substr(format[i].length-2,2)=="_a")
         args[i] = makeArray(args[i]);
@@ -109,27 +112,27 @@ function formatInput(args,format,images) {
       for (var img in json_q)
         json_q[img] = makeArray(json_q[img]);
     }
+    if(format_i == "r") json_q = {0:copy(args[0])};
   }
-  else if (format_i == "r") {
-    for (var img in args[0]) json_q[args[0][img]] = args[1];
+  else if (format_i == "r" ) {
+    for (var img in args[0]) json_q = {0:args[0]};
   }
   else if (format_i == "l") {
     json_q = {
-      images: {},
-      callback: args[2]
+      image: args[0],
+      callback: args[1]
     }
-    json_q.images[args[0]] = args[1];
   }
   else {
-    for (var img in args[0]) {
-      var image = args[0][img];
-      json_q[image] = [];
-
+    // for (var img in args[0]) {
+    //   var image = args[0][img];
+    //   json_q[image] = [];
+      json_q = [];
       if(format_i == "+") {
-        for(var s in args[1]) {
-          json_q[image].push({
-            name: args[1][s],
-            o: args[2]
+        for(var s in args[0]) {
+          json_q.push({
+            name: args[0][s],
+            o: args[1]
           });
         }
       }
@@ -148,14 +151,9 @@ function formatInput(args,format,images) {
           name: args[2],
           o: args[3]
         });
-      }
+      // }
 
     }
-  }
-
-  if(format_i == "l") {
-    json_q.loadedimages = [];
-    for (var i in json_q.images) json_q.loadedimages.push(i);
   }
 
   return json_q;

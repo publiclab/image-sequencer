@@ -898,13 +898,13 @@ function mapHtmlTypes(inputInfo){
       htmlType = 'text';
       break;
   }
-  return {
-    ...inputInfo,
-    type: htmlType
-  }
+  var response = inputInfo;
+  response.type = htmlType;
+  return response;
 }
 
 module.exports = mapHtmlTypes;
+
 },{}],8:[function(require,module,exports){
 function getUrlHashParameter(param) {
 

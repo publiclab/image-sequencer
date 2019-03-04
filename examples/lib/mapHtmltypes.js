@@ -20,10 +20,9 @@ function mapHtmlTypes(inputInfo){
       htmlType = 'text';
       break;
   }
-  return {
-    ...inputInfo,
-    type: htmlType
-  }
+  var response = inputInfo;
+  response.type = htmlType;
+  return response;
 }
 
 module.exports = mapHtmlTypes;

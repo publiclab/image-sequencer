@@ -1,0 +1,12 @@
+{
+  "name": "Flip Image",
+  "description": "Flip The Image On The Selected Axis.",
+  "inputs": {
+    "Axis": {
+      "type": "select",
+      "desc": "Axis",
+      "default": "Vertical",
+      "values": ["Horizontal", "Vertical"]
+    }
+  }
+}

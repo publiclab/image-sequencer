@@ -10,6 +10,8 @@
 
 var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js');
 var urlHash = require('./urlHash.js');
+var _ = require('lodash');
+var mapHtmlTypes = require('./mapHtmltypes');
 
 function DefaultHtmlStepUi(_sequencer, options) {
   
@@ -70,7 +72,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       for (var paramName in merged) {
         var isInput = inputs.hasOwnProperty(paramName);
         var html = "";
-        var inputDesc = isInput ? inputs[paramName] : {};
+        var inputDesc = isInput ? mapHtmlTypes(inputs[paramName]) : {};
         if (!isInput) {
           html += '<span class="output"></span>';
         } else if (inputDesc.type.toLowerCase() == "select") {
@@ -98,7 +100,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
               '"max="' +
               inputDesc.max +
               '"step="' +
-              inputDesc.step + '">' + '<span>' + paramVal + '</span>';
+              (inputDesc.step ? inputDesc.step : 1)+ '">' + '<span>' + paramVal + '</span>';
 
           }
           else html += '">';
@@ -156,6 +158,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $(step.ui.querySelectorAll(".cal")).toggleClass("collapse");
     });
     
+    $(step.imgElement).on("mousemove", _.debounce(() => imageHover(step), 150));
 
     function saveOptions(e) {
       e.preventDefault();
@@ -273,10 +276,29 @@ function DefaultHtmlStepUi(_sequencer, options) {
     }
   }
 
+  function imageHover(step){
+
+    var img = $(step.imgElement);
+
+    img.mousemove(function(e) { 
+      var canvas = document.createElement('canvas');
+      canvas.width = img.width();
+      canvas.height = img.height();
+      var context = canvas.getContext('2d');
+      context.drawImage(this,0,0);
+
+      var offset = $(this).offset();
+      var xPos = e.pageX - offset.left;
+      var yPos = e.pageY - offset.top;
+      var myData = context.getImageData(xPos, yPos, 1, 1);
+      img[0].title = "rgb: " +myData.data[0]+","+ myData.data[1]+","+myData.data[2];//+ rgbdata;
+    }); 
+  }
+
   function onRemove(step) {
     step.ui.remove();
     $("#steps .container:nth-last-child(1) .insert-step").prop('disabled',true);
-    $('div[class^=imgareaselect-]').remove();
+    $('div[class*=imgareaselect-]').remove();
   }
 
   function getPreview() {
@@ -302,7 +324,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
     onComplete: onComplete,
     onRemove: onRemove,
     onDraw: onDraw, 
-    notify: notify
+    notify: notify,
+    imageHover: imageHover
   }
 }
 

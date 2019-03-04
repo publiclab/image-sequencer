@@ -38,8 +38,6 @@ function InsertStep(ref, image, index, name, o) {
     ref.modules[name].expandSteps = function expandSteps(stepsArray) {
       for (var i in stepsArray) {
         let step = stepsArray[i];
-        console.log(step['name'])
-        console.log(step['options'])
         ref.insertSteps(index + Number.parseInt(i), step['name'], step['options']);
         // ref.addSteps(step['name'], step['options']);
       }

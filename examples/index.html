@@ -63,7 +63,7 @@
       </p>
       <center>
         <input type="file" id="fileInput" value="" accept="image/*"><br />
-        <button type="button" id="take-photo">Take a Photo</button>
+        <button type="button" id="take-photo" class="btn btn-primary btn-block btn-lg ">Take a Photo</button>
         <video  id="video" width="400" height="300" style="display:none"></video>
         <a href="#" id="capture" style="display:none" class="btn btn-primary btn-md">Click Picture</a>
         <a href="#" id="close" style="display:none" class="btn btn-default btn-md">Close</a>
@@ -82,8 +82,16 @@
     <section id="addStep" class="panel panel-primary">
       <div class="form-inline">
         <div class="panel-body">
+          <div style="display:flex; justify-content:center;">
+          </div>
           <p class="info">Select a new module to add to your sequence.</p>
           <div class="row center-align radio-group">
+            <div>
+              <div class="radio" data-value="resize">
+                <i class="fa fa-arrows-alt fa-4x i-over"></i>
+              </div>
+              <p>Resize</p>
+            </div>
             <div>
               <div class="radio" data-value="brightness">
                 <i class="fa fa-sun-o fa-4x i-over"></i>
@@ -122,6 +130,9 @@
             </select>
             <button class="btn btn-success btn-lg" name="add" id="add-step-btn">Add Step</button>
           </div>
+          <div class="row center-align">
+          <button id="resetButton" class="btn btn-default btn-lg" style=" margin: 20px 35px 0px 35px; width:100%;">Clear All Steps</button>
+        </div>
         </div>
       </div>
     </section>
@@ -130,8 +141,9 @@
       <div class="panel-body">
 
         <div class="row center-align">
-          <button class="btn btn-primary btn-block btn-lg" name="save-sequence" id="save-seq">Save Sequence</button>
-          <button class="btn btn-primary btn-block btn-lg js-view-as-gif" id="gif">View GIF</button>
+          <!--<button class="btn btn-primary btn-block btn-lg" name="save-sequence" id="save-seq">Save Sequence</button> -->
+            <!--<button class="btn btn-primary btn-block btn-lg" id="download-btn" name="download" style="display: block; margin: 0px 10px 0px 0px; width: 250px;">Download PNG</button> -->
+          <button class="btn btn-primary btn-block btn-lg js-view-as-gif" id="gif" style="margin: 0px 35px 0px 35px;width:100%;">View GIF</button>
         </div>
 
 
@@ -165,8 +177,15 @@
       <div class="form-inline">
         <div class="panel-body">
           <div style="text-align:center;">
-            <button class="btn btn-success btn-lg" id="download-btn" name="download">Download PNG</button>
-            <button id="resetButton" class="btn btn-default btn-lg">Clear All Steps</button>
+            <h2 style="margin-top:20px">Save</h2>
+            <p>Or click ARROW to save the entire sequence as a workflow for future use.</p>
+              <select class="form-control input-md" id="selectSaveOption" style="margin-top:20px">
+                <option>Save as PNG</option>
+                <option>Save as GIF (all steps)</option>
+                <option>Save sequence</option>
+                <option>Save sequence string</option>
+              </select>
+                <button id="saveButton" class="btn btn-primary btn-lg" style="margin-top:20px; margin-bottom:0px;align:center; width:100%;">Save</button>
           </div>
         </div>
       </div>
@@ -176,6 +195,26 @@
 
   <footer>
     <hr style="margin:20px;"><center><a class="color:grey;" id="clear-cache">Clear offline cache</a></center>
+    <div class="row">
+      <div class="col-md-6">
+        <h2>Need Help?</h2>
+        <p>
+          Post a link to this and ask help from other community members on <a href="https://github.com/publiclab/image-sequencer/issues">PublicLab.org</a>
+        </p>
+        <p>
+          <a class="btn btn-primary" href="https://github.com/publiclab/image-sequencer/issues">Ask a question &raquo;</a>
+        </p>
+      </div>
+      <div class="col-md-6">
+        <h2>Improve this tool</h2>
+        <p>
+          This is an open source toolkit which you can help add to and improve on <a href="https://github.com/">Github</a>
+        </p>
+        <p>
+          <a class="btn btn-primary" href="https://github.com/publiclab/image-sequencer">View the code &raquo;</a>
+        </p>
+      </div>
+    </div>
   </footer>
 
   <button id="move-up"><i class="fa fa-arrow-circle-o-up"></i></button>

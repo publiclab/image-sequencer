@@ -24,7 +24,7 @@
       "default": "(50%)"
     },
     "backgroundColor": {
-      "type": "String",
+      "type": "string",
       "desc": "Background Color (Four space separated RGBA values)",
       "default": "255 255 255 255",
       "placeholder": "255 255 255 255"

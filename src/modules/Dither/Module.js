@@ -1,5 +1,5 @@
 module.exports = function Dither(options, UI){
-
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
     var output;
 
     function draw(input,callback,progressObj){
@@ -8,6 +8,7 @@ module.exports = function Dither(options, UI){
         progressObj.overrideFlag = true;
 
         var step = this;
+        options.dither = options.dither || defaults.dither;
 
         function extraManipulation(pixels) {
             pixels = require('./Dither')(pixels, options.dither)

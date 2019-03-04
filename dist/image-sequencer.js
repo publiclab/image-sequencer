@@ -6007,7 +6007,7 @@ module.exports = ret;
 },{"./es5":13}]},{},[4])(4)
 });                    ;if (typeof window !== 'undefined' && window !== null) {                               window.P = window.Promise;                                                     } else if (typeof self !== 'undefined' && self !== null) {                             self.P = self.Promise;                                                         }
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("timers").setImmediate)
-},{"_process":117,"timers":142}],4:[function(require,module,exports){
+},{"_process":118,"timers":172}],4:[function(require,module,exports){
 
 },{}],5:[function(require,module,exports){
 (function (process){
@@ -6318,7 +6318,7 @@ var extractCodes = exports.extractCodes = function (buf) {
 }
 
 }).call(this,require('_process'))
-},{"./lib/encode":6,"_process":117,"stream":139,"tty":143}],6:[function(require,module,exports){
+},{"./lib/encode":6,"_process":118,"stream":169,"tty":173}],6:[function(require,module,exports){
 (function (Buffer){
 var encode = module.exports = function (xs) {
     function bytes (s) {
@@ -6340,7 +6340,7 @@ var ord = encode.ord = function ord (c) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":47}],7:[function(require,module,exports){
+},{"buffer":48}],7:[function(require,module,exports){
 (function (Buffer){
 /**!
  * contentstream - index.js
@@ -6389,7 +6389,7 @@ ContentStream.prototype._read = function (n) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":47,"readable-stream":13,"util":150}],8:[function(require,module,exports){
+},{"buffer":48,"readable-stream":13,"util":180}],8:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -6482,7 +6482,7 @@ function forEach (xs, f) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_readable":10,"./_stream_writable":12,"_process":117,"core-util-is":14,"inherits":70}],9:[function(require,module,exports){
+},{"./_stream_readable":10,"./_stream_writable":12,"_process":118,"core-util-is":14,"inherits":71}],9:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -6530,7 +6530,7 @@ PassThrough.prototype._transform = function(chunk, encoding, cb) {
   cb(null, chunk);
 };
 
-},{"./_stream_transform":11,"core-util-is":14,"inherits":70}],10:[function(require,module,exports){
+},{"./_stream_transform":11,"core-util-is":14,"inherits":71}],10:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -7516,7 +7516,7 @@ function indexOf (xs, x) {
 }
 
 }).call(this,require('_process'))
-},{"_process":117,"buffer":47,"core-util-is":14,"events":48,"inherits":70,"isarray":73,"stream":139,"string_decoder/":140}],11:[function(require,module,exports){
+},{"_process":118,"buffer":48,"core-util-is":14,"events":49,"inherits":71,"isarray":74,"stream":169,"string_decoder/":170}],11:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -7728,7 +7728,7 @@ function done(stream, er) {
   return stream.push(null);
 }
 
-},{"./_stream_duplex":8,"core-util-is":14,"inherits":70}],12:[function(require,module,exports){
+},{"./_stream_duplex":8,"core-util-is":14,"inherits":71}],12:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -8118,7 +8118,7 @@ function endWritable(stream, state, cb) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":8,"_process":117,"buffer":47,"core-util-is":14,"inherits":70,"stream":139}],13:[function(require,module,exports){
+},{"./_stream_duplex":8,"_process":118,"buffer":48,"core-util-is":14,"inherits":71,"stream":169}],13:[function(require,module,exports){
 (function (process){
 var Stream = require('stream'); // hack to fix a circular dependency issue when used with browserify
 exports = module.exports = require('./lib/_stream_readable.js');
@@ -8133,7 +8133,7 @@ if (!process.browser && process.env.READABLE_STREAM === 'disable') {
 }
 
 }).call(this,require('_process'))
-},{"./lib/_stream_duplex.js":8,"./lib/_stream_passthrough.js":9,"./lib/_stream_readable.js":10,"./lib/_stream_transform.js":11,"./lib/_stream_writable.js":12,"_process":117,"stream":139}],14:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":8,"./lib/_stream_passthrough.js":9,"./lib/_stream_readable.js":10,"./lib/_stream_transform.js":11,"./lib/_stream_writable.js":12,"_process":118,"stream":169}],14:[function(require,module,exports){
 (function (Buffer){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -8244,7 +8244,7 @@ function objectToString(o) {
 }
 
 }).call(this,{"isBuffer":require("../../is-buffer/index.js")})
-},{"../../is-buffer/index.js":72}],15:[function(require,module,exports){
+},{"../../is-buffer/index.js":73}],15:[function(require,module,exports){
 "use strict"
 
 var createThunk = require("./lib/thunk.js")
@@ -8715,7 +8715,7 @@ function generateCWiseOp(proc, typesig) {
 }
 module.exports = generateCWiseOp
 
-},{"uniq":146}],17:[function(require,module,exports){
+},{"uniq":176}],17:[function(require,module,exports){
 "use strict"
 
 // The function below is called when constructing a cwise function object, and does the following:
@@ -8875,7 +8875,174 @@ function dataUriToBuffer (uri) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":47}],20:[function(require,module,exports){
+},{"buffer":48}],20:[function(require,module,exports){
+'use strict';
+
+/******************************************************************************
+ * Created 2008-08-19.
+ *
+ * Dijkstra path-finding functions. Adapted from the Dijkstar Python project.
+ *
+ * Copyright (C) 2008
+ *   Wyatt Baldwin <self@wyattbaldwin.com>
+ *   All rights reserved
+ *
+ * Licensed under the MIT license.
+ *
+ *   http://www.opensource.org/licenses/mit-license.php
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *****************************************************************************/
+var dijkstra = {
+  single_source_shortest_paths: function(graph, s, d) {
+    // Predecessor map for each node that has been encountered.
+    // node ID => predecessor node ID
+    var predecessors = {};
+
+    // Costs of shortest paths from s to all nodes encountered.
+    // node ID => cost
+    var costs = {};
+    costs[s] = 0;
+
+    // Costs of shortest paths from s to all nodes encountered; differs from
+    // `costs` in that it provides easy access to the node that currently has
+    // the known shortest path from s.
+    // XXX: Do we actually need both `costs` and `open`?
+    var open = dijkstra.PriorityQueue.make();
+    open.push(s, 0);
+
+    var closest,
+        u, v,
+        cost_of_s_to_u,
+        adjacent_nodes,
+        cost_of_e,
+        cost_of_s_to_u_plus_cost_of_e,
+        cost_of_s_to_v,
+        first_visit;
+    while (!open.empty()) {
+      // In the nodes remaining in graph that have a known cost from s,
+      // find the node, u, that currently has the shortest path from s.
+      closest = open.pop();
+      u = closest.value;
+      cost_of_s_to_u = closest.cost;
+
+      // Get nodes adjacent to u...
+      adjacent_nodes = graph[u] || {};
+
+      // ...and explore the edges that connect u to those nodes, updating
+      // the cost of the shortest paths to any or all of those nodes as
+      // necessary. v is the node across the current edge from u.
+      for (v in adjacent_nodes) {
+        if (adjacent_nodes.hasOwnProperty(v)) {
+          // Get the cost of the edge running from u to v.
+          cost_of_e = adjacent_nodes[v];
+
+          // Cost of s to u plus the cost of u to v across e--this is *a*
+          // cost from s to v that may or may not be less than the current
+          // known cost to v.
+          cost_of_s_to_u_plus_cost_of_e = cost_of_s_to_u + cost_of_e;
+
+          // If we haven't visited v yet OR if the current known cost from s to
+          // v is greater than the new cost we just found (cost of s to u plus
+          // cost of u to v across e), update v's cost in the cost list and
+          // update v's predecessor in the predecessor list (it's now u).
+          cost_of_s_to_v = costs[v];
+          first_visit = (typeof costs[v] === 'undefined');
+          if (first_visit || cost_of_s_to_v > cost_of_s_to_u_plus_cost_of_e) {
+            costs[v] = cost_of_s_to_u_plus_cost_of_e;
+            open.push(v, cost_of_s_to_u_plus_cost_of_e);
+            predecessors[v] = u;
+          }
+        }
+      }
+    }
+
+    if (typeof d !== 'undefined' && typeof costs[d] === 'undefined') {
+      var msg = ['Could not find a path from ', s, ' to ', d, '.'].join('');
+      throw new Error(msg);
+    }
+
+    return predecessors;
+  },
+
+  extract_shortest_path_from_predecessor_list: function(predecessors, d) {
+    var nodes = [];
+    var u = d;
+    var predecessor;
+    while (u) {
+      nodes.push(u);
+      predecessor = predecessors[u];
+      u = predecessors[u];
+    }
+    nodes.reverse();
+    return nodes;
+  },
+
+  find_path: function(graph, s, d) {
+    var predecessors = dijkstra.single_source_shortest_paths(graph, s, d);
+    return dijkstra.extract_shortest_path_from_predecessor_list(
+      predecessors, d);
+  },
+
+  /**
+   * A very naive priority queue implementation.
+   */
+  PriorityQueue: {
+    make: function (opts) {
+      var T = dijkstra.PriorityQueue,
+          t = {},
+          key;
+      opts = opts || {};
+      for (key in T) {
+        if (T.hasOwnProperty(key)) {
+          t[key] = T[key];
+        }
+      }
+      t.queue = [];
+      t.sorter = opts.sorter || T.default_sorter;
+      return t;
+    },
+
+    default_sorter: function (a, b) {
+      return a.cost - b.cost;
+    },
+
+    /**
+     * Add a new item to the queue and ensure the highest priority element
+     * is at the front of the queue.
+     */
+    push: function (value, cost) {
+      var item = {value: value, cost: cost};
+      this.queue.push(item);
+      this.queue.sort(this.sorter);
+    },
+
+    /**
+     * Return the highest priority element in the queue.
+     */
+    pop: function () {
+      return this.queue.shift();
+    },
+
+    empty: function () {
+      return this.queue.length === 0;
+    }
+  }
+};
+
+
+// node.js module exports
+if (typeof module !== 'undefined') {
+  module.exports = dijkstra;
+}
+
+},{}],21:[function(require,module,exports){
 "use strict"
 
 function dupe_array(count, value, i) {
@@ -8925,7 +9092,7 @@ function dupe(count, value) {
 }
 
 module.exports = dupe
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 var FisheyeGl = function FisheyeGl(options){
 
   // Defaults:
@@ -9233,7 +9400,7 @@ if (typeof(document) != 'undefined')
 else
   module.exports = FisheyeGl;
 
-},{"./shaders":22}],22:[function(require,module,exports){
+},{"./shaders":23}],23:[function(require,module,exports){
 module.exports = {
   fragment: require('./shaders/fragment.glfs'),
   fragment2: require('./shaders/fragment2.glfs'),
@@ -9243,7 +9410,7 @@ module.exports = {
   vertex: require('./shaders/vertex.glvs')
 };
 
-},{"./shaders/fragment.glfs":23,"./shaders/fragment2.glfs":24,"./shaders/fragment3.glfs":25,"./shaders/method1.glfs":26,"./shaders/method2.glfs":27,"./shaders/vertex.glvs":28}],23:[function(require,module,exports){
+},{"./shaders/fragment.glfs":24,"./shaders/fragment2.glfs":25,"./shaders/fragment3.glfs":26,"./shaders/method1.glfs":27,"./shaders/method2.glfs":28,"./shaders/vertex.glvs":29}],24:[function(require,module,exports){
 module.exports = "\
 #ifdef GL_ES\n\
 precision highp float;\n\
@@ -9271,7 +9438,7 @@ void main(void){\n\
 	gl_FragColor = texture;\n\
 }\n\
 ";
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 module.exports = "\
 #ifdef GL_ES\n\
 precision highp float;\n\
@@ -9304,7 +9471,7 @@ void main(void){\n\
 	gl_FragColor = texture;\n\
 }\n\
 ";
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 module.exports = "\
 #ifdef GL_ES\n\
 precision highp float;\n\
@@ -9335,7 +9502,7 @@ void main(void){\n\
 	gl_FragColor = texture;\n\
 }\n\
 ";
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 module.exports = "\
 #ifdef GL_ES\n\
 precision highp float;\n\
@@ -9367,7 +9534,7 @@ void main(void){\n\
 	gl_FragColor = texture;\n\
 }\n\
 ";
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 module.exports = "\
 #ifdef GL_ES\n\
 precision highp float;\n\
@@ -9399,7 +9566,7 @@ void main(void){\n\
 	gl_FragColor = texture;\n\
 }\n\
 ";
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 module.exports = "\
 #ifdef GL_ES\n\
 precision highp float;\n\
@@ -9414,7 +9581,7 @@ void main(void){\n\
 	gl_Position = vec4(vPosition,1.0);\n\
 }\n\
 ";
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 (function (Buffer,process){
 'use strict'
 
@@ -9552,7 +9719,7 @@ module.exports = function getPixels(url, type, cb) {
   }
 }
 }).call(this,{"isBuffer":require("../is-buffer/index.js")},require('_process'))
-},{"../is-buffer/index.js":72,"_process":117,"data-uri-to-buffer":30,"ndarray":84,"ndarray-pack":82,"omggif":93,"path":95,"through":141}],30:[function(require,module,exports){
+},{"../is-buffer/index.js":73,"_process":118,"data-uri-to-buffer":31,"ndarray":85,"ndarray-pack":83,"omggif":94,"path":96,"through":171}],31:[function(require,module,exports){
 (function (Buffer){
 
 /**
@@ -9610,7 +9777,7 @@ function dataUriToBuffer (uri) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":47}],31:[function(require,module,exports){
+},{"buffer":48}],32:[function(require,module,exports){
 (function (Buffer){
 /*
   GIFEncoder.js
@@ -10083,7 +10250,7 @@ GIFEncoder.ByteCapacitor = ByteCapacitor;
 module.exports = GIFEncoder;
 
 }).call(this,require("buffer").Buffer)
-},{"./LZWEncoder.js":32,"./TypedNeuQuant.js":33,"assert":40,"buffer":47,"events":48,"readable-stream":39,"util":150}],32:[function(require,module,exports){
+},{"./LZWEncoder.js":33,"./TypedNeuQuant.js":34,"assert":41,"buffer":48,"events":49,"readable-stream":40,"util":180}],33:[function(require,module,exports){
 /*
   LZWEncoder.js
 
@@ -10297,7 +10464,7 @@ function LZWEncoder(width, height, pixels, colorDepth) {
 
 module.exports = LZWEncoder;
 
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 /* NeuQuant Neural-Net Quantization Algorithm
  * ------------------------------------------
  *
@@ -10730,11 +10897,11 @@ function NeuQuant(pixels, samplefac) {
 
 module.exports = NeuQuant;
 
-},{}],34:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 arguments[4][8][0].apply(exports,arguments)
-},{"./_stream_readable":36,"./_stream_writable":38,"_process":117,"core-util-is":14,"dup":8,"inherits":70}],35:[function(require,module,exports){
+},{"./_stream_readable":37,"./_stream_writable":39,"_process":118,"core-util-is":14,"dup":8,"inherits":71}],36:[function(require,module,exports){
 arguments[4][9][0].apply(exports,arguments)
-},{"./_stream_transform":37,"core-util-is":14,"dup":9,"inherits":70}],36:[function(require,module,exports){
+},{"./_stream_transform":38,"core-util-is":14,"dup":9,"inherits":71}],37:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -11689,7 +11856,7 @@ function indexOf (xs, x) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":34,"_process":117,"buffer":47,"core-util-is":14,"events":48,"inherits":70,"isarray":73,"stream":139,"string_decoder/":140,"util":4}],37:[function(require,module,exports){
+},{"./_stream_duplex":35,"_process":118,"buffer":48,"core-util-is":14,"events":49,"inherits":71,"isarray":74,"stream":169,"string_decoder/":170,"util":4}],38:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -11900,7 +12067,7 @@ function done(stream, er) {
   return stream.push(null);
 }
 
-},{"./_stream_duplex":34,"core-util-is":14,"inherits":70}],38:[function(require,module,exports){
+},{"./_stream_duplex":35,"core-util-is":14,"inherits":71}],39:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -12381,7 +12548,7 @@ function endWritable(stream, state, cb) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":34,"_process":117,"buffer":47,"core-util-is":14,"inherits":70,"stream":139}],39:[function(require,module,exports){
+},{"./_stream_duplex":35,"_process":118,"buffer":48,"core-util-is":14,"inherits":71,"stream":169}],40:[function(require,module,exports){
 (function (process){
 exports = module.exports = require('./lib/_stream_readable.js');
 exports.Stream = require('stream');
@@ -12395,7 +12562,7 @@ if (!process.browser && process.env.READABLE_STREAM === 'disable') {
 }
 
 }).call(this,require('_process'))
-},{"./lib/_stream_duplex.js":34,"./lib/_stream_passthrough.js":35,"./lib/_stream_readable.js":36,"./lib/_stream_transform.js":37,"./lib/_stream_writable.js":38,"_process":117,"stream":139}],40:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":35,"./lib/_stream_passthrough.js":36,"./lib/_stream_readable.js":37,"./lib/_stream_transform.js":38,"./lib/_stream_writable.js":39,"_process":118,"stream":169}],41:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -12889,7 +13056,7 @@ var objectKeys = Object.keys || function (obj) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"util/":43}],41:[function(require,module,exports){
+},{"util/":44}],42:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -12914,14 +13081,14 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],42:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -13511,7 +13678,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":42,"_process":117,"inherits":41}],44:[function(require,module,exports){
+},{"./support/isBuffer":43,"_process":118,"inherits":42}],45:[function(require,module,exports){
 (function (process,Buffer){
 'use strict';
 /* eslint camelcase: "off" */
@@ -13923,7 +14090,7 @@ Zlib.prototype._reset = function () {
 
 exports.Zlib = Zlib;
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"_process":117,"assert":40,"buffer":47,"pako/lib/zlib/constants":51,"pako/lib/zlib/deflate.js":53,"pako/lib/zlib/inflate.js":55,"pako/lib/zlib/zstream":59}],45:[function(require,module,exports){
+},{"_process":118,"assert":41,"buffer":48,"pako/lib/zlib/constants":52,"pako/lib/zlib/deflate.js":54,"pako/lib/zlib/inflate.js":56,"pako/lib/zlib/zstream":60}],46:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -14535,9 +14702,9 @@ util.inherits(DeflateRaw, Zlib);
 util.inherits(InflateRaw, Zlib);
 util.inherits(Unzip, Zlib);
 }).call(this,require('_process'))
-},{"./binding":44,"_process":117,"assert":40,"buffer":47,"stream":139,"util":150}],46:[function(require,module,exports){
+},{"./binding":45,"_process":118,"assert":41,"buffer":48,"stream":169,"util":180}],47:[function(require,module,exports){
 arguments[4][4][0].apply(exports,arguments)
-},{"dup":4}],47:[function(require,module,exports){
+},{"dup":4}],48:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -16253,7 +16420,7 @@ function numberIsNaN (obj) {
   return obj !== obj // eslint-disable-line no-self-compare
 }
 
-},{"base64-js":1,"ieee754":60}],48:[function(require,module,exports){
+},{"base64-js":1,"ieee754":61}],49:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -16778,7 +16945,7 @@ function functionBindPolyfill(context) {
   };
 }
 
-},{}],49:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 'use strict';
 
 
@@ -16885,7 +17052,7 @@ exports.setTyped = function (on) {
 
 exports.setTyped(TYPED_OK);
 
-},{}],50:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 'use strict';
 
 // Note: adler32 takes 12% for level 0 and 2% for level 6.
@@ -16938,7 +17105,7 @@ function adler32(adler, buf, len, pos) {
 
 module.exports = adler32;
 
-},{}],51:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 'use strict';
 
 // (C) 1995-2013 Jean-loup Gailly and Mark Adler
@@ -17008,7 +17175,7 @@ module.exports = {
   //Z_NULL:                 null // Use -1 or null inline, depending on var type
 };
 
-},{}],52:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 'use strict';
 
 // Note: we can't get significant speed boost here.
@@ -17069,7 +17236,7 @@ function crc32(crc, buf, len, pos) {
 
 module.exports = crc32;
 
-},{}],53:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 'use strict';
 
 // (C) 1995-2013 Jean-loup Gailly and Mark Adler
@@ -18945,7 +19112,7 @@ exports.deflatePrime = deflatePrime;
 exports.deflateTune = deflateTune;
 */
 
-},{"../utils/common":49,"./adler32":50,"./crc32":52,"./messages":57,"./trees":58}],54:[function(require,module,exports){
+},{"../utils/common":50,"./adler32":51,"./crc32":53,"./messages":58,"./trees":59}],55:[function(require,module,exports){
 'use strict';
 
 // (C) 1995-2013 Jean-loup Gailly and Mark Adler
@@ -19292,7 +19459,7 @@ module.exports = function inflate_fast(strm, start) {
   return;
 };
 
-},{}],55:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 'use strict';
 
 // (C) 1995-2013 Jean-loup Gailly and Mark Adler
@@ -20850,7 +21017,7 @@ exports.inflateSyncPoint = inflateSyncPoint;
 exports.inflateUndermine = inflateUndermine;
 */
 
-},{"../utils/common":49,"./adler32":50,"./crc32":52,"./inffast":54,"./inftrees":56}],56:[function(require,module,exports){
+},{"../utils/common":50,"./adler32":51,"./crc32":53,"./inffast":55,"./inftrees":57}],57:[function(require,module,exports){
 'use strict';
 
 // (C) 1995-2013 Jean-loup Gailly and Mark Adler
@@ -21195,7 +21362,7 @@ module.exports = function inflate_table(type, lens, lens_index, codes, table, ta
   return 0;
 };
 
-},{"../utils/common":49}],57:[function(require,module,exports){
+},{"../utils/common":50}],58:[function(require,module,exports){
 'use strict';
 
 // (C) 1995-2013 Jean-loup Gailly and Mark Adler
@@ -21229,7 +21396,7 @@ module.exports = {
   '-6':   'incompatible version' /* Z_VERSION_ERROR (-6) */
 };
 
-},{}],58:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
 'use strict';
 
 // (C) 1995-2013 Jean-loup Gailly and Mark Adler
@@ -22451,7 +22618,7 @@ exports._tr_flush_block  = _tr_flush_block;
 exports._tr_tally = _tr_tally;
 exports._tr_align = _tr_align;
 
-},{"../utils/common":49}],59:[function(require,module,exports){
+},{"../utils/common":50}],60:[function(require,module,exports){
 'use strict';
 
 // (C) 1995-2013 Jean-loup Gailly and Mark Adler
@@ -22500,7 +22667,7 @@ function ZStream() {
 
 module.exports = ZStream;
 
-},{}],60:[function(require,module,exports){
+},{}],61:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = (nBytes * 8) - mLen - 1
@@ -22586,7 +22753,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],61:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 /*
  * Invert the image
  */
@@ -22638,7 +22805,7 @@ var info = {
   }
 }
 module.exports = [Invert,info];
-},{}],62:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 /**
  * Copyright (c) 2015 Guyon Roche
  * 
@@ -22671,7 +22838,7 @@ var main = module.exports = {
 
 _.extend(main, require("./lib/enums"));
 
-},{"./lib/bitmap":63,"./lib/enums":64,"underscore":145}],63:[function(require,module,exports){
+},{"./lib/bitmap":64,"./lib/enums":65,"underscore":175}],64:[function(require,module,exports){
 (function (Buffer){
 /**
  * Copyright (c) 2015 Guyon Roche
@@ -23266,7 +23433,7 @@ Bitmap.prototype = {
     }
 }
 }).call(this,require("buffer").Buffer)
-},{"./enums":64,"./resize":65,"./utils":66,"bluebird":3,"buffer":47,"fs":46,"jpeg-js":67,"node-png":92,"underscore":145}],64:[function(require,module,exports){
+},{"./enums":65,"./resize":66,"./utils":67,"bluebird":3,"buffer":48,"fs":47,"jpeg-js":68,"node-png":93,"underscore":175}],65:[function(require,module,exports){
 /**
  * Copyright (c) 2015 Guyon Roche
  * 
@@ -23297,7 +23464,7 @@ module.exports = {
         PNG: 2
     }
 };
-},{}],65:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 (function (Buffer){
 /**
  * Copyright (c) 2015 Guyon Roche
@@ -23591,7 +23758,7 @@ module.exports = {
     }
 }
 }).call(this,require("buffer").Buffer)
-},{"./bitmap":63,"bluebird":3,"buffer":47,"underscore":145}],66:[function(require,module,exports){
+},{"./bitmap":64,"bluebird":3,"buffer":48,"underscore":175}],67:[function(require,module,exports){
 /**
  * Copyright (c) 2015 Guyon Roche
  * 
@@ -23634,7 +23801,7 @@ var utils = module.exports = {
         }
     }
 }
-},{"bluebird":3,"fs":46,"underscore":145}],67:[function(require,module,exports){
+},{"bluebird":3,"fs":47,"underscore":175}],68:[function(require,module,exports){
 var encode = require('./lib/encoder'),
     decode = require('./lib/decoder');
 
@@ -23643,7 +23810,7 @@ module.exports = {
   decode: decode
 };
 
-},{"./lib/decoder":68,"./lib/encoder":69}],68:[function(require,module,exports){
+},{"./lib/decoder":69,"./lib/encoder":70}],69:[function(require,module,exports){
 (function (Buffer){
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- /
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
@@ -24633,7 +24800,7 @@ function decode(jpegData) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":47}],69:[function(require,module,exports){
+},{"buffer":48}],70:[function(require,module,exports){
 (function (Buffer){
 /*
   Copyright (c) 2008, Adobe Systems Incorporated
@@ -25403,9 +25570,9 @@ function getImageDataFromImage(idOrElement){
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":47}],70:[function(require,module,exports){
-arguments[4][41][0].apply(exports,arguments)
-},{"dup":41}],71:[function(require,module,exports){
+},{"buffer":48}],71:[function(require,module,exports){
+arguments[4][42][0].apply(exports,arguments)
+},{"dup":42}],72:[function(require,module,exports){
 "use strict"
 
 function iota(n) {
@@ -25417,7 +25584,7 @@ function iota(n) {
 }
 
 module.exports = iota
-},{}],72:[function(require,module,exports){
+},{}],73:[function(require,module,exports){
 /*!
  * Determine if an object is a Buffer
  *
@@ -25440,12 +25607,12 @@ function isSlowBuffer (obj) {
   return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
 }
 
-},{}],73:[function(require,module,exports){
+},{}],74:[function(require,module,exports){
 module.exports = Array.isArray || function (arr) {
   return Object.prototype.toString.call(arr) == '[object Array]';
 };
 
-},{}],74:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -35488,7 +35655,7 @@ exports.locate = locate;
 /***/ })
 /******/ ])["default"];
 });
-},{}],75:[function(require,module,exports){
+},{}],76:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -52599,7 +52766,7 @@ exports.locate = locate;
 }.call(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],76:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 (function (process){
 var path = require('path');
 var fs = require('fs');
@@ -52711,9 +52878,9 @@ mime.charsets = {
 module.exports = mime;
 
 }).call(this,require('_process'))
-},{"./types.json":77,"_process":117,"fs":46,"path":95}],77:[function(require,module,exports){
+},{"./types.json":78,"_process":118,"fs":47,"path":96}],78:[function(require,module,exports){
 module.exports={"application/andrew-inset":["ez"],"application/applixware":["aw"],"application/atom+xml":["atom"],"application/atomcat+xml":["atomcat"],"application/atomsvc+xml":["atomsvc"],"application/bdoc":["bdoc"],"application/ccxml+xml":["ccxml"],"application/cdmi-capability":["cdmia"],"application/cdmi-container":["cdmic"],"application/cdmi-domain":["cdmid"],"application/cdmi-object":["cdmio"],"application/cdmi-queue":["cdmiq"],"application/cu-seeme":["cu"],"application/dash+xml":["mpd"],"application/davmount+xml":["davmount"],"application/docbook+xml":["dbk"],"application/dssc+der":["dssc"],"application/dssc+xml":["xdssc"],"application/ecmascript":["ecma"],"application/emma+xml":["emma"],"application/epub+zip":["epub"],"application/exi":["exi"],"application/font-tdpfr":["pfr"],"application/font-woff":[],"application/font-woff2":[],"application/geo+json":["geojson"],"application/gml+xml":["gml"],"application/gpx+xml":["gpx"],"application/gxf":["gxf"],"application/gzip":["gz"],"application/hyperstudio":["stk"],"application/inkml+xml":["ink","inkml"],"application/ipfix":["ipfix"],"application/java-archive":["jar","war","ear"],"application/java-serialized-object":["ser"],"application/java-vm":["class"],"application/javascript":["js","mjs"],"application/json":["json","map"],"application/json5":["json5"],"application/jsonml+json":["jsonml"],"application/ld+json":["jsonld"],"application/lost+xml":["lostxml"],"application/mac-binhex40":["hqx"],"application/mac-compactpro":["cpt"],"application/mads+xml":["mads"],"application/manifest+json":["webmanifest"],"application/marc":["mrc"],"application/marcxml+xml":["mrcx"],"application/mathematica":["ma","nb","mb"],"application/mathml+xml":["mathml"],"application/mbox":["mbox"],"application/mediaservercontrol+xml":["mscml"],"application/metalink+xml":["metalink"],"application/metalink4+xml":["meta4"],"application/mets+xml":["mets"],"application/mods+xml":["mods"],"application/mp21":["m21","mp21"],"application/mp4":["mp4s","m4p"],"application/msword":["doc","dot"],"application/mxf":["mxf"],"application/octet-stream":["bin","dms","lrf","mar","so","dist","distz","pkg","bpk","dump","elc","deploy","exe","dll","deb","dmg","iso","img","msi","msp","msm","buffer"],"application/oda":["oda"],"application/oebps-package+xml":["opf"],"application/ogg":["ogx"],"application/omdoc+xml":["omdoc"],"application/onenote":["onetoc","onetoc2","onetmp","onepkg"],"application/oxps":["oxps"],"application/patch-ops-error+xml":["xer"],"application/pdf":["pdf"],"application/pgp-encrypted":["pgp"],"application/pgp-signature":["asc","sig"],"application/pics-rules":["prf"],"application/pkcs10":["p10"],"application/pkcs7-mime":["p7m","p7c"],"application/pkcs7-signature":["p7s"],"application/pkcs8":["p8"],"application/pkix-attr-cert":["ac"],"application/pkix-cert":["cer"],"application/pkix-crl":["crl"],"application/pkix-pkipath":["pkipath"],"application/pkixcmp":["pki"],"application/pls+xml":["pls"],"application/postscript":["ai","eps","ps"],"application/prs.cww":["cww"],"application/pskc+xml":["pskcxml"],"application/raml+yaml":["raml"],"application/rdf+xml":["rdf"],"application/reginfo+xml":["rif"],"application/relax-ng-compact-syntax":["rnc"],"application/resource-lists+xml":["rl"],"application/resource-lists-diff+xml":["rld"],"application/rls-services+xml":["rs"],"application/rpki-ghostbusters":["gbr"],"application/rpki-manifest":["mft"],"application/rpki-roa":["roa"],"application/rsd+xml":["rsd"],"application/rss+xml":["rss"],"application/rtf":["rtf"],"application/sbml+xml":["sbml"],"application/scvp-cv-request":["scq"],"application/scvp-cv-response":["scs"],"application/scvp-vp-request":["spq"],"application/scvp-vp-response":["spp"],"application/sdp":["sdp"],"application/set-payment-initiation":["setpay"],"application/set-registration-initiation":["setreg"],"application/shf+xml":["shf"],"application/smil+xml":["smi","smil"],"application/sparql-query":["rq"],"application/sparql-results+xml":["srx"],"application/srgs":["gram"],"application/srgs+xml":["grxml"],"application/sru+xml":["sru"],"application/ssdl+xml":["ssdl"],"application/ssml+xml":["ssml"],"application/tei+xml":["tei","teicorpus"],"application/thraud+xml":["tfi"],"application/timestamped-data":["tsd"],"application/vnd.3gpp.pic-bw-large":["plb"],"application/vnd.3gpp.pic-bw-small":["psb"],"application/vnd.3gpp.pic-bw-var":["pvb"],"application/vnd.3gpp2.tcap":["tcap"],"application/vnd.3m.post-it-notes":["pwn"],"application/vnd.accpac.simply.aso":["aso"],"application/vnd.accpac.simply.imp":["imp"],"application/vnd.acucobol":["acu"],"application/vnd.acucorp":["atc","acutc"],"application/vnd.adobe.air-application-installer-package+zip":["air"],"application/vnd.adobe.formscentral.fcdt":["fcdt"],"application/vnd.adobe.fxp":["fxp","fxpl"],"application/vnd.adobe.xdp+xml":["xdp"],"application/vnd.adobe.xfdf":["xfdf"],"application/vnd.ahead.space":["ahead"],"application/vnd.airzip.filesecure.azf":["azf"],"application/vnd.airzip.filesecure.azs":["azs"],"application/vnd.amazon.ebook":["azw"],"application/vnd.americandynamics.acc":["acc"],"application/vnd.amiga.ami":["ami"],"application/vnd.android.package-archive":["apk"],"application/vnd.anser-web-certificate-issue-initiation":["cii"],"application/vnd.anser-web-funds-transfer-initiation":["fti"],"application/vnd.antix.game-component":["atx"],"application/vnd.apple.installer+xml":["mpkg"],"application/vnd.apple.mpegurl":["m3u8"],"application/vnd.apple.pkpass":["pkpass"],"application/vnd.aristanetworks.swi":["swi"],"application/vnd.astraea-software.iota":["iota"],"application/vnd.audiograph":["aep"],"application/vnd.blueice.multipass":["mpm"],"application/vnd.bmi":["bmi"],"application/vnd.businessobjects":["rep"],"application/vnd.chemdraw+xml":["cdxml"],"application/vnd.chipnuts.karaoke-mmd":["mmd"],"application/vnd.cinderella":["cdy"],"application/vnd.claymore":["cla"],"application/vnd.cloanto.rp9":["rp9"],"application/vnd.clonk.c4group":["c4g","c4d","c4f","c4p","c4u"],"application/vnd.cluetrust.cartomobile-config":["c11amc"],"application/vnd.cluetrust.cartomobile-config-pkg":["c11amz"],"application/vnd.commonspace":["csp"],"application/vnd.contact.cmsg":["cdbcmsg"],"application/vnd.cosmocaller":["cmc"],"application/vnd.crick.clicker":["clkx"],"application/vnd.crick.clicker.keyboard":["clkk"],"application/vnd.crick.clicker.palette":["clkp"],"application/vnd.crick.clicker.template":["clkt"],"application/vnd.crick.clicker.wordbank":["clkw"],"application/vnd.criticaltools.wbs+xml":["wbs"],"application/vnd.ctc-posml":["pml"],"application/vnd.cups-ppd":["ppd"],"application/vnd.curl.car":["car"],"application/vnd.curl.pcurl":["pcurl"],"application/vnd.dart":["dart"],"application/vnd.data-vision.rdz":["rdz"],"application/vnd.dece.data":["uvf","uvvf","uvd","uvvd"],"application/vnd.dece.ttml+xml":["uvt","uvvt"],"application/vnd.dece.unspecified":["uvx","uvvx"],"application/vnd.dece.zip":["uvz","uvvz"],"application/vnd.denovo.fcselayout-link":["fe_launch"],"application/vnd.dna":["dna"],"application/vnd.dolby.mlp":["mlp"],"application/vnd.dpgraph":["dpg"],"application/vnd.dreamfactory":["dfac"],"application/vnd.ds-keypoint":["kpxx"],"application/vnd.dvb.ait":["ait"],"application/vnd.dvb.service":["svc"],"application/vnd.dynageo":["geo"],"application/vnd.ecowin.chart":["mag"],"application/vnd.enliven":["nml"],"application/vnd.epson.esf":["esf"],"application/vnd.epson.msf":["msf"],"application/vnd.epson.quickanime":["qam"],"application/vnd.epson.salt":["slt"],"application/vnd.epson.ssf":["ssf"],"application/vnd.eszigno3+xml":["es3","et3"],"application/vnd.ezpix-album":["ez2"],"application/vnd.ezpix-package":["ez3"],"application/vnd.fdf":["fdf"],"application/vnd.fdsn.mseed":["mseed"],"application/vnd.fdsn.seed":["seed","dataless"],"application/vnd.flographit":["gph"],"application/vnd.fluxtime.clip":["ftc"],"application/vnd.framemaker":["fm","frame","maker","book"],"application/vnd.frogans.fnc":["fnc"],"application/vnd.frogans.ltf":["ltf"],"application/vnd.fsc.weblaunch":["fsc"],"application/vnd.fujitsu.oasys":["oas"],"application/vnd.fujitsu.oasys2":["oa2"],"application/vnd.fujitsu.oasys3":["oa3"],"application/vnd.fujitsu.oasysgp":["fg5"],"application/vnd.fujitsu.oasysprs":["bh2"],"application/vnd.fujixerox.ddd":["ddd"],"application/vnd.fujixerox.docuworks":["xdw"],"application/vnd.fujixerox.docuworks.binder":["xbd"],"application/vnd.fuzzysheet":["fzs"],"application/vnd.genomatix.tuxedo":["txd"],"application/vnd.geogebra.file":["ggb"],"application/vnd.geogebra.tool":["ggt"],"application/vnd.geometry-explorer":["gex","gre"],"application/vnd.geonext":["gxt"],"application/vnd.geoplan":["g2w"],"application/vnd.geospace":["g3w"],"application/vnd.gmx":["gmx"],"application/vnd.google-apps.document":["gdoc"],"application/vnd.google-apps.presentation":["gslides"],"application/vnd.google-apps.spreadsheet":["gsheet"],"application/vnd.google-earth.kml+xml":["kml"],"application/vnd.google-earth.kmz":["kmz"],"application/vnd.grafeq":["gqf","gqs"],"application/vnd.groove-account":["gac"],"application/vnd.groove-help":["ghf"],"application/vnd.groove-identity-message":["gim"],"application/vnd.groove-injector":["grv"],"application/vnd.groove-tool-message":["gtm"],"application/vnd.groove-tool-template":["tpl"],"application/vnd.groove-vcard":["vcg"],"application/vnd.hal+xml":["hal"],"application/vnd.handheld-entertainment+xml":["zmm"],"application/vnd.hbci":["hbci"],"application/vnd.hhe.lesson-player":["les"],"application/vnd.hp-hpgl":["hpgl"],"application/vnd.hp-hpid":["hpid"],"application/vnd.hp-hps":["hps"],"application/vnd.hp-jlyt":["jlt"],"application/vnd.hp-pcl":["pcl"],"application/vnd.hp-pclxl":["pclxl"],"application/vnd.hydrostatix.sof-data":["sfd-hdstx"],"application/vnd.ibm.minipay":["mpy"],"application/vnd.ibm.modcap":["afp","listafp","list3820"],"application/vnd.ibm.rights-management":["irm"],"application/vnd.ibm.secure-container":["sc"],"application/vnd.iccprofile":["icc","icm"],"application/vnd.igloader":["igl"],"application/vnd.immervision-ivp":["ivp"],"application/vnd.immervision-ivu":["ivu"],"application/vnd.insors.igm":["igm"],"application/vnd.intercon.formnet":["xpw","xpx"],"application/vnd.intergeo":["i2g"],"application/vnd.intu.qbo":["qbo"],"application/vnd.intu.qfx":["qfx"],"application/vnd.ipunplugged.rcprofile":["rcprofile"],"application/vnd.irepository.package+xml":["irp"],"application/vnd.is-xpr":["xpr"],"application/vnd.isac.fcs":["fcs"],"application/vnd.jam":["jam"],"application/vnd.jcp.javame.midlet-rms":["rms"],"application/vnd.jisp":["jisp"],"application/vnd.joost.joda-archive":["joda"],"application/vnd.kahootz":["ktz","ktr"],"application/vnd.kde.karbon":["karbon"],"application/vnd.kde.kchart":["chrt"],"application/vnd.kde.kformula":["kfo"],"application/vnd.kde.kivio":["flw"],"application/vnd.kde.kontour":["kon"],"application/vnd.kde.kpresenter":["kpr","kpt"],"application/vnd.kde.kspread":["ksp"],"application/vnd.kde.kword":["kwd","kwt"],"application/vnd.kenameaapp":["htke"],"application/vnd.kidspiration":["kia"],"application/vnd.kinar":["kne","knp"],"application/vnd.koan":["skp","skd","skt","skm"],"application/vnd.kodak-descriptor":["sse"],"application/vnd.las.las+xml":["lasxml"],"application/vnd.llamagraphics.life-balance.desktop":["lbd"],"application/vnd.llamagraphics.life-balance.exchange+xml":["lbe"],"application/vnd.lotus-1-2-3":["123"],"application/vnd.lotus-approach":["apr"],"application/vnd.lotus-freelance":["pre"],"application/vnd.lotus-notes":["nsf"],"application/vnd.lotus-organizer":["org"],"application/vnd.lotus-screencam":["scm"],"application/vnd.lotus-wordpro":["lwp"],"application/vnd.macports.portpkg":["portpkg"],"application/vnd.mcd":["mcd"],"application/vnd.medcalcdata":["mc1"],"application/vnd.mediastation.cdkey":["cdkey"],"application/vnd.mfer":["mwf"],"application/vnd.mfmp":["mfm"],"application/vnd.micrografx.flo":["flo"],"application/vnd.micrografx.igx":["igx"],"application/vnd.mif":["mif"],"application/vnd.mobius.daf":["daf"],"application/vnd.mobius.dis":["dis"],"application/vnd.mobius.mbk":["mbk"],"application/vnd.mobius.mqy":["mqy"],"application/vnd.mobius.msl":["msl"],"application/vnd.mobius.plc":["plc"],"application/vnd.mobius.txf":["txf"],"application/vnd.mophun.application":["mpn"],"application/vnd.mophun.certificate":["mpc"],"application/vnd.mozilla.xul+xml":["xul"],"application/vnd.ms-artgalry":["cil"],"application/vnd.ms-cab-compressed":["cab"],"application/vnd.ms-excel":["xls","xlm","xla","xlc","xlt","xlw"],"application/vnd.ms-excel.addin.macroenabled.12":["xlam"],"application/vnd.ms-excel.sheet.binary.macroenabled.12":["xlsb"],"application/vnd.ms-excel.sheet.macroenabled.12":["xlsm"],"application/vnd.ms-excel.template.macroenabled.12":["xltm"],"application/vnd.ms-fontobject":["eot"],"application/vnd.ms-htmlhelp":["chm"],"application/vnd.ms-ims":["ims"],"application/vnd.ms-lrm":["lrm"],"application/vnd.ms-officetheme":["thmx"],"application/vnd.ms-outlook":["msg"],"application/vnd.ms-pki.seccat":["cat"],"application/vnd.ms-pki.stl":["stl"],"application/vnd.ms-powerpoint":["ppt","pps","pot"],"application/vnd.ms-powerpoint.addin.macroenabled.12":["ppam"],"application/vnd.ms-powerpoint.presentation.macroenabled.12":["pptm"],"application/vnd.ms-powerpoint.slide.macroenabled.12":["sldm"],"application/vnd.ms-powerpoint.slideshow.macroenabled.12":["ppsm"],"application/vnd.ms-powerpoint.template.macroenabled.12":["potm"],"application/vnd.ms-project":["mpp","mpt"],"application/vnd.ms-word.document.macroenabled.12":["docm"],"application/vnd.ms-word.template.macroenabled.12":["dotm"],"application/vnd.ms-works":["wps","wks","wcm","wdb"],"application/vnd.ms-wpl":["wpl"],"application/vnd.ms-xpsdocument":["xps"],"application/vnd.mseq":["mseq"],"application/vnd.musician":["mus"],"application/vnd.muvee.style":["msty"],"application/vnd.mynfc":["taglet"],"application/vnd.neurolanguage.nlu":["nlu"],"application/vnd.nitf":["ntf","nitf"],"application/vnd.noblenet-directory":["nnd"],"application/vnd.noblenet-sealer":["nns"],"application/vnd.noblenet-web":["nnw"],"application/vnd.nokia.n-gage.data":["ngdat"],"application/vnd.nokia.n-gage.symbian.install":["n-gage"],"application/vnd.nokia.radio-preset":["rpst"],"application/vnd.nokia.radio-presets":["rpss"],"application/vnd.novadigm.edm":["edm"],"application/vnd.novadigm.edx":["edx"],"application/vnd.novadigm.ext":["ext"],"application/vnd.oasis.opendocument.chart":["odc"],"application/vnd.oasis.opendocument.chart-template":["otc"],"application/vnd.oasis.opendocument.database":["odb"],"application/vnd.oasis.opendocument.formula":["odf"],"application/vnd.oasis.opendocument.formula-template":["odft"],"application/vnd.oasis.opendocument.graphics":["odg"],"application/vnd.oasis.opendocument.graphics-template":["otg"],"application/vnd.oasis.opendocument.image":["odi"],"application/vnd.oasis.opendocument.image-template":["oti"],"application/vnd.oasis.opendocument.presentation":["odp"],"application/vnd.oasis.opendocument.presentation-template":["otp"],"application/vnd.oasis.opendocument.spreadsheet":["ods"],"application/vnd.oasis.opendocument.spreadsheet-template":["ots"],"application/vnd.oasis.opendocument.text":["odt"],"application/vnd.oasis.opendocument.text-master":["odm"],"application/vnd.oasis.opendocument.text-template":["ott"],"application/vnd.oasis.opendocument.text-web":["oth"],"application/vnd.olpc-sugar":["xo"],"application/vnd.oma.dd2+xml":["dd2"],"application/vnd.openofficeorg.extension":["oxt"],"application/vnd.openxmlformats-officedocument.presentationml.presentation":["pptx"],"application/vnd.openxmlformats-officedocument.presentationml.slide":["sldx"],"application/vnd.openxmlformats-officedocument.presentationml.slideshow":["ppsx"],"application/vnd.openxmlformats-officedocument.presentationml.template":["potx"],"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":["xlsx"],"application/vnd.openxmlformats-officedocument.spreadsheetml.template":["xltx"],"application/vnd.openxmlformats-officedocument.wordprocessingml.document":["docx"],"application/vnd.openxmlformats-officedocument.wordprocessingml.template":["dotx"],"application/vnd.osgeo.mapguide.package":["mgp"],"application/vnd.osgi.dp":["dp"],"application/vnd.osgi.subsystem":["esa"],"application/vnd.palm":["pdb","pqa","oprc"],"application/vnd.pawaafile":["paw"],"application/vnd.pg.format":["str"],"application/vnd.pg.osasli":["ei6"],"application/vnd.picsel":["efif"],"application/vnd.pmi.widget":["wg"],"application/vnd.pocketlearn":["plf"],"application/vnd.powerbuilder6":["pbd"],"application/vnd.previewsystems.box":["box"],"application/vnd.proteus.magazine":["mgz"],"application/vnd.publishare-delta-tree":["qps"],"application/vnd.pvi.ptid1":["ptid"],"application/vnd.quark.quarkxpress":["qxd","qxt","qwd","qwt","qxl","qxb"],"application/vnd.realvnc.bed":["bed"],"application/vnd.recordare.musicxml":["mxl"],"application/vnd.recordare.musicxml+xml":["musicxml"],"application/vnd.rig.cryptonote":["cryptonote"],"application/vnd.rim.cod":["cod"],"application/vnd.rn-realmedia":["rm"],"application/vnd.rn-realmedia-vbr":["rmvb"],"application/vnd.route66.link66+xml":["link66"],"application/vnd.sailingtracker.track":["st"],"application/vnd.seemail":["see"],"application/vnd.sema":["sema"],"application/vnd.semd":["semd"],"application/vnd.semf":["semf"],"application/vnd.shana.informed.formdata":["ifm"],"application/vnd.shana.informed.formtemplate":["itp"],"application/vnd.shana.informed.interchange":["iif"],"application/vnd.shana.informed.package":["ipk"],"application/vnd.simtech-mindmapper":["twd","twds"],"application/vnd.smaf":["mmf"],"application/vnd.smart.teacher":["teacher"],"application/vnd.solent.sdkm+xml":["sdkm","sdkd"],"application/vnd.spotfire.dxp":["dxp"],"application/vnd.spotfire.sfs":["sfs"],"application/vnd.stardivision.calc":["sdc"],"application/vnd.stardivision.draw":["sda"],"application/vnd.stardivision.impress":["sdd"],"application/vnd.stardivision.math":["smf"],"application/vnd.stardivision.writer":["sdw","vor"],"application/vnd.stardivision.writer-global":["sgl"],"application/vnd.stepmania.package":["smzip"],"application/vnd.stepmania.stepchart":["sm"],"application/vnd.sun.wadl+xml":["wadl"],"application/vnd.sun.xml.calc":["sxc"],"application/vnd.sun.xml.calc.template":["stc"],"application/vnd.sun.xml.draw":["sxd"],"application/vnd.sun.xml.draw.template":["std"],"application/vnd.sun.xml.impress":["sxi"],"application/vnd.sun.xml.impress.template":["sti"],"application/vnd.sun.xml.math":["sxm"],"application/vnd.sun.xml.writer":["sxw"],"application/vnd.sun.xml.writer.global":["sxg"],"application/vnd.sun.xml.writer.template":["stw"],"application/vnd.sus-calendar":["sus","susp"],"application/vnd.svd":["svd"],"application/vnd.symbian.install":["sis","sisx"],"application/vnd.syncml+xml":["xsm"],"application/vnd.syncml.dm+wbxml":["bdm"],"application/vnd.syncml.dm+xml":["xdm"],"application/vnd.tao.intent-module-archive":["tao"],"application/vnd.tcpdump.pcap":["pcap","cap","dmp"],"application/vnd.tmobile-livetv":["tmo"],"application/vnd.trid.tpt":["tpt"],"application/vnd.triscape.mxs":["mxs"],"application/vnd.trueapp":["tra"],"application/vnd.ufdl":["ufd","ufdl"],"application/vnd.uiq.theme":["utz"],"application/vnd.umajin":["umj"],"application/vnd.unity":["unityweb"],"application/vnd.uoml+xml":["uoml"],"application/vnd.vcx":["vcx"],"application/vnd.visio":["vsd","vst","vss","vsw"],"application/vnd.visionary":["vis"],"application/vnd.vsf":["vsf"],"application/vnd.wap.wbxml":["wbxml"],"application/vnd.wap.wmlc":["wmlc"],"application/vnd.wap.wmlscriptc":["wmlsc"],"application/vnd.webturbo":["wtb"],"application/vnd.wolfram.player":["nbp"],"application/vnd.wordperfect":["wpd"],"application/vnd.wqd":["wqd"],"application/vnd.wt.stf":["stf"],"application/vnd.xara":["xar"],"application/vnd.xfdl":["xfdl"],"application/vnd.yamaha.hv-dic":["hvd"],"application/vnd.yamaha.hv-script":["hvs"],"application/vnd.yamaha.hv-voice":["hvp"],"application/vnd.yamaha.openscoreformat":["osf"],"application/vnd.yamaha.openscoreformat.osfpvg+xml":["osfpvg"],"application/vnd.yamaha.smaf-audio":["saf"],"application/vnd.yamaha.smaf-phrase":["spf"],"application/vnd.yellowriver-custom-menu":["cmp"],"application/vnd.zul":["zir","zirz"],"application/vnd.zzazz.deck+xml":["zaz"],"application/voicexml+xml":["vxml"],"application/wasm":["wasm"],"application/widget":["wgt"],"application/winhlp":["hlp"],"application/wsdl+xml":["wsdl"],"application/wspolicy+xml":["wspolicy"],"application/x-7z-compressed":["7z"],"application/x-abiword":["abw"],"application/x-ace-compressed":["ace"],"application/x-apple-diskimage":[],"application/x-arj":["arj"],"application/x-authorware-bin":["aab","x32","u32","vox"],"application/x-authorware-map":["aam"],"application/x-authorware-seg":["aas"],"application/x-bcpio":["bcpio"],"application/x-bdoc":[],"application/x-bittorrent":["torrent"],"application/x-blorb":["blb","blorb"],"application/x-bzip":["bz"],"application/x-bzip2":["bz2","boz"],"application/x-cbr":["cbr","cba","cbt","cbz","cb7"],"application/x-cdlink":["vcd"],"application/x-cfs-compressed":["cfs"],"application/x-chat":["chat"],"application/x-chess-pgn":["pgn"],"application/x-chrome-extension":["crx"],"application/x-cocoa":["cco"],"application/x-conference":["nsc"],"application/x-cpio":["cpio"],"application/x-csh":["csh"],"application/x-debian-package":["udeb"],"application/x-dgc-compressed":["dgc"],"application/x-director":["dir","dcr","dxr","cst","cct","cxt","w3d","fgd","swa"],"application/x-doom":["wad"],"application/x-dtbncx+xml":["ncx"],"application/x-dtbook+xml":["dtb"],"application/x-dtbresource+xml":["res"],"application/x-dvi":["dvi"],"application/x-envoy":["evy"],"application/x-eva":["eva"],"application/x-font-bdf":["bdf"],"application/x-font-ghostscript":["gsf"],"application/x-font-linux-psf":["psf"],"application/x-font-pcf":["pcf"],"application/x-font-snf":["snf"],"application/x-font-type1":["pfa","pfb","pfm","afm"],"application/x-freearc":["arc"],"application/x-futuresplash":["spl"],"application/x-gca-compressed":["gca"],"application/x-glulx":["ulx"],"application/x-gnumeric":["gnumeric"],"application/x-gramps-xml":["gramps"],"application/x-gtar":["gtar"],"application/x-hdf":["hdf"],"application/x-httpd-php":["php"],"application/x-install-instructions":["install"],"application/x-iso9660-image":[],"application/x-java-archive-diff":["jardiff"],"application/x-java-jnlp-file":["jnlp"],"application/x-latex":["latex"],"application/x-lua-bytecode":["luac"],"application/x-lzh-compressed":["lzh","lha"],"application/x-makeself":["run"],"application/x-mie":["mie"],"application/x-mobipocket-ebook":["prc","mobi"],"application/x-ms-application":["application"],"application/x-ms-shortcut":["lnk"],"application/x-ms-wmd":["wmd"],"application/x-ms-wmz":["wmz"],"application/x-ms-xbap":["xbap"],"application/x-msaccess":["mdb"],"application/x-msbinder":["obd"],"application/x-mscardfile":["crd"],"application/x-msclip":["clp"],"application/x-msdos-program":[],"application/x-msdownload":["com","bat"],"application/x-msmediaview":["mvb","m13","m14"],"application/x-msmetafile":["wmf","emf","emz"],"application/x-msmoney":["mny"],"application/x-mspublisher":["pub"],"application/x-msschedule":["scd"],"application/x-msterminal":["trm"],"application/x-mswrite":["wri"],"application/x-netcdf":["nc","cdf"],"application/x-ns-proxy-autoconfig":["pac"],"application/x-nzb":["nzb"],"application/x-perl":["pl","pm"],"application/x-pilot":[],"application/x-pkcs12":["p12","pfx"],"application/x-pkcs7-certificates":["p7b","spc"],"application/x-pkcs7-certreqresp":["p7r"],"application/x-rar-compressed":["rar"],"application/x-redhat-package-manager":["rpm"],"application/x-research-info-systems":["ris"],"application/x-sea":["sea"],"application/x-sh":["sh"],"application/x-shar":["shar"],"application/x-shockwave-flash":["swf"],"application/x-silverlight-app":["xap"],"application/x-sql":["sql"],"application/x-stuffit":["sit"],"application/x-stuffitx":["sitx"],"application/x-subrip":["srt"],"application/x-sv4cpio":["sv4cpio"],"application/x-sv4crc":["sv4crc"],"application/x-t3vm-image":["t3"],"application/x-tads":["gam"],"application/x-tar":["tar"],"application/x-tcl":["tcl","tk"],"application/x-tex":["tex"],"application/x-tex-tfm":["tfm"],"application/x-texinfo":["texinfo","texi"],"application/x-tgif":["obj"],"application/x-ustar":["ustar"],"application/x-virtualbox-hdd":["hdd"],"application/x-virtualbox-ova":["ova"],"application/x-virtualbox-ovf":["ovf"],"application/x-virtualbox-vbox":["vbox"],"application/x-virtualbox-vbox-extpack":["vbox-extpack"],"application/x-virtualbox-vdi":["vdi"],"application/x-virtualbox-vhd":["vhd"],"application/x-virtualbox-vmdk":["vmdk"],"application/x-wais-source":["src"],"application/x-web-app-manifest+json":["webapp"],"application/x-x509-ca-cert":["der","crt","pem"],"application/x-xfig":["fig"],"application/x-xliff+xml":["xlf"],"application/x-xpinstall":["xpi"],"application/x-xz":["xz"],"application/x-zmachine":["z1","z2","z3","z4","z5","z6","z7","z8"],"application/xaml+xml":["xaml"],"application/xcap-diff+xml":["xdf"],"application/xenc+xml":["xenc"],"application/xhtml+xml":["xhtml","xht"],"application/xml":["xml","xsl","xsd","rng"],"application/xml-dtd":["dtd"],"application/xop+xml":["xop"],"application/xproc+xml":["xpl"],"application/xslt+xml":["xslt"],"application/xspf+xml":["xspf"],"application/xv+xml":["mxml","xhvml","xvml","xvm"],"application/yang":["yang"],"application/yin+xml":["yin"],"application/zip":["zip"],"audio/3gpp":[],"audio/adpcm":["adp"],"audio/basic":["au","snd"],"audio/midi":["mid","midi","kar","rmi"],"audio/mp3":[],"audio/mp4":["m4a","mp4a"],"audio/mpeg":["mpga","mp2","mp2a","mp3","m2a","m3a"],"audio/ogg":["oga","ogg","spx"],"audio/s3m":["s3m"],"audio/silk":["sil"],"audio/vnd.dece.audio":["uva","uvva"],"audio/vnd.digital-winds":["eol"],"audio/vnd.dra":["dra"],"audio/vnd.dts":["dts"],"audio/vnd.dts.hd":["dtshd"],"audio/vnd.lucent.voice":["lvp"],"audio/vnd.ms-playready.media.pya":["pya"],"audio/vnd.nuera.ecelp4800":["ecelp4800"],"audio/vnd.nuera.ecelp7470":["ecelp7470"],"audio/vnd.nuera.ecelp9600":["ecelp9600"],"audio/vnd.rip":["rip"],"audio/wav":["wav"],"audio/wave":[],"audio/webm":["weba"],"audio/x-aac":["aac"],"audio/x-aiff":["aif","aiff","aifc"],"audio/x-caf":["caf"],"audio/x-flac":["flac"],"audio/x-m4a":[],"audio/x-matroska":["mka"],"audio/x-mpegurl":["m3u"],"audio/x-ms-wax":["wax"],"audio/x-ms-wma":["wma"],"audio/x-pn-realaudio":["ram","ra"],"audio/x-pn-realaudio-plugin":["rmp"],"audio/x-realaudio":[],"audio/x-wav":[],"audio/xm":["xm"],"chemical/x-cdx":["cdx"],"chemical/x-cif":["cif"],"chemical/x-cmdf":["cmdf"],"chemical/x-cml":["cml"],"chemical/x-csml":["csml"],"chemical/x-xyz":["xyz"],"font/collection":["ttc"],"font/otf":["otf"],"font/ttf":["ttf"],"font/woff":["woff"],"font/woff2":["woff2"],"image/apng":["apng"],"image/bmp":["bmp"],"image/cgm":["cgm"],"image/g3fax":["g3"],"image/gif":["gif"],"image/ief":["ief"],"image/jp2":["jp2","jpg2"],"image/jpeg":["jpeg","jpg","jpe"],"image/jpm":["jpm"],"image/jpx":["jpx","jpf"],"image/ktx":["ktx"],"image/png":["png"],"image/prs.btif":["btif"],"image/sgi":["sgi"],"image/svg+xml":["svg","svgz"],"image/tiff":["tiff","tif"],"image/vnd.adobe.photoshop":["psd"],"image/vnd.dece.graphic":["uvi","uvvi","uvg","uvvg"],"image/vnd.djvu":["djvu","djv"],"image/vnd.dvb.subtitle":[],"image/vnd.dwg":["dwg"],"image/vnd.dxf":["dxf"],"image/vnd.fastbidsheet":["fbs"],"image/vnd.fpx":["fpx"],"image/vnd.fst":["fst"],"image/vnd.fujixerox.edmics-mmr":["mmr"],"image/vnd.fujixerox.edmics-rlc":["rlc"],"image/vnd.ms-modi":["mdi"],"image/vnd.ms-photo":["wdp"],"image/vnd.net-fpx":["npx"],"image/vnd.wap.wbmp":["wbmp"],"image/vnd.xiff":["xif"],"image/webp":["webp"],"image/x-3ds":["3ds"],"image/x-cmu-raster":["ras"],"image/x-cmx":["cmx"],"image/x-freehand":["fh","fhc","fh4","fh5","fh7"],"image/x-icon":["ico"],"image/x-jng":["jng"],"image/x-mrsid-image":["sid"],"image/x-ms-bmp":[],"image/x-pcx":["pcx"],"image/x-pict":["pic","pct"],"image/x-portable-anymap":["pnm"],"image/x-portable-bitmap":["pbm"],"image/x-portable-graymap":["pgm"],"image/x-portable-pixmap":["ppm"],"image/x-rgb":["rgb"],"image/x-tga":["tga"],"image/x-xbitmap":["xbm"],"image/x-xpixmap":["xpm"],"image/x-xwindowdump":["xwd"],"message/rfc822":["eml","mime"],"model/gltf+json":["gltf"],"model/gltf-binary":["glb"],"model/iges":["igs","iges"],"model/mesh":["msh","mesh","silo"],"model/vnd.collada+xml":["dae"],"model/vnd.dwf":["dwf"],"model/vnd.gdl":["gdl"],"model/vnd.gtw":["gtw"],"model/vnd.mts":["mts"],"model/vnd.vtu":["vtu"],"model/vrml":["wrl","vrml"],"model/x3d+binary":["x3db","x3dbz"],"model/x3d+vrml":["x3dv","x3dvz"],"model/x3d+xml":["x3d","x3dz"],"text/cache-manifest":["appcache","manifest"],"text/calendar":["ics","ifb"],"text/coffeescript":["coffee","litcoffee"],"text/css":["css"],"text/csv":["csv"],"text/hjson":["hjson"],"text/html":["html","htm","shtml"],"text/jade":["jade"],"text/jsx":["jsx"],"text/less":["less"],"text/markdown":["markdown","md"],"text/mathml":["mml"],"text/n3":["n3"],"text/plain":["txt","text","conf","def","list","log","in","ini"],"text/prs.lines.tag":["dsc"],"text/richtext":["rtx"],"text/rtf":[],"text/sgml":["sgml","sgm"],"text/slim":["slim","slm"],"text/stylus":["stylus","styl"],"text/tab-separated-values":["tsv"],"text/troff":["t","tr","roff","man","me","ms"],"text/turtle":["ttl"],"text/uri-list":["uri","uris","urls"],"text/vcard":["vcard"],"text/vnd.curl":["curl"],"text/vnd.curl.dcurl":["dcurl"],"text/vnd.curl.mcurl":["mcurl"],"text/vnd.curl.scurl":["scurl"],"text/vnd.dvb.subtitle":["sub"],"text/vnd.fly":["fly"],"text/vnd.fmi.flexstor":["flx"],"text/vnd.graphviz":["gv"],"text/vnd.in3d.3dml":["3dml"],"text/vnd.in3d.spot":["spot"],"text/vnd.sun.j2me.app-descriptor":["jad"],"text/vnd.wap.wml":["wml"],"text/vnd.wap.wmlscript":["wmls"],"text/vtt":["vtt"],"text/x-asm":["s","asm"],"text/x-c":["c","cc","cxx","cpp","h","hh","dic"],"text/x-component":["htc"],"text/x-fortran":["f","for","f77","f90"],"text/x-handlebars-template":["hbs"],"text/x-java-source":["java"],"text/x-lua":["lua"],"text/x-markdown":["mkd"],"text/x-nfo":["nfo"],"text/x-opml":["opml"],"text/x-org":[],"text/x-pascal":["p","pas"],"text/x-processing":["pde"],"text/x-sass":["sass"],"text/x-scss":["scss"],"text/x-setext":["etx"],"text/x-sfv":["sfv"],"text/x-suse-ymp":["ymp"],"text/x-uuencode":["uu"],"text/x-vcalendar":["vcs"],"text/x-vcard":["vcf"],"text/xml":[],"text/yaml":["yaml","yml"],"video/3gpp":["3gp","3gpp"],"video/3gpp2":["3g2"],"video/h261":["h261"],"video/h263":["h263"],"video/h264":["h264"],"video/jpeg":["jpgv"],"video/jpm":["jpgm"],"video/mj2":["mj2","mjp2"],"video/mp2t":["ts"],"video/mp4":["mp4","mp4v","mpg4"],"video/mpeg":["mpeg","mpg","mpe","m1v","m2v"],"video/ogg":["ogv"],"video/quicktime":["qt","mov"],"video/vnd.dece.hd":["uvh","uvvh"],"video/vnd.dece.mobile":["uvm","uvvm"],"video/vnd.dece.pd":["uvp","uvvp"],"video/vnd.dece.sd":["uvs","uvvs"],"video/vnd.dece.video":["uvv","uvvv"],"video/vnd.dvb.file":["dvb"],"video/vnd.fvt":["fvt"],"video/vnd.mpegurl":["mxu","m4u"],"video/vnd.ms-playready.media.pyv":["pyv"],"video/vnd.uvvu.mp4":["uvu","uvvu"],"video/vnd.vivo":["viv"],"video/webm":["webm"],"video/x-f4v":["f4v"],"video/x-fli":["fli"],"video/x-flv":["flv"],"video/x-m4v":["m4v"],"video/x-matroska":["mkv","mk3d","mks"],"video/x-mng":["mng"],"video/x-ms-asf":["asf","asx"],"video/x-ms-vob":["vob"],"video/x-ms-wm":["wm"],"video/x-ms-wmv":["wmv"],"video/x-ms-wmx":["wmx"],"video/x-ms-wvx":["wvx"],"video/x-msvideo":["avi"],"video/x-sgi-movie":["movie"],"video/x-smv":["smv"],"x-conference/x-cooltalk":["ice"]}
-},{}],78:[function(require,module,exports){
+},{}],79:[function(require,module,exports){
 'use strict'
 
 var ops = require('ndarray-ops')
@@ -52796,7 +52963,7 @@ function ndfft(dir, x, y) {
 }
 
 module.exports = ndfft
-},{"./lib/fft-matrix.js":79,"ndarray":84,"ndarray-ops":81,"typedarray-pool":144}],79:[function(require,module,exports){
+},{"./lib/fft-matrix.js":80,"ndarray":85,"ndarray-ops":82,"typedarray-pool":174}],80:[function(require,module,exports){
 var bits = require('bit-twiddle')
 
 function fft(dir, nrows, ncols, buffer, x_ptr, y_ptr, scratch_ptr) {
@@ -53015,7 +53182,7 @@ function fftBluestein(dir, nrows, ncols, buffer, x_ptr, y_ptr, scratch_ptr) {
   }
 }
 
-},{"bit-twiddle":2}],80:[function(require,module,exports){
+},{"bit-twiddle":2}],81:[function(require,module,exports){
 "use strict"
 
 module.exports = gaussBlur
@@ -53061,7 +53228,7 @@ function gaussBlur(arr, sigma, wrap) {
   pool.freeDouble(im)
   return arr
 }
-},{"cwise/lib/wrapper":18,"dup":20,"ndarray":84,"ndarray-fft":78,"ndarray-ops":81,"next-pow-2":85,"typedarray-pool":144}],81:[function(require,module,exports){
+},{"cwise/lib/wrapper":18,"dup":21,"ndarray":85,"ndarray-fft":79,"ndarray-ops":82,"next-pow-2":86,"typedarray-pool":174}],82:[function(require,module,exports){
 "use strict"
 
 var compile = require("cwise-compiler")
@@ -53524,7 +53691,7 @@ exports.equals = compile({
 
 
 
-},{"cwise-compiler":15}],82:[function(require,module,exports){
+},{"cwise-compiler":15}],83:[function(require,module,exports){
 "use strict"
 
 var ndarray = require("ndarray")
@@ -53547,10 +53714,10 @@ module.exports = function convert(arr, result) {
   return result
 }
 
-},{"./doConvert.js":83,"ndarray":84}],83:[function(require,module,exports){
+},{"./doConvert.js":84,"ndarray":85}],84:[function(require,module,exports){
 module.exports=require('cwise-compiler')({"args":["array","scalar","index"],"pre":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"body":{"body":"{\nvar _inline_1_v=_inline_1_arg1_,_inline_1_i\nfor(_inline_1_i=0;_inline_1_i<_inline_1_arg2_.length-1;++_inline_1_i) {\n_inline_1_v=_inline_1_v[_inline_1_arg2_[_inline_1_i]]\n}\n_inline_1_arg0_=_inline_1_v[_inline_1_arg2_[_inline_1_arg2_.length-1]]\n}","args":[{"name":"_inline_1_arg0_","lvalue":true,"rvalue":false,"count":1},{"name":"_inline_1_arg1_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_1_arg2_","lvalue":false,"rvalue":true,"count":4}],"thisVars":[],"localVars":["_inline_1_i","_inline_1_v"]},"post":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"funcName":"convert","blockSize":64})
 
-},{"cwise-compiler":15}],84:[function(require,module,exports){
+},{"cwise-compiler":15}],85:[function(require,module,exports){
 var iota = require("iota-array")
 var isBuffer = require("is-buffer")
 
@@ -53895,7 +54062,7 @@ function wrappedNDArrayCtor(data, shape, stride, offset) {
 
 module.exports = wrappedNDArrayCtor
 
-},{"iota-array":71,"is-buffer":72}],85:[function(require,module,exports){
+},{"iota-array":72,"is-buffer":73}],86:[function(require,module,exports){
 module.exports = function(v) {
   v += v === 0
   --v
@@ -53907,7 +54074,7 @@ module.exports = function(v) {
   return v + 1
 }
 
-},{}],86:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
 (function (process,Buffer){
 // Copyright (c) 2012 Kuba Niegowski
 //
@@ -54111,7 +54278,7 @@ ChunkStream.prototype._process = function() {
 };
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"_process":117,"buffer":47,"stream":139,"util":150}],87:[function(require,module,exports){
+},{"_process":118,"buffer":48,"stream":169,"util":180}],88:[function(require,module,exports){
 // Copyright (c) 2012 Kuba Niegowski
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -54151,7 +54318,7 @@ module.exports = {
     COLOR_ALPHA: 4
 };
 
-},{}],88:[function(require,module,exports){
+},{}],89:[function(require,module,exports){
 // Copyright (c) 2012 Kuba Niegowski
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -54232,7 +54399,7 @@ for (var i = 0; i < 256; i++) {
     crcTable[i] = c;
 }
 
-},{"stream":139,"util":150}],89:[function(require,module,exports){
+},{"stream":169,"util":180}],90:[function(require,module,exports){
 (function (Buffer){
 // Copyright (c) 2012 Kuba Niegowski
 //
@@ -54550,7 +54717,7 @@ var PaethPredictor = function(left, above, upLeft) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./chunkstream":86,"buffer":47,"util":150,"zlib":45}],90:[function(require,module,exports){
+},{"./chunkstream":87,"buffer":48,"util":180,"zlib":46}],91:[function(require,module,exports){
 (function (Buffer){
 // Copyright (c) 2012 Kuba Niegowski
 //
@@ -54664,7 +54831,7 @@ Packer.prototype._packIEND = function() {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./constants":87,"./crc":88,"./filter":89,"buffer":47,"stream":139,"util":150,"zlib":45}],91:[function(require,module,exports){
+},{"./constants":88,"./crc":89,"./filter":90,"buffer":48,"stream":169,"util":180,"zlib":46}],92:[function(require,module,exports){
 (function (Buffer){
 // Copyright (c) 2012 Kuba Niegowski
 //
@@ -55027,7 +55194,7 @@ Parser.prototype._reverseFiltered = function(data, width, height) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./chunkstream":86,"./constants":87,"./crc":88,"./filter":89,"buffer":47,"util":150,"zlib":45}],92:[function(require,module,exports){
+},{"./chunkstream":87,"./constants":88,"./crc":89,"./filter":90,"buffer":48,"util":180,"zlib":46}],93:[function(require,module,exports){
 (function (process,Buffer){
 // Copyright (c) 2012 Kuba Niegowski
 //
@@ -55180,7 +55347,7 @@ PNG.prototype.bitblt = function(dst, sx, sy, w, h, dx, dy) {
 };
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"./packer":90,"./parser":91,"_process":117,"buffer":47,"stream":139,"util":150}],93:[function(require,module,exports){
+},{"./packer":91,"./parser":92,"_process":118,"buffer":48,"stream":169,"util":180}],94:[function(require,module,exports){
 // (c) Dean McNamee <dean@gmail.com>, 2013.
 //
 // https://github.com/deanm/omggif
@@ -55989,7 +56156,7 @@ function GifReaderLZWOutputIndexStream(code_stream, p, output, output_length) {
 // CommonJS.
 try { exports.GifWriter = GifWriter; exports.GifReader = GifReader } catch(e) {}
 
-},{}],94:[function(require,module,exports){
+},{}],95:[function(require,module,exports){
 (function (process){
 /**
  * Pace
@@ -56263,7 +56430,7 @@ function formatNumber(number, decimals, dec_point, thousands_sep) {
 }
 
 }).call(this,require('_process'))
-},{"_process":117,"charm":5}],95:[function(require,module,exports){
+},{"_process":118,"charm":5}],96:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -56569,7 +56736,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":117}],96:[function(require,module,exports){
+},{"_process":118}],97:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -56765,7 +56932,7 @@ exports.dataToBitMap = function(data, bitmapInfo) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./interlace":106,"buffer":47}],97:[function(require,module,exports){
+},{"./interlace":107,"buffer":48}],98:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -56833,7 +57000,7 @@ module.exports = function(data, width, height, options) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./constants":99,"buffer":47}],98:[function(require,module,exports){
+},{"./constants":100,"buffer":48}],99:[function(require,module,exports){
 (function (process,Buffer){
 'use strict';
 
@@ -57046,7 +57213,7 @@ ChunkStream.prototype._process = function() {
 };
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"_process":117,"buffer":47,"stream":139,"util":150}],99:[function(require,module,exports){
+},{"_process":118,"buffer":48,"stream":169,"util":180}],100:[function(require,module,exports){
 'use strict';
 
 
@@ -57082,7 +57249,7 @@ module.exports = {
   GAMMA_DIVISION: 100000
 };
 
-},{}],100:[function(require,module,exports){
+},{}],101:[function(require,module,exports){
 'use strict';
 
 var crcTable = [];
@@ -57128,7 +57295,7 @@ CrcCalculator.crc32 = function(buf) {
   return crc ^ -1;
 };
 
-},{}],101:[function(require,module,exports){
+},{}],102:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -57315,7 +57482,7 @@ module.exports = function(pxData, width, height, options, bpp) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./paeth-predictor":110,"buffer":47}],102:[function(require,module,exports){
+},{"./paeth-predictor":111,"buffer":48}],103:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -57344,7 +57511,7 @@ var FilterAsync = module.exports = function(bitmapInfo) {
 util.inherits(FilterAsync, ChunkStream);
 
 }).call(this,require("buffer").Buffer)
-},{"./chunkstream":98,"./filter-parse":104,"buffer":47,"util":150}],103:[function(require,module,exports){
+},{"./chunkstream":99,"./filter-parse":105,"buffer":48,"util":180}],104:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -57371,7 +57538,7 @@ exports.process = function(inBuffer, bitmapInfo) {
   return Buffer.concat(outBuffers);
 };
 }).call(this,require("buffer").Buffer)
-},{"./filter-parse":104,"./sync-reader":116,"buffer":47}],104:[function(require,module,exports){
+},{"./filter-parse":105,"./sync-reader":117,"buffer":48}],105:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -57546,7 +57713,7 @@ Filter.prototype._reverseFilterLine = function(rawData) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./interlace":106,"./paeth-predictor":110,"buffer":47}],105:[function(require,module,exports){
+},{"./interlace":107,"./paeth-predictor":111,"buffer":48}],106:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -57639,7 +57806,7 @@ module.exports = function(indata, imageData) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":47}],106:[function(require,module,exports){
+},{"buffer":48}],107:[function(require,module,exports){
 'use strict';
 
 // Adam 7
@@ -57727,7 +57894,7 @@ exports.getInterlaceIterator = function(width) {
     return (outerX * 4) + (outerY * width * 4);
   };
 };
-},{}],107:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -57776,7 +57943,7 @@ PackerAsync.prototype.pack = function(data, width, height, gamma) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./constants":99,"./packer":109,"buffer":47,"stream":139,"util":150}],108:[function(require,module,exports){
+},{"./constants":100,"./packer":110,"buffer":48,"stream":169,"util":180}],109:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -57828,7 +57995,7 @@ module.exports = function(metaData, opt) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./constants":99,"./packer":109,"buffer":47,"zlib":45}],109:[function(require,module,exports){
+},{"./constants":100,"./packer":110,"buffer":48,"zlib":46}],110:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -57923,7 +58090,7 @@ Packer.prototype.packIEND = function() {
   return this._packChunk(constants.TYPE_IEND, null);
 };
 }).call(this,require("buffer").Buffer)
-},{"./bitpacker":97,"./constants":99,"./crc":100,"./filter-pack":101,"buffer":47,"zlib":45}],110:[function(require,module,exports){
+},{"./bitpacker":98,"./constants":100,"./crc":101,"./filter-pack":102,"buffer":48,"zlib":46}],111:[function(require,module,exports){
 'use strict';
 
 module.exports = function paethPredictor(left, above, upLeft) {
@@ -57941,7 +58108,7 @@ module.exports = function paethPredictor(left, above, upLeft) {
   }
   return upLeft;
 };
-},{}],111:[function(require,module,exports){
+},{}],112:[function(require,module,exports){
 'use strict';
 
 var util = require('util');
@@ -58053,7 +58220,7 @@ ParserAsync.prototype._complete = function(filteredData) {
   this.emit('parsed', normalisedBitmapData);
 };
 
-},{"./bitmapper":96,"./chunkstream":98,"./filter-parse-async":102,"./format-normaliser":105,"./parser":113,"util":150,"zlib":45}],112:[function(require,module,exports){
+},{"./bitmapper":97,"./chunkstream":99,"./filter-parse-async":103,"./format-normaliser":106,"./parser":114,"util":180,"zlib":46}],113:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -58148,7 +58315,7 @@ module.exports = function(buffer, options) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./bitmapper":96,"./filter-parse-sync":103,"./format-normaliser":105,"./parser":113,"./sync-reader":116,"buffer":47,"zlib":45}],113:[function(require,module,exports){
+},{"./bitmapper":97,"./filter-parse-sync":104,"./format-normaliser":106,"./parser":114,"./sync-reader":117,"buffer":48,"zlib":46}],114:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -58442,7 +58609,7 @@ Parser.prototype._parseIEND = function(data) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./constants":99,"./crc":100,"buffer":47}],114:[function(require,module,exports){
+},{"./constants":100,"./crc":101,"buffer":48}],115:[function(require,module,exports){
 'use strict';
 
 
@@ -58460,7 +58627,7 @@ exports.write = function(png) {
   return pack(png);
 };
 
-},{"./packer-sync":108,"./parser-sync":112}],115:[function(require,module,exports){
+},{"./packer-sync":109,"./parser-sync":113}],116:[function(require,module,exports){
 (function (process,Buffer){
 'use strict';
 
@@ -58627,7 +58794,7 @@ PNG.prototype.adjustGamma = function() {
 };
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"./packer-async":107,"./parser-async":111,"./png-sync":114,"_process":117,"buffer":47,"stream":139,"util":150}],116:[function(require,module,exports){
+},{"./packer-async":108,"./parser-async":112,"./png-sync":115,"_process":118,"buffer":48,"stream":169,"util":180}],117:[function(require,module,exports){
 'use strict';
 
 var SyncReader = module.exports = function(buffer) {
@@ -58680,7 +58847,7 @@ SyncReader.prototype.process = function() {
 
 };
 
-},{}],117:[function(require,module,exports){
+},{}],118:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -58866,10 +59033,3209 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],118:[function(require,module,exports){
+},{}],119:[function(require,module,exports){
+
+var canPromise = require('./can-promise')
+
+var QRCode = require('./core/qrcode')
+var CanvasRenderer = require('./renderer/canvas')
+var SvgRenderer = require('./renderer/svg-tag.js')
+
+function renderCanvas (renderFunc, canvas, text, opts, cb) {
+  var args = [].slice.call(arguments, 1)
+  var argsNum = args.length
+  var isLastArgCb = typeof args[argsNum - 1] === 'function'
+
+  if (!isLastArgCb && !canPromise()) {
+    throw new Error('Callback required as last argument')
+  }
+
+  if (isLastArgCb) {
+    if (argsNum < 2) {
+      throw new Error('Too few arguments provided')
+    }
+
+    if (argsNum === 2) {
+      cb = text
+      text = canvas
+      canvas = opts = undefined
+    } else if (argsNum === 3) {
+      if (canvas.getContext && typeof cb === 'undefined') {
+        cb = opts
+        opts = undefined
+      } else {
+        cb = opts
+        opts = text
+        text = canvas
+        canvas = undefined
+      }
+    }
+  } else {
+    if (argsNum < 1) {
+      throw new Error('Too few arguments provided')
+    }
+
+    if (argsNum === 1) {
+      text = canvas
+      canvas = opts = undefined
+    } else if (argsNum === 2 && !canvas.getContext) {
+      opts = text
+      text = canvas
+      canvas = undefined
+    }
+
+    return new Promise(function (resolve, reject) {
+      try {
+        var data = QRCode.create(text, opts)
+        resolve(renderFunc(data, canvas, opts))
+      } catch (e) {
+        reject(e)
+      }
+    })
+  }
+
+  try {
+    var data = QRCode.create(text, opts)
+    cb(null, renderFunc(data, canvas, opts))
+  } catch (e) {
+    cb(e)
+  }
+}
+
+exports.create = QRCode.create
+exports.toCanvas = renderCanvas.bind(null, CanvasRenderer.render)
+exports.toDataURL = renderCanvas.bind(null, CanvasRenderer.renderToDataURL)
+
+// only svg for now.
+exports.toString = renderCanvas.bind(null, function (data, _, opts) {
+  return SvgRenderer.render(data, opts)
+})
+
+},{"./can-promise":120,"./core/qrcode":136,"./renderer/canvas":143,"./renderer/svg-tag.js":144}],120:[function(require,module,exports){
+// can-promise has a crash in some versions of react native that dont have
+// standard global objects
+// https://github.com/soldair/node-qrcode/issues/157
+
+module.exports = function () {
+  return typeof Promise === 'function' && Promise.prototype && Promise.prototype.then
+}
+
+},{}],121:[function(require,module,exports){
+/**
+ * Alignment pattern are fixed reference pattern in defined positions
+ * in a matrix symbology, which enables the decode software to re-synchronise
+ * the coordinate mapping of the image modules in the event of moderate amounts
+ * of distortion of the image.
+ *
+ * Alignment patterns are present only in QR Code symbols of version 2 or larger
+ * and their number depends on the symbol version.
+ */
+
+var getSymbolSize = require('./utils').getSymbolSize
+
+/**
+ * Calculate the row/column coordinates of the center module of each alignment pattern
+ * for the specified QR Code version.
+ *
+ * The alignment patterns are positioned symmetrically on either side of the diagonal
+ * running from the top left corner of the symbol to the bottom right corner.
+ *
+ * Since positions are simmetrical only half of the coordinates are returned.
+ * Each item of the array will represent in turn the x and y coordinate.
+ * @see {@link getPositions}
+ *
+ * @param  {Number} version QR Code version
+ * @return {Array}          Array of coordinate
+ */
+exports.getRowColCoords = function getRowColCoords (version) {
+  if (version === 1) return []
+
+  var posCount = Math.floor(version / 7) + 2
+  var size = getSymbolSize(version)
+  var intervals = size === 145 ? 26 : Math.ceil((size - 13) / (2 * posCount - 2)) * 2
+  var positions = [size - 7] // Last coord is always (size - 7)
+
+  for (var i = 1; i < posCount - 1; i++) {
+    positions[i] = positions[i - 1] - intervals
+  }
+
+  positions.push(6) // First coord is always 6
+
+  return positions.reverse()
+}
+
+/**
+ * Returns an array containing the positions of each alignment pattern.
+ * Each array's element represent the center point of the pattern as (x, y) coordinates
+ *
+ * Coordinates are calculated expanding the row/column coordinates returned by {@link getRowColCoords}
+ * and filtering out the items that overlaps with finder pattern
+ *
+ * @example
+ * For a Version 7 symbol {@link getRowColCoords} returns values 6, 22 and 38.
+ * The alignment patterns, therefore, are to be centered on (row, column)
+ * positions (6,22), (22,6), (22,22), (22,38), (38,22), (38,38).
+ * Note that the coordinates (6,6), (6,38), (38,6) are occupied by finder patterns
+ * and are not therefore used for alignment patterns.
+ *
+ * var pos = getPositions(7)
+ * // [[6,22], [22,6], [22,22], [22,38], [38,22], [38,38]]
+ *
+ * @param  {Number} version QR Code version
+ * @return {Array}          Array of coordinates
+ */
+exports.getPositions = function getPositions (version) {
+  var coords = []
+  var pos = exports.getRowColCoords(version)
+  var posLength = pos.length
+
+  for (var i = 0; i < posLength; i++) {
+    for (var j = 0; j < posLength; j++) {
+      // Skip if position is occupied by finder patterns
+      if ((i === 0 && j === 0) ||             // top-left
+          (i === 0 && j === posLength - 1) || // bottom-left
+          (i === posLength - 1 && j === 0)) { // top-right
+        continue
+      }
+
+      coords.push([pos[i], pos[j]])
+    }
+  }
+
+  return coords
+}
+
+},{"./utils":140}],122:[function(require,module,exports){
+var Mode = require('./mode')
+
+/**
+ * Array of characters available in alphanumeric mode
+ *
+ * As per QR Code specification, to each character
+ * is assigned a value from 0 to 44 which in this case coincides
+ * with the array index
+ *
+ * @type {Array}
+ */
+var ALPHA_NUM_CHARS = [
+  '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+  'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+  'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+  ' ', '$', '%', '*', '+', '-', '.', '/', ':'
+]
+
+function AlphanumericData (data) {
+  this.mode = Mode.ALPHANUMERIC
+  this.data = data
+}
+
+AlphanumericData.getBitsLength = function getBitsLength (length) {
+  return 11 * Math.floor(length / 2) + 6 * (length % 2)
+}
+
+AlphanumericData.prototype.getLength = function getLength () {
+  return this.data.length
+}
+
+AlphanumericData.prototype.getBitsLength = function getBitsLength () {
+  return AlphanumericData.getBitsLength(this.data.length)
+}
+
+AlphanumericData.prototype.write = function write (bitBuffer) {
+  var i
+
+  // Input data characters are divided into groups of two characters
+  // and encoded as 11-bit binary codes.
+  for (i = 0; i + 2 <= this.data.length; i += 2) {
+    // The character value of the first character is multiplied by 45
+    var value = ALPHA_NUM_CHARS.indexOf(this.data[i]) * 45
+
+    // The character value of the second digit is added to the product
+    value += ALPHA_NUM_CHARS.indexOf(this.data[i + 1])
+
+    // The sum is then stored as 11-bit binary number
+    bitBuffer.put(value, 11)
+  }
+
+  // If the number of input data characters is not a multiple of two,
+  // the character value of the final character is encoded as a 6-bit binary number.
+  if (this.data.length % 2) {
+    bitBuffer.put(ALPHA_NUM_CHARS.indexOf(this.data[i]), 6)
+  }
+}
+
+module.exports = AlphanumericData
+
+},{"./mode":133}],123:[function(require,module,exports){
+function BitBuffer () {
+  this.buffer = []
+  this.length = 0
+}
+
+BitBuffer.prototype = {
+
+  get: function (index) {
+    var bufIndex = Math.floor(index / 8)
+    return ((this.buffer[bufIndex] >>> (7 - index % 8)) & 1) === 1
+  },
+
+  put: function (num, length) {
+    for (var i = 0; i < length; i++) {
+      this.putBit(((num >>> (length - i - 1)) & 1) === 1)
+    }
+  },
+
+  getLengthInBits: function () {
+    return this.length
+  },
+
+  putBit: function (bit) {
+    var bufIndex = Math.floor(this.length / 8)
+    if (this.buffer.length <= bufIndex) {
+      this.buffer.push(0)
+    }
+
+    if (bit) {
+      this.buffer[bufIndex] |= (0x80 >>> (this.length % 8))
+    }
+
+    this.length++
+  }
+}
+
+module.exports = BitBuffer
+
+},{}],124:[function(require,module,exports){
+var Buffer = require('../utils/buffer')
+
+/**
+ * Helper class to handle QR Code symbol modules
+ *
+ * @param {Number} size Symbol size
+ */
+function BitMatrix (size) {
+  if (!size || size < 1) {
+    throw new Error('BitMatrix size must be defined and greater than 0')
+  }
+
+  this.size = size
+  this.data = new Buffer(size * size)
+  this.data.fill(0)
+  this.reservedBit = new Buffer(size * size)
+  this.reservedBit.fill(0)
+}
+
+/**
+ * Set bit value at specified location
+ * If reserved flag is set, this bit will be ignored during masking process
+ *
+ * @param {Number}  row
+ * @param {Number}  col
+ * @param {Boolean} value
+ * @param {Boolean} reserved
+ */
+BitMatrix.prototype.set = function (row, col, value, reserved) {
+  var index = row * this.size + col
+  this.data[index] = value
+  if (reserved) this.reservedBit[index] = true
+}
+
+/**
+ * Returns bit value at specified location
+ *
+ * @param  {Number}  row
+ * @param  {Number}  col
+ * @return {Boolean}
+ */
+BitMatrix.prototype.get = function (row, col) {
+  return this.data[row * this.size + col]
+}
+
+/**
+ * Applies xor operator at specified location
+ * (used during masking process)
+ *
+ * @param {Number}  row
+ * @param {Number}  col
+ * @param {Boolean} value
+ */
+BitMatrix.prototype.xor = function (row, col, value) {
+  this.data[row * this.size + col] ^= value
+}
+
+/**
+ * Check if bit at specified location is reserved
+ *
+ * @param {Number}   row
+ * @param {Number}   col
+ * @return {Boolean}
+ */
+BitMatrix.prototype.isReserved = function (row, col) {
+  return this.reservedBit[row * this.size + col]
+}
+
+module.exports = BitMatrix
+
+},{"../utils/buffer":146}],125:[function(require,module,exports){
+var Buffer = require('../utils/buffer')
+var Mode = require('./mode')
+
+function ByteData (data) {
+  this.mode = Mode.BYTE
+  this.data = new Buffer(data)
+}
+
+ByteData.getBitsLength = function getBitsLength (length) {
+  return length * 8
+}
+
+ByteData.prototype.getLength = function getLength () {
+  return this.data.length
+}
+
+ByteData.prototype.getBitsLength = function getBitsLength () {
+  return ByteData.getBitsLength(this.data.length)
+}
+
+ByteData.prototype.write = function (bitBuffer) {
+  for (var i = 0, l = this.data.length; i < l; i++) {
+    bitBuffer.put(this.data[i], 8)
+  }
+}
+
+module.exports = ByteData
+
+},{"../utils/buffer":146,"./mode":133}],126:[function(require,module,exports){
+var ECLevel = require('./error-correction-level')
+
+var EC_BLOCKS_TABLE = [
+// L  M  Q  H
+  1, 1, 1, 1,
+  1, 1, 1, 1,
+  1, 1, 2, 2,
+  1, 2, 2, 4,
+  1, 2, 4, 4,
+  2, 4, 4, 4,
+  2, 4, 6, 5,
+  2, 4, 6, 6,
+  2, 5, 8, 8,
+  4, 5, 8, 8,
+  4, 5, 8, 11,
+  4, 8, 10, 11,
+  4, 9, 12, 16,
+  4, 9, 16, 16,
+  6, 10, 12, 18,
+  6, 10, 17, 16,
+  6, 11, 16, 19,
+  6, 13, 18, 21,
+  7, 14, 21, 25,
+  8, 16, 20, 25,
+  8, 17, 23, 25,
+  9, 17, 23, 34,
+  9, 18, 25, 30,
+  10, 20, 27, 32,
+  12, 21, 29, 35,
+  12, 23, 34, 37,
+  12, 25, 34, 40,
+  13, 26, 35, 42,
+  14, 28, 38, 45,
+  15, 29, 40, 48,
+  16, 31, 43, 51,
+  17, 33, 45, 54,
+  18, 35, 48, 57,
+  19, 37, 51, 60,
+  19, 38, 53, 63,
+  20, 40, 56, 66,
+  21, 43, 59, 70,
+  22, 45, 62, 74,
+  24, 47, 65, 77,
+  25, 49, 68, 81
+]
+
+var EC_CODEWORDS_TABLE = [
+// L  M  Q  H
+  7, 10, 13, 17,
+  10, 16, 22, 28,
+  15, 26, 36, 44,
+  20, 36, 52, 64,
+  26, 48, 72, 88,
+  36, 64, 96, 112,
+  40, 72, 108, 130,
+  48, 88, 132, 156,
+  60, 110, 160, 192,
+  72, 130, 192, 224,
+  80, 150, 224, 264,
+  96, 176, 260, 308,
+  104, 198, 288, 352,
+  120, 216, 320, 384,
+  132, 240, 360, 432,
+  144, 280, 408, 480,
+  168, 308, 448, 532,
+  180, 338, 504, 588,
+  196, 364, 546, 650,
+  224, 416, 600, 700,
+  224, 442, 644, 750,
+  252, 476, 690, 816,
+  270, 504, 750, 900,
+  300, 560, 810, 960,
+  312, 588, 870, 1050,
+  336, 644, 952, 1110,
+  360, 700, 1020, 1200,
+  390, 728, 1050, 1260,
+  420, 784, 1140, 1350,
+  450, 812, 1200, 1440,
+  480, 868, 1290, 1530,
+  510, 924, 1350, 1620,
+  540, 980, 1440, 1710,
+  570, 1036, 1530, 1800,
+  570, 1064, 1590, 1890,
+  600, 1120, 1680, 1980,
+  630, 1204, 1770, 2100,
+  660, 1260, 1860, 2220,
+  720, 1316, 1950, 2310,
+  750, 1372, 2040, 2430
+]
+
+/**
+ * Returns the number of error correction block that the QR Code should contain
+ * for the specified version and error correction level.
+ *
+ * @param  {Number} version              QR Code version
+ * @param  {Number} errorCorrectionLevel Error correction level
+ * @return {Number}                      Number of error correction blocks
+ */
+exports.getBlocksCount = function getBlocksCount (version, errorCorrectionLevel) {
+  switch (errorCorrectionLevel) {
+    case ECLevel.L:
+      return EC_BLOCKS_TABLE[(version - 1) * 4 + 0]
+    case ECLevel.M:
+      return EC_BLOCKS_TABLE[(version - 1) * 4 + 1]
+    case ECLevel.Q:
+      return EC_BLOCKS_TABLE[(version - 1) * 4 + 2]
+    case ECLevel.H:
+      return EC_BLOCKS_TABLE[(version - 1) * 4 + 3]
+    default:
+      return undefined
+  }
+}
+
+/**
+ * Returns the number of error correction codewords to use for the specified
+ * version and error correction level.
+ *
+ * @param  {Number} version              QR Code version
+ * @param  {Number} errorCorrectionLevel Error correction level
+ * @return {Number}                      Number of error correction codewords
+ */
+exports.getTotalCodewordsCount = function getTotalCodewordsCount (version, errorCorrectionLevel) {
+  switch (errorCorrectionLevel) {
+    case ECLevel.L:
+      return EC_CODEWORDS_TABLE[(version - 1) * 4 + 0]
+    case ECLevel.M:
+      return EC_CODEWORDS_TABLE[(version - 1) * 4 + 1]
+    case ECLevel.Q:
+      return EC_CODEWORDS_TABLE[(version - 1) * 4 + 2]
+    case ECLevel.H:
+      return EC_CODEWORDS_TABLE[(version - 1) * 4 + 3]
+    default:
+      return undefined
+  }
+}
+
+},{"./error-correction-level":127}],127:[function(require,module,exports){
+exports.L = { bit: 1 }
+exports.M = { bit: 0 }
+exports.Q = { bit: 3 }
+exports.H = { bit: 2 }
+
+function fromString (string) {
+  if (typeof string !== 'string') {
+    throw new Error('Param is not a string')
+  }
+
+  var lcStr = string.toLowerCase()
+
+  switch (lcStr) {
+    case 'l':
+    case 'low':
+      return exports.L
+
+    case 'm':
+    case 'medium':
+      return exports.M
+
+    case 'q':
+    case 'quartile':
+      return exports.Q
+
+    case 'h':
+    case 'high':
+      return exports.H
+
+    default:
+      throw new Error('Unknown EC Level: ' + string)
+  }
+}
+
+exports.isValid = function isValid (level) {
+  return level && typeof level.bit !== 'undefined' &&
+    level.bit >= 0 && level.bit < 4
+}
+
+exports.from = function from (value, defaultValue) {
+  if (exports.isValid(value)) {
+    return value
+  }
+
+  try {
+    return fromString(value)
+  } catch (e) {
+    return defaultValue
+  }
+}
+
+},{}],128:[function(require,module,exports){
+var getSymbolSize = require('./utils').getSymbolSize
+var FINDER_PATTERN_SIZE = 7
+
+/**
+ * Returns an array containing the positions of each finder pattern.
+ * Each array's element represent the top-left point of the pattern as (x, y) coordinates
+ *
+ * @param  {Number} version QR Code version
+ * @return {Array}          Array of coordinates
+ */
+exports.getPositions = function getPositions (version) {
+  var size = getSymbolSize(version)
+
+  return [
+    // top-left
+    [0, 0],
+    // top-right
+    [size - FINDER_PATTERN_SIZE, 0],
+    // bottom-left
+    [0, size - FINDER_PATTERN_SIZE]
+  ]
+}
+
+},{"./utils":140}],129:[function(require,module,exports){
+var Utils = require('./utils')
+
+var G15 = (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0)
+var G15_MASK = (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1)
+var G15_BCH = Utils.getBCHDigit(G15)
+
+/**
+ * Returns format information with relative error correction bits
+ *
+ * The format information is a 15-bit sequence containing 5 data bits,
+ * with 10 error correction bits calculated using the (15, 5) BCH code.
+ *
+ * @param  {Number} errorCorrectionLevel Error correction level
+ * @param  {Number} mask                 Mask pattern
+ * @return {Number}                      Encoded format information bits
+ */
+exports.getEncodedBits = function getEncodedBits (errorCorrectionLevel, mask) {
+  var data = ((errorCorrectionLevel.bit << 3) | mask)
+  var d = data << 10
+
+  while (Utils.getBCHDigit(d) - G15_BCH >= 0) {
+    d ^= (G15 << (Utils.getBCHDigit(d) - G15_BCH))
+  }
+
+  // xor final data with mask pattern in order to ensure that
+  // no combination of Error Correction Level and data mask pattern
+  // will result in an all-zero data string
+  return ((data << 10) | d) ^ G15_MASK
+}
+
+},{"./utils":140}],130:[function(require,module,exports){
+var Buffer = require('../utils/buffer')
+
+if(Buffer.alloc) { 
+  var EXP_TABLE = Buffer.alloc(512)
+  var LOG_TABLE = Buffer.alloc(256)
+} else {
+  var EXP_TABLE = new Buffer(512)
+  var LOG_TABLE = new Buffer(256)
+}
+/**
+ * Precompute the log and anti-log tables for faster computation later
+ *
+ * For each possible value in the galois field 2^8, we will pre-compute
+ * the logarithm and anti-logarithm (exponential) of this value
+ *
+ * ref {@link https://en.wikiversity.org/wiki/Reed%E2%80%93Solomon_codes_for_coders#Introduction_to_mathematical_fields}
+ */
+;(function initTables () {
+  var x = 1
+  for (var i = 0; i < 255; i++) {
+    EXP_TABLE[i] = x
+    LOG_TABLE[x] = i
+
+    x <<= 1 // multiply by 2
+
+    // The QR code specification says to use byte-wise modulo 100011101 arithmetic.
+    // This means that when a number is 256 or larger, it should be XORed with 0x11D.
+    if (x & 0x100) { // similar to x >= 256, but a lot faster (because 0x100 == 256)
+      x ^= 0x11D
+    }
+  }
+
+  // Optimization: double the size of the anti-log table so that we don't need to mod 255 to
+  // stay inside the bounds (because we will mainly use this table for the multiplication of
+  // two GF numbers, no more).
+  // @see {@link mul}
+  for (i = 255; i < 512; i++) {
+    EXP_TABLE[i] = EXP_TABLE[i - 255]
+  }
+}())
+
+/**
+ * Returns log value of n inside Galois Field
+ *
+ * @param  {Number} n
+ * @return {Number}
+ */
+exports.log = function log (n) {
+  if (n < 1) throw new Error('log(' + n + ')')
+  return LOG_TABLE[n]
+}
+
+/**
+ * Returns anti-log value of n inside Galois Field
+ *
+ * @param  {Number} n
+ * @return {Number}
+ */
+exports.exp = function exp (n) {
+  return EXP_TABLE[n]
+}
+
+/**
+ * Multiplies two number inside Galois Field
+ *
+ * @param  {Number} x
+ * @param  {Number} y
+ * @return {Number}
+ */
+exports.mul = function mul (x, y) {
+  if (x === 0 || y === 0) return 0
+
+  // should be EXP_TABLE[(LOG_TABLE[x] + LOG_TABLE[y]) % 255] if EXP_TABLE wasn't oversized
+  // @see {@link initTables}
+  return EXP_TABLE[LOG_TABLE[x] + LOG_TABLE[y]]
+}
+
+},{"../utils/buffer":146}],131:[function(require,module,exports){
+var Mode = require('./mode')
+var Utils = require('./utils')
+
+function KanjiData (data) {
+  this.mode = Mode.KANJI
+  this.data = data
+}
+
+KanjiData.getBitsLength = function getBitsLength (length) {
+  return length * 13
+}
+
+KanjiData.prototype.getLength = function getLength () {
+  return this.data.length
+}
+
+KanjiData.prototype.getBitsLength = function getBitsLength () {
+  return KanjiData.getBitsLength(this.data.length)
+}
+
+KanjiData.prototype.write = function (bitBuffer) {
+  var i
+
+  // In the Shift JIS system, Kanji characters are represented by a two byte combination.
+  // These byte values are shifted from the JIS X 0208 values.
+  // JIS X 0208 gives details of the shift coded representation.
+  for (i = 0; i < this.data.length; i++) {
+    var value = Utils.toSJIS(this.data[i])
+
+    // For characters with Shift JIS values from 0x8140 to 0x9FFC:
+    if (value >= 0x8140 && value <= 0x9FFC) {
+      // Subtract 0x8140 from Shift JIS value
+      value -= 0x8140
+
+    // For characters with Shift JIS values from 0xE040 to 0xEBBF
+    } else if (value >= 0xE040 && value <= 0xEBBF) {
+      // Subtract 0xC140 from Shift JIS value
+      value -= 0xC140
+    } else {
+      throw new Error(
+        'Invalid SJIS character: ' + this.data[i] + '\n' +
+        'Make sure your charset is UTF-8')
+    }
+
+    // Multiply most significant byte of result by 0xC0
+    // and add least significant byte to product
+    value = (((value >>> 8) & 0xff) * 0xC0) + (value & 0xff)
+
+    // Convert result to a 13-bit binary string
+    bitBuffer.put(value, 13)
+  }
+}
+
+module.exports = KanjiData
+
+},{"./mode":133,"./utils":140}],132:[function(require,module,exports){
+/**
+ * Data mask pattern reference
+ * @type {Object}
+ */
+exports.Patterns = {
+  PATTERN000: 0,
+  PATTERN001: 1,
+  PATTERN010: 2,
+  PATTERN011: 3,
+  PATTERN100: 4,
+  PATTERN101: 5,
+  PATTERN110: 6,
+  PATTERN111: 7
+}
+
+/**
+ * Weighted penalty scores for the undesirable features
+ * @type {Object}
+ */
+var PenaltyScores = {
+  N1: 3,
+  N2: 3,
+  N3: 40,
+  N4: 10
+}
+
+/**
+ * Check if mask pattern value is valid
+ *
+ * @param  {Number}  mask    Mask pattern
+ * @return {Boolean}         true if valid, false otherwise
+ */
+exports.isValid = function isValid (mask) {
+  return mask != null && mask !== '' && !isNaN(mask) && mask >= 0 && mask <= 7
+}
+
+/**
+ * Returns mask pattern from a value.
+ * If value is not valid, returns undefined
+ *
+ * @param  {Number|String} value        Mask pattern value
+ * @return {Number}                     Valid mask pattern or undefined
+ */
+exports.from = function from (value) {
+  return exports.isValid(value) ? parseInt(value, 10) : undefined
+}
+
+/**
+* Find adjacent modules in row/column with the same color
+* and assign a penalty value.
+*
+* Points: N1 + i
+* i is the amount by which the number of adjacent modules of the same color exceeds 5
+*/
+exports.getPenaltyN1 = function getPenaltyN1 (data) {
+  var size = data.size
+  var points = 0
+  var sameCountCol = 0
+  var sameCountRow = 0
+  var lastCol = null
+  var lastRow = null
+
+  for (var row = 0; row < size; row++) {
+    sameCountCol = sameCountRow = 0
+    lastCol = lastRow = null
+
+    for (var col = 0; col < size; col++) {
+      var module = data.get(row, col)
+      if (module === lastCol) {
+        sameCountCol++
+      } else {
+        if (sameCountCol >= 5) points += PenaltyScores.N1 + (sameCountCol - 5)
+        lastCol = module
+        sameCountCol = 1
+      }
+
+      module = data.get(col, row)
+      if (module === lastRow) {
+        sameCountRow++
+      } else {
+        if (sameCountRow >= 5) points += PenaltyScores.N1 + (sameCountRow - 5)
+        lastRow = module
+        sameCountRow = 1
+      }
+    }
+
+    if (sameCountCol >= 5) points += PenaltyScores.N1 + (sameCountCol - 5)
+    if (sameCountRow >= 5) points += PenaltyScores.N1 + (sameCountRow - 5)
+  }
+
+  return points
+}
+
+/**
+ * Find 2x2 blocks with the same color and assign a penalty value
+ *
+ * Points: N2 * (m - 1) * (n - 1)
+ */
+exports.getPenaltyN2 = function getPenaltyN2 (data) {
+  var size = data.size
+  var points = 0
+
+  for (var row = 0; row < size - 1; row++) {
+    for (var col = 0; col < size - 1; col++) {
+      var last = data.get(row, col) +
+        data.get(row, col + 1) +
+        data.get(row + 1, col) +
+        data.get(row + 1, col + 1)
+
+      if (last === 4 || last === 0) points++
+    }
+  }
+
+  return points * PenaltyScores.N2
+}
+
+/**
+ * Find 1:1:3:1:1 ratio (dark:light:dark:light:dark) pattern in row/column,
+ * preceded or followed by light area 4 modules wide
+ *
+ * Points: N3 * number of pattern found
+ */
+exports.getPenaltyN3 = function getPenaltyN3 (data) {
+  var size = data.size
+  var points = 0
+  var bitsCol = 0
+  var bitsRow = 0
+
+  for (var row = 0; row < size; row++) {
+    bitsCol = bitsRow = 0
+    for (var col = 0; col < size; col++) {
+      bitsCol = ((bitsCol << 1) & 0x7FF) | data.get(row, col)
+      if (col >= 10 && (bitsCol === 0x5D0 || bitsCol === 0x05D)) points++
+
+      bitsRow = ((bitsRow << 1) & 0x7FF) | data.get(col, row)
+      if (col >= 10 && (bitsRow === 0x5D0 || bitsRow === 0x05D)) points++
+    }
+  }
+
+  return points * PenaltyScores.N3
+}
+
+/**
+ * Calculate proportion of dark modules in entire symbol
+ *
+ * Points: N4 * k
+ *
+ * k is the rating of the deviation of the proportion of dark modules
+ * in the symbol from 50% in steps of 5%
+ */
+exports.getPenaltyN4 = function getPenaltyN4 (data) {
+  var darkCount = 0
+  var modulesCount = data.data.length
+
+  for (var i = 0; i < modulesCount; i++) darkCount += data.data[i]
+
+  var k = Math.abs(Math.ceil((darkCount * 100 / modulesCount) / 5) - 10)
+
+  return k * PenaltyScores.N4
+}
+
+/**
+ * Return mask value at given position
+ *
+ * @param  {Number} maskPattern Pattern reference value
+ * @param  {Number} i           Row
+ * @param  {Number} j           Column
+ * @return {Boolean}            Mask value
+ */
+function getMaskAt (maskPattern, i, j) {
+  switch (maskPattern) {
+    case exports.Patterns.PATTERN000: return (i + j) % 2 === 0
+    case exports.Patterns.PATTERN001: return i % 2 === 0
+    case exports.Patterns.PATTERN010: return j % 3 === 0
+    case exports.Patterns.PATTERN011: return (i + j) % 3 === 0
+    case exports.Patterns.PATTERN100: return (Math.floor(i / 2) + Math.floor(j / 3)) % 2 === 0
+    case exports.Patterns.PATTERN101: return (i * j) % 2 + (i * j) % 3 === 0
+    case exports.Patterns.PATTERN110: return ((i * j) % 2 + (i * j) % 3) % 2 === 0
+    case exports.Patterns.PATTERN111: return ((i * j) % 3 + (i + j) % 2) % 2 === 0
+
+    default: throw new Error('bad maskPattern:' + maskPattern)
+  }
+}
+
+/**
+ * Apply a mask pattern to a BitMatrix
+ *
+ * @param  {Number}    pattern Pattern reference number
+ * @param  {BitMatrix} data    BitMatrix data
+ */
+exports.applyMask = function applyMask (pattern, data) {
+  var size = data.size
+
+  for (var col = 0; col < size; col++) {
+    for (var row = 0; row < size; row++) {
+      if (data.isReserved(row, col)) continue
+      data.xor(row, col, getMaskAt(pattern, row, col))
+    }
+  }
+}
+
+/**
+ * Returns the best mask pattern for data
+ *
+ * @param  {BitMatrix} data
+ * @return {Number} Mask pattern reference number
+ */
+exports.getBestMask = function getBestMask (data, setupFormatFunc) {
+  var numPatterns = Object.keys(exports.Patterns).length
+  var bestPattern = 0
+  var lowerPenalty = Infinity
+
+  for (var p = 0; p < numPatterns; p++) {
+    setupFormatFunc(p)
+    exports.applyMask(p, data)
+
+    // Calculate penalty
+    var penalty =
+      exports.getPenaltyN1(data) +
+      exports.getPenaltyN2(data) +
+      exports.getPenaltyN3(data) +
+      exports.getPenaltyN4(data)
+
+    // Undo previously applied mask
+    exports.applyMask(p, data)
+
+    if (penalty < lowerPenalty) {
+      lowerPenalty = penalty
+      bestPattern = p
+    }
+  }
+
+  return bestPattern
+}
+
+},{}],133:[function(require,module,exports){
+var VersionCheck = require('./version-check')
+var Regex = require('./regex')
+
+/**
+ * Numeric mode encodes data from the decimal digit set (0 - 9)
+ * (byte values 30HEX to 39HEX).
+ * Normally, 3 data characters are represented by 10 bits.
+ *
+ * @type {Object}
+ */
+exports.NUMERIC = {
+  id: 'Numeric',
+  bit: 1 << 0,
+  ccBits: [10, 12, 14]
+}
+
+/**
+ * Alphanumeric mode encodes data from a set of 45 characters,
+ * i.e. 10 numeric digits (0 - 9),
+ *      26 alphabetic characters (A - Z),
+ *   and 9 symbols (SP, $, %, *, +, -, ., /, :).
+ * Normally, two input characters are represented by 11 bits.
+ *
+ * @type {Object}
+ */
+exports.ALPHANUMERIC = {
+  id: 'Alphanumeric',
+  bit: 1 << 1,
+  ccBits: [9, 11, 13]
+}
+
+/**
+ * In byte mode, data is encoded at 8 bits per character.
+ *
+ * @type {Object}
+ */
+exports.BYTE = {
+  id: 'Byte',
+  bit: 1 << 2,
+  ccBits: [8, 16, 16]
+}
+
+/**
+ * The Kanji mode efficiently encodes Kanji characters in accordance with
+ * the Shift JIS system based on JIS X 0208.
+ * The Shift JIS values are shifted from the JIS X 0208 values.
+ * JIS X 0208 gives details of the shift coded representation.
+ * Each two-byte character value is compacted to a 13-bit binary codeword.
+ *
+ * @type {Object}
+ */
+exports.KANJI = {
+  id: 'Kanji',
+  bit: 1 << 3,
+  ccBits: [8, 10, 12]
+}
+
+/**
+ * Mixed mode will contain a sequences of data in a combination of any of
+ * the modes described above
+ *
+ * @type {Object}
+ */
+exports.MIXED = {
+  bit: -1
+}
+
+/**
+ * Returns the number of bits needed to store the data length
+ * according to QR Code specifications.
+ *
+ * @param  {Mode}   mode    Data mode
+ * @param  {Number} version QR Code version
+ * @return {Number}         Number of bits
+ */
+exports.getCharCountIndicator = function getCharCountIndicator (mode, version) {
+  if (!mode.ccBits) throw new Error('Invalid mode: ' + mode)
+
+  if (!VersionCheck.isValid(version)) {
+    throw new Error('Invalid version: ' + version)
+  }
+
+  if (version >= 1 && version < 10) return mode.ccBits[0]
+  else if (version < 27) return mode.ccBits[1]
+  return mode.ccBits[2]
+}
+
+/**
+ * Returns the most efficient mode to store the specified data
+ *
+ * @param  {String} dataStr Input data string
+ * @return {Mode}           Best mode
+ */
+exports.getBestModeForData = function getBestModeForData (dataStr) {
+  if (Regex.testNumeric(dataStr)) return exports.NUMERIC
+  else if (Regex.testAlphanumeric(dataStr)) return exports.ALPHANUMERIC
+  else if (Regex.testKanji(dataStr)) return exports.KANJI
+  else return exports.BYTE
+}
+
+/**
+ * Return mode name as string
+ *
+ * @param {Mode} mode Mode object
+ * @returns {String}  Mode name
+ */
+exports.toString = function toString (mode) {
+  if (mode && mode.id) return mode.id
+  throw new Error('Invalid mode')
+}
+
+/**
+ * Check if input param is a valid mode object
+ *
+ * @param   {Mode}    mode Mode object
+ * @returns {Boolean} True if valid mode, false otherwise
+ */
+exports.isValid = function isValid (mode) {
+  return mode && mode.bit && mode.ccBits
+}
+
+/**
+ * Get mode object from its name
+ *
+ * @param   {String} string Mode name
+ * @returns {Mode}          Mode object
+ */
+function fromString (string) {
+  if (typeof string !== 'string') {
+    throw new Error('Param is not a string')
+  }
+
+  var lcStr = string.toLowerCase()
+
+  switch (lcStr) {
+    case 'numeric':
+      return exports.NUMERIC
+    case 'alphanumeric':
+      return exports.ALPHANUMERIC
+    case 'kanji':
+      return exports.KANJI
+    case 'byte':
+      return exports.BYTE
+    default:
+      throw new Error('Unknown mode: ' + string)
+  }
+}
+
+/**
+ * Returns mode from a value.
+ * If value is not a valid mode, returns defaultValue
+ *
+ * @param  {Mode|String} value        Encoding mode
+ * @param  {Mode}        defaultValue Fallback value
+ * @return {Mode}                     Encoding mode
+ */
+exports.from = function from (value, defaultValue) {
+  if (exports.isValid(value)) {
+    return value
+  }
+
+  try {
+    return fromString(value)
+  } catch (e) {
+    return defaultValue
+  }
+}
+
+},{"./regex":138,"./version-check":141}],134:[function(require,module,exports){
+var Mode = require('./mode')
+
+function NumericData (data) {
+  this.mode = Mode.NUMERIC
+  this.data = data.toString()
+}
+
+NumericData.getBitsLength = function getBitsLength (length) {
+  return 10 * Math.floor(length / 3) + ((length % 3) ? ((length % 3) * 3 + 1) : 0)
+}
+
+NumericData.prototype.getLength = function getLength () {
+  return this.data.length
+}
+
+NumericData.prototype.getBitsLength = function getBitsLength () {
+  return NumericData.getBitsLength(this.data.length)
+}
+
+NumericData.prototype.write = function write (bitBuffer) {
+  var i, group, value
+
+  // The input data string is divided into groups of three digits,
+  // and each group is converted to its 10-bit binary equivalent.
+  for (i = 0; i + 3 <= this.data.length; i += 3) {
+    group = this.data.substr(i, 3)
+    value = parseInt(group, 10)
+
+    bitBuffer.put(value, 10)
+  }
+
+  // If the number of input digits is not an exact multiple of three,
+  // the final one or two digits are converted to 4 or 7 bits respectively.
+  var remainingNum = this.data.length - i
+  if (remainingNum > 0) {
+    group = this.data.substr(i)
+    value = parseInt(group, 10)
+
+    bitBuffer.put(value, remainingNum * 3 + 1)
+  }
+}
+
+module.exports = NumericData
+
+},{"./mode":133}],135:[function(require,module,exports){
+var Buffer = require('../utils/buffer')
+var GF = require('./galois-field')
+
+/**
+ * Multiplies two polynomials inside Galois Field
+ *
+ * @param  {Buffer} p1 Polynomial
+ * @param  {Buffer} p2 Polynomial
+ * @return {Buffer}    Product of p1 and p2
+ */
+exports.mul = function mul (p1, p2) {
+  var coeff = new Buffer(p1.length + p2.length - 1)
+  coeff.fill(0)
+
+  for (var i = 0; i < p1.length; i++) {
+    for (var j = 0; j < p2.length; j++) {
+      coeff[i + j] ^= GF.mul(p1[i], p2[j])
+    }
+  }
+
+  return coeff
+}
+
+/**
+ * Calculate the remainder of polynomials division
+ *
+ * @param  {Buffer} divident Polynomial
+ * @param  {Buffer} divisor  Polynomial
+ * @return {Buffer}          Remainder
+ */
+exports.mod = function mod (divident, divisor) {
+  var result = new Buffer(divident)
+
+  while ((result.length - divisor.length) >= 0) {
+    var coeff = result[0]
+
+    for (var i = 0; i < divisor.length; i++) {
+      result[i] ^= GF.mul(divisor[i], coeff)
+    }
+
+    // remove all zeros from buffer head
+    var offset = 0
+    while (offset < result.length && result[offset] === 0) offset++
+    result = result.slice(offset)
+  }
+
+  return result
+}
+
+/**
+ * Generate an irreducible generator polynomial of specified degree
+ * (used by Reed-Solomon encoder)
+ *
+ * @param  {Number} degree Degree of the generator polynomial
+ * @return {Buffer}        Buffer containing polynomial coefficients
+ */
+exports.generateECPolynomial = function generateECPolynomial (degree) {
+  var poly = new Buffer([1])
+  for (var i = 0; i < degree; i++) {
+    poly = exports.mul(poly, [1, GF.exp(i)])
+  }
+
+  return poly
+}
+
+},{"../utils/buffer":146,"./galois-field":130}],136:[function(require,module,exports){
+var Buffer = require('../utils/buffer')
+var Utils = require('./utils')
+var ECLevel = require('./error-correction-level')
+var BitBuffer = require('./bit-buffer')
+var BitMatrix = require('./bit-matrix')
+var AlignmentPattern = require('./alignment-pattern')
+var FinderPattern = require('./finder-pattern')
+var MaskPattern = require('./mask-pattern')
+var ECCode = require('./error-correction-code')
+var ReedSolomonEncoder = require('./reed-solomon-encoder')
+var Version = require('./version')
+var FormatInfo = require('./format-info')
+var Mode = require('./mode')
+var Segments = require('./segments')
+var isArray = require('isarray')
+
+/**
+ * QRCode for JavaScript
+ *
+ * modified by Ryan Day for nodejs support
+ * Copyright (c) 2011 Ryan Day
+ *
+ * Licensed under the MIT license:
+ *   http://www.opensource.org/licenses/mit-license.php
+ *
+//---------------------------------------------------------------------
+// QRCode for JavaScript
+//
+// Copyright (c) 2009 Kazuhiko Arase
+//
+// URL: http://www.d-project.com/
+//
+// Licensed under the MIT license:
+//   http://www.opensource.org/licenses/mit-license.php
+//
+// The word "QR Code" is registered trademark of
+// DENSO WAVE INCORPORATED
+//   http://www.denso-wave.com/qrcode/faqpatent-e.html
+//
+//---------------------------------------------------------------------
+*/
+
+/**
+ * Add finder patterns bits to matrix
+ *
+ * @param  {BitMatrix} matrix  Modules matrix
+ * @param  {Number}    version QR Code version
+ */
+function setupFinderPattern (matrix, version) {
+  var size = matrix.size
+  var pos = FinderPattern.getPositions(version)
+
+  for (var i = 0; i < pos.length; i++) {
+    var row = pos[i][0]
+    var col = pos[i][1]
+
+    for (var r = -1; r <= 7; r++) {
+      if (row + r <= -1 || size <= row + r) continue
+
+      for (var c = -1; c <= 7; c++) {
+        if (col + c <= -1 || size <= col + c) continue
+
+        if ((r >= 0 && r <= 6 && (c === 0 || c === 6)) ||
+          (c >= 0 && c <= 6 && (r === 0 || r === 6)) ||
+          (r >= 2 && r <= 4 && c >= 2 && c <= 4)) {
+          matrix.set(row + r, col + c, true, true)
+        } else {
+          matrix.set(row + r, col + c, false, true)
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Add timing pattern bits to matrix
+ *
+ * Note: this function must be called before {@link setupAlignmentPattern}
+ *
+ * @param  {BitMatrix} matrix Modules matrix
+ */
+function setupTimingPattern (matrix) {
+  var size = matrix.size
+
+  for (var r = 8; r < size - 8; r++) {
+    var value = r % 2 === 0
+    matrix.set(r, 6, value, true)
+    matrix.set(6, r, value, true)
+  }
+}
+
+/**
+ * Add alignment patterns bits to matrix
+ *
+ * Note: this function must be called after {@link setupTimingPattern}
+ *
+ * @param  {BitMatrix} matrix  Modules matrix
+ * @param  {Number}    version QR Code version
+ */
+function setupAlignmentPattern (matrix, version) {
+  var pos = AlignmentPattern.getPositions(version)
+
+  for (var i = 0; i < pos.length; i++) {
+    var row = pos[i][0]
+    var col = pos[i][1]
+
+    for (var r = -2; r <= 2; r++) {
+      for (var c = -2; c <= 2; c++) {
+        if (r === -2 || r === 2 || c === -2 || c === 2 ||
+          (r === 0 && c === 0)) {
+          matrix.set(row + r, col + c, true, true)
+        } else {
+          matrix.set(row + r, col + c, false, true)
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Add version info bits to matrix
+ *
+ * @param  {BitMatrix} matrix  Modules matrix
+ * @param  {Number}    version QR Code version
+ */
+function setupVersionInfo (matrix, version) {
+  var size = matrix.size
+  var bits = Version.getEncodedBits(version)
+  var row, col, mod
+
+  for (var i = 0; i < 18; i++) {
+    row = Math.floor(i / 3)
+    col = i % 3 + size - 8 - 3
+    mod = ((bits >> i) & 1) === 1
+
+    matrix.set(row, col, mod, true)
+    matrix.set(col, row, mod, true)
+  }
+}
+
+/**
+ * Add format info bits to matrix
+ *
+ * @param  {BitMatrix} matrix               Modules matrix
+ * @param  {ErrorCorrectionLevel}    errorCorrectionLevel Error correction level
+ * @param  {Number}    maskPattern          Mask pattern reference value
+ */
+function setupFormatInfo (matrix, errorCorrectionLevel, maskPattern) {
+  var size = matrix.size
+  var bits = FormatInfo.getEncodedBits(errorCorrectionLevel, maskPattern)
+  var i, mod
+
+  for (i = 0; i < 15; i++) {
+    mod = ((bits >> i) & 1) === 1
+
+    // vertical
+    if (i < 6) {
+      matrix.set(i, 8, mod, true)
+    } else if (i < 8) {
+      matrix.set(i + 1, 8, mod, true)
+    } else {
+      matrix.set(size - 15 + i, 8, mod, true)
+    }
+
+    // horizontal
+    if (i < 8) {
+      matrix.set(8, size - i - 1, mod, true)
+    } else if (i < 9) {
+      matrix.set(8, 15 - i - 1 + 1, mod, true)
+    } else {
+      matrix.set(8, 15 - i - 1, mod, true)
+    }
+  }
+
+  // fixed module
+  matrix.set(size - 8, 8, 1, true)
+}
+
+/**
+ * Add encoded data bits to matrix
+ *
+ * @param  {BitMatrix} matrix Modules matrix
+ * @param  {Buffer}    data   Data codewords
+ */
+function setupData (matrix, data) {
+  var size = matrix.size
+  var inc = -1
+  var row = size - 1
+  var bitIndex = 7
+  var byteIndex = 0
+
+  for (var col = size - 1; col > 0; col -= 2) {
+    if (col === 6) col--
+
+    while (true) {
+      for (var c = 0; c < 2; c++) {
+        if (!matrix.isReserved(row, col - c)) {
+          var dark = false
+
+          if (byteIndex < data.length) {
+            dark = (((data[byteIndex] >>> bitIndex) & 1) === 1)
+          }
+
+          matrix.set(row, col - c, dark)
+          bitIndex--
+
+          if (bitIndex === -1) {
+            byteIndex++
+            bitIndex = 7
+          }
+        }
+      }
+
+      row += inc
+
+      if (row < 0 || size <= row) {
+        row -= inc
+        inc = -inc
+        break
+      }
+    }
+  }
+}
+
+/**
+ * Create encoded codewords from data input
+ *
+ * @param  {Number}   version              QR Code version
+ * @param  {ErrorCorrectionLevel}   errorCorrectionLevel Error correction level
+ * @param  {ByteData} data                 Data input
+ * @return {Buffer}                        Buffer containing encoded codewords
+ */
+function createData (version, errorCorrectionLevel, segments) {
+  // Prepare data buffer
+  var buffer = new BitBuffer()
+
+  segments.forEach(function (data) {
+    // prefix data with mode indicator (4 bits)
+    buffer.put(data.mode.bit, 4)
+
+    // Prefix data with character count indicator.
+    // The character count indicator is a string of bits that represents the
+    // number of characters that are being encoded.
+    // The character count indicator must be placed after the mode indicator
+    // and must be a certain number of bits long, depending on the QR version
+    // and data mode
+    // @see {@link Mode.getCharCountIndicator}.
+    buffer.put(data.getLength(), Mode.getCharCountIndicator(data.mode, version))
+
+    // add binary data sequence to buffer
+    data.write(buffer)
+  })
+
+  // Calculate required number of bits
+  var totalCodewords = Utils.getSymbolTotalCodewords(version)
+  var ecTotalCodewords = ECCode.getTotalCodewordsCount(version, errorCorrectionLevel)
+  var dataTotalCodewordsBits = (totalCodewords - ecTotalCodewords) * 8
+
+  // Add a terminator.
+  // If the bit string is shorter than the total number of required bits,
+  // a terminator of up to four 0s must be added to the right side of the string.
+  // If the bit string is more than four bits shorter than the required number of bits,
+  // add four 0s to the end.
+  if (buffer.getLengthInBits() + 4 <= dataTotalCodewordsBits) {
+    buffer.put(0, 4)
+  }
+
+  // If the bit string is fewer than four bits shorter, add only the number of 0s that
+  // are needed to reach the required number of bits.
+
+  // After adding the terminator, if the number of bits in the string is not a multiple of 8,
+  // pad the string on the right with 0s to make the string's length a multiple of 8.
+  while (buffer.getLengthInBits() % 8 !== 0) {
+    buffer.putBit(0)
+  }
+
+  // Add pad bytes if the string is still shorter than the total number of required bits.
+  // Extend the buffer to fill the data capacity of the symbol corresponding to
+  // the Version and Error Correction Level by adding the Pad Codewords 11101100 (0xEC)
+  // and 00010001 (0x11) alternately.
+  var remainingByte = (dataTotalCodewordsBits - buffer.getLengthInBits()) / 8
+  for (var i = 0; i < remainingByte; i++) {
+    buffer.put(i % 2 ? 0x11 : 0xEC, 8)
+  }
+
+  return createCodewords(buffer, version, errorCorrectionLevel)
+}
+
+/**
+ * Encode input data with Reed-Solomon and return codewords with
+ * relative error correction bits
+ *
+ * @param  {BitBuffer} bitBuffer            Data to encode
+ * @param  {Number}    version              QR Code version
+ * @param  {ErrorCorrectionLevel} errorCorrectionLevel Error correction level
+ * @return {Buffer}                         Buffer containing encoded codewords
+ */
+function createCodewords (bitBuffer, version, errorCorrectionLevel) {
+  // Total codewords for this QR code version (Data + Error correction)
+  var totalCodewords = Utils.getSymbolTotalCodewords(version)
+
+  // Total number of error correction codewords
+  var ecTotalCodewords = ECCode.getTotalCodewordsCount(version, errorCorrectionLevel)
+
+  // Total number of data codewords
+  var dataTotalCodewords = totalCodewords - ecTotalCodewords
+
+  // Total number of blocks
+  var ecTotalBlocks = ECCode.getBlocksCount(version, errorCorrectionLevel)
+
+  // Calculate how many blocks each group should contain
+  var blocksInGroup2 = totalCodewords % ecTotalBlocks
+  var blocksInGroup1 = ecTotalBlocks - blocksInGroup2
+
+  var totalCodewordsInGroup1 = Math.floor(totalCodewords / ecTotalBlocks)
+
+  var dataCodewordsInGroup1 = Math.floor(dataTotalCodewords / ecTotalBlocks)
+  var dataCodewordsInGroup2 = dataCodewordsInGroup1 + 1
+
+  // Number of EC codewords is the same for both groups
+  var ecCount = totalCodewordsInGroup1 - dataCodewordsInGroup1
+
+  // Initialize a Reed-Solomon encoder with a generator polynomial of degree ecCount
+  var rs = new ReedSolomonEncoder(ecCount)
+
+  var offset = 0
+  var dcData = new Array(ecTotalBlocks)
+  var ecData = new Array(ecTotalBlocks)
+  var maxDataSize = 0
+  var buffer = new Buffer(bitBuffer.buffer)
+
+  // Divide the buffer into the required number of blocks
+  for (var b = 0; b < ecTotalBlocks; b++) {
+    var dataSize = b < blocksInGroup1 ? dataCodewordsInGroup1 : dataCodewordsInGroup2
+
+    // extract a block of data from buffer
+    dcData[b] = buffer.slice(offset, offset + dataSize)
+
+    // Calculate EC codewords for this data block
+    ecData[b] = rs.encode(dcData[b])
+
+    offset += dataSize
+    maxDataSize = Math.max(maxDataSize, dataSize)
+  }
+
+  // Create final data
+  // Interleave the data and error correction codewords from each block
+  var data = new Buffer(totalCodewords)
+  var index = 0
+  var i, r
+
+  // Add data codewords
+  for (i = 0; i < maxDataSize; i++) {
+    for (r = 0; r < ecTotalBlocks; r++) {
+      if (i < dcData[r].length) {
+        data[index++] = dcData[r][i]
+      }
+    }
+  }
+
+  // Apped EC codewords
+  for (i = 0; i < ecCount; i++) {
+    for (r = 0; r < ecTotalBlocks; r++) {
+      data[index++] = ecData[r][i]
+    }
+  }
+
+  return data
+}
+
+/**
+ * Build QR Code symbol
+ *
+ * @param  {String} data                 Input string
+ * @param  {Number} version              QR Code version
+ * @param  {ErrorCorretionLevel} errorCorrectionLevel Error level
+ * @param  {MaskPattern} maskPattern     Mask pattern
+ * @return {Object}                      Object containing symbol data
+ */
+function createSymbol (data, version, errorCorrectionLevel, maskPattern) {
+  var segments
+
+  if (isArray(data)) {
+    segments = Segments.fromArray(data)
+  } else if (typeof data === 'string') {
+    var estimatedVersion = version
+
+    if (!estimatedVersion) {
+      var rawSegments = Segments.rawSplit(data)
+
+      // Estimate best version that can contain raw splitted segments
+      estimatedVersion = Version.getBestVersionForData(rawSegments,
+        errorCorrectionLevel)
+    }
+
+    // Build optimized segments
+    // If estimated version is undefined, try with the highest version
+    segments = Segments.fromString(data, estimatedVersion || 40)
+  } else {
+    throw new Error('Invalid data')
+  }
+
+  // Get the min version that can contain data
+  var bestVersion = Version.getBestVersionForData(segments,
+      errorCorrectionLevel)
+
+  // If no version is found, data cannot be stored
+  if (!bestVersion) {
+    throw new Error('The amount of data is too big to be stored in a QR Code')
+  }
+
+  // If not specified, use min version as default
+  if (!version) {
+    version = bestVersion
+
+  // Check if the specified version can contain the data
+  } else if (version < bestVersion) {
+    throw new Error('\n' +
+      'The chosen QR Code version cannot contain this amount of data.\n' +
+      'Minimum version required to store current data is: ' + bestVersion + '.\n'
+    )
+  }
+
+  var dataBits = createData(version, errorCorrectionLevel, segments)
+
+  // Allocate matrix buffer
+  var moduleCount = Utils.getSymbolSize(version)
+  var modules = new BitMatrix(moduleCount)
+
+  // Add function modules
+  setupFinderPattern(modules, version)
+  setupTimingPattern(modules)
+  setupAlignmentPattern(modules, version)
+
+  // Add temporary dummy bits for format info just to set them as reserved.
+  // This is needed to prevent these bits from being masked by {@link MaskPattern.applyMask}
+  // since the masking operation must be performed only on the encoding region.
+  // These blocks will be replaced with correct values later in code.
+  setupFormatInfo(modules, errorCorrectionLevel, 0)
+
+  if (version >= 7) {
+    setupVersionInfo(modules, version)
+  }
+
+  // Add data codewords
+  setupData(modules, dataBits)
+
+  if (isNaN(maskPattern)) {
+    // Find best mask pattern
+    maskPattern = MaskPattern.getBestMask(modules,
+      setupFormatInfo.bind(null, modules, errorCorrectionLevel))
+  }
+
+  // Apply mask pattern
+  MaskPattern.applyMask(maskPattern, modules)
+
+  // Replace format info bits with correct values
+  setupFormatInfo(modules, errorCorrectionLevel, maskPattern)
+
+  return {
+    modules: modules,
+    version: version,
+    errorCorrectionLevel: errorCorrectionLevel,
+    maskPattern: maskPattern,
+    segments: segments
+  }
+}
+
+/**
+ * QR Code
+ *
+ * @param {String | Array} data                 Input data
+ * @param {Object} options                      Optional configurations
+ * @param {Number} options.version              QR Code version
+ * @param {String} options.errorCorrectionLevel Error correction level
+ * @param {Function} options.toSJISFunc         Helper func to convert utf8 to sjis
+ */
+exports.create = function create (data, options) {
+  if (typeof data === 'undefined' || data === '') {
+    throw new Error('No input text')
+  }
+
+  var errorCorrectionLevel = ECLevel.M
+  var version
+  var mask
+
+  if (typeof options !== 'undefined') {
+    // Use higher error correction level as default
+    errorCorrectionLevel = ECLevel.from(options.errorCorrectionLevel, ECLevel.M)
+    version = Version.from(options.version)
+    mask = MaskPattern.from(options.maskPattern)
+
+    if (options.toSJISFunc) {
+      Utils.setToSJISFunction(options.toSJISFunc)
+    }
+  }
+
+  return createSymbol(data, version, errorCorrectionLevel, mask)
+}
+
+},{"../utils/buffer":146,"./alignment-pattern":121,"./bit-buffer":123,"./bit-matrix":124,"./error-correction-code":126,"./error-correction-level":127,"./finder-pattern":128,"./format-info":129,"./mask-pattern":132,"./mode":133,"./reed-solomon-encoder":137,"./segments":139,"./utils":140,"./version":142,"isarray":147}],137:[function(require,module,exports){
+var Buffer = require('../utils/buffer')
+var Polynomial = require('./polynomial')
+
+function ReedSolomonEncoder (degree) {
+  this.genPoly = undefined
+  this.degree = degree
+
+  if (this.degree) this.initialize(this.degree)
+}
+
+/**
+ * Initialize the encoder.
+ * The input param should correspond to the number of error correction codewords.
+ *
+ * @param  {Number} degree
+ */
+ReedSolomonEncoder.prototype.initialize = function initialize (degree) {
+  // create an irreducible generator polynomial
+  this.degree = degree
+  this.genPoly = Polynomial.generateECPolynomial(this.degree)
+}
+
+/**
+ * Encodes a chunk of data
+ *
+ * @param  {Buffer} data Buffer containing input data
+ * @return {Buffer}      Buffer containing encoded data
+ */
+ReedSolomonEncoder.prototype.encode = function encode (data) {
+  if (!this.genPoly) {
+    throw new Error('Encoder not initialized')
+  }
+
+  // Calculate EC for this data block
+  // extends data size to data+genPoly size
+  var pad = new Buffer(this.degree)
+  pad.fill(0)
+  var paddedData = Buffer.concat([data, pad], data.length + this.degree)
+
+  // The error correction codewords are the remainder after dividing the data codewords
+  // by a generator polynomial
+  var remainder = Polynomial.mod(paddedData, this.genPoly)
+
+  // return EC data blocks (last n byte, where n is the degree of genPoly)
+  // If coefficients number in remainder are less than genPoly degree,
+  // pad with 0s to the left to reach the needed number of coefficients
+  var start = this.degree - remainder.length
+  if (start > 0) {
+    var buff = new Buffer(this.degree)
+    buff.fill(0)
+    remainder.copy(buff, start)
+
+    return buff
+  }
+
+  return remainder
+}
+
+module.exports = ReedSolomonEncoder
+
+},{"../utils/buffer":146,"./polynomial":135}],138:[function(require,module,exports){
+var numeric = '[0-9]+'
+var alphanumeric = '[A-Z $%*+\\-./:]+'
+var kanji = '(?:[u3000-u303F]|[u3040-u309F]|[u30A0-u30FF]|' +
+  '[uFF00-uFFEF]|[u4E00-u9FAF]|[u2605-u2606]|[u2190-u2195]|u203B|' +
+  '[u2010u2015u2018u2019u2025u2026u201Cu201Du2225u2260]|' +
+  '[u0391-u0451]|[u00A7u00A8u00B1u00B4u00D7u00F7])+'
+kanji = kanji.replace(/u/g, '\\u')
+
+var byte = '(?:(?![A-Z0-9 $%*+\\-./:]|' + kanji + ')(?:.|[\r\n]))+'
+
+exports.KANJI = new RegExp(kanji, 'g')
+exports.BYTE_KANJI = new RegExp('[^A-Z0-9 $%*+\\-./:]+', 'g')
+exports.BYTE = new RegExp(byte, 'g')
+exports.NUMERIC = new RegExp(numeric, 'g')
+exports.ALPHANUMERIC = new RegExp(alphanumeric, 'g')
+
+var TEST_KANJI = new RegExp('^' + kanji + '$')
+var TEST_NUMERIC = new RegExp('^' + numeric + '$')
+var TEST_ALPHANUMERIC = new RegExp('^[A-Z0-9 $%*+\\-./:]+$')
+
+exports.testKanji = function testKanji (str) {
+  return TEST_KANJI.test(str)
+}
+
+exports.testNumeric = function testNumeric (str) {
+  return TEST_NUMERIC.test(str)
+}
+
+exports.testAlphanumeric = function testAlphanumeric (str) {
+  return TEST_ALPHANUMERIC.test(str)
+}
+
+},{}],139:[function(require,module,exports){
+var Mode = require('./mode')
+var NumericData = require('./numeric-data')
+var AlphanumericData = require('./alphanumeric-data')
+var ByteData = require('./byte-data')
+var KanjiData = require('./kanji-data')
+var Regex = require('./regex')
+var Utils = require('./utils')
+var dijkstra = require('dijkstrajs')
+
+/**
+ * Returns UTF8 byte length
+ *
+ * @param  {String} str Input string
+ * @return {Number}     Number of byte
+ */
+function getStringByteLength (str) {
+  return unescape(encodeURIComponent(str)).length
+}
+
+/**
+ * Get a list of segments of the specified mode
+ * from a string
+ *
+ * @param  {Mode}   mode Segment mode
+ * @param  {String} str  String to process
+ * @return {Array}       Array of object with segments data
+ */
+function getSegments (regex, mode, str) {
+  var segments = []
+  var result
+
+  while ((result = regex.exec(str)) !== null) {
+    segments.push({
+      data: result[0],
+      index: result.index,
+      mode: mode,
+      length: result[0].length
+    })
+  }
+
+  return segments
+}
+
+/**
+ * Extracts a series of segments with the appropriate
+ * modes from a string
+ *
+ * @param  {String} dataStr Input string
+ * @return {Array}          Array of object with segments data
+ */
+function getSegmentsFromString (dataStr) {
+  var numSegs = getSegments(Regex.NUMERIC, Mode.NUMERIC, dataStr)
+  var alphaNumSegs = getSegments(Regex.ALPHANUMERIC, Mode.ALPHANUMERIC, dataStr)
+  var byteSegs
+  var kanjiSegs
+
+  if (Utils.isKanjiModeEnabled()) {
+    byteSegs = getSegments(Regex.BYTE, Mode.BYTE, dataStr)
+    kanjiSegs = getSegments(Regex.KANJI, Mode.KANJI, dataStr)
+  } else {
+    byteSegs = getSegments(Regex.BYTE_KANJI, Mode.BYTE, dataStr)
+    kanjiSegs = []
+  }
+
+  var segs = numSegs.concat(alphaNumSegs, byteSegs, kanjiSegs)
+
+  return segs
+    .sort(function (s1, s2) {
+      return s1.index - s2.index
+    })
+    .map(function (obj) {
+      return {
+        data: obj.data,
+        mode: obj.mode,
+        length: obj.length
+      }
+    })
+}
+
+/**
+ * Returns how many bits are needed to encode a string of
+ * specified length with the specified mode
+ *
+ * @param  {Number} length String length
+ * @param  {Mode} mode     Segment mode
+ * @return {Number}        Bit length
+ */
+function getSegmentBitsLength (length, mode) {
+  switch (mode) {
+    case Mode.NUMERIC:
+      return NumericData.getBitsLength(length)
+    case Mode.ALPHANUMERIC:
+      return AlphanumericData.getBitsLength(length)
+    case Mode.KANJI:
+      return KanjiData.getBitsLength(length)
+    case Mode.BYTE:
+      return ByteData.getBitsLength(length)
+  }
+}
+
+/**
+ * Merges adjacent segments which have the same mode
+ *
+ * @param  {Array} segs Array of object with segments data
+ * @return {Array}      Array of object with segments data
+ */
+function mergeSegments (segs) {
+  return segs.reduce(function (acc, curr) {
+    var prevSeg = acc.length - 1 >= 0 ? acc[acc.length - 1] : null
+    if (prevSeg && prevSeg.mode === curr.mode) {
+      acc[acc.length - 1].data += curr.data
+      return acc
+    }
+
+    acc.push(curr)
+    return acc
+  }, [])
+}
+
+/**
+ * Generates a list of all possible nodes combination which
+ * will be used to build a segments graph.
+ *
+ * Nodes are divided by groups. Each group will contain a list of all the modes
+ * in which is possible to encode the given text.
+ *
+ * For example the text '12345' can be encoded as Numeric, Alphanumeric or Byte.
+ * The group for '12345' will contain then 3 objects, one for each
+ * possible encoding mode.
+ *
+ * Each node represents a possible segment.
+ *
+ * @param  {Array} segs Array of object with segments data
+ * @return {Array}      Array of object with segments data
+ */
+function buildNodes (segs) {
+  var nodes = []
+  for (var i = 0; i < segs.length; i++) {
+    var seg = segs[i]
+
+    switch (seg.mode) {
+      case Mode.NUMERIC:
+        nodes.push([seg,
+          { data: seg.data, mode: Mode.ALPHANUMERIC, length: seg.length },
+          { data: seg.data, mode: Mode.BYTE, length: seg.length }
+        ])
+        break
+      case Mode.ALPHANUMERIC:
+        nodes.push([seg,
+          { data: seg.data, mode: Mode.BYTE, length: seg.length }
+        ])
+        break
+      case Mode.KANJI:
+        nodes.push([seg,
+          { data: seg.data, mode: Mode.BYTE, length: getStringByteLength(seg.data) }
+        ])
+        break
+      case Mode.BYTE:
+        nodes.push([
+          { data: seg.data, mode: Mode.BYTE, length: getStringByteLength(seg.data) }
+        ])
+    }
+  }
+
+  return nodes
+}
+
+/**
+ * Builds a graph from a list of nodes.
+ * All segments in each node group will be connected with all the segments of
+ * the next group and so on.
+ *
+ * At each connection will be assigned a weight depending on the
+ * segment's byte length.
+ *
+ * @param  {Array} nodes    Array of object with segments data
+ * @param  {Number} version QR Code version
+ * @return {Object}         Graph of all possible segments
+ */
+function buildGraph (nodes, version) {
+  var table = {}
+  var graph = {'start': {}}
+  var prevNodeIds = ['start']
+
+  for (var i = 0; i < nodes.length; i++) {
+    var nodeGroup = nodes[i]
+    var currentNodeIds = []
+
+    for (var j = 0; j < nodeGroup.length; j++) {
+      var node = nodeGroup[j]
+      var key = '' + i + j
+
+      currentNodeIds.push(key)
+      table[key] = { node: node, lastCount: 0 }
+      graph[key] = {}
+
+      for (var n = 0; n < prevNodeIds.length; n++) {
+        var prevNodeId = prevNodeIds[n]
+
+        if (table[prevNodeId] && table[prevNodeId].node.mode === node.mode) {
+          graph[prevNodeId][key] =
+            getSegmentBitsLength(table[prevNodeId].lastCount + node.length, node.mode) -
+            getSegmentBitsLength(table[prevNodeId].lastCount, node.mode)
+
+          table[prevNodeId].lastCount += node.length
+        } else {
+          if (table[prevNodeId]) table[prevNodeId].lastCount = node.length
+
+          graph[prevNodeId][key] = getSegmentBitsLength(node.length, node.mode) +
+            4 + Mode.getCharCountIndicator(node.mode, version) // switch cost
+        }
+      }
+    }
+
+    prevNodeIds = currentNodeIds
+  }
+
+  for (n = 0; n < prevNodeIds.length; n++) {
+    graph[prevNodeIds[n]]['end'] = 0
+  }
+
+  return { map: graph, table: table }
+}
+
+/**
+ * Builds a segment from a specified data and mode.
+ * If a mode is not specified, the more suitable will be used.
+ *
+ * @param  {String} data             Input data
+ * @param  {Mode | String} modesHint Data mode
+ * @return {Segment}                 Segment
+ */
+function buildSingleSegment (data, modesHint) {
+  var mode
+  var bestMode = Mode.getBestModeForData(data)
+
+  mode = Mode.from(modesHint, bestMode)
+
+  // Make sure data can be encoded
+  if (mode !== Mode.BYTE && mode.bit < bestMode.bit) {
+    throw new Error('"' + data + '"' +
+      ' cannot be encoded with mode ' + Mode.toString(mode) +
+      '.\n Suggested mode is: ' + Mode.toString(bestMode))
+  }
+
+  // Use Mode.BYTE if Kanji support is disabled
+  if (mode === Mode.KANJI && !Utils.isKanjiModeEnabled()) {
+    mode = Mode.BYTE
+  }
+
+  switch (mode) {
+    case Mode.NUMERIC:
+      return new NumericData(data)
+
+    case Mode.ALPHANUMERIC:
+      return new AlphanumericData(data)
+
+    case Mode.KANJI:
+      return new KanjiData(data)
+
+    case Mode.BYTE:
+      return new ByteData(data)
+  }
+}
+
+/**
+ * Builds a list of segments from an array.
+ * Array can contain Strings or Objects with segment's info.
+ *
+ * For each item which is a string, will be generated a segment with the given
+ * string and the more appropriate encoding mode.
+ *
+ * For each item which is an object, will be generated a segment with the given
+ * data and mode.
+ * Objects must contain at least the property "data".
+ * If property "mode" is not present, the more suitable mode will be used.
+ *
+ * @param  {Array} array Array of objects with segments data
+ * @return {Array}       Array of Segments
+ */
+exports.fromArray = function fromArray (array) {
+  return array.reduce(function (acc, seg) {
+    if (typeof seg === 'string') {
+      acc.push(buildSingleSegment(seg, null))
+    } else if (seg.data) {
+      acc.push(buildSingleSegment(seg.data, seg.mode))
+    }
+
+    return acc
+  }, [])
+}
+
+/**
+ * Builds an optimized sequence of segments from a string,
+ * which will produce the shortest possible bitstream.
+ *
+ * @param  {String} data    Input string
+ * @param  {Number} version QR Code version
+ * @return {Array}          Array of segments
+ */
+exports.fromString = function fromString (data, version) {
+  var segs = getSegmentsFromString(data, Utils.isKanjiModeEnabled())
+
+  var nodes = buildNodes(segs)
+  var graph = buildGraph(nodes, version)
+  var path = dijkstra.find_path(graph.map, 'start', 'end')
+
+  var optimizedSegs = []
+  for (var i = 1; i < path.length - 1; i++) {
+    optimizedSegs.push(graph.table[path[i]].node)
+  }
+
+  return exports.fromArray(mergeSegments(optimizedSegs))
+}
+
+/**
+ * Splits a string in various segments with the modes which
+ * best represent their content.
+ * The produced segments are far from being optimized.
+ * The output of this function is only used to estimate a QR Code version
+ * which may contain the data.
+ *
+ * @param  {string} data Input string
+ * @return {Array}       Array of segments
+ */
+exports.rawSplit = function rawSplit (data) {
+  return exports.fromArray(
+    getSegmentsFromString(data, Utils.isKanjiModeEnabled())
+  )
+}
+
+},{"./alphanumeric-data":122,"./byte-data":125,"./kanji-data":131,"./mode":133,"./numeric-data":134,"./regex":138,"./utils":140,"dijkstrajs":20}],140:[function(require,module,exports){
+var toSJISFunction
+var CODEWORDS_COUNT = [
+  0, // Not used
+  26, 44, 70, 100, 134, 172, 196, 242, 292, 346,
+  404, 466, 532, 581, 655, 733, 815, 901, 991, 1085,
+  1156, 1258, 1364, 1474, 1588, 1706, 1828, 1921, 2051, 2185,
+  2323, 2465, 2611, 2761, 2876, 3034, 3196, 3362, 3532, 3706
+]
+
+/**
+ * Returns the QR Code size for the specified version
+ *
+ * @param  {Number} version QR Code version
+ * @return {Number}         size of QR code
+ */
+exports.getSymbolSize = function getSymbolSize (version) {
+  if (!version) throw new Error('"version" cannot be null or undefined')
+  if (version < 1 || version > 40) throw new Error('"version" should be in range from 1 to 40')
+  return version * 4 + 17
+}
+
+/**
+ * Returns the total number of codewords used to store data and EC information.
+ *
+ * @param  {Number} version QR Code version
+ * @return {Number}         Data length in bits
+ */
+exports.getSymbolTotalCodewords = function getSymbolTotalCodewords (version) {
+  return CODEWORDS_COUNT[version]
+}
+
+/**
+ * Encode data with Bose-Chaudhuri-Hocquenghem
+ *
+ * @param  {Number} data Value to encode
+ * @return {Number}      Encoded value
+ */
+exports.getBCHDigit = function (data) {
+  var digit = 0
+
+  while (data !== 0) {
+    digit++
+    data >>>= 1
+  }
+
+  return digit
+}
+
+exports.setToSJISFunction = function setToSJISFunction (f) {
+  if (typeof f !== 'function') {
+    throw new Error('"toSJISFunc" is not a valid function.')
+  }
+
+  toSJISFunction = f
+}
+
+exports.isKanjiModeEnabled = function () {
+  return typeof toSJISFunction !== 'undefined'
+}
+
+exports.toSJIS = function toSJIS (kanji) {
+  return toSJISFunction(kanji)
+}
+
+},{}],141:[function(require,module,exports){
+/**
+ * Check if QR Code version is valid
+ *
+ * @param  {Number}  version QR Code version
+ * @return {Boolean}         true if valid version, false otherwise
+ */
+exports.isValid = function isValid (version) {
+  return !isNaN(version) && version >= 1 && version <= 40
+}
+
+},{}],142:[function(require,module,exports){
+var Utils = require('./utils')
+var ECCode = require('./error-correction-code')
+var ECLevel = require('./error-correction-level')
+var Mode = require('./mode')
+var VersionCheck = require('./version-check')
+var isArray = require('isarray')
+
+// Generator polynomial used to encode version information
+var G18 = (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0)
+var G18_BCH = Utils.getBCHDigit(G18)
+
+function getBestVersionForDataLength (mode, length, errorCorrectionLevel) {
+  for (var currentVersion = 1; currentVersion <= 40; currentVersion++) {
+    if (length <= exports.getCapacity(currentVersion, errorCorrectionLevel, mode)) {
+      return currentVersion
+    }
+  }
+
+  return undefined
+}
+
+function getReservedBitsCount (mode, version) {
+  // Character count indicator + mode indicator bits
+  return Mode.getCharCountIndicator(mode, version) + 4
+}
+
+function getTotalBitsFromDataArray (segments, version) {
+  var totalBits = 0
+
+  segments.forEach(function (data) {
+    var reservedBits = getReservedBitsCount(data.mode, version)
+    totalBits += reservedBits + data.getBitsLength()
+  })
+
+  return totalBits
+}
+
+function getBestVersionForMixedData (segments, errorCorrectionLevel) {
+  for (var currentVersion = 1; currentVersion <= 40; currentVersion++) {
+    var length = getTotalBitsFromDataArray(segments, currentVersion)
+    if (length <= exports.getCapacity(currentVersion, errorCorrectionLevel, Mode.MIXED)) {
+      return currentVersion
+    }
+  }
+
+  return undefined
+}
+
+/**
+ * Returns version number from a value.
+ * If value is not a valid version, returns defaultValue
+ *
+ * @param  {Number|String} value        QR Code version
+ * @param  {Number}        defaultValue Fallback value
+ * @return {Number}                     QR Code version number
+ */
+exports.from = function from (value, defaultValue) {
+  if (VersionCheck.isValid(value)) {
+    return parseInt(value, 10)
+  }
+
+  return defaultValue
+}
+
+/**
+ * Returns how much data can be stored with the specified QR code version
+ * and error correction level
+ *
+ * @param  {Number} version              QR Code version (1-40)
+ * @param  {Number} errorCorrectionLevel Error correction level
+ * @param  {Mode}   mode                 Data mode
+ * @return {Number}                      Quantity of storable data
+ */
+exports.getCapacity = function getCapacity (version, errorCorrectionLevel, mode) {
+  if (!VersionCheck.isValid(version)) {
+    throw new Error('Invalid QR Code version')
+  }
+
+  // Use Byte mode as default
+  if (typeof mode === 'undefined') mode = Mode.BYTE
+
+  // Total codewords for this QR code version (Data + Error correction)
+  var totalCodewords = Utils.getSymbolTotalCodewords(version)
+
+  // Total number of error correction codewords
+  var ecTotalCodewords = ECCode.getTotalCodewordsCount(version, errorCorrectionLevel)
+
+  // Total number of data codewords
+  var dataTotalCodewordsBits = (totalCodewords - ecTotalCodewords) * 8
+
+  if (mode === Mode.MIXED) return dataTotalCodewordsBits
+
+  var usableBits = dataTotalCodewordsBits - getReservedBitsCount(mode, version)
+
+  // Return max number of storable codewords
+  switch (mode) {
+    case Mode.NUMERIC:
+      return Math.floor((usableBits / 10) * 3)
+
+    case Mode.ALPHANUMERIC:
+      return Math.floor((usableBits / 11) * 2)
+
+    case Mode.KANJI:
+      return Math.floor(usableBits / 13)
+
+    case Mode.BYTE:
+    default:
+      return Math.floor(usableBits / 8)
+  }
+}
+
+/**
+ * Returns the minimum version needed to contain the amount of data
+ *
+ * @param  {Segment} data                    Segment of data
+ * @param  {Number} [errorCorrectionLevel=H] Error correction level
+ * @param  {Mode} mode                       Data mode
+ * @return {Number}                          QR Code version
+ */
+exports.getBestVersionForData = function getBestVersionForData (data, errorCorrectionLevel) {
+  var seg
+
+  var ecl = ECLevel.from(errorCorrectionLevel, ECLevel.M)
+
+  if (isArray(data)) {
+    if (data.length > 1) {
+      return getBestVersionForMixedData(data, ecl)
+    }
+
+    if (data.length === 0) {
+      return 1
+    }
+
+    seg = data[0]
+  } else {
+    seg = data
+  }
+
+  return getBestVersionForDataLength(seg.mode, seg.getLength(), ecl)
+}
+
+/**
+ * Returns version information with relative error correction bits
+ *
+ * The version information is included in QR Code symbols of version 7 or larger.
+ * It consists of an 18-bit sequence containing 6 data bits,
+ * with 12 error correction bits calculated using the (18, 6) Golay code.
+ *
+ * @param  {Number} version QR Code version
+ * @return {Number}         Encoded version info bits
+ */
+exports.getEncodedBits = function getEncodedBits (version) {
+  if (!VersionCheck.isValid(version) || version < 7) {
+    throw new Error('Invalid QR Code version')
+  }
+
+  var d = version << 12
+
+  while (Utils.getBCHDigit(d) - G18_BCH >= 0) {
+    d ^= (G18 << (Utils.getBCHDigit(d) - G18_BCH))
+  }
+
+  return (version << 12) | d
+}
+
+},{"./error-correction-code":126,"./error-correction-level":127,"./mode":133,"./utils":140,"./version-check":141,"isarray":147}],143:[function(require,module,exports){
+var Utils = require('./utils')
+
+function clearCanvas (ctx, canvas, size) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+  if (!canvas.style) canvas.style = {}
+  canvas.height = size
+  canvas.width = size
+  canvas.style.height = size + 'px'
+  canvas.style.width = size + 'px'
+}
+
+function getCanvasElement () {
+  try {
+    return document.createElement('canvas')
+  } catch (e) {
+    throw new Error('You need to specify a canvas element')
+  }
+}
+
+exports.render = function render (qrData, canvas, options) {
+  var opts = options
+  var canvasEl = canvas
+
+  if (typeof opts === 'undefined' && (!canvas || !canvas.getContext)) {
+    opts = canvas
+    canvas = undefined
+  }
+
+  if (!canvas) {
+    canvasEl = getCanvasElement()
+  }
+
+  opts = Utils.getOptions(opts)
+  var size = Utils.getImageWidth(qrData.modules.size, opts)
+
+  var ctx = canvasEl.getContext('2d')
+  var image = ctx.createImageData(size, size)
+  Utils.qrToImageData(image.data, qrData, opts)
+
+  clearCanvas(ctx, canvasEl, size)
+  ctx.putImageData(image, 0, 0)
+
+  return canvasEl
+}
+
+exports.renderToDataURL = function renderToDataURL (qrData, canvas, options) {
+  var opts = options
+
+  if (typeof opts === 'undefined' && (!canvas || !canvas.getContext)) {
+    opts = canvas
+    canvas = undefined
+  }
+
+  if (!opts) opts = {}
+
+  var canvasEl = exports.render(qrData, canvas, opts)
+
+  var type = opts.type || 'image/png'
+  var rendererOpts = opts.rendererOpts || {}
+
+  return canvasEl.toDataURL(type, rendererOpts.quality)
+}
+
+},{"./utils":145}],144:[function(require,module,exports){
+var Utils = require('./utils')
+
+function getColorAttrib (color, attrib) {
+  var alpha = color.a / 255
+  var str = attrib + '="' + color.hex + '"'
+
+  return alpha < 1
+    ? str + ' ' + attrib + '-opacity="' + alpha.toFixed(2).slice(1) + '"'
+    : str
+}
+
+function svgCmd (cmd, x, y) {
+  var str = cmd + x
+  if (typeof y !== 'undefined') str += ' ' + y
+
+  return str
+}
+
+function qrToPath (data, size, margin) {
+  var path = ''
+  var moveBy = 0
+  var newRow = false
+  var lineLength = 0
+
+  for (var i = 0; i < data.length; i++) {
+    var col = Math.floor(i % size)
+    var row = Math.floor(i / size)
+
+    if (!col && !newRow) newRow = true
+
+    if (data[i]) {
+      lineLength++
+
+      if (!(i > 0 && col > 0 && data[i - 1])) {
+        path += newRow
+          ? svgCmd('M', col + margin, 0.5 + row + margin)
+          : svgCmd('m', moveBy, 0)
+
+        moveBy = 0
+        newRow = false
+      }
+
+      if (!(col + 1 < size && data[i + 1])) {
+        path += svgCmd('h', lineLength)
+        lineLength = 0
+      }
+    } else {
+      moveBy++
+    }
+  }
+
+  return path
+}
+
+exports.render = function render (qrData, options, cb) {
+  var opts = Utils.getOptions(options)
+  var size = qrData.modules.size
+  var data = qrData.modules.data
+  var qrcodesize = size + opts.margin * 2
+
+  var bg = !opts.color.light.a
+    ? ''
+    : '<path ' + getColorAttrib(opts.color.light, 'fill') +
+      ' d="M0 0h' + qrcodesize + 'v' + qrcodesize + 'H0z"/>'
+
+  var path =
+    '<path ' + getColorAttrib(opts.color.dark, 'stroke') +
+    ' d="' + qrToPath(data, size, opts.margin) + '"/>'
+
+  var viewBox = 'viewBox="' + '0 0 ' + qrcodesize + ' ' + qrcodesize + '"'
+
+  var width = !opts.width ? '' : 'width="' + opts.width + '" height="' + opts.width + '" '
+
+  var svgTag = '<svg xmlns="http://www.w3.org/2000/svg" ' + width + viewBox + ' shape-rendering="crispEdges">' + bg + path + '</svg>\n'
+
+  if (typeof cb === 'function') {
+    cb(null, svgTag)
+  }
+
+  return svgTag
+}
+
+},{"./utils":145}],145:[function(require,module,exports){
+function hex2rgba (hex) {
+  if (typeof hex !== 'string') {
+    throw new Error('Color should be defined as hex string')
+  }
+
+  var hexCode = hex.slice().replace('#', '').split('')
+  if (hexCode.length < 3 || hexCode.length === 5 || hexCode.length > 8) {
+    throw new Error('Invalid hex color: ' + hex)
+  }
+
+  // Convert from short to long form (fff -> ffffff)
+  if (hexCode.length === 3 || hexCode.length === 4) {
+    hexCode = Array.prototype.concat.apply([], hexCode.map(function (c) {
+      return [c, c]
+    }))
+  }
+
+  // Add default alpha value
+  if (hexCode.length === 6) hexCode.push('F', 'F')
+
+  var hexValue = parseInt(hexCode.join(''), 16)
+
+  return {
+    r: (hexValue >> 24) & 255,
+    g: (hexValue >> 16) & 255,
+    b: (hexValue >> 8) & 255,
+    a: hexValue & 255,
+    hex: '#' + hexCode.slice(0, 6).join('')
+  }
+}
+
+exports.getOptions = function getOptions (options) {
+  if (!options) options = {}
+  if (!options.color) options.color = {}
+
+  var margin = typeof options.margin === 'undefined' ||
+    options.margin === null ||
+    options.margin < 0 ? 4 : options.margin
+
+  var width = options.width && options.width >= 21 ? options.width : undefined
+  var scale = options.scale || 4
+
+  return {
+    width: width,
+    scale: width ? 4 : scale,
+    margin: margin,
+    color: {
+      dark: hex2rgba(options.color.dark || '#000000ff'),
+      light: hex2rgba(options.color.light || '#ffffffff')
+    },
+    type: options.type,
+    rendererOpts: options.rendererOpts || {}
+  }
+}
+
+exports.getScale = function getScale (qrSize, opts) {
+  return opts.width && opts.width >= qrSize + opts.margin * 2
+    ? opts.width / (qrSize + opts.margin * 2)
+    : opts.scale
+}
+
+exports.getImageWidth = function getImageWidth (qrSize, opts) {
+  var scale = exports.getScale(qrSize, opts)
+  return Math.floor((qrSize + opts.margin * 2) * scale)
+}
+
+exports.qrToImageData = function qrToImageData (imgData, qr, opts) {
+  var size = qr.modules.size
+  var data = qr.modules.data
+  var scale = exports.getScale(size, opts)
+  var symbolSize = Math.floor((size + opts.margin * 2) * scale)
+  var scaledMargin = opts.margin * scale
+  var palette = [opts.color.light, opts.color.dark]
+
+  for (var i = 0; i < symbolSize; i++) {
+    for (var j = 0; j < symbolSize; j++) {
+      var posDst = (i * symbolSize + j) * 4
+      var pxColor = opts.color.light
+
+      if (i >= scaledMargin && j >= scaledMargin &&
+        i < symbolSize - scaledMargin && j < symbolSize - scaledMargin) {
+        var iSrc = Math.floor((i - scaledMargin) / scale)
+        var jSrc = Math.floor((j - scaledMargin) / scale)
+        pxColor = palette[data[iSrc * size + jSrc] ? 1 : 0]
+      }
+
+      imgData[posDst++] = pxColor.r
+      imgData[posDst++] = pxColor.g
+      imgData[posDst++] = pxColor.b
+      imgData[posDst] = pxColor.a
+    }
+  }
+}
+
+},{}],146:[function(require,module,exports){
+/**
+ * Implementation of a subset of node.js Buffer methods for the browser.
+ * Based on https://github.com/feross/buffer
+ */
+
+/* eslint-disable no-proto */
+
+'use strict'
+
+var isArray = require('isarray')
+
+function typedArraySupport () {
+  // Can typed array instances be augmented?
+  try {
+    var arr = new Uint8Array(1)
+    arr.__proto__ = {__proto__: Uint8Array.prototype, foo: function () { return 42 }}
+    return arr.foo() === 42
+  } catch (e) {
+    return false
+  }
+}
+
+Buffer.TYPED_ARRAY_SUPPORT = typedArraySupport()
+
+var K_MAX_LENGTH = Buffer.TYPED_ARRAY_SUPPORT
+    ? 0x7fffffff
+    : 0x3fffffff
+
+function Buffer (arg, offset, length) {
+  if (!Buffer.TYPED_ARRAY_SUPPORT && !(this instanceof Buffer)) {
+    return new Buffer(arg, offset, length)
+  }
+
+  if (typeof arg === 'number') {
+    return allocUnsafe(this, arg)
+  }
+
+  return from(this, arg, offset, length)
+}
+
+if (Buffer.TYPED_ARRAY_SUPPORT) {
+  Buffer.prototype.__proto__ = Uint8Array.prototype
+  Buffer.__proto__ = Uint8Array
+
+  // Fix subarray() in ES2016. See: https://github.com/feross/buffer/pull/97
+  if (typeof Symbol !== 'undefined' && Symbol.species &&
+      Buffer[Symbol.species] === Buffer) {
+    Object.defineProperty(Buffer, Symbol.species, {
+      value: null,
+      configurable: true,
+      enumerable: false,
+      writable: false
+    })
+  }
+}
+
+function checked (length) {
+  // Note: cannot use `length < K_MAX_LENGTH` here because that fails when
+  // length is NaN (which is otherwise coerced to zero.)
+  if (length >= K_MAX_LENGTH) {
+    throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
+                         'size: 0x' + K_MAX_LENGTH.toString(16) + ' bytes')
+  }
+  return length | 0
+}
+
+function isnan (val) {
+  return val !== val // eslint-disable-line no-self-compare
+}
+
+function createBuffer (that, length) {
+  var buf
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    buf = new Uint8Array(length)
+    buf.__proto__ = Buffer.prototype
+  } else {
+    // Fallback: Return an object instance of the Buffer class
+    buf = that
+    if (buf === null) {
+      buf = new Buffer(length)
+    }
+    buf.length = length
+  }
+
+  return buf
+}
+
+function allocUnsafe (that, size) {
+  var buf = createBuffer(that, size < 0 ? 0 : checked(size) | 0)
+
+  if (!Buffer.TYPED_ARRAY_SUPPORT) {
+    for (var i = 0; i < size; ++i) {
+      buf[i] = 0
+    }
+  }
+
+  return buf
+}
+
+function fromString (that, string) {
+  var length = byteLength(string) | 0
+  var buf = createBuffer(that, length)
+
+  var actual = buf.write(string)
+
+  if (actual !== length) {
+    // Writing a hex string, for example, that contains invalid characters will
+    // cause everything after the first invalid character to be ignored. (e.g.
+    // 'abxxcd' will be treated as 'ab')
+    buf = buf.slice(0, actual)
+  }
+
+  return buf
+}
+
+function fromArrayLike (that, array) {
+  var length = array.length < 0 ? 0 : checked(array.length) | 0
+  var buf = createBuffer(that, length)
+  for (var i = 0; i < length; i += 1) {
+    buf[i] = array[i] & 255
+  }
+  return buf
+}
+
+function fromArrayBuffer (that, array, byteOffset, length) {
+  if (byteOffset < 0 || array.byteLength < byteOffset) {
+    throw new RangeError('\'offset\' is out of bounds')
+  }
+
+  if (array.byteLength < byteOffset + (length || 0)) {
+    throw new RangeError('\'length\' is out of bounds')
+  }
+
+  var buf
+  if (byteOffset === undefined && length === undefined) {
+    buf = new Uint8Array(array)
+  } else if (length === undefined) {
+    buf = new Uint8Array(array, byteOffset)
+  } else {
+    buf = new Uint8Array(array, byteOffset, length)
+  }
+
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    // Return an augmented `Uint8Array` instance, for best performance
+    buf.__proto__ = Buffer.prototype
+  } else {
+    // Fallback: Return an object instance of the Buffer class
+    buf = fromArrayLike(that, buf)
+  }
+
+  return buf
+}
+
+function fromObject (that, obj) {
+  if (Buffer.isBuffer(obj)) {
+    var len = checked(obj.length) | 0
+    var buf = createBuffer(that, len)
+
+    if (buf.length === 0) {
+      return buf
+    }
+
+    obj.copy(buf, 0, 0, len)
+    return buf
+  }
+
+  if (obj) {
+    if ((typeof ArrayBuffer !== 'undefined' &&
+        obj.buffer instanceof ArrayBuffer) || 'length' in obj) {
+      if (typeof obj.length !== 'number' || isnan(obj.length)) {
+        return createBuffer(that, 0)
+      }
+      return fromArrayLike(that, obj)
+    }
+
+    if (obj.type === 'Buffer' && Array.isArray(obj.data)) {
+      return fromArrayLike(that, obj.data)
+    }
+  }
+
+  throw new TypeError('First argument must be a string, Buffer, ArrayBuffer, Array, or array-like object.')
+}
+
+function utf8ToBytes (string, units) {
+  units = units || Infinity
+  var codePoint
+  var length = string.length
+  var leadSurrogate = null
+  var bytes = []
+
+  for (var i = 0; i < length; ++i) {
+    codePoint = string.charCodeAt(i)
+
+    // is surrogate component
+    if (codePoint > 0xD7FF && codePoint < 0xE000) {
+      // last char was a lead
+      if (!leadSurrogate) {
+        // no lead yet
+        if (codePoint > 0xDBFF) {
+          // unexpected trail
+          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+          continue
+        } else if (i + 1 === length) {
+          // unpaired lead
+          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+          continue
+        }
+
+        // valid lead
+        leadSurrogate = codePoint
+
+        continue
+      }
+
+      // 2 leads in a row
+      if (codePoint < 0xDC00) {
+        if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+        leadSurrogate = codePoint
+        continue
+      }
+
+      // valid surrogate pair
+      codePoint = (leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00) + 0x10000
+    } else if (leadSurrogate) {
+      // valid bmp char, but last char was a lead
+      if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+    }
+
+    leadSurrogate = null
+
+    // encode utf8
+    if (codePoint < 0x80) {
+      if ((units -= 1) < 0) break
+      bytes.push(codePoint)
+    } else if (codePoint < 0x800) {
+      if ((units -= 2) < 0) break
+      bytes.push(
+        codePoint >> 0x6 | 0xC0,
+        codePoint & 0x3F | 0x80
+      )
+    } else if (codePoint < 0x10000) {
+      if ((units -= 3) < 0) break
+      bytes.push(
+        codePoint >> 0xC | 0xE0,
+        codePoint >> 0x6 & 0x3F | 0x80,
+        codePoint & 0x3F | 0x80
+      )
+    } else if (codePoint < 0x110000) {
+      if ((units -= 4) < 0) break
+      bytes.push(
+        codePoint >> 0x12 | 0xF0,
+        codePoint >> 0xC & 0x3F | 0x80,
+        codePoint >> 0x6 & 0x3F | 0x80,
+        codePoint & 0x3F | 0x80
+      )
+    } else {
+      throw new Error('Invalid code point')
+    }
+  }
+
+  return bytes
+}
+
+function byteLength (string) {
+  if (Buffer.isBuffer(string)) {
+    return string.length
+  }
+  if (typeof ArrayBuffer !== 'undefined' && typeof ArrayBuffer.isView === 'function' &&
+      (ArrayBuffer.isView(string) || string instanceof ArrayBuffer)) {
+    return string.byteLength
+  }
+  if (typeof string !== 'string') {
+    string = '' + string
+  }
+
+  var len = string.length
+  if (len === 0) return 0
+
+  return utf8ToBytes(string).length
+}
+
+function blitBuffer (src, dst, offset, length) {
+  for (var i = 0; i < length; ++i) {
+    if ((i + offset >= dst.length) || (i >= src.length)) break
+    dst[i + offset] = src[i]
+  }
+  return i
+}
+
+function utf8Write (buf, string, offset, length) {
+  return blitBuffer(utf8ToBytes(string, buf.length - offset), buf, offset, length)
+}
+
+function from (that, value, offset, length) {
+  if (typeof value === 'number') {
+    throw new TypeError('"value" argument must not be a number')
+  }
+
+  if (typeof ArrayBuffer !== 'undefined' && value instanceof ArrayBuffer) {
+    return fromArrayBuffer(that, value, offset, length)
+  }
+
+  if (typeof value === 'string') {
+    return fromString(that, value, offset)
+  }
+
+  return fromObject(that, value)
+}
+
+Buffer.prototype.write = function write (string, offset, length) {
+  // Buffer#write(string)
+  if (offset === undefined) {
+    length = this.length
+    offset = 0
+  // Buffer#write(string, encoding)
+  } else if (length === undefined && typeof offset === 'string') {
+    length = this.length
+    offset = 0
+  // Buffer#write(string, offset[, length])
+  } else if (isFinite(offset)) {
+    offset = offset | 0
+    if (isFinite(length)) {
+      length = length | 0
+    } else {
+      length = undefined
+    }
+  }
+
+  var remaining = this.length - offset
+  if (length === undefined || length > remaining) length = remaining
+
+  if ((string.length > 0 && (length < 0 || offset < 0)) || offset > this.length) {
+    throw new RangeError('Attempt to write outside buffer bounds')
+  }
+
+  return utf8Write(this, string, offset, length)
+}
+
+Buffer.prototype.slice = function slice (start, end) {
+  var len = this.length
+  start = ~~start
+  end = end === undefined ? len : ~~end
+
+  if (start < 0) {
+    start += len
+    if (start < 0) start = 0
+  } else if (start > len) {
+    start = len
+  }
+
+  if (end < 0) {
+    end += len
+    if (end < 0) end = 0
+  } else if (end > len) {
+    end = len
+  }
+
+  if (end < start) end = start
+
+  var newBuf
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    newBuf = this.subarray(start, end)
+    // Return an augmented `Uint8Array` instance
+    newBuf.__proto__ = Buffer.prototype
+  } else {
+    var sliceLen = end - start
+    newBuf = new Buffer(sliceLen, undefined)
+    for (var i = 0; i < sliceLen; ++i) {
+      newBuf[i] = this[i + start]
+    }
+  }
+
+  return newBuf
+}
+
+Buffer.prototype.copy = function copy (target, targetStart, start, end) {
+  if (!start) start = 0
+  if (!end && end !== 0) end = this.length
+  if (targetStart >= target.length) targetStart = target.length
+  if (!targetStart) targetStart = 0
+  if (end > 0 && end < start) end = start
+
+  // Copy 0 bytes; we're done
+  if (end === start) return 0
+  if (target.length === 0 || this.length === 0) return 0
+
+  // Fatal error conditions
+  if (targetStart < 0) {
+    throw new RangeError('targetStart out of bounds')
+  }
+  if (start < 0 || start >= this.length) throw new RangeError('sourceStart out of bounds')
+  if (end < 0) throw new RangeError('sourceEnd out of bounds')
+
+  // Are we oob?
+  if (end > this.length) end = this.length
+  if (target.length - targetStart < end - start) {
+    end = target.length - targetStart + start
+  }
+
+  var len = end - start
+  var i
+
+  if (this === target && start < targetStart && targetStart < end) {
+    // descending copy from end
+    for (i = len - 1; i >= 0; --i) {
+      target[i + targetStart] = this[i + start]
+    }
+  } else if (len < 1000 || !Buffer.TYPED_ARRAY_SUPPORT) {
+    // ascending copy from start
+    for (i = 0; i < len; ++i) {
+      target[i + targetStart] = this[i + start]
+    }
+  } else {
+    Uint8Array.prototype.set.call(
+      target,
+      this.subarray(start, start + len),
+      targetStart
+    )
+  }
+
+  return len
+}
+
+Buffer.prototype.fill = function fill (val, start, end) {
+  // Handle string cases:
+  if (typeof val === 'string') {
+    if (typeof start === 'string') {
+      start = 0
+      end = this.length
+    } else if (typeof end === 'string') {
+      end = this.length
+    }
+    if (val.length === 1) {
+      var code = val.charCodeAt(0)
+      if (code < 256) {
+        val = code
+      }
+    }
+  } else if (typeof val === 'number') {
+    val = val & 255
+  }
+
+  // Invalid ranges are not set to a default, so can range check early.
+  if (start < 0 || this.length < start || this.length < end) {
+    throw new RangeError('Out of range index')
+  }
+
+  if (end <= start) {
+    return this
+  }
+
+  start = start >>> 0
+  end = end === undefined ? this.length : end >>> 0
+
+  if (!val) val = 0
+
+  var i
+  if (typeof val === 'number') {
+    for (i = start; i < end; ++i) {
+      this[i] = val
+    }
+  } else {
+    var bytes = Buffer.isBuffer(val)
+      ? val
+      : new Buffer(val)
+    var len = bytes.length
+    for (i = 0; i < end - start; ++i) {
+      this[i + start] = bytes[i % len]
+    }
+  }
+
+  return this
+}
+
+Buffer.concat = function concat (list, length) {
+  if (!isArray(list)) {
+    throw new TypeError('"list" argument must be an Array of Buffers')
+  }
+
+  if (list.length === 0) {
+    return createBuffer(null, 0)
+  }
+
+  var i
+  if (length === undefined) {
+    length = 0
+    for (i = 0; i < list.length; ++i) {
+      length += list[i].length
+    }
+  }
+
+  var buffer = allocUnsafe(null, length)
+  var pos = 0
+  for (i = 0; i < list.length; ++i) {
+    var buf = list[i]
+    if (!Buffer.isBuffer(buf)) {
+      throw new TypeError('"list" argument must be an Array of Buffers')
+    }
+    buf.copy(buffer, pos)
+    pos += buf.length
+  }
+  return buffer
+}
+
+Buffer.byteLength = byteLength
+
+Buffer.prototype._isBuffer = true
+Buffer.isBuffer = function isBuffer (b) {
+  return !!(b != null && b._isBuffer)
+}
+
+module.exports = Buffer
+
+},{"isarray":147}],147:[function(require,module,exports){
+var toString = {}.toString;
+
+module.exports = Array.isArray || function (arr) {
+  return toString.call(arr) == '[object Array]';
+};
+
+},{}],148:[function(require,module,exports){
 module.exports = require('./lib/_stream_duplex.js');
 
-},{"./lib/_stream_duplex.js":119}],119:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":149}],149:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -59001,7 +62367,7 @@ Duplex.prototype._destroy = function (err, cb) {
 
   pna.nextTick(cb, err);
 };
-},{"./_stream_readable":121,"./_stream_writable":123,"core-util-is":14,"inherits":70,"process-nextick-args":128}],120:[function(require,module,exports){
+},{"./_stream_readable":151,"./_stream_writable":153,"core-util-is":14,"inherits":71,"process-nextick-args":158}],150:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -59049,7 +62415,7 @@ function PassThrough(options) {
 PassThrough.prototype._transform = function (chunk, encoding, cb) {
   cb(null, chunk);
 };
-},{"./_stream_transform":122,"core-util-is":14,"inherits":70}],121:[function(require,module,exports){
+},{"./_stream_transform":152,"core-util-is":14,"inherits":71}],151:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -60071,7 +63437,7 @@ function indexOf(xs, x) {
   return -1;
 }
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./_stream_duplex":119,"./internal/streams/BufferList":124,"./internal/streams/destroy":125,"./internal/streams/stream":126,"_process":117,"core-util-is":14,"events":48,"inherits":70,"isarray":127,"process-nextick-args":128,"safe-buffer":134,"string_decoder/":129,"util":4}],122:[function(require,module,exports){
+},{"./_stream_duplex":149,"./internal/streams/BufferList":154,"./internal/streams/destroy":155,"./internal/streams/stream":156,"_process":118,"core-util-is":14,"events":49,"inherits":71,"isarray":157,"process-nextick-args":158,"safe-buffer":164,"string_decoder/":159,"util":4}],152:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -60286,7 +63652,7 @@ function done(stream, er, data) {
 
   return stream.push(null);
 }
-},{"./_stream_duplex":119,"core-util-is":14,"inherits":70}],123:[function(require,module,exports){
+},{"./_stream_duplex":149,"core-util-is":14,"inherits":71}],153:[function(require,module,exports){
 (function (process,global,setImmediate){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -60976,7 +64342,7 @@ Writable.prototype._destroy = function (err, cb) {
   cb(err);
 };
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("timers").setImmediate)
-},{"./_stream_duplex":119,"./internal/streams/destroy":125,"./internal/streams/stream":126,"_process":117,"core-util-is":14,"inherits":70,"process-nextick-args":128,"safe-buffer":134,"timers":142,"util-deprecate":148}],124:[function(require,module,exports){
+},{"./_stream_duplex":149,"./internal/streams/destroy":155,"./internal/streams/stream":156,"_process":118,"core-util-is":14,"inherits":71,"process-nextick-args":158,"safe-buffer":164,"timers":172,"util-deprecate":178}],154:[function(require,module,exports){
 'use strict';
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -61056,7 +64422,7 @@ if (util && util.inspect && util.inspect.custom) {
     return this.constructor.name + ' ' + obj;
   };
 }
-},{"safe-buffer":134,"util":4}],125:[function(require,module,exports){
+},{"safe-buffer":164,"util":4}],155:[function(require,module,exports){
 'use strict';
 
 /*<replacement>*/
@@ -61131,17 +64497,12 @@ module.exports = {
   destroy: destroy,
   undestroy: undestroy
 };
-},{"process-nextick-args":128}],126:[function(require,module,exports){
+},{"process-nextick-args":158}],156:[function(require,module,exports){
 module.exports = require('events').EventEmitter;
 
-},{"events":48}],127:[function(require,module,exports){
-var toString = {}.toString;
-
-module.exports = Array.isArray || function (arr) {
-  return toString.call(arr) == '[object Array]';
-};
-
-},{}],128:[function(require,module,exports){
+},{"events":49}],157:[function(require,module,exports){
+arguments[4][147][0].apply(exports,arguments)
+},{"dup":147}],158:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -61189,7 +64550,7 @@ function nextTick(fn, arg1, arg2, arg3) {
 
 
 }).call(this,require('_process'))
-},{"_process":117}],129:[function(require,module,exports){
+},{"_process":118}],159:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -61486,10 +64847,10 @@ function simpleWrite(buf) {
 function simpleEnd(buf) {
   return buf && buf.length ? this.write(buf) : '';
 }
-},{"safe-buffer":134}],130:[function(require,module,exports){
+},{"safe-buffer":164}],160:[function(require,module,exports){
 module.exports = require('./readable').PassThrough
 
-},{"./readable":131}],131:[function(require,module,exports){
+},{"./readable":161}],161:[function(require,module,exports){
 exports = module.exports = require('./lib/_stream_readable.js');
 exports.Stream = exports;
 exports.Readable = exports;
@@ -61498,13 +64859,13 @@ exports.Duplex = require('./lib/_stream_duplex.js');
 exports.Transform = require('./lib/_stream_transform.js');
 exports.PassThrough = require('./lib/_stream_passthrough.js');
 
-},{"./lib/_stream_duplex.js":119,"./lib/_stream_passthrough.js":120,"./lib/_stream_readable.js":121,"./lib/_stream_transform.js":122,"./lib/_stream_writable.js":123}],132:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":149,"./lib/_stream_passthrough.js":150,"./lib/_stream_readable.js":151,"./lib/_stream_transform.js":152,"./lib/_stream_writable.js":153}],162:[function(require,module,exports){
 module.exports = require('./readable').Transform
 
-},{"./readable":131}],133:[function(require,module,exports){
+},{"./readable":161}],163:[function(require,module,exports){
 module.exports = require('./lib/_stream_writable.js');
 
-},{"./lib/_stream_writable.js":123}],134:[function(require,module,exports){
+},{"./lib/_stream_writable.js":153}],164:[function(require,module,exports){
 /* eslint-disable node/no-deprecated-api */
 var buffer = require('buffer')
 var Buffer = buffer.Buffer
@@ -61568,9 +64929,9 @@ SafeBuffer.allocUnsafeSlow = function (size) {
   return buffer.SlowBuffer(size)
 }
 
-},{"buffer":47}],135:[function(require,module,exports){
-arguments[4][67][0].apply(exports,arguments)
-},{"./lib/decoder":136,"./lib/encoder":137,"dup":67}],136:[function(require,module,exports){
+},{"buffer":48}],165:[function(require,module,exports){
+arguments[4][68][0].apply(exports,arguments)
+},{"./lib/decoder":166,"./lib/encoder":167,"dup":68}],166:[function(require,module,exports){
 (function (Buffer){
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- /
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
@@ -62553,9 +65914,9 @@ function decode(jpegData) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":47}],137:[function(require,module,exports){
-arguments[4][69][0].apply(exports,arguments)
-},{"buffer":47,"dup":69}],138:[function(require,module,exports){
+},{"buffer":48}],167:[function(require,module,exports){
+arguments[4][70][0].apply(exports,arguments)
+},{"buffer":48,"dup":70}],168:[function(require,module,exports){
 (function (Buffer){
 'use strict'
 
@@ -62700,7 +66061,7 @@ module.exports = function savePixels (array, type, options) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":47,"contentstream":7,"gif-encoder":31,"jpeg-js":135,"ndarray":84,"ndarray-ops":81,"pngjs-nozlib":115,"through":141}],139:[function(require,module,exports){
+},{"buffer":48,"contentstream":7,"gif-encoder":32,"jpeg-js":165,"ndarray":85,"ndarray-ops":82,"pngjs-nozlib":116,"through":171}],169:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -62829,7 +66190,7 @@ Stream.prototype.pipe = function(dest, options) {
   return dest;
 };
 
-},{"events":48,"inherits":70,"readable-stream/duplex.js":118,"readable-stream/passthrough.js":130,"readable-stream/readable.js":131,"readable-stream/transform.js":132,"readable-stream/writable.js":133}],140:[function(require,module,exports){
+},{"events":49,"inherits":71,"readable-stream/duplex.js":148,"readable-stream/passthrough.js":160,"readable-stream/readable.js":161,"readable-stream/transform.js":162,"readable-stream/writable.js":163}],170:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -63052,7 +66413,7 @@ function base64DetectIncompleteChar(buffer) {
   this.charLength = this.charReceived ? 3 : 0;
 }
 
-},{"buffer":47}],141:[function(require,module,exports){
+},{"buffer":48}],171:[function(require,module,exports){
 (function (process){
 var Stream = require('stream')
 
@@ -63164,7 +66525,7 @@ function through (write, end, opts) {
 
 
 }).call(this,require('_process'))
-},{"_process":117,"stream":139}],142:[function(require,module,exports){
+},{"_process":118,"stream":169}],172:[function(require,module,exports){
 (function (setImmediate,clearImmediate){
 var nextTick = require('process/browser.js').nextTick;
 var apply = Function.prototype.apply;
@@ -63243,7 +66604,7 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
   delete immediateIds[id];
 };
 }).call(this,require("timers").setImmediate,require("timers").clearImmediate)
-},{"process/browser.js":117,"timers":142}],143:[function(require,module,exports){
+},{"process/browser.js":118,"timers":172}],173:[function(require,module,exports){
 exports.isatty = function () { return false; };
 
 function ReadStream() {
@@ -63256,7 +66617,7 @@ function WriteStream() {
 }
 exports.WriteStream = WriteStream;
 
-},{}],144:[function(require,module,exports){
+},{}],174:[function(require,module,exports){
 (function (global,Buffer){
 'use strict'
 
@@ -63473,7 +66834,7 @@ exports.clearCache = function clearCache() {
   }
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"bit-twiddle":2,"buffer":47,"dup":20}],145:[function(require,module,exports){
+},{"bit-twiddle":2,"buffer":48,"dup":21}],175:[function(require,module,exports){
 //     Underscore.js 1.4.4
 //     http://underscorejs.org
 //     (c) 2009-2013 Jeremy Ashkenas, DocumentCloud Inc.
@@ -64701,7 +68062,7 @@ exports.clearCache = function clearCache() {
 
 }).call(this);
 
-},{}],146:[function(require,module,exports){
+},{}],176:[function(require,module,exports){
 "use strict"
 
 function unique_pred(list, compare) {
@@ -64760,7 +68121,7 @@ function unique(list, compare, sorted) {
 
 module.exports = unique
 
-},{}],147:[function(require,module,exports){
+},{}],177:[function(require,module,exports){
 var mime = require('mime');
 var fs = require('fs');
 
@@ -64770,7 +68131,7 @@ module.exports = function urifyNode (file) {
   return 'data:' + type + ';base64,' + data;
 };
 
-},{"fs":46,"mime":76}],148:[function(require,module,exports){
+},{"fs":47,"mime":77}],178:[function(require,module,exports){
 (function (global){
 
 /**
@@ -64841,18 +68202,18 @@ function config (name) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],149:[function(require,module,exports){
-arguments[4][42][0].apply(exports,arguments)
-},{"dup":42}],150:[function(require,module,exports){
+},{}],179:[function(require,module,exports){
 arguments[4][43][0].apply(exports,arguments)
-},{"./support/isBuffer":149,"_process":117,"dup":43,"inherits":70}],151:[function(require,module,exports){
+},{"dup":43}],180:[function(require,module,exports){
+arguments[4][44][0].apply(exports,arguments)
+},{"./support/isBuffer":179,"_process":118,"dup":44,"inherits":71}],181:[function(require,module,exports){
 // add steps to the sequencer
 function AddStep(_sequencer, image, name, o) {
   return require('./InsertStep')(_sequencer,image,-1,name,o);
 }
 module.exports = AddStep;
 
-},{"./InsertStep":155}],152:[function(require,module,exports){
+},{"./InsertStep":185}],182:[function(require,module,exports){
 var fs = require('fs');
 var getDirectories = function(rootDir, cb) {
   fs.readdir(rootDir, function(err, files) {
@@ -64927,7 +68288,7 @@ module.exports = function ExportBin(dir = "./output/", ref, basic, filename) {
   }
 }
 
-},{"data-uri-to-buffer":19,"fs":46}],153:[function(require,module,exports){
+},{"data-uri-to-buffer":19,"fs":47}],183:[function(require,module,exports){
 function objTypeOf(object){
   return Object.prototype.toString.call(object).split(" ")[1].slice(0,-1)
 }
@@ -65093,7 +68454,7 @@ function formatInput(args,format,images) {
 }
 module.exports = formatInput;
 
-},{}],154:[function(require,module,exports){
+},{}],184:[function(require,module,exports){
 if (typeof window !== 'undefined') { isBrowser = true }
 else { var isBrowser = false }
 require('./util/getStep.js');
@@ -65102,7 +68463,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   var sequencer = (this.name == "ImageSequencer") ? this : this.sequencer;
   options = options || {};
-  options.inBrowser = options.inBrowser || isBrowser;
+  options.inBrowser = options.inBrowser === undefined ? isBrowser : options.inBrowser;
   options.sequencerCounter = 0;
 
   function objTypeOf(object) {
@@ -65299,6 +68660,16 @@ ImageSequencer = function ImageSequencer(options) {
     return require('./ReplaceImage')(this, selector, steps, options);
   }
 
+  //returns the steps added
+  function getSteps(){
+    var steps;
+    if(arguments[0])
+    steps= this.images.test.steps;
+    else
+    steps = this.images.image1.steps;
+    return [...steps];
+  }
+
   function setUI(UI) {
     this.events = require('./ui/UserInterface')(UI);
   }
@@ -65478,19 +68849,6 @@ ImageSequencer = function ImageSequencer(options) {
     fs.writeFileSync('./src/Modules.js', mods);
   }
 
-  function createMetaModule(stepsCollection, info) {
-    var stepsArr = stepsCollection;
-    if (typeof stepsCollection === 'string')
-      stepsArr = stringToJSON(stepsCollection);
-    var metaMod = function() {
-      this.expandSteps(stepsArr);
-      return {
-        isMeta: true
-      }
-    }
-    return [metaMod, info];
-  }
-
   function saveSequence(name, sequenceString) {
     const sequence = stringToJSON(sequenceString);
     // Save the given sequence string as a module
@@ -65548,9 +68906,10 @@ ImageSequencer = function ImageSequencer(options) {
     importJSON: importJSON,
     loadNewModule: loadNewModule,
     saveNewModule: saveNewModule,
-    createMetaModule: createMetaModule,
+    createMetaModule: require('./util/createMetaModule'),
     saveSequence: saveSequence,
     loadModules: loadModules,
+    getSteps:getSteps,
 
     //other functions
     log: log,
@@ -65563,7 +68922,7 @@ ImageSequencer = function ImageSequencer(options) {
 }
 module.exports = ImageSequencer;
 
-},{"./AddStep":151,"./ExportBin":152,"./FormatInput":153,"./InsertStep":155,"./Modules":156,"./ReplaceImage":157,"./Run":158,"./SavedSequences.json":160,"./ui/LoadImage":265,"./ui/SetInputStep":266,"./ui/UserInterface":267,"./util/getStep.js":271,"fs":46}],155:[function(require,module,exports){
+},{"./AddStep":181,"./ExportBin":182,"./FormatInput":183,"./InsertStep":185,"./Modules":186,"./ReplaceImage":187,"./Run":188,"./SavedSequences.json":190,"./ui/LoadImage":303,"./ui/SetInputStep":304,"./ui/UserInterface":305,"./util/createMetaModule":308,"./util/getStep.js":310,"fs":47}],185:[function(require,module,exports){
 const getStepUtils = require('./util/getStep.js');
 
 // insert one or more steps at a given index in the sequencer
@@ -65604,8 +68963,6 @@ function InsertStep(ref, image, index, name, o) {
     ref.modules[name].expandSteps = function expandSteps(stepsArray) {
       for (var i in stepsArray) {
         let step = stepsArray[i];
-        console.log(step['name'])
-        console.log(step['options'])
         ref.insertSteps(index + Number.parseInt(i), step['name'], step['options']);
         // ref.addSteps(step['name'], step['options']);
       }
@@ -65630,11 +68987,12 @@ function InsertStep(ref, image, index, name, o) {
 }
 module.exports = InsertStep;
 
-},{"./util/getStep.js":271}],156:[function(require,module,exports){
+},{"./util/getStep.js":310}],186:[function(require,module,exports){
 /*
 * Core modules and their info files
 */
 module.exports = {
+  'add-qr': require('./modules/AddQR'),
   'average': require('./modules/Average'),
   'blend': require('./modules/Blend'),
   'blur': require('./modules/Blur'),
@@ -65650,6 +69008,7 @@ module.exports = {
   'draw-rectangle': require('./modules/DrawRectangle'),
   'dynamic': require('./modules/Dynamic'),
   'edge-detect': require('./modules/EdgeDetect'),
+  'flip-image': require('./modules/FlipImage'),
   'fisheye-gl': require('./modules/FisheyeGl'),
   'histogram': require('./modules/Histogram'),
   'gamma-correction': require('./modules/GammaCorrection'),
@@ -65667,8 +69026,7 @@ module.exports = {
   'tint': require('./modules/Tint'),
   'white-balance': require('./modules/WhiteBalance')
 }
-
-},{"./modules/Average":162,"./modules/Blend":165,"./modules/Blur":169,"./modules/Brightness":172,"./modules/Channel":175,"./modules/Colorbar":178,"./modules/Colormap":182,"./modules/Contrast":186,"./modules/Convolution":190,"./modules/Crop":195,"./modules/DecodeQr":198,"./modules/Dither":202,"./modules/DrawRectangle":206,"./modules/Dynamic":209,"./modules/EdgeDetect":213,"./modules/FisheyeGl":216,"./modules/GammaCorrection":219,"./modules/Gradient":222,"./modules/Histogram":225,"./modules/ImportImage":229,"./modules/Ndvi":233,"./modules/NdviColormap":236,"./modules/Overlay":239,"./modules/PaintBucket":243,"./modules/Resize":246,"./modules/Rotate":249,"./modules/Saturation":252,"./modules/Threshold":256,"./modules/Tint":259,"./modules/WhiteBalance":262,"image-sequencer-invert":61}],157:[function(require,module,exports){
+},{"./modules/AddQR":193,"./modules/Average":196,"./modules/Blend":199,"./modules/Blur":203,"./modules/Brightness":206,"./modules/Channel":209,"./modules/Colorbar":212,"./modules/Colormap":216,"./modules/Contrast":220,"./modules/Convolution":224,"./modules/Crop":229,"./modules/DecodeQr":232,"./modules/Dither":236,"./modules/DrawRectangle":240,"./modules/Dynamic":243,"./modules/EdgeDetect":247,"./modules/FisheyeGl":250,"./modules/FlipImage":254,"./modules/GammaCorrection":257,"./modules/Gradient":260,"./modules/Histogram":263,"./modules/ImportImage":267,"./modules/Ndvi":271,"./modules/NdviColormap":274,"./modules/Overlay":277,"./modules/PaintBucket":281,"./modules/Resize":284,"./modules/Rotate":287,"./modules/Saturation":290,"./modules/Threshold":294,"./modules/Tint":297,"./modules/WhiteBalance":300,"image-sequencer-invert":62}],187:[function(require,module,exports){
 // Uses a given image as input and replaces it with the output.
 // Works only in the browser.
 function ReplaceImage(ref,selector,steps,options) {
@@ -65729,7 +69087,7 @@ function ReplaceImage(ref,selector,steps,options) {
 
 module.exports = ReplaceImage;
 
-},{}],158:[function(require,module,exports){
+},{}],188:[function(require,module,exports){
 const getStepUtils = require('./util/getStep.js');
 
 function Run(ref, json_q, callback, ind, progressObj) {
@@ -65751,28 +69109,29 @@ function Run(ref, json_q, callback, ind, progressObj) {
       var image = drawarray[pos].image;
       var i = drawarray[pos].i;
       var input = ref.images[image].steps[i - 1].output;
+      var step = ref.images[image].steps[i];
 
-      ref.images[image].steps[i].getStep = function getStep(offset) {
+      step.getStep = function getStep(offset) {
         if (i + offset >= ref.images[image].steps.length) return { options: { name: undefined } };
         else return ref.images[image].steps.slice(i + offset)[0];
       };
-      ref.images[image].steps[i].getIndex = function getIndex() {
+      step.getIndex = function getIndex() {
         return i;
       }
 
       for (var util in getStepUtils) {
         if (getStepUtils.hasOwnProperty(util)) {
-          ref.images[image].steps[i][util] = getStepUtils[util];
+          step[util] = getStepUtils[util];
         }
       }
 
       // Tell UI that a step is being drawn.
-      ref.images[image].steps[i].UI.onDraw(ref.images[image].steps[i].options.step);
+      step.UI.onDraw(step.options.step);
 
       // provides a set of standard tools for each step
       var inputForNextStep = require('./RunToolkit')(ref.copy(input));
 
-      ref.images[image].steps[i].draw(
+      step.draw(
         inputForNextStep,
         function onEachStep() {
 
@@ -65824,7 +69183,7 @@ function Run(ref, json_q, callback, ind, progressObj) {
 }
 module.exports = Run;
 
-},{"./RunToolkit":159,"./util/getStep.js":271}],159:[function(require,module,exports){
+},{"./RunToolkit":189,"./util/getStep.js":310}],189:[function(require,module,exports){
 const getPixels = require('get-pixels');
 const pixelManipulation = require('./modules/_nomodule/PixelManipulation');
 const lodash = require('lodash');
@@ -65839,71 +69198,196 @@ module.exports = function(input) {
     input.savePixels = savePixels;
     return input;
 }
-},{"./modules/_nomodule/PixelManipulation":264,"data-uri-to-buffer":19,"get-pixels":29,"lodash":75,"save-pixels":138}],160:[function(require,module,exports){
+},{"./modules/_nomodule/PixelManipulation":302,"data-uri-to-buffer":19,"get-pixels":30,"lodash":76,"save-pixels":168}],190:[function(require,module,exports){
 module.exports={"sample":[{"name":"invert","options":{}},{"name":"channel","options":{"channel":"red"}},{"name":"blur","options":{"blur":"5"}}]}
-},{}],161:[function(require,module,exports){
-/*
-* Average all pixel colors
-*/
-module.exports = function Average(options, UI){
+},{}],191:[function(require,module,exports){
+module.exports = function AddQR(options, UI) {
 
-    options.blur = options.blur || 2
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+    options.size = options.size || defaults.size;
+    options.qrCodeString = options.qrCodeString || "https://github.com/publiclab/image-sequencer";
     var output;
+    getPixels = require('get-pixels');
 
-    options.step.metadata = options.step.metadata || {};
-
-    function draw(input,callback,progressObj){
+    function draw(input, callback, progressObj) {
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
         var step = this;
 
-        function changePixel(r, g, b, a){
-            return [r,g,b,a]
-        }
+        return getPixels(input.src, function (err, oldPixels) {
+            function changePixel(r, g, b, a) {
+                return [r, g, b, a];
+            }
+           
+            function extraManipulation(pixels,generateOutput) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                 require('./QR')(options, pixels, oldPixels, generateOutput);
+            }
+            function output(image, datauri, mimetype) {
+                step.output = { src: datauri, format: mimetype };
+            }
+
+            return require('../_nomodule/PixelManipulation.js')(input, {
+                output: output,
+                changePixel: changePixel,
+                extraManipulation: extraManipulation,
+                format: input.format,
+                image: options.image,
+                inBrowser: options.inBrowser,
+                callback: callback
+            });
+        })
+
+    }
+
+    return {
+        options: options,
+        draw: draw,
+        output: output,
+        UI: UI
+    }
+}
+},{"../_nomodule/PixelManipulation.js":302,"./../../util/getDefaults.js":309,"./QR":192,"./info.json":194,"get-pixels":30}],192:[function(require,module,exports){
+module.exports = exports = function (options, pixels, oldPixels, callback) {
+    var QRCode = require('qrcode')
+    QRCode.toDataURL(options.qrCodeString, function (err, url) {
+        var getPixels = require("get-pixels");
+        getPixels(url, function (err, qrPixels) {
+            if (err) {
+                console.log("Bad image path", image);
+            }
+
+            var imagejs = require('imagejs');
+            var bitmap = new imagejs.Bitmap({ width: qrPixels.shape[0], height: qrPixels.shape[1] });
+            bitmap._data.data = qrPixels.data;
+            var resized = bitmap.resize({
+                width: options.size, height: options.size,
+                algorithm: "bicubicInterpolation"
+            });
+
+            qrPixels.data = resized._data.data;
+            qrPixels.shape = [options.size, options.size, 4];
+            qrPixels.stride[1] = 4 * options.size;
+
+            var width = oldPixels.shape[0],
+                height = oldPixels.shape[1];
+            var xe = width - options.size,
+                ye = height - options.size;
+            for (var m = 0; m < width; m++) {
+                for (var n = 0; n < height; n++) {
+                    if (m >= xe && n >= ye) {
+                        pixels.set(m, n, 0, qrPixels.get(m - xe, n - ye, 0))
+                        pixels.set(m, n, 1, qrPixels.get(m - xe, n - ye, 1))
+                        pixels.set(m, n, 2, qrPixels.get(m - xe, n - ye, 2))
+                        pixels.set(m, n, 3, qrPixels.get(m - xe, n - ye, 3))
+                    }
+
+                    else {
+                        pixels.set(m, n, 0, oldPixels.get(m, n, 0))
+                        pixels.set(m, n, 1, oldPixels.get(m, n, 1))
+                        pixels.set(m, n, 2, oldPixels.get(m, n, 2))
+                        pixels.set(m, n, 3, oldPixels.get(m, n, 3))
+                    }
+
+                }
+            }
+            callback();
+
+        })
+    })
+}
+
+},{"get-pixels":30,"imagejs":63,"qrcode":119}],193:[function(require,module,exports){
+module.exports = [
+    require('./Module'),
+    require('./info.json')
+]
+},{"./Module":191,"./info.json":194}],194:[function(require,module,exports){
+module.exports={
+    "name": "Add QR",
+    "description": "Adds QR corresponding to the given string",
+    "url": "https://github.com/publiclab/image-sequencer/tree/master/MODULES.md",
+    "inputs": {
+      "size": {
+        "type": "integer",
+        "desc": "size of QR code in pixels",
+        "default": 200
+      },
+      "qrCodeString":{
+        "type": "string",
+        "desc": "input string to generate QR code",
+        "default": "https://github.com/publiclab/image-sequencer"
+      }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  }
+  
+},{}],195:[function(require,module,exports){
+/*
+* Average all pixel colors
+*/
+module.exports = function Average(options, UI) {
+
+    var output;
+
+    options.step.metadata = options.step.metadata || {};
+
+    function draw(input, callback, progressObj) {
+
+        progressObj.stop(true);
+        progressObj.overrideFlag = true;
+
+        var step = this;
 
         // do the averaging
-        function extraManipulation(pixels){
-            var sum = [0,0,0,0];
-            for (var i = 0; i < pixels.data.length; i += 4) {
-              sum[0] += pixels.data[i + 0];
-              sum[1] += pixels.data[i + 1];
-              sum[2] += pixels.data[i + 2];
-              sum[3] += pixels.data[i + 3];
+        function extraManipulation(pixels) {
+            var i = 0, sum = [0, 0, 0, 0];
+            while (i < pixels.data.length) {
+                sum[0] += pixels.data[i++];
+                sum[1] += pixels.data[i++];
+                sum[2] += pixels.data[i++];
+                sum[3] += pixels.data[i++];
             }
 
-            sum[0] = parseInt(sum[0] / (pixels.data.length / 4));
-            sum[1] = parseInt(sum[1] / (pixels.data.length / 4));
-            sum[2] = parseInt(sum[2] / (pixels.data.length / 4));
-            sum[3] = parseInt(sum[3] / (pixels.data.length / 4));
+            let divisor = pixels.data.length / 4;
 
-            for (var i = 0; i < pixels.data.length; i += 4) {
-              pixels.data[i + 0] = sum[0];
-              pixels.data[i + 1] = sum[1];
-              pixels.data[i + 2] = sum[2];
-              pixels.data[i + 3] = sum[3];
+            sum[0] = Math.floor(sum[0] / divisor);
+            sum[1] = Math.floor(sum[1] / divisor);
+            sum[2] = Math.floor(sum[2] / divisor);
+            sum[3] = Math.floor(sum[3] / divisor);
+
+            i = 0
+            while (i < pixels.data.length) {
+                pixels.data[i++] = sum[0];
+                pixels.data[i++] = sum[1];
+                pixels.data[i++] = sum[2];
+                pixels.data[i++] = sum[3];
             }
+
             // report back and store average in metadata:
             options.step.metadata.averages = sum;
-            console.log("average: ", sum);
+
             // TODO: refactor into a new "display()" method as per https://github.com/publiclab/image-sequencer/issues/242
             if (options.step.inBrowser && options.step.ui) $(options.step.ui).find('.details').append("<p><b>Averages</b> (r, g, b, a): " + sum.join(', ') + "</p>");
             return pixels;
         }
 
-        function output(image, datauri, mimetype){
+        function output(image, datauri, mimetype) {
 
             // This output is accessible by Image Sequencer
             step.output = {
-              src: datauri,
-              format: mimetype
+                src: datauri,
+                format: mimetype
             };
         }
 
         return require('../_nomodule/PixelManipulation.js')(input, {
             output: output,
-            changePixel: changePixel,
             extraManipulation: extraManipulation,
             format: input.format,
             image: options.image,
@@ -65913,18 +69397,15 @@ module.exports = function Average(options, UI){
     }
     return {
         options: options,
-        draw:  draw,
+        draw: draw,
         output: output,
         UI: UI
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":264}],162:[function(require,module,exports){
-module.exports = [
-    require('./Module'),
-    require('./info.json')
-]
-},{"./Module":161,"./info.json":163}],163:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":302}],196:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":195,"./info.json":197,"dup":193}],197:[function(require,module,exports){
 module.exports={
     "name": "Average",
     "description": "Average all pixel color",
@@ -65933,7 +69414,7 @@ module.exports={
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],164:[function(require,module,exports){
+},{}],198:[function(require,module,exports){
 module.exports = function Dynamic(options, UI, util) {
 
     var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
@@ -65957,14 +69438,14 @@ module.exports = function Dynamic(options, UI, util) {
         var getPixels = require('get-pixels');
 
         // convert offset as string to int
-        if(typeof options.offset === "string") options.offset = parseInt(options.offset);
+        if (typeof options.offset === "string") options.offset = parseInt(options.offset);
 
         // save first image's pixels
         var priorStep = this.getStep(options.offset);
 
         if (priorStep.output === undefined) {
             this.output = input;
-            UI.notify('Offset Unavailable','offset-notification');
+            UI.notify('Offset Unavailable', 'offset-notification');
             callback();
         } 
 
@@ -65973,7 +69454,7 @@ module.exports = function Dynamic(options, UI, util) {
 
             function changePixel(r2, g2, b2, a2, x, y) {
                 // blend!
-                var p = options.firstImagePixels;
+                let p = options.firstImagePixels;
                 return options.func(
                     r2, g2, b2, a2,
                     p.get(x, y, 0),
@@ -66010,9 +69491,9 @@ module.exports = function Dynamic(options, UI, util) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":264,"./../../util/getDefaults.js":270,"./info.json":166,"get-pixels":29}],165:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":164,"./info.json":166,"dup":162}],166:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":302,"./../../util/getDefaults.js":309,"./info.json":200,"get-pixels":30}],199:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":198,"./info.json":200,"dup":193}],200:[function(require,module,exports){
 module.exports={
   "name": "Blend",
   "description": "Blend two chosen image steps with the given function. Defaults to using the red channel from image 1 and the green and blue and alpha channels of image 2. Easier to use interfaces coming soon!",
@@ -66023,7 +69504,7 @@ module.exports={
       "default": -2
     },
     "blend": {
-      "type": "input",
+      "type": "string",
       "desc": "Function to use to blend the two images.",
       "default": "function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] }"
     }
@@ -66031,9 +69512,9 @@ module.exports={
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],167:[function(require,module,exports){
+},{}],201:[function(require,module,exports){
 module.exports = exports = function(pixels, blur) {
-    let kernel = kernelGenerator(blur, 1), oldpix = pixels;
+    let kernel = kernelGenerator(blur, 1), oldpix = require('lodash').cloneDeep(pixels);
     kernel = flipKernel(kernel);
 
     for (let i = 0; i < pixels.shape[0]; i++) {
@@ -66116,7 +69597,7 @@ module.exports = exports = function(pixels, blur) {
         return result;
     }
 }
-},{}],168:[function(require,module,exports){
+},{"lodash":76}],202:[function(require,module,exports){
 /*
 * Blur an Image
 */
@@ -66133,13 +69614,9 @@ module.exports = function Blur(options, UI) {
 
         var step = this;
 
-        function changePixel(r, g, b, a) {
-            return [r, g, b, a]
-        }
-
         function extraManipulation(pixels) {
-            pixels = require('./Blur')(pixels, options.blur)
-            return pixels
+            pixels = require('./Blur')(pixels, options.blur);
+            return pixels;
         }
 
         function output(image, datauri, mimetype) {
@@ -66151,7 +69628,6 @@ module.exports = function Blur(options, UI) {
 
         return require('../_nomodule/PixelManipulation.js')(input, {
             output: output,
-            changePixel: changePixel,
             extraManipulation: extraManipulation,
             format: input.format,
             image: options.image,
@@ -66167,40 +69643,40 @@ module.exports = function Blur(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":264,"./../../util/getDefaults.js":270,"./Blur":167,"./info.json":170}],169:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":168,"./info.json":170,"dup":162}],170:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":302,"./../../util/getDefaults.js":309,"./Blur":201,"./info.json":204}],203:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":202,"./info.json":204,"dup":193}],204:[function(require,module,exports){
 module.exports={
     "name": "Blur",
     "description": "Applies a Gaussian blur given by the intensity value",
     "inputs": {
         "blur": {
-            "type": "range",
+            "type": "float",
             "desc": "Amount of gaussian blur(Less blur gives more detail, typically 0-5)",
-            "default": "2",
-            "min": "0",
-            "max": "5",
-            "step": "0.25"
+            "default": 2,
+            "min": 0,
+            "max": 5,
+            "step": 0.25
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],171:[function(require,module,exports){
+},{}],205:[function(require,module,exports){
 /*
 * Changes the Image Brightness
 */
-module.exports = function Brightness(options,UI){
+module.exports = function Brightness(options, UI) {
 
     var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
     var output;
 
 
 
-    function draw(input,callback,progressObj){
+    function draw(input, callback, progressObj) {
 
-        options.brightness = parseInt(options.brightness) || defaults.brightness;
-        var val = (options.brightness)/100.0;
+        options.brightness = options.brightness || defaults.brightness;
+
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
@@ -66210,20 +69686,20 @@ module.exports = function Brightness(options,UI){
         For eg. progressObj = new SomeProgressModule()
         */
 
-        var step = this;
+        var step = this, val = (options.brightness) / 100.0;;
 
-        function changePixel(r, g, b, a){
+        function changePixel(r, g, b, a) {
 
-            r = Math.min(val*r, 255)
-            g = Math.min(val*g, 255)
-            b = Math.min(val*b, 255)
-            return [r, g, b, a]
+            r = Math.min(val * r, 255);
+            g = Math.min(val * g, 255);
+            b = Math.min(val * b, 255);
+            return [r, g, b, a];
         }
 
-        function output(image,datauri,mimetype){
+        function output(image, datauri, mimetype) {
 
             // This output is accessible by Image Sequencer
-            step.output = {src:datauri,format:mimetype};
+            step.output = { src: datauri, format: mimetype };
 
         }
 
@@ -66239,32 +69715,31 @@ module.exports = function Brightness(options,UI){
     }
     return {
         options: options,
-        draw:  draw,
+        draw: draw,
         output: output,
         UI: UI
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":264,"./../../util/getDefaults.js":270,"./info.json":173}],172:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":171,"./info.json":173,"dup":162}],173:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":302,"./../../util/getDefaults.js":309,"./info.json":207}],206:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":205,"./info.json":207,"dup":193}],207:[function(require,module,exports){
 module.exports={
   "name": "Brightness",
   "description": "Change the brightness of the image by given percent value",
   "inputs": {
       "brightness": {
-          "type": "range",
+          "type": "integer",
           "desc": "% brightness for the new image",
           "default": "175",
           "min": "0",
-          "max": "200",
-          "step": "1"
+          "max": "200"
       }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],174:[function(require,module,exports){
+},{}],208:[function(require,module,exports){
 /*
  * Display only one color channel
  */
@@ -66284,9 +69759,9 @@ module.exports = function Channel(options, UI) {
     var step = this;
 
     function changePixel(r, g, b, a) {
-      if (options.channel == "red") return [r, 0, 0, a];
-      if (options.channel == "green") return [0, g, 0, a];
-      if (options.channel == "blue") return [0, 0, b, a];
+      if (options.channel === "red") return [r, 0, 0, a];
+      if (options.channel === "green") return [0, g, 0, a];
+      if (options.channel === "blue") return [0, 0, b, a];
     }
 
     function output(image, datauri, mimetype) {
@@ -66316,9 +69791,9 @@ module.exports = function Channel(options, UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":264,"./../../util/getDefaults.js":270,"./info.json":176}],175:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":174,"./info.json":176,"dup":162}],176:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":302,"./../../util/getDefaults.js":309,"./info.json":210}],209:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":208,"./info.json":210,"dup":193}],210:[function(require,module,exports){
 module.exports={
   "name": "Channel",
   "description": "Displays only one color channel of an image -- default is green",
@@ -66333,28 +69808,25 @@ module.exports={
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],177:[function(require,module,exports){
-module.exports = function NdviColormapfunction(options, UI) {
+},{}],211:[function(require,module,exports){
+module.exports = require('../../util/createMetaModule.js')(
+  function mapFunction(options) {
 
-    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+    // return steps with options:
+    return [
+      { 'name': 'gradient', 'options': {} },
+      { 'name': 'colormap', 'options': { colormap: options.colormap } },
+      { 'name': 'crop', 'options': { 'y': 0, 'h': options.h } },
+      { 'name': 'overlay', 'options': { 'x': options.x, 'y': options.y, 'offset': -4 } }
+    ];
+  }, {
+    infoJson: require('./info.json')
+  }
+)[0];
 
-    options.x = options.x || defaults.x;
-    options.y = options.y || defaults.y;
-    options.colormap = options.colormap || defaults.colormap;
-    options.h = options.h || defaults.h;
-    this.expandSteps([
-        { 'name': 'gradient', 'options': {} },
-        { 'name': 'colormap', 'options': { colormap: options.colormap } },
-        { 'name': 'crop', 'options': { 'y': 0, 'h': options.h } },
-        { 'name': 'overlay', 'options': { 'x': options.x, 'y': options.y, 'offset': -4 } }
-    ]);
-    return {
-        isMeta: true
-    }
-}
-},{"./../../util/getDefaults.js":270,"./info.json":179}],178:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":177,"./info.json":179,"dup":162}],179:[function(require,module,exports){
+},{"../../util/createMetaModule.js":308,"./info.json":213}],212:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":211,"./info.json":213,"dup":193}],213:[function(require,module,exports){
 module.exports={
     "name": "Colorbar",
     "description": "Generates a colorbar to lay over the image",
@@ -66381,15 +69853,14 @@ module.exports={
             "default": 0
         },
         "h": {
-            "type": "iinteger",
+            "type": "integer",
             "desc": "height of the colorbar",
             "default": 10
         }
     },
-    "length": 4,
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
-},{}],180:[function(require,module,exports){
+},{}],214:[function(require,module,exports){
 /*
  * Accepts a value from 0-255 and returns the new color-mapped pixel 
  * from a lookup table, which can be specified as an array of [begin, end] 
@@ -66587,13 +70058,13 @@ var colormaps = {
              ])
  
 }
-},{}],181:[function(require,module,exports){
-module.exports = function Colormap(options,UI) {
+},{}],215:[function(require,module,exports){
+module.exports = function Colormap(options, UI) {
 
   var output;
 
   // This function is called on every draw.
-  function draw(input,callback,progressObj) {
+  function draw(input, callback, progressObj) {
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;
@@ -66606,7 +70077,7 @@ module.exports = function Colormap(options,UI) {
       return [res[0], res[1], res[2], 255];
     }
 
-    function output(image,datauri,mimetype){
+    function output(image, datauri, mimetype) {
 
       // This output is accessible by Image Sequencer
       step.output = { src: datauri, format: mimetype };
@@ -66631,9 +70102,9 @@ module.exports = function Colormap(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":264,"./Colormap":180}],182:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":181,"./info.json":183,"dup":162}],183:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":302,"./Colormap":214}],216:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":215,"./info.json":217,"dup":193}],217:[function(require,module,exports){
 module.exports={
   "name": "Colormap",
   "description": "Maps brightness values (average of red, green & blue) to a given color lookup table, made up of a set of one more color gradients.\n\nFor example, 'cooler' colors like blue could represent low values, while 'hot' colors like red could represent high values.",
@@ -66648,45 +70119,45 @@ module.exports={
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],184:[function(require,module,exports){
+},{}],218:[function(require,module,exports){
 var _ = require('lodash');
-module.exports = exports = function(pixels , contrast){
-	let oldpix = _.cloneDeep(pixels);
+
+module.exports = exports = function(pixels, contrast) {
+    let oldpix = _.cloneDeep(pixels);
     contrast = Number(contrast)
-	if (contrast < -100) contrast = -100;
+    if (contrast < -100) contrast = -100;
     if (contrast > 100) contrast = 100;
     contrast = (100.0 + contrast) / 100.0;
     contrast *= contrast;
-        
-    for (let i = 0; i < oldpix.shape[0]; i++) {
-        for (let j = 0; j < oldpix.shape[1]; j++) {
-        	var r = oldpix.get(i,j,0)/255.0;
-        	r -= 0.5;
+
+    for (let i = 0; i < pixels.shape[0]; i++) {
+        for (let j = 0; j < pixels.shape[1]; j++) {
+            var r = oldpix.get(i, j, 0) / 255.0;
+            r -= 0.5;
             r *= contrast;
-        	r += 0.5;
+            r += 0.5;
             r *= 255;
             if (r < 0) r = 0;
             if (r > 255) r = 255;
 
 
-            var g = oldpix.get(i,j,1)/255.0;
+            var g = oldpix.get(i, j, 1) / 255.0;
             g -= 0.5;
             g *= contrast;
             g += 0.5;
             g *= 255;
             if (g < 0) g = 0;
             if (g > 255) g = 255;
-        
 
 
-            var b = oldpix.get(i,j,2)/255.0;
+            var b = oldpix.get(i, j, 2) / 255.0;
             b -= 0.5;
             b *= contrast;
             b += 0.5;
             b *= 255;
             if (b < 0) b = 0;
             if (b > 255) b = 255;
-            
+
 
             pixels.set(i, j, 0, r);
             pixels.set(i, j, 1, g);
@@ -66696,7 +70167,7 @@ module.exports = exports = function(pixels , contrast){
     }
     return pixels;
 }
-},{"lodash":75}],185:[function(require,module,exports){
+},{"lodash":76}],219:[function(require,module,exports){
 // /*
 // * Changes the Image Contrast
 // */
@@ -66714,10 +70185,6 @@ module.exports = function Contrast(options, UI) {
 
         var step = this;
 
-        function changePixel(r, g, b, a) {
-            return [r, g, b, a]
-        }
-
         function extraManipulation(pixels) {
             pixels = require('./Contrast')(pixels, options.contrast)
             return pixels
@@ -66732,7 +70199,6 @@ module.exports = function Contrast(options, UI) {
 
         return require('../_nomodule/PixelManipulation.js')(input, {
             output: output,
-            changePixel: changePixel,
             extraManipulation: extraManipulation,
             format: input.format,
             image: options.image,
@@ -66748,32 +70214,31 @@ module.exports = function Contrast(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":264,"./../../util/getDefaults.js":270,"./Contrast":184,"./info.json":187}],186:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":185,"./info.json":187,"dup":162}],187:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":302,"./../../util/getDefaults.js":309,"./Contrast":218,"./info.json":221}],220:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":219,"./info.json":221,"dup":193}],221:[function(require,module,exports){
 module.exports={
     "name": "Contrast",
     "description": "Change the contrast of the image by given value",
     "inputs": {
         "contrast": {
-            "type": "range",
+            "type": "integer",
             "desc": "contrast for the new image, typically -100 to 100",
-            "default": "70",
-            "min": "-100",
-            "max": "100",
-            "step": "1"
+            "default": 70,
+            "min": -100,
+            "max": 100
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],188:[function(require,module,exports){
+},{}],222:[function(require,module,exports){
 var _ = require('lodash');
-module.exports = exports = function(pixels, constantFactor, kernelValues){
-	let kernel = kernelGenerator(constantFactor, kernelValues), oldpix = _.cloneDeep(pixels);
-	kernel = flipKernel(kernel);
+module.exports = exports = function(pixels, constantFactor, kernelValues) {
+    let kernel = kernelGenerator(constantFactor, kernelValues), oldpix = _.cloneDeep(pixels);
+    kernel = flipKernel(kernel);
 
-	for (let i = 0; i < pixels.shape[0]; i++) {
+    for (let i = 0; i < pixels.shape[0]; i++) {
         for (let j = 0; j < pixels.shape[1]; j++) {
             let neighboutPos = getNeighbouringPixelPositions([i, j]);
             let acc = [0.0, 0.0, 0.0, 0.0];
@@ -66785,9 +70250,9 @@ module.exports = exports = function(pixels, constantFactor, kernelValues){
                     acc[3] += (oldpix.get(neighboutPos[a][b][0], neighboutPos[a][b][1], 3) * kernel[a][b]);
                 }
             }
-            acc[0] = acc[0]%255;
-            acc[1] = acc[1]%255;
-            acc[2] = acc[2]%255;
+            acc[0] = Math.min(acc[0], 255);
+            acc[1] = Math.min(acc[1], 255);
+            acc[2] = Math.min(acc[2], 255);
             pixels.set(i, j, 0, acc[0]);
             pixels.set(i, j, 1, acc[1]);
             pixels.set(i, j, 2, acc[2]);
@@ -66796,25 +70261,25 @@ module.exports = exports = function(pixels, constantFactor, kernelValues){
     return pixels;
 
 
-	function kernelGenerator(constantFactor, kernelValues){
-		kernelValues = kernelValues.split(" ");
-        for(i = 0 ; i < 9; i++){
+    function kernelGenerator(constantFactor, kernelValues) {
+        kernelValues = kernelValues.split(" ");
+        for (i = 0; i < 9; i++) {
             kernelValues[i] = Number(kernelValues[i]) * constantFactor;
         }
         let k = 0;
-		let arr = [];
-		for(i = 0; i < 3; i++){
-			let columns = [];
-			for(j = 0; j < 3; j++){
-				columns.push(kernelValues[k]);
-				k += 1;
-			}
-			arr.push(columns);
-		}
-		return arr;
-	}
+        let arr = [];
+        for (i = 0; i < 3; i++) {
+            let columns = [];
+            for (j = 0; j < 3; j++) {
+                columns.push(kernelValues[k]);
+                k += 1;
+            }
+            arr.push(columns);
+        }
+        return arr;
+    }
 
-	function getNeighbouringPixelPositions(pixelPosition) {
+    function getNeighbouringPixelPositions(pixelPosition) {
         let x = pixelPosition[0], y = pixelPosition[1], result = [];
 
         for (let i = -1; i <= 1; i++) {
@@ -66827,7 +70292,7 @@ module.exports = exports = function(pixels, constantFactor, kernelValues){
         return result;
     }
 
-	function flipKernel(kernel) {
+    function flipKernel(kernel) {
         let result = [];
         for (let i = kernel.length - 1; i >= 0; i--) {
             let arr = [];
@@ -66839,7 +70304,7 @@ module.exports = exports = function(pixels, constantFactor, kernelValues){
         return result;
     }
 }
-},{"lodash":75}],189:[function(require,module,exports){
+},{"lodash":76}],223:[function(require,module,exports){
 module.exports = function Convolution(options, UI) {
 
     var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
@@ -66855,13 +70320,9 @@ module.exports = function Convolution(options, UI) {
 
         var step = this;
 
-        function changePixel(r, g, b, a) {
-            return [r, g, b, a]
-        }
-
         function extraManipulation(pixels) {
-            pixels = require('./Convolution')(pixels, options.constantFactor, options.kernelValues)
-            return pixels
+            pixels = require('./Convolution')(pixels, options.constantFactor, options.kernelValues);
+            return pixels;
         }
 
         function output(image, datauri, mimetype) {
@@ -66872,7 +70333,6 @@ module.exports = function Convolution(options, UI) {
 
         return require('../_nomodule/PixelManipulation.js')(input, {
             output: output,
-            changePixel: changePixel,
             extraManipulation: extraManipulation,
             format: input.format,
             image: options.image,
@@ -66888,22 +70348,22 @@ module.exports = function Convolution(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":264,"./../../util/getDefaults.js":270,"./Convolution":188,"./info.json":191}],190:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":189,"./info.json":191,"dup":162}],191:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":302,"./../../util/getDefaults.js":309,"./Convolution":222,"./info.json":225}],224:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":223,"./info.json":225,"dup":193}],225:[function(require,module,exports){
 module.exports={
     "name": "Convolution",
     "description": "Image Convolution using a given 3x3 kernel matrix <a href='https://en.wikipedia.org/wiki/Kernel_(image_processing)'>Read more</a>",
     "inputs": {
   		"constantFactor":{
-  			"type": "Float",
+  			"type": "float",
   			"desc": "a constant factor, multiplies all the kernel values by that factor",
   			"default": 0.1111,
         "placeholder": 0.1111
   		},
         
       "kernelValues": {
-        "type": "String",
+        "type": "string",
         "desc": "nine space separated numbers representing the kernel values in left to right and top to bottom format.",
         "default": "1 1 1 1 1 1 1 1 1",
         "placeholder": "1 1 1 1 1 1 1 1 1"
@@ -66912,20 +70372,20 @@ module.exports={
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],192:[function(require,module,exports){
+},{}],226:[function(require,module,exports){
 (function (Buffer){
 module.exports = function Crop(input,options,callback) {
-
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
   var getPixels = require('get-pixels'),
       savePixels = require('save-pixels');
 
-  options.x = parseInt(options.x) || 0;
-  options.y = parseInt(options.y) || 0;
+  options.x = parseInt(options.x) || defaults.x;
+  options.y = parseInt(options.y) || defaults.y;
 
   getPixels(input.src,function(err,pixels){
     options.w = parseInt(options.w) || Math.floor(pixels.shape[0]);
     options.h = parseInt(options.h) || Math.floor(pixels.shape[1]);
-    options.backgroundColor = options.backgroundColor || '255 255 255 255';
+    options.backgroundColor = options.backgroundColor || defaults.backgroundColor;
     var ox = options.x;
     var oy = options.y;
     var w = options.w;
@@ -66969,7 +70429,7 @@ module.exports = function Crop(input,options,callback) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":47,"get-pixels":29,"save-pixels":138}],193:[function(require,module,exports){
+},{"./../../util/getDefaults.js":309,"./info.json":230,"buffer":48,"get-pixels":30,"save-pixels":168}],227:[function(require,module,exports){
 /*
  * Image Cropping module
  * Usage:
@@ -67056,7 +70516,7 @@ module.exports = function CropModule(options, UI) {
   }
 }
 
-},{"../../util/ParseInputCoordinates":269,"./Crop":192,"./Ui.js":194}],194:[function(require,module,exports){
+},{"../../util/ParseInputCoordinates":307,"./Crop":226,"./Ui.js":228}],228:[function(require,module,exports){
 // hide on save
 module.exports = function CropModuleUi(step, ui) {
 
@@ -67155,9 +70615,9 @@ module.exports = function CropModuleUi(step, ui) {
   }
 }
 
-},{}],195:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":193,"./info.json":196,"dup":162}],196:[function(require,module,exports){
+},{}],229:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":227,"./info.json":230,"dup":193}],230:[function(require,module,exports){
 module.exports={
   "name": "Crop",
   "description": "Crop image to given x, y, w, h in pixels or % , measured from top left",
@@ -67184,7 +70644,7 @@ module.exports={
       "default": "(50%)"
     },
     "backgroundColor": {
-      "type": "String",
+      "type": "string",
       "desc": "Background Color (Four space separated RGBA values)",
       "default": "255 255 255 255",
       "placeholder": "255 255 255 255"
@@ -67193,7 +70653,7 @@ module.exports={
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],197:[function(require,module,exports){
+},{}],231:[function(require,module,exports){
 /*
  * Decodes QR from a given image.
  */
@@ -67204,7 +70664,10 @@ module.exports = function DoNothing(options,UI) {
   var getPixels = require('get-pixels');
 
   // This function is called everytime a step has to be redrawn
-  function draw(input,callback) {
+  function draw(input,callback,progressObj) {
+
+    progressObj.stop(true);
+    progressObj.overrideFlag = true;
 
     var step = this;
 
@@ -67214,16 +70677,25 @@ module.exports = function DoNothing(options,UI) {
 
       var w = pixels.shape[0];
       var h = pixels.shape[1];
-      var decoded = jsQR.decodeQRFromImage(pixels.data,w,h);
+      var decoded = jsQR(pixels.data,w,h);
 
-      // This output is accessible to Image Sequencer
-      step.output = input;
-      step.output.data = decoded;
 
       // Tell Image Sequencer that this step is complete
-      callback();
-      options.step.qrval = decoded;
+      options.step.qrval = (decoded)?decoded.data:"undefined";
+    });
 
+    function output(image, datauri, mimetype){
+      // This output is accessible by Image Sequencer
+      step.output = {
+        src: datauri,
+        format: mimetype
+      };
+    }
+    return require('../_nomodule/PixelManipulation.js')(input, {
+      output: output,
+      format: input.format,
+      image: options.image,
+      callback: callback
     });
 
   }
@@ -67236,9 +70708,9 @@ module.exports = function DoNothing(options,UI) {
   }
 }
 
-},{"get-pixels":29,"jsqr":74}],198:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":197,"./info.json":199,"dup":162}],199:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":302,"get-pixels":30,"jsqr":75}],232:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":231,"./info.json":233,"dup":193}],233:[function(require,module,exports){
 module.exports={
   "name": "Decode QR",
   "description": "Search for and decode a QR code in the image",
@@ -67246,86 +70718,93 @@ module.exports={
   },
   "outputs": {
     "qrval": {
-      "type": "text"
+      "type": "string"
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],200:[function(require,module,exports){
+},{}],234:[function(require,module,exports){
 module.exports = function Dither(pixels, type) {
-  type = type || "none";
-      var bayerThresholdMap = [
-          [  15, 135,  45, 165 ],
-          [ 195,  75, 225, 105 ],
-          [  60, 180,  30, 150 ],
-          [ 240, 120, 210,  90 ]
-      ];
-      
-      var lumR = [];
-      var lumG = [];
-      var lumB = [];
-      for (var i=0; i<256; i++) {
-          lumR[i] = i*0.299;
-          lumG[i] = i*0.587;
-          lumB[i] = i*0.114;
-      }
-      var threshold = 129;
-      var imageDataLength = pixels.data.length;   //imageData.data.length;
-    
-      // Greyscale luminance (sets r pixels to luminance of rgb)
-      for (var i = 0; i <= imageDataLength; i += 4) {
-        pixels.data[i] = Math.floor(lumR[pixels.data[i]] + lumG[pixels.data[i+1]] + lumB[pixels.data[i+2]]);
-      }
-    
-      var w = pixels.shape[0];
-      var newPixel, err;
-    
-      for (var currentPixel = 0; currentPixel <= imageDataLength; currentPixel+=4) {
-    
-        if (type === "none") {
-          // No dithering
-          pixels.data[currentPixel] = pixels.data[currentPixel] < threshold ? 0 : 255;
-        } else if (type === "bayer") {
-          // 4x4 Bayer ordered dithering algorithm
-          var x = currentPixel/4 % w;
-          var y = Math.floor(currentPixel/4 / w);
-          var map = Math.floor( (pixels.data[currentPixel] + bayerThresholdMap[x%4][y%4]) / 2 );
-          pixels.data[currentPixel] = (map < threshold) ? 0 : 255;
-        } else if (type === "floydsteinberg") {
-          // Floyd–Steinberg dithering algorithm
-          newPixel = pixels.data[currentPixel] < 129 ? 0 : 255;
-          err = Math.floor((pixels.data[currentPixel] - newPixel) / 16);
-          pixels.data[currentPixel] = newPixel;
-    
-          pixels.data[currentPixel       + 4 ] += err*7;
-          pixels.data[currentPixel + 4*w - 4 ] += err*3;
-          pixels.data[currentPixel + 4*w     ] += err*5;
-          pixels.data[currentPixel + 4*w + 4 ] += err*1;
-        } else {
-          // Bill Atkinson's dithering algorithm
-          newPixel = pixels.data[currentPixel] < threshold ? 0 : 255;
-          err = Math.floor((pixels.data[currentPixel] - newPixel) / 8);
-          pixels.data[currentPixel] = newPixel;
-    
-          pixels.data[currentPixel       + 4 ] += err;
-          pixels.data[currentPixel       + 8 ] += err;
-          pixels.data[currentPixel + 4*w - 4 ] += err;
-          pixels.data[currentPixel + 4*w     ] += err;
-          pixels.data[currentPixel + 4*w + 4 ] += err;
-          pixels.data[currentPixel + 8*w     ] += err;
-        }
-    
-        // Set g and b pixels equal to r
-        pixels.data[currentPixel + 1] = pixels.data[currentPixel + 2] = pixels.data[currentPixel];
-      }
-      return pixels;
-  
-  }
-  
-},{}],201:[function(require,module,exports){
-module.exports = function Dither(options, UI){
+  type = type;
+  let bayerThresholdMap = [
+    [15, 135, 45, 165],
+    [195, 75, 225, 105],
+    [60, 180, 30, 150],
+    [240, 120, 210, 90]
+  ];
 
+  let lumR = [];
+  let lumG = [];
+  let lumB = [];
+  for (let i = 0; i < 256; i++) {
+    lumR[i] = i * 0.299;
+    lumG[i] = i * 0.587;
+    lumB[i] = i * 0.114;
+  }
+  let threshold = 129;
+  let imageDataLength = pixels.data.length;   //imageData.data.length;
+
+  // Greyscale luminance (sets r pixels to luminance of rgb)
+  for (let i = 0; i <= imageDataLength; i++) {
+    pixels.data[i] = Math.floor(lumR[pixels.data[i++]] + lumG[pixels.data[i++]] + lumB[pixels.data[i++]]);
+  }
+
+  let w = pixels.shape[0];
+  let newPixel, err;
+
+  for (let currentPixel = 0; currentPixel <= imageDataLength; currentPixel += 4) {
+
+    if (type === "none") {
+      // No dithering
+      pixels.data[currentPixel] = pixels.data[currentPixel] < threshold ? 0 : 255;
+
+    } else if (type === "bayer") {
+
+      // 4x4 Bayer ordered dithering algorithm
+      let x = currentPixel / 4 % w;
+      let y = Math.floor(currentPixel / 4 / w);
+      let map = Math.floor((pixels.data[currentPixel] + bayerThresholdMap[x % 4][y % 4]) / 2);
+      pixels.data[currentPixel] = (map < threshold) ? 0 : 255;
+
+    } else if (type === "floydsteinberg") {
+
+      // Floyd–Steinberg dithering algorithm
+      newPixel = pixels.data[currentPixel] < 129 ? 0 : 255;
+      err = Math.floor((pixels.data[currentPixel] - newPixel) / 16);
+      pixels.data[currentPixel] = newPixel;
+
+      pixels.data[currentPixel + 4] += err * 7;
+      pixels.data[currentPixel + 4 * w - 4] += err * 3;
+      pixels.data[currentPixel + 4 * w] += err * 5;
+      pixels.data[currentPixel + 4 * w + 4] += err * 1;
+
+    } else {
+
+      // Bill Atkinson's dithering algorithm
+      newPixel = pixels.data[currentPixel] < threshold ? 0 : 255;
+      err = Math.floor((pixels.data[currentPixel] - newPixel) / 8);
+      pixels.data[currentPixel] = newPixel;
+
+      pixels.data[currentPixel + 4] += err;
+      pixels.data[currentPixel + 8] += err;
+      pixels.data[currentPixel + 4 * w - 4] += err;
+      pixels.data[currentPixel + 4 * w] += err;
+      pixels.data[currentPixel + 4 * w + 4] += err;
+      pixels.data[currentPixel + 8 * w] += err;
+
+    }
+
+    // Set g and b pixels equal to r
+    pixels.data[currentPixel + 1] = pixels.data[currentPixel + 2] = pixels.data[currentPixel];
+  }
+  return pixels;
+
+}
+
+},{}],235:[function(require,module,exports){
+module.exports = function Dither(options, UI){
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
     var output;
 
     function draw(input,callback,progressObj){
@@ -67334,6 +70813,7 @@ module.exports = function Dither(options, UI){
         progressObj.overrideFlag = true;
 
         var step = this;
+        options.dither = options.dither || defaults.dither;
 
         function extraManipulation(pixels) {
             pixels = require('./Dither')(pixels, options.dither)
@@ -67361,9 +70841,9 @@ module.exports = function Dither(options, UI){
         UI: UI
     }
 }
-},{"../_nomodule/PixelManipulation.js":264,"./Dither":200}],202:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":201,"./info.json":203,"dup":162}],203:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":302,"./../../util/getDefaults.js":309,"./Dither":234,"./info.json":237}],236:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":235,"./info.json":237,"dup":193}],237:[function(require,module,exports){
 module.exports={
     "name": "Dither",
     "description": "Approximates a color from a mixture of other colors when the required color is not available, creating illusions of the color that is not present actually.<a href='https://en.wikipedia.org/wiki/Dither'>Read more</a>",
@@ -67377,18 +70857,20 @@ module.exports={
     }
 }
   
-},{}],204:[function(require,module,exports){
+},{}],238:[function(require,module,exports){
 module.exports = exports = function(pixels, options){
-	options.startingX = options.startingX || 0;
-  options.startingY = options.startingY || 0;
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+
+	options.startingX = options.startingX || defaults.startingX;
+  options.startingY = options.startingY || defaults.startingY;
 	var ox = Number(options.startingX),
 	  oy = Number(options.startingY),
 	  iw = pixels.shape[0],
 	  ih = pixels.shape[1],
-    thickness = Number(options.thickness) || 1,
+    thickness = Number(options.thickness) || defaults.thickness,
 	  ex =  options.endX = Number(options.endX) - thickness || iw - 1,
 	  ey = options.endY = Number(options.endY) -thickness || ih - 1,
-    color = options.color || "0 0 0 255";
+    color = options.color || defaults.color;
     color = color.split(" ");
 
   var drawSide = function(startX, startY, endX, endY){
@@ -67408,7 +70890,7 @@ module.exports = exports = function(pixels, options){
   drawSide(ox, ey, ex, ey); // Bottom
   return pixels;
 }
-},{}],205:[function(require,module,exports){
+},{"./../../util/getDefaults.js":309,"./info.json":241}],239:[function(require,module,exports){
 module.exports = function DrawRectangle(options, UI) {
 
     
@@ -67454,21 +70936,21 @@ module.exports = function DrawRectangle(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":264,"./DrawRectangle":204}],206:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":205,"./info.json":207,"dup":162}],207:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":302,"./DrawRectangle":238}],240:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":239,"./info.json":241,"dup":193}],241:[function(require,module,exports){
 module.exports={
     "name": "Draw Rectangle",
     "description": "It draws a rectangle on the image",
     "inputs": {
   		"startingX":{
-  			"type": "Number",
+  			"type": "integer",
   			"desc": "starting x position of the rectangle",
   			"default": 0
   		},
         
       "startingY": {
-        "type": "Number",
+        "type": "integer",
         "desc": "starting y position of the rectangle",
         "default": 0
       },
@@ -67492,14 +70974,14 @@ module.exports={
       },
 
       "color":{
-        "type": "String",
+        "type": "string",
         "desc": "RGBA values separated by a space",
         "default": "0 0 0 255"
       }
     }
 }
 
-},{}],208:[function(require,module,exports){
+},{}],242:[function(require,module,exports){
 module.exports = function Dynamic(options,UI) {
 
   var output;
@@ -67600,30 +71082,30 @@ module.exports = function Dynamic(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":264}],209:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":208,"./info.json":210,"dup":162}],210:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":302}],243:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":242,"./info.json":244,"dup":193}],244:[function(require,module,exports){
 module.exports={
   "name": "Dynamic",
   "description": "A module which accepts JavaScript math expressions to produce each color channel based on the original image's color. See <a href='https://publiclab.org/wiki/infragram-sandbox'>Infragrammar</a>.",
   "inputs": {
     "red": {
-      "type": "input",
+      "type": "string",
       "desc": "Expression to return for red channel with R, G, B, and A inputs",
       "default": "r"
     },
     "green": {
-      "type": "input",
+      "type": "string",
       "desc": "Expression to return for green channel with R, G, B, and A inputs",
       "default": "g"
     },
     "blue": {
-      "type": "input",
+      "type": "string",
       "desc": "Expression to return for blue channel with R, G, B, and A inputs",
       "default": "b"
     },
     "monochrome (fallback)": {
-      "type": "input",
+      "type": "string",
       "desc": "Expression to return with R, G, B, and A inputs; fallback for other channels if none provided",
       "default": "r + g + b"
     }
@@ -67631,7 +71113,7 @@ module.exports={
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],211:[function(require,module,exports){
+},{}],245:[function(require,module,exports){
 const _ = require('lodash')
 
 //define kernels for the sobel filter
@@ -67807,7 +71289,7 @@ function doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio, mags, st
 
 
 
-},{"lodash":75}],212:[function(require,module,exports){
+},{"lodash":76}],246:[function(require,module,exports){
 /*
 * Detect Edges in an Image
 */
@@ -67867,36 +71349,42 @@ module.exports = function edgeDetect(options, UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":264,"./../../util/getDefaults.js":270,"./EdgeUtils":211,"./info.json":214,"ndarray-gaussian-filter":80}],213:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":212,"./info.json":214,"dup":162}],214:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":302,"./../../util/getDefaults.js":309,"./EdgeUtils":245,"./info.json":248,"ndarray-gaussian-filter":81}],247:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":246,"./info.json":248,"dup":193}],248:[function(require,module,exports){
 module.exports={
     "name": "Detect Edges",
     "description": "This module detects edges using the Canny method, which first Gaussian blurs the image to reduce noise (amount of blur configurable in settings as `options.blur`), then applies a number of steps to highlight edges, resulting in a greyscale image where the brighter the pixel, the stronger the detected edge.<a href='https://en.wikipedia.org/wiki/Canny_edge_detector'> Read more. </a>",
     "inputs": {
         "blur": {
-            "type": "range",
+            "type": "float",
             "desc": "Amount of gaussian blur(Less blur gives more detail, typically 0-5)",
-            "default": "2",
-            "min": "0",
-            "max": "5",
-            "step": "0.25"
+            "default": 2,
+            "min": 0,
+            "max": 5,
+            "step": 0.25
         },
         "highThresholdRatio":{
             "type": "float",
             "desc": "The high threshold ratio for the image",
-            "default": 0.2
+            "default": 0.2,
+            "min": 0,
+            "max": 1,
+            "step": 0.25
         },
         "lowThresholdRatio": {
             "type": "float",
             "desc": "The low threshold value for the image",
-            "default": 0.15
+            "default": 0.15,
+            "min": 0,
+            "max": 1,
+            "step": 0.05
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],215:[function(require,module,exports){
+},{}],249:[function(require,module,exports){
 /*
  * Resolves Fisheye Effect
  */
@@ -67968,9 +71456,9 @@ module.exports = function DoNothing(options,UI) {
   }
 }
 
-},{"fisheyegl":21}],216:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":215,"./info.json":217,"dup":162}],217:[function(require,module,exports){
+},{"fisheyegl":22}],250:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":249,"./info.json":251,"dup":193}],251:[function(require,module,exports){
 module.exports={
   "name": "Fisheye GL",
   "description": "Correct fisheye, or barrel distortion, in images (with WebGL -- adapted from fisheye-correction-webgl by @bluemir).",
@@ -68039,33 +71527,135 @@ module.exports={
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],218:[function(require,module,exports){
-module.exports = function Gamma(options,UI){
+},{}],252:[function(require,module,exports){
+/*
+ * Flip the image on vertical/horizontal axis.
+ */
+module.exports = function FlipImage(options, UI) {
+  options.Axis = options.Axis || require('./info.json').inputs.Axis.default;
+
+	var output,
+    getPixels = require('get-pixels');
+
+  function draw(input, callback, progressObj) {
+
+    progressObj.stop(true);
+    progressObj.overrideFlag = true;
+
+    var step = this;
+
+    return getPixels(input.src, function(err, oldPixels){
+      function changePixel(r, g, b, a) {
+        return [r, g, b, a];
+      }
+      function extraManipulation(pixels) {
+        if (err){
+          console.log(err);
+          return;
+        }
+        return require('./flipImage')(oldPixels, pixels, options.Axis);
+      }
+      function output(image, datauri, mimetype) {
+        step.output = { src: datauri, format: mimetype };
+      }
+      
+      return require('../_nomodule/PixelManipulation.js')(input, {
+        output: output,
+        changePixel: changePixel,
+        extraManipulation: extraManipulation,
+        format: input.format,
+        image: options.image,
+        inBrowser: options.inBrowser,
+        callback: callback
+      });
+    })
+
+  }
+
+  return {
+    options: options,
+    draw: draw,
+    output: output,
+    UI: UI
+  }
+}
+
+},{"../_nomodule/PixelManipulation.js":302,"./flipImage":253,"./info.json":255,"get-pixels":30}],253:[function(require,module,exports){
+module.exports = function flipImage(oldPixels, pixels, axis) {
+    var width = oldPixels.shape[0],
+    height = oldPixels.shape[1];
+  
+  function copyPixel(x1, y1, x2, y2){
+    pixels.set(x1, y1, 0, oldPixels.get(x2, y2, 0))
+    pixels.set(x1, y1, 1, oldPixels.get(x2, y2, 1))
+    pixels.set(x1, y1, 2, oldPixels.get(x2, y2, 2))
+    pixels.set(x1, y1, 3, oldPixels.get(x2, y2, 3))
+  }
+
+  function flip(){
+    if(axis.toLowerCase() == 'horizontal'){
+      for (var n=0; n < width; n++){
+        for (var m=0; m < height; m++){
+          copyPixel(n, m, n, height - m - 1);
+        }
+      }
+    }
+    else {
+      for (var n=0; n < width; n++){
+        for (var m=0; m < height; m++){
+          copyPixel(n, m, width - n - 1, m);
+        }
+      }
+    }
+  }
+
+  flip();
+  return pixels;
+}
+},{}],254:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":252,"./info.json":255,"dup":193}],255:[function(require,module,exports){
+module.exports={
+  "name": "Flip Image",
+  "description": "Flip The Image On The Selected Axis.",
+  "inputs": {
+    "Axis": {
+      "type": "select",
+      "desc": "Axis",
+      "default": "Vertical",
+      "values": ["Horizontal", "Vertical"]
+    }
+  }
+}
+
+},{}],256:[function(require,module,exports){
+module.exports = function Gamma(options, UI) {
 
     var output;
 
-    function draw(input,callback,progressObj){
+    function draw(input, callback, progressObj) {
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
         var step = this;
 
-        var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+        var defaults = require('./../../util/getDefaults.js')(require('./info.json')),
+            adjustment = options.adjustment || defaults.adjustment;
+        var val = adjustment / defaults.adjustment;
 
-        function changePixel(r, g, b, a){
-            var val = options.adjustment || defaults.adjustment;
+        function changePixel(r, g, b, a) {
 
             r = Math.pow(r / 255, val) * 255;
             g = Math.pow(g / 255, val) * 255;
             b = Math.pow(b / 255, val) * 255;
 
-            return [r , g, b, a];
+            return [r, g, b, a];
         }
 
-        function output(image,datauri,mimetype){
+        function output(image, datauri, mimetype) {
 
-            step.output = {src:datauri,format:mimetype};
+            step.output = { src: datauri, format: mimetype };
 
         }
 
@@ -68081,15 +71671,15 @@ module.exports = function Gamma(options,UI){
     }
     return {
         options: options,
-        draw:  draw,
+        draw: draw,
         output: output,
         UI: UI
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":264,"./../../util/getDefaults.js":270,"./info.json":220}],219:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":218,"./info.json":220,"dup":162}],220:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":302,"./../../util/getDefaults.js":309,"./info.json":258}],257:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":256,"./info.json":258,"dup":193}],258:[function(require,module,exports){
 module.exports={
     "name": "Gamma Correction",
     "description": "Apply gamma correction on the image <a href='https://en.wikipedia.org/wiki/Gamma_correction'>Read more</a>",
@@ -68097,13 +71687,15 @@ module.exports={
         "adjustment": {
             "type": "float",
             "desc": "gamma correction (inverse of actual gamma factor) for the new image",
-            "default": 0.2
+            "default": 0.2,
+            "min": 2,
+            "max": 1
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],221:[function(require,module,exports){
+},{}],259:[function(require,module,exports){
 (function (Buffer){
 module.exports = function Invert(options, UI) {
 
@@ -68122,9 +71714,8 @@ module.exports = function Invert(options, UI) {
                 console.log("Bad Image path");
                 return;
             }
-            var width = 0;
 
-            for (var i = 0; i < pixels.shape[0]; i++) width++;
+            var width = pixels.shape[0];
 
             for (var i = 0; i < pixels.shape[0]; i++) {
                 for (var j = 0; j < pixels.shape[1]; j++) {
@@ -68169,16 +71760,16 @@ module.exports = function Invert(options, UI) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":47,"get-pixels":29,"save-pixels":138}],222:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":221,"./info.json":223,"dup":162}],223:[function(require,module,exports){
+},{"buffer":48,"get-pixels":30,"save-pixels":168}],260:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":259,"./info.json":261,"dup":193}],261:[function(require,module,exports){
 module.exports={
     "name": "Gradient",
     "description": "Gives a gradient of the image",
     "inputs": {},
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
-},{}],224:[function(require,module,exports){
+},{}],262:[function(require,module,exports){
 /*
  * Calculates the histogram of the image
  */
@@ -68274,12 +71865,12 @@ module.exports = function Channel(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":264,"./../../util/getDefaults.js":270,"./info.json":226}],225:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":302,"./../../util/getDefaults.js":309,"./info.json":264}],263:[function(require,module,exports){
 module.exports = [
     require('./Module.js'),
     require('./info.json')
 ]
-},{"./Module.js":224,"./info.json":226}],226:[function(require,module,exports){
+},{"./Module.js":262,"./info.json":264}],264:[function(require,module,exports){
 module.exports={
     "name": "Histogram",
     "description": "Calculates the histogram for the image",
@@ -68296,7 +71887,7 @@ module.exports={
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
-},{}],227:[function(require,module,exports){
+},{}],265:[function(require,module,exports){
 /*
  * Import Image module; this fetches a given remote or local image via URL
  * or data-url, and overwrites the current one. It saves the original as
@@ -68311,7 +71902,7 @@ module.exports = function ImportImageModule(options, UI) {
   options.imageUrl = options.url || defaults.url;
 
   var output,
-      imgObj = new Image();
+    imgObj = new Image();
 
   // we should get UI to return the image thumbnail so we can attach our own UI extensions
 
@@ -68322,31 +71913,36 @@ module.exports = function ImportImageModule(options, UI) {
   }
 
   // This function is caled everytime the step has to be redrawn
-  function draw(input,callback) {
+  function draw(input, callback) {
 
     var step = this;
 
-    step.metadata = step.metadata || {};
-    // TODO: develop a standard API method for saving each input state,
-    // for reference in future steps (for blending, for example)
-    step.metadata.input = input;
+    if (!options.inBrowser) { // This module is only for browser
+      this.output = input;
+      callback();
+    } else {
+      step.metadata = step.metadata || {};
+      // TODO: develop a standard API method for saving each input state,
+      // for reference in future steps (for blending, for example)
+      step.metadata.input = input;
 
-    function onLoad() {
+      function onLoad() {
 
-      // This output is accessible to Image Sequencer
-      step.output = {
-        src: imgObj.src,
-        format: options.format
+        // This output is accessible to Image Sequencer
+        step.output = {
+          src: imgObj.src,
+          format: options.format
+        }
+
+        // Tell Image Sequencer that step has been drawn
+        callback();
       }
 
-      // Tell Image Sequencer that step has been drawn
-      callback();
+      options.format = require('../../util/GetFormat')(options.imageUrl);
+      imgObj.onload = onLoad;
+      imgObj.src = options.imageUrl;
+
     }
-
-    options.format = require('../../util/GetFormat')(options.imageUrl);
-    imgObj.onload = onLoad;
-    imgObj.src = options.imageUrl;
-
   }
 
   return {
@@ -68357,7 +71953,7 @@ module.exports = function ImportImageModule(options, UI) {
   }
 }
 
-},{"../../util/GetFormat":268,"./../../util/getDefaults.js":270,"./Ui.js":228,"./info.json":230}],228:[function(require,module,exports){
+},{"../../util/GetFormat":306,"./../../util/getDefaults.js":309,"./Ui.js":266,"./info.json":268}],266:[function(require,module,exports){
 // hide on save
 module.exports = function ImportImageModuleUi(step, ui) {
 
@@ -68413,9 +72009,9 @@ module.exports = function ImportImageModuleUi(step, ui) {
   }
 }
 
-},{}],229:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":227,"./info.json":230,"dup":162}],230:[function(require,module,exports){
+},{}],267:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":265,"./info.json":268,"dup":193}],268:[function(require,module,exports){
 module.exports={
   "name": "Import Image",
   "description": "Import a new image and replace the original with it. Future versions may enable a blend mode. Specify an image by URL or by file selector.",
@@ -68429,7 +72025,7 @@ module.exports={
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
-},{}],231:[function(require,module,exports){
+},{}],269:[function(require,module,exports){
 /*
  * NDVI with red filter (blue channel is infrared)
  */
@@ -68490,7 +72086,7 @@ module.exports = function Ndvi(options, UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":264,"./../../util/getDefaults.js":270,"./Ui.js":232,"./info.json":234}],232:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":302,"./../../util/getDefaults.js":309,"./Ui.js":270,"./info.json":272}],270:[function(require,module,exports){
 // hide on save
 module.exports = function CropModuleUi(step, ui) {
 
@@ -68526,9 +72122,9 @@ module.exports = function CropModuleUi(step, ui) {
     }
 }
 
-},{}],233:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":231,"./info.json":234,"dup":162}],234:[function(require,module,exports){
+},{}],271:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":269,"./info.json":272,"dup":193}],272:[function(require,module,exports){
 module.exports={
   "name": "NDVI",
   "description": "Normalized Difference Vegetation Index, or NDVI, is an image analysis technique used with aerial photography. It's a way to visualize the amounts of infrared and other wavelengths of light reflected from vegetation by comparing ratios of blue and red light absorbed versus green and IR light reflected. NDVI is used to evaluate the health of vegetation in satellite imagery, where it correlates with how much photosynthesis is happening. This is helpful in assessing vegetative health or stress. <a href='https://publiclab.org/ndvi'>Read more</a>.<br /><br/>This is designed for use with red-filtered single camera <a href='http://publiclab.org/infragram'>DIY Infragram cameras</a>; change to 'blue' for blue filters",
@@ -68543,27 +72139,31 @@ module.exports={
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],235:[function(require,module,exports){
+},{}],273:[function(require,module,exports){
 /*
  * Sample Meta Module for demonstration purpose only
  */
-module.exports = function NdviColormapfunction() {
-    this.expandSteps([{ 'name': 'ndvi', 'options': {} }, { 'name': 'colormap', options: {} }]);
-    return {
-        isMeta: true
+module.exports = require('../../util/createMetaModule.js')(
+    function mapFunction(options) {
+
+        return [
+            { 'name': 'ndvi', 'options': {} },
+            { 'name': 'colormap', 'options': { colormap: options.colormap } },
+        ];
+    }, {
+        infoJson: require('./info.json')
     }
-}
-},{}],236:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":235,"./info.json":237,"dup":162}],237:[function(require,module,exports){
+)[0];
+},{"../../util/createMetaModule.js":308,"./info.json":275}],274:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":273,"./info.json":275,"dup":193}],275:[function(require,module,exports){
 module.exports={
     "name": "NDVI-Colormap",
     "description": "Sequentially Applies NDVI and Colormap steps",
     "inputs": {},
-    "length": 2,
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
-},{}],238:[function(require,module,exports){
+},{}],276:[function(require,module,exports){
 module.exports = function Dynamic(options, UI, util) {
 
     var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
@@ -68648,9 +72248,9 @@ module.exports = function Dynamic(options, UI, util) {
     }
 }
 
-},{"../../util/ParseInputCoordinates":269,"../_nomodule/PixelManipulation.js":264,"./../../util/getDefaults.js":270,"./info.json":240,"get-pixels":29}],239:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":238,"./info.json":240,"dup":162}],240:[function(require,module,exports){
+},{"../../util/ParseInputCoordinates":307,"../_nomodule/PixelManipulation.js":302,"./../../util/getDefaults.js":309,"./info.json":278,"get-pixels":30}],277:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":276,"./info.json":278,"dup":193}],278:[function(require,module,exports){
 module.exports={
     "name": "Overlay",
     "description": "Overlays an Image over another at a given position(x,y) in pixels or in %",
@@ -68673,7 +72273,7 @@ module.exports={
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
-},{}],241:[function(require,module,exports){
+},{}],279:[function(require,module,exports){
 module.exports = function PaintBucket(options, UI) {
 
     var output;
@@ -68685,17 +72285,11 @@ module.exports = function PaintBucket(options, UI) {
 
         var step = this;
 
-
-        function changePixel(r, g, b, a) {
-            return [r, g, b, a]
-        }
-
         function extraManipulation(pixels) {
-            
 
             pixels = require('./PaintBucket')(pixels, options)
             return pixels
-            
+
         }
 
         function output(image, datauri, mimetype) {
@@ -68705,7 +72299,6 @@ module.exports = function PaintBucket(options, UI) {
 
         return require('../_nomodule/PixelManipulation.js')(input, {
             output: output,
-            changePixel: changePixel,
             extraManipulation: extraManipulation,
             format: input.format,
             image: options.image,
@@ -68722,75 +72315,77 @@ module.exports = function PaintBucket(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":264,"./PaintBucket":242}],242:[function(require,module,exports){
-module.exports = exports = function(pixels, options){
-  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
-      var fillColor = options.fillColor || defaults.fillColor,
-          x = parseInt(options.startingX) || defaults.startingX,
-          y = parseInt(options.startingY) || defaults.startingY,
-          height = pixels.shape[1],
-          width = pixels.shape[0],
-          r = pixels.get(x, y, 0),
-          g = pixels.get(x,y,1),
-          b = pixels.get(x,y,2),
-          a = pixels.get(x, y, 3),
-          queuex = [x],
-          queuey = [y],
-          curry, currx,
-          north,
-          south,
-          n,
-          tolerance = parseInt(options.tolerance) || defaults.tolerance,
-          maxFactor = (1 + tolerance/100),
-          minFactor = (1 - tolerance/100);
+},{"../_nomodule/PixelManipulation.js":302,"./PaintBucket":280}],280:[function(require,module,exports){
+module.exports = exports = function(pixels, options) {
 
-      fillColor = fillColor.split(" ");
-      function isSimilar(currx, curry){
-        return (pixels.get(currx, curry, 0) >= r*minFactor && pixels.get(currx, curry, 0) <= r*maxFactor &&
-                pixels.get(currx, curry, 1) >= g*minFactor && pixels.get(currx, curry, 1) <= g*maxFactor &&
-                pixels.get(currx, curry, 2) >= b*minFactor && pixels.get(currx, curry, 2) <= b*maxFactor &&
-                pixels.get(currx, curry, 3) >= a*minFactor && pixels.get(currx, curry, 3) <= a*maxFactor);
-      }
 
-      while (queuey.length) {
-        currx = queuex.pop()
-        curry = queuey.pop()
-        
+  let defaults = require('./../../util/getDefaults.js')(require('./info.json'));
 
-        if (isSimilar(currx, curry)) {
-          north = south = curry
+  let fillColor = options.fillColor || defaults.fillColor,
+    x = parseInt(options.startingX) || defaults.startingX,
+    y = parseInt(options.startingY) || defaults.startingY,
+    height = pixels.shape[1],
+    width = pixels.shape[0],
+    r = pixels.get(x, y, 0),
+    g = pixels.get(x, y, 1),
+    b = pixels.get(x, y, 2),
+    a = pixels.get(x, y, 3),
+    queuex = [x],
+    queuey = [y],
+    curry, currx,
+    north,
+    south,
+    n,
+    tolerance = options.tolerance || defaults.tolerance,
+    maxFactor = (1 + tolerance / 100),
+    minFactor = (1 - tolerance / 100);
 
-          do {
-            north -= 1
-          } while (isSimilar(currx, north) && north >= 0)
+  fillColor = fillColor.split(" ");
+  function isSimilar(currx, curry) {
+    return (pixels.get(currx, curry, 0) >= r * minFactor && pixels.get(currx, curry, 0) <= r * maxFactor &&
+      pixels.get(currx, curry, 1) >= g * minFactor && pixels.get(currx, curry, 1) <= g * maxFactor &&
+      pixels.get(currx, curry, 2) >= b * minFactor && pixels.get(currx, curry, 2) <= b * maxFactor &&
+      pixels.get(currx, curry, 3) >= a * minFactor && pixels.get(currx, curry, 3) <= a * maxFactor);
+  }
 
-          do {
-            south += 1
-          } while (isSimilar(currx, south) && south < height)
-          
-          for (n = north + 1; n < south; n += 1) {
-            pixels.set(currx, n, 0, fillColor[0]);
-            pixels.set(currx, n, 1, fillColor[1]);
-            pixels.set(currx, n, 2, fillColor[2]);
-            pixels.set(currx, n, 3, fillColor[3]);
-            if (isSimilar(currx - 1, n)) {
-              queuex.push(currx - 1)
-              queuey.push(n)
-            }
-            if (isSimilar(currx + 1, n)) {
-              queuex.push(currx + 1)
-              queuey.push(n)
-            }
-          }
+  while (queuey.length) {
+    currx = queuex.pop()
+    curry = queuey.pop()
+
+    if (isSimilar(currx, curry)) {
+      north = south = curry
+
+      do {
+        north -= 1
+      } while (isSimilar(currx, north) && north >= 0)
+
+      do {
+        south += 1
+      } while (isSimilar(currx, south) && south < height)
+
+      for (n = north + 1; n < south; n += 1) {
+        pixels.set(currx, n, 0, fillColor[0]);
+        pixels.set(currx, n, 1, fillColor[1]);
+        pixels.set(currx, n, 2, fillColor[2]);
+        pixels.set(currx, n, 3, fillColor[3]);
+        if (isSimilar(currx - 1, n)) {
+          queuex.push(currx - 1)
+          queuey.push(n)
+        }
+        if (isSimilar(currx + 1, n)) {
+          queuex.push(currx + 1)
+          queuey.push(n)
         }
       }
+    }
+  }
 
-      return pixels;
+  return pixels;
 }
 
-},{"./../../util/getDefaults.js":270,"./info.json":244}],243:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":241,"./info.json":244,"dup":162}],244:[function(require,module,exports){
+},{"./../../util/getDefaults.js":309,"./info.json":282}],281:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":279,"./info.json":282,"dup":193}],282:[function(require,module,exports){
 module.exports={
   "name": "PaintBucket",
   "description": "Fill color in pixels",
@@ -68821,7 +72416,7 @@ module.exports={
       }
   } 
 }
-},{}],245:[function(require,module,exports){
+},{}],283:[function(require,module,exports){
 /*
  * Resize the image by given percentage value
  */
@@ -68895,9 +72490,9 @@ module.exports = function Resize(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":264,"./../../util/getDefaults.js":270,"./info.json":247,"imagejs":62}],246:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":245,"./info.json":247,"dup":162}],247:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":302,"./../../util/getDefaults.js":309,"./info.json":285,"imagejs":63}],284:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":283,"./info.json":285,"dup":193}],285:[function(require,module,exports){
 module.exports={
   "name": "Resize",
   "description": "Resize image by given percentage value",
@@ -68910,7 +72505,7 @@ module.exports={
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
-},{}],248:[function(require,module,exports){
+},{}],286:[function(require,module,exports){
 /*
  * Rotates image 
  */
@@ -68921,7 +72516,7 @@ module.exports = function Rotate(options, UI) {
     function draw(input, callback, progressObj) {
 
         var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
-        options.rotate = parseInt(options.rotate) || defaults.rotate;
+        options.rotate = options.rotate || defaults.rotate;
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;
@@ -68975,17 +72570,17 @@ module.exports = function Rotate(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":264,"./../../util/getDefaults.js":270,"./info.json":250,"imagejs":62}],249:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":248,"./info.json":250,"dup":162}],250:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":302,"./../../util/getDefaults.js":309,"./info.json":288,"imagejs":63}],287:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":286,"./info.json":288,"dup":193}],288:[function(require,module,exports){
 module.exports={
     "name": "Rotate",
     "description": "Rotates image by specified degrees",
     "inputs": {
       "rotate": {
-        "type": "range",
+        "type": "integer",
         "desc": "Angular value for rotation in degrees",
-        "default": "0",
+        "default": "90",
         "min": "0",
         "max": "360",
         "step": "1"
@@ -68993,41 +72588,45 @@ module.exports={
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
   }
-},{}],251:[function(require,module,exports){
+
+},{}],289:[function(require,module,exports){
 /*
  * Saturate an image with a value from 0 to 1
  */
 module.exports = function Saturation(options,UI) {
-
+  
+ var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
   var output;
 
-  function draw(input,callback,progressObj) {
+  function draw(input, callback, progressObj) {
+
+    options.saturation = options.saturation || defaults.saturation;
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;
 
     var step = this;
 
+    var cR = 0.299;
+    var cG = 0.587;
+    var cB = 0.114;
+
     function changePixel(r, g, b, a) {
 
-      var cR = 0.299;
-      var cG = 0.587;
-      var cB = 0.114;
+      var p = Math.sqrt((cR * (r * r)) + (cG * (g * g)) + (cB * (g * g)));
 
-      var p = Math.sqrt((cR * (r*r)) + (cG * (g*g)) + (cB * (g*g)));
-
-      r = p+(r-p)*(options.saturation);
-      g = p+(g-p)*(options.saturation);
-      b = p+(b-p)*(options.saturation);
+      r = p + (r - p) * (options.saturation);
+      g = p + (g - p) * (options.saturation);
+      b = p + (b - p) * (options.saturation);
 
 
       return [Math.round(r), Math.round(g), Math.round(b), a];
     }
 
-    function output(image,datauri,mimetype){
+    function output(image, datauri, mimetype) {
 
       // This output is accesible by Image Sequencer
-      step.output = {src:datauri,format:mimetype};
+      step.output = { src: datauri, format: mimetype };
 
     }
 
@@ -69045,32 +72644,32 @@ module.exports = function Saturation(options,UI) {
   return {
     options: options,
     //setup: setup, // optional
-    draw:  draw,
+    draw: draw,
     output: output,
     UI: UI
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":264}],252:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":251,"./info.json":253,"dup":162}],253:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":302,"./../../util/getDefaults.js":309,"./info.json":291}],290:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":289,"./info.json":291,"dup":193}],291:[function(require,module,exports){
 module.exports={
     "name": "Saturation",
     "description": "Change the saturation of the image by given value, from 0-1, with 1 being 100% saturated.",
     "inputs": {
         "saturation": {
-            "type": "range",
+            "type": "float",
             "desc": "saturation for the new image between 0 and 2, 0 being black and white and 2 being highly saturated",
-            "default": "0.5",
-            "min": "0",
-            "max": "2",
-            "step": "0.1"
+            "default": 0.5,
+            "min": 0,
+            "max": 2,
+            "step": 0.1
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
-},{}],254:[function(require,module,exports){
+},{}],292:[function(require,module,exports){
 /*
  * Image thresholding with 'image-filter-threshold'
  */
@@ -69079,7 +72678,7 @@ module.exports = function ImageThreshold(options, UI) {
   var output;
 
   function draw(input, callback, progressObj) {
-   
+
     progressObj.stop(true);
     progressObj.overrideFlag = true;
 
@@ -69089,13 +72688,13 @@ module.exports = function ImageThreshold(options, UI) {
       let pixVal = Math.round((r + g + b) / 3);
       hist[pixVal]++;
       return [r, g, b, a];
-  }
+    }
 
     function extraManipulation(pixels) {
       pixels = require('./Threshold')(pixels, options, hist)
       return pixels
     }
-    function output(image,  datauri, mimetype){
+    function output(image, datauri, mimetype) {
       // This output is accessible by Image Sequencer
       step.output = { src: datauri, format: mimetype };
     }
@@ -69106,50 +72705,53 @@ module.exports = function ImageThreshold(options, UI) {
       format: input.format,
       image: options.image,
       callback: callback
-  });
-}
-return {
-  options: options,
-  draw: draw,
-  output: output,
-  UI: UI
-}
+    });
+  }
+  return {
+    options: options,
+    draw: draw,
+    output: output,
+    UI: UI
+  }
 }
 
-},{"../_nomodule/PixelManipulation.js":264,"./Threshold":255}],255:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":302,"./Threshold":293}],293:[function(require,module,exports){
 module.exports = function Threshold(pixels, options, histData) {
-    type = options.threshold;
-    threshold = parseInt(options.input) || 120;
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+   
+    type = options.threshold ;
+    threshold = parseInt(options.input) || defaults.input;
     var lumR = [];
     var lumG = [];
     var lumB = [];
-    for (var i=0; i<256; i++) {
-        lumR[i] = i*0.299;
-        lumG[i] = i*0.587;
-        lumB[i] = i*0.114;
+    for (var i = 0; i < 256; i++) {
+        lumR[i] = i * 0.299;
+        lumG[i] = i * 0.587;
+        lumB[i] = i * 0.114;
     }
-    var imageDataLength = pixels.data.length;   //imageData.data.length;
-    for (var i = 0; i <= imageDataLength; i += 4) {
-        pixels.data[i] = Math.floor(lumR[pixels.data[i]] + lumG[pixels.data[i+1]] + lumB[pixels.data[i+2]]);
-      }
 
-    if(type === "Automatic Thresholding")
+    var imageDataLength = pixels.data.length;   //imageData.data.length;
+    for (var i = 0; i <= imageDataLength; i++) {
+        pixels.data[i] = Math.floor(lumR[pixels.data[i++]] + lumG[pixels.data[i++]] + lumB[pixels.data[i++]]);
+    }
+
+    if (type === "Automatic Thresholding")
         threshold = otsu(histData);
 
-    for (var currentPixel = 0; currentPixel <= imageDataLength; currentPixel+=4) {
-  
-      pixels.data[currentPixel] = pixels.data[currentPixel] < threshold ? 0 : 255;
-      pixels.data[currentPixel + 1] = pixels.data[currentPixel + 2] = pixels.data[currentPixel];
+    for (var currentPixel = 0; currentPixel <= imageDataLength; currentPixel += 4) {
+
+        pixels.data[currentPixel] = pixels.data[currentPixel] < threshold ? 0 : 255;
+        pixels.data[currentPixel + 1] = pixels.data[currentPixel + 2] = pixels.data[currentPixel];
     }
     return pixels;
 }
 
-function otsu(histData){
+function otsu(histData) {
     let total = 0;
-    for (let t=0 ; t<256 ; t++) total +=  histData[t];
-    
+    for (let t = 0; t < 256; t++) total += histData[t];
+
     let sum = 0;
-    for (let t=0 ; t<256 ; t++) sum += t * histData[t];
+    for (let t = 0; t < 256; t++) sum += t * histData[t];
 
     let sumB = 0;
     let wB = 0;
@@ -69158,7 +72760,7 @@ function otsu(histData){
     let varMax = 0;
     let threshold = 0;
 
-    for (let t=0 ; t<256 ; t++) {
+    for (let t = 0; t < 256; t++) {
         wB += histData[t];               // Weight Background
         if (wB == 0) continue;
 
@@ -69180,12 +72782,12 @@ function otsu(histData){
         }
     }
 
-return threshold;
+    return threshold;
 
 }
-},{}],256:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":254,"./info.json":257,"dup":162}],257:[function(require,module,exports){
+},{"./../../util/getDefaults.js":309,"./info.json":295}],294:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":292,"./info.json":295,"dup":193}],295:[function(require,module,exports){
 module.exports={
   "name": "Threshold",
   "description": "Thresholding is used to create binary images",
@@ -69207,41 +72809,36 @@ module.exports={
   }
 }
 
-},{}],258:[function(require,module,exports){
-module.exports = function Tint(options,UI){
+},{}],296:[function(require,module,exports){
+module.exports = function Tint(options, UI) {
 
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
 
     var output;
 
-    function draw(input,callback,progressObj){
+    function draw(input, callback, progressObj) {
 
-        var color = options.color || '0 0 255';
-        color = color.split(" "); 
-        var factor = options.factor || 0.5;
+        var color = options.color || defaults.color;
+        color = color.split(" ");
+        var factor = options.factor || defaults.factor;
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
-        /*
-        In this case progress is handled by changepixel internally otherwise progressObj
-        needs to be overriden and used
-        For eg. progressObj = new SomeProgressModule()
-        */
-
         var step = this;
 
-        function changePixel(r, g, b, a){
+        function changePixel(r, g, b, a) {
 
-            r -= (r - color[0])*factor;
-            g -= (g - color[1])*factor;
-            b -= (b - color[2])*factor;
+            r -= (r - color[0]) * factor;
+            g -= (g - color[1]) * factor;
+            b -= (b - color[2]) * factor;
             return [r, g, b, a]
         }
 
-        function output(image,datauri,mimetype){
+        function output(image, datauri, mimetype) {
 
             // This output is accessible by Image Sequencer
-            step.output = {src:datauri,format:mimetype};
+            step.output = { src: datauri, format: mimetype };
 
         }
 
@@ -69257,15 +72854,15 @@ module.exports = function Tint(options,UI){
     }
     return {
         options: options,
-        draw:  draw,
+        draw: draw,
         output: output,
         UI: UI
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":264}],259:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":258,"./info.json":260,"dup":162}],260:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":302,"./../../util/getDefaults.js":309,"./info.json":298}],297:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":296,"./info.json":298,"dup":193}],298:[function(require,module,exports){
 module.exports={
   "name": "Tint",
   "description": "Add color tint to an image",
@@ -69286,23 +72883,19 @@ module.exports={
   }
 }
 
-},{}],261:[function(require,module,exports){
+},{}],299:[function(require,module,exports){
 module.exports = function Balance(options, UI) {
 
     var output;
 
-    function draw (input, callback, progressObj) {
+    function draw(input, callback, progressObj) {
 
-      options.temperature = (options.temperature > "40000") ? "40000" : options.temperature
+        options.temperature = (options.temperature > "40000") ? "40000" : options.temperature
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
         var step = this;
-
-        function changePixel(r, g, b, a) {
-            return [r, g, b ,a]
-        }
 
         function extraManipulation(pixels) {
 
@@ -69328,35 +72921,34 @@ module.exports = function Balance(options, UI) {
                 b = Math.min(Math.max(138.5177312231 * Math.log(b) - 305.0447927307, 0), 255);
             }
 
-            for(let i=0; i<pixels.shape[0]; i++) {
-              for (let j=0; j<pixels.shape[1]; j++) {
+            for (let i = 0; i < pixels.shape[0]; i++) {
+                for (let j = 0; j < pixels.shape[1]; j++) {
 
-                  r_data = pixels.get(i,j,0)
-                  r_new_data = (255/r) * r_data
-                  pixels.set(i,j,0,r_new_data)
+                    r_data = pixels.get(i, j, 0)
+                    r_new_data = (255 / r) * r_data
+                    pixels.set(i, j, 0, r_new_data)
 
-                  g_data = pixels.get(i,j,1)
-                  g_new_data = (255/g) * g_data
-                  pixels.set(i,j,1,g_new_data)
+                    g_data = pixels.get(i, j, 1)
+                    g_new_data = (255 / g) * g_data
+                    pixels.set(i, j, 1, g_new_data)
 
-                  b_data = pixels.get(i,j,2)
-                  b_new_data = (255/b) * b_data
-                  pixels.set(i,j,2,b_new_data)
-              }
+                    b_data = pixels.get(i, j, 2)
+                    b_new_data = (255 / b) * b_data
+                    pixels.set(i, j, 2, b_new_data)
+                }
             }
 
-          return pixels
+            return pixels
         }
 
-        function output (image, datauri, mimetype){
+        function output(image, datauri, mimetype) {
 
-            step.output = {src:datauri,format:mimetype};
+            step.output = { src: datauri, format: mimetype };
 
         }
 
         return require('../_nomodule/PixelManipulation.js')(input, {
             output: output,
-            changePixel: changePixel,
             extraManipulation: extraManipulation,
             format: input.format,
             image: options.image,
@@ -69373,22 +72965,22 @@ module.exports = function Balance(options, UI) {
     }
 
 }
-},{"../_nomodule/PixelManipulation.js":264}],262:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":261,"./info.json":263,"dup":162}],263:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":302}],300:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":299,"./info.json":301,"dup":193}],301:[function(require,module,exports){
 module.exports={
     "name": "White Balance",
     "description": "Change the colour balance of the image by adjusting the colour temperature.",
     "inputs": {
       "temperature": {
-        "type": "string",
+        "type": "integer",
         "desc": "Temperature between 0 - 40,000 Kelvin",
-        "default": "6000"
+        "default": 6000
       }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
-},{}],264:[function(require,module,exports){
+},{}],302:[function(require,module,exports){
 (function (process,Buffer){
 /*
 * General purpose per-pixel manipulation
@@ -69398,29 +72990,17 @@ module.exports = function PixelManipulation(image, options) {
 
   // To handle the case where pixelmanipulation is called on the input object itself
   // like input.pixelManipulation(options)
-  if(arguments.length <= 1){
+  if (arguments.length <= 1) {
     options = image;
     image = this;
   }
 
   options = options || {};
-  options.changePixel =
-    options.changePixel ||
-    function changePixel(r, g, b, a) {
-      return [r, g, b, a];
-    };
 
-  //
-  options.extraManipulation =
-    options.extraManipulation ||
-    function extraManipulation(pixels) {
-      return pixels;
-    };
-
-  var getPixels = require("get-pixels"),
+  const getPixels = require("get-pixels"),
     savePixels = require("save-pixels");
 
-  getPixels(image.src, function (err, pixels) {
+  getPixels(image.src, function(err, pixels) {
     if (err) {
       console.log("Bad image path", image);
       return;
@@ -69444,52 +73024,67 @@ module.exports = function PixelManipulation(image, options) {
       }
     }
 
-    for (var x = 0; x < pixels.shape[0]; x++) {
-      for (var y = 0; y < pixels.shape[1]; y++) {
-        var pixel = options.changePixel(
-          pixels.get(x, y, 0),
-          pixels.get(x, y, 1),
-          pixels.get(x, y, 2),
-          pixels.get(x, y, 3),
-          x,
-          y
-        );
+    if (options.preProcess) pixels = options.preProcess(pixels); // Allow for preprocessing
 
-        pixels.set(x, y, 0, pixel[0]);
-        pixels.set(x, y, 1, pixel[1]);
-        pixels.set(x, y, 2, pixel[2]);
-        pixels.set(x, y, 3, pixel[3]);
+    if (options.changePixel) {
 
-        if (!options.inBrowser && !process.env.TEST) pace.op();
+      /* Allows for Flexibility
+       if per pixel manipulation is not required */
+
+      for (var x = 0; x < pixels.shape[0]; x++) {
+        for (var y = 0; y < pixels.shape[1]; y++) {
+          let pixel = options.changePixel(
+            pixels.get(x, y, 0),
+            pixels.get(x, y, 1),
+            pixels.get(x, y, 2),
+            pixels.get(x, y, 3),
+            x,
+            y
+          );
+
+          pixels.set(x, y, 0, pixel[0]);
+          pixels.set(x, y, 1, pixel[1]);
+          pixels.set(x, y, 2, pixel[2]);
+          pixels.set(x, y, 3, pixel[3]);
+
+          if (!options.inBrowser && !process.env.TEST) pace.op();
+        }
       }
     }
-
     // perform any extra operations on the entire array:
-    if (options.extraManipulation) pixels = options.extraManipulation(pixels);
-
+    var res;
+    if (options.extraManipulation) res = options.extraManipulation(pixels,generateOutput);
     // there may be a more efficient means to encode an image object,
     // but node modules and their documentation are essentially arcane on this point
-    var chunks = [];
+    function generateOutput(){
+      var chunks = [];
     var totalLength = 0;
+    
     var r = savePixels(pixels, options.format, { quality: 100 });
 
-    r.on("data", function (chunk) {
+    r.on("data", function(chunk) {
       totalLength += chunk.length;
       chunks.push(chunk);
     });
 
-    r.on("end", function () {
+    r.on("end", function() {
       var data = Buffer.concat(chunks, totalLength).toString("base64");
       var datauri = "data:image/" + options.format + ";base64," + data;
       if (options.output)
         options.output(options.image, datauri, options.format);
       if (options.callback) options.callback();
     });
+    }
+    if(res){
+      pixels=res;
+      generateOutput();
+    }
+    else if(!options.extraManipulation) generateOutput();
   });
 };
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"_process":117,"buffer":47,"get-pixels":29,"pace":94,"save-pixels":138}],265:[function(require,module,exports){
+},{"_process":118,"buffer":48,"get-pixels":30,"pace":95,"save-pixels":168}],303:[function(require,module,exports){
 // special module to load an image into the start of the sequence; used in the HTML UI
 function LoadImage(ref, name, src, main_callback) {
   function makeImage(datauri) {
@@ -69596,7 +73191,7 @@ function LoadImage(ref, name, src, main_callback) {
 
 module.exports = LoadImage;
 
-},{"urify":147}],266:[function(require,module,exports){
+},{"urify":177}],304:[function(require,module,exports){
 // TODO: potentially move this into ImportImage module
 function setInputStepInit() {
 
@@ -69695,7 +73290,7 @@ function setInputStepInit() {
 }
 module.exports = setInputStepInit;
 
-},{}],267:[function(require,module,exports){
+},{}],305:[function(require,module,exports){
 /*
  * User Interface Handling Module
  */
@@ -69759,7 +73354,7 @@ module.exports = function UserInterface(events = {}) {
 
 }
 
-},{}],268:[function(require,module,exports){
+},{}],306:[function(require,module,exports){
 /*
 * Determine format from a URL or data-url, return "jpg" "png" "gif" etc
 * TODO: write a test for this using the examples
@@ -69801,7 +73396,7 @@ module.exports = function GetFormat(src) {
 
 }
 
-},{}],269:[function(require,module,exports){
+},{}],307:[function(require,module,exports){
 module.exports = function parseCornerCoordinateInputs(options,coord,callback) {
     var getPixels = require('get-pixels');
     getPixels(coord.src, function(err, pixels) {
@@ -69826,17 +73421,84 @@ module.exports = function parseCornerCoordinateInputs(options,coord,callback) {
       callback(options, coord);
     })
   }
-},{"get-pixels":29}],270:[function(require,module,exports){
-module.exports = function(info){
-	var defaults = {};
-	for (var key in info.inputs) {
-	  if (info.inputs.hasOwnProperty(key)) {
-	    defaults[key] = info.inputs[key].default;
-	  }
-	}
-	return defaults;
+},{"get-pixels":30}],308:[function(require,module,exports){
+module.exports = function createMetaModule(mapFunction, moduleOptions) {
+
+  moduleOptions = moduleOptions || {};
+  moduleOptions.infoJson = moduleOptions.infoJson || {};
+
+  function MetaModule(options, UI) {
+
+    var defaults = require('./getDefaults.js')(moduleOptions.infoJson);
+    var output;
+
+
+    // Parses the options and gets the input which is not available in options from defaults
+    for (key in moduleOptions.infoJson.inputs) {
+      if (moduleOptions.infoJson.inputs.hasOwnProperty(key)) {
+        options[key] = options[key] || defaults[key];
+      }
+    }
+
+    // map inputs to internal step options;
+    // use this to set defaults for internal steps
+    // and to expose internal settings as external meta-module parameters;
+    // it must return a steps object
+    var steps = mapFunction(options);
+
+    /* example:
+    function mapFunction(opt, _defaults) {
+
+      // return steps with options:
+      return [
+        { 'name': 'gradient', 'options': {} },
+        { 'name': 'colormap', 'options': { colormap: options.colormap } },
+        { 'name': 'crop', 'options': { 'y': 0, 'h': options.h } },
+        { 'name': 'overlay', 'options': { 'x': options.x, 'y': options.y, 'offset': -4 } }
+      ];
+    }
+    */
+
+    // ui: false prevents internal logs
+    var internalSequencer = ImageSequencer({ inBrowser: false, ui: false });
+
+    function draw(input, callback) {
+
+      var step = this;
+
+      internalSequencer.loadImage(input.src, function onAddImage() {
+        internalSequencer.importJSON(steps);
+        internalSequencer.run(function onCallback(internalOutput) {
+          step.output = { src: internalOutput, format: input.format };
+          callback();
+        });
+      });
+
+    }
+
+    return {
+      options: options,
+      draw: draw,
+      output: output,
+      UI: UI
+    }
+  }
+
+  return [MetaModule, moduleOptions.infoJson];
 }
-},{}],271:[function(require,module,exports){
+
+},{"./getDefaults.js":309}],309:[function(require,module,exports){
+module.exports = function(info){
+  var defaults = {};
+  for (var key in info.inputs) {
+    if (info.inputs.hasOwnProperty(key)) {
+      defaults[key] = info.inputs[key].default;
+    }
+  }
+  return defaults;
+}
+
+},{}],310:[function(require,module,exports){
 module.exports = {
     getPreviousStep: function() {
         return this.getStep(-1);
@@ -69886,4 +73548,4 @@ module.exports = {
         img.src = this.getInput(0).src;
     }
 }
-},{}]},{},[154]);
+},{}]},{},[184]);

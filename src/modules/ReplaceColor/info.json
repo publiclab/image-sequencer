@@ -1,0 +1,32 @@
+{
+    "name": "ReplaceColor",
+    "description": "Replace color with grey or your desired color",
+    "inputs": {
+      "replaceMethod": {
+        "type": "select",
+        "desc": "Replace Method",
+        "default": "greyscale",
+        "values": ["greyscale","replaceByColor"]
+      },
+      "replaceColor": {
+        "type": "String",
+        "desc": "three space separated numbers representing the RGB values of color to be filled",
+        "default": "0 0 255",
+        "placeholder": "0 0 255"
+      },
+      "color": {
+          "type": "String",
+          "desc": "three space separated numbers representing the RGB values of color to be replaced",
+          "default": "228 86 81",
+          "placeholder": "228 86 81"
+        },
+      "tolerance": {
+          "type": "range",
+          "desc": "% tolerance",
+          "default": "50",
+          "min": "0",
+          "max": "100",
+          "step": "1"
+        }
+    } 
+  }

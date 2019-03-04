@@ -10,6 +10,7 @@
   <meta name="theme-color" content="#428bca">
   <link rel="icon" sizes="192x192" href="../icons/ic_192.png">
   <link rel="manifest" href="manifest.json">
+  
 
   <title>Image Sequencer</title>
 
@@ -34,6 +35,8 @@
 
   <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="../node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="uppy.css">
+
 
   <!-- for crop module: -->
   <link href="../node_modules/imgareaselect/distfiles/css/imgareaselect-default.css" rel="stylesheet">
@@ -57,19 +60,7 @@
       </p>
     </header>
 
-    <div id="dropzone" class="dropzone">
-      <p>
-        <i>Select or drag in an image to start!</i>
-      </p>
-      <center>
-        <input type="file" id="fileInput" value="" accept="image/*"><br />
-        <button type="button" id="take-photo" class="btn btn-primary btn-block btn-lg ">Take a Photo</button>
-        <video  id="video" width="400" height="300" style="display:none"></video>
-        <a href="#" id="capture" style="display:none" class="btn btn-primary btn-md">Click Picture</a>
-        <a href="#" id="close" style="display:none" class="btn btn-default btn-md">Close</a>
-        <canvas id="canvas" width="400" height="300" style="display:none"></canvas>
-      </center>
-    </div>
+    <div id="dropzone" class="dropzone"></div>
 
     <section id="steps" class="row">
       <div id="load-image"></div>
@@ -217,14 +208,26 @@
     </div>
   </footer>
 
-  <button id="move-up"><i class="fa fa-arrow-circle-o-up"></i></button>
 
+  <button id="move-up"><i class="fa fa-arrow-circle-o-up"></i></button>
   <script type="text/javascript">
     $(function() {
       var sequencer;
     })
   </script>
+  <script src="uppy.js"></script>
+    <script>
+      var uppy = Uppy.Core()
+        .use(Uppy.Dashboard, {
+          inline: true,
+          target: '#dropzone'
+        })
+        .use(Uppy.Tus, {endpoint: 'https://master.tus.io/files/'})
 
+      uppy.on('complete', (result) => {
+        console.log('Upload complete! We’ve uploaded these files:', result.successful)
+      })
+    </script>
 </body>
 
 </html>

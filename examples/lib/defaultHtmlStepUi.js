@@ -52,7 +52,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     <button class="btn  insert-step" style="margin-left:10px;border-radius:6px;background-color:#fff;border:solid #bababa 1.1px;" >\
       <i class="fa fa-plus"></i> Add\
     </button>\
-    <button class="btn " style="margin-left:10px;border-radius:6px;background-color:#fff;border:solid #bababa 1.1px;" >\
+    <button class="btn " id="download-btn" style="margin-left:10px;border-radius:6px;background-color:#fff;border:solid #bababa 1.1px;" >\
       <i class="fa fa-download"></i> Download\
     </button>\
     </div>\

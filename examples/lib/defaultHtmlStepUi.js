@@ -26,11 +26,17 @@ function DefaultHtmlStepUi(_sequencer, options) {
     step.ui =
       '\
       <div class="container">\
+      <div class="panel panel-default">\
+      <div class="panel-heading">\
+        <h3 class="panel-title">Module name <span class="caret"></span></h3>\
+        <a class="pull-right btn btn-sm btn-default"><span class="fa fa-trash" aria-hidden="true"></span></a>\
+    </div>\
+    <div class="panel-body">\
     <div class="row step">\
     <form class="input-form">\
     <div class="col-md-4 details">\
     <h3>\
-    <span class = "toggle">' +step.name + ' <i class="fa fa-caret-up toggleIcon" aria-hidden="true"></i></span>' +
+    <span class = "toggle">' +step.name +
     '<span class="load-spin" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></span>' +
     '</h3><div class="cal"><p><i>"'+
       (step.description || "") +
@@ -42,6 +48,10 @@ function DefaultHtmlStepUi(_sequencer, options) {
     <a><img alt="" style="max-width=100%" class="img-thumbnail step-thumbnail"/></a>\
     </div>\
     </div>\
+    </div>\
+    <div class="panel-footer">\
+        <a class="btn btn-sm btn-default insert-step">Save</a><a class="pull-right btn btn-sm btn-default">\
+        <span class="fa fa-plus" aria-hidden="true"></span> Insert module</a>\
     </div>\
     </div>';
 

@@ -250,3 +250,9 @@ a.name-header{
   text-decoration: none;
   color: #445;
 }
+.panel.panel-default{
+  position: relative;
+  top: 0;
+  right: 0;
+  width:1100px;
+}

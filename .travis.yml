@@ -18,6 +18,7 @@ script:
   - npm test
   - npm run test-ui
   - grunt build
+  - npm i -g surge
   - sudo ./pr_deploy.sh
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT

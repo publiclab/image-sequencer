@@ -11,6 +11,8 @@ test('Load ndvi-colormap meta module', function(t) {
     sequencer1.addSteps('ndvi-colormap');
     sequencer2.addSteps(['ndvi', 'colormap']);
     t.equal(sequencer1.images.image1.steps[1].options.name, sequencer2.steps[1].options.name, "First step OK");
+    t.equal(sequencer1.images.image1.steps[1].options.name, 'ndvi', "First step OK");
     t.equal(sequencer1.images.image1.steps[2].options.name, sequencer2.steps[2].options.name, "Second step OK");
+    t.equal(sequencer1.images.image1.steps[2].options.name, 'colormap', "Second step OK");
     t.end();
 });

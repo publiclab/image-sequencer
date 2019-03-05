@@ -12,12 +12,13 @@ before_script:
   - npm install jasmine -g
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
+  - chmod +x ./pr_deploy.sh
   - ./cc-test-reporter before-build
 script:
   - npm test
   - npm run test-ui
   - grunt build
-  - ./pr_deploy.sh
+  - sudo ./pr_deploy.sh
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 addons:

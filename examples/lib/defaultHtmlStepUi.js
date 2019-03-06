@@ -28,15 +28,19 @@ function DefaultHtmlStepUi(_sequencer, options) {
       <div class="container">\
       <div class="panel panel-default">\
       <div class="panel-heading">\
-        <h3 class="panel-title">Module name <span class="caret"></span></h3>\
-        <a class="pull-right btn btn-sm btn-default"><span class="fa fa-trash" aria-hidden="true"></span></a>\
+        <h3 class="panel-title">' +step.name + '<span class="caret"></span></h3>\
+        <div class="cal"><div class="tools btn-group pull-right">\
+      <button confirm="Are you sure?" class="remove btn btn btn-default">\
+        <i class="fa fa-trash"></i>\
+    </button>\
+    </div>\
     </div>\
     <div class="panel-body">\
     <div class="row step">\
     <form class="input-form">\
     <div class="col-md-4 details">\
     <h3>\
-    <span class = "toggle">' +step.name +
+    <span class = "toggle">' +
     '<span class="load-spin" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></span>' +
     '</h3><div class="cal"><p><i>"'+
       (step.description || "") +
@@ -50,22 +54,46 @@ function DefaultHtmlStepUi(_sequencer, options) {
     </div>\
     </div>\
     <div class="panel-footer">\
-        <a class="btn btn-sm btn-default insert-step">Save</a><a class="pull-right btn btn-sm btn-default">\
-        <span class="fa fa-plus" aria-hidden="true"></span> Insert module</a>\
+        <button class="btn btn-primary"> Apply\
+        <button class="btn  btn-primary pull-right insert-step">\
+          <i class="fa fa-plus"></i> Insert module\
+        </button>\
+      </div>\
     </div>\
+    </div>';
+
+    step.load=
+      '\
+      <div class="container">\
+      <div class="panel panel-default">\
+      <div class="panel-heading">\
+        <h3 class="panel-title">' +step.name + '<span class="caret"></span></h3>\
+      </div>\
+      <div class="panel-body">\
+    <div class="row step">\
+    <form class="input-form">\
+    <div class="col-md-4 details">\
+    <h3>\
+    <span class = "toggle">' +
+    '<span class="load-spin" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></span>' +
+    '</h3><div class="cal"><p><i>"'+
+      (step.description || "") +
+      '</i></p></div>\
+    </div>\
+    </form>\
+    <div class="col-md-8 cal">\
+    <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
+    <a><img alt="" style="max-width=100%" class="img-thumbnail step-thumbnail"/></a>\
+    </div>\
+    </div>\
+    </div>\
+    <div class="panel-footer"></div>\
     </div>';
 
     var tools =
-    '<div class="cal"><div class="tools btn-group">\
-    <button confirm="Are you sure?" class="remove btn btn btn-default">\
-      <i class="fa fa-trash"></i>\
-    </button>\
-    <button class="btn  insert-step" style="margin-left:10px;border-radius:6px;background-color:#fff;border:solid #bababa 1.1px;" >\
-      <i class="fa fa-plus"></i> Add\
-    </button>\
-    </div>\
+    '<div class="cal"><div class="tools btn-group"></div>\
     </div>';
-
+    
     var util = intermediateHtmlStepUi(_sequencer, step);
 
     var parser = new DOMParser();
@@ -161,7 +189,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       }
     }
     else {
-      $("#load-image").append(step.ui);
+      $("#load-image").append(step.load);
     }
     $(step.ui.querySelector(".toggle")).on("click", () => {
       $(step.ui.querySelector('.toggleIcon')).toggleClass('fa-caret-up').toggleClass('fa-caret-down');

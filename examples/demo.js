@@ -182,7 +182,7 @@ window.onload = function() {
   // image selection and drag/drop handling from examples/lib/imageSelection.js
   sequencer.setInputStep({
     dropZoneSelector: "#dropzone",
-    fileInputSelector: "#fileInput",
+    fileInputSelector: "#dropzone",
     takePhotoSelector: "#take-photo",
     onLoad: function onFileReaderLoad(progress) {
       var reader = progress.target;

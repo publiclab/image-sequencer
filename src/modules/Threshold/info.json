@@ -16,5 +16,6 @@
       "max": "255",
       "step": "1"
     }
-  }
+  },
+ "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#threshold"
 }

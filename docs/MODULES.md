@@ -568,7 +568,7 @@ It adds color tint to an image
 ```
 where `options` is an object with the following property:
 * color : RGB values seperated by a space (default "0 0 255")
-* range : amount of tint (default 0.5)
+* factor : amount of tint (default 0.5)
 
 
 ## White Balance

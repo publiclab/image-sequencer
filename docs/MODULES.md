@@ -15,7 +15,7 @@ List of Module Documentations
 10. [Colorbar](#colorbar-module)
 11. [Colormap](#colormap-module)
 12. [Contrast](#contrast-module)
-13. [Convolution](#convolutioon-module)
+13. [Convolution](#convolution-module)
 14. [DecodeQr](#decodeQr-module)
 15. [Dither](#dither-module)
 16. [DrawRectangle](draw-rectangle-module)

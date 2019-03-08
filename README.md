@@ -18,13 +18,13 @@ The following diagrams attempt to explain how the applications various component
 
 ![workflow diagram](https://raw.githubusercontent.com/publiclab/image-sequencer/master/examples/images/diagram-workflows.png)
 
-It is also for prototyping some other related ideas:
+It also for prototypes other related ideas:
 
 * filter-like image processing -- apply a transform to an image from a given source, like a proxy. I.e. [every image tile of a satellite imagery web map](https://publiclab.org/notes/warren/05-10-2018/prototype-filter-map-tiles-in-real-time-in-a-browser-with-imagesequencer-ndvi-landsat)
-* test-based image processing -- the ability to create a sequence of steps that do the same task as some other image processing tool, provable with example before/after images to compare with
-* logging of each step to produce an evidentiary record of modifications to an original image
+* test-based image processing -- the ability to create a sequence of steps that do the same task as other image processing tools, provable with example before/after images to compare with
+* logging each step -- to produce an evidentiary record of modifications to an original image
 * cascading changes -- change an earlier step's settings, and see those changes affect later steps
-* "small modules"-based extensibility: see [Contributing](https://github.com/publiclab/image-sequencer/blob/master/CONTRIBUTING.md)
+* "small modules" -- based extensibility: see [Contributing](https://github.com/publiclab/image-sequencer/blob/master/CONTRIBUTING.md)
 
 ## Examples
 
@@ -49,7 +49,7 @@ A diagram of this running 5 steps on a single sample image may help explain how 
 
 ## Installation
 
-This library works in the browser, in Node, and on the command line (CLI), which we think is great.
+This library conveniently works in the browser, in Node, and on the command line (CLI).
 
 ### Unix based platforms
 You can set up a local environment to test the UI with `sudo npm run setup` followed by `npm start`
@@ -92,7 +92,7 @@ $ npm run debug invert
 ## Quick Usage
 
 Image Sequencer can be used to run modules on an HTML Image Element using the
-`replaceImage` method. The method accepts two parameters - `selector` and `steps`.
+`replaceImage` method, which accepts two parameters - `selector` and `steps`.
 `selector` is a CSS selector. If it matches multiple images, all images will be
 modified. `steps` may be the name of a module or array of names of modules.
 
@@ -153,7 +153,7 @@ Options for the steps can be passed in one line as JSON in the details option li
 $ ./index.js -i [PATH] -s "brightness" -c '{"brightness":50}'
 
 ```
-Or the values can be given through terminal prompt like
+Or the values can be given through the terminal prompt like
 
 <img width="1436" alt="screen shot 2018-02-14 at 5 18 50 pm" src="https://user-images.githubusercontent.com/25617855/36202790-3c6e8204-11ab-11e8-9e17-7f3387ab0158.png">
 
@@ -222,11 +222,11 @@ sequencer.addSteps(modules, optional_options);
 ```
 
 If only one module is to be added, `modules` is simply the name of the module.
-If multiple images are to be added, `modules` is an array of the names of modules
-which are to be added, in that particular order.
+If multiple images are to be added, `modules` is an array, which holds the names of modules
+to be added, in that particular order.
 
-optional_otions is just additional parameters, in object form, which you might
-want to provide to the modules. It's an optional parameter.
+optional_otions is just an optional parameter, in object form, which you might
+want to provide to the modules. 
 
 return value: **`sequencer`** (To allow method chaining)
 
@@ -277,7 +277,7 @@ return value: **`sequencer`** (To allow method chaining)
 ### Removing a step from the sequencer
 
 The `removeSteps` method is used to remove unwanted steps from the sequencer.
-It accepts the index of the step as an input or an array of the unwanted indices
+It accepts the index of the step as an input or an array of the unwanted indices,
 if there are more than one.
 
 For example, if the modules ['ndvi-red','crop','invert'] were added in this order,
@@ -304,7 +304,7 @@ role it played in `addSteps`.
 
 Indexes can be negative. Negative sign with an index means that counting will be
 done in reverse order. If the index is out of bounds, the counting will wrap in
-the original direction of counting. So, an `index` of -1 means that the module is
+the original direction of counting. So, an `index` of -1 means the module is
 inserted at the end.
 
 ```js
@@ -509,7 +509,7 @@ returns an array of steps associated with the current sequencer.
 
 ## Saving Sequences
 
-IMAGE SEQUENCER supports saving a sequence of modules and their associated settings in a simple string syntax. These sequences can be saved in the local storage inside the browser and inside a JSON file in node.js. sequences can be saved in node context using the CLI option
+IMAGE SEQUENCER supports saving a sequence of modules and their associated settings in a simple string syntax. These sequences can be saved in the local storage of the browser and inside a JSON file in node.js. sequences can be saved in node context using the CLI option
 
 ```shell
 --save-sequence "name stringified-sequence"

@@ -187,19 +187,28 @@ window.onload = function() {
     takePhotoSelector: "#take-photo",
     onLoad: function onFileReaderLoad(progress) {
       var reader = progress.target;
-      var step = sequencer.images.image1.steps[0];
+      var step = sequencer.steps[0];
       var util= intermediateHtmlStepUi(sequencer);
       step.output.src = reader.result;
       sequencer.run({ index: 0 });
+      if(typeof step.options !=="undefined")
       step.options.step.imgElement.src = reader.result;
+      else
+      step.imgElement.src = reader.result;
       insertPreview.updatePreviews(reader.result,'addStep');
-      insertPreview.updatePreviews(sequencer.images.image1.steps[0].options.step.imgElement.src,'insertStep');
+      insertPreview.updatePreviews(sequencer.steps[0].imgElement.src,'insertStep');
     },
     onTakePhoto: function (url) {
-      var step = sequencer.images.image1.steps[0];
+      var step = sequencer.steps[0];
       step.output.src = url;
       sequencer.run({ index: 0 });
-      step.options.step.imgElement.src = url;
+      if(typeof step.options !=="undefined"){
+        step.options.step.imgElement.src = url;
+      }
+      else
+      step.imgElement.src = url;
+      insertPreview.updatePreviews(url,'addStep');
+      insertPreview.updatePreviews(sequencer.steps[0].imgElement.src,'insertStep');
     }
   });
 
@@ -211,7 +220,7 @@ window.onload = function() {
     insertPreview.updatePreviews("images/tulips.png",'addStep');
   }
 };
-},{"./lib/cache.js":2,"./lib/defaultHtmlSequencerUi.js":3,"./lib/defaultHtmlStepUi.js":4,"./lib/insertPreview.js":5,"./lib/intermediateHtmlStepUi.js":6,"./lib/urlHash.js":7}],2:[function(require,module,exports){
+},{"./lib/cache.js":2,"./lib/defaultHtmlSequencerUi.js":3,"./lib/defaultHtmlStepUi.js":4,"./lib/insertPreview.js":5,"./lib/intermediateHtmlStepUi.js":6,"./lib/urlHash.js":8}],2:[function(require,module,exports){
 var setupCache = function() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js', { scope: '/examples/' })
@@ -311,7 +320,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     }
     _sequencer
       .addSteps(newStepName, options)
-      .run({ index: _sequencer.images.image1.steps.length - sequenceLength - 1 });
+      .run({ index: _sequencer.steps.length - sequenceLength - 1 });
       $(addStepSel + " .info").html("Select a new module to add to your sequence.");
       $(addStepSel + " select").val("none");
 
@@ -319,11 +328,11 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     handleSaveSequence();
 
     // add to URL hash too
-    urlHash.setUrlHashParameter("steps", _sequencer.toString());
+    urlHash.setUrlHashParameter("steps", _sequencer.toString())
   }
 
   function handleSaveSequence(){
-    var stepCount=sequencer.images.image1.steps.length;
+    var stepCount=sequencer.steps.length;
     if(stepCount<2)
     $(" #save-seq").prop("disabled", true);
     else
@@ -342,7 +351,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
 module.exports = DefaultHtmlSequencerUi;
 
 
-},{"./urlHash.js":7}],4:[function(require,module,exports){
+},{"./urlHash.js":8}],4:[function(require,module,exports){
 // Set the UI in sequencer. This Will generate HTML based on
 // Image Sequencer events :
 // onSetup : Called every time a step is added
@@ -356,6 +365,7 @@ module.exports = DefaultHtmlSequencerUi;
 var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js');
 var urlHash = require('./urlHash.js');
 var _ = require('lodash');
+var mapHtmlTypes = require('./mapHtmltypes');
 
 function DefaultHtmlStepUi(_sequencer, options) {
   
@@ -416,7 +426,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       for (var paramName in merged) {
         var isInput = inputs.hasOwnProperty(paramName);
         var html = "";
-        var inputDesc = isInput ? inputs[paramName] : {};
+        var inputDesc = isInput ? mapHtmlTypes(inputs[paramName]) : {};
         if (!isInput) {
           html += '<span class="output"></span>';
         } else if (inputDesc.type.toLowerCase() == "select") {
@@ -444,7 +454,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
               '"max="' +
               inputDesc.max +
               '"step="' +
-              inputDesc.step + '">' + '<span>' + paramVal + '</span>';
+              (inputDesc.step ? inputDesc.step : 1)+ '">' + '<span>' + paramVal + '</span>';
 
           }
           else html += '">';
@@ -485,7 +495,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $(step.ui.querySelectorAll(".insert-step")).on('click', function() { util.insertStep(step.ID) });
 
       // Insert the step's UI in the right place
-      if (stepOptions.index == _sequencer.images.image1.steps.length) {
+      if (stepOptions.index == _sequencer.steps.length) {
         stepsEl.appendChild(step.ui);
         $("#steps .container:nth-last-child(1) .insert-step").prop('disabled',true);
         if($("#steps .container:nth-last-child(2)"))
@@ -518,8 +528,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         _sequencer.run({ index: step.index - 1 });
 
         // modify the url hash
-        urlHash.setUrlHashParameter("steps", _sequencer.toString());
-
+        urlHash.setUrlHashParameter("steps", _sequencer.toString())
         // disable the save button
         $(step.ui.querySelector('.btn-save')).prop('disabled', true);
         optionsChanged = false;
@@ -579,11 +588,11 @@ function DefaultHtmlStepUi(_sequencer, options) {
     $(step.ui.querySelector("img")).show();
     $(step.ui.querySelector(".load-spin")).hide();
 
-    step.imgElement.src = step.output;
+    step.imgElement.src = (step.name == "load-image") ? step.output.src : step.output;
     var imgthumbnail = step.ui.querySelector(".img-thumbnail");
     for (let index = 0; index < step.linkElements.length; index++) {
       if (step.linkElements[index].contains(imgthumbnail))
-        step.linkElements[index].href = step.output;
+        step.linkElements[index].href = step.imgElement.src;
     }
 
     // TODO: use a generalized version of this
@@ -592,7 +601,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
     }
 
     for (let index = 0; index < step.linkElements.length; index++) {
-      step.linkElements[index].download = step.name + "." + fileExtension(step.output);
+
+      step.linkElements[index].download = step.name + "." + fileExtension(step.imgElement.src);
       step.linkElements[index].target = "_blank";
     }
 
@@ -682,7 +692,7 @@ if(typeof window === "undefined"){
 module.exports = DefaultHtmlStepUi;
 
 
-},{"./intermediateHtmlStepUi.js":6,"./urlHash.js":7,"lodash":8}],5:[function(require,module,exports){
+},{"./intermediateHtmlStepUi.js":6,"./mapHtmltypes":7,"./urlHash.js":8,"lodash":9}],5:[function(require,module,exports){
 function generatePreview(previewStepName, customValues, path, selector) {
 
     var previewSequencer = ImageSequencer();
@@ -701,7 +711,6 @@ function generatePreview(previewStepName, customValues, path, selector) {
     }
 
     function loadPreview() {
-      previewSequencer = previewSequencer.addSteps('resize', { resize: "40%" });
       if (previewStepName === "crop") {
         previewSequencer.addSteps(previewStepName, customValues).run(insertPreview);
       }
@@ -874,7 +883,37 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
 module.exports = IntermediateHtmlStepUi;
 
 
-},{"./insertPreview.js":5,"./urlHash.js":7}],7:[function(require,module,exports){
+},{"./insertPreview.js":5,"./urlHash.js":8}],7:[function(require,module,exports){
+function mapHtmlTypes(inputInfo){
+  var htmlType;
+  switch(inputInfo.type.toLowerCase()){
+    case 'integer':
+      htmlType = inputInfo.min != undefined ? 'range' : 'number';
+      break;
+    case 'string':
+      htmlType = 'text';
+      break;
+    case 'select':
+      htmlType = 'select';
+      break;
+    case 'percentage':
+      htmlType = 'number';
+      break;
+    case 'float':
+      htmlType = inputInfo.min != undefined ? 'range' : 'text';
+      break;
+    default:
+      htmlType = 'text';
+      break;
+  }
+  var response = inputInfo;
+  response.type = htmlType;
+  return response;
+}
+
+module.exports = mapHtmlTypes;
+
+},{}],8:[function(require,module,exports){
 function getUrlHashParameter(param) {
 
   var params = getUrlHashParameters();
@@ -925,7 +964,7 @@ module.exports =  {
                     setUrlHashParameters: setUrlHashParameters
                   }
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function (global){
 /**
  * @license

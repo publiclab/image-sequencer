@@ -24,7 +24,7 @@
             "default": 0
         },
         "h": {
-            "type": "iinteger",
+            "type": "integer",
             "desc": "height of the colorbar",
             "default": 10
         }

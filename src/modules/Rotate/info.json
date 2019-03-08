@@ -3,7 +3,7 @@
     "description": "Rotates image by specified degrees",
     "inputs": {
       "rotate": {
-        "type": "range",
+        "type": "integer",
         "desc": "Angular value for rotation in degrees",
         "default": "90",
         "min": "0",

@@ -32,13 +32,11 @@ module.exports = function ExportBin(dir = "./output/", ref, basic, filename) {
     if (err) console.error(err)
   });
   if (filename && basic) {
-    for (var image in ref.images) {
-      var steps = ref.images[image].steps;
+      var steps = ref.steps;
       var datauri = steps.slice(-1)[0].output.src;
       var ext = steps.slice(-1)[0].output.format;
       var buffer = require('data-uri-to-buffer')(datauri);
       fs.writeFile(dir + filename, buffer, function() { });
-    }
   }
   else {
     getDirectories(dir, function(dirs) {
@@ -50,8 +48,7 @@ module.exports = function ExportBin(dir = "./output/", ref, basic, filename) {
       }
       fs.mkdir(dir + 'sequencer' + num, function() {
         var root = dir + 'sequencer' + num + '/';
-        for (var image in ref.images) {
-          var steps = ref.images[image].steps;
+          var steps = ref.steps;
           if (basic) {
             var datauri = steps.slice(-1)[0].output.src;
             var ext = steps.slice(-1)[0].output.format;
@@ -66,7 +63,6 @@ module.exports = function ExportBin(dir = "./output/", ref, basic, filename) {
               fs.writeFile(root + image + "_" + i + "." + ext, buffer, function() { });
             }
           }
-        }
       });
     });
   }

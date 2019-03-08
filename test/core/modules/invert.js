@@ -20,17 +20,17 @@ var invert = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9h
 //Tests for Invert module
 
 test("Load invert module", function(t) {
-  sequencer.loadImages('test', red);
-  t.equal(sequencer.images.test.steps.length, 1,'Image loaded')
-  sequencer.addSteps('test','invert');
-  t.equal(sequencer.images.test.steps[1].options.name, 'invert', 'Invert step added')
+  sequencer.loadImages( red);
+  t.equal(sequencer.steps.length, 1,'Image loaded')
+  sequencer.addSteps('invert');
+  t.equal(sequencer.steps[1].options.name, 'invert', 'Invert step added')
   t.end()
 })
 
 test("Inverted image isn't identical", function(t) {
   sequencer.run({ mode: 'test' }, function(out) {
-    var input = sequencer.images.test.steps[0].output.src;
-    var output = sequencer.images.test.steps[1].output.src;
+    var input = sequencer.steps[0].output.src;
+    var output = sequencer.steps[1].output.src;
     input = DataURItoBuffer(input);
     output = DataURItoBuffer(output);
     t.notEqual(input,output,'Not equal')
@@ -41,8 +41,8 @@ test("Inverted image isn't identical", function(t) {
 test("Twice inverted image is identical to original image", function(t) {
   sequencer.addSteps('test','invert');
   sequencer.run({ mode: 'test' }, function(out) {
-    var input = sequencer.images.test.steps[0].output.src
-    var output = sequencer.images.test.steps[2].output.src
+    var input = sequencer.steps[0].output.src
+    var output = sequencer.steps[2].output.src
     base64Img.imgSync(input, target, 'input')
     base64Img.imgSync(output, target, 'output')
     input = './test_outputs/input.png'
@@ -57,7 +57,7 @@ test("Twice inverted image is identical to original image", function(t) {
 
 test("Invert module produces correct output", function(t) {
   sequencer.run({ mode: 'test' }, function(out) {
-    var result = sequencer.images.test.steps[1].output.src
+    var result = sequencer.steps[1].output.src
     var benchmark = invert
     base64Img.imgSync(result, target, 'result')
     base64Img.imgSync(benchmark, target, 'benchmark')

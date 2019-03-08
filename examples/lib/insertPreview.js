@@ -16,7 +16,6 @@ function generatePreview(previewStepName, customValues, path, selector) {
     }
 
     function loadPreview() {
-      previewSequencer = previewSequencer.addSteps('resize', { resize: "40%" });
       if (previewStepName === "crop") {
         previewSequencer.addSteps(previewStepName, customValues).run(insertPreview);
       }

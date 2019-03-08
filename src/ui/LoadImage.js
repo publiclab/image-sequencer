@@ -33,9 +33,9 @@ function LoadImage(ref, name, src, main_callback) {
         canvas.width = image.naturalWidth;
         canvas.height = image.naturalHeight;
         context.drawImage(image,0,0);
-        datauri = canvas.toDataURL(ext);
+        datauri = canvas.toDataURL(ext);        
         callback(datauri, step);
-      }
+      }  
       image.src = src;
     }
     else {
@@ -60,10 +60,6 @@ function LoadImage(ref, name, src, main_callback) {
       var output = makeImage(datauri);
       ref.steps.push(step);
       ref.steps[0].output = output;
-      // ref.images[name] = image;
-      // var loadImageStep = ref.images[name].steps[0];
-      // loadImageStep.output = output;
-      // loadImageStep.options.step.output = loadImageStep.output.src;
       ref.steps[0].UI.onSetup(ref.steps[0]);
       ref.steps[0].UI.onDraw(ref.steps[0]);
       ref.steps[0].UI.onComplete(ref.steps[0]);
@@ -78,34 +74,3 @@ function LoadImage(ref, name, src, main_callback) {
 
 module.exports = LoadImage;
 
-
-    // var image = {
-    //   src: src,
-    //   steps: [{
-    //     options: {
-    //       id: step.ID,
-    //       name: "load-image",
-    //       description: "This initial step loads and displays the original image without any modifications.",
-    //       title: "Load Image",
-    //       step: step
-    //     },
-    //     UI: ref.events,
-    //     draw: function() {
-    //       UI.onDraw(options.step);
-    //       if(arguments.length==1){
-    //         this.output = CImage(arguments[0]);
-    //         options.step.output = this.output;
-    //         UI.onComplete(options.step);
-    //         return true;
-    //       }
-    //       else if(arguments.length==2) {
-    //         this.output = CImage(arguments[0]);
-    //         options.step.output = this.output;
-    //         arguments[1]();
-    //         UI.onComplete(options.step);
-    //         return true;
-    //       }
-    //       return false;
-    //     },
-    //   }]
-    // };

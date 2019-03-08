@@ -17,7 +17,7 @@ test('benchmark all modules', function(t) {
   var sequencer = ImageSequencer({ ui: false, inBrowser: false });
   var mods = Object.keys(sequencer.modules);
 
-  sequencer.loadImages(imageName, image);
+  sequencer.loadImages(image);
   sequencer.addSteps(mods[0]);
   global.start = Date.now()
   global.idx = 0

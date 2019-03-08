@@ -140,7 +140,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $(step.ui.querySelectorAll(".insert-step")).on('click', function() { util.insertStep(step.ID) });
 
       // Insert the step's UI in the right place
-      if (stepOptions.index == _sequencer.images.image1.steps.length) {
+      if (stepOptions.index == _sequencer.steps.length) {
         stepsEl.appendChild(step.ui);
         $("#steps .container:nth-last-child(1) .insert-step").prop('disabled',true);
         if($("#steps .container:nth-last-child(2)"))
@@ -173,8 +173,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         _sequencer.run({ index: step.index - 1 });
 
         // modify the url hash
-        urlHash.setUrlHashParameter("steps", _sequencer.toString());
-
+        urlHash.setUrlHashParameter("steps", _sequencer.toString())
         // disable the save button
         $(step.ui.querySelector('.btn-save')).prop('disabled', true);
         optionsChanged = false;
@@ -234,11 +233,11 @@ function DefaultHtmlStepUi(_sequencer, options) {
     $(step.ui.querySelector("img")).show();
     $(step.ui.querySelector(".load-spin")).hide();
 
-    step.imgElement.src = step.output;
+    step.imgElement.src = (step.name == "load-image") ? step.output.src : step.output;
     var imgthumbnail = step.ui.querySelector(".img-thumbnail");
     for (let index = 0; index < step.linkElements.length; index++) {
       if (step.linkElements[index].contains(imgthumbnail))
-        step.linkElements[index].href = step.output;
+        step.linkElements[index].href = step.imgElement.src;
     }
 
     // TODO: use a generalized version of this
@@ -247,7 +246,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
     }
 
     for (let index = 0; index < step.linkElements.length; index++) {
-      step.linkElements[index].download = step.name + "." + fileExtension(step.output);
+
+      step.linkElements[index].download = step.name + "." + fileExtension(step.imgElement.src);
       step.linkElements[index].target = "_blank";
     }
 

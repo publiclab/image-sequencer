@@ -8,6 +8,7 @@
         "default": "none",
         "values": ["none","floydsteinberg","bayer","Atkinson"]
       }
-    }
+    },
+	"docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#dither-module"
 }
   

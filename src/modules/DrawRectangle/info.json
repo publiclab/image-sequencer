@@ -37,5 +37,6 @@
         "desc": "RGBA values separated by a space",
         "default": "0 0 0 255"
       }
-    }
+    },
+ "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#draw-rectangle-module"
 }

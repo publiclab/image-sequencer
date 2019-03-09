@@ -20,7 +20,6 @@ function InsertStep(ref, index, name, o) {
     o.description = o_.description || moduleInfo.description;
     o.selector = o_.selector || 'ismod-' + name;
     o.container = o_.container || ref.options.selector;
-    // o.image = image;
     o.inBrowser = ref.options.inBrowser;
 
     if (index == -1) index = ref.steps.length;
@@ -29,7 +28,6 @@ function InsertStep(ref, index, name, o) {
       name: o.name,
       description: o.description,
       ID: o.number,
-      // imageName: o.image,
       inBrowser: ref.options.inBrowser,
       ui: ref.options.ui,
       options: o
@@ -41,7 +39,6 @@ function InsertStep(ref, index, name, o) {
       for (var i in stepsArray) {
         let step = stepsArray[i];
         ref.insertSteps(index + Number.parseInt(i), step['name'], step['options']);
-        // ref.addSteps(step['name'], step['options']);
       }
     }
 

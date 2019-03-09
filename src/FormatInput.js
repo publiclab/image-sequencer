@@ -97,7 +97,6 @@ function formatInput(args,format,images) {
           name: args[1],
           o: args[2]
         });
-      // }
 
     }
   }

@@ -81,14 +81,6 @@ test('loadImage works too.', function(t) {
   t.end();
 });
 
-// test('addSteps("image","name") adds a step', function(t) {
-//   sequencer.addSteps('test', 'channel');
-//   t.equal(sequencer.steps.length, 2, "Length of steps increased")
-//   t.equal(sequencer.steps[1].options.name, "channel", "Correct Step Added");
-//   t.equal(sequencer.steps[1].options.description, "Displays only one color channel of an image -- default is green", "Step description shown");
-//   t.end();
-// });
-
 test('addSteps("name") adds a step', function(t) {
   sequencer.addSteps('channel');
   t.equal(sequencer.steps.length, 2, "Length of steps increased");
@@ -111,12 +103,6 @@ test('addSteps("name",o) adds a step', function(t) {
   t.end();
 });
 
-// test('addSteps("image","name",o) adds a step', function(t) {
-//   sequencer.addSteps('test', 'channel', {});
-//   t.equal(sequencer.images.test.steps.length, 7, "Length of steps increased");
-//   t.equal(sequencer.images.test.steps[6].options.name, "channel", "Correct Step Added");
-//   t.end();
-// });
 
 test('removeSteps(position) removes a step', function(t) {
   sequencer.removeSteps( 1);
@@ -129,12 +115,6 @@ test('removeSteps([positions]) removes steps', function(t) {
   t.equal(sequencer.steps.length, 2, "Length of steps reduced");
   t.end();
 });
-
-// test('removeSteps(position) removes steps', function(t) {
-//   sequencer.removeSteps([1, 2]);
-//   t.equal(sequencer.images.test.steps.length, 2, "Length of steps reduced");
-//   t.end();
-// });
 
 test('insertSteps(position,"module",options) inserts a step', function(t) {
   sequencer.insertSteps( 1, 'channel', {});
@@ -150,19 +130,6 @@ test('insertSteps(position,"module") inserts a step', function(t) {
   t.end();
 });
 
-// test('insertSteps(position,"module") inserts a step', function(t) {
-//   sequencer.insertSteps(1, 'channel');
-//   t.equal(sequencer.images.test.steps.length, 5, "Length of Steps increased");
-//   t.equal(sequencer.images.test.steps[1].options.name, "channel", "Correct Step Inserted");
-//   t.end();
-// });
-
-// test('insertSteps({image: {index: index, name: "module", o: options} }) inserts a step', function(t) {
-//   sequencer.insertSteps({ test: { index: 1, name: 'channel', o: {} } });
-//   t.equal(sequencer.images.test.steps.length, 6, "Length of Steps increased");
-//   t.equal(sequencer.images.test.steps[1].options.name, "channel", "Correct Step Inserted");
-//   t.end();
-// });
 
 
 test('getSteps() returns correct array of steps', function(t){

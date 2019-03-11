@@ -69325,9 +69325,10 @@ module.exports={
         "default": "https://github.com/publiclab/image-sequencer"
       }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#add-qr-module"
   }
   
+
 },{}],195:[function(require,module,exports){
 /*
 * Average all pixel colors
@@ -69412,7 +69413,7 @@ module.exports={
     "description": "Average all pixel color",
     "inputs": {
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#average-module"
 }
 
 },{}],198:[function(require,module,exports){
@@ -69510,7 +69511,7 @@ module.exports={
       "default": "function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] }"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#blend-module"
 }
 
 },{}],201:[function(require,module,exports){
@@ -69660,7 +69661,7 @@ module.exports={
             "step": 0.25
         }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#blur-module"
 }
 
 },{}],205:[function(require,module,exports){
@@ -69737,7 +69738,7 @@ module.exports={
           "max": "200"
       }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#brightness-module"
 }
 
 },{}],208:[function(require,module,exports){
@@ -69806,7 +69807,7 @@ module.exports={
       "values": ["red", "green", "blue"]
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#channel-module"
 }
 
 },{}],211:[function(require,module,exports){
@@ -69859,8 +69860,9 @@ module.exports={
             "default": 10
         }
     },
-    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#colorbar-module"
 }
+
 },{}],214:[function(require,module,exports){
 /*
  * Accepts a value from 0-255 and returns the new color-mapped pixel 
@@ -70117,7 +70119,7 @@ module.exports={
       "values": ["default","greyscale","bluwhtgrngis","stretched","fastie","brntogrn","blutoredjet","colors16"]
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#colormap-module"
 }
 
 },{}],218:[function(require,module,exports){
@@ -70230,7 +70232,7 @@ module.exports={
             "max": 100
         }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#contrast-module"
 }
 
 },{}],222:[function(require,module,exports){
@@ -70370,7 +70372,7 @@ module.exports={
         "placeholder": "1 1 1 1 1 1 1 1 1"
       }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#convolution-module"
 }
 
 },{}],226:[function(require,module,exports){
@@ -70651,7 +70653,7 @@ module.exports={
       "placeholder": "255 255 255 255"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#crop-module"
 }
 
 },{}],231:[function(require,module,exports){
@@ -70722,7 +70724,7 @@ module.exports={
       "type": "string"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#decodeqr-module"
 }
 
 },{}],234:[function(require,module,exports){
@@ -70855,9 +70857,11 @@ module.exports={
         "default": "none",
         "values": ["none","floydsteinberg","bayer","Atkinson"]
       }
-    }
+    },
+	"docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#dither-module"
 }
   
+
 },{}],238:[function(require,module,exports){
 module.exports = exports = function(pixels, options){
   var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
@@ -70979,7 +70983,8 @@ module.exports={
         "desc": "RGBA values separated by a space",
         "default": "0 0 0 255"
       }
-    }
+    },
+ "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#draw-rectangle-module"
 }
 
 },{}],242:[function(require,module,exports){
@@ -71111,7 +71116,7 @@ module.exports={
       "default": "r + g + b"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#dynamic-module"
 }
 
 },{}],245:[function(require,module,exports){
@@ -71382,7 +71387,7 @@ module.exports={
             "step": 0.05
         }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#edge-detect-module"
 }
 
 },{}],249:[function(require,module,exports){
@@ -71525,7 +71530,7 @@ module.exports={
       "default": "(inbuilt)"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#fisheyegl-module"
 }
 
 },{}],252:[function(require,module,exports){
@@ -71626,7 +71631,8 @@ module.exports={
       "default": "Vertical",
       "values": ["Horizontal", "Vertical"]
     }
-  }
+  },
+   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#flipimage-module"
 }
 
 },{}],256:[function(require,module,exports){
@@ -71693,7 +71699,7 @@ module.exports={
             "max": 1
         }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#gamma-correction-module"
 }
 
 },{}],259:[function(require,module,exports){
@@ -71768,8 +71774,9 @@ module.exports={
     "name": "Gradient",
     "description": "Gives a gradient of the image",
     "inputs": {},
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#gradient-module"
 }
+
 },{}],262:[function(require,module,exports){
 /*
  * Calculates the histogram of the image
@@ -71886,8 +71893,9 @@ module.exports={
             ]
         }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#histogram-module"
 }
+
 },{}],265:[function(require,module,exports){
 /*
  * Import Image module; this fetches a given remote or local image via URL
@@ -72024,8 +72032,9 @@ module.exports={
       "default": "./images/monarch.png"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#import-image-module"
 }
+
 },{}],269:[function(require,module,exports){
 /*
  * NDVI with red filter (blue channel is infrared)
@@ -72137,7 +72146,7 @@ module.exports={
       "values": ["red", "blue"]
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#ndvi-module"
 }
 
 },{}],273:[function(require,module,exports){
@@ -72162,8 +72171,9 @@ module.exports={
     "name": "NDVI-Colormap",
     "description": "Sequentially Applies NDVI and Colormap steps",
     "inputs": {},
-    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#ndvi-colormap-module"
 }
+
 },{}],276:[function(require,module,exports){
 module.exports = function Dynamic(options, UI, util) {
 
@@ -72272,8 +72282,9 @@ module.exports={
             "default": -2
         }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#overlay-module"
 }
+
 },{}],279:[function(require,module,exports){
 module.exports = function PaintBucket(options, UI) {
 
@@ -72415,8 +72426,10 @@ module.exports={
         "max": "100",
         "step": "1"
       }
-  } 
+  },
+ "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#paint-bucket-module" 
 }
+
 },{}],283:[function(require,module,exports){
 module.exports = function ReplaceColor(options, UI) {
 
@@ -72540,8 +72553,10 @@ module.exports={
           "max": "100",
           "step": "1"
         }
-    } 
+    },
+	"docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#replacecolor-module" 
   }
+
 },{}],287:[function(require,module,exports){
 /*
  * Resize the image by given percentage value
@@ -72629,8 +72644,9 @@ module.exports={
       "default": "125%"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#resize-module"
 }
+
 },{}],290:[function(require,module,exports){
 /*
  * Rotates image 
@@ -72712,7 +72728,7 @@ module.exports={
         "step": "1"
       }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#rotate-modul"
   }
 
 },{}],293:[function(require,module,exports){
@@ -72792,7 +72808,7 @@ module.exports={
             "step": 0.1
         }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#saturation-module"
 }
 
 },{}],296:[function(require,module,exports){
@@ -72932,7 +72948,8 @@ module.exports={
       "max": "255",
       "step": "1"
     }
-  }
+  },
+ "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#threshold"
 }
 
 },{}],300:[function(require,module,exports){
@@ -73006,7 +73023,8 @@ module.exports={
           "max": "1",
           "step": "0.01"
       }
-  }
+  },
+ "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#tint"
 }
 
 },{}],303:[function(require,module,exports){
@@ -73104,8 +73122,9 @@ module.exports={
         "default": 6000
       }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#white-balance"
 }
+
 },{}],306:[function(require,module,exports){
 (function (process,Buffer){
 /*

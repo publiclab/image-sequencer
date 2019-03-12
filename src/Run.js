@@ -57,9 +57,9 @@ function Run(ref, json_q, callback, ind, progressObj) {
   }
 
   function drawSteps(json_q) {
-    var drawarray = [];
-      var no_steps = ref.steps.length;
-      var init = json_q[0];
+    var drawarray = [],
+    no_steps = ref.steps.length,
+    init = json_q[0];
       for (var i = 0; i < no_steps - init; i++) {
         drawarray.push({i: init + i });
       }

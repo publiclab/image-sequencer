@@ -330,12 +330,11 @@ Methods can be chained on the Image Sequencer:
 * run() can not be in the middle of the chain.
 * If the chain starts with loadImage() or loadImages(), the following methods are
 applied only to the newly loaded images.
-* If no name is provided to the image, a name will be generated for it. The name will
-be of the form "image<number>". For Ex: "image1", "image2", "image3", etc.
+
 
 Valid Chains:
 ```js
-sequencer.loadImage('red',function(){
+sequencer.loadImage(function(){
   this.addSteps('invert').run(function(out){
     //do something with ouptut.
   });
@@ -350,152 +349,6 @@ sequencer.addSteps('invert').run().addSteps('ndvi-red');
 ```
 
 
-## Multiple Images
-Image Sequencer is capable of handling multiple images at once.
-
-### Initializing a sequencer with multiple images.
-This is just like before.
-```js
-var sequencer = ImageSequencer();
-```
-
-### Loading Multiple Images into the Sequencer
-
-Multiple images can be loaded by the method `loadImages`. Everything is the same,
-except that now, a unique identification called `image_name` has to be provided
-with each image. This is a string literal.
-
-* 3/2 parameters :
-    ```js
-    sequencer.loadImages(image_name,
-      image_src,optional_callback);
-    ```
-* 1/2 parameters (JSON) :
-    ```js
-    sequencer.loadImages({
-      images: {
-        image1_name: image_src,
-        image2_name: image_src,
-        ...
-      },
-      callback: optional_callback
-    });
-    ```
-
-return value: **none**
-
-
-### Adding Steps on Multiple Images
-
-The same method `addSteps` is used for this. There's just a slight obvious change
-in the syntax that the image name has to be supplied too. `image_name` as well as,
-`module_name` in the following examples can be either strings or arrays of strings.
-
-```js
-sequencer.addSteps(image_name,module_name,optional_options);
-```
-
-If no Image Name is specified, the module is added to **all** images.
-
-```js
-sequencer.addSteps(module_name,optional_options);
-```
-
-All this can be passed in as JSON:
-
-```js
-sequencer.addSteps({
-  image1_name: {name: module_name, o: optional_options},
-  image2_name: {name: module_name, o: optional_options},
-  ...
-});
-```
-
-return value: **`sequencer`** (To allow method chaining)
-
-
-### Running a Sequencer with multiple images
-
-The same `run` method can be used with a slight change in syntax.
-The `run` method accepts parameters `image` and `from`. `from` is the index from
-where the function starts generating output. By default, it will run across all
-the steps. (from = 1) If no image is specified, the sequencer will be run over **all
-the images**. `image_name` may be an array of image names.
-
-```js
-sequencer.run(); //All images from first step
-```
-
-```js
-sequencer.run(image_name,from); //Image 'image' from 'from'
-```
-
-The `run` method also accepts an optional callback just like before:
-
-```js
-  sequencer.run(image_name,from,function(out){
-    // This gets called back.
-    // "out" is the DataURL of final image.
-  });
-```
-
-JSON input is also acceptable.
-
-```js
-sequencer.run({
-  image1_name: from,
-  image2_name: from,
-  ...
-});
-```
-
-return value: **`sequencer`** (To allow method chaining)
-
-
-### Removing Steps from an Image
-
-Similarly, `removeSteps` can also accept an `image_name` parameter. Either, both,
-or none of `image_name` and `steps` them may be an array. JSON input is also acceptable.
-
-```js
-sequencer.removeSteps("image_name",[steps]);
-```
-
-```js
-sequencer.removeSteps("image_name",step);
-```
-
-```js
-sequencer.removeSteps({
-  image1_name: [steps],
-  image2_name: [steps],
-  ...
-});
-```
-return value: **`sequencer`** (To allow method chaining)
-
-
-### Inserting steps on an image
-
-The `insertSteps` method can also accept an `image_name` parameter. `image_name`
-may be an array. Everything else remains the same. JSON Input is acceptable too.
-
-```js
-sequencer.insertSteps("image",index,"module_name",o);
-```
-```js
-sequencer.insertSteps([image],index,"module_name",o);
-```
-```js
-sequencer.insertSteps({
-  image1: [
-    {index:index1, name: module_name1, o:optional_options1},
-    {index:index2, name: module_name2, o:optional_options2},
-    ...
-  ]
-});
-```
-return value: **`sequencer`** (To allow method chaining)
 
 ## Fetching current steps
 
@@ -619,12 +472,37 @@ sequencer.setUI({
 });
 ```
 
-Note: `identity.imageName` is the "name" of that particular image. This name can
-be specified while loading the image via `sequencer.loadImage("name","SRC")`. If
-not specified, the name of a loaded image defaults to a name like "image1",
-"image2", et cetra.
+## Using multiple images on same sequencer:
 
-Details of all modules can be sought using `sequencer.modulesInfo()`.
+Image Sequencer object supports one imageURL at a time.
+
+Adding a seccond image to same sequencer will result to adding same set of steps added to prior image and flushing out the previous one. 
+
+```js
+s1 = new ImageSequencer(...);
+s1.loadImage(url1);
+s1.addSteps('blur');
+s1.run();
+s1.addImage(url2);
+s1.run();
+```
+However if we want to use more than one image, we can either initialize a sequencer for each image like:
+
+```js
+sequencer1 = new ImageSequencer(...);
+sequencer1.loadImage(...);
+sequencer1.addSteps(steps);
+sequencer1.run();
+
+sequencer2 = new ImageSequencer(...);
+sequencer2.loadImage(...);
+sequencer2.addSteps(steps);
+sequencer2.run();
+```
+
+
+
+**Note**: Details of all modules can be sought using `sequencer.modulesInfo()`.
 This method returns an object which defines the name and inputs of the modules. If a module name (hyphenated) is passed in the method, then only the details of that module are returned.
 
 The `notify` function takes two parameters `msg` and `id`, former being the message to be displayed on console (in case of CLI and node ) and a HTML component(in browser). The id is optional and is useful for HTML interface to give appropriate IDs.

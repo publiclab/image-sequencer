@@ -211,7 +211,7 @@ window.onload = function() {
     insertPreview.updatePreviews("images/tulips.png",'addStep');
   }
 };
-},{"./lib/cache.js":2,"./lib/defaultHtmlSequencerUi.js":3,"./lib/defaultHtmlStepUi.js":4,"./lib/insertPreview.js":5,"./lib/intermediateHtmlStepUi.js":6,"./lib/urlHash.js":7}],2:[function(require,module,exports){
+},{"./lib/cache.js":2,"./lib/defaultHtmlSequencerUi.js":3,"./lib/defaultHtmlStepUi.js":4,"./lib/insertPreview.js":5,"./lib/intermediateHtmlStepUi.js":6,"./lib/urlHash.js":8}],2:[function(require,module,exports){
 var setupCache = function() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js', { scope: '/examples/' })
@@ -342,7 +342,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
 module.exports = DefaultHtmlSequencerUi;
 
 
-},{"./urlHash.js":7}],4:[function(require,module,exports){
+},{"./urlHash.js":8}],4:[function(require,module,exports){
 // Set the UI in sequencer. This Will generate HTML based on
 // Image Sequencer events :
 // onSetup : Called every time a step is added
@@ -356,6 +356,7 @@ module.exports = DefaultHtmlSequencerUi;
 var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js');
 var urlHash = require('./urlHash.js');
 var _ = require('lodash');
+var mapHtmlTypes = require('./mapHtmltypes');
 
 function DefaultHtmlStepUi(_sequencer, options) {
   
@@ -416,7 +417,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       for (var paramName in merged) {
         var isInput = inputs.hasOwnProperty(paramName);
         var html = "";
-        var inputDesc = isInput ? inputs[paramName] : {};
+        var inputDesc = isInput ? mapHtmlTypes(inputs[paramName]) : {};
         if (!isInput) {
           html += '<span class="output"></span>';
         } else if (inputDesc.type.toLowerCase() == "select") {
@@ -444,7 +445,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
               '"max="' +
               inputDesc.max +
               '"step="' +
-              inputDesc.step + '">' + '<span>' + paramVal + '</span>';
+              (inputDesc.step ? inputDesc.step : 1)+ '">' + '<span>' + paramVal + '</span>';
 
           }
           else html += '">';
@@ -682,7 +683,7 @@ if(typeof window === "undefined"){
 module.exports = DefaultHtmlStepUi;
 
 
-},{"./intermediateHtmlStepUi.js":6,"./urlHash.js":7,"lodash":8}],5:[function(require,module,exports){
+},{"./intermediateHtmlStepUi.js":6,"./mapHtmltypes":7,"./urlHash.js":8,"lodash":9}],5:[function(require,module,exports){
 function generatePreview(previewStepName, customValues, path, selector) {
 
     var previewSequencer = ImageSequencer();
@@ -874,7 +875,37 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
 module.exports = IntermediateHtmlStepUi;
 
 
-},{"./insertPreview.js":5,"./urlHash.js":7}],7:[function(require,module,exports){
+},{"./insertPreview.js":5,"./urlHash.js":8}],7:[function(require,module,exports){
+function mapHtmlTypes(inputInfo){
+  var htmlType;
+  switch(inputInfo.type.toLowerCase()){
+    case 'integer':
+      htmlType = inputInfo.min != undefined ? 'range' : 'number';
+      break;
+    case 'string':
+      htmlType = 'text';
+      break;
+    case 'select':
+      htmlType = 'select';
+      break;
+    case 'percentage':
+      htmlType = 'number';
+      break;
+    case 'float':
+      htmlType = inputInfo.min != undefined ? 'range' : 'text';
+      break;
+    default:
+      htmlType = 'text';
+      break;
+  }
+  var response = inputInfo;
+  response.type = htmlType;
+  return response;
+}
+
+module.exports = mapHtmlTypes;
+
+},{}],8:[function(require,module,exports){
 function getUrlHashParameter(param) {
 
   var params = getUrlHashParameters();
@@ -925,7 +956,7 @@ module.exports =  {
                     setUrlHashParameters: setUrlHashParameters
                   }
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function (global){
 /**
  * @license

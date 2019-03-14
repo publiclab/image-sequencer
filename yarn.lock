@@ -3313,6 +3313,11 @@ jquery@^3.3.1:
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
   integrity sha512-Ubldcmxp5np52/ENotGxlLe6aGMvmF4R8S6tZjsP6Knsaxd/xp3Zrh50cG93lR6nPXyUFwzN3ZSOQI0wRJNdGg==
 
+js-graph-algorithms@1.0.18:
+  version "1.0.18"
+  resolved "https://registry.yarnpkg.com/js-graph-algorithms/-/js-graph-algorithms-1.0.18.tgz#f96ec87bf194f5c0a31365fa0e1d07b7b962d891"
+  integrity sha1-+W7Ie/GU9cCjE2X6Dh0Ht7li2JE=
+
 js-yaml@~3.5.2:
   version "3.5.5"
   resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.5.5.tgz#0377c38017cabc7322b0d1fbcd25a491641f2fbe"
@@ -3568,12 +3573,13 @@ longest@^1.0.1:
   integrity sha1-MKCy2jj3N3DoKUoNIuZiXtd9AJc=
 
 looks-same@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/looks-same/-/looks-same-7.0.0.tgz#d0999cabcbd7de597a3aeabdb08907e5c2879ac5"
-  integrity sha512-1I7MB1B8I2YN03lpsRRLswW4v/soG2UuwIV5plzcuwCGFnLwK1ew6JhibfOIF8H94M4ThKuoKvqBf36Lpaolmg==
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/looks-same/-/looks-same-7.1.0.tgz#8ecab8d015c428a3efd13003b9c649f8852f57e4"
+  integrity sha512-nroqc3WnrTLYRGWVx6geMS3kO4ww50AQM0QdGP3Zy8Q5ohma6k7xEq3gUEd8Mf7CiXiJAbrUJpokcN0xLBDCUQ==
   dependencies:
     color-diff "^1.1.0"
     concat-stream "^1.6.2"
+    js-graph-algorithms "1.0.18"
     lodash "^4.17.3"
     parse-color "^1.0.0"
     pngjs "^3.3.3"

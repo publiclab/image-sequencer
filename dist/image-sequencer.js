@@ -69070,9 +69070,9 @@ function Run(ref, json_q, callback, ind, progressObj) {
   }
 
   function drawSteps(json_q) {
-    var drawarray = [];
-      var no_steps = ref.steps.length;
-      var init = json_q[0];
+    var drawarray = [],
+    no_steps = ref.steps.length,
+    init = json_q[0];
       for (var i = 0; i < no_steps - init; i++) {
         drawarray.push({i: init + i });
       }
@@ -71516,7 +71516,7 @@ module.exports = function flipImage(oldPixels, pixels, axis) {
   }
 
   function flip(){
-    if(axis.toLowerCase() == 'horizontal'){
+    if(axis.toLowerCase() == 'vertical'){
       for (var n=0; n < width; n++){
         for (var m=0; m < height; m++){
           copyPixel(n, m, n, height - m - 1);
@@ -71540,7 +71540,7 @@ arguments[4][193][0].apply(exports,arguments)
 },{"./Module":252,"./info.json":255,"dup":193}],255:[function(require,module,exports){
 module.exports={
   "name": "Flip Image",
-  "description": "Flip The Image On The Selected Axis.",
+  "description": "Flip The Image On The Specified Axis.",
   "inputs": {
     "Axis": {
       "type": "select",

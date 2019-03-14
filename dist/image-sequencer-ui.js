@@ -192,9 +192,9 @@ window.onload = function() {
       step.output.src = reader.result;
       sequencer.run({ index: 0 });
       if(typeof step.options !=="undefined")
-      step.options.step.imgElement.src = reader.result;
+        step.options.step.imgElement.src = reader.result;
       else
-      step.imgElement.src = reader.result;
+        step.imgElement.src = reader.result;
       insertPreview.updatePreviews(reader.result,'addStep');
       insertPreview.updatePreviews(sequencer.steps[0].imgElement.src,'insertStep');
     },
@@ -202,11 +202,10 @@ window.onload = function() {
       var step = sequencer.steps[0];
       step.output.src = url;
       sequencer.run({ index: 0 });
-      if(typeof step.options !=="undefined"){
+      if(typeof step.options !=="undefined")
         step.options.step.imgElement.src = url;
-      }
       else
-      step.imgElement.src = url;
+        step.imgElement.src = url;
       insertPreview.updatePreviews(url,'addStep');
       insertPreview.updatePreviews(sequencer.steps[0].imgElement.src,'insertStep');
     }

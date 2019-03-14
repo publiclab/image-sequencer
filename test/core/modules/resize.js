@@ -6,27 +6,27 @@ require('../../../src/ImageSequencer')
 
 var sequencer = ImageSequencer({ui: false})
 var red = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABlBMVEX+AAD///+KQee0AAAAAWJLR0QB/wIt3gAAAAd0SU1FB+EGHRIVAvrm6EMAAAAMSURBVAjXY2AgDQAAADAAAceqhY4AAAAldEVYdGRhdGU6Y3JlYXRlADIwMTctMDYtMjlUMTg6MjE6MDIrMDI6MDDGD83DAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE3LTA2LTI5VDE4OjIxOjAyKzAyOjAwt1J1fwAAAABJRU5ErkJggg=="
-var benchmark = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAHklEQVQ4T2Pc4u39n4ECwDhqAMNoGDCMhgHDsAgDALGCJKF4bsMPAAAAAElFTkSuQmCC"
+var benchmark = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAAAklEQVR4AewaftIAAAAzSURBVLXBAQEAMAiAME7/zN4Ssr2BzzEJSEACEpCABCQgAQlIQAISkIAEJCABCUhAAhJYclMCJyy7k2QAAAAASUVORK5CYII="
+
 var target = 'test_outputs'
 
-var options = {contrast: -40}
+var options = {resize: '129%'}
 
-test('Contrast module loads correctly', function(t) {
-  sequencer.loadImages(red)
-  sequencer.addSteps('contrast')
-  t.equal(sequencer.steps.length, 2, 'Contrast module loaded')
+test('Resize module loads correctly', function(t) {
+  sequencer.loadImages('test', red)
+  sequencer.addSteps('resize', options)
+  t.equal(sequencer.images.test.steps[1].options.name, 'resize', 'Resize module is getting loaded')
   t.end()
 })
 
-test('Contrast module loads with correct options', function(t) {
-  sequencer.addSteps('test', 'contrast', options)
-  t.equal(sequencer.steps[2].options.contrast, -40, 'options loaded correctly')
-  t.end()
+test('Resize module loads with correct options', function(t) {
+    t.equal(sequencer.images.test.steps[1].options.resize, '129%', 'Options are correct');
+    t.end();
 })
 
-test('Contrast module works correctly', function(t) {
+test('Resize module works correctly', function(t) {
   sequencer.run({mode:'test'}, function(out) {
-    var result = sequencer.steps[2].output.src
+    var result = sequencer.images.test.steps[1].output.src
     base64Img.imgSync(result, target, 'result')
     base64Img.imgSync(benchmark, target, 'benchmark')
     result = './test_outputs/result.png'

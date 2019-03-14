@@ -16,25 +16,25 @@ var benchmark = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8
 
 // Test 1 to check replace-color module is getting loaded
 test('Load replace-color module', function(t) {
-  sequencer.loadImages('test', red);
+  sequencer.loadImages(red);
   sequencer.addSteps('replace-color', options);
-  t.equal(sequencer.images.test.steps[1].options.name, 'replace-color', 'replace-color module is getting loaded');
+  t.equal(sequencer.steps[1].options.name, 'replace-color', 'replace-color module is getting loaded');
   t.end();
 });
 
 // Test 2 to check options are correct
 test('Check Options', function(t) {
-  t.equal(sequencer.images.test.steps[1].options.replaceMethod, "greyscale", 'replaceMethod option is correct');
-  t.equal(sequencer.images.test.steps[1].options.replaceColor, "0 0 255", 'replaceColor option is correct');
-  t.equal(sequencer.images.test.steps[1].options.color, "228 86 81", 'color option is correct');
-  t.equal(sequencer.images.test.steps[1].options.tolerance, "50", 'tolerance option is correct');
+  t.equal(sequencer.steps[1].options.replaceMethod, "greyscale", 'replaceMethod option is correct');
+  t.equal(sequencer.steps[1].options.replaceColor, "0 0 255", 'replaceColor option is correct');
+  t.equal(sequencer.steps[1].options.color, "228 86 81", 'color option is correct');
+  t.equal(sequencer.steps[1].options.tolerance, "50", 'tolerance option is correct');
   t.end();
 });
 
 // Test 3 to check threshold module works as expected
 test('replace-color module works correctly', function(t) {
   sequencer.run({ mode: 'test' }, function(out) {
-    var result = sequencer.images.test.steps[1].output.src
+    var result = sequencer.steps[1].output.src
     base64Img.imgSync(result, target, 'result')
     base64Img.imgSync(benchmark, target, 'benchmark')
     result = './test_outputs/result.png'

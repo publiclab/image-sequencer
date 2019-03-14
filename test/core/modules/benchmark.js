@@ -17,7 +17,7 @@ test('benchmark all modules', function(t) {
   var sequencer = ImageSequencer({ ui: false, inBrowser: false });
   var mods = Object.keys(sequencer.modules);
 
-  sequencer.loadImages(imageName, image);
+  sequencer.loadImages(image);
   sequencer.addSteps(mods[0]);
   global.start = Date.now()
   global.idx = 0
@@ -27,7 +27,6 @@ test('benchmark all modules', function(t) {
     var end = Date.now();
     console.log("Module " + mods[0] + " ran in: " + (end - global.start) + " milliseconds");
     mods.splice(0, 1);
-    // sequencer.removeSteps(sequencer.images.image1.steps.length - 1);
     if (mods.length > 1) { //Last one is test module, we need not benchmark it
       sequencer.steps[global.idx].output.src = image;
       global.idx++;

@@ -16,27 +16,27 @@ module.exports = function(grunt) {
       },
       source: {
         files: ["src/**/*", "Gruntfile.js", "examples/lib/*","examples/demo.js"],
-        tasks: ["build:js"]
+        tasks: ["browserify"]
       }
     },
 
     browserify: {
-      dist: {
+      core: {
         src: ["src/ImageSequencer.js"],
         dest: "dist/image-sequencer.js"
       }, 
-      js: {
+      ui: {
         src: ["examples/demo.js"],
         dest: "dist/image-sequencer-ui.js"
       }
     },
 
     uglify: {
-      dist: {
+      core: {
         src: ["./dist/image-sequencer.js"],
         dest: "./dist/image-sequencer.min.js"
       },
-      js: {
+      ui: {
         src: ['dist/image-sequencer-ui.js'],
         dest: 'dist/image-sequencer-ui.min.js'
       }
@@ -53,6 +53,7 @@ module.exports = function(grunt) {
 
   /* Default (development): Watch files and build on change. */
   grunt.registerTask("default", ["watch"]);
-  grunt.registerTask("build", ["browserify:dist","browserify:js","uglify:dist","uglify:js"]);
-  grunt.registerTask("serve", ["browserify:dist","browserify:js","uglify:dist","uglify:js","browserSync", "watch"]);
+  grunt.registerTask("build", ["browserify", "uglify"]);
+  grunt.registerTask("serve", ["browserify", "browserSync", "watch"]);
+  grunt.registerTask("compile", ["browserify"]);
 };

@@ -12,22 +12,22 @@ var benchmark = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8
 
 // Test 1 to check threshold module is getting loaded
 test('Load Threshold module', function(t) {
-  sequencer.loadImages('test', red);
+  sequencer.loadImages(red);
   sequencer.addSteps('threshold', options);
-  t.equal(sequencer.images.test.steps[1].options.name, 'threshold', 'Threshold module is getting loaded');
+  t.equal(sequencer.steps[1].options.name, 'threshold', 'Threshold module is getting loaded');
   t.end();
 });
 
 // Test 2 to check options are correct
 test('Check Options', function(t) {
-  t.equal(sequencer.images.test.steps[1].options.threshold, "Automatic Thresholding", 'Options are correct');
+  t.equal(sequencer.steps[1].options.threshold, "Automatic Thresholding", 'Options are correct');
   t.end();
 });
 
 // Test 3 to check threshold module works as expected
 test('Threshold module works correctly', function(t) {
   sequencer.run({ mode: 'test' }, function(out) {
-    var result = sequencer.images.test.steps[1].output.src
+    var result = sequencer.steps[1].output.src
     base64Img.imgSync(result, target, 'result')
     base64Img.imgSync(benchmark, target, 'benchmark')
     result = './test_outputs/result.png'

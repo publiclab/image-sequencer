@@ -192,9 +192,9 @@ window.onload = function() {
       step.output.src = reader.result;
       sequencer.run({ index: 0 });
       if(typeof step.options !=="undefined")
-      step.options.step.imgElement.src = reader.result;
+        step.options.step.imgElement.src = reader.result;
       else
-      step.imgElement.src = reader.result;
+        step.imgElement.src = reader.result;
       insertPreview.updatePreviews(reader.result,'addStep');
       insertPreview.updatePreviews(sequencer.steps[0].imgElement.src,'insertStep');
     },
@@ -202,11 +202,10 @@ window.onload = function() {
       var step = sequencer.steps[0];
       step.output.src = url;
       sequencer.run({ index: 0 });
-      if(typeof step.options !=="undefined"){
+      if(typeof step.options !=="undefined")
         step.options.step.imgElement.src = url;
-      }
       else
-      step.imgElement.src = url;
+        step.imgElement.src = url;
       insertPreview.updatePreviews(url,'addStep');
       insertPreview.updatePreviews(sequencer.steps[0].imgElement.src,'insertStep');
     }
@@ -391,9 +390,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
       '</i></p></div>\
     </div>\
     </form>\
-    <div class="col-md-8 cal">\
-    <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
-    <a><img alt="" style="max-width=100%" class="img-thumbnail step-thumbnail"/></a>\
+    <div class="col-md-8 cal step-column">\
+      <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
+        <a><img alt="" class="img-thumbnail step-thumbnail"/></a>\
     </div>\
     </div>\
     </div>\
@@ -726,8 +725,8 @@ function generatePreview(previewStepName, customValues, path, selector) {
 
     var previewSequencerSteps = {
       "resize": "125%",
-      "brightness": "20",
-      "saturation": "5",
+      "brightness": "175",
+      "saturation": "0.5",
       "rotate": 90,
       "contrast": 90,
       "crop": {
@@ -748,6 +747,7 @@ module.exports = {
   generatePreview : generatePreview,
   updatePreviews : updatePreviews
 }
+
 },{}],6:[function(require,module,exports){
 var urlHash = require('./urlHash.js'),
     insertPreview = require('./insertPreview.js');

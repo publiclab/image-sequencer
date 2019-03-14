@@ -68949,7 +68949,7 @@ module.exports = {
   'tint': require('./modules/Tint'),
   'white-balance': require('./modules/WhiteBalance')
 }
-},{"./modules/AddQR":193,"./modules/Average":196,"./modules/Blend":199,"./modules/Blur":203,"./modules/Brightness":206,"./modules/Channel":209,"./modules/Colorbar":212,"./modules/Colormap":216,"./modules/Contrast":220,"./modules/Convolution":224,"./modules/Crop":229,"./modules/DecodeQr":232,"./modules/Dither":236,"./modules/DrawRectangle":240,"./modules/Dynamic":243,"./modules/EdgeDetect":247,"./modules/FisheyeGl":250,"./modules/FlipImage":254,"./modules/GammaCorrection":257,"./modules/Gradient":260,"./modules/Histogram":263,"./modules/ImportImage":267,"./modules/Ndvi":271,"./modules/NdviColormap":274,"./modules/Overlay":277,"./modules/PaintBucket":281,"./modules/ReplaceColor":285,"./modules/Resize":288,"./modules/Rotate":291,"./modules/Saturation":294,"./modules/Threshold":298,"./modules/Tint":301,"./modules/WhiteBalance":304,"image-sequencer-invert":62}],187:[function(require,module,exports){
+},{"./modules/AddQR":193,"./modules/Average":196,"./modules/Blend":199,"./modules/Blur":203,"./modules/Brightness":206,"./modules/Channel":209,"./modules/Colorbar":212,"./modules/Colormap":216,"./modules/Contrast":220,"./modules/Convolution":224,"./modules/Crop":229,"./modules/DecodeQr":232,"./modules/Dither":236,"./modules/DrawRectangle":240,"./modules/Dynamic":243,"./modules/EdgeDetect":247,"./modules/FisheyeGl":250,"./modules/FlipImage":254,"./modules/GammaCorrection":257,"./modules/Gradient":260,"./modules/Histogram":263,"./modules/ImportImage":267,"./modules/Ndvi":274,"./modules/NdviColormap":270,"./modules/Overlay":277,"./modules/PaintBucket":281,"./modules/ReplaceColor":285,"./modules/Resize":288,"./modules/Rotate":291,"./modules/Saturation":294,"./modules/Threshold":298,"./modules/Tint":301,"./modules/WhiteBalance":304,"image-sequencer-invert":62}],187:[function(require,module,exports){
 // Uses a given image as input and replaces it with the output.
 // Works only in the browser.
 function ReplaceImage(ref,selector,steps,options) {
@@ -69070,9 +69070,9 @@ function Run(ref, json_q, callback, ind, progressObj) {
   }
 
   function drawSteps(json_q) {
-    var drawarray = [];
-      var no_steps = ref.steps.length;
-      var init = json_q[0];
+    var drawarray = [],
+    no_steps = ref.steps.length,
+    init = json_q[0];
       for (var i = 0; i < no_steps - init; i++) {
         drawarray.push({i: init + i });
       }
@@ -71516,7 +71516,7 @@ module.exports = function flipImage(oldPixels, pixels, axis) {
   }
 
   function flip(){
-    if(axis.toLowerCase() == 'horizontal'){
+    if(axis.toLowerCase() == 'vertical'){
       for (var n=0; n < width; n++){
         for (var m=0; m < height; m++){
           copyPixel(n, m, n, height - m - 1);
@@ -71540,7 +71540,7 @@ arguments[4][193][0].apply(exports,arguments)
 },{"./Module":252,"./info.json":255,"dup":193}],255:[function(require,module,exports){
 module.exports={
   "name": "Flip Image",
-  "description": "Flip The Image On The Selected Axis.",
+  "description": "Flip The Image On The Specified Axis.",
   "inputs": {
     "Axis": {
       "type": "select",
@@ -71954,6 +71954,31 @@ module.exports={
 
 },{}],269:[function(require,module,exports){
 /*
+ * Sample Meta Module for demonstration purpose only
+ */
+module.exports = require('../../util/createMetaModule.js')(
+    function mapFunction(options) {
+
+        return [
+            { 'name': 'ndvi', 'options': {} },
+            { 'name': 'colormap', 'options': { colormap: options.colormap } },
+        ];
+    }, {
+        infoJson: require('./info.json')
+    }
+)[0];
+},{"../../util/createMetaModule.js":312,"./info.json":271}],270:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":269,"./info.json":271,"dup":193}],271:[function(require,module,exports){
+module.exports={
+    "name": "NDVI-Colormap",
+    "description": "Sequentially Applies NDVI and Colormap steps",
+    "inputs": {},
+    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#ndvi-colormap-module"
+}
+
+},{}],272:[function(require,module,exports){
+/*
  * NDVI with red filter (blue channel is infrared)
  */
 module.exports = function Ndvi(options, UI) {
@@ -72013,7 +72038,7 @@ module.exports = function Ndvi(options, UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":306,"./../../util/getDefaults.js":313,"./Ui.js":270,"./info.json":272}],270:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":306,"./../../util/getDefaults.js":313,"./Ui.js":273,"./info.json":275}],273:[function(require,module,exports){
 // hide on save
 module.exports = function CropModuleUi(step, ui) {
 
@@ -72049,9 +72074,9 @@ module.exports = function CropModuleUi(step, ui) {
     }
 }
 
-},{}],271:[function(require,module,exports){
+},{}],274:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
-},{"./Module":269,"./info.json":272,"dup":193}],272:[function(require,module,exports){
+},{"./Module":272,"./info.json":275,"dup":193}],275:[function(require,module,exports){
 module.exports={
   "name": "NDVI",
   "description": "Normalized Difference Vegetation Index, or NDVI, is an image analysis technique used with aerial photography. It's a way to visualize the amounts of infrared and other wavelengths of light reflected from vegetation by comparing ratios of blue and red light absorbed versus green and IR light reflected. NDVI is used to evaluate the health of vegetation in satellite imagery, where it correlates with how much photosynthesis is happening. This is helpful in assessing vegetative health or stress. <a href='https://publiclab.org/ndvi'>Read more</a>.<br /><br/>This is designed for use with red-filtered single camera <a href='http://publiclab.org/infragram'>DIY Infragram cameras</a>; change to 'blue' for blue filters",
@@ -72064,31 +72089,6 @@ module.exports={
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#ndvi-module"
-}
-
-},{}],273:[function(require,module,exports){
-/*
- * Sample Meta Module for demonstration purpose only
- */
-module.exports = require('../../util/createMetaModule.js')(
-    function mapFunction(options) {
-
-        return [
-            { 'name': 'ndvi', 'options': {} },
-            { 'name': 'colormap', 'options': { colormap: options.colormap } },
-        ];
-    }, {
-        infoJson: require('./info.json')
-    }
-)[0];
-},{"../../util/createMetaModule.js":312,"./info.json":275}],274:[function(require,module,exports){
-arguments[4][193][0].apply(exports,arguments)
-},{"./Module":273,"./info.json":275,"dup":193}],275:[function(require,module,exports){
-module.exports={
-    "name": "NDVI-Colormap",
-    "description": "Sequentially Applies NDVI and Colormap steps",
-    "inputs": {},
-    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#ndvi-colormap-module"
 }
 
 },{}],276:[function(require,module,exports){

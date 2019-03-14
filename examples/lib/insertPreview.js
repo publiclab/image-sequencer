@@ -31,8 +31,8 @@ function generatePreview(previewStepName, customValues, path, selector) {
 
     var previewSequencerSteps = {
       "resize": "125%",
-      "brightness": "20",
-      "saturation": "5",
+      "brightness": "175",
+      "saturation": "0.5",
       "rotate": 90,
       "contrast": 90,
       "crop": {

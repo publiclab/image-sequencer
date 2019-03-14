@@ -4,7 +4,8 @@
 
 module.exports = function Contrast(options, UI) {
 
-    options.contrast = options.contrast || 70
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+    options.contrast = options.contrast || defaults.contrast;
     var output;
 
     function draw(input, callback, progressObj) {
@@ -13,10 +14,6 @@ module.exports = function Contrast(options, UI) {
         progressObj.overrideFlag = true;
 
         var step = this;
-
-        function changePixel(r, g, b, a) {
-            return [r, g, b, a]
-        }
 
         function extraManipulation(pixels) {
             pixels = require('./Contrast')(pixels, options.contrast)
@@ -32,7 +29,6 @@ module.exports = function Contrast(options, UI) {
 
         return require('../_nomodule/PixelManipulation.js')(input, {
             output: output,
-            changePixel: changePixel,
             extraManipulation: extraManipulation,
             format: input.format,
             image: options.image,

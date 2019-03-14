@@ -3,13 +3,13 @@
     "description": "Rotates image by specified degrees",
     "inputs": {
       "rotate": {
-        "type": "range",
+        "type": "integer",
         "desc": "Angular value for rotation in degrees",
-        "default": "0",
+        "default": "90",
         "min": "0",
         "max": "360",
         "step": "1"
       }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#rotate-modul"
   }

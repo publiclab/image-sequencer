@@ -7,7 +7,8 @@ module.exports = function Rotate(options, UI) {
 
     function draw(input, callback, progressObj) {
 
-        options.rotate = parseInt(options.rotate) || 0;
+        var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+        options.rotate = options.rotate || defaults.rotate;
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;

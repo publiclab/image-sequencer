@@ -3,7 +3,8 @@
 */
 module.exports = function Blur(options, UI) {
 
-    options.blur = options.blur || 2
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+    options.blur = options.blur || defaults.blur;
     var output;
 
     function draw(input, callback, progressObj) {
@@ -13,13 +14,9 @@ module.exports = function Blur(options, UI) {
 
         var step = this;
 
-        function changePixel(r, g, b, a) {
-            return [r, g, b, a]
-        }
-
         function extraManipulation(pixels) {
-            pixels = require('./Blur')(pixels, options.blur)
-            return pixels
+            pixels = require('./Blur')(pixels, options.blur);
+            return pixels;
         }
 
         function output(image, datauri, mimetype) {
@@ -31,7 +28,6 @@ module.exports = function Blur(options, UI) {
 
         return require('../_nomodule/PixelManipulation.js')(input, {
             output: output,
-            changePixel: changePixel,
             extraManipulation: extraManipulation,
             format: input.format,
             image: options.image,

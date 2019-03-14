@@ -24,11 +24,10 @@
             "default": 0
         },
         "h": {
-            "type": "iinteger",
+            "type": "integer",
             "desc": "height of the colorbar",
             "default": 10
         }
     },
-    "length": 4,
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#colorbar-module"
 }

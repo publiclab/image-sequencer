@@ -2,6 +2,7 @@
 * Core modules and their info files
 */
 module.exports = {
+  'add-qr': require('./modules/AddQR'),
   'average': require('./modules/Average'),
   'blend': require('./modules/Blend'),
   'blur': require('./modules/Blur'),
@@ -17,6 +18,7 @@ module.exports = {
   'draw-rectangle': require('./modules/DrawRectangle'),
   'dynamic': require('./modules/Dynamic'),
   'edge-detect': require('./modules/EdgeDetect'),
+  'flip-image': require('./modules/FlipImage'),
   'fisheye-gl': require('./modules/FisheyeGl'),
   'histogram': require('./modules/Histogram'),
   'gamma-correction': require('./modules/GammaCorrection'),
@@ -27,8 +29,11 @@ module.exports = {
   'ndvi-colormap': require('./modules/NdviColormap'),
   'paint-bucket': require('./modules/PaintBucket'),
   'overlay': require('./modules/Overlay'),
+  'replace-color':require('./modules/ReplaceColor'),
   'resize': require('./modules/Resize'),
   'rotate': require('./modules/Rotate'),
   'saturation': require('./modules/Saturation'),
+  'threshold': require('./modules/Threshold'),
+  'tint': require('./modules/Tint'),
   'white-balance': require('./modules/WhiteBalance')
 }

@@ -100,6 +100,7 @@ Note: Browser CORS Restrictions apply. Some browsers may not allow local images
 from other folders, and throw a Security Error instead.
 
 ```js
+  var sequencer = ImageSequencer();
   sequencer.replaceImage(selector,steps,optional_options);
 ```
 

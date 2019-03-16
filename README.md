@@ -88,8 +88,16 @@ $ npm install image-sequencer -g
 ```
 $ npm run debug invert
 ```
-
+ 
 ## Quick Usage
+
+### Initializing the Sequencer
+
+The Image Sequencer Library exports a function ImageSequencer which initializes a sequencer.
+
+```js
+var sequencer = ImageSequencer();
+```
 
 Image Sequencer can be used to run modules on an HTML Image Element using the
 `replaceImage` method, which accepts two parameters - `selector` and `steps`.
@@ -100,7 +108,6 @@ Note: Browser CORS Restrictions apply. Some browsers may not allow local images
 from other folders, and throw a Security Error instead.
 
 ```js
-  var sequencer = ImageSequencer();
   sequencer.replaceImage(selector,steps,optional_options);
 ```
 

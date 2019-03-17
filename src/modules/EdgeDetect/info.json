@@ -19,7 +19,13 @@
             "type": "float",
             "desc": "The low threshold value for the image",
             "default": 0.15
-        }
+        },
+	"hysteresis": {
+	    "type": "select",
+	    "desc": "Toggle Hysteresis",
+	    "values": ["false", "true"],
+	    "default": "false"
+	}
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }

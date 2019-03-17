@@ -250,3 +250,15 @@ a.name-header{
   text-decoration: none;
   color: #445;
 }
+
+.step-column{ 
+    display:flex; 
+    flex-direction:row; 
+    align-items:center;
+}
+.step-image{
+    width:100%; 
+    display:flex; 
+    flex-direction:column; 
+    align-items:center;
+}

@@ -12,7 +12,7 @@ kernely = [
 
 let pixelsToBeSupressed = [];
 
-module.exports = function(pixels, highThresholdRatio, lowThresholdRatio) {
+module.exports = function(pixels, highThresholdRatio, lowThresholdRatio, hysteresis) {
   let angles = [], grads = [], strongEdgePixels = [], weakEdgePixels = [];
   for (var x = 0; x < pixels.shape[0]; x++) {
     grads.push([]);
@@ -31,7 +31,7 @@ module.exports = function(pixels, highThresholdRatio, lowThresholdRatio) {
   }
   nonMaxSupress(pixels, grads, angles);
   doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio, grads, strongEdgePixels, weakEdgePixels);
-  hysteresis(strongEdgePixels, weakEdgePixels);
+  if(hysteresis.toLowerCase() == 'true') hysteresis(strongEdgePixels, weakEdgePixels);
 
   strongEdgePixels.forEach(pixel => preserve(pixels, pixel));
   weakEdgePixels.forEach(pixel => supress(pixels, pixel));

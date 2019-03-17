@@ -3,13 +3,12 @@
     "description": "Change the contrast of the image by given value",
     "inputs": {
         "contrast": {
-            "type": "range",
+            "type": "integer",
             "desc": "contrast for the new image, typically -100 to 100",
-            "default": "70",
-            "min": "-100",
-            "max": "100",
-            "step": "1"
+            "default": 70,
+            "min": -100,
+            "max": 100
         }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#contrast-module"
 }

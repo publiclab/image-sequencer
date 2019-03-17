@@ -15,9 +15,8 @@ module.exports = function Invert(options, UI) {
                 console.log("Bad Image path");
                 return;
             }
-            var width = 0;
 
-            for (var i = 0; i < pixels.shape[0]; i++) width++;
+            var width = pixels.shape[0];
 
             for (var i = 0; i < pixels.shape[0]; i++) {
                 for (var j = 0; j < pixels.shape[1]; j++) {

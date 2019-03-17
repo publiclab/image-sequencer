@@ -6,33 +6,34 @@ module.exports = function Threshold(pixels, options, histData) {
     var lumR = [];
     var lumG = [];
     var lumB = [];
-    for (var i=0; i<256; i++) {
-        lumR[i] = i*0.299;
-        lumG[i] = i*0.587;
-        lumB[i] = i*0.114;
+    for (var i = 0; i < 256; i++) {
+        lumR[i] = i * 0.299;
+        lumG[i] = i * 0.587;
+        lumB[i] = i * 0.114;
     }
-    var imageDataLength = pixels.data.length;   //imageData.data.length;
-    for (var i = 0; i <= imageDataLength; i += 4) {
-        pixels.data[i] = Math.floor(lumR[pixels.data[i]] + lumG[pixels.data[i+1]] + lumB[pixels.data[i+2]]);
-      }
 
-    if(type === "Automatic Thresholding")
+    var imageDataLength = pixels.data.length;   //imageData.data.length;
+    for (var i = 0; i <= imageDataLength; i++) {
+        pixels.data[i] = Math.floor(lumR[pixels.data[i++]] + lumG[pixels.data[i++]] + lumB[pixels.data[i++]]);
+    }
+
+    if (type === "Automatic Thresholding")
         threshold = otsu(histData);
 
-    for (var currentPixel = 0; currentPixel <= imageDataLength; currentPixel+=4) {
-  
-      pixels.data[currentPixel] = pixels.data[currentPixel] < threshold ? 0 : 255;
-      pixels.data[currentPixel + 1] = pixels.data[currentPixel + 2] = pixels.data[currentPixel];
+    for (var currentPixel = 0; currentPixel <= imageDataLength; currentPixel += 4) {
+
+        pixels.data[currentPixel] = pixels.data[currentPixel] < threshold ? 0 : 255;
+        pixels.data[currentPixel + 1] = pixels.data[currentPixel + 2] = pixels.data[currentPixel];
     }
     return pixels;
 }
 
-function otsu(histData){
+function otsu(histData) {
     let total = 0;
-    for (let t=0 ; t<256 ; t++) total +=  histData[t];
-    
+    for (let t = 0; t < 256; t++) total += histData[t];
+
     let sum = 0;
-    for (let t=0 ; t<256 ; t++) sum += t * histData[t];
+    for (let t = 0; t < 256; t++) sum += t * histData[t];
 
     let sumB = 0;
     let wB = 0;
@@ -41,7 +42,7 @@ function otsu(histData){
     let varMax = 0;
     let threshold = 0;
 
-    for (let t=0 ; t<256 ; t++) {
+    for (let t = 0; t < 256; t++) {
         wB += histData[t];               // Weight Background
         if (wB == 0) continue;
 
@@ -63,6 +64,6 @@ function otsu(histData){
         }
     }
 
-return threshold;
+    return threshold;
 
 }

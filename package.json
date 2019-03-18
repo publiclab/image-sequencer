@@ -45,6 +45,7 @@
     "pace": "0.0.4",
     "readline-sync": "^1.4.7",
     "save-pixels": "~2.3.4",
+    "selectize": "^0.12.6",
     "urify": "^2.1.1"
   },
   "devDependencies": {

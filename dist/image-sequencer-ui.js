@@ -466,7 +466,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         div.setAttribute("name", paramName);
         var description = inputs[paramName].desc || paramName;
         div.innerHTML =
-          "<div class='det cal'>\
+          "<div class='det cal collapse in'>\
                            <label for='" +
           paramName +
           "'>" +

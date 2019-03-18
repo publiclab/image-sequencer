@@ -45,3 +45,4 @@ test/core/modules/test_outputs/*
 node_modules/
 node_modules/*
 test_outputs
+/test_outputs

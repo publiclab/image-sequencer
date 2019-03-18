@@ -12,21 +12,21 @@ var target = 'test_outputs'
 var options = {contrast: -40}
 
 test('Contrast module loads correctly', function(t) {
-  sequencer.loadImages('test', red)
-  sequencer.addSteps('test', 'contrast')
-  t.equal(sequencer.images.test.steps.length, 2, 'Contrast module loaded')
+  sequencer.loadImages(red)
+  sequencer.addSteps('contrast')
+  t.equal(sequencer.steps.length, 2, 'Contrast module loaded')
   t.end()
 })
 
 test('Contrast module loads with correct options', function(t) {
   sequencer.addSteps('test', 'contrast', options)
-  t.equal(sequencer.images.test.steps[2].options.contrast, -40, 'options loaded correctly')
+  t.equal(sequencer.steps[2].options.contrast, -40, 'options loaded correctly')
   t.end()
 })
 
 test('Contrast module works correctly', function(t) {
   sequencer.run({mode:'test'}, function(out) {
-    var result = sequencer.images.test.steps[2].output.src
+    var result = sequencer.steps[2].output.src
     base64Img.imgSync(result, target, 'result')
     base64Img.imgSync(benchmark, target, 'benchmark')
     result = './test_outputs/result.png'

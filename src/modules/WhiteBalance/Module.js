@@ -2,18 +2,14 @@ module.exports = function Balance(options, UI) {
 
     var output;
 
-    function draw (input, callback, progressObj) {
+    function draw(input, callback, progressObj) {
 
-      options.temperature = (options.temperature > "40000") ? "40000" : options.temperature
+        options.temperature = (options.temperature > "40000") ? "40000" : options.temperature
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
         var step = this;
-
-        function changePixel(r, g, b, a) {
-            return [r, g, b ,a]
-        }
 
         function extraManipulation(pixels) {
 
@@ -39,35 +35,34 @@ module.exports = function Balance(options, UI) {
                 b = Math.min(Math.max(138.5177312231 * Math.log(b) - 305.0447927307, 0), 255);
             }
 
-            for(let i=0; i<pixels.shape[0]; i++) {
-              for (let j=0; j<pixels.shape[1]; j++) {
+            for (let i = 0; i < pixels.shape[0]; i++) {
+                for (let j = 0; j < pixels.shape[1]; j++) {
 
-                  r_data = pixels.get(i,j,0)
-                  r_new_data = (255/r) * r_data
-                  pixels.set(i,j,0,r_new_data)
+                    r_data = pixels.get(i, j, 0)
+                    r_new_data = (255 / r) * r_data
+                    pixels.set(i, j, 0, r_new_data)
 
-                  g_data = pixels.get(i,j,1)
-                  g_new_data = (255/g) * g_data
-                  pixels.set(i,j,1,g_new_data)
+                    g_data = pixels.get(i, j, 1)
+                    g_new_data = (255 / g) * g_data
+                    pixels.set(i, j, 1, g_new_data)
 
-                  b_data = pixels.get(i,j,2)
-                  b_new_data = (255/b) * b_data
-                  pixels.set(i,j,2,b_new_data)
-              }
+                    b_data = pixels.get(i, j, 2)
+                    b_new_data = (255 / b) * b_data
+                    pixels.set(i, j, 2, b_new_data)
+                }
             }
 
-          return pixels
+            return pixels
         }
 
-        function output (image, datauri, mimetype){
+        function output(image, datauri, mimetype) {
 
-            step.output = {src:datauri,format:mimetype};
+            step.output = { src: datauri, format: mimetype };
 
         }
 
         return require('../_nomodule/PixelManipulation.js')(input, {
             output: output,
-            changePixel: changePixel,
             extraManipulation: extraManipulation,
             format: input.format,
             image: options.image,

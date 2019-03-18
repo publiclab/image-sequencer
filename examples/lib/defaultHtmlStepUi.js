@@ -10,6 +10,8 @@
 
 var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js');
 var urlHash = require('./urlHash.js');
+var _ = require('lodash');
+var mapHtmlTypes = require('./mapHtmltypes');
 
 function DefaultHtmlStepUi(_sequencer, options) {
   
@@ -24,9 +26,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
     step.ui =
       '\
       <div class="container">\
-    <div class="row step">\
+    <div class="row step" style="display:flex">\
     <form class="input-form">\
-    <div class="col-md-4 details">\
+    <div class="col-md-4 details" style="flex:1">\
     <h3>\
     <span class = "toggle">' +step.name + ' <i class="fa fa-caret-up toggleIcon" aria-hidden="true"></i></span>' +
     '<span class="load-spin" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></span>' +
@@ -35,9 +37,11 @@ function DefaultHtmlStepUi(_sequencer, options) {
       '</i></p></div>\
     </div>\
     </form>\
-    <div class="col-md-8 cal">\
-    <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
-    <a><img alt="" style="max-width=100%" class="img-thumbnail step-thumbnail"/></a>\
+    <div class="col-md-8 cal step-column">\
+      <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
+      <div class="step-image">\
+        <a><img alt="" class="img-thumbnail step-thumbnail"/></a>\
+      </div>\
     </div>\
     </div>\
     </div>\
@@ -49,7 +53,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       <i class="fa fa-trash"></i>\
     </button>\
     <button class="btn insert-step" style="margin-left:10px;border-radius:6px;background-color:#fff;border:solid #bababa 1.1px;" >\
-      <span class="insert-text"><i class="fa fa-plus"></i> Add</span><span class="no-insert-text" style="display:none;"><i class="fa fa-times" aria-hidden="true"></i> Close</span>\
+      <span class="insert-text"><i class="fa fa-plus"></i> Add</span><span class="no-insert-text" style="display:none;"><i class="fa fa-times" aria-hidden="true"></i> Close The Box</span>\
     </button>\
     </div>\
     </div>';
@@ -70,7 +74,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       for (var paramName in merged) {
         var isInput = inputs.hasOwnProperty(paramName);
         var html = "";
-        var inputDesc = isInput ? inputs[paramName] : {};
+        var inputDesc = isInput ? mapHtmlTypes(inputs[paramName]) : {};
         if (!isInput) {
           html += '<span class="output"></span>';
         } else if (inputDesc.type.toLowerCase() == "select") {
@@ -98,7 +102,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
               '"max="' +
               inputDesc.max +
               '"step="' +
-              inputDesc.step + '">' + '<span>' + paramVal + '</span>';
+              (inputDesc.step ? inputDesc.step : 1)+ '">' + '<span>' + paramVal + '</span>';
 
           }
           else html += '">';
@@ -139,7 +143,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $(step.ui.querySelectorAll(".insert-step")).on('click', function() { util.insertStep(step.ID) });
 
       // Insert the step's UI in the right place
-      if (stepOptions.index == _sequencer.images.image1.steps.length) {
+      if (stepOptions.index == _sequencer.steps.length) {
         stepsEl.appendChild(step.ui);
         $("#steps .container:nth-last-child(1) .insert-step").prop('disabled',true);
         if($("#steps .container:nth-last-child(2)"))
@@ -156,6 +160,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $(step.ui.querySelectorAll(".cal")).toggleClass("collapse");
     });
     
+    $(step.imgElement).on("mousemove", _.debounce(() => imageHover(step), 150));
 
     function saveOptions(e) {
       e.preventDefault();
@@ -171,8 +176,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         _sequencer.run({ index: step.index - 1 });
 
         // modify the url hash
-        urlHash.setUrlHashParameter("steps", _sequencer.toString());
-
+        urlHash.setUrlHashParameter("steps", _sequencer.toString())
         // disable the save button
         $(step.ui.querySelector('.btn-save')).prop('disabled', true);
         optionsChanged = false;
@@ -232,11 +236,11 @@ function DefaultHtmlStepUi(_sequencer, options) {
     $(step.ui.querySelector("img")).show();
     $(step.ui.querySelector(".load-spin")).hide();
 
-    step.imgElement.src = step.output;
+    step.imgElement.src = (step.name == "load-image") ? step.output.src : step.output;
     var imgthumbnail = step.ui.querySelector(".img-thumbnail");
     for (let index = 0; index < step.linkElements.length; index++) {
       if (step.linkElements[index].contains(imgthumbnail))
-        step.linkElements[index].href = step.output;
+        step.linkElements[index].href = step.imgElement.src;
     }
 
     // TODO: use a generalized version of this
@@ -245,7 +249,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
     }
 
     for (let index = 0; index < step.linkElements.length; index++) {
-      step.linkElements[index].download = step.name + "." + fileExtension(step.output);
+
+      step.linkElements[index].download = step.name + "." + fileExtension(step.imgElement.src);
       step.linkElements[index].target = "_blank";
     }
 
@@ -273,10 +278,29 @@ function DefaultHtmlStepUi(_sequencer, options) {
     }
   }
 
+  function imageHover(step){
+
+    var img = $(step.imgElement);
+
+    img.mousemove(function(e) { 
+      var canvas = document.createElement('canvas');
+      canvas.width = img.width();
+      canvas.height = img.height();
+      var context = canvas.getContext('2d');
+      context.drawImage(this,0,0);
+
+      var offset = $(this).offset();
+      var xPos = e.pageX - offset.left;
+      var yPos = e.pageY - offset.top;
+      var myData = context.getImageData(xPos, yPos, 1, 1);
+      img[0].title = "rgb: " +myData.data[0]+","+ myData.data[1]+","+myData.data[2];//+ rgbdata;
+    }); 
+  }
+
   function onRemove(step) {
     step.ui.remove();
     $("#steps .container:nth-last-child(1) .insert-step").prop('disabled',true);
-    $('div[class^=imgareaselect-]').remove();
+    $('div[class*=imgareaselect-]').remove();
   }
 
   function getPreview() {
@@ -302,7 +326,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
     onComplete: onComplete,
     onRemove: onRemove,
     onDraw: onDraw, 
-    notify: notify
+    notify: notify,
+    imageHover: imageHover
   }
 }
 

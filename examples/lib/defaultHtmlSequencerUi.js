@@ -57,7 +57,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     }
     _sequencer
       .addSteps(newStepName, options)
-      .run({ index: _sequencer.images.image1.steps.length - sequenceLength - 1 });
+      .run({ index: _sequencer.steps.length - sequenceLength - 1 });
       $(addStepSel + " .info").html("Select a new module to add to your sequence.");
       $(addStepSel + " select").val("none");
 
@@ -65,11 +65,11 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     handleSaveSequence();
 
     // add to URL hash too
-    urlHash.setUrlHashParameter("steps", _sequencer.toString());
+    urlHash.setUrlHashParameter("steps", _sequencer.toString())
   }
 
   function handleSaveSequence(){
-    var stepCount=sequencer.images.image1.steps.length;
+    var stepCount=sequencer.steps.length;
     if(stepCount<2)
     $(" #save-seq").prop("disabled", true);
     else

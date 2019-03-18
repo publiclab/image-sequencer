@@ -5,11 +5,18 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
   function stepUI() {
     return '<div class="row insertDiv collapse">\
         <div class="col-md-6 col-md-offset-2" style="margin-top:5%">\
+	<button class="btn btn-primary close-insert-box"><i class="fa fa-times" aria-hidden="true"> Close</button>\
         <section id="insertStep" class="panel panel-primary">\
           <div class="form-inline">\
             <div class="panel-body">\
               <p class="info">Select a new module to add to your sequence.</p>\
               <div class="row center-align radio-group">\
+              <div>\
+              <div class="radio" data-value="resize">\
+              <i class="fa fa-arrows-alt fa-4x i-over"></i>\
+            </div>\
+                <p>Resize</p>\
+                </div>\
                 <div>\
                 <div class="radio" data-value="brightness">\
                 <i class="fa fa-sun-o fa-4x i-over"></i>\
@@ -75,6 +82,8 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
         $(step.ui.querySelector('.no-insert-text')).fadeToggle(200, function(){$(step.ui.querySelector('.insert-text')).fadeToggle(200, callback)})
       }
     }
+
+    $(step.ui.querySelector('.close-insert-box')).on('click', toggleDiv);
 
     if ($(step.ui.querySelector('.insertDiv')).length > 0){
       toggleDiv();

@@ -10,6 +10,12 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
             <div class="panel-body">\
               <p class="info">Select a new module to add to your sequence.</p>\
               <div class="row center-align radio-group">\
+              <div>\
+              <div class="radio" data-value="resize">\
+              <i class="fa fa-arrows-alt fa-4x i-over"></i>\
+            </div>\
+                <p>Resize</p>\
+                </div>\
                 <div>\
                 <div class="radio" data-value="brightness">\
                 <i class="fa fa-sun-o fa-4x i-over"></i>\

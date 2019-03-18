@@ -1,5 +1,5 @@
 module.exports = exports = function(pixels, blur) {
-    let kernel = kernelGenerator(blur, 1), oldpix = pixels;
+    let kernel = kernelGenerator(blur, 1), oldpix = require('lodash').cloneDeep(pixels);
     kernel = flipKernel(kernel);
 
     for (let i = 0; i < pixels.shape[0]; i++) {

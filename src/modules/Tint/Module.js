@@ -1,37 +1,32 @@
-module.exports = function Tint(options,UI){
+module.exports = function Tint(options, UI) {
+
     var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
 
     var output;
 
-    function draw(input,callback,progressObj){
+    function draw(input, callback, progressObj) {
 
         var color = options.color || defaults.color;
-        color = color.split(" "); 
+        color = color.split(" ");
         var factor = options.factor || defaults.factor;
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
-        /*
-        In this case progress is handled by changepixel internally otherwise progressObj
-        needs to be overriden and used
-        For eg. progressObj = new SomeProgressModule()
-        */
-
         var step = this;
 
-        function changePixel(r, g, b, a){
+        function changePixel(r, g, b, a) {
 
-            r -= (r - color[0])*factor;
-            g -= (g - color[1])*factor;
-            b -= (b - color[2])*factor;
+            r -= (r - color[0]) * factor;
+            g -= (g - color[1]) * factor;
+            b -= (b - color[2]) * factor;
             return [r, g, b, a]
         }
 
-        function output(image,datauri,mimetype){
+        function output(image, datauri, mimetype) {
 
             // This output is accessible by Image Sequencer
-            step.output = {src:datauri,format:mimetype};
+            step.output = { src: datauri, format: mimetype };
 
         }
 
@@ -47,7 +42,7 @@ module.exports = function Tint(options,UI){
     }
     return {
         options: options,
-        draw:  draw,
+        draw: draw,
         output: output,
         UI: UI
     }

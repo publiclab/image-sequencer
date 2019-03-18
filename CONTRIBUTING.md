@@ -272,16 +272,20 @@ For help integrating, please open an issue.
 IMAGE SEQUENCER supports "meta modules" -- modules made of other modules. The syntax and structure of these meta modules is very similar to standard modules. Sequencer can also genarate meta modules dynamically with the function `createMetaModule` which can be called in the following ways
 
 ```js
-// stepsString is a stringified sequence
-sequencer.createMetaModule(stepsString,info)
 
-/* stepsArray is the array of objects in this format
-* [
-*   {name: "moduleName",options: {}},
-*   {name: "moduleName",options: {}}
-* ]
+/* Mapping function is a function which gets the inputs of the module as argument
+*  and returns an array with steps mapped to their options
+*  See https://github.com/publiclab/image-sequencer/blob/main/src/modules/Colorbar/Module.js for example
 */
-sequencer.createMetaModule(stepsArray,info)
+
+/* Module options is an object with the following keys
+*  infoJson: the info.json object for the module
+*/
+sequencer.createMetaModule(mappingFunction,moduleOptions)
+
+/* createMetaModule returns an array of module function and info just like normal
+*  modules. These can also be loaded into sequencer dynamically like other modules
+*/
 ```
 
 A Meta module can also be contributed like a normal module with an info and a Module.js. A basic Meta module shall follow the following format
@@ -289,12 +293,17 @@ A Meta module can also be contributed like a normal module with an info and a Mo
 
 ```js
 // Module.js
-module.exports = function metaModuleFun(){
-  this.expandSteps([
-    { 'name': 'module-name', 'options': {} },
-    { 'name': 'module-name', options: {} }
-    ]);
-}
+  module.exports = require('../../util/createMetaModule.js')(
+    function mapFunction(options) {
+
+        return [
+            { 'name': 'module-name', 'options': {} },
+            { 'name': 'module-name', 'options': {} },
+        ];
+    }, {
+        infoJson: require('./info.json')
+    }
+)[0];
 ```
 
 ```json
@@ -302,7 +311,8 @@ module.exports = function metaModuleFun(){
 {
   "name": "meta-moduleName",
   "description": "",
-  "length": //Integer representing number of steps in the metaModule
+  "inputs": {
+  }
 }
 ```
 
@@ -317,19 +327,22 @@ module.exports = [
 All of the above can also be combined together to form a single file module.
 
 ```js
+
 // MetaModule.js
-module.export = [
-  function (){
-  this.expandSteps([
-    { 'name': 'module-name', 'options': {} },
-    { 'name': 'module-name', options: {} }
-    ]);
-  },
-  {
-  "name": "meta-moduleName",
-  "description": "",
-  "length": //Integer representing number of steps in the metaModule
-  }
-]
+module.exports =
+  sequencer.createMetaModule(
+    function mapFunction(options) {
+
+        return [
+            { 'name': 'module-name', 'options': {} },
+            { 'name': 'module-name', 'options': {} },
+        ];
+    }, {
+        infoJson: {
+            "name": "meta-moduleName",
+            "description": "",
+            "inputs": {
+            }
+        }
+    });
 ```
-The length is absolutely required for a meta-module, since sequencer is optimized to re-run minimum number of steps when a step is added in the UI which is 1 in the case of normal modules, if the added step is a meta-module the length of the sequence governs the number of steps to re-run.

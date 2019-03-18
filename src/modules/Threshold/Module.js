@@ -6,7 +6,7 @@ module.exports = function ImageThreshold(options, UI) {
   var output;
 
   function draw(input, callback, progressObj) {
-   
+
     progressObj.stop(true);
     progressObj.overrideFlag = true;
 
@@ -16,13 +16,13 @@ module.exports = function ImageThreshold(options, UI) {
       let pixVal = Math.round((r + g + b) / 3);
       hist[pixVal]++;
       return [r, g, b, a];
-  }
+    }
 
     function extraManipulation(pixels) {
       pixels = require('./Threshold')(pixels, options, hist)
       return pixels
     }
-    function output(image,  datauri, mimetype){
+    function output(image, datauri, mimetype) {
       // This output is accessible by Image Sequencer
       step.output = { src: datauri, format: mimetype };
     }
@@ -33,12 +33,12 @@ module.exports = function ImageThreshold(options, UI) {
       format: input.format,
       image: options.image,
       callback: callback
-  });
-}
-return {
-  options: options,
-  draw: draw,
-  output: output,
-  UI: UI
-}
+    });
+  }
+  return {
+    options: options,
+    draw: draw,
+    output: output,
+    UI: UI
+  }
 }

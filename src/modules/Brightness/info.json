@@ -3,13 +3,12 @@
   "description": "Change the brightness of the image by given percent value",
   "inputs": {
       "brightness": {
-          "type": "range",
+          "type": "integer",
           "desc": "% brightness for the new image",
           "default": "175",
           "min": "0",
-          "max": "200",
-          "step": "1"
+          "max": "200"
       }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#brightness-module"
 }

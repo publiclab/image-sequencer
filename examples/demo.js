@@ -186,19 +186,27 @@ window.onload = function() {
     takePhotoSelector: "#take-photo",
     onLoad: function onFileReaderLoad(progress) {
       var reader = progress.target;
-      var step = sequencer.images.image1.steps[0];
+      var step = sequencer.steps[0];
       var util= intermediateHtmlStepUi(sequencer);
       step.output.src = reader.result;
       sequencer.run({ index: 0 });
-      step.options.step.imgElement.src = reader.result;
+      if(typeof step.options !=="undefined")
+        step.options.step.imgElement.src = reader.result;
+      else
+        step.imgElement.src = reader.result;
       insertPreview.updatePreviews(reader.result,'addStep');
-      insertPreview.updatePreviews(sequencer.images.image1.steps[0].options.step.imgElement.src,'insertStep');
+      insertPreview.updatePreviews(sequencer.steps[0].imgElement.src,'insertStep');
     },
     onTakePhoto: function (url) {
-      var step = sequencer.images.image1.steps[0];
+      var step = sequencer.steps[0];
       step.output.src = url;
       sequencer.run({ index: 0 });
-      step.options.step.imgElement.src = url;
+      if(typeof step.options !=="undefined")
+        step.options.step.imgElement.src = url;
+      else
+        step.imgElement.src = url;
+      insertPreview.updatePreviews(url,'addStep');
+      insertPreview.updatePreviews(sequencer.steps[0].imgElement.src,'insertStep');
     }
   });
 

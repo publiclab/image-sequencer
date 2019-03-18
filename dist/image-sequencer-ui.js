@@ -187,19 +187,27 @@ window.onload = function() {
     takePhotoSelector: "#take-photo",
     onLoad: function onFileReaderLoad(progress) {
       var reader = progress.target;
-      var step = sequencer.images.image1.steps[0];
+      var step = sequencer.steps[0];
       var util= intermediateHtmlStepUi(sequencer);
       step.output.src = reader.result;
       sequencer.run({ index: 0 });
-      step.options.step.imgElement.src = reader.result;
+      if(typeof step.options !=="undefined")
+        step.options.step.imgElement.src = reader.result;
+      else
+        step.imgElement.src = reader.result;
       insertPreview.updatePreviews(reader.result,'addStep');
-      insertPreview.updatePreviews(sequencer.images.image1.steps[0].options.step.imgElement.src,'insertStep');
+      insertPreview.updatePreviews(sequencer.steps[0].imgElement.src,'insertStep');
     },
     onTakePhoto: function (url) {
-      var step = sequencer.images.image1.steps[0];
+      var step = sequencer.steps[0];
       step.output.src = url;
       sequencer.run({ index: 0 });
-      step.options.step.imgElement.src = url;
+      if(typeof step.options !=="undefined")
+        step.options.step.imgElement.src = url;
+      else
+        step.imgElement.src = url;
+      insertPreview.updatePreviews(url,'addStep');
+      insertPreview.updatePreviews(sequencer.steps[0].imgElement.src,'insertStep');
     }
   });
 
@@ -311,7 +319,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     }
     _sequencer
       .addSteps(newStepName, options)
-      .run({ index: _sequencer.images.image1.steps.length - sequenceLength - 1 });
+      .run({ index: _sequencer.steps.length - sequenceLength - 1 });
       $(addStepSel + " .info").html("Select a new module to add to your sequence.");
       $(addStepSel + " select").val("none");
 
@@ -319,11 +327,11 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     handleSaveSequence();
 
     // add to URL hash too
-    urlHash.setUrlHashParameter("steps", _sequencer.toString());
+    urlHash.setUrlHashParameter("steps", _sequencer.toString())
   }
 
   function handleSaveSequence(){
-    var stepCount=sequencer.images.image1.steps.length;
+    var stepCount=sequencer.steps.length;
     if(stepCount<2)
     $(" #save-seq").prop("disabled", true);
     else
@@ -371,9 +379,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
     step.ui =
       '\
       <div class="container">\
-    <div class="row step">\
+    <div class="row step" style="display:flex">\
     <form class="input-form">\
-    <div class="col-md-4 details">\
+    <div class="col-md-4 details" style="flex:1">\
     <h3>\
     <span class = "toggle">' +step.name + ' <i class="fa fa-caret-up toggleIcon" aria-hidden="true"></i></span>' +
     '<span class="load-spin" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></span>' +
@@ -382,9 +390,11 @@ function DefaultHtmlStepUi(_sequencer, options) {
       '</i></p></div>\
     </div>\
     </form>\
-    <div class="col-md-8 cal">\
-    <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
-    <a><img alt="" style="max-width=100%" class="img-thumbnail step-thumbnail"/></a>\
+    <div class="col-md-8 cal step-column">\
+      <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
+      <div class="step-image">\
+        <a><img alt="" class="img-thumbnail step-thumbnail"/></a>\
+      </div>\
     </div>\
     </div>\
     </div>\
@@ -486,7 +496,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $(step.ui.querySelectorAll(".insert-step")).on('click', function() { util.insertStep(step.ID) });
 
       // Insert the step's UI in the right place
-      if (stepOptions.index == _sequencer.images.image1.steps.length) {
+      if (stepOptions.index == _sequencer.steps.length) {
         stepsEl.appendChild(step.ui);
         $("#steps .container:nth-last-child(1) .insert-step").prop('disabled',true);
         if($("#steps .container:nth-last-child(2)"))
@@ -519,8 +529,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         _sequencer.run({ index: step.index - 1 });
 
         // modify the url hash
-        urlHash.setUrlHashParameter("steps", _sequencer.toString());
-
+        urlHash.setUrlHashParameter("steps", _sequencer.toString())
         // disable the save button
         $(step.ui.querySelector('.btn-save')).prop('disabled', true);
         optionsChanged = false;
@@ -580,11 +589,11 @@ function DefaultHtmlStepUi(_sequencer, options) {
     $(step.ui.querySelector("img")).show();
     $(step.ui.querySelector(".load-spin")).hide();
 
-    step.imgElement.src = step.output;
+    step.imgElement.src = (step.name == "load-image") ? step.output.src : step.output;
     var imgthumbnail = step.ui.querySelector(".img-thumbnail");
     for (let index = 0; index < step.linkElements.length; index++) {
       if (step.linkElements[index].contains(imgthumbnail))
-        step.linkElements[index].href = step.output;
+        step.linkElements[index].href = step.imgElement.src;
     }
 
     // TODO: use a generalized version of this
@@ -593,7 +602,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
     }
 
     for (let index = 0; index < step.linkElements.length; index++) {
-      step.linkElements[index].download = step.name + "." + fileExtension(step.output);
+
+      step.linkElements[index].download = step.name + "." + fileExtension(step.imgElement.src);
       step.linkElements[index].target = "_blank";
     }
 
@@ -702,7 +712,6 @@ function generatePreview(previewStepName, customValues, path, selector) {
     }
 
     function loadPreview() {
-      previewSequencer = previewSequencer.addSteps('resize', { resize: "40%" });
       if (previewStepName === "crop") {
         previewSequencer.addSteps(previewStepName, customValues).run(insertPreview);
       }
@@ -718,8 +727,8 @@ function generatePreview(previewStepName, customValues, path, selector) {
 
     var previewSequencerSteps = {
       "resize": "125%",
-      "brightness": "20",
-      "saturation": "5",
+      "brightness": "175",
+      "saturation": "0.5",
       "rotate": 90,
       "contrast": 90,
       "crop": {
@@ -740,6 +749,7 @@ module.exports = {
   generatePreview : generatePreview,
   updatePreviews : updatePreviews
 }
+
 },{}],6:[function(require,module,exports){
 var urlHash = require('./urlHash.js'),
     insertPreview = require('./insertPreview.js');

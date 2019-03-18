@@ -6,7 +6,7 @@ var red = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQ
 
 test('Dynamically add a test Module', function(t) {
   sequencer.loadNewModule('test', { func: require('./testModule/Module'), info: require('./testModule/info') });
-  sequencer.loadImages('image1', red);
+  sequencer.loadImages(red);
   t.deepEqual(sequencer.modules['test'], [
     require('./testModule/Module'),
     require('./testModule/info')

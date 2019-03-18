@@ -10,17 +10,17 @@ var red = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAA
 var benchmark= 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAklEQVR4AewaftIAAAApSURBVKXBAQEAAAiAIPP/5+qDMPsIJJJIIokkkkgiiSSSSCKJJJJIogNrygQcXEYsHQAAAABJRU5ErkJggg==';
 // Test 1 to check brightness module is getting loaded
 test('Load add QR module', function(t) {
-    sequencer1.loadImages('image1', red);
+    sequencer1.loadImages(red);
     sequencer1.addSteps('add-qr', options);
-    t.equal(sequencer1.images.image1.steps[1].options.name, "add-qr", "Add-QR module is getting loaded.");
+    t.equal(sequencer1.steps[1].options.name, "add-qr", "Add-QR module is getting loaded.");
     t.end();
 });
 
 // Test 2 to check options are correct
 test('Check Options', function(t) {
-    sequencer1.loadImages('image1', red);
+    sequencer1.loadImages(red);
     sequencer1.addSteps('add-qr', options);
-    t.equal(sequencer1.images.image1.steps[1].options.size, 200, "Options are correct");
+    t.equal(sequencer1.steps[1].options.size, 200, "Options are correct");
     t.end();
 });
 
@@ -28,7 +28,7 @@ test('Check Options', function(t) {
 // Test 3 to check Add QR module works as expected
 test('Add QR module works correctly', function(t) {
     sequencer1.run( function(out) {
-      var result = sequencer1.images.image1.steps[1].output.src
+      var result = sequencer1.steps[1].output.src
       base64Img.imgSync(result, target, 'result')
       base64Img.imgSync(benchmark, target, 'benchmark')
       result = 'test_outputs/result.png'

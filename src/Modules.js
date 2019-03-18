@@ -29,6 +29,7 @@ module.exports = {
   'ndvi-colormap': require('./modules/NdviColormap'),
   'paint-bucket': require('./modules/PaintBucket'),
   'overlay': require('./modules/Overlay'),
+  'replace-color':require('./modules/ReplaceColor'),
   'resize': require('./modules/Resize'),
   'rotate': require('./modules/Rotate'),
   'saturation': require('./modules/Saturation'),

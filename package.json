@@ -70,7 +70,7 @@
     "tape-run": "^5.0.0",
     "uglify-es": "^3.3.7"
   },
-  "homepage": "https://github.com/publiclab/image-sequencer",
+  "homepage": "https://sequencer.publiclab.org",
   "bin": {
     "sequencer": "./index.js"
   }

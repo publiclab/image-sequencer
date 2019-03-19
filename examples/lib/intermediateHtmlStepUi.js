@@ -1,4 +1,6 @@
-var urlHash = require('./urlHash.js');
+var urlHash = require('./urlHash.js'),
+    insertPreview = require('./insertPreview.js');
+
 function IntermediateHtmlStepUi(_sequencer, step, options) {
   function stepUI() {
     return '<div class="row insertDiv">\
@@ -8,6 +10,12 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
             <div class="panel-body">\
               <p class="info">Select a new module to add to your sequence.</p>\
               <div class="row center-align radio-group">\
+              <div>\
+              <div class="radio" data-value="resize">\
+              <i class="fa fa-arrows-alt fa-4x i-over"></i>\
+            </div>\
+                <p>Resize</p>\
+                </div>\
                 <div>\
                 <div class="radio" data-value="brightness">\
                 <i class="fa fa-sun-o fa-4x i-over"></i>\
@@ -68,7 +76,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       .insertAdjacentElement('afterend',
         addStepUI
       );
-      updatePreviews(step.output,'insertStep');
+    insertPreview.updatePreviews(step.output,'insertStep');
     var insertStepSelect = $("#insertStep select");
     insertStepSelect.html("");
     // Add modules to the insertStep dropdown
@@ -78,7 +86,9 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
           '<option value="' + m + '">' + modulesInfo[m].name + "</option>"
         );
     }
-
+    $('#insertStep #add-step-btn').selectize({
+      sortField: 'text'
+    });
     $('#insertStep #add-step-btn').prop('disabled', true);
 
     insertStepSelect.append('<option value="none" disabled selected>More modules...</option>');

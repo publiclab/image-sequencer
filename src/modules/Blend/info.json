@@ -8,10 +8,10 @@
       "default": -2
     },
     "blend": {
-      "type": "input",
+      "type": "string",
       "desc": "Function to use to blend the two images.",
       "default": "function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] }"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#blend-module"
 }

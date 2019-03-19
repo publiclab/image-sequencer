@@ -26,17 +26,18 @@
   <script src="../node_modules/downloadjs/download.min.js" type="text/javascript"/>
 
   <script src="lib/scrollToTop.js"></script>
-
+  <script src="../node_modules/selectize/dist/js/standalone/selectize.min.js"></script>
 </head>
 
 
 <body>
 
   <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="demo.css">
   <link href="../node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-
+  <link href="../node_modules/selectize/dist/css/selectize.default.css" rel="stylesheet">
   <!-- for crop module: -->
-  <link href="../node_modules/imgareaselect/distfiles/css/imgareaselect-default.css" rel="stylesheet">
+  <link href="./selectize.default.css" rel="stylesheet">
   <link rel="stylesheet" href="demo.css">
 
   <div class="container-fluid">
@@ -124,7 +125,7 @@
             </div>
           </div>
           <div class="center-align">
-            <select class="form-control input-lg" id="selectStep">
+            <select  id="selectStep" >
               <!-- The default null selection has been appended manually in demo.js
               This is because the options in select are overritten when options are appended.-->
             </select>

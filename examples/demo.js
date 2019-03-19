@@ -24,6 +24,9 @@ window.onload = function() {
     }
     // Null option
     addStepSelect.append('<option value="none" disabled selected>More modules...</option>');
+    addStepSelect.selectize({
+      sortField: 'text'
+  });
   }
   refreshOptions();
 

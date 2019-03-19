@@ -25,6 +25,9 @@ window.onload = function() {
     }
     // Null option
     addStepSelect.append('<option value="none" disabled selected>More modules...</option>');
+    addStepSelect.selectize({
+      sortField: 'text'
+  });
   }
   refreshOptions();
 
@@ -270,8 +273,8 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
 
   function onLoad() {
     importStepsFromUrlHash();
-    if (!$('#selectStep').val())
-      $(addStepSel + " #add-step-btn").prop("disabled", true);
+    if ($('#selectStep').val()==='none')
+        $(addStepSel + " #add-step-btn").prop("disabled", true);
       handleSaveSequence();
   }
 
@@ -839,7 +842,9 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
           '<option value="' + m + '">' + modulesInfo[m].name + "</option>"
         );
     }
-
+    $('#insertStep #add-step-btn').selectize({
+      sortField: 'text'
+    });
     $('#insertStep #add-step-btn').prop('disabled', true);
 
     insertStepSelect.append('<option value="none" disabled selected>More modules...</option>');

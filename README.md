@@ -1,7 +1,11 @@
 Image Sequencer
 ====
 
+
 [![Build Status](https://travis-ci.org/publiclab/image-sequencer.svg?branch=master)](https://travis-ci.org/publiclab/image-sequencer)
+
+**Latest Stable Demo**: https://sequencer.publiclab.org
+**Latest Beta Demo**: https://beta.sequencer.publiclab.org
 
 ## Why
 

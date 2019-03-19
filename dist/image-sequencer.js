@@ -71408,12 +71408,12 @@ module.exports={
 
 module.exports = function Exposure(options,UI){
 
-
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
     var output;
 
     function draw(input,callback,progressObj){
 
-        options.exposure = parseInt(options.exposure) || 0;
+        options.exposure = options.exposure || defaults.exposure
         var exposure = Math.pow(2, options.exposure);
         progressObj.stop(true);
         progressObj.overrideFlag = true;
@@ -71453,7 +71453,7 @@ module.exports = function Exposure(options,UI){
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":309}],250:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":309,"./../../util/getDefaults.js":316,"./info.json":251}],250:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":249,"./info.json":251,"dup":193}],251:[function(require,module,exports){
 module.exports={
@@ -71461,12 +71461,12 @@ module.exports={
   "description": "Change the exposure of the image by given exposure value",
   "inputs": {
       "exposure": {
-          "type": "range",
+          "type": "float",
           "desc": "exposure value for the new image",
-          "default": "0",
-          "min": "-3",
-          "max": "4",
-          "step": "0.05"
+          "default": 1,
+          "min": -3,
+          "max": 4,
+          "step": 0.05
       }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"

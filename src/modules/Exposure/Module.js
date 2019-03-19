@@ -4,12 +4,12 @@
 
 module.exports = function Exposure(options,UI){
 
-
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
     var output;
 
     function draw(input,callback,progressObj){
 
-        options.exposure = parseInt(options.exposure) || 0;
+        options.exposure = options.exposure || defaults.exposure
         var exposure = Math.pow(2, options.exposure);
         progressObj.stop(true);
         progressObj.overrideFlag = true;

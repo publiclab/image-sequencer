@@ -14,4 +14,4 @@ If tests do fail, click on the red `X` to learn why by reading the logs.
 Please be sure you've reviewed our contribution guidelines at https://publiclab.org/contributing-to-public-lab-software
 
 Thanks!
-@publiclab/is-reviewers please review my pr.
+@publiclab/is-reviewers please review my PR :smile:.

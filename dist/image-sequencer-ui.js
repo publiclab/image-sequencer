@@ -80,8 +80,8 @@ window.onload = function() {
     newStep = $(this).attr('data-value');
     //$("#addStep option[value=" + newStep + "]").attr('selected', 'selected');
     $("#addStep select").val(newStep);
-    ui.selectNewStepUi();
-    ui.addStepUi();
+    ui.selectNewStepUi(newStep);
+    ui.addStepUi(newStep);
     $(this).removeClass('selected');
   });
 
@@ -291,6 +291,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
 
   function selectNewStepUi() {
     var m = $(addStepSel + " select").val();
+    if(!m) m = arguments[0];
     $(addStepSel + " .info").html(_sequencer.modulesInfo(m).description);
     $(addStepSel + " #add-step-btn").prop("disabled", false);
   }
@@ -308,6 +309,8 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     if ($(addStepSel + " select").val() == "none") return;
 
     var newStepName = $(addStepSel + " select").val();
+  
+    if(!newStepName) newStepName = arguments[0]
 
     /*
     * after adding the step we run the sequencer from defined step
@@ -382,9 +385,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
     step.ui =
       '\
       <div class="container">\
-    <div class="row step" style="display:flex">\
+    <div class="row step">\
     <form class="input-form">\
-    <div class="col-md-4 details" style="flex:1">\
+    <div class="col-md-4 details">\
     <h3>\
     <span class = "toggle">' +step.name + ' <i class="fa fa-caret-up toggleIcon" aria-hidden="true"></i></span>' +
     '<span class="load-spin" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></span>' +
@@ -513,7 +516,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     }
     $(step.ui.querySelector(".toggle")).on("click", () => {
       $(step.ui.querySelector('.toggleIcon')).toggleClass('fa-caret-up').toggleClass('fa-caret-down');
-      $(step.ui.querySelectorAll(".cal")).collapse('toggle');
+       $(step.ui.querySelectorAll(".cal")).collapse('toggle');
     });
     
     $(step.imgElement).on("mousemove", _.debounce(() => imageHover(step), 150));

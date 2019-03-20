@@ -11,7 +11,7 @@ newIssueWelcomeComment: |
 # Comment to be posted to on PRs from first time contributors in your repository
 newPRWelcomeComment: |
  Thanks for opening this pull request!
- There may be some errors, **but don't worry!** @publiclab/is-reviewers is here to help you 👍🎉😄
+ There may be some errors, **but don't worry!** @publiclab/is-reviewers will be here to help! 👍🎉😄
 # Configuration for first-pr-merge - https://github.com/behaviorbot/first-pr-merge
 
 # Comment to be posted to on pull requests merged by a first time user

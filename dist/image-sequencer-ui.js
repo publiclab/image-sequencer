@@ -382,9 +382,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
     step.ui =
       '\
       <div class="container">\
-    <div class="row step" style="display:flex">\
+    <div class="row step">\
     <form class="input-form">\
-    <div class="col-md-4 details" style="flex:1">\
+    <div class="col-md-4 details">\
     <h3>\
     <span class = "toggle">' +step.name + ' <i class="fa fa-caret-up toggleIcon" aria-hidden="true"></i></span>' +
     '<span class="load-spin" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></span>' +
@@ -513,7 +513,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     }
     $(step.ui.querySelector(".toggle")).on("click", () => {
       $(step.ui.querySelector('.toggleIcon')).toggleClass('fa-caret-up').toggleClass('fa-caret-down');
-      $(step.ui.querySelectorAll(".cal")).collapse('toggle');
+       $(step.ui.querySelectorAll(".cal")).collapse('toggle');
     });
     
     $(step.imgElement).on("mousemove", _.debounce(() => imageHover(step), 150));

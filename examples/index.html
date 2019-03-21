@@ -26,17 +26,18 @@
   <script src="../node_modules/downloadjs/download.min.js" type="text/javascript"/></script>
 
   <script src="lib/scrollToTop.js"></script>
-
+  <script src="../node_modules/selectize/dist/js/standalone/selectize.min.js"></script>
 </head>
 
 
 <body>
 
   <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="demo.css">
   <link href="../node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-
+  <link href="../node_modules/selectize/dist/css/selectize.default.css" rel="stylesheet">
   <!-- for crop module: -->
-  <link href="../node_modules/imgareaselect/distfiles/css/imgareaselect-default.css" rel="stylesheet">
+  <link href="./selectize.default.css" rel="stylesheet">
   <link rel="stylesheet" href="demo.css">
 
   <div class="container-fluid">
@@ -63,7 +64,7 @@
       </p>
       <center>
         <input type="file" id="fileInput" value="" accept="image/*"><br />
-        <button type="button" id="take-photo">Take a Photo</button>
+        <button type="button" id="take-photo" class="btn btn-primary btn-block btn-lg ">Take a Photo</button>
         <video  id="video" width="400" height="300" style="display:none"></video>
         <a href="#" id="capture" style="display:none" class="btn btn-primary btn-md">Click Picture</a>
         <a href="#" id="close" style="display:none" class="btn btn-default btn-md">Close</a>
@@ -124,7 +125,7 @@
             </div>
           </div>
           <div class="center-align">
-            <select class="form-control input-lg" id="selectStep">
+            <select  id="selectStep" >
               <!-- The default null selection has been appended manually in demo.js
               This is because the options in select are overritten when options are appended.-->
             </select>
@@ -199,19 +200,19 @@
       <div class="col-md-6">
         <h2>Need Help?</h2>
         <p>
-          Post a link to this and ask help from other community members on <a href="https://github.com/publiclab/image-sequencer/issues">PublicLab.org</a>
+          Post a link to this and ask help from other community members on <a href="https://github.com/publiclab/image-sequencer/issues/new">Github Issues</a>
         </p>
         <p>
-          <a class="btn btn-primary" href="https://github.com/publiclab/image-sequencer/issues">Ask a question &raquo;</a>
+          <a class="btn btn-primary" href="https://gitter.im/publiclab/publiclab">Ask a question on Gitter</a>
         </p>
       </div>
       <div class="col-md-6">
         <h2>Improve this tool</h2>
         <p>
-          This is an open source toolkit which you can help add to and improve on <a href="https://github.com/">Github</a>
+          This is an open source toolkit which you can help add to and improve on <a href="https://github.com/publiclab/image-sequencer/">Github</a>
         </p>
         <p>
-          <a class="btn btn-default" href="https://github.com/publiclab/image-sequencer">View the code</a>
+          <a class="btn btn-primary" href="https://github.com/publiclab/image-sequencer">View the code &raquo;</a>
         </p>
       </div>
     </div>

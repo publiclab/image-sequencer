@@ -251,3 +251,9 @@ a.name-header{
   text-decoration: none;
   color: #445;
 }
+
+.step-column{
+    display:flex; 
+    align-content: center;
+    justify-content: center;
+}

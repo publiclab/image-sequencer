@@ -34,9 +34,9 @@ test('Image Sequencer has tests', function(t) {
 });
 
 test('loadImages loads a DataURL image and creates a step.', function(t) {
-  sequencer.loadImages('test', red);
-  t.equal(sequencer.images.test.steps.length, 1, "Initial Step Created");
-  t.equal(typeof (sequencer.images.test.steps[0].output.src), "string", "Initial output exists");
+  sequencer.loadImages(red);
+  t.equal(sequencer.steps.length, 1, "Initial Step Created");
+  t.equal(typeof (sequencer.steps[0].output.src), "string", "Initial output exists");
   t.end();
 });
 
@@ -58,8 +58,8 @@ if (!sequencer.options.inBrowser)
       }
       else {
         sequencer.loadImage('URL', 'https://ccpandhare.github.io/image-sequencer/examples/images/red.jpg', function() {
-          t.equal(sequencer.images.URL.steps.length, 1, "Initial Step Created");
-          t.equal(typeof (sequencer.images.URL.steps[0].output.src), "string", "Initial output exists");
+          t.equal(sequencer.steps.length, 1, "Initial Step Created");
+          t.equal(typeof (sequencer.steps[0].output.src), "string", "Initial output exists");
           t.end();
         });
       }
@@ -69,100 +69,67 @@ if (!sequencer.options.inBrowser)
 if (!sequencer.options.inBrowser)
   test('loadImages loads an image from PATH and creates a step. (NodeJS)', function(t) {
     sequencer.loadImages('examples/images/red.jpg');
-    t.equal(sequencer.images.image1.steps.length, 1, "Initial Step Created");
-    t.equal(typeof (sequencer.images.image1.steps[0].output.src), "string", "Initial output exists");
+    t.equal(sequencer.steps.length, 1, "Initial Step Created");
+    t.equal(typeof (sequencer.steps[0].output.src), "string", "Initial output exists");
     t.end();
   });
 
 test('loadImage works too.', function(t) {
-  sequencer.loadImage('test2', red);
-  t.equal(sequencer.images.test2.steps.length, 1, "Initial Step Created");
-  t.equal(typeof (sequencer.images.test2.steps[0].output.src), "string", "Initial output exists");
-  t.end();
-});
-
-test('addSteps("image","name") adds a step', function(t) {
-  sequencer.addSteps('test', 'channel');
-  t.equal(sequencer.images.test.steps.length, 2, "Length of steps increased")
-  t.equal(sequencer.images.test.steps[1].options.name, "channel", "Correct Step Added");
-  t.equal(sequencer.images.test.steps[1].options.description, "Displays only one color channel of an image -- default is green", "Step description shown");
+  sequencer.loadImage(red);
+  t.equal(sequencer.steps.length, 1, "Initial Step Created");
+  t.equal(typeof (sequencer.steps[0].output.src), "string", "Initial output exists");
   t.end();
 });
 
 test('addSteps("name") adds a step', function(t) {
   sequencer.addSteps('channel');
-  t.equal(sequencer.images.test.steps.length, 3, "Length of steps increased");
-  t.equal(sequencer.images.test.steps[2].options.name, "channel", "Correct Step Added");
+  t.equal(sequencer.steps.length, 2, "Length of steps increased");
+  t.equal(sequencer.steps[1].options.name, "channel", "Correct Step Added");
   t.end();
 });
 
 test('addSteps(["name"]) adds a step', function(t) {
   sequencer.addSteps(['channel', 'invert']);
-  t.equal(sequencer.images.test.steps.length, 5, "Length of steps increased by two")
-  t.equal(sequencer.images.test.steps[3].options.name, "channel", "Correct Step Added");
-  t.equal(sequencer.images.test.steps[4].options.name, "invert", "Correct Step Added");
+  t.equal(sequencer.steps.length, 4, "Length of steps increased by two")
+  t.equal(sequencer.steps[2].options.name, "channel", "Correct Step Added");
+  t.equal(sequencer.steps[3].options.name, "invert", "Correct Step Added");
   t.end();
 });
 
 test('addSteps("name",o) adds a step', function(t) {
   sequencer.addSteps('channel', {});
-  t.equal(sequencer.images.test.steps.length, 6, "Length of steps increased");
-  t.equal(sequencer.images.test.steps[5].options.name, "channel", "Correct Step Added");
+  t.equal(sequencer.steps.length, 5, "Length of steps increased");
+  t.equal(sequencer.steps[4].options.name, "channel", "Correct Step Added");
   t.end();
 });
 
-test('addSteps("image","name",o) adds a step', function(t) {
-  sequencer.addSteps('test', 'channel', {});
-  t.equal(sequencer.images.test.steps.length, 7, "Length of steps increased");
-  t.equal(sequencer.images.test.steps[6].options.name, "channel", "Correct Step Added");
+
+test('removeSteps(position) removes a step', function(t) {
+  sequencer.removeSteps( 1);
+  t.equal(sequencer.steps.length, 4, "Length of steps reduced");
   t.end();
 });
 
-test('removeSteps("image",position) removes a step', function(t) {
-  sequencer.removeSteps('test', 1);
-  t.equal(sequencer.images.test.steps.length, 6, "Length of steps reduced");
-  t.end();
-});
-
-test('removeSteps({image: [positions]}) removes steps', function(t) {
-  sequencer.removeSteps('test', [1, 2]);
-  t.equal(sequencer.images.test.steps.length, 4, "Length of steps reduced");
-  t.end();
-});
-
-test('removeSteps(position) removes steps', function(t) {
+test('removeSteps([positions]) removes steps', function(t) {
   sequencer.removeSteps([1, 2]);
-  t.equal(sequencer.images.test.steps.length, 2, "Length of steps reduced");
+  t.equal(sequencer.steps.length, 2, "Length of steps reduced");
   t.end();
 });
 
-test('insertSteps("image",position,"module",options) inserts a step', function(t) {
-  sequencer.insertSteps('test', 1, 'channel', {});
-  t.equal(sequencer.images.test.steps.length, 3, "Length of Steps increased");
-  t.equal(sequencer.images.test.steps[1].options.name, "channel", "Correct Step Inserted");
-  t.end();
-});
-
-test('insertSteps("image",position,"module") inserts a step', function(t) {
-  sequencer.insertSteps('test', 1, 'channel');
-  t.equal(sequencer.images.test.steps.length, 4, "Length of Steps increased");
-  t.equal(sequencer.images.test.steps[1].options.name, "channel", "Correct Step Inserted");
+test('insertSteps(position,"module",options) inserts a step', function(t) {
+  sequencer.insertSteps( 1, 'channel', {});
+  t.equal(sequencer.steps.length, 3, "Length of Steps increased");
+  t.equal(sequencer.steps[1].options.name, "channel", "Correct Step Inserted");
   t.end();
 });
 
 test('insertSteps(position,"module") inserts a step', function(t) {
   sequencer.insertSteps(1, 'channel');
-  t.equal(sequencer.images.test.steps.length, 5, "Length of Steps increased");
-  t.equal(sequencer.images.test.steps[1].options.name, "channel", "Correct Step Inserted");
+  t.equal(sequencer.steps.length, 4, "Length of Steps increased");
+  t.equal(sequencer.steps[1].options.name, "channel", "Correct Step Inserted");
   t.end();
 });
 
-test('insertSteps({image: {index: index, name: "module", o: options} }) inserts a step', function(t) {
-  sequencer.insertSteps({ test: { index: 1, name: 'channel', o: {} } });
-  t.equal(sequencer.images.test.steps.length, 6, "Length of Steps increased");
-  t.equal(sequencer.images.test.steps[1].options.name, "channel", "Correct Step Inserted");
-  t.end();
-});
 
 
 test('getSteps() returns correct array of steps', function(t){
@@ -170,10 +137,10 @@ test('getSteps() returns correct array of steps', function(t){
   sequencer.loadImages('test', red);
   sequencer.addSteps(['blur','invert']);
   var stepsArray = sequencer.getSteps('test');  
-  t.equal(stepsArray.length, sequencer.images.test.steps.length, "getSteps() returns correct length of steps");
+  t.equal(stepsArray.length, sequencer.steps.length, "getSteps() returns correct length of steps");
   var flag=0;
-  for (var i = 0; i<sequencer.images.test.steps.length; i++){
-    if(stepsArray[i].options.name==(sequencer.images.test.steps[i].options.name))
+  for (var i = 0; i<sequencer.steps.length; i++){
+    if(stepsArray[i].options.name==(sequencer.steps[i].options.name))
     continue
     else
     flag=1;
@@ -184,17 +151,17 @@ test('getSteps() returns correct array of steps', function(t){
 
 
 test('run() runs the sequencer and returns output to callback', function(t) {
-  sequencer.run({ mode: 'test' }, function(out) {
-    t.equal(typeof (sequencer.images.test.steps[sequencer.images.test.steps.length - 1].output), "object", "Output is Generated");
-    t.equal(out, sequencer.images.test.steps[sequencer.images.test.steps.length - 1].output.src, "Output callback works");
+  sequencer.run(function(out) {
+    t.equal(typeof (sequencer.steps[sequencer.steps.length - 1].output), "object", "Output is Generated");
+    t.equal(out, sequencer.steps[sequencer.steps.length - 1].output.src, "Output callback works");
     t.end();
   });
 });
 
 
 test('getStep(offset) returns the step at offset distance relative to current step', function(t) {
-  sequencer.addSteps('test', 'invert', {});
-  sequencer.addSteps('test', 'blend', {});
+  sequencer.addSteps('invert', {});
+  sequencer.addSteps('blend', {});
   sequencer.run({ mode: 'test' }, function(out) {
     t.equal(!!out, true, "Blend generates output");
     t.end();
@@ -202,18 +169,18 @@ test('getStep(offset) returns the step at offset distance relative to current st
 });
 
 test('toCliString() returns the CLI command for the sequence', function(t) {
-  t.deepEqual(sequencer.toCliString(), `sequencer -i [PATH] -s "channel channel channel channel channel invert blend" -d '{"channel":"green","offset":-2}'`, "works correctly");
+  t.deepEqual(sequencer.toCliString(), `sequencer -i [PATH] -s "channel channel channel invert blend" -d '{"channel":"green","offset":-2}'`, "works correctly");
   t.end();
 });
 
 test('blend returns different output depending on the set offset', function(t) {
-  sequencer.addSteps('test', 'invert', {});
-  sequencer.addSteps('test', 'invert', {});
-  sequencer.addSteps('test', 'blend', {});
+  sequencer.addSteps('invert', {});
+  sequencer.addSteps('invert', {});
+  sequencer.addSteps('blend', {});
   // because we've added blend before, so instead of -3 we set it to -4
-  sequencer.addSteps('test', 'blend', {'offset': -4});
+  sequencer.addSteps('blend', {'offset': -4});
   sequencer.run({ mode: 'test' }, function(out) {
-    t.notStrictEqual(out, sequencer.images.test.steps[sequencer.images.test.steps.length - 2].output.src, 'different offsets give different output');
+    t.notStrictEqual(out, sequencer.steps[sequencer.steps.length - 2].output.src, 'different offsets give different output');
     t.end();
   });
 });

@@ -36,6 +36,8 @@ todo.txt
 test.js
 output.txt
 output/
+test/
+test/*
 
 examples/
 icons/

@@ -134,9 +134,9 @@
 }
 .selectize-input {
   border: 1px solid #d0d0d0;
-  padding: 10px 0px;
+  padding: 10px 10px;
   display: inline-block;
-  width: 24vw;
+  width: 24px;
   overflow: hidden;
   position: relative;
   z-index: 1;

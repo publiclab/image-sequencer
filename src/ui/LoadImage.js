@@ -14,13 +14,13 @@ function LoadImage(ref, name, src, main_callback) {
       callback(datauri, step);
     }
     else if (!ref.options.inBrowser && !!src.match(/^https?:\/\//i)) {
-      require( src.match(/^(https?):\/\//i)[1] ).get(src,function(res){
+      require(src.match(/^(https?):\/\//i)[1]).get(src, function(res) {
         var data = '';
         var contentType = res.headers['content-type'];
         res.setEncoding('base64');
-        res.on('data',function(chunk) {data += chunk;});
-        res.on('end',function() {
-          callback("data:"+contentType+";base64,"+data, step);
+        res.on('data', function(chunk) { data += chunk; });
+        res.on('end', function() {
+          callback("data:" + contentType + ";base64," + data, step);
         });
       });
     }
@@ -32,10 +32,10 @@ function LoadImage(ref, name, src, main_callback) {
       image.onload = function() {
         canvas.width = image.naturalWidth;
         canvas.height = image.naturalHeight;
-        context.drawImage(image,0,0);
-        datauri = canvas.toDataURL(ext);        
+        context.drawImage(image, 0, 0);
+        datauri = canvas.toDataURL(ext);
         callback(datauri, step);
-      }  
+      }
       image.src = src;
     }
     else {
@@ -52,7 +52,7 @@ function LoadImage(ref, name, src, main_callback) {
       inBrowser: ref.options.inBrowser,
       ui: ref.options.ui,
       UI: ref.events,
-      output : ''
+      output: ''
     };
 
 
@@ -69,7 +69,7 @@ function LoadImage(ref, name, src, main_callback) {
     });
   }
 
-  return loadImage(name,src);
+  return loadImage(name, src);
 }
 
 module.exports = LoadImage;

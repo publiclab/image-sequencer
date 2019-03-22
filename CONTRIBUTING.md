@@ -11,6 +11,7 @@ Most contribution (we imagine) would be in the form of API-compatible modules, w
 * [Contributing Modules](#contributing-modules)
 * [Info File](#info-file)
 * [Ideas](#Contribution-ideas)
+* [Grunt Tasks](#grunt-tasks)
 
 ****
 
@@ -346,3 +347,16 @@ module.exports =
         }
     });
 ```
+
+## Grunt Tasks
+This repository has different grunt tasks for different uses. The source code is in the [Gruntfile](https://github.com/publiclab/image-sequencer/blob/main/Gruntfile.js).
+
+The following command is used for running the tasks: `grunt [task-name]`. Here `[task-name]` should be replaced by the name of the task to be run. To run the default task run `grunt` without any options.
+
+#### Tasks
+1. **compile**: Compiles/Browserifies the dist files in `/dist/image-sequencer.js` and `/dist/image-sequencer-ui.js`.
+2. **build**: Compiles the files as in the **compile** task and minifies/uglifies dist files in `/dist/image-sequencer.min.js` and `/dist/image-sequencer-ui.min.js`.
+3. **watch**: Checks for any changes in the source code and runs the **compile** task if any changes are found.
+4. **serve**: Compiles the dist files as in the **compile** task and starts a local server on `localhost:3000` to host the demo site in `/examples/` directory. Also runs the **watch** task.
+5. **production**: Compiles and minifies dist files in `/dist/image-sequencer.js` and `/dist/image-sequencer-ui.js` without the `.min.js` extension to include minified files in the demo site. This script should only be used in production mode while deploying.
+6. **default**: Runs the **watch** task as default.

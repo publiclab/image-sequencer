@@ -24,6 +24,9 @@ window.onload = function() {
     }
     // Null option
     addStepSelect.append('<option value="none" disabled selected>More modules...</option>');
+    addStepSelect.selectize({
+      sortField: 'text'
+  });
   }
   refreshOptions();
 
@@ -76,8 +79,8 @@ window.onload = function() {
     newStep = $(this).attr('data-value');
     //$("#addStep option[value=" + newStep + "]").attr('selected', 'selected');
     $("#addStep select").val(newStep);
-    ui.selectNewStepUi();
-    ui.addStepUi();
+    ui.selectNewStepUi(newStep);
+    ui.addStepUi(newStep);
     $(this).removeClass('selected');
   });
 

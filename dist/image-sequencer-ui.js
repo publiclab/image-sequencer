@@ -25,6 +25,9 @@ window.onload = function() {
     }
     // Null option
     addStepSelect.append('<option value="none" disabled selected>More modules...</option>');
+    addStepSelect.selectize({
+      sortField: 'text'
+  });
   }
   refreshOptions();
 
@@ -77,8 +80,8 @@ window.onload = function() {
     newStep = $(this).attr('data-value');
     //$("#addStep option[value=" + newStep + "]").attr('selected', 'selected');
     $("#addStep select").val(newStep);
-    ui.selectNewStepUi();
-    ui.addStepUi();
+    ui.selectNewStepUi(newStep);
+    ui.addStepUi(newStep);
     $(this).removeClass('selected');
   });
 
@@ -270,8 +273,8 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
 
   function onLoad() {
     importStepsFromUrlHash();
-    if (!$('#selectStep').val())
-      $(addStepSel + " #add-step-btn").prop("disabled", true);
+    if ($('#selectStep').val()==='none')
+        $(addStepSel + " #add-step-btn").prop("disabled", true);
       handleSaveSequence();
   }
 
@@ -288,6 +291,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
 
   function selectNewStepUi() {
     var m = $(addStepSel + " select").val();
+    if(!m) m = arguments[0];
     $(addStepSel + " .info").html(_sequencer.modulesInfo(m).description);
     $(addStepSel + " #add-step-btn").prop("disabled", false);
   }
@@ -305,6 +309,8 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     if ($(addStepSel + " select").val() == "none") return;
 
     var newStepName = $(addStepSel + " select").val();
+  
+    if(!newStepName) newStepName = arguments[0]
 
     /*
     * after adding the step we run the sequencer from defined step
@@ -379,21 +385,21 @@ function DefaultHtmlStepUi(_sequencer, options) {
     step.ui =
       '\
       <div class="container">\
-    <div class="row step" style="display:flex">\
+    <div class="row step">\
     <form class="input-form">\
-    <div class="col-md-4 details" style="flex:1">\
+    <div class="col-md-4 details">\
     <h3>\
     <span class = "toggle">' +step.name + ' <i class="fa fa-caret-up toggleIcon" aria-hidden="true"></i></span>' +
     '<span class="load-spin" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></span>' +
-    '</h3><div class="cal"><p><i>"'+
+    '</h3><div class="cal collapse in"><p><i>"'+
       (step.description || "") +
       '</i></p></div>\
     </div>\
     </form>\
-    <div class="col-md-8 cal step-column">\
+    <div class="col-md-8 cal collapse in step-column">\
       <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
       <div class="step-image">\
-        <a><img alt="" class="img-thumbnail step-thumbnail"/></a>\
+        <a class="cal collapse in"><img alt="" class="img-thumbnail step-thumbnail"/></a>\
       </div>\
     </div>\
     </div>\
@@ -401,7 +407,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     </div>';
 
     var tools =
-    '<div class="cal"><div class="tools btn-group">\
+    '<div class="cal collapse in"><div class="tools btn-group">\
     <button confirm="Are you sure?" class="remove btn btn btn-default">\
       <i class="fa fa-trash"></i>\
     </button>\
@@ -466,7 +472,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         div.setAttribute("name", paramName);
         var description = inputs[paramName].desc || paramName;
         div.innerHTML =
-          "<div class='det cal'>\
+          "<div class='det cal collapse in'>\
                            <label for='" +
           paramName +
           "'>" +
@@ -480,7 +486,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       }
 
       $(step.ui.querySelector("div.details")).append(
-        '<div class="cal"><p><button type="submit" class="btn btn-default btn-save" disabled = "true" >Apply</button><span> Press apply to see changes</span></p></div>'
+        '<div class="cal collapse in"><p><button type="submit" class="btn btn-default btn-save" disabled = "true" >Apply</button><span> Press apply to see changes</span></p></div>'
       );
 
       
@@ -510,7 +516,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     }
     $(step.ui.querySelector(".toggle")).on("click", () => {
       $(step.ui.querySelector('.toggleIcon')).toggleClass('fa-caret-up').toggleClass('fa-caret-down');
-      $(step.ui.querySelectorAll(".cal")).toggleClass("collapse");
+       $(step.ui.querySelectorAll(".cal")).collapse('toggle');
     });
     
     $(step.imgElement).on("mousemove", _.debounce(() => imageHover(step), 150));
@@ -861,7 +867,9 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
           '<option value="' + m + '">' + modulesInfo[m].name + "</option>"
         );
     }
-
+    $('#insertStep #add-step-btn').selectize({
+      sortField: 'text'
+    });
     $('#insertStep #add-step-btn').prop('disabled', true);
 
     insertStepSelect.append('<option value="none" disabled selected>More modules...</option>');

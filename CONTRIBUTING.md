@@ -372,27 +372,27 @@ The method returns a scoped `jQuery` object which only searches for elements ins
 
 To use the method, 
 * import the `scopeSelector` and `scopeSelectorAll` methods from `lib/scopeQuery.js`
-* call the methods with scope 
+* call the methods with scope as a parameter
 	
 ```js
 var scopeQuery = require('./scopeQuery');
 
 var $step = scopeQuery.scopeSelector(scope),
- 	  $stepAll = scopeQuery.scopeSelectorAll(scope);	
+    $stepAll = scopeQuery.scopeSelectorAll(scope);	
 ```
 This will return an object with a constructor which returns a `jQuery` object (from inside the scope) but with new `elem` and `elemAll` methods.
 
 #### Methods of the Returned Object
-* `elem()`: selects an element inside the scope; 
-* `elemAll()`: selects all the instances of a given element inside the scope;
+* `elem()`: Selects an element inside the scope; 
+* `elemAll()`: Selects all the instances of a given element inside the scope;
 
-Example:
+#### Example
 
 ```js
 //The scope is a div element with id=“container“ and there are three divs in it 
 //with ids „1“, „2“, and „3“, and all of them have a „child“ class attribute
 
-var $step = require('./scopeQuery').scopeSelector(document.getElementById('container');
+var $step = require('./scopeQuery').scopeSelector(document.getElementById('container'));
 
 $step('#1'); // returns the div element with id=“1“
 $step('#1').hide().elemAll('.child').fadeOut(); // abruptly hides the div element with id=“1“ and fades out all other div elements
@@ -402,13 +402,13 @@ These two methods are chainable and will always return elements from inside the 
 
 #### Usage
 
-The method can significantly shorten the UI code. Instead of using
+Instead of using
 
 ```js
 $(step.ui.querySelector('query')).show().hide();
 $(step.ui.querySelectorAll('q2')).show().hide();
 ```
-the following code can be used:
+The following code can be used
 
 ```js
 $step('query').show().hide();

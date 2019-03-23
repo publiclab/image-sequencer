@@ -68951,6 +68951,7 @@ module.exports = {
   'tint': require('./modules/Tint'),
   'white-balance': require('./modules/WhiteBalance')
 }
+
 },{"./modules/AddQR":193,"./modules/Average":196,"./modules/Blend":199,"./modules/Blur":203,"./modules/Brightness":206,"./modules/Channel":209,"./modules/Colorbar":212,"./modules/Colormap":216,"./modules/Contrast":220,"./modules/Convolution":224,"./modules/Crop":229,"./modules/DecodeQr":232,"./modules/Dither":236,"./modules/DrawRectangle":240,"./modules/Dynamic":243,"./modules/EdgeDetect":247,"./modules/Exposure":250,"./modules/FisheyeGl":253,"./modules/FlipImage":257,"./modules/GammaCorrection":260,"./modules/Gradient":263,"./modules/Histogram":266,"./modules/ImportImage":270,"./modules/Ndvi":277,"./modules/NdviColormap":273,"./modules/Overlay":280,"./modules/PaintBucket":284,"./modules/ReplaceColor":288,"./modules/Resize":291,"./modules/Rotate":294,"./modules/Saturation":297,"./modules/Shadow":300,"./modules/Threshold":305,"./modules/Tint":308,"./modules/WhiteBalance":311,"image-sequencer-invert":62}],187:[function(require,module,exports){
 // Uses a given image as input and replaces it with the output.
 // Works only in the browser.
@@ -72828,16 +72829,17 @@ module.exports = function Shadow(options, UI) {
 
         var step = this;
 
+        let defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+        let shadowDimension = options.shadowDimension || defaults.shadowDimension;
+        shadowDimension = shadowDimension.split(" ");
+        var firstValue = shadowDimension[0];
+        var secondValue = shadowDimension[1];
+        console.log(firstValue, secondValue);
+
         const getPixels = require("get-pixels");
 
         getPixels(input.src, function(err, pixels) {
             console.log("nirav");
-            let defaults = require('./../../util/getDefaults.js')(require('./info.json'));
-            let shadowDimension = options.shadowDimension || defaults.shadowDimension;
-            shadowDimension = shadowDimension.split(" ");
-            var firstValue = shadowDimension[0];
-            var secondValue = shadowDimension[1];
-            console.log(firstValue, secondValue);
             if (options.preProcess) pixels = options.preProcess(pixels); // Allow for preprocessing
             var pixelsArray = [];
             var i = 0;

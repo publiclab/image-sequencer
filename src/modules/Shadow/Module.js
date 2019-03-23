@@ -9,16 +9,17 @@ module.exports = function Shadow(options, UI) {
 
         var step = this;
 
+        let defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+        let shadowDimension = options.shadowDimension || defaults.shadowDimension;
+        shadowDimension = shadowDimension.split(" ");
+        var firstValue = shadowDimension[0];
+        var secondValue = shadowDimension[1];
+        console.log(firstValue, secondValue);
+
         const getPixels = require("get-pixels");
 
         getPixels(input.src, function(err, pixels) {
             console.log("nirav");
-            let defaults = require('./../../util/getDefaults.js')(require('./info.json'));
-            let shadowDimension = options.shadowDimension || defaults.shadowDimension;
-            shadowDimension = shadowDimension.split(" ");
-            var firstValue = shadowDimension[0];
-            var secondValue = shadowDimension[1];
-            console.log(firstValue, secondValue);
             if (options.preProcess) pixels = options.preProcess(pixels); // Allow for preprocessing
             var pixelsArray = [];
             var i = 0;

@@ -46,6 +46,10 @@ h1 {
   padding: 0px 0px;
 }
 
+.csrtoptr{
+  cursor: pointer;
+}
+
 .dropzone {
   padding: 30px;
   margin: 0 20% 30px;

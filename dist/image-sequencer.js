@@ -68845,7 +68845,7 @@ ImageSequencer = function ImageSequencer(options) {
 }
 module.exports = ImageSequencer;
 
-},{"./AddStep":181,"./ExportBin":182,"./FormatInput":183,"./InsertStep":185,"./Modules":186,"./ReplaceImage":187,"./Run":188,"./SavedSequences.json":190,"./ui/LoadImage":310,"./ui/SetInputStep":311,"./ui/UserInterface":312,"./util/createMetaModule":314,"./util/getStep.js":316,"fs":47}],185:[function(require,module,exports){
+},{"./AddStep":181,"./ExportBin":182,"./FormatInput":183,"./InsertStep":185,"./Modules":186,"./ReplaceImage":187,"./Run":188,"./SavedSequences.json":190,"./ui/LoadImage":314,"./ui/SetInputStep":315,"./ui/UserInterface":316,"./util/createMetaModule":318,"./util/getStep.js":320,"fs":47}],185:[function(require,module,exports){
 const getStepUtils = require('./util/getStep.js');
 
 // insert one or more steps at a given index in the sequencer
@@ -68909,7 +68909,7 @@ function InsertStep(ref, index, name, o) {
 }
 module.exports = InsertStep;
 
-},{"./util/getStep.js":316}],186:[function(require,module,exports){
+},{"./util/getStep.js":320}],186:[function(require,module,exports){
 /*
 * Core modules and their info files
 */
@@ -68946,11 +68946,12 @@ module.exports = {
   'resize': require('./modules/Resize'),
   'rotate': require('./modules/Rotate'),
   'saturation': require('./modules/Saturation'),
+  'shadow': require('./modules/Shadow'),
   'threshold': require('./modules/Threshold'),
   'tint': require('./modules/Tint'),
   'white-balance': require('./modules/WhiteBalance')
 }
-},{"./modules/AddQR":193,"./modules/Average":196,"./modules/Blend":199,"./modules/Blur":203,"./modules/Brightness":206,"./modules/Channel":209,"./modules/Colorbar":212,"./modules/Colormap":216,"./modules/Contrast":220,"./modules/Convolution":224,"./modules/Crop":229,"./modules/DecodeQr":232,"./modules/Dither":236,"./modules/DrawRectangle":240,"./modules/Dynamic":243,"./modules/EdgeDetect":247,"./modules/Exposure":250,"./modules/FisheyeGl":253,"./modules/FlipImage":257,"./modules/GammaCorrection":260,"./modules/Gradient":263,"./modules/Histogram":266,"./modules/ImportImage":270,"./modules/Ndvi":274,"./modules/NdviColormap":277,"./modules/Overlay":280,"./modules/PaintBucket":284,"./modules/ReplaceColor":288,"./modules/Resize":291,"./modules/Rotate":294,"./modules/Saturation":297,"./modules/Threshold":301,"./modules/Tint":304,"./modules/WhiteBalance":307,"image-sequencer-invert":62}],187:[function(require,module,exports){
+},{"./modules/AddQR":193,"./modules/Average":196,"./modules/Blend":199,"./modules/Blur":203,"./modules/Brightness":206,"./modules/Channel":209,"./modules/Colorbar":212,"./modules/Colormap":216,"./modules/Contrast":220,"./modules/Convolution":224,"./modules/Crop":229,"./modules/DecodeQr":232,"./modules/Dither":236,"./modules/DrawRectangle":240,"./modules/Dynamic":243,"./modules/EdgeDetect":247,"./modules/Exposure":250,"./modules/FisheyeGl":253,"./modules/FlipImage":257,"./modules/GammaCorrection":260,"./modules/Gradient":263,"./modules/Histogram":266,"./modules/ImportImage":270,"./modules/Ndvi":277,"./modules/NdviColormap":273,"./modules/Overlay":280,"./modules/PaintBucket":284,"./modules/ReplaceColor":288,"./modules/Resize":291,"./modules/Rotate":294,"./modules/Saturation":297,"./modules/Shadow":300,"./modules/Threshold":305,"./modules/Tint":308,"./modules/WhiteBalance":311,"image-sequencer-invert":62}],187:[function(require,module,exports){
 // Uses a given image as input and replaces it with the output.
 // Works only in the browser.
 function ReplaceImage(ref,selector,steps,options) {
@@ -69102,7 +69103,7 @@ function Run(ref, json_q, callback, ind, progressObj) {
 }
 module.exports = Run;
 
-},{"./RunToolkit":189,"./util/getStep.js":316}],189:[function(require,module,exports){
+},{"./RunToolkit":189,"./util/getStep.js":320}],189:[function(require,module,exports){
 const getPixels = require('get-pixels');
 const pixelManipulation = require('./modules/_nomodule/PixelManipulation');
 const lodash = require('lodash');
@@ -69117,7 +69118,7 @@ module.exports = function(input) {
     input.savePixels = savePixels;
     return input;
 }
-},{"./modules/_nomodule/PixelManipulation":309,"data-uri-to-buffer":19,"get-pixels":30,"lodash":76,"save-pixels":168}],190:[function(require,module,exports){
+},{"./modules/_nomodule/PixelManipulation":313,"data-uri-to-buffer":19,"get-pixels":30,"lodash":76,"save-pixels":168}],190:[function(require,module,exports){
 module.exports={"sample":[{"name":"invert","options":{}},{"name":"channel","options":{"channel":"red"}},{"name":"blur","options":{"blur":"5"}}]}
 },{}],191:[function(require,module,exports){
 module.exports = function AddQR(options, UI) {
@@ -69171,7 +69172,7 @@ module.exports = function AddQR(options, UI) {
         UI: UI
     }
 }
-},{"../_nomodule/PixelManipulation.js":309,"./../../util/getDefaults.js":315,"./QR":192,"./info.json":194,"get-pixels":30}],192:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313,"./../../util/getDefaults.js":319,"./QR":192,"./info.json":194,"get-pixels":30}],192:[function(require,module,exports){
 module.exports = exports = function (options, pixels, oldPixels, callback) {
     var QRCode = require('qrcode')
     QRCode.toDataURL(options.qrCodeString, function (err, url) {
@@ -69323,7 +69324,7 @@ module.exports = function Average(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":309}],196:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313}],196:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":195,"./info.json":197,"dup":193}],197:[function(require,module,exports){
 module.exports={
@@ -69411,7 +69412,7 @@ module.exports = function Dynamic(options, UI, util) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":309,"./../../util/getDefaults.js":315,"./info.json":200,"get-pixels":30}],199:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313,"./../../util/getDefaults.js":319,"./info.json":200,"get-pixels":30}],199:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":198,"./info.json":200,"dup":193}],200:[function(require,module,exports){
 module.exports={
@@ -69563,7 +69564,7 @@ module.exports = function Blur(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":309,"./../../util/getDefaults.js":315,"./Blur":201,"./info.json":204}],203:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313,"./../../util/getDefaults.js":319,"./Blur":201,"./info.json":204}],203:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":202,"./info.json":204,"dup":193}],204:[function(require,module,exports){
 module.exports={
@@ -69641,7 +69642,7 @@ module.exports = function Brightness(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":309,"./../../util/getDefaults.js":315,"./info.json":207}],206:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313,"./../../util/getDefaults.js":319,"./info.json":207}],206:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":205,"./info.json":207,"dup":193}],207:[function(require,module,exports){
 module.exports={
@@ -69711,7 +69712,7 @@ module.exports = function Channel(options, UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":309,"./../../util/getDefaults.js":315,"./info.json":210}],209:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313,"./../../util/getDefaults.js":319,"./info.json":210}],209:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":208,"./info.json":210,"dup":193}],210:[function(require,module,exports){
 module.exports={
@@ -69744,7 +69745,7 @@ module.exports = require('../../util/createMetaModule.js')(
   }
 )[0];
 
-},{"../../util/createMetaModule.js":314,"./info.json":213}],212:[function(require,module,exports){
+},{"../../util/createMetaModule.js":318,"./info.json":213}],212:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":211,"./info.json":213,"dup":193}],213:[function(require,module,exports){
 module.exports={
@@ -70023,7 +70024,7 @@ module.exports = function Colormap(options, UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":309,"./Colormap":214}],216:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313,"./Colormap":214}],216:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":215,"./info.json":217,"dup":193}],217:[function(require,module,exports){
 module.exports={
@@ -70135,7 +70136,7 @@ module.exports = function Contrast(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":309,"./../../util/getDefaults.js":315,"./Contrast":218,"./info.json":221}],220:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313,"./../../util/getDefaults.js":319,"./Contrast":218,"./info.json":221}],220:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":219,"./info.json":221,"dup":193}],221:[function(require,module,exports){
 module.exports={
@@ -70269,7 +70270,7 @@ module.exports = function Convolution(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":309,"./../../util/getDefaults.js":315,"./Convolution":222,"./info.json":225}],224:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313,"./../../util/getDefaults.js":319,"./Convolution":222,"./info.json":225}],224:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":223,"./info.json":225,"dup":193}],225:[function(require,module,exports){
 module.exports={
@@ -70350,7 +70351,7 @@ module.exports = function Crop(input,options,callback) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./../../util/getDefaults.js":315,"./info.json":230,"buffer":48,"get-pixels":30,"save-pixels":168}],227:[function(require,module,exports){
+},{"./../../util/getDefaults.js":319,"./info.json":230,"buffer":48,"get-pixels":30,"save-pixels":168}],227:[function(require,module,exports){
 /*
  * Image Cropping module
  * Usage:
@@ -70437,7 +70438,7 @@ module.exports = function CropModule(options, UI) {
   }
 }
 
-},{"../../util/ParseInputCoordinates":313,"./Crop":226,"./Ui.js":228}],228:[function(require,module,exports){
+},{"../../util/ParseInputCoordinates":317,"./Crop":226,"./Ui.js":228}],228:[function(require,module,exports){
 // hide on save
 module.exports = function CropModuleUi(step, ui) {
 
@@ -70629,7 +70630,7 @@ module.exports = function DoNothing(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":309,"get-pixels":30,"jsqr":75}],232:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313,"get-pixels":30,"jsqr":75}],232:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":231,"./info.json":233,"dup":193}],233:[function(require,module,exports){
 module.exports={
@@ -70762,7 +70763,7 @@ module.exports = function Dither(options, UI){
         UI: UI
     }
 }
-},{"../_nomodule/PixelManipulation.js":309,"./../../util/getDefaults.js":315,"./Dither":234,"./info.json":237}],236:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313,"./../../util/getDefaults.js":319,"./Dither":234,"./info.json":237}],236:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":235,"./info.json":237,"dup":193}],237:[function(require,module,exports){
 module.exports={
@@ -70813,7 +70814,7 @@ module.exports = exports = function(pixels, options){
   drawSide(ox, ey, ex, ey); // Bottom
   return pixels;
 }
-},{"./../../util/getDefaults.js":315,"./info.json":241}],239:[function(require,module,exports){
+},{"./../../util/getDefaults.js":319,"./info.json":241}],239:[function(require,module,exports){
 module.exports = function DrawRectangle(options, UI) {
 
     
@@ -70859,7 +70860,7 @@ module.exports = function DrawRectangle(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":309,"./DrawRectangle":238}],240:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313,"./DrawRectangle":238}],240:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":239,"./info.json":241,"dup":193}],241:[function(require,module,exports){
 module.exports={
@@ -71006,7 +71007,7 @@ module.exports = function Dynamic(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":309}],243:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313}],243:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":242,"./info.json":244,"dup":193}],244:[function(require,module,exports){
 module.exports={
@@ -71219,247 +71220,6 @@ function doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio, grads, s
     }
   }
 }
-},{}],214:[function(require,module,exports){
-/*
- * Accepts a value from 0-255 and returns the new color-mapped pixel 
- * from a lookup table, which can be specified as an array of [begin, end] 
- * gradients, where begin and end are represented as [r, g, b] colors. In 
- * combination, a lookup table which maps values from 0 - 255 smoothly from black to white looks like:
- * [
- *   [0, [0, 0, 0], [255, 255, 255]],
- *   [1, [255, 255, 255], [255, 255, 255]]
- * ]
- * 
- * Adapted from bgamari's work in Infragram: https://github.com/p-v-o-s/infragram-js/commit/346c97576a07b71a55671d17e0153b7df74e803b
- */
-
-module.exports = function Colormap(value, options) {
-  options.colormap = options.colormap || colormaps.default;
-  // if a lookup table is provided as an array:
-  if(typeof(options.colormap) == "object")
-    colormapFunction = colormap(options.colormap);
-  // if a stored colormap is named with a string like "fastie":
-  else if(colormaps.hasOwnProperty(options.colormap))
-    colormapFunction = colormaps[options.colormap];
-  else colormapFunction = colormaps.default;
-  return colormapFunction(value / 255.00);
-}
-
-function colormap(segments) {
-  return function(x) {
-    var i, result, x0, x1, xstart, y0, y1, _i, _j, _len, _ref, _ref1, _ref2, _ref3;
-    _ref = [0, 0], y0 = _ref[0], y1 = _ref[1];
-    _ref1 = [segments[0][0], 1], x0 = _ref1[0], x1 = _ref1[1];
-    if (x < x0) {
-      return y0;
-    }
-    for (i = _i = 0, _len = segments.length; _i < _len; i = ++_i) {
-      _ref2 = segments[i], xstart = _ref2[0], y0 = _ref2[1], y1 = _ref2[2];
-      x0 = xstart;
-      if (i === segments.length - 1) {
-        x1 = 1;
-        break;
-      }
-      x1 = segments[i + 1][0];
-      if ((xstart <= x && x < x1)) {
-        break;
-      }
-    }
-    result = [];
-    for (i = _j = 0, _ref3 = y0.length; 0 <= _ref3 ? _j < _ref3 : _j > _ref3; i = 0 <= _ref3 ? ++_j : --_j) {
-      result[i] = (x - x0) / (x1 - x0) * (y1[i] - y0[i]) + y0[i];
-    }
-    return result;
-  };
-};
-
-var colormaps = {
-  greyscale: colormap([
-               [0,     [0,   0,   0],   [255, 255, 255] ],
-               [1,     [255, 255, 255], [255, 255, 255] ]
-             ]),
-
- bluwhtgrngis:   colormap([
-               [0,     	[6,23,86],    [6,25, 84]    ],
-               [0.0625, [6,25,84],    [6,25, 84]    ],//1
-               [0.125,  [6,25,84],    [6,25, 84]    ],//2
-               [0.1875, [6,25,84],    [6,25, 84]    ],
-               [0.25,   [6,25,84],    [6,25,84]     ],
-               [0.3125, [6,25,84],    [9,24, 84]    ],//5
-               [0.3438, [9,24, 84],   [119,120,162] ],//5
-               [0.375,  [119,129,162],[249,250,251] ], //6
-               [0.406,  [249,250,251],[255,255,255] ], //6.5
-               [0.4375, [255,255,255],[255,255,255] ], //7 white
-               [0.50,   [255,255,255],[214,205,191] ],//8
-               [0.52,   [214,205,191],[178,175,96]  ],//8.2
-               [0.5625, [178,175,96], [151,176,53]  ],//9
-               [0.593,  [151,176,53], [146,188,12]  ],//9.5
-               [0.625,  [146,188,12], [96,161,1]    ], //10
-               [0.6875, [96,161,1],   [30,127,3]    ],//11
-               [0.75,   [30,127,3],   [0,99,1]      ],//12
-               [0.8125, [0,99,1],     [0,74,1]      ],//13
-               [0.875,  [0,74,1],     [0,52, 0]     ],//14
-               [0.9375, [0,52, 0],    [0,34,0]      ], //15
-               [0.968,  [0,34,0],     [68,70,67]    ] //16
-              ]),
-
-
-  brntogrn:   colormap([
-               [0,      [110,12,3],   [118,6,1]      ],
-               [0.0625, [118,6,1],    [141,19,6]     ],
-               [0.125,  [141,19,6],   [165,35,13]    ],
-               [0.1875, [165,35,13],  [177,59,25]    ],
-               [0.2188, [177,59,25],  [192,91,36]    ],
-               [0.25,   [192,91,36],  [214, 145, 76] ],
-               [0.3125, [214,145,76], [230,183,134]  ],
-               [0.375,  [230,183,134],[243, 224, 194]],   
-               [0.4375, [243,224,194],[250,252,229]  ],
-               [0.50,   [250,252,229],[217,235,185]  ],
-               [0.5625, [217,235,185],[184,218,143]  ],
-               [0.625,  [184,218,143],[141,202,89]   ],
-               [0.6875, [141,202,89], [80,176,61]    ],
-               [0.75,   [80,176,61],  [0, 147, 32]   ],
-               [0.8125, [0,147,32],   [1, 122, 22]   ],
-               [0.875,  [1,122,22],   [0, 114, 19]   ],
-               [0.90,   [0,114,19],   [0,105,18]     ],
-               [0.9375, [0,105,18],   [7,70,14]      ] 
-
-             ]),
-
-
-  blutoredjet:     colormap([
-               [0,       [0,0,140],    [1,1,186]    ],
-               [0.0625,  [1,1,186],    [0,1,248]    ],
-               [0.125,   [0,1,248],    [0,70,254]   ],
-               [0.1875,  [0,70,254],   [0,130,255]  ],
-               [0.25,    [0,130,255],  [2,160,255]  ],
-	       [0.2813,  [2,160,255],  [0,187,255]  ],	//inset
-               [0.3125,  [0,187,255],  [6,250,255]  ],
- //            [0.348,   [0,218,255],  [8,252,251]  ],//inset
-               [0.375,   [8,252,251],  [27,254,228] ], 
-               [0.406,   [27,254,228], [70,255,187] ], //insert
-               [0.4375,  [70,255,187], [104,254,151]],
-               [0.47, 	 [104,254,151],[132,255,19] ],//insert
-               [0.50,    [132,255,19], [195,255,60] ],
-               [0.5625,  [195,255,60], [231,254,25] ],
-               [0.5976,  [231,254,25], [253,246,1]  ],//insert
-               [0.625,   [253,246,1],  [252,210,1]  ], //yellow
-               [0.657,   [252,210,1],  [255,183,0]  ],//insert
-               [0.6875,  [255,183,0],  [255,125,2]  ],
-               [0.75,    [255,125,2],  [255,65, 1]  ],
-               [0.8125,  [255,65, 1],  [247, 1, 1]  ],
-               [0.875,   [247,1,1],    [200, 1,  3] ],
-               [0.9375,  [200,1,3],    [122, 3,  2] ] 
-
-             ]),
-
-
-  colors16:   colormap([
-               [0,      [0,0,0],       [0,0,0]       ],
-               [0.0625, [3,1,172],     [3,1,172]     ],
-               [0.125,  [3,1,222],     [3,1, 222]    ],
-               [0.1875, [0,111,255],   [0,111,255]   ],
-               [0.25,   [3,172,255],   [3,172,255]   ],
-               [0.3125, [1,226,255],   [1,226,255]   ],
-               [0.375,  [2,255,0],     [2,255,0]     ],   
-               [0.4375, [198,254,0],   [190,254,0]   ],
-               [0.50,   [252,255,0],   [252,255,0]   ],
-               [0.5625, [255,223,3],   [255,223,3]   ],
-               [0.625,  [255,143,3],   [255,143,3]   ],
-               [0.6875, [255,95,3],    [255,95,3]    ],
-               [0.75,   [242,0,1],     [242,0,1]     ],
-               [0.8125, [245,0,170],   [245,0,170]   ],
-               [0.875,  [223,180,225], [223,180,225] ],
-               [0.9375, [255,255,255], [255,255, 255]] 
-
-             ]),
-
-   default:      colormap([
-               [0,       [45,1,121],     [25,1,137]    ],
-               [0.125,   [25,1,137],     [0,6,156]     ],
-               [0.1875,  [0,6,156],      [7,41,172]    ],
-               [0.25,    [7,41,172],     [22,84,187]   ],
-               [0.3125,  [22,84,187],    [25,125,194]  ],
-               [0.375,   [25,125,194],   [26,177,197]  ],   
-               [0.4375,  [26,177,197],   [23,199,193]  ],
-               [0.47,    [23,199,193],   [25, 200,170] ],
-               [0.50,    [25, 200,170],  [21,209,27]   ],
-               [0.5625,  [21,209,27],    [108,215,18]  ],
-               [0.625,   [108,215,18],   [166,218,19]  ],
-               [0.6875,  [166,218,19],   [206,221,20]  ],
-               [0.75,    [206,221,20],   [222,213,19 ] ],
-               [0.7813,  [222,213,19],   [222, 191, 19]],
-               [0.8125,  [222, 191, 19], [227,133,17]  ],
-               [0.875,   [227,133,17],   [231,83,16]   ],
-               [0.9375,  [231,83,16],    [220,61,48]   ] 
-
-             ]),
-
-
-  fastie:    colormap([
-               [0,     [255, 255, 255], [0,   0,   0]   ],
-               [0.167, [0,   0,   0],   [255, 255, 255] ],
-               [0.33,  [255, 255, 255],   [0,   0,   0] ],
-               [0.5,   [0,   0,   0],   [140, 140, 255] ],
-               [0.55,  [140, 140, 255], [0,   255, 0]   ],
-               [0.63,  [0,   255, 0],   [255, 255, 0]   ],
-               [0.75,  [255, 255, 0],   [255, 0,   0]   ],
-               [0.95,  [255, 0,   0],   [255, 0,   255] ]
-             ]),
-
-
-  stretched: colormap([
-               [0,     [0,   0,   255], [0,   0,   255] ],
-               [0.1,   [0,   0,   255], [38,  195, 195] ],
-               [0.5,   [0,   150, 0],   [255, 255, 0]   ],
-               [0.7,   [255, 255, 0],   [255, 50,  50]  ],
-               [0.9,   [255, 50,  50],  [255, 50,  50]  ]
-             ])
- 
-}
-},{}],215:[function(require,module,exports){
-module.exports = function Colormap(options, UI) {
-
-  var output;
-
-  // This function is called on every draw.
-  function draw(input, callback, progressObj) {
-
-    progressObj.stop(true);
-    progressObj.overrideFlag = true;
-
-    var step = this;
-
-    function changePixel(r, g, b, a) {
-      var combined = (r + g + b) / 3.000;
-      var res = require('./Colormap')(combined, options);
-      return [res[0], res[1], res[2], 255];
-    }
-
-    function output(image, datauri, mimetype) {
-
-      // This output is accessible by Image Sequencer
-      step.output = { src: datauri, format: mimetype };
-
-    }
-    return require('../_nomodule/PixelManipulation.js')(input, {
-      output: output,
-      changePixel: changePixel,
-      format: input.format,
-      image: options.image,
-      inBrowser: options.inBrowser,
-      callback: callback
-    });
-
-  }
-
-  return {
-    options: options,
-    draw: draw,
-    output: output,
-    UI: UI
-  }
-}
 
 function hysteresis(strongEdgePixels, weakEdgePixels){
   strongEdgePixels.forEach(pixel => {
@@ -71495,259 +71255,14 @@ module.exports = function edgeDetect(options, UI) {
 
   var output;
 
-},{}],218:[function(require,module,exports){
-var _ = require('lodash');
+  // The function which is called on every draw.
+  function draw(input, callback, progressObj) {
 
-module.exports = exports = function(pixels, contrast) {
-    let oldpix = _.cloneDeep(pixels);
-    contrast = Number(contrast)
-    if (contrast < -100) contrast = -100;
-    if (contrast > 100) contrast = 100;
-    contrast = (100.0 + contrast) / 100.0;
-    contrast *= contrast;
+    progressObj.stop(true);
+    progressObj.overrideFlag = true;
 
-    for (let i = 0; i < pixels.shape[0]; i++) {
-        for (let j = 0; j < pixels.shape[1]; j++) {
-            var r = oldpix.get(i, j, 0) / 255.0;
-            r -= 0.5;
-            r *= contrast;
-            r += 0.5;
-            r *= 255;
-            if (r < 0) r = 0;
-            if (r > 255) r = 255;
+    var step = this;
 
-
-            var g = oldpix.get(i, j, 1) / 255.0;
-            g -= 0.5;
-            g *= contrast;
-            g += 0.5;
-            g *= 255;
-            if (g < 0) g = 0;
-            if (g > 255) g = 255;
-
-
-            var b = oldpix.get(i, j, 2) / 255.0;
-            b -= 0.5;
-            b *= contrast;
-            b += 0.5;
-            b *= 255;
-            if (b < 0) b = 0;
-            if (b > 255) b = 255;
-
-
-            pixels.set(i, j, 0, r);
-            pixels.set(i, j, 1, g);
-            pixels.set(i, j, 2, b);
-
-        }
-    }
-    return pixels;
-}
-},{"lodash":76}],219:[function(require,module,exports){
-// /*
-// * Changes the Image Contrast
-// */
-
-module.exports = function Contrast(options, UI) {
-
-    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
-    options.contrast = options.contrast || defaults.contrast;
-    var output;
-
-    function draw(input, callback, progressObj) {
-
-        progressObj.stop(true);
-        progressObj.overrideFlag = true;
-
-        var step = this;
-
-        function extraManipulation(pixels) {
-            pixels = require('./Contrast')(pixels, options.contrast)
-            return pixels
-        }
-
-        function output(image, datauri, mimetype) {
-
-            // This output is accessible by Image Sequencer
-            step.output = { src: datauri, format: mimetype };
-
-        }
-
-        return require('../_nomodule/PixelManipulation.js')(input, {
-            output: output,
-            extraManipulation: extraManipulation,
-            format: input.format,
-            image: options.image,
-            callback: callback
-        });
-
-    }
-    return {
-        options: options,
-        draw: draw,
-        output: output,
-        UI: UI
-    }
-}
-
-},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":305,"./Contrast":218,"./info.json":221}],220:[function(require,module,exports){
-arguments[4][193][0].apply(exports,arguments)
-},{"./Module":219,"./info.json":221,"dup":193}],221:[function(require,module,exports){
-module.exports={
-    "name": "Contrast",
-    "description": "Change the contrast of the image by given value",
-    "inputs": {
-        "contrast": {
-            "type": "range",
-            "desc": "contrast for the new image, typically -100 to 100",
-            "default": "70",
-            "min": "-100",
-            "max": "100",
-            "step": "1"
-        }
-    },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
-}
-
-},{}],222:[function(require,module,exports){
-var _ = require('lodash');
-module.exports = exports = function(pixels, constantFactor, kernelValues) {
-    let kernel = kernelGenerator(constantFactor, kernelValues), oldpix = _.cloneDeep(pixels);
-    kernel = flipKernel(kernel);
-
-    for (let i = 0; i < pixels.shape[0]; i++) {
-        for (let j = 0; j < pixels.shape[1]; j++) {
-            let neighboutPos = getNeighbouringPixelPositions([i, j]);
-            let acc = [0.0, 0.0, 0.0, 0.0];
-            for (let a = 0; a < kernel.length; a++) {
-                for (let b = 0; b < kernel.length; b++) {
-                    acc[0] += (oldpix.get(neighboutPos[a][b][0], neighboutPos[a][b][1], 0) * kernel[a][b]);
-                    acc[1] += (oldpix.get(neighboutPos[a][b][0], neighboutPos[a][b][1], 1) * kernel[a][b]);
-                    acc[2] += (oldpix.get(neighboutPos[a][b][0], neighboutPos[a][b][1], 2) * kernel[a][b]);
-                    acc[3] += (oldpix.get(neighboutPos[a][b][0], neighboutPos[a][b][1], 3) * kernel[a][b]);
-                }
-            }
-            acc[0] = Math.min(acc[0], 255);
-            acc[1] = Math.min(acc[1], 255);
-            acc[2] = Math.min(acc[2], 255);
-            pixels.set(i, j, 0, acc[0]);
-            pixels.set(i, j, 1, acc[1]);
-            pixels.set(i, j, 2, acc[2]);
-        }
-    }
-    return pixels;
-
-
-    function kernelGenerator(constantFactor, kernelValues) {
-        kernelValues = kernelValues.split(" ");
-        for (i = 0; i < 9; i++) {
-            kernelValues[i] = Number(kernelValues[i]) * constantFactor;
-        }
-        let k = 0;
-        let arr = [];
-        for (i = 0; i < 3; i++) {
-            let columns = [];
-            for (j = 0; j < 3; j++) {
-                columns.push(kernelValues[k]);
-                k += 1;
-            }
-            arr.push(columns);
-        }
-        return arr;
-    }
-
-    function getNeighbouringPixelPositions(pixelPosition) {
-        let x = pixelPosition[0], y = pixelPosition[1], result = [];
-
-        for (let i = -1; i <= 1; i++) {
-            let arr = [];
-            for (let j = -1; j <= 1; j++)
-                arr.push([x + i, y + j]);
-
-            result.push(arr);
-        }
-        return result;
-    }
-
-    function flipKernel(kernel) {
-        let result = [];
-        for (let i = kernel.length - 1; i >= 0; i--) {
-            let arr = [];
-            for (let j = kernel[i].length - 1; j >= 0; j--) {
-                arr.push(kernel[i][j]);
-            }
-            result.push(arr);
-        }
-        return result;
-    }
-}
-},{"lodash":76}],223:[function(require,module,exports){
-module.exports = function Convolution(options, UI) {
-
-    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
-
-    options.kernelValues = options.kernelValues || defaults.kernelValues;
-    options.constantFactor = options.constantFactor || defaults.constantFactor;
-    var output;
-
-    function draw(input, callback, progressObj) {
-
-        progressObj.stop(true);
-        progressObj.overrideFlag = true;
-
-        var step = this;
-
-        function extraManipulation(pixels) {
-            pixels = require('./Convolution')(pixels, options.constantFactor, options.kernelValues);
-            return pixels;
-        }
-
-        function output(image, datauri, mimetype) {
-
-            step.output = { src: datauri, format: mimetype };
-
-        }
-
-        return require('../_nomodule/PixelManipulation.js')(input, {
-            output: output,
-            extraManipulation: extraManipulation,
-            format: input.format,
-            image: options.image,
-            callback: callback
-        });
-
-    }
-    return {
-        options: options,
-        draw: draw,
-        output: output,
-        UI: UI
-    }
-}
-
-},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":305,"./Convolution":222,"./info.json":225}],224:[function(require,module,exports){
-arguments[4][193][0].apply(exports,arguments)
-},{"./Module":223,"./info.json":225,"dup":193}],225:[function(require,module,exports){
-module.exports={
-    "name": "Convolution",
-    "description": "Image Convolution using a given 3x3 kernel matrix <a href='https://en.wikipedia.org/wiki/Kernel_(image_processing)'>Read more</a>",
-    "inputs": {
-  		"constantFactor":{
-  			"type": "Float",
-  			"desc": "a constant factor, multiplies all the kernel values by that factor",
-  			"default": 0.1111,
-        "placeholder": 0.1111
-  		},
-        
-      "kernelValues": {
-        "type": "String",
-        "desc": "nine space separated numbers representing the kernel values in left to right and top to bottom format.",
-        "default": "1 1 1 1 1 1 1 1 1",
-        "placeholder": "1 1 1 1 1 1 1 1 1"
-      }
-    },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
-}
 
     // Extra Manipulation function used as an enveloper for applying gaussian blur and Convolution
     function changePixel(r, g, b, a) {
@@ -71775,47 +71290,15 @@ module.exports={
     });
   }
 
-},{}],235:[function(require,module,exports){
-module.exports = function Dither(options, UI){
-    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
-    var output;
-
-    function draw(input,callback,progressObj){
-
-        progressObj.stop(true);
-        progressObj.overrideFlag = true;
-
-        var step = this;
-        options.dither = options.dither || defaults.dither;
-
-        function extraManipulation(pixels) {
-            pixels = require('./Dither')(pixels, options.dither)
-            return pixels
-        }
-
-        function output(image,  datauri, mimetype){
-            // This output is accessible by Image Sequencer
-            step.output = { src: datauri, format: mimetype };
-
-        }
-
-        return require('../_nomodule/PixelManipulation.js')(input, {
-            output: output,
-            extraManipulation: extraManipulation,
-            format: input.format,
-            image: options.image,
-            callback: callback
-        });
-    }
-    return {
-        options: options,
-        draw: draw,
-        output: output,
-        UI: UI
-    }
+  return {
+    options: options,
+    draw: draw,
+    output: output,
+    UI: UI
+  }
 }
 
-},{"../_nomodule/PixelManipulation.js":309,"./../../util/getDefaults.js":315,"./EdgeUtils":245,"./info.json":248,"ndarray-gaussian-filter":81}],247:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313,"./../../util/getDefaults.js":319,"./EdgeUtils":245,"./info.json":248,"ndarray-gaussian-filter":81}],247:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":246,"./info.json":248,"dup":193}],248:[function(require,module,exports){
 module.exports={
@@ -71854,51 +71337,6 @@ module.exports={
 	}
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#edge-detect-module"
-}
-},{"./../../util/getDefaults.js":305,"./info.json":241}],239:[function(require,module,exports){
-module.exports = function DrawRectangle(options, UI) {
-
-    
-    var output;
-
-    function draw(input, callback, progressObj) {
-
-        progressObj.stop(true);
-        progressObj.overrideFlag = true;
-
-        var step = this;
-
-        function changePixel(r, g, b, a) {
-            return [r, g, b, a]
-        }
-
-        function extraManipulation(pixels) {
-            pixels = require('./DrawRectangle')(pixels, options)
-            return pixels
-        }
-
-        function output(image, datauri, mimetype) {
-
-            step.output = { src: datauri, format: mimetype };
-
-        }
-
-        return require('../_nomodule/PixelManipulation.js')(input, {
-            output: output,
-            changePixel: changePixel,
-            extraManipulation: extraManipulation,
-            format: input.format,
-            image: options.image,
-            callback: callback
-        });
-
-    }
-    return {
-        options: options,
-        draw: draw,
-        output: output,
-        UI: UI
-    }
 }
 
 },{}],249:[function(require,module,exports){
@@ -71953,7 +71391,7 @@ module.exports = function Exposure(options,UI){
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":309,"./../../util/getDefaults.js":315,"./info.json":251}],250:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313,"./../../util/getDefaults.js":319,"./info.json":251}],250:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":249,"./info.json":251,"dup":193}],251:[function(require,module,exports){
 module.exports={
@@ -71973,417 +71411,6 @@ module.exports={
 }
 
 },{}],252:[function(require,module,exports){
-/*
- * Resolves Fisheye Effect
- */
-module.exports = function DoNothing(options,UI) {
-
-  var output;
-
-  require('fisheyegl');
-
-  function draw(input,callback) {
-
-    var step = this;
-
-},{}],242:[function(require,module,exports){
-module.exports = function Dynamic(options,UI) {
-
-  var output;
-
-  // This function is called on every draw.
-  function draw(input,callback,progressObj) {
-
-    progressObj.stop(true);
-    progressObj.overrideFlag = true;
-
-    var step = this;
-
-    // start with monochrome, but if options.red, options.green, and options.blue are set, accept them too
-    options.monochrome = options.monochrome || "(R+G+B)/3";
-
-    function generator(expression) {
-      var func = 'f = function (r, g, b, a) { var R = r, G = g, B = b, A = a;'
-      func = func + 'return ';
-      func = func + expression + '}';
-      var f;
-      eval(func);
-      return f;
-    }
-
-    var channels = ['red', 'green', 'blue', 'alpha'];
-
-    channels.forEach(function(channel) {
-      if (options.hasOwnProperty(channel)) options[channel + '_function'] = generator(options[channel]);
-      else if (channel === 'alpha')        options['alpha_function'] = function() { return 255; }
-      else                                 options[channel + '_function'] = generator(options.monochrome);
-    });
-
-    function changePixel(r, g, b, a) {
-
-      /* neighbourpixels can be calculated by
-       this.getNeighbourPixel.fun(x,y)  or this.getNeighborPixel.fun(x,y)
-       */
-      var combined = (r + g + b) / 3.000;
-      return [
-        options.red_function(r, g, b, a),
-        options.green_function(r, g, b, a),
-        options.blue_function(r, g, b, a),
-        options.alpha_function(r, g, b, a),
-      ];
-    }
-
-    /* Functions to get the neighbouring pixel by position (x,y) */
-    function getNeighbourPixel(pixels,curX,curY,distX,distY){
-      return [
-         pixels.get(curX+distX,curY+distY,0)
-        ,pixels.get(curX+distX,curY+distY,1)
-        ,pixels.get(curX+distX,curY+distY,2)
-        ,pixels.get(curX+distX,curY+distY,3)
-      ]
-    }
-
-    // via P5js: https://github.com/processing/p5.js/blob/2920492842aae9a8bf1a779916893ac19d65cd38/src/math/calculation.js#L461-L472
-    function map(n, start1, stop1, start2, stop2, withinBounds) {
-      var newval = (n - start1) / (stop1 - start1) * (stop2 - start2) + start2;
-      if (!withinBounds) {
-        return newval;
-      }
-      // also via P5js: https://github.com/processing/p5.js/blob/2920492842aae9a8bf1a779916893ac19d65cd38/src/math/calculation.js#L116-L119
-      function constrain(n, low, high) {
-        return Math.max(Math.min(n, high), low);
-      };
-      if (start2 < stop2) {
-        return constrain(newval, start2, stop2);
-      } else {
-        return constrain(newval, stop2, start2);
-      }
-    };
-
-    function output(image,datauri,mimetype){
-
-      // This output is accessible by Image Sequencer
-      step.output = { src: datauri, format: mimetype };
-
-    }
-    return require('../_nomodule/PixelManipulation.js')(input, {
-      output: output,
-      changePixel: changePixel,
-      getNeighbourPixel: getNeighbourPixel,
-      getNeighborPixel: getNeighbourPixel,
-      format: input.format,
-      image: options.image,
-      inBrowser: options.inBrowser,
-      callback: callback
-    });
-
-  }
-
-  return {
-    options: options,
-    draw: draw,
-    output: output,
-    UI: UI
-  }
-}
-
-},{"../_nomodule/PixelManipulation.js":298}],243:[function(require,module,exports){
-arguments[4][193][0].apply(exports,arguments)
-},{"./Module":242,"./info.json":244,"dup":193}],244:[function(require,module,exports){
-module.exports={
-  "name": "Dynamic",
-  "description": "A module which accepts JavaScript math expressions to produce each color channel based on the original image's color. See <a href='https://publiclab.org/wiki/infragram-sandbox'>Infragrammar</a>.",
-  "inputs": {
-    "red": {
-      "type": "input",
-      "desc": "Expression to return for red channel with R, G, B, and A inputs",
-      "default": "r"
-    },
-    "green": {
-      "type": "input",
-      "desc": "Expression to return for green channel with R, G, B, and A inputs",
-      "default": "g"
-    },
-    "blue": {
-      "type": "input",
-      "desc": "Expression to return for blue channel with R, G, B, and A inputs",
-      "default": "b"
-    },
-    "monochrome (fallback)": {
-      "type": "input",
-      "desc": "Expression to return with R, G, B, and A inputs; fallback for other channels if none provided",
-      "default": "r + g + b"
-    }
-  },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
-}
-
-},{}],245:[function(require,module,exports){
-const _ = require('lodash')
-
-//define kernels for the sobel filter
-const kernelx = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]],
-    kernely = [[-1, -2, -1], [0, 0, 0], [1, 2, 1]];
-
-module.exports = function(pixels, highThresholdRatio, lowThresholdRatio, inBrowser) {
-    let angles = [], mags = [], strongEdgePixels = [], weakEdgePixels = [], notInUI = !inBrowser;
-    for (var x = 0; x < pixels.shape[0]; x++) {
-        angles.push([]);
-        mags.push([]);
-        for (var y = 0; y < pixels.shape[1]; y++) {
-            var result = changePixel(
-                pixels,
-                pixels.get(x, y, 0),
-                pixels.get(x, y, 3),
-                x,
-                y
-            );
-            let pixel = result.pixel;
-
-            pixels.set(x, y, 0, pixel[0]);
-            pixels.set(x, y, 1, pixel[1]);
-            pixels.set(x, y, 2, pixel[2]);
-            pixels.set(x, y, 3, pixel[3]);
-
-            mags.slice(-1)[0].push(pixel[3]);
-            angles.slice(-1)[0].push(result.angle);
-        }
-    }
-    nonMaxSupress(pixels, mags, angles);
-    doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio, mags, strongEdgePixels, weakEdgePixels);
-    return pixels;
-}
-
-//changepixel function that convolutes every pixel (sobel filter)
-function changePixel(pixels, val, a, x, y) {
-    let magX = 0.0;
-    for (let a = 0; a < 3; a++) {
-        for (let b = 0; b < 3; b++) {
-
-            let xn = x + a - 1;
-            let yn = y + b - 1;
-
-            magX += pixels.get(xn, yn, 0) * kernelx[a][b];
-        }
-    }
-    let magY = 0.0;
-    for (let a = 0; a < 3; a++) {
-        for (let b = 0; b < 3; b++) {
-
-            let xn = x + a - 1;
-            let yn = y + b - 1;
-
-            magY += pixels.get(xn, yn, 0) * kernely[a][b];
-        }
-    }
-    let mag = Math.sqrt(Math.pow(magX, 2) + Math.pow(magY, 2));
-    let angle = Math.atan2(magY, magX);
-    return {
-        pixel:
-            [val, val, val, mag],
-        angle: angle
-    };
-}
-
-//Non Maximum Supression without interpolation
-function nonMaxSupress(pixels, mags, angles) {
-
-    angles = angles.map((arr) => arr.map(convertToDegrees));
-
-    for (let i = 1; i < pixels.shape[0] - 1; i++) {
-        for (let j = 1; j < pixels.shape[1] - 1; j++) {
-
-            let angle = angles[i][j];
-            let pixel = pixels.get(i, j);
-
-            if ((angle >= -22.5 && angle <= 22.5) ||
-                (angle < -157.5 && angle >= -180))
-
-                if ((mags[i][j] >= mags[i][j + 1]) &&
-                    (mags[i][j] >= mags[i][j - 1]))
-                    pixels.set(i, j, 3, mags[i][j]);
-                else
-                    pixels.set(i, j, 3, 0);
-
-            else if ((angle >= 22.5 && angle <= 67.5) ||
-                (angle < -112.5 && angle >= -157.5))
-
-                if ((mags[i][j] >= mags[i + 1][j + 1]) &&
-                    (mags[i][j] >= mags[i - 1][j - 1]))
-                    pixels.set(i, j, 3, mags[i][j]);
-                else
-                    pixels.set(i, j, 3, 0);
-
-            else if ((angle >= 67.5 && angle <= 112.5) ||
-                (angle < -67.5 && angle >= -112.5))
-
-                if ((mags[i][i] >= mags[i + 1][j]) &&
-                    (mags[i][j] >= mags[i][j]))
-                    pixels.set(i, j, 3, mags[i][j]);
-                else
-                    pixels.set(i, j, 3, 0);
-
-            else if ((angle >= 112.5 && angle <= 157.5) ||
-                (angle < -22.5 && angle >= -67.5))
-
-                if ((mags[i][j] >= mags[i + 1][j - 1]) &&
-                    (mags[i][j] >= mags[i - 1][j + 1]))
-                    pixels.set(i, j, 3, mags[i][j]);
-                else
-                    pixels.set(i, j, 3, 0);
-
-        }
-    }
-}
-//Converts radians to degrees
-var convertToDegrees = radians => (radians * 180) / Math.PI;
-
-//Finds the max value in a 2d array like mags
-var findMaxInMatrix = arr => Math.max(...arr.map(el => el.map(val => !!val ? val : 0)).map(el => Math.max(...el)));
-
-//Applies the double threshold to the image
-function doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio, mags, strongEdgePixels, weakEdgePixels) {
-
-    const highThreshold = findMaxInMatrix(mags) * highThresholdRatio;
-    const lowThreshold = highThreshold * lowThresholdRatio;
-
-    for (let i = 0; i < pixels.shape[0]; i++) {
-        for (let j = 0; j < pixels.shape[1]; j++) {
-            let pixelPos = [i, j];
-
-            mags[i][j] > lowThreshold
-                ? mags[i][j] > highThreshold
-                    ? strongEdgePixels.push(pixelPos)
-                    : weakEdgePixels.push(pixelPos)
-                : pixels.set(i, j, 3, 0);
-        }
-    }
-
-    strongEdgePixels.forEach(pix => pixels.set(pix[0], pix[1], 3, 255));
-}
-
-//  hysteresis edge tracking algorithm -- not working as of now
-/* function hysteresis(pixels) {
-    function getNeighbouringPixelPositions(pixelPosition) {
-        let x = pixelPosition[0], y = pixelPosition[1]
-        return [[x + 1, y + 1],
-        [x + 1, y],
-        [x + 1, y - 1],
-        [x, y + 1],
-        [x, y - 1],
-        [x - 1, y + 1],
-        [x - 1, y],
-        [x - 1, y - 1]]
-    }
-
-    //This can potentially be improved see  https://en.wikipedia.org/wiki/Connected-component_labeling
-     for (weakPixel in weakEdgePixels) {
-         let neighbourPixels = getNeighbouringPixelPositions(weakEdgePixels[weakPixel])
-         for (pixel in neighbourPixels) {
-             if (strongEdgePixels.find(el => _.isEqual(el, neighbourPixels[pixel]))) {
-                 pixels.set(weakPixel[0], weakPixel[1], 3, 255)
-                 weakEdgePixels.splice(weakPixel, weakPixel)
-                 break
-             }
-         }
-     }
-     weakEdgePixels.forEach(pix => pixels.set(pix[0], pix[1], 3, 0))
-     return pixels
-} */
-
-
-
-
-},{"lodash":76}],246:[function(require,module,exports){
-/*
-* Detect Edges in an Image
-*/
-module.exports = function edgeDetect(options, UI) {
-
-  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
-  options.blur = options.blur || defaults.blur;
-  options.highThresholdRatio = options.highThresholdRatio || defaults.highThresholdRatio;
-  options.lowThresholdRatio = options.lowThresholdRatio || defaults.lowThresholdRatio;
-
-  var output;
-
-  // The function which is called on every draw.
-  function draw(input, callback, progressObj) {
-
-    progressObj.stop(true);
-    progressObj.overrideFlag = true;
-
-    var step = this;
-
-
-    //   Extra Manipulation function used as an enveloper for applying gaussian blur and Convolution
-    function extraManipulation(pixels) {
-      pixels = require('ndarray-gaussian-filter')(pixels, options.blur);
-      pixels = require('./EdgeUtils')(pixels, options.highThresholdRatio, options.lowThresholdRatio, options.inBrowser);
-      return pixels;
-    }
-
-    function changePixel(r, g, b, a) {
-      return [(r + g + b) / 3, (r + g + b) / 3, (r + g + b) / 3, a];
-    }
-
-    function output(image, datauri, mimetype) {
-
-      // This output is accessible by Image Sequencer
-      step.output = { src: datauri, format: mimetype };
-
-    }
-
-    return require('../_nomodule/PixelManipulation.js')(input, {
-      output: output,
-      changePixel: changePixel,
-      extraManipulation: extraManipulation,
-      format: input.format,
-      image: options.image,
-      inBrowser: options.inBrowser,
-      callback: callback
-    });
-
-  }
-
-  return {
-    options: options,
-    draw: draw,
-    output: output,
-    UI: UI
-  }
-}
-
-},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":305,"./EdgeUtils":245,"./info.json":248,"ndarray-gaussian-filter":81}],247:[function(require,module,exports){
-arguments[4][193][0].apply(exports,arguments)
-},{"./Module":246,"./info.json":248,"dup":193}],248:[function(require,module,exports){
-module.exports={
-    "name": "Detect Edges",
-    "description": "This module detects edges using the Canny method, which first Gaussian blurs the image to reduce noise (amount of blur configurable in settings as `options.blur`), then applies a number of steps to highlight edges, resulting in a greyscale image where the brighter the pixel, the stronger the detected edge.<a href='https://en.wikipedia.org/wiki/Canny_edge_detector'> Read more. </a>",
-    "inputs": {
-        "blur": {
-            "type": "range",
-            "desc": "Amount of gaussian blur(Less blur gives more detail, typically 0-5)",
-            "default": "2",
-            "min": "0",
-            "max": "5",
-            "step": "0.25"
-        },
-        "highThresholdRatio":{
-            "type": "float",
-            "desc": "The high threshold ratio for the image",
-            "default": 0.2
-        },
-        "lowThresholdRatio": {
-            "type": "float",
-            "desc": "The low threshold value for the image",
-            "default": 0.15
-        }
-    },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
-}
-
-},{}],249:[function(require,module,exports){
 /*
  * Resolves Fisheye Effect
  */
@@ -72579,7 +71606,7 @@ module.exports = function FlipImage(options, UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":309,"./flipImage":256,"./info.json":258,"get-pixels":30}],256:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313,"./flipImage":256,"./info.json":258,"get-pixels":30}],256:[function(require,module,exports){
 module.exports = function flipImage(oldPixels, pixels, axis) {
     var width = oldPixels.shape[0],
     height = oldPixels.shape[1];
@@ -72677,7 +71704,7 @@ module.exports = function Gamma(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":309,"./../../util/getDefaults.js":315,"./info.json":261}],260:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313,"./../../util/getDefaults.js":319,"./info.json":261}],260:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":259,"./info.json":261,"dup":193}],261:[function(require,module,exports){
 module.exports={
@@ -72866,7 +71893,7 @@ module.exports = function Channel(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":309,"./../../util/getDefaults.js":315,"./info.json":267}],266:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313,"./../../util/getDefaults.js":319,"./info.json":267}],266:[function(require,module,exports){
 module.exports = [
     require('./Module.js'),
     require('./info.json')
@@ -72938,73 +71965,8 @@ module.exports = function ImportImageModule(options, UI) {
     UI: UI
   }
 }
-},{}],261:[function(require,module,exports){
-/*
- * Import Image module; this fetches a given remote or local image via URL
- * or data-url, and overwrites the current one. It saves the original as
- * step.metadata.input for use in future modules such as blending.
- * TODO: we could accept an operation for blending like "screen" or "overlay",
- * or a function with blend(r1,g1,b1,a1,r2,g2,b2,a2), OR we could simply allow
- * subsequent modules to do this blending and keep this one simple.
- */
-module.exports = function ImportImageModule(options, UI) {
 
-  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
-  options.imageUrl = options.url || defaults.url;
-
-  var output,
-    imgObj = new Image();
-
-  // we should get UI to return the image thumbnail so we can attach our own UI extensions
-
-  // add our custom in-module html ui:
-  if (options.step.inBrowser) {
-    var ui = require('./Ui.js')(options.step, UI);
-    ui.setup();
-  }
-
-  // This function is caled everytime the step has to be redrawn
-  function draw(input, callback) {
-
-    var step = this;
-
-    if (!options.inBrowser) { // This module is only for browser
-      this.output = input;
-      callback();
-    } else {
-      step.metadata = step.metadata || {};
-      // TODO: develop a standard API method for saving each input state,
-      // for reference in future steps (for blending, for example)
-      step.metadata.input = input;
-
-      function onLoad() {
-
-        // This output is accessible to Image Sequencer
-        step.output = {
-          src: imgObj.src,
-          format: options.format
-        }
-
-        // Tell Image Sequencer that step has been drawn
-        callback();
-      }
-
-      options.format = require('../../util/GetFormat')(options.imageUrl);
-      imgObj.onload = onLoad;
-      imgObj.src = options.imageUrl;
-
-    }
-  }
-
-  return {
-    options: options,
-    draw: draw,
-    output: output,
-    UI: UI
-  }
-}
-
-},{"./../../util/getDefaults.js":315,"./Ui.js":269,"./info.json":271}],269:[function(require,module,exports){
+},{"./../../util/getDefaults.js":319,"./Ui.js":269,"./info.json":271}],269:[function(require,module,exports){
 // hide on save
 module.exports = function ImportImageModuleUi(step, ui) {
 
@@ -73079,6 +72041,31 @@ module.exports={
 
 },{}],272:[function(require,module,exports){
 /*
+ * Sample Meta Module for demonstration purpose only
+ */
+module.exports = require('../../util/createMetaModule.js')(
+    function mapFunction(options) {
+
+        return [
+            { 'name': 'ndvi', 'options': {} },
+            { 'name': 'colormap', 'options': { colormap: options.colormap } },
+        ];
+    }, {
+        infoJson: require('./info.json')
+    }
+)[0];
+},{"../../util/createMetaModule.js":318,"./info.json":274}],273:[function(require,module,exports){
+arguments[4][193][0].apply(exports,arguments)
+},{"./Module":272,"./info.json":274,"dup":193}],274:[function(require,module,exports){
+module.exports={
+    "name": "NDVI-Colormap",
+    "description": "Sequentially Applies NDVI and Colormap steps",
+    "inputs": {},
+    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#ndvi-colormap-module"
+}
+
+},{}],275:[function(require,module,exports){
+/*
  * NDVI with red filter (blue channel is infrared)
  */
 module.exports = function Ndvi(options, UI) {
@@ -73138,7 +72125,7 @@ module.exports = function Ndvi(options, UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":309,"./../../util/getDefaults.js":315,"./Ui.js":273,"./info.json":275}],273:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313,"./../../util/getDefaults.js":319,"./Ui.js":276,"./info.json":278}],276:[function(require,module,exports){
 // hide on save
 module.exports = function CropModuleUi(step, ui) {
 
@@ -73174,9 +72161,9 @@ module.exports = function CropModuleUi(step, ui) {
     }
 }
 
-},{}],274:[function(require,module,exports){
+},{}],277:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
-},{"./Module":272,"./info.json":275,"dup":193}],275:[function(require,module,exports){
+},{"./Module":275,"./info.json":278,"dup":193}],278:[function(require,module,exports){
 module.exports={
   "name": "NDVI",
   "description": "Normalized Difference Vegetation Index, or NDVI, is an image analysis technique used with aerial photography. It's a way to visualize the amounts of infrared and other wavelengths of light reflected from vegetation by comparing ratios of blue and red light absorbed versus green and IR light reflected. NDVI is used to evaluate the health of vegetation in satellite imagery, where it correlates with how much photosynthesis is happening. This is helpful in assessing vegetative health or stress. <a href='https://publiclab.org/ndvi'>Read more</a>.<br /><br/>This is designed for use with red-filtered single camera <a href='http://publiclab.org/infragram'>DIY Infragram cameras</a>; change to 'blue' for blue filters",
@@ -73191,148 +72178,7 @@ module.exports={
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#ndvi-module"
 }
 
-},{}],276:[function(require,module,exports){
-/*
- * Sample Meta Module for demonstration purpose only
- */
-module.exports = require('../../util/createMetaModule.js')(
-    function mapFunction(options) {
-
-        return [
-            { 'name': 'ndvi', 'options': {} },
-            { 'name': 'colormap', 'options': { colormap: options.colormap } },
-        ];
-    }, {
-        infoJson: require('./info.json')
-    }
-)[0];
-},{"../../util/createMetaModule.js":314,"./info.json":278}],277:[function(require,module,exports){
-arguments[4][193][0].apply(exports,arguments)
-},{"./Module":276,"./info.json":278,"dup":193}],278:[function(require,module,exports){
-module.exports={
-    "name": "NDVI-Colormap",
-    "description": "Sequentially Applies NDVI and Colormap steps",
-    "inputs": {},
-    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#ndvi-colormap-module"
-}
-
 },{}],279:[function(require,module,exports){
-module.exports = function Dynamic(options, UI, util) {
-
-    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
-    options.x = options.x || defaults.x;
-    options.y = options.y || defaults.y;
-
-    var output;
-
-    // This function is called on every draw.
-    function draw(input, callback, progressObj) {
-
-        options.offset = options.offset || -2;
-
-        progressObj.stop(true);
-        progressObj.overrideFlag = true;
-
-        var step = this;
-
-        var parseCornerCoordinateInputs = require('../../util/ParseInputCoordinates');
-
-        //parse the inputs
-        parseCornerCoordinateInputs(options, {
-            src: input.src,
-            x: { valInp: options.x, type: 'horizontal' },
-            y: { valInp: options.y, type: 'vertical' },
-        }, function (options, input) {
-            options.x = parseInt(input.x.valInp);
-            options.y = parseInt(input.y.valInp);
-        });
-
-        // save the pixels of the base image
-        var baseStepImage = this.getStep(options.offset).image;
-        var baseStepOutput = this.getOutput(options.offset);
-
-        var getPixels = require('get-pixels');
-
-        getPixels(input.src, function (err, pixels) {
-            options.secondImagePixels = pixels;
-
-            function changePixel(r1, g1, b1, a1, x, y) {
-
-                // overlay
-                var p = options.secondImagePixels;
-                if (x >= options.x
-                    && x < p.shape[0]
-                    && y >= options.y
-                    && y < p.shape[1])
-                    return [
-                        p.get(x, y, 0),
-                        p.get(x, y, 1),
-                        p.get(x, y, 2),
-                        p.get(x, y, 3)
-                    ];
-                else
-                    return [r1, g1, b1, a1];
-            }
-
-            function output(image, datauri, mimetype) {
-
-                // This output is accessible by Image Sequencer
-                step.output = { src: datauri, format: mimetype };
-
-},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":305,"./Ui.js":269,"./info.json":271}],269:[function(require,module,exports){
-// hide on save
-module.exports = function CropModuleUi(step, ui) {
-
-    /* sets the pixel value under the mouse pointer
-     * on the title attribute of the image element.
-    */
-    function setup() {
-        var ndviImage = $(imgEl());
-
-        ndviImage.mousemove(function ndviMousemove(e) {
-
-            var canvas = document.createElement("canvas");
-            canvas.width = ndviImage.width();
-            canvas.height = ndviImage.height();
-            canvas.getContext('2d').drawImage(this, 0, 0);
-
-            var offset = $(this).offset();
-            var xPos = e.pageX - offset.left;
-            var yPos = e.pageY - offset.top;
-            var ndvi = canvas.getContext('2d').getImageData(xPos, yPos, 1, 1).data[0];
-            ndvi = ndvi/127.5 - 1 ;
-            ndvi = ndvi.toFixed(2);
-            ndviImage[0].title = "NDVI: " + ndvi;
-        });
-    }
-    // step.imgSelector is not defined, imgElement is:
-    function imgEl() {
-        return step.imgElement;
-    }
-
-    return {
-        setup: setup
-    }
-}
-
-},{}],270:[function(require,module,exports){
-arguments[4][193][0].apply(exports,arguments)
-},{"./Module":268,"./info.json":271,"dup":193}],271:[function(require,module,exports){
-module.exports={
-  "name": "NDVI",
-  "description": "Normalized Difference Vegetation Index, or NDVI, is an image analysis technique used with aerial photography. It's a way to visualize the amounts of infrared and other wavelengths of light reflected from vegetation by comparing ratios of blue and red light absorbed versus green and IR light reflected. NDVI is used to evaluate the health of vegetation in satellite imagery, where it correlates with how much photosynthesis is happening. This is helpful in assessing vegetative health or stress. <a href='https://publiclab.org/ndvi'>Read more</a>.<br /><br/>This is designed for use with red-filtered single camera <a href='http://publiclab.org/infragram'>DIY Infragram cameras</a>; change to 'blue' for blue filters",
-  "inputs": {
-    "filter": {
-      "type": "select",
-      "desc": "Filter color",
-      "default": "red",
-      "values": ["red", "blue"]
-    }
-  },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
-}
-
-},{}],272:[function(require,module,exports){
 module.exports = function Dynamic(options, UI, util) {
 
     var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
@@ -73417,7 +72263,7 @@ module.exports = function Dynamic(options, UI, util) {
     }
 }
 
-},{"../../util/ParseInputCoordinates":313,"../_nomodule/PixelManipulation.js":309,"./../../util/getDefaults.js":315,"./info.json":281,"get-pixels":30}],280:[function(require,module,exports){
+},{"../../util/ParseInputCoordinates":317,"../_nomodule/PixelManipulation.js":313,"./../../util/getDefaults.js":319,"./info.json":281,"get-pixels":30}],280:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":279,"./info.json":281,"dup":193}],281:[function(require,module,exports){
 module.exports={
@@ -73485,72 +72331,7 @@ module.exports = function PaintBucket(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":309,"./PaintBucket":283}],283:[function(require,module,exports){
-module.exports = exports = function(pixels, options) {
-
-
-  let defaults = require('./../../util/getDefaults.js')(require('./info.json'));
-
-  let fillColor = options.fillColor || defaults.fillColor,
-    x = parseInt(options.startingX) || defaults.startingX,
-    y = parseInt(options.startingY) || defaults.startingY,
-    height = pixels.shape[1],
-    width = pixels.shape[0],
-    r = pixels.get(x, y, 0),
-    g = pixels.get(x, y, 1),
-    b = pixels.get(x, y, 2),
-    a = pixels.get(x, y, 3),
-    queuex = [x],
-    queuey = [y],
-    curry, currx,
-    north,
-    south,
-    n,
-    tolerance = options.tolerance || defaults.tolerance,
-    maxFactor = (1 + tolerance / 100),
-    minFactor = (1 - tolerance / 100);
-
-  fillColor = fillColor.split(" ");
-  function isSimilar(currx, curry) {
-    return (pixels.get(currx, curry, 0) >= r * minFactor && pixels.get(currx, curry, 0) <= r * maxFactor &&
-      pixels.get(currx, curry, 1) >= g * minFactor && pixels.get(currx, curry, 1) <= g * maxFactor &&
-      pixels.get(currx, curry, 2) >= b * minFactor && pixels.get(currx, curry, 2) <= b * maxFactor &&
-      pixels.get(currx, curry, 3) >= a * minFactor && pixels.get(currx, curry, 3) <= a * maxFactor);
-  }
-
-  while (queuey.length) {
-    currx = queuex.pop()
-    curry = queuey.pop()
-
-    if (isSimilar(currx, curry)) {
-      north = south = curry
-
-      do {
-        north -= 1
-      } while (isSimilar(currx, north) && north >= 0)
-
-      do {
-        south += 1
-      } while (isSimilar(currx, south) && south < height)
-
-      for (n = north + 1; n < south; n += 1) {
-        pixels.set(currx, n, 0, fillColor[0]);
-        pixels.set(currx, n, 1, fillColor[1]);
-        pixels.set(currx, n, 2, fillColor[2]);
-        pixels.set(currx, n, 3, fillColor[3]);
-        if (isSimilar(currx - 1, n)) {
-          queuex.push(currx - 1)
-          queuey.push(n)
-        }
-        if (isSimilar(currx + 1, n)) {
-          queuex.push(currx + 1)
-          queuey.push(n)
-        }
-      }
-    }
-  }
-
-},{"../_nomodule/PixelManipulation.js":298,"./PaintBucket":276}],276:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313,"./PaintBucket":283}],283:[function(require,module,exports){
 module.exports = exports = function(pixels, options) {
 
 
@@ -73618,7 +72399,7 @@ module.exports = exports = function(pixels, options) {
   return pixels;
 }
 
-},{"./../../util/getDefaults.js":315,"./info.json":285}],284:[function(require,module,exports){
+},{"./../../util/getDefaults.js":319,"./info.json":285}],284:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":282,"./info.json":285,"dup":193}],285:[function(require,module,exports){
 module.exports={
@@ -73699,7 +72480,7 @@ module.exports = function ReplaceColor(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":309,"./ReplaceColor":287}],287:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313,"./ReplaceColor":287}],287:[function(require,module,exports){
 module.exports = exports = function(pixels, options){
     var color = options.color || '228 86 81';
     var replaceColor = options.replaceColor || '0 0 255';
@@ -73854,7 +72635,7 @@ module.exports = function Resize(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":309,"./../../util/getDefaults.js":315,"./info.json":292,"imagejs":63}],291:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313,"./../../util/getDefaults.js":319,"./info.json":292,"imagejs":63}],291:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":290,"./info.json":292,"dup":193}],292:[function(require,module,exports){
 module.exports={
@@ -73935,7 +72716,7 @@ module.exports = function Rotate(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":309,"./../../util/getDefaults.js":315,"./info.json":295,"imagejs":63}],294:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313,"./../../util/getDefaults.js":319,"./info.json":295,"imagejs":63}],294:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":293,"./info.json":295,"dup":193}],295:[function(require,module,exports){
 module.exports={
@@ -74015,7 +72796,7 @@ module.exports = function Saturation(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":309,"./../../util/getDefaults.js":315,"./info.json":298}],297:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313,"./../../util/getDefaults.js":319,"./info.json":298}],297:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
 },{"./Module":296,"./info.json":298,"dup":193}],298:[function(require,module,exports){
 module.exports={
@@ -74035,131 +72816,234 @@ module.exports={
 }
 
 },{}],299:[function(require,module,exports){
-/*
- * Image thresholding with 'image-filter-threshold'
- */
-module.exports = function ImageThreshold(options, UI) {
+(function (process){
+module.exports = function Shadow(options, UI) {
 
-  var output;
+    var output;
 
-  function draw(input, callback, progressObj) {
+    // The function which is called on every draw.
+    function draw(input, callback, progressObj) {
+        progressObj.stop(true);
+        progressObj.overrideFlag = true;
 
-    progressObj.stop(true);
-    progressObj.overrideFlag = true;
+        var step = this;
 
-    var step = this, hist = new Array(256).fill(0);
+        const getPixels = require("get-pixels");
 
-    function changePixel(r, g, b, a) {
-      let pixVal = Math.round((r + g + b) / 3);
-      hist[pixVal]++;
-      return [r, g, b, a];
+        getPixels(input.src, function(err, pixels) {
+            console.log("nirav");
+            let defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+            let shadowDimension = options.shadowDimension || defaults.shadowDimension;
+            shadowDimension = shadowDimension.split(" ");
+            var firstValue = shadowDimension[0];
+            var secondValue = shadowDimension[1];
+            console.log(firstValue, secondValue);
+            if (options.preProcess) pixels = options.preProcess(pixels); // Allow for preprocessing
+            var pixelsArray = [];
+            var i = 0;
+            var pixel = [];
+            for (var x = 0; x < pixels.shape[0]; x++) {
+                for (var y = 0; y < pixels.shape[1]; y++) {
+                    pixelsArray[i+0] = pixels.get(x, y, 0);
+                    pixelsArray[i+1] = pixels.get(x, y, 1);
+                    pixelsArray[i+2] = pixels.get(x, y, 2);
+                    pixelsArray[i+3] = pixels.get(x, y, 3);
+                    i+=4;
+                }
+            }
+            console.log("asher");
+            console.log(pixelsArray);
+            i = 0;
+            for (var x = pixels.shape[0]; x > 0; x--) {
+                for (var y = pixels.shape[1]; y > 0; y--) {
+                    pixels.set(x-firstValue, y-secondValue, 0, pixelsArray[i+0]);
+                    pixels.set(x-firstValue, y-secondValue, 1, pixelsArray[i+1]);
+                    pixels.set(x-firstValue, y-secondValue, 2, pixelsArray[i+2]);
+                    pixels.set(x-firstValue, y-secondValue, 3, pixelsArray[i+3]);
+                    i+=4;
+                    if (!options.inBrowser && !process.env.TEST) pace.op();
+                }
+            }
+            function extraManipulation(pixels) {
+                pixels = require('./shadow')(pixels, options)
+                return pixels
+            };
+            return require('../_nomodule/PixelManipulation.js')(input, {
+                output: output,
+                extraManipulation: extraManipulation,
+                format: input.format,
+                image: options.image,
+                inBrowser: options.inBrowser,
+                callback: callback
+            });
+        });
+
+        function output(image, datauri, mimetype) {
+            // This output is accessible by Image Sequencer
+            step.output = { src: datauri, format: mimetype };
+        }
     }
 
-    function extraManipulation(pixels) {
-      pixels = require('./Threshold')(pixels, options, hist)
-      return pixels
+    return {
+        options: options,
+        draw: draw,
+        output: output,
+        UI: UI
     }
-    function output(image, datauri, mimetype) {
-      // This output is accessible by Image Sequencer
-      step.output = { src: datauri, format: mimetype };
-    }
-    return require('../_nomodule/PixelManipulation.js')(input, {
-      output: output,
-      changePixel: changePixel,
-      extraManipulation: extraManipulation,
-      format: input.format,
-      image: options.image,
-      callback: callback
-    });
-  }
-  return {
-    options: options,
-    draw: draw,
-    output: output,
-    UI: UI
-  }
 }
 
-},{"../_nomodule/PixelManipulation.js":309,"./Threshold":300}],300:[function(require,module,exports){
-module.exports = function Threshold(pixels, options, histData) {
-    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
-   
-    type = options.threshold ;
-    threshold = parseInt(options.input) || defaults.input;
-    var lumR = [];
-    var lumG = [];
-    var lumB = [];
-    for (var i = 0; i < 256; i++) {
-        lumR[i] = i * 0.299;
-        lumG[i] = i * 0.587;
-        lumB[i] = i * 0.114;
+}).call(this,require('_process'))
+},{"../_nomodule/PixelManipulation.js":313,"./../../util/getDefaults.js":319,"./info.json":301,"./shadow":302,"_process":118,"get-pixels":30}],300:[function(require,module,exports){
+module.exports = [
+    require('./Module'),
+    require('./info.json')
+]
+
+},{"./Module":299,"./info.json":301}],301:[function(require,module,exports){
+module.exports={
+    "name": "Shadow",
+    "description": "Generates a shadow behind the image",
+    "inputs": {
+        "shadowDimension": {
+          "type": "String",
+          "desc": "two space separated numbers representing the position of shadow",
+          "default": "-10 -10",
+          "placeholder": "-10 -10"
+        },
+    }
+}
+
+},{}],302:[function(require,module,exports){
+module.exports = exports = function(pixels, options) {
+
+    let defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+
+    let shadowDimension = options.shadowDimension || defaults.shadowDimension;
+
+    shadowDimension = shadowDimension.split(" ");
+
+    var firstValue = shadowDimension[0];
+    var secondValue = shadowDimension[1];
+
+    if (firstValue < 0 && secondValue < 0) {
+        for (var i = 0; i < Math.abs(firstValue); i++) {
+            for (var j = 0; j < pixels.shape[1]; j++) {
+                let val = 255 - ((i / Math.abs(firstValue)) * 255);
+                pixels.set(i, j, 0, val);
+                pixels.set(i, j, 1, val);
+                pixels.set(i, j, 2, val);
+                pixels.set(i, j, 3, 255);
+            }
+        }
+
+        for (var i = 0; i < pixels.shape[0]; i++) {
+            for (var j = 0; j < Math.abs(secondValue); j++) {
+                let val = 255 - ((j / Math.abs(secondValue)) * 255);
+                if (i < pixels.shape[0] && j > i) {
+                    continue;
+                }
+                else {
+                    pixels.set(i, j, 0, val);
+                    pixels.set(i, j, 1, val);
+                    pixels.set(i, j, 2, val);
+                    pixels.set(i, j, 3, 255);
+                }
+            }
+        }
     }
 
-    var imageDataLength = pixels.data.length;   //imageData.data.length;
-    for (var i = 0; i <= imageDataLength; i++) {
-        pixels.data[i] = Math.floor(lumR[pixels.data[i++]] + lumG[pixels.data[i++]] + lumB[pixels.data[i++]]);
+    if (firstValue > 0 && secondValue < 0) {
+        for (var i = pixels.shape[0]-Math.abs(firstValue); i < pixels.shape[0]; i++) {
+            for (var j = 0; j < pixels.shape[1]; j++) {
+                let val = (((i-pixels.shape[0]+Math.abs(firstValue)) / (Math.abs(firstValue))) * 255);
+                if (i > pixels.shape[0]-Math.abs(firstValue) && j > i) {
+                    continue;
+                }
+                else
+                {
+                    pixels.set(i, j, 0, val);
+                    pixels.set(i, j, 1, val);
+                    pixels.set(i, j, 2, val);
+                    pixels.set(i, j, 3, 255);
+                }
+            }
+        }
+
+        for (var i = 0; i < pixels.shape[0]; i++) {
+            for (var j = 0; j < Math.abs(secondValue); j++) {
+                let val = 255 - ((j / Math.abs(secondValue)) * 255);
+                if (i > pixels.shape[0]-Math.abs(firstValue) && j > (pixels.shape[0]-i)) {
+                    continue;
+                }
+                else {
+                    pixels.set(i, j, 0, val);
+                    pixels.set(i, j, 1, val);
+                    pixels.set(i, j, 2, val);
+                    pixels.set(i, j, 3, 255);
+                }
+            }
+        }
     }
 
-    if (type === "Automatic Thresholding")
-        threshold = otsu(histData);
+    if (firstValue < 0 && secondValue > 0) {
+        for (var i = 0; i < Math.abs(firstValue); i++) {
+            for (var j = 0; j < pixels.shape[1]; j++) {
+                let val = 255 - ((i / Math.abs(firstValue)) * 255);
+                if (i < Math.abs(firstValue) && (pixels.shape[1]-j) < i) {
+                    continue;
+                }
+                else {
+                    pixels.set(i, j, 0, val);
+                    pixels.set(i, j, 1, val);
+                    pixels.set(i, j, 2, val);
+                    pixels.set(i, j, 3, 255);
+                }
+            }
+        }
 
-    for (var currentPixel = 0; currentPixel <= imageDataLength; currentPixel += 4) {
-
-        pixels.data[currentPixel] = pixels.data[currentPixel] < threshold ? 0 : 255;
-        pixels.data[currentPixel + 1] = pixels.data[currentPixel + 2] = pixels.data[currentPixel];
+        for (var i = 0; i < pixels.shape[0]; i++) {
+            for (var j = pixels.shape[1]-Math.abs(secondValue); j < pixels.shape[1]; j++) {
+                let val = (((j-pixels.shape[1]+Math.abs(secondValue)) / (Math.abs(secondValue))) * 255);
+                if (i < Math.abs(firstValue) && pixels.shape[1]-j > i) {
+                    continue;
+                }
+                else {
+                    pixels.set(i, j, 0, val);
+                    pixels.set(i, j, 1, val);
+                    pixels.set(i, j, 2, val);
+                    pixels.set(i, j, 3, 255);
+                }
+            }
+        }
     }
+
+    if (firstValue > 0 && secondValue > 0) {
+        for (var i = pixels.shape[0]-Math.abs(firstValue); i < pixels.shape[0]; i++) {
+            for (var j = 0; j < pixels.shape[1]; j++) {
+                let val = (((i-pixels.shape[0]+Math.abs(firstValue)) / (Math.abs(firstValue))) * 255);
+                if (i > pixels.shape[0]-Math.abs(firstValue) && (pixels.shape[1]-j) > (pixels.shape[0]-i))
+                pixels.set(i, j, 0, val);
+                pixels.set(i, j, 1, val);
+                pixels.set(i, j, 2, val);
+                pixels.set(i, j, 3, 255);
+            }
+        }
+
+        for (var i = 0; i < pixels.shape[0]; i++) {
+            for (var j = pixels.shape[1]-Math.abs(secondValue); j < pixels.shape[1]; j++) {
+                let val = (((j-pixels.shape[1]+Math.abs(secondValue)) / (Math.abs(secondValue))) * 255);
+                pixels.set(i, j, 0, val);
+                pixels.set(i, j, 1, val);
+                pixels.set(i, j, 2, val);
+                pixels.set(i, j, 3, 255);
+            }
+        }
+    }
+
     return pixels;
 }
 
-function otsu(histData) {
-    let total = 0;
-    for (let t = 0; t < 256; t++) total += histData[t];
-
-    let sum = 0;
-    for (let t = 0; t < 256; t++) sum += t * histData[t];
-
-    let sumB = 0;
-    let wB = 0;
-    let wF = 0;
-
-    let varMax = 0;
-    let threshold = 0;
-
-    for (let t = 0; t < 256; t++) {
-        wB += histData[t];               // Weight Background
-        if (wB == 0) continue;
-
-        wF = total - wB;                 // Weight Foreground
-        if (wF == 0) break;
-
-        sumB += t * histData[t];
-
-        let mB = sumB / wB;            // Mean Background
-        let mF = (sum - sumB) / wF;    // Mean Foreground
-
-        // Calculate Between Class Variance
-        let varBetween = wB * wF * (mB - mF) * (mB - mF);
-
-},{"../_nomodule/PixelManipulation.js":298,"./../../util/getDefaults.js":305,"./info.json":287}],286:[function(require,module,exports){
-arguments[4][193][0].apply(exports,arguments)
-},{"./Module":285,"./info.json":287,"dup":193}],287:[function(require,module,exports){
-module.exports={
-    "name": "Saturation",
-    "description": "Change the saturation of the image by given value, from 0-1, with 1 being 100% saturated.",
-    "inputs": {
-        "saturation": {
-            "type": "range",
-            "desc": "saturation for the new image between 0 and 2, 0 being black and white and 2 being highly saturated",
-            "default": "0.5",
-            "min": "0",
-            "max": "2",
-            "step": "0.1"
-        }
-    },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
-}
-
-},{}],288:[function(require,module,exports){
+},{"./../../util/getDefaults.js":319,"./info.json":301}],303:[function(require,module,exports){
 /*
  * Image thresholding with 'image-filter-threshold'
  */
@@ -74205,7 +73089,7 @@ module.exports = function ImageThreshold(options, UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":298,"./Threshold":289}],289:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313,"./Threshold":304}],304:[function(require,module,exports){
 module.exports = function Threshold(pixels, options, histData) {
     var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
    
@@ -74275,9 +73159,9 @@ function otsu(histData) {
     return threshold;
 
 }
-},{"./../../util/getDefaults.js":315,"./info.json":302}],301:[function(require,module,exports){
+},{"./../../util/getDefaults.js":319,"./info.json":306}],305:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
-},{"./Module":299,"./info.json":302,"dup":193}],302:[function(require,module,exports){
+},{"./Module":303,"./info.json":306,"dup":193}],306:[function(require,module,exports){
 module.exports={
   "name": "Threshold",
   "description": "Thresholding is used to create binary images",
@@ -74300,7 +73184,7 @@ module.exports={
  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#threshold"
 }
 
-},{}],303:[function(require,module,exports){
+},{}],307:[function(require,module,exports){
 module.exports = function Tint(options, UI) {
 
     var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
@@ -74351,9 +73235,9 @@ module.exports = function Tint(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":309,"./../../util/getDefaults.js":315,"./info.json":305}],304:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313,"./../../util/getDefaults.js":319,"./info.json":309}],308:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
-},{"./Module":303,"./info.json":305,"dup":193}],305:[function(require,module,exports){
+},{"./Module":307,"./info.json":309,"dup":193}],309:[function(require,module,exports){
 module.exports={
   "name": "Tint",
   "description": "Add color tint to an image",
@@ -74375,7 +73259,7 @@ module.exports={
  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#tint"
 }
 
-},{}],306:[function(require,module,exports){
+},{}],310:[function(require,module,exports){
 module.exports = function Balance(options, UI) {
 
     var output;
@@ -74457,9 +73341,9 @@ module.exports = function Balance(options, UI) {
     }
 
 }
-},{"../_nomodule/PixelManipulation.js":309}],307:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":313}],311:[function(require,module,exports){
 arguments[4][193][0].apply(exports,arguments)
-},{"./Module":306,"./info.json":308,"dup":193}],308:[function(require,module,exports){
+},{"./Module":310,"./info.json":312,"dup":193}],312:[function(require,module,exports){
 module.exports={
     "name": "White Balance",
     "description": "Change the colour balance of the image by adjusting the colour temperature.",
@@ -74473,7 +73357,7 @@ module.exports={
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#white-balance"
 }
 
-},{}],309:[function(require,module,exports){
+},{}],313:[function(require,module,exports){
 (function (process,Buffer){
 /*
 * General purpose per-pixel manipulation
@@ -74577,7 +73461,7 @@ module.exports = function PixelManipulation(image, options) {
 };
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"_process":118,"buffer":48,"get-pixels":30,"pace":95,"save-pixels":168}],310:[function(require,module,exports){
+},{"_process":118,"buffer":48,"get-pixels":30,"pace":95,"save-pixels":168}],314:[function(require,module,exports){
 // special module to load an image into the start of the sequence; used in the HTML UI
 function LoadImage(ref, name, src, main_callback) {
   function makeImage(datauri) {
@@ -74652,116 +73536,10 @@ function LoadImage(ref, name, src, main_callback) {
   return loadImage(name, src);
 }
 
-}).call(this,require('_process'),require("buffer").Buffer)
-},{"_process":118,"buffer":48,"get-pixels":30,"pace":95,"save-pixels":168}],299:[function(require,module,exports){
-// special module to load an image into the start of the sequence; used in the HTML UI
-function LoadImage(ref, name, src, main_callback) {
-  function makeImage(datauri) {
-    var image = {
-      src: datauri,
-      format: datauri.split(':')[1].split(';')[0].split('/')[1]
-    }
-    return image;
-  }
-  function CImage(src, callback) {
-    var datauri;
-    if (!!src.match(/^data:/i)) {
-      datauri = src;
-      callback(datauri);
-    }
-    else if (!ref.options.inBrowser && !!src.match(/^https?:\/\//i)) {
-      require( src.match(/^(https?):\/\//i)[1] ).get(src,function(res){
-        var data = '';
-        var contentType = res.headers['content-type'];
-        res.setEncoding('base64');
-        res.on('data',function(chunk) {data += chunk;});
-        res.on('end',function() {
-          callback("data:"+contentType+";base64,"+data);
-        });
-      });
-    }
-    else if (ref.options.inBrowser) {
-      var ext = src.split('.').pop();
-      var image = document.createElement('img');
-      var canvas = document.createElement('canvas');
-      var context = canvas.getContext('2d');
-      image.onload = function() {
-        canvas.width = image.naturalWidth;
-        canvas.height = image.naturalHeight;
-        context.drawImage(image,0,0);
-        datauri = canvas.toDataURL(ext);
-        callback(datauri);
-      }
-      image.src = src;
-    }
-    else {
-      datauri = require('urify')(src);
-      callback(datauri);
-    }
-  }
-
-  function loadImage(name, src) {
-    var step = {
-      name: "load-image",
-      description: "This initial step loads and displays the original image without any modifications.<br /><br />To work with a new or different image, drag one into the drop zone.",
-      ID: ref.options.sequencerCounter++,
-      imageName: name,
-      inBrowser: ref.options.inBrowser,
-      ui: ref.options.ui
-    };
-
-    var image = {
-      src: src,
-      steps: [{
-        options: {
-          id: step.ID,
-          name: "load-image",
-          description: "This initial step loads and displays the original image without any modifications.",
-          title: "Load Image",
-          step: step
-        },
-        UI: ref.events,
-        draw: function() {
-          UI.onDraw(options.step);
-          if(arguments.length==1){
-            this.output = CImage(arguments[0]);
-            options.step.output = this.output;
-            UI.onComplete(options.step);
-            return true;
-          }
-          else if(arguments.length==2) {
-            this.output = CImage(arguments[0]);
-            options.step.output = this.output;
-            arguments[1]();
-            UI.onComplete(options.step);
-            return true;
-          }
-          return false;
-        },
-      }]
-    };
-    CImage(src, function(datauri) {
-      var output = makeImage(datauri);
-      ref.images[name] = image;
-      var loadImageStep = ref.images[name].steps[0];
-      loadImageStep.output = output;
-      loadImageStep.options.step.output = loadImageStep.output.src;
-      loadImageStep.UI.onSetup(loadImageStep.options.step);
-      loadImageStep.UI.onDraw(loadImageStep.options.step);
-      loadImageStep.UI.onComplete(loadImageStep.options.step);
-
-      main_callback();
-      return true;
-    });
-  }
-
-  return loadImage(name,src);
-}
-
 module.exports = LoadImage;
 
 
-},{"urify":177}],311:[function(require,module,exports){
+},{"urify":177}],315:[function(require,module,exports){
 // TODO: potentially move this into ImportImage module
 function setInputStepInit() {
 
@@ -74860,7 +73638,7 @@ function setInputStepInit() {
 }
 module.exports = setInputStepInit;
 
-},{}],312:[function(require,module,exports){
+},{}],316:[function(require,module,exports){
 /*
  * User Interface Handling Module
  */
@@ -74924,7 +73702,7 @@ module.exports = function UserInterface(events = {}) {
 
 }
 
-},{}],313:[function(require,module,exports){
+},{}],317:[function(require,module,exports){
 module.exports = function parseCornerCoordinateInputs(options,coord,callback) {
     var getPixels = require('get-pixels');
     getPixels(coord.src, function(err, pixels) {
@@ -74949,7 +73727,7 @@ module.exports = function parseCornerCoordinateInputs(options,coord,callback) {
       callback(options, coord);
     })
   }
-},{"get-pixels":30}],314:[function(require,module,exports){
+},{"get-pixels":30}],318:[function(require,module,exports){
 module.exports = function createMetaModule(mapFunction, moduleOptions) {
 
   moduleOptions = moduleOptions || {};
@@ -75015,7 +73793,7 @@ module.exports = function createMetaModule(mapFunction, moduleOptions) {
   return [MetaModule, moduleOptions.infoJson];
 }
 
-},{"./getDefaults.js":315}],315:[function(require,module,exports){
+},{"./getDefaults.js":319}],319:[function(require,module,exports){
 module.exports = function(info){
   var defaults = {};
   for (var key in info.inputs) {
@@ -75026,7 +73804,7 @@ module.exports = function(info){
   return defaults;
 }
 
-},{}],316:[function(require,module,exports){
+},{}],320:[function(require,module,exports){
 module.exports = {
     getPreviousStep: function() {
         return this.getStep(-1);

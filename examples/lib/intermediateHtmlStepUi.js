@@ -47,12 +47,16 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
                   <p>Crop</p>\
                 </div>\
               </div>\
-              <div class="center-align">\
+              <div class="row center-align">\
+                <div class="col-md-8">\
                 <select class="form-control input-lg" id="selectStep">\
                   <!-- The default null selection has been appended manually in demo.js\
                   This is because the options in select are overritten when options are appended.-->\
                 </select>\
+                <div>\
+                <div class="col-md-4">\
                 <button class="btn btn-success btn-lg" name="add" id="add-step-btn">Add Step</button>\
+                <div>\
               </div>\
             </div>\
           </div>\

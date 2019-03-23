@@ -36,5 +36,5 @@ module.exports = {
   'saturation': require('./modules/Saturation'),
   'threshold': require('./modules/Threshold'),
   'tint': require('./modules/Tint'),
-  'white-balance': require('./modules/WhiteBalance')
+  'color-temperature': require('./modules/ColorTemperature')
 }

@@ -368,23 +368,25 @@ The following command is used for running the tasks: `grunt [task-name]`. Here `
 
 ###### Path: `/examples/lib/scopeQuery.js`
 
-The helper method `scopeQuery` refactors the UI code by using the new methods `$step` and `$stepall`. The method returns a scoped `jQuery` object which only searches for elements inside a given scope (a DOM element).
+The method returns a scoped `jQuery` object which only searches for elements inside a given scope (a DOM element).
 
 To use the method, 
 * import the `scopeSelector` and `scopeSelectorAll` methods from `lib/scopeQuery.js`
-* call the methods with scope (step.ui in this case) 
+* call the methods with scope 
 	
 ```js
 var scopeQuery = require('./scopeQuery');
 
-var $step = scopeQuery.scopeSelector(step.ui),
- 	  $stepAll = scopeQuery.scopeSelectorAll(step.ui);	
+var $step = scopeQuery.scopeSelector(scope),
+ 	  $stepAll = scopeQuery.scopeSelectorAll(scope);	
 ```
 This will return an object with a constructor which returns a `jQuery` object (from inside the scope) but with new `elem` and `elemAll` methods.
 
 #### Methods of the Returned Object
 * `elem()`: selects an element inside the scope; 
-* `elemAll()`: selects all the instances of a given element;
+* `elemAll()`: selects all the instances of a given element inside the scope;
+
+Example:
 
 ```js
 //The scope is a div element with id=“container“ and there are three divs in it 
@@ -411,10 +413,4 @@ the following code can be used:
 ```js
 $step('query').show().hide();
 $stepAll('q2').show().hide();
-```
-
-The method can also reduce the frequent occurrences of `$(step.ui.querySelector('q'))`, especially with `selector chaining`
-
-```js
-$step('query').show().hide().elemAll('q2').show().hide();
 ```

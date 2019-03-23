@@ -22,6 +22,7 @@ after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 after_success:
 - bash <(curl -s https://codecov.io/bash)
+- istanbul cover ./node_modules/jasmine/bin/jasmine.js
 addons:
   apt:
     sources:

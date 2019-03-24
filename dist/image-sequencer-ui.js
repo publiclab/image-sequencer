@@ -385,15 +385,15 @@ function DefaultHtmlStepUi(_sequencer, options) {
     step.ui =
       '\
       <div class="container">\
-      <div class="panel panel-default">\
-      <div class="panel-heading">\
-        <h3 class="panel-title">' +  
-        '<span class="toggle">' +step.name + '<span class="caret"></span></h3>\
+      <form class="input-form">\
+    <div class="panel panel-default">\
+        <div class="panel-heading">\
+          <h3 class="panel-title">' +  
+            '<span class="toggle">' +step.name + '<span class="caret"></span>\
+          </h3>\
         </div>\
-      </h3>\
     <div class="panel-body cal collapse in">\
     <div class="row step">\
-    <form class="input-form">\
     <div class="col-md-4 details">\
     <h3>\
     <span class="load-spin" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></span>' +
@@ -410,8 +410,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
     </div>\
     </div>\
     <div class="panel-footer cal collapse in"></div>\
-    </form>\
     </div>\
+    </form>\
     </div>';
 
     var tools =

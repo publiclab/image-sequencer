@@ -404,7 +404,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     <div class="col-md-8 cal collapse in step-column">\
       <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
       <div class="step-image">\
-        <a class="cal collapse in"><img alt="" id="myimg" class="img-thumbnail step-thumbnail"/></a>\
+        <a class="cal collapse in"><img alt="" class="img-thumbnail step-thumbnail"/></a>\
       </div>\
     </div>\
     </div>\
@@ -493,7 +493,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         '<div class="cal collapse in"><p><button type="submit" class="btn btn-default btn-save" disabled = "true" >Apply</button><span> Press apply to see changes</span></p></div>'
       );      
       $(step.ui.querySelector("div.panel-footer")).append(
-        '<button class="pull-right btn insert-step " style="margin-left:10px;margin-top:-40px;border-radius:6px;background-color:#fff;border:solid #bababa 1.1px;" >\
+        '<button class="pull-right btn insert-step" >\
       <i class="fa fa-plus"></i> Insert Module\
       </button>'
       );  

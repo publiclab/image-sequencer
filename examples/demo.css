@@ -255,3 +255,10 @@ a.name-header{
     align-content: center;
     justify-content: center;
 }
+.panel-footer .insert-step{
+  margin-left:10px;
+  margin-top:-40px;
+  border-radius:6px;
+  background-color:#fff;
+  border:solid #bababa 1.1px;
+}

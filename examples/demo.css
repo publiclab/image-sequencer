@@ -257,16 +257,12 @@ a.name-header{
 }
 .panel-footer .insert-step{
   margin-left:10px;
-  margin-top:-40px;
   border-radius:6px;
   background-color:#fff;
   border:solid #bababa 1.1px;
 }
 .col-md-4{
   padding-left: 30px;
-}
-.tools{
-  margin-top: -30px;
 }
 .panel-heading{
   height:45px;

@@ -388,10 +388,11 @@ function DefaultHtmlStepUi(_sequencer, options) {
         <form class="input-form">\
           <div class="panel panel-default">\
             <div class="panel-heading">\
-              <h3 class="panel-title">' +  
-                '<span class="toggle">' +step.name + '<span class="caret"></span>\
-              </h3>\
-            </div>\
+              <div class="trash"></div>\
+                <h3 class="panel-title">' +  
+                  '<span class="toggle">' +step.name + '<span class="caret"></span>\
+                </h3>\
+              </div>\
             <div class="panel-body cal collapse in">\
               <div class="row step">\
                 <div class="col-md-4 details">\
@@ -415,11 +416,10 @@ function DefaultHtmlStepUi(_sequencer, options) {
         </div>';
 
     var tools =
-    '<div class="panel-heading cal collapse in"><div class="pull-right tools btn-group">\
-    <button confirm="Are you sure?" class="remove btn btn-default btn-sm">\
-      <i class="fa fa-trash"></i>\
-    </button>\
-    </div>\
+    '<div class="trash cal collapse in pull-right">\
+      <button confirm="Are you sure?" class="remove btn btn-default btn-sm">\
+        <i class="fa fa-trash"></i>\
+      </button>\
     </div>';
 
     var util = intermediateHtmlStepUi(_sequencer, step);
@@ -492,7 +492,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $(step.ui.querySelector("div.panel-footer")).append(
         '<div class="cal collapse in"><p><button type="submit" class="btn btn-sm btn-default btn-save" disabled = "true" >Apply</button><span> Press apply to see changes</span></p></div>'
       );      
-      $(step.ui.querySelector("div.panel-footer")).append(
+      $(step.ui.querySelector("div.panel-footer")).prepend(
         '<button class="pull-right btn btn-sm insert-step" >\
       <i class="fa fa-plus"></i> Insert Module\
       </button>'
@@ -501,8 +501,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     if (step.name != "load-image") {
       step.ui
-        .querySelector("div.panel-heading")
-        .appendChild(
+        .querySelector("div.trash")
+        .prepend(
           parser.parseFromString(tools, "text/html").querySelector("div")
         );
       $(step.ui.querySelectorAll(".remove")).on('click', function() {notify('Step Removed','remove-notification')});  

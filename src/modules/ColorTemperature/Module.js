@@ -1,4 +1,4 @@
-module.exports = function colorTemp(options, UI) {
+module.exports = function ColorTemperature(options, UI) {
 
     var output;
 

@@ -6,7 +6,7 @@ Image Sequencer
 
 - **Latest Stable Demo**: https://sequencer.publiclab.org
 - **Latest Beta Demo**: https://beta.sequencer.publiclab.org
-- **Stable Branch**: https://github.com/publiclab/image-sequencer/blob/stable/
+- **Stable Branch**: https://github.com/publiclab/image-sequencer/tree/stable/
 
 ## Why
 

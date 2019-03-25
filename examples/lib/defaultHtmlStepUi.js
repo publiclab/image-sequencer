@@ -57,7 +57,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         </div>';
 
     var tools =
-    '<div class="trash cal collapse in pull-right">\
+    '<div class="trash pull-right">\
       <button confirm="Are you sure?" class="remove btn btn-default btn-sm">\
         <i class="fa fa-trash"></i>\
       </button>\

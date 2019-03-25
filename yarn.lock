@@ -3601,9 +3601,9 @@ longest@^1.0.1:
   integrity sha1-MKCy2jj3N3DoKUoNIuZiXtd9AJc=
 
 looks-same@^7.0.0:
-  version "7.1.1"
-  resolved "https://registry.yarnpkg.com/looks-same/-/looks-same-7.1.1.tgz#599fe1b23a1c37665d78f3277a6df8b71d8363fe"
-  integrity sha512-AqyjVTnkF9ksgAtO+k7bPJcEafH12BAnj58z6o87yn2d6tKGOgd6yR1QnXJIT04Reg7EL1VCy8MBmubelMyUvQ==
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/looks-same/-/looks-same-7.2.0.tgz#54772d2ed088f77691e271c4531d7ba97a5818eb"
+  integrity sha512-LCE5Md8ZQ9Wn5lJbaGW4r6Fs00P8p8+JOjvXKkq9LdI/datYG8JOSRycMes+bp2h/UJ/RYYzJjvP0CXLPeVq1A==
   dependencies:
     color-diff "^1.1.0"
     concat-stream "^1.6.2"

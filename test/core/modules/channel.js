@@ -13,20 +13,20 @@ var target = 'test_outputs'
 var options = {channel: 'red'}
 
 test('Channel module loads correctly', function(t) {
-  sequencer.loadImages('test', red)
+  sequencer.loadImages( red)
   sequencer.addSteps('channel', options)
-  t.equal(sequencer.images.test.steps[1].options.name, 'channel', 'Channel module is getting loaded')
+  t.equal(sequencer.steps[1].options.name, 'channel', 'Channel module is getting loaded')
   t.end()
 })
 
 test('Channel module loads with correct options', function(t) {
-    t.equal(sequencer.images.test.steps[1].options.channel, 'red', 'Options are correct');
+    t.equal(sequencer.steps[1].options.channel, 'red', 'Options are correct');
     t.end();
 })
 
 test('Channel module works correctly', function(t) {
   sequencer.run({mode:'test'}, function(out) {
-    var result = sequencer.images.test.steps[1].output.src
+    var result = sequencer.steps[1].output.src
     base64Img.imgSync(result, target, 'result')
     base64Img.imgSync(benchmark, target, 'benchmark')
     result = './test_outputs/result.png'

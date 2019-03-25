@@ -262,3 +262,6 @@ a.name-header{
   background-color:#fff;
   border:solid #bababa 1.1px;
 }
+.col-md-4{
+  padding-left: 30px;
+}

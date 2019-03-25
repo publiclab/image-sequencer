@@ -26,38 +26,38 @@ function DefaultHtmlStepUi(_sequencer, options) {
     step.ui =
       '\
       <div class="container">\
-      <form class="input-form">\
-    <div class="panel panel-default">\
-        <div class="panel-heading">\
-          <h3 class="panel-title">' +  
-            '<span class="toggle">' +step.name + '<span class="caret"></span>\
-          </h3>\
-        </div>\
-    <div class="panel-body cal collapse in">\
-    <div class="row step">\
-    <div class="col-md-4 details">\
-    <h3>\
-    <span class="load-spin" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></span>' +
-    '</h3><div class="cal collapse in"><p><i>"'+
-      (step.description || "") +
-      '</i></p></div>\
-    </div>\
-    <div class="col-md-8 cal collapse in step-column">\
-      <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
-      <div class="step-image">\
-        <a class="cal collapse in"><img alt="" class="img-thumbnail step-thumbnail"/></a>\
-      </div>\
-    </div>\
-    </div>\
-    </div>\
-    <div class="panel-footer cal collapse in"></div>\
-    </div>\
-    </form>\
-    </div>';
+        <form class="input-form">\
+          <div class="panel panel-default">\
+            <div class="panel-heading">\
+              <h3 class="panel-title">' +  
+                '<span class="toggle">' +step.name + '<span class="caret"></span>\
+              </h3>\
+            </div>\
+            <div class="panel-body cal collapse in">\
+              <div class="row step">\
+                <div class="col-md-4 details">\
+                  <h3>\
+                    <span class="load-spin" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></span>' +
+                      '</h3><div class="cal collapse in"><p><i>"'+
+                        (step.description || "") +
+                      '</i></p></div>\
+                </div>\
+              <div class="col-md-8 cal collapse in step-column">\
+                <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
+                  <div class="step-image">\
+                    <a class="cal collapse in"><img alt="" class="img-thumbnail step-thumbnail"/></a>\
+                  </div>\
+                </div>\
+              </div>\
+              </div>\
+              <div class="panel-footer cal collapse in"></div>\
+            </div>\
+          </form>\
+        </div>';
 
     var tools =
-    '<div class="cal collapse in"><div class="tools btn-group pull-right">\
-    <button confirm="Are you sure?" class="remove btn btn btn-default">\
+    '<div class="cal collapse in"><div class="pull-right tools btn-group">\
+    <button confirm="Are you sure?" class="remove btn btn-sm btn btn-default">\
       <i class="fa fa-trash"></i>\
     </button>\
     </div>\
@@ -131,10 +131,10 @@ function DefaultHtmlStepUi(_sequencer, options) {
         step.ui.querySelector("div.details").appendChild(div);
       }
       $(step.ui.querySelector("div.panel-footer")).append(
-        '<div class="cal collapse in"><p><button type="submit" class="btn btn-default btn-save" disabled = "true" >Apply</button><span> Press apply to see changes</span></p></div>'
+        '<div class="cal collapse in"><p><button type="submit" class="btn btn-sm btn-default btn-save" disabled = "true" >Apply</button><span> Press apply to see changes</span></p></div>'
       );      
       $(step.ui.querySelector("div.panel-footer")).append(
-        '<button class="pull-right btn insert-step" >\
+        '<button class="pull-right btn btn-sm insert-step" >\
       <i class="fa fa-plus"></i> Insert Module\
       </button>'
       );  

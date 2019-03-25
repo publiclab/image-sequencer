@@ -265,3 +265,12 @@ a.name-header{
 .col-md-4{
   padding-left: 30px;
 }
+.tools{
+  margin-top: -30px;
+}
+.panel-heading{
+  height:45px;
+}
+.panel-footer{
+  height: 45px;
+}

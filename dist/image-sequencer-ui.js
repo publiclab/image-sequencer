@@ -415,8 +415,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
         </div>';
 
     var tools =
-    '<div class="cal collapse in"><div class="pull-right tools btn-group">\
-    <button confirm="Are you sure?" class="remove btn btn-sm btn btn-default">\
+    '<div class="panel-heading cal collapse in"><div class="pull-right tools btn-group">\
+    <button confirm="Are you sure?" class="remove btn btn-default btn-sm">\
       <i class="fa fa-trash"></i>\
     </button>\
     </div>\

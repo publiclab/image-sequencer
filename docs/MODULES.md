@@ -573,7 +573,7 @@ where `options` is an object with the following property:
 
 ## Color Temperature
 
-This change the color temperature of the image.
+This changes the color temperature of the image.
 
 ## Usage
 

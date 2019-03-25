@@ -142,7 +142,7 @@ input = {
   pixelManipulation: "general purpose pixel manipulation API, see https://github.com/publiclab/image-sequencer/blob/master/src/modules/_nomodule/PixelManipulation.js"
 }
 ```
-For example usage for pixelManipulation see https://github.com/publiclab/image-sequencer/blob/main/src/modules/Invert/Module.js
+For example usage of pixelManipulation see https://github.com/publiclab/image-sequencer/blob/main/src/modules/Invert/Module.js
 
 **The module is included in the browser inside a script tag and since the code runs directly in the browser if any other module is required apart from the apis available on the input object, it should be either bundled with the module code and imported in es6 format or the module code must be browserified before distribution for browser**
 

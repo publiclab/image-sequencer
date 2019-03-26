@@ -37,7 +37,7 @@ List of Module Documentations
 32. [Saturation](#saturation-module)
 33. [Threshold](#threshold)
 34. [Tint](#tint)
-35. [WhiteBalance](#white-balance)
+35. [ColorTemperature](#color-temperature)
 
 
 ## crop-module
@@ -571,15 +571,15 @@ where `options` is an object with the following property:
 * factor : amount of tint (default 0.5)
 
 
-## White Balance
+## Color Temperature
 
-This Change the colour balance of the image by adjusting the colour temperature.
+This changes the color temperature of the image.
 
 ## Usage
 
 ```js
   sequencer.loadImage('PATH')
-           .addSteps('white-balance',options)
+           .addSteps('color-temperature',options)
            .run()
 ```
 where `options` is an object with the following property:

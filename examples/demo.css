@@ -256,3 +256,14 @@ a.name-header{
     align-content: center;
     justify-content: center;
 }
+#gif{
+  margin-left:0px;
+  margin-top:5px;
+  width:100%;
+}
+.save-button{
+  margin-top:20px; 
+  margin-bottom:0px;
+  align:center; 
+  width:100%;
+}

@@ -1,29 +1,24 @@
 module.exports = function Dynamic(options, UI, util) {
 
-<<<<<<< HEAD
-    options.x = options.x || 0;
-    options.y = options.y || 0;
-    options.offset = options.offset || -2;
-=======
     var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
     options.x = options.x || defaults.x;
     options.y = options.y || defaults.y;
->>>>>>> main
+    options.offset = options.offset || -2;
 
     var output;
 
     // This function is called on every draw.
     function draw(input, callback, progressObj) {
 
+
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
         var step = this;
 
-<<<<<<< HEAD
         // convert offset as string to int
         if(typeof options.offset === "string") options.offset = parseInt(options.offset);
-=======
+
         var parseCornerCoordinateInputs = require('../../util/ParseInputCoordinates');
 
         //parse the inputs
@@ -35,7 +30,6 @@ module.exports = function Dynamic(options, UI, util) {
             options.x = parseInt(input.x.valInp);
             options.y = parseInt(input.y.valInp);
         });
->>>>>>> main
 
         // save the pixels of the base image
         var baseStepImage = this.getStep(options.offset).image;

@@ -15,22 +15,46 @@ module.exports = function(grunt) {
         livereload: true
       },
       source: {
-        files: ["src/**/*", "Gruntfile.js"],
-        tasks: ["build:js"]
+        files: ["src/**/*", "Gruntfile.js", "examples/lib/*","examples/demo.js"],
+        tasks: ["compile"]
       }
     },
 
     browserify: {
-      dist: {
+      core: {
         src: ["src/ImageSequencer.js"],
         dest: "dist/image-sequencer.js"
+      }, 
+      ui: {
+        src: ["examples/demo.js"],
+        dest: "dist/image-sequencer-ui.js"
+      },
+      prodcore: {
+        src: ["src/ImageSequencer.js"],
+        dest: "dist/image-sequencer.brow.js"
+      },
+      produi: {
+        src: ["examples/demo.js"],
+        dest: "dist/image-sequencer-ui.brow.js"
       }
     },
 
     uglify: {
-      dist: {
+      core: {
         src: ["./dist/image-sequencer.js"],
         dest: "./dist/image-sequencer.min.js"
+      },
+      ui: {
+        src: ['dist/image-sequencer-ui.js'],
+        dest: 'dist/image-sequencer-ui.min.js'
+      },
+      prodcore: {
+        src: ["dist/image-sequencer.brow.js"],
+        dest: "dist/image-sequencer.js"
+      },
+      produi: {
+        src: ["dist/image-sequencer-ui.brow.js"],
+        dest: "dist/image-sequencer-ui.js"
       }
     },
     browserSync: {
@@ -45,6 +69,8 @@ module.exports = function(grunt) {
 
   /* Default (development): Watch files and build on change. */
   grunt.registerTask("default", ["watch"]);
-  grunt.registerTask("build", ["browserify:dist", "uglify:dist"]);
-  grunt.registerTask("serve", ["browserify:dist", "uglify:dist", "browserSync", "watch"]);
+  grunt.registerTask("build", ["browserify:core", "browserify:ui", "uglify:core", "uglify:ui"]);
+  grunt.registerTask("serve", ["browserify:core", "browserify:ui", "browserSync", "watch"]);
+  grunt.registerTask("compile", ["browserify:core", "browserify:ui"]);
+  grunt.registerTask("production", ["browserify:prodcore", "browserify:produi", "uglify:prodcore", "uglify:produi"]);
 };

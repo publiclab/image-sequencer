@@ -1,0 +1,53 @@
+{
+    "name": "Text-Overlay",
+    "description": "Overlay text on image.",
+    "inputs": {
+        "text": {
+            "type": "string",
+            "desc": "Enter the text to overlay.",
+            "default": "Lorem ipsum"
+        },
+        "x": {
+            "type": "integer",
+            "desc": "Starting text horizontal position.",
+            "default": "20"
+        },
+        "y": {
+            "type": "integer",
+            "desc": "Starting text vertical position.",
+            "default": "20"
+        },
+        "font": {
+            "type": "select",
+            "desc": "Select the font style.",
+            "default": "serif",
+            "values": [
+                "serif",
+                "arial",
+                "times",
+                "courier",
+                "Montserrat"
+            ]
+        },
+        "color": {
+            "type": "select",
+            "desc": "Select the text color.",
+            "default": "black",
+            "values": [
+                "black",
+                "blue",
+                "green",
+                "red",
+                "white",
+                "pink",
+                "orange"
+            ]
+        },
+        "size": {
+            "type" : "integer",
+            "desc": "Enter the font size in pixels.",
+            "default": "12"
+        }
+    },
+    "only": "browser" 
+}

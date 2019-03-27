@@ -1,8 +1,14 @@
 module.exports = function Dynamic(options, UI, util) {
 
+<<<<<<< HEAD
     options.x = options.x || 0;
     options.y = options.y || 0;
     options.offset = options.offset || -2;
+=======
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+    options.x = options.x || defaults.x;
+    options.y = options.y || defaults.y;
+>>>>>>> main
 
     var output;
 
@@ -14,8 +20,22 @@ module.exports = function Dynamic(options, UI, util) {
 
         var step = this;
 
+<<<<<<< HEAD
         // convert offset as string to int
         if(typeof options.offset === "string") options.offset = parseInt(options.offset);
+=======
+        var parseCornerCoordinateInputs = require('../../util/ParseInputCoordinates');
+
+        //parse the inputs
+        parseCornerCoordinateInputs(options, {
+            src: input.src,
+            x: { valInp: options.x, type: 'horizontal' },
+            y: { valInp: options.y, type: 'vertical' },
+        }, function (options, input) {
+            options.x = parseInt(input.x.valInp);
+            options.y = parseInt(input.y.valInp);
+        });
+>>>>>>> main
 
         // save the pixels of the base image
         var baseStepImage = this.getStep(options.offset).image;
@@ -23,7 +43,7 @@ module.exports = function Dynamic(options, UI, util) {
 
         var getPixels = require('get-pixels');
 
-        getPixels(input.src, function(err, pixels) {
+        getPixels(input.src, function (err, pixels) {
             options.secondImagePixels = pixels;
 
             function changePixel(r1, g1, b1, a1, x, y) {

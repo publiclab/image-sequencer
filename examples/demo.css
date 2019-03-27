@@ -23,15 +23,30 @@ h1 {
   color: #445;
 }
 
+.center-align {
+  display: flex;
+  justify-content: center;
+  text-align:center;
+}
+
 .header {
   text-align: center;
+}
+
+.panel {
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 .nomargin {
   margin: 0 !important;
 }
 
-#dropzone {
+.form-control[type="range"] {
+  padding: 0px 0px;
+}
+
+.dropzone {
   padding: 30px;
   margin: 0 20% 30px;
   border: 4px dashed #ccc;
@@ -44,7 +59,7 @@ h1 {
   background: #eee;
 }
 
-#dropzone input {
+.dropzone input {
   max-width: 100%;
 }
 
@@ -85,13 +100,18 @@ h1 {
   color: #444;
 }
 
+.load-spin{
+  position: absolute;
+  right: 0px;
+}
+
 #addStep {
   max-width: 500px;
   margin: 20px auto;
 }
 
 #add-step-btn{
-  margin: 10px;
+  margin-left: 10px;
 }
 
 #addStep .labels {
@@ -113,7 +133,8 @@ h1 {
 }
 #save-seq {
   display: block;
-  margin: 0 auto;
+  margin: 0px 10px 0px 0px;
+  width: 250px;
 }
 .info {
   padding: 8px;
@@ -121,19 +142,117 @@ h1 {
 }
 #gif {
   display: block;
-  margin: 0 auto;
-  margin-top: 4px;
+  margin: 0px 0px 0px 10px;
+  width: 250px;
 }
 #dwnld {
-  max-width: 200px;
+  max-width: 500px;
   margin: 20px auto;
   margin-left: 5px;
 }
 
 #gif_element {
   display: block;
-  padding: 50px;
   margin: 0 auto;
-
+  width: 100%;
+  height: auto;
 }
 
+#move-up {
+    position: fixed;
+    bottom: 50px;
+    right: 40px;
+    z-index: 550;
+    display: none;
+    background:transparent;
+    border:none;
+}
+
+#move-up i {
+    font-size:60px;
+    opacity:0.7;
+    color:#BABABA;
+}
+
+.btn-circle{
+  min-width: 80px;
+  min-height: 80px;
+  text-align: center;
+  display: flex !important;
+  flex-direction: column;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.42;
+  border-radius: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.radio{
+  cursor:pointer;
+  overflow: hidden;
+  height: 80px;
+  width: 80px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.radio-group {
+  margin-bottom: 20px;
+  overflow: auto;
+}
+
+.no-border {
+  border: 0px;
+}
+
+.savesequencemsg{
+  display: none;
+  text-align: center;
+  }
+
+.notification {
+  background-color: #808b96;
+  padding:4px;
+  color:white;
+  border-radius:3px;
+  font-size:2rem;
+  position:fixed;
+  bottom:2px;
+  left:50%;
+  min-width:14rem;
+  text-align:center;
+  display:none;
+  transform: translate(-50%, -50%);
+}
+
+#resetButton {
+  margin-top: 20px;
+}
+
+.i-over {
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  z-index: 2;
+  color: white;
+}
+
+.i-small {
+  left: 25px;
+}
+
+@media all and (max-width: 767px) {
+  .center-align {
+    justify-content: space-between;
+  }
+}
+a.name-header{
+  text-decoration: none;
+  color: #445;
+}
+
+.step-column{
+    display:flex; 
+    align-content: center;
+    justify-content: center;
+}

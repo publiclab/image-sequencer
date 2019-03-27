@@ -1,0 +1,12 @@
+{
+  "name": "Resize",
+  "description": "Resize image by given percentage value",
+  "inputs": {
+    "resize": {
+      "type": "string",
+      "desc": "Percentage value of the resize",
+      "default": "125%"
+    }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#resize-module"
+}

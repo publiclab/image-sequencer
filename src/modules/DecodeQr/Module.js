@@ -8,7 +8,10 @@ module.exports = function DoNothing(options,UI) {
   var getPixels = require('get-pixels');
 
   // This function is called everytime a step has to be redrawn
-  function draw(input,callback) {
+  function draw(input,callback,progressObj) {
+
+    progressObj.stop(true);
+    progressObj.overrideFlag = true;
 
     var step = this;
 
@@ -18,16 +21,25 @@ module.exports = function DoNothing(options,UI) {
 
       var w = pixels.shape[0];
       var h = pixels.shape[1];
-      var decoded = jsQR.decodeQRFromImage(pixels.data,w,h);
+      var decoded = jsQR(pixels.data,w,h);
 
-      // This output is accessible to Image Sequencer
-      step.output = input;
-      step.output.data = decoded;
 
       // Tell Image Sequencer that this step is complete
-      callback();
-      options.step.qrval = decoded;
+      options.step.qrval = (decoded)?decoded.data:"undefined";
+    });
 
+    function output(image, datauri, mimetype){
+      // This output is accessible by Image Sequencer
+      step.output = {
+        src: datauri,
+        format: mimetype
+      };
+    }
+    return require('../_nomodule/PixelManipulation.js')(input, {
+      output: output,
+      format: input.format,
+      image: options.image,
+      callback: callback
     });
 
   }

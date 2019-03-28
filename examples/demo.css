@@ -256,8 +256,8 @@ a.name-header{
   justify-content: center;
 }
 
-.panel-header button.btn {
-  margin-top: -6px !important;
+.trash-container button.btn-xs {
+  margin-top: -5px !important;
 }
 
 /*

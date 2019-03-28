@@ -39,7 +39,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
                 <div class="col-md-4 details">\
                   <h3>\
                     <span class="load-spin" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></span>' +
-                      '</h3><div class="cal collapse in"><p><i>"'+
+                      '</h3><div class="cal collapse in"><p><i>'+
                         (step.description || "") +
                       '</i></p></div>\
                 </div>\

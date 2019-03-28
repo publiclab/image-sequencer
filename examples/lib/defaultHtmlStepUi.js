@@ -29,11 +29,11 @@ function DefaultHtmlStepUi(_sequencer, options) {
         <form class="input-form">\
           <div class="panel panel-default">\
             <div class="panel-heading">\
-              <div class="trash"></div>\
-                <h3 class="panel-title">' +  
-                  '<span class="toggle">' +step.name + '<span class="caret"></span>\
-                </h3>\
-              </div>\
+              <div class="trash-container pull-right"></div>\
+              <h3 class="panel-title">' +  
+                '<span class="toggle">' +step.name + '<span class="caret"></span>\
+              </h3>\
+            </div>\
             <div class="panel-body cal collapse in">\
               <div class="row step">\
                 <div class="col-md-4 details">\
@@ -57,8 +57,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
         </div>';
 
     var tools =
-    '<div class="trash pull-right">\
-      <button confirm="Are you sure?" class="remove btn btn-default btn-sm">\
+    '<div class="trash">\
+      <button confirm="Are you sure?" class="remove btn btn-default btn-xs">\
         <i class="fa fa-trash"></i>\
       </button>\
     </div>';
@@ -131,10 +131,10 @@ function DefaultHtmlStepUi(_sequencer, options) {
         step.ui.querySelector("div.details").appendChild(div);
       }
       $(step.ui.querySelector("div.panel-footer")).append(
-        '<div class="cal collapse in"><p><button type="submit" class="btn btn-sm btn-default btn-save" disabled = "true" >Apply</button><span> Press apply to see changes</span></p></div>'
-      );      
+        '<div class="cal collapse in"><button type="submit" class="btn btn-sm btn-default btn-save" disabled = "true" >Apply</button> <small style="padding-top:2px;">Press apply to see changes</small></div>'
+      );
       $(step.ui.querySelector("div.panel-footer")).prepend(
-        '<button class="pull-right btn btn-sm insert-step" >\
+        '<button class="pull-right btn btn-default btn-sm insert-step" >\
       <i class="fa fa-plus"></i> Insert Module\
       </button>'
       );  
@@ -142,7 +142,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     if (step.name != "load-image") {
       step.ui
-        .querySelector("div.trash")
+        .querySelector("div.trash-container")
         .prepend(
           parser.parseFromString(tools, "text/html").querySelector("div")
         );

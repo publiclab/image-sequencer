@@ -255,6 +255,12 @@ a.name-header{
   align-content: center;
   justify-content: center;
 }
+
+.panel-header button.btn {
+  margin-top: -6px !important;
+}
+
+/*
 .panel-footer .insert-step{
   margin-left:10px;
   border-radius:6px;
@@ -270,3 +276,4 @@ a.name-header{
 .panel-footer{
   height: 45px;
 }
+*/

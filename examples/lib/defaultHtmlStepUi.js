@@ -25,7 +25,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     step.ui =
       '\
-      <div>\
+      <div class="main">\
         <form class="input-form">\
           <div class="panel panel-default">\
             <div class="panel-heading">\
@@ -67,7 +67,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     var parser = new DOMParser();
     step.ui = parser.parseFromString(step.ui, "text/html");
-    step.ui = step.ui.querySelector("div.container");
+    step.ui = step.ui.querySelector("div.main");
     step.linkElements = step.ui.querySelectorAll("a");
     step.imgElement = step.ui.querySelector("a img");
 
@@ -151,9 +151,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
       // Insert the step's UI in the right place
       if (stepOptions.index == _sequencer.steps.length) {
         stepsEl.appendChild(step.ui);
-        $("#steps .container:nth-last-child(1) .insert-step").prop('disabled',true);
-        if($("#steps .container:nth-last-child(2)"))
-        $("#steps .container:nth-last-child(2) .insert-step").prop('disabled',false);
+        $("#steps .main:nth-last-child(1) .insert-step").prop('disabled',true);
+        if($("#steps .main:nth-last-child(2)"))
+        $("#steps .main:nth-last-child(2) .insert-step").prop('disabled',false);
       } else {
         stepsEl.insertBefore(step.ui, $(stepsEl).children()[stepOptions.index]);
       }
@@ -305,7 +305,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
   function onRemove(step) {
     step.ui.remove();
-    $("#steps .container:nth-last-child(1) .insert-step").prop('disabled',true);
+    $("#steps .main:nth-last-child(1) .insert-step").prop('disabled',true);
     $('div[class*=imgareaselect-]').remove();
   }
 

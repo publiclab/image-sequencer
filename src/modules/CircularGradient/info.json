@@ -1,0 +1,25 @@
+{
+    "name": "Circular Gradient",
+    "description": "Gives a circular gradient of the image",
+    "inputs": {
+        "fillColor": {
+          "type": "String",
+          "desc": "three space separated numbers representing the RGB values of fill-color",
+          "default": "100 100 100",
+          "placeholder": "100 100 100"
+        },
+        "centreX": {
+            "type": "integer",
+            "max": 210,
+            "desc": "X co-ordinate of centre of gradient",
+            "default": 305,
+        },
+        "centreY": {
+            "type": "integer",
+            "max": 210,
+            "desc": "Y co-ordinate of centre of gradient",
+            "default": 214,
+        }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+}

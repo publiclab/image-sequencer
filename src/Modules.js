@@ -7,9 +7,11 @@ module.exports = {
   'blend': require('./modules/Blend'),
   'blur': require('./modules/Blur'),
   'brightness': require('./modules/Brightness'),
+  'circular-gradient': require('./modules/CircularGradient'),
   'channel': require('./modules/Channel'),
   'colorbar': require('./modules/Colorbar'),
   'colormap': require('./modules/Colormap'),
+  'color-temperature': require('./modules/ColorTemperature'),
   'contrast': require('./modules/Contrast'),
   'convolution': require('./modules/Convolution'),
   'crop': require('./modules/Crop'),
@@ -36,6 +38,5 @@ module.exports = {
   'saturation': require('./modules/Saturation'),
   'text-overlay': require('./modules/TextOverlay'),
   'threshold': require('./modules/Threshold'),
-  'tint': require('./modules/Tint'),
-  'color-temperature': require('./modules/ColorTemperature')
+  'tint': require('./modules/Tint')
 }

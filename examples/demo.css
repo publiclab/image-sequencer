@@ -1,14 +1,14 @@
 /* https://github.com/theleagueof/league-spartan */
 @font-face {
-    font-family: 'League Spartan';
-    src: url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.eot');
-    src: url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.eot?#iefix') format('embedded-opentype'),
-         url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.woff2') format('woff2'),
-         url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.woff') format('woff'),
-         url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.ttf') format('truetype'),
-         url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.svg#league_spartanbold') format('svg');
-    font-weight: bold;
-    font-style: normal;
+  font-family: 'League Spartan';
+  src: url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.eot');
+  src: url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.eot?#iefix') format('embedded-opentype'),
+       url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.woff2') format('woff2'),
+       url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.woff') format('woff'),
+       url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.ttf') format('truetype'),
+       url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.svg#league_spartanbold') format('svg');
+  font-weight: bold;
+  font-style: normal;
 }
 
 body {
@@ -72,7 +72,6 @@ h1 {
 }
 
 .details {
-  border-top: 3px solid #444;
   padding-left: 6px;
 }
 
@@ -159,19 +158,19 @@ h1 {
 }
 
 #move-up {
-    position: fixed;
-    bottom: 50px;
-    right: 40px;
-    z-index: 550;
-    display: none;
-    background:transparent;
-    border:none;
+  position: fixed;
+  bottom: 50px;
+  right: 40px;
+  z-index: 550;
+  display: none;
+  background:transparent;
+  border:none;
 }
 
 #move-up i {
-    font-size:60px;
-    opacity:0.7;
-    color:#BABABA;
+  font-size:60px;
+  opacity:0.7;
+  color:#BABABA;
 }
 
 .btn-circle{
@@ -208,7 +207,7 @@ h1 {
 .savesequencemsg{
   display: none;
   text-align: center;
-  }
+}
 
 .notification {
   background-color: #808b96;
@@ -252,10 +251,32 @@ a.name-header{
 }
 
 .step-column{
-    display:flex; 
-    align-content: center;
-    justify-content: center;
+  display:flex; 
+  align-content: center;
+  justify-content: center;
 }
+
+.trash-container button.btn-xs {
+  margin-top: -5px !important;
+}
+
+/*
+.panel-footer .insert-step{
+  margin-left:10px;
+  border-radius:6px;
+  background-color:#fff;
+  border:solid #bababa 1.1px;
+}
+.col-md-4{
+  padding-left: 30px;
+}
+.panel-heading{
+  height:45px;
+}
+.panel-footer{
+  height: 45px;
+}
+<<<<<<< HEAD
 #gif{
   margin-left:0px;
   margin-top:5px;
@@ -267,3 +288,6 @@ a.name-header{
   align:center; 
   width:100%;
 }
+=======
+*/
+>>>>>>> main

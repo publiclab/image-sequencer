@@ -413,7 +413,7 @@ ImageSequencer = function ImageSequencer(options) {
     image: image,
 
     //user functions
-    loadImage: loadImages,
+    loadImages: loadImages,
     addSteps: addSteps,
     removeSteps: removeSteps,
     insertSteps: insertSteps,

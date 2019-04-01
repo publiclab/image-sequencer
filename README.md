@@ -4,8 +4,9 @@ Image Sequencer
 
 [![Build Status](https://travis-ci.org/publiclab/image-sequencer.svg?branch=master)](https://travis-ci.org/publiclab/image-sequencer)
 
-**Latest Stable Demo**: https://sequencer.publiclab.org
-**Latest Beta Demo**: https://beta.sequencer.publiclab.org
+- **Latest Stable Demo**: https://sequencer.publiclab.org
+- **Latest Beta Demo**: https://beta.sequencer.publiclab.org
+- **Stable Branch**: https://github.com/publiclab/image-sequencer/tree/stable/
 
 ## Why
 
@@ -18,9 +19,9 @@ Image Sequencer is different from other image processing systems because it's _n
 
 The following diagrams attempt to explain how the applications various components interconnect:
 
-![general diagram](https://i.imgur.com/S3Dou2M.jpg)
+![general diagram](https://publiclab.org/i/30547.png?s=o)
 
-![workflow diagram](https://raw.githubusercontent.com/publiclab/image-sequencer/master/examples/images/diagram-workflows.png)
+![workflow diagram](https://raw.githubusercontent.com/publiclab/image-sequencer/main/examples/images/diagram-workflows.png)
 
 It also for prototypes other related ideas:
 
@@ -28,15 +29,17 @@ It also for prototypes other related ideas:
 * test-based image processing -- the ability to create a sequence of steps that do the same task as other image processing tools, provable with example before/after images to compare with
 * logging each step -- to produce an evidentiary record of modifications to an original image
 * cascading changes -- change an earlier step's settings, and see those changes affect later steps
-* "small modules" -- based extensibility: see [Contributing](https://github.com/publiclab/image-sequencer/blob/master/CONTRIBUTING.md)
+* "small modules" -- based extensibility: see [Contributing](https://github.com/publiclab/image-sequencer/blob/main/CONTRIBUTING.md)
+
 
 ## Examples
 
-* [Simple Demo](https://publiclab.github.io/image-sequencer/)
+* [Simple Demo](https://sequencer.publiclab.org)
+* [Latest Beta Demo](https://beta.sequencer.publiclab.org)
 
 A diagram of this running 5 steps on a single sample image may help explain how it works:
 
-![example workflow](https://raw.githubusercontent.com/publiclab/image-sequencer/master/examples/images/diagram-6-steps.png)
+![example workflow](https://raw.githubusercontent.com/publiclab/image-sequencer/main/examples/images/diagram-6-steps.png)
 
 ## Jump to:
 
@@ -47,8 +50,8 @@ A diagram of this running 5 steps on a single sample image may help explain how 
 * [Method Chaining](#method-chaining)
 * [Multiple Images](#multiple-images)
 * [Creating a User Interface](#creating-a-user-interface)
-* [Contributing](https://github.com/publiclab/image-sequencer/blob/master/CONTRIBUTING.md)
-* [Submit a Module](https://github.com/publiclab/image-sequencer/blob/master/CONTRIBUTING.md#contributing-modules)
+* [Contributing](https://github.com/publiclab/image-sequencer/blob/main/CONTRIBUTING.md)
+* [Submit a Module](https://github.com/publiclab/image-sequencer/blob/main/CONTRIBUTING.md#contributing-modules)
 * [Get Demo Bookmarklet](https://publiclab.org/w/imagesequencerbookmarklet)
 
 ## Installation
@@ -56,12 +59,12 @@ A diagram of this running 5 steps on a single sample image may help explain how 
 This library conveniently works in the browser, in Node, and on the command line (CLI).
 
 ### Unix based platforms
-You can set up a local environment to test the UI with `sudo npm run setup` followed by `npm start`
+You can set up a local environment to test the UI with `npm run setup` followed by `npm start`.
 
 ### Windows
 Our npm scripts do not support windows shells, please run the following snippet in PowerShell.
 ```powershell
-npm i ; npm i -g grunt grunt-cli ; grunt serve
+npm i ; npm i -g grunt grunt-cli ; grunt build; grunt serve
 ```
 In case of a port conflict please run the following
 ```powershell
@@ -70,12 +73,12 @@ npm i -g http-server ; http-server -p 3000
 
 ### Browser
 
-Just include [image-sequencer.js](https://publiclab.github.io/image-sequencer/dist/image-sequencer.js) in the Head section of your web page. See the [demo here](https://publiclab.github.io/image-sequencer/)!
+Just include [image-sequencer.min.js](https://github.com/publiclab/image-sequencer/blob/stable/dist/image-sequencer.min.js) in the Head section of your web page. See the [demo here](https://sequencer.publiclab.org)!
 
 ### Node (via NPM)
 
 (You must have NPM for this)
-Add `image-sequencer` to your list of dependencies and run `$ npm install`
+Add `image-sequencer` to your list of dependencies and run `npm install`
 
 ### CLI
 

@@ -1,4 +1,4 @@
-module.exports = function Balance(options, UI) {
+module.exports = function ColorTemperature(options, UI) {
 
     var output;
 

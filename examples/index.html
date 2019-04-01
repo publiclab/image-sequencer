@@ -2,7 +2,6 @@
 
 <html>
 
-
 <head>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +14,6 @@
    <meta property="og:site_name" content="sequencer.publiclab.org">
    <meta property="og:url" content="https://sequencer.publiclab.org">
    <meta property="og:title" content="Image Sequencer">
-
 
   <title>Image Sequencer</title>
 
@@ -34,7 +32,6 @@
   <script src="lib/scrollToTop.js"></script>
   <script src="../node_modules/selectize/dist/js/standalone/selectize.min.js"></script>
 </head>
-
 
 <body>
 
@@ -130,12 +127,16 @@
               <p>Crop</p>
             </div>
           </div>
-          <div class="center-align">
+          <div class="row center-align">
+            <div class="col-md-8">
+              
             <select  id="selectStep" >
               <!-- The default null selection has been appended manually in demo.js
               This is because the options in select are overritten when options are appended.-->
             </select>
-            <button class="btn btn-success btn-lg" name="add" id="add-step-btn">Add Step</button>
+            </div>
+            <div class="col-md-4">
+            <button class="btn btn-success btn-lg" name="add" id="add-step-btn">Add Step</button></div>
           </div>
           <div class="row center-align">
           <button id="resetButton" class="btn btn-default btn-lg" style=" margin: 20px 35px 0px 35px; width:100%;">Clear All Steps</button>
@@ -146,13 +147,6 @@
 
     <section id="sequence-actions" class="panel">
       <div class="panel-body">
-
-        <div class="row center-align">
-          <!--<button class="btn btn-primary btn-block btn-lg" name="save-sequence" id="save-seq">Save Sequence</button> -->
-            <!--<button class="btn btn-primary btn-block btn-lg" id="download-btn" name="download" style="display: block; margin: 0px 10px 0px 0px; width: 250px;">Download PNG</button> -->
-          <button class="btn btn-primary btn-block btn-lg js-view-as-gif" id="gif" style="margin: 0px 35px 0px 35px;width:100%;">View GIF</button>
-        </div>
-
 
         <div class="modal fade" id="js-download-gif-modal" tabindex="-1" role="dialog">
           <div class="modal-dialog" role="document">
@@ -185,14 +179,14 @@
         <div class="panel-body">
           <div style="text-align:center;">
             <h2 style="margin-top:20px">Save</h2>
-            <p>Or click ARROW to save the entire sequence as a workflow for future use.</p>
-              <select class="form-control input-md" id="selectSaveOption" style="margin-top:20px">
-                <option>Save as PNG</option>
-                <option>Save as GIF (all steps)</option>
-                <option>Save sequence</option>
-                <option>Save sequence string</option>
-              </select>
-                <button id="saveButton" class="btn btn-primary btn-lg" style="margin-top:20px; margin-bottom:0px;align:center; width:100%;">Save</button>
+            <select class="form-control input-md" id="selectSaveOption" style="margin-top:20px">
+              <option>Save as PNG</option>
+              <option>Save as GIF (all steps)</option>
+              <option>Save sequence</option>
+              <option>Save sequence string</option>
+            </select>
+            <p><button id="saveButton" class="btn btn-primary btn-lg" style="margin-top:20px; margin-bottom:0px;align:center; width:100%;">Save</button></p>
+            <p><button class="btn btn-default js-view-as-gif" id="gif" style="align:center;">Preview GIF</button></p>
           </div>
         </div>
       </div>
@@ -206,19 +200,17 @@
       <div class="col-md-6">
         <h2>Need Help?</h2>
         <p>
-          Post a link to this and ask help from other community members on <a href="https://github.com/publiclab/image-sequencer/issues/new">Github Issues</a>
-        </p>
-        <p>
-          <a class="btn btn-primary" href="https://gitter.im/publiclab/publiclab">Ask a question on Gitter</a>
+          <a class="btn btn-default" href="https://github.com/publiclab/image-sequencer/issues">Ask a question</a>
+          <a class="btn btn-default" href="https://publiclab.org/chat">Ask in our chatroom</a>
         </p>
       </div>
       <div class="col-md-6">
         <h2>Improve this tool</h2>
         <p>
-          This is an open source toolkit which you can help add to and improve on <a href="https://github.com/publiclab/image-sequencer/">Github</a>
+          This is an open source toolkit which you can help improve on Github
         </p>
         <p>
-          <a class="btn btn-primary" href="https://github.com/publiclab/image-sequencer">View the code &raquo;</a>
+          <a class="btn btn-default" href="https://github.com/publiclab/image-sequencer">View the code &raquo;</a>
         </p>
       </div>
     </div>

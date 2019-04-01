@@ -5,63 +5,63 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
   function stepUI() {
     return '<div class="row insertDiv collapse">\
         <div class="col-md-6 col-md-offset-2" style="margin-top:5%">\
-	<button class="btn btn-primary close-insert-box"><i class="fa fa-times" aria-hidden="true"> Close</button>\
-        <section id="insertStep" class="panel panel-primary">\
-          <div class="form-inline">\
-            <div class="panel-body">\
-              <p class="info">Select a new module to add to your sequence.</p>\
-              <div class="row center-align radio-group">\
-              <div>\
-              <div class="radio" data-value="resize">\
-              <i class="fa fa-arrows-alt fa-4x i-over"></i>\
+          <section id="insertStep" class="panel panel-primary">\
+            <button class="btn btn-default close-insert-box"><i class="fa fa-times" aria-hidden="true"></i> Close</button>\
+            <div class="form-inline">\
+              <div class="panel-body">\
+                <p class="info">Select a new module to add to your sequence.</p>\
+                <div class="row center-align radio-group">\
+                <div>\
+                <div class="radio" data-value="resize">\
+                <i class="fa fa-arrows-alt fa-4x i-over"></i>\
+              </div>\
+                  <p>Resize</p>\
+                  </div>\
+                  <div>\
+                  <div class="radio" data-value="brightness">\
+                  <i class="fa fa-sun-o fa-4x i-over"></i>\
+                </div>\
+                    <p>Brightness</p>\
+                  </div>\
+                  <div>\
+                  <div class="radio" data-value="contrast">\
+                  <i class="fa fa-adjust fa-4x i-over"></i>\
+                </div>\
+                    <p>Contrast</p>\
+                  </div>\
+                  <div>\
+                  <div class="radio" data-value="saturation">\
+                  <i class="fa fa-tint fa-4x i-over i-small"></i>\
+                </div>\
+                    <p>Saturation</p>\
+                  </div>\
+                  <div>\
+                  <div class="radio" data-value="rotate">\
+                  <i class="fa fa-rotate-right fa-4x i-over"></i>\
+                </div>\
+                    <p>Rotate</p>\
+                  </div>\
+                  <div>\
+                  <div class="radio" data-value="crop">\
+                  <i class="fa fa-crop fa-4x i-over"></i>\
+                </div>\
+                    <p>Crop</p>\
+                  </div>\
+                </div>\
+                <div class="row center-align">\
+                  <div class="col-md-8">\
+                    <select class=".insert-step-select">\
+                      <!-- The default null selection has been appended manually in demo.js\
+                      This is because the options in select are overritten when options are appended.-->\
+                    </select>\
+                  <div>\
+                  <div class="col-md-4">\
+                    <button class="btn btn-success btn-lg insert-save-btn" name="add" id="add-step-btn">Add Step</button>\
+                  <div>\
+                </div>\
+              </div>\
             </div>\
-                <p>Resize</p>\
-                </div>\
-                <div>\
-                <div class="radio" data-value="brightness">\
-                <i class="fa fa-sun-o fa-4x i-over"></i>\
-              </div>\
-                  <p>Brightness</p>\
-                </div>\
-                <div>\
-                <div class="radio" data-value="contrast">\
-                <i class="fa fa-adjust fa-4x i-over"></i>\
-              </div>\
-                  <p>Contrast</p>\
-                </div>\
-                <div>\
-                <div class="radio" data-value="saturation">\
-                <i class="fa fa-tint fa-4x i-over i-small"></i>\
-              </div>\
-                  <p>Saturation</p>\
-                </div>\
-                <div>\
-                <div class="radio" data-value="rotate">\
-                <i class="fa fa-rotate-right fa-4x i-over"></i>\
-              </div>\
-                  <p>Rotate</p>\
-                </div>\
-                <div>\
-                <div class="radio" data-value="crop">\
-                <i class="fa fa-crop fa-4x i-over"></i>\
-              </div>\
-                  <p>Crop</p>\
-                </div>\
-              </div>\
-              <div class="row center-align">\
-                <div class="col-md-8">\
-                <select class="form-control input-lg" id="selectStep">\
-                  <!-- The default null selection has been appended manually in demo.js\
-                  This is because the options in select are overritten when options are appended.-->\
-                </select>\
-                <div>\
-                <div class="col-md-4">\
-                <button class="btn btn-success btn-lg" name="add" id="add-step-btn">Add Step</button>\
-                <div>\
-              </div>\
-            </div>\
-          </div>\
-        </section>\
+          </section>\
         </div>';
   }
 
@@ -103,7 +103,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       });
     }
     
-    var insertStepSelect = $("#insertStep select");
+    var insertStepSelect = $(step.ui.querySelector('.insert-step-select'));
     insertStepSelect.html("");
     // Add modules to the insertStep dropdown
     for (var m in modulesInfo) {
@@ -112,10 +112,10 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
           '<option value="' + m + '">' + modulesInfo[m].name + "</option>"
         );
     }
-    $('#insertStep #add-step-btn').selectize({
+    insertStepSelect.selectize({
       sortField: 'text'
     });
-    $('#insertStep #add-step-btn').prop('disabled', true);
+    $('#insertStep#insertStep #add-step-btn').prop('disabled', true);
 
     insertStepSelect.append('<option value="none" disabled selected>More modules...</option>');
     $('#insertStep .radio-group .radio').on("click", function () {

@@ -252,3 +252,11 @@ a.name-header{
 .trash-container button.btn-xs {
   margin-top: -5px !important;
 }
+
+.toggleIcon {
+  transition: transform 0.2s;
+}
+
+.rotated {
+  transform: rotate(180deg);
+}

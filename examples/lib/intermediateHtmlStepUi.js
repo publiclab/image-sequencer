@@ -4,7 +4,6 @@ var urlHash = require('./urlHash.js'),
 function IntermediateHtmlStepUi(_sequencer, step, options) {
   function stepUI() {
     return '<div class="row insertDiv collapse">\
-        <div class="col-md-6 col-md-offset-2" style="margin-top:5%">\
           <section class="panel panel-primary .insert-step">\
             <button class="btn btn-default close-insert-box"><i class="fa fa-times" aria-hidden="true"></i> Close</button>\
             <div class="form-inline">\

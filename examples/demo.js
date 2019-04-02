@@ -197,8 +197,8 @@ window.onload = function() {
         step.options.step.imgElement.src = reader.result;
       else
         step.imgElement.src = reader.result;
-      insertPreview.updatePreviews(reader.result,'addStep');
-      insertPreview.updatePreviews(sequencer.steps[0].imgElement.src,'insertStep');
+      insertPreview.updatePreviews(reader.result,'#addStep');
+      insertPreview.updatePreviews(sequencer.steps[0].imgElement.src,'.insertDiv');
     },
     onTakePhoto: function (url) {
       var step = sequencer.steps[0];
@@ -208,16 +208,16 @@ window.onload = function() {
         step.options.step.imgElement.src = url;
       else
         step.imgElement.src = url;
-      insertPreview.updatePreviews(url,'addStep');
-      insertPreview.updatePreviews(sequencer.steps[0].imgElement.src,'insertStep');
+      insertPreview.updatePreviews(url,'#addStep');
+      insertPreview.updatePreviews(sequencer.steps[0].imgElement.src,'.insertDiv');
     }
   });
 
   setupCache();
 
   if (urlHash.getUrlHashParameter('src')) {
-    insertPreview.updatePreviews(urlHash.getUrlHashParameter('src'),'addStep');
+    insertPreview.updatePreviews(urlHash.getUrlHashParameter('src'),'#addStep');
   } else {
-    insertPreview.updatePreviews("images/tulips.png",'addStep');
+    insertPreview.updatePreviews("images/tulips.png",'#addStep');
   }
 };

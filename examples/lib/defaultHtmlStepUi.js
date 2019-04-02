@@ -134,8 +134,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
       );
       $(step.ui.querySelector("div.panel-footer")).prepend(
         '<button class="pull-right btn btn-default btn-sm insert-step" >\
-      <i class="fa fa-plus"></i> Insert Step\
-      </button>'
+          <span class="insert-text"><i class="fa fa-plus"></i> Insert Step</span><span class="no-insert-text" style="display:none">Close</span>\
+        </button>'
       );  
     }
 

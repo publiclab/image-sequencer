@@ -260,3 +260,15 @@ a.name-header{
 .rotated {
   transform: rotate(180deg);
 }
+
+#gif{
+  margin-left:0px;
+  margin-top:5px;
+  width:100%;
+}
+.save-button{
+  margin-top:20px; 
+  margin-bottom:0px;
+  align:center; 
+  width:100%;
+}

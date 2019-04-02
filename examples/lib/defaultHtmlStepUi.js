@@ -150,9 +150,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
       // Insert the step's UI in the right place
       if (stepOptions.index == _sequencer.steps.length) {
         stepsEl.appendChild(step.ui);
-        $("#steps .main:nth-last-child(1) .insert-step").prop('disabled',true);
-        if($("#steps .main:nth-last-child(2)"))
-        $("#steps .main:nth-last-child(2) .insert-step").prop('disabled',false);
+        $("#steps .step-container:nth-last-child(1) .insert-step").prop('disabled',true);
+        if($("#steps .step-container:nth-last-child(2)"))
+        $("#steps .step-container:nth-last-child(2) .insert-step").prop('disabled',false);
       } else {
         stepsEl.insertBefore(step.ui, $(stepsEl).children()[stepOptions.index]);
       }
@@ -301,7 +301,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
   function onRemove(step) {
     step.ui.remove();
-    $("#steps .main:nth-last-child(1) .insert-step").prop('disabled',true);
+    $("#steps .step-container:nth-last-child(1) .insert-step").prop('disabled',true);
     $('div[class*=imgareaselect-]').remove();
   }
 

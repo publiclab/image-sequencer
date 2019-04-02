@@ -2,7 +2,7 @@ Image Sequencer
 ====
 
 
-[![Build Status](https://travis-ci.org/publiclab/image-sequencer.svg?branch=master)](https://travis-ci.org/publiclab/image-sequencer)
+[![Build Status](https://travis-ci.org/publiclab/image-sequencer.svg?branch=master)](https://travis-ci.org/publiclab/image-sequencer) [![Maintainability](https://api.codeclimate.com/v1/badges/5906996dd2e90aca6398/maintainability)](https://codeclimate.com/github/publiclab/image-sequencer/maintainability)
 
 - **Latest Stable Demo**: https://sequencer.publiclab.org
 - **Latest Beta Demo**: https://beta.sequencer.publiclab.org

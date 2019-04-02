@@ -145,32 +145,26 @@
       </div>
     </section>
 
-    <section id="sequence-actions" class="panel">
-      <div class="panel-body">
-
-        <div class="modal fade" id="js-download-gif-modal" tabindex="-1" role="dialog">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Your gif is ready</h4>
-              </div>
-              <div class="modal-body">
-                <div id="js-download-modal-gif-container">
-                  <!-- Gif should appear here -->
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
-
-                <button id="js-download-as-gif-button" class="btn btn-primary">Download</button>
-              </div>
+    <div class="modal fade" id="js-download-gif-modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Your gif is ready</h4>
+          </div>
+          <div class="modal-body">
+            <div id="js-download-modal-gif-container">
+              <!-- Gif should appear here -->
             </div>
           </div>
-        </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
 
+            <button id="js-download-as-gif-button" class="btn btn-primary">Download</button>
+          </div>
+        </div>
       </div>
-    </section>
+    </div>
 
     </div>
     <div class="col-sm-4">
@@ -185,8 +179,8 @@
               <option>Save sequence</option>
               <option>Save sequence string</option>
             </select>
-            <p><button id="saveButton" class="btn btn-primary btn-lg" style="margin-top:20px; margin-bottom:0px;align:center; width:100%;">Save</button></p>
-            <p><button class="btn btn-default js-view-as-gif" id="gif" style="align:center;">Preview GIF</button></p>
+            <p><button id="saveButton" class="btn btn-primary btn-lg save-button">Save</button></p>
+            <p><button class="btn btn-default btn-lg js-view-as-gif" id="gif">Preview GIF</button></p>
           </div>
         </div>
       </div>

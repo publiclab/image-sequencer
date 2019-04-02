@@ -1,0 +1,21 @@
+{
+    "name": "GridOverlay",
+    "description": "Overlays a grid over an Image",
+    "inputs": {
+        "color": {
+            "type": "select",
+            "desc": "Select the color for the grid.",
+            "default": "black",
+            "values": [
+                "black",
+                "blue",
+                "green",
+                "red",
+                "white",
+                "pink",
+                "orange"
+            ]
+        }
+    },
+    "only": "browser" 
+}

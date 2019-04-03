@@ -139,7 +139,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     if (insertStepSelect.val() == "none") return;
 
     var newStepName = insertStepSelect.val()
-    $('div .insertDiv').remove();
+    toggleDiv();
     var sequenceLength = 1;
     if (sequencer.sequences[newStepName]) {
       sequenceLength = sequencer.sequences[newStepName].length;

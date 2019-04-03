@@ -71,22 +71,23 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     $(step.ui.querySelector('.insertDiv .info')).html(_sequencer.modulesInfo(m).description);
     $(step.ui.querySelector('.insertDiv .add-step-btn')).prop("disabled", false);
   }
+    
+    
+  var toggleDiv = function(callback = function(){}){
+    $(step.ui.querySelector('.insertDiv')).collapse('toggle');
+    if ($(step.ui.querySelector('.insert-text')).css('display') != "none"){
+      $(step.ui.querySelector('.insert-text')).fadeToggle(200, function(){$(step.ui.querySelector('.no-insert-text')).fadeToggle(200, callback)})
+    }
+    else {
+      $(step.ui.querySelector('.no-insert-text')).fadeToggle(200, function(){$(step.ui.querySelector('.insert-text')).fadeToggle(200, callback)})
+    }
+  }
 
   insertStep = function (id) {
     var modulesInfo = _sequencer.modulesInfo();
     var parser = new DOMParser();
     var addStepUI = stepUI();
     addStepUI = parser.parseFromString(addStepUI, "text/html").querySelector("div")
-
-    var toggleDiv = function(callback){
-      $(step.ui.querySelector('.insertDiv')).collapse('toggle');
-      if ($(step.ui.querySelector('.insert-text')).css('display') != "none"){
-        $(step.ui.querySelector('.insert-text')).fadeToggle(200, function(){$(step.ui.querySelector('.no-insert-text')).fadeToggle(200, callback)})
-      }
-      else {
-        $(step.ui.querySelector('.no-insert-text')).fadeToggle(200, function(){$(step.ui.querySelector('.insert-text')).fadeToggle(200, callback)})
-      }
-    }
 
     if ($(step.ui.querySelector('.insertDiv')).length > 0){
       toggleDiv();

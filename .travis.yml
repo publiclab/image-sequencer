@@ -6,6 +6,7 @@ node_js:
 env:
   - CXX=g++-4.8
 before_script:
+  - npm i -g surge
   - npm install grunt-cli -g # for "grunt build"
   - npm install jasmine -g
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
@@ -17,6 +18,7 @@ script:
   - grunt build
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - ./pr_deploy.sh
 addons:
   apt:
     sources:

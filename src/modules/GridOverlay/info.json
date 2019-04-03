@@ -2,6 +2,16 @@
     "name": "GridOverlay",
     "description": "Overlays a grid over an Image",
     "inputs": {
+        "x": {
+            "type": "integer",
+            "desc": "X-position (measured from left) from where grid starts",
+            "default": 100
+        },
+        "y": {
+            "type": "integer",
+            "desc": "Y-position (measured from top) from where grid starts",
+            "default": 100
+        },
         "color": {
             "type": "select",
             "desc": "Select the color for the grid.",

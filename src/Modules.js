@@ -10,6 +10,7 @@ module.exports = {
   'channel': require('./modules/Channel'),
   'colorbar': require('./modules/Colorbar'),
   'colormap': require('./modules/Colormap'),
+  'color-temperature': require('./modules/Temperature'),
   'contrast': require('./modules/Contrast'),
   'convolution': require('./modules/Convolution'),
   'crop': require('./modules/Crop'),
@@ -34,6 +35,5 @@ module.exports = {
   'rotate': require('./modules/Rotate'),
   'saturation': require('./modules/Saturation'),
   'threshold': require('./modules/Threshold'),
-  'tint': require('./modules/Tint'),
-  'white-balance': require('./modules/WhiteBalance')
+  'tint': require('./modules/Tint')
 }

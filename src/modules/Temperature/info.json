@@ -1,5 +1,5 @@
 {
-    "name": "White Balance",
+    "name": "Color Temperature",
     "description": "Change the colour balance of the image by adjusting the colour temperature.",
     "inputs": {
       "temperature": {

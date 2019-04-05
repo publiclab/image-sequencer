@@ -118,7 +118,7 @@ window.onload = function() {
 
     var button = event.target;
     button.disabled = true;
-
+    button.innerHTML='<i class="fa fa-circle-o-notch fa-spin"></i>'
 
     try {
       // Select all images from previous steps
@@ -170,6 +170,7 @@ window.onload = function() {
           modal.modal();
 
           button.disabled = false;
+          button.innerHTML = 'View GIF';
           isWorkingOnGifGeneration = false;
         }
       });
@@ -177,6 +178,7 @@ window.onload = function() {
     catch (e) {
       console.error(e);
       button.disabled = false;
+      button.innerHTML = 'View GIF';
       isWorkingOnGifGeneration = false;
 
     }

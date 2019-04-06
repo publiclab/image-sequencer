@@ -32,7 +32,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
               <div class="trash-container float-right"></div>\
               <h3 class="card-title">' +  
                 '<span class="dropdown-toggle">' +step.name + ' <span class="caret toggleIcon rotated"></span>\
-                 <span class="load-spin pull-right" style="display:none;padding:1px 8px;"><i class="fa fa-circle-o-notch fa-spin"></i></span>\
+                 <span class="load-spin float-right" style="display:none;padding:1px 8px;"><i class="fa fa-circle-o-notch fa-spin"></i></span>\
               </h3>\
             </div>\
             <div class="card-body cal collapse in">\
@@ -133,7 +133,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         '<div class="cal collapse in"><button type="submit" class="btn btn-sm btn-outline-dark btn-save" disabled = "true" >Apply</button> <small style="padding-top:2px;">Press apply to see changes</small></div>'
       );
       $(step.ui.querySelector("div.card-footer")).prepend(
-        '<button class="pull-right btn btn-outline-dark btn-sm insert-step" >\
+        '<button class="float-right btn btn-outline-dark btn-sm insert-step" >\
           <span class="insert-text"><i class="fa fa-plus"></i> Insert Step</span><span class="no-insert-text" style="display:none">Close</span>\
         </button>'
       );  

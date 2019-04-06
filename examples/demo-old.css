@@ -28,17 +28,17 @@ h1 {
   text-align: center;
 }
 
-.panels {
+.cards {
 }
 
-.panel {
+.card {
   background: #f8f8fa;
   padding: 20px 0;
   margin-bottom: 20px;
   border-bottom: 1px dashed #ccc;
 }
 
-.panel img {
+.card img {
   max-width: 100%;
 }
 

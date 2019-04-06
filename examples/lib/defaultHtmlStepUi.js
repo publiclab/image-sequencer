@@ -27,15 +27,15 @@ function DefaultHtmlStepUi(_sequencer, options) {
       '\
       <div class="container-fluid step-container">\
         <form class="input-form">\
-          <div class="panel panel-default">\
-            <div class="panel-heading">\
-              <div class="trash-container pull-right"></div>\
-              <h3 class="panel-title">' +  
-                '<span class="toggle">' +step.name + ' <span class="caret toggleIcon rotated"></span>\
+          <div class="card">\
+            <div class="card-header">\
+              <div class="trash-container float-right"></div>\
+              <h3 class="card-title">' +  
+                '<span class="dropdown-toggle">' +step.name + ' <span class="caret toggleIcon rotated"></span>\
                  <span class="load-spin pull-right" style="display:none;padding:1px 8px;"><i class="fa fa-circle-o-notch fa-spin"></i></span>\
               </h3>\
             </div>\
-            <div class="panel-body cal collapse in">\
+            <div class="card-body cal collapse in">\
               <div class="row step">\
                 <div class="col-md-4 details container-fluid">\
                   <div class="cal collapse in"><p>' +
@@ -50,14 +50,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
                 </div>\
               </div>\
             </div>\
-            <div class="panel-footer cal collapse in"></div>\
+            <div class="card-footer cal collapse in"></div>\
           </div>\
         </form>\
       </div>';
 
     var tools =
     '<div class="trash">\
-      <button confirm="Are you sure?" class="remove btn btn-default btn-xs">\
+      <button confirm="Are you sure?" class="remove btn btn-outline-dark btn-xs">\
         <i class="fa fa-trash"></i>\
       </button>\
     </div>';
@@ -129,11 +129,11 @@ function DefaultHtmlStepUi(_sequencer, options) {
                          </div>";
         step.ui.querySelector("div.details").appendChild(div);
       }
-      $(step.ui.querySelector("div.panel-footer")).append(
-        '<div class="cal collapse in"><button type="submit" class="btn btn-sm btn-default btn-save" disabled = "true" >Apply</button> <small style="padding-top:2px;">Press apply to see changes</small></div>'
+      $(step.ui.querySelector("div.card-footer")).append(
+        '<div class="cal collapse in"><button type="submit" class="btn btn-sm btn-outline-dark btn-save" disabled = "true" >Apply</button> <small style="padding-top:2px;">Press apply to see changes</small></div>'
       );
-      $(step.ui.querySelector("div.panel-footer")).prepend(
-        '<button class="pull-right btn btn-default btn-sm insert-step" >\
+      $(step.ui.querySelector("div.card-footer")).prepend(
+        '<button class="pull-right btn btn-outline-dark btn-sm insert-step" >\
           <span class="insert-text"><i class="fa fa-plus"></i> Insert Step</span><span class="no-insert-text" style="display:none">Close</span>\
         </button>'
       );  
@@ -160,7 +160,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     else {
       $("#load-image").append(step.ui);
     }
-    $(step.ui.querySelector(".toggle")).on("click", () => {
+    $(step.ui.querySelector(".dropdown-toggle")).on("click", () => {
       $(step.ui.querySelector('.toggleIcon')).toggleClass('rotated');
        $(step.ui.querySelectorAll(".cal")).collapse('toggle');
     });

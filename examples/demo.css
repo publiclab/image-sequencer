@@ -41,7 +41,7 @@ body > .container-fluid {
   text-align: center;
 }
 
-.panel {
+.card {
   margin-left: 20px;
   margin-right: 20px;
 }
@@ -179,7 +179,7 @@ body > .container-fluid {
   margin-left: 5px;
   margin-right: 5px;
 }
-.radio{
+.form-check{
   cursor:pointer;
   overflow: hidden;
   height: 80px;
@@ -188,7 +188,7 @@ body > .container-fluid {
   margin-right: 5px;
 }
 
-.radio-group {
+.form-group {
   margin-bottom: 20px;
   overflow: auto;
 }
@@ -271,4 +271,8 @@ a.name-header{
   margin-bottom:0px;
   align:center; 
   width:100%;
+}
+
+.bg-primary {
+  background-color: #ffffff!important;
 }

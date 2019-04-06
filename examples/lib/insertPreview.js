@@ -8,7 +8,7 @@ function generatePreview(previewStepName, customValues, path, selector) {
       img.src = src;
       $(img).css("max-width", "200%");
       $(img).css("transform", "translateX(-20%)");
-      $(selector + ' .radio-group').find('div').each(function() {
+      $(selector + ' .form-group').find('div').each(function() {
         if ($(this).find('div').attr('data-value') === previewStepName) {
           $(this).find('div').append(img);
         }

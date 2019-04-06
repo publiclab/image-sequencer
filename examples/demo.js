@@ -72,9 +72,9 @@ window.onload = function() {
   $("#addStep #add-step-btn").on("click", ui.addStepUi);
   $("#resetButton").on("click",resetSequence);
 
-  //Module button radio selection
-  $('.radio-group .radio').on("click", function() {
-    $(this).parent().find('.radio').removeClass('selected');
+  //Module button form-check selection
+  $('.form-group .form-check').on("click", function() {
+    $(this).parent().find('.form-check').removeClass('selected');
     $(this).addClass('selected');
     newStep = $(this).attr('data-value');
     //$("#addStep option[value=" + newStep + "]").attr('selected', 'selected');

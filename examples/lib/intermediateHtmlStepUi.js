@@ -4,44 +4,44 @@ var urlHash = require('./urlHash.js'),
 function IntermediateHtmlStepUi(_sequencer, step, options) {
   function stepUI() {
     return '<div class="row insertDiv collapse">\
-          <section class="panel panel-primary .insert-step">\
-            <button class="btn btn-default close-insert-box"><i class="fa fa-times" aria-hidden="true"></i> Close</button>\
+          <section class="card card-primary .insert-step">\
+            <button class="btn btn-outline-dark close-insert-box"><i class="fa fa-times" aria-hidden="true"></i> Close</button>\
             <div class="form-inline">\
-              <div class="panel-body">\
+              <div class="card-body">\
                 <p class="info">Select a new module to add to your sequence.</p>\
-                <div class="row center-align radio-group">\
+                <div class="row center-align form-group">\
                   <div>\
-                    <div class="radio" data-value="resize">\
+                    <div class="form-check" data-value="resize">\
                       <i class="fa fa-arrows-alt fa-4x i-over"></i>\
                     </div>\
                     <p>Resize</p>\
                   </div>\
                   <div>\
-                    <div class="radio" data-value="brightness">\
+                    <div class="form-check" data-value="brightness">\
                       <i class="fa fa-sun-o fa-4x i-over"></i>\
                     </div>\
                     <p>Brightness</p>\
                   </div>\
                   <div>\
-                    <div class="radio" data-value="contrast">\
+                    <div class="form-check" data-value="contrast">\
                       <i class="fa fa-adjust fa-4x i-over"></i>\
                     </div>\
                     <p>Contrast</p>\
                   </div>\
                   <div>\
-                    <div class="radio" data-value="saturation">\
+                    <div class="form-check" data-value="saturation">\
                       <i class="fa fa-tint fa-4x i-over i-small"></i>\
                     </div>\
                     <p>Saturation</p>\
                   </div>\
                   <div>\
-                    <div class="radio" data-value="rotate">\
+                    <div class="form-check" data-value="rotate">\
                       <i class="fa fa-rotate-right fa-4x i-over"></i>\
                     </div>\
                     <p>Rotate</p>\
                   </div>\
                   <div>\
-                    <div class="radio" data-value="crop">\
+                    <div class="form-check" data-value="crop">\
                       <i class="fa fa-crop fa-4x i-over"></i>\
                     </div>\
                     <p>Crop</p>\
@@ -120,8 +120,8 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     $(step.ui.querySelector('.inserDiv .add-step-btn')).prop('disabled', true);
 
     insertStepSelect.append('<option value="none" disabled selected>More modules...</option>');
-    $(step.ui.querySelector('.insertDiv .radio-group .radio')).on("click", function () {
-      $(this).parent().find('.radio').removeClass('selected');
+    $(step.ui.querySelector('.insertDiv .form-group .form-check')).on("click", function () {
+      $(this).parent().find('.form-check').removeClass('selected');
       $(this).addClass('selected');
       newStep = $(this).attr('data-value');
       $(step.ui.querySelector('.insert-step-select')).val(newStep);

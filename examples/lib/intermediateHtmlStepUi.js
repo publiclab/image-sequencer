@@ -95,7 +95,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     });
     $('#insertStep #add-step-btn').prop('disabled', true);
 
-    insertStepSelect.append('<option value="" disabled selected>Select A Module</option>');
+    insertStepSelect.append('<option value="" disabled selected>Select a Module</option>');
     $('#insertStep .radio-group .radio').on("click", function () {
       $(this).parent().find('.radio').removeClass('selected');
       $(this).addClass('selected');

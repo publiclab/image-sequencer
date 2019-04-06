@@ -23,7 +23,7 @@ window.onload = function() {
         );
     }
     // Null option
-    addStepSelect.append('<option value="none" disabled selected>More modules...</option>');
+    addStepSelect.append('<option value="" disabled selected>Select A Module</option>');
     addStepSelect.selectize({
       sortField: 'text'
   });

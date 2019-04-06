@@ -24,6 +24,7 @@ module.exports = {
   'histogram': require('./modules/Histogram'),
   'gamma-correction': require('./modules/GammaCorrection'),
   'gradient': require('./modules/Gradient'),
+  'grid-overlay': require('./modules/GridOverlay'),
   'import-image': require('./modules/ImportImage'),
   'invert': require('image-sequencer-invert'),
   'ndvi': require('./modules/Ndvi'),

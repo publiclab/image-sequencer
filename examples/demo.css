@@ -18,9 +18,17 @@ body {
   background: #f8f8fa;
 }
 
+footer {
+  margin-top: 40px;
+}
+
 h1 {
   font-family: 'League Spartan';
   color: #445;
+}
+
+body > .container,
+body > .container-fluid {
 }
 
 .center-align {
@@ -71,16 +79,6 @@ h1 {
   margin-bottom: 20px;
 }
 
-.details {
-  padding-left: 6px;
-}
-
-.details h3 {
-  font-family: monospace;
-  margin-top: 12px;
-  font-size: 1.3em;
-}
-
 .det {
   padding: 10px 16px;
   text-decoration: italic;
@@ -97,11 +95,6 @@ h1 {
   text-align: center;
   font-size: 2em;
   color: #444;
-}
-
-.load-spin{
-  position: absolute;
-  right: 0px;
 }
 
 #addStep {
@@ -260,20 +253,22 @@ a.name-header{
   margin-top: -5px !important;
 }
 
-/*
-.panel-footer .insert-step{
-  margin-left:10px;
-  border-radius:6px;
-  background-color:#fff;
-  border:solid #bababa 1.1px;
+.toggleIcon {
+  transition: transform 0.2s;
 }
-.col-md-4{
-  padding-left: 30px;
+
+.rotated {
+  transform: rotate(180deg);
 }
-.panel-heading{
-  height:45px;
+
+#gif{
+  margin-left:0px;
+  margin-top:5px;
+  width:100%;
 }
-.panel-footer{
-  height: 45px;
+.save-button{
+  margin-top:20px; 
+  margin-bottom:0px;
+  align:center; 
+  width:100%;
 }
-*/

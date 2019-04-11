@@ -8,8 +8,10 @@ module.exports = exports = function(pixels, options,priorstep){
     options.color = options.color || defaults.color;
     options.size = options.size || defaults.size;
 
-
         var img = $(priorstep.imgElement);
+        if(Object.keys(img).length === 0){
+            img = $(priorstep.options.step.imgElement);
+        }
         var canvas = document.createElement("canvas");
         canvas.width = pixels.shape[0]; //img.width();
         canvas.height = pixels.shape[1]; //img.height();

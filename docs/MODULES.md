@@ -37,7 +37,8 @@ List of Module Documentations
 32. [Saturation](#saturation-module)
 33. [Threshold](#threshold)
 34. [Tint](#tint)
-35. [WhiteBalance](#white-balance)
+35. [ColorTemperature](#color-temperature)
+36. [Grid-Overlay](#grid-overlay)
 
 
 ## crop-module
@@ -571,17 +572,32 @@ where `options` is an object with the following property:
 * factor : amount of tint (default 0.5)
 
 
-## White Balance
+## Color Temperature
 
-This Change the colour balance of the image by adjusting the colour temperature.
+This changes the color temperature of the image.
 
 ## Usage
 
 ```js
   sequencer.loadImage('PATH')
-           .addSteps('white-balance',options)
+           .addSteps('color-temperature',options)
            .run()
 ```
 where `options` is an object with the following property:
 * temperature : temperature between 0 - 40,000 kelvin (default 6000)
 
+## Grid Overlay
+
+This adds the grid over an image.
+
+## Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('grid-overlay',options)
+           .run()
+```
+where `options` is an object with the following property:
+* options.x : The value at which the grid line should start in x-axis.
+* options.y : The value at which the grid line should start in y-axis.
+* color : Color for the grid on the image.

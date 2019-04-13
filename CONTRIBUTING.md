@@ -11,6 +11,7 @@ Most contribution (we imagine) would be in the form of API-compatible modules, w
 * [Contributing Modules](#contributing-modules)
 * [Info File](#info-file)
 * [Ideas](#Contribution-ideas)
+* [Grunt Tasks](#grunt-tasks)
 
 ****
 
@@ -26,7 +27,7 @@ If you find a bug please list it here, and help us develop Image Sequencer by [o
 
 ## Contributing modules
 
-Most contributions can happen in modules, rather than to core library code. Modules and their [corresponding info files](#info-file) are included into the library in this file: https://github.com/publiclab/image-sequencer/blob/master/src/Modules.js#L5-L7
+Most contributions can happen in modules, rather than to core library code. Modules and their [corresponding info files](#info-file) are included into the library in this file: https://github.com/publiclab/image-sequencer/blob/main/src/Modules.js#L5-L7
 
 Module names, descriptions, and parameters are set in the `info.json` file -- [see below](#info-file).
 
@@ -61,6 +62,8 @@ module.exports = function ModuleName(options,UI) {
 Image Sequencer modules are designed to be run either in the browser or in a Node.js environment. For dynamically loaded modules, that means that any uses of `require()` to include an external library must be compiled using a system like `browserify` or `webpack` to ensure browser compatibility. An example of this can be found here:
 
 https://github.com/tech4gt/image-sequencer
+
+### Browser/node compatibility
 
 If you wish to offer a module without browser-compatibility, please indicate this in the returned `info` object as:
 
@@ -139,7 +142,7 @@ input = {
   pixelManipulation: "general purpose pixel manipulation API, see https://github.com/publiclab/image-sequencer/blob/master/src/modules/_nomodule/PixelManipulation.js"
 }
 ```
-For example usage for pixelManipulation see https://github.com/publiclab/image-sequencer/blob/master/src/modules/Invert/Module.js
+For example usage of pixelManipulation see https://github.com/publiclab/image-sequencer/blob/main/src/modules/Invert/Module.js
 
 **The module is included in the browser inside a script tag and since the code runs directly in the browser if any other module is required apart from the apis available on the input object, it should be either bundled with the module code and imported in es6 format or the module code must be browserified before distribution for browser**
 
@@ -261,9 +264,9 @@ The `progressObj` parameter of `draw()` is not consumed unless a custom progress
 
 ### Module example
 
-See existing module `green-channel` for an example: https://github.com/publiclab/image-sequencer/tree/master/src/modules/GreenChannel/Module.js
+See existing module `channel` for an example: https://github.com/publiclab/image-sequencer/blob/main/src/modules/Channel/Module.js
 
-The `green-channel` module is included into the core modules here: https://github.com/publiclab/image-sequencer/blob/master/src/Modules.js#L5-L7
+The `channel` module is included into the core modules here: https://github.com/publiclab/image-sequencer/blob/main/src/Modules.js#L5-L7
 
 For help integrating, please open an issue.
 
@@ -346,3 +349,16 @@ module.exports =
         }
     });
 ```
+
+## Grunt Tasks
+This repository has different grunt tasks for different uses. The source code is in the [Gruntfile](https://github.com/publiclab/image-sequencer/blob/main/Gruntfile.js).
+
+The following command is used for running the tasks: `grunt [task-name]`. Here `[task-name]` should be replaced by the name of the task to be run. To run the default task run `grunt` without any options.
+
+#### Tasks
+1. **compile**: Compiles/Browserifies the dist files in `/dist/image-sequencer.js` and `/dist/image-sequencer-ui.js`.
+2. **build**: Compiles the files as in the **compile** task and minifies/uglifies dist files in `/dist/image-sequencer.min.js` and `/dist/image-sequencer-ui.min.js`.
+3. **watch**: Checks for any changes in the source code and runs the **compile** task if any changes are found.
+4. **serve**: Compiles the dist files as in the **compile** task and starts a local server on `localhost:3000` to host the demo site in `/examples/` directory. Also runs the **watch** task.
+5. **production**: Compiles and minifies dist files in `/dist/image-sequencer.js` and `/dist/image-sequencer-ui.js` without the `.min.js` extension to include minified files in the demo site. This script should only be used in production mode while deploying.
+6. **default**: Runs the **watch** task as default.

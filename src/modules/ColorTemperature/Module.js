@@ -1,12 +1,10 @@
-module.exports = function Balance(options, UI) {
-
-    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
-    options.temperature = (options.temperature > "40000") ? "40000" : options.temperature
-    options.temperature = defaults.temperature || options.temperature
+module.exports = function ColorTemperature(options, UI) {
 
     var output;
 
     function draw(input, callback, progressObj) {
+
+        options.temperature = (options.temperature > "40000") ? "40000" : options.temperature
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;

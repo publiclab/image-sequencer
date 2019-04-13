@@ -23,7 +23,7 @@ window.onload = function() {
         );
     }
     // Null option
-    addStepSelect.append('<option value="none" disabled selected>More modules...</option>');
+    addStepSelect.append('<option value="" disabled selected>Select a Module</option>');
     addStepSelect.selectize({
       sortField: 'text'
   });
@@ -79,8 +79,8 @@ window.onload = function() {
     newStep = $(this).attr('data-value');
     //$("#addStep option[value=" + newStep + "]").attr('selected', 'selected');
     $("#addStep select").val(newStep);
-    ui.selectNewStepUi();
-    ui.addStepUi();
+    ui.selectNewStepUi(newStep);
+    ui.addStepUi(newStep);
     $(this).removeClass('selected');
   });
 
@@ -118,7 +118,7 @@ window.onload = function() {
 
     var button = event.target;
     button.disabled = true;
-
+    button.innerHTML='<i class="fa fa-circle-o-notch fa-spin"></i>'
 
     try {
       // Select all images from previous steps
@@ -170,6 +170,7 @@ window.onload = function() {
           modal.modal();
 
           button.disabled = false;
+          button.innerHTML = 'View GIF';
           isWorkingOnGifGeneration = false;
         }
       });
@@ -177,6 +178,7 @@ window.onload = function() {
     catch (e) {
       console.error(e);
       button.disabled = false;
+      button.innerHTML = 'View GIF';
       isWorkingOnGifGeneration = false;
 
     }
@@ -197,8 +199,8 @@ window.onload = function() {
         step.options.step.imgElement.src = reader.result;
       else
         step.imgElement.src = reader.result;
-      insertPreview.updatePreviews(reader.result,'addStep');
-      insertPreview.updatePreviews(sequencer.steps[0].imgElement.src,'insertStep');
+      insertPreview.updatePreviews(reader.result,'#addStep');
+      insertPreview.updatePreviews(sequencer.steps[0].imgElement.src,'.insertDiv');
     },
     onTakePhoto: function (url) {
       var step = sequencer.steps[0];
@@ -208,16 +210,16 @@ window.onload = function() {
         step.options.step.imgElement.src = url;
       else
         step.imgElement.src = url;
-      insertPreview.updatePreviews(url,'addStep');
-      insertPreview.updatePreviews(sequencer.steps[0].imgElement.src,'insertStep');
+      insertPreview.updatePreviews(url,'#addStep');
+      insertPreview.updatePreviews(sequencer.steps[0].imgElement.src,'.insertDiv');
     }
   });
 
   setupCache();
 
   if (urlHash.getUrlHashParameter('src')) {
-    insertPreview.updatePreviews(urlHash.getUrlHashParameter('src'),'addStep');
+    insertPreview.updatePreviews(urlHash.getUrlHashParameter('src'),'#addStep');
   } else {
-    insertPreview.updatePreviews("images/tulips.png",'addStep');
+    insertPreview.updatePreviews("images/tulips.png",'#addStep');
   }
 };

@@ -1,6 +1,6 @@
 {
     "name": "Color Temperature",
-    "description": "Change the colour balance of the image by adjusting the colour temperature.",
+    "description": "Changes the color temperature of the image.",
     "inputs": {
       "temperature": {
         "type": "integer",

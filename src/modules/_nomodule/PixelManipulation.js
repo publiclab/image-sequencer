@@ -69,32 +69,32 @@ module.exports = function PixelManipulation(image, options) {
     }
     // perform any extra operations on the entire array:
     var res;
-    if (options.extraManipulation) res = options.extraManipulation(pixels,generateOutput);
+    if (options.extraManipulation) res = options.extraManipulation(pixels, generateOutput);
     // there may be a more efficient means to encode an image object,
     // but node modules and their documentation are essentially arcane on this point
-    function generateOutput(){
+    function generateOutput() {
       var chunks = [];
-    var totalLength = 0;
-    
-    var r = savePixels(pixels, options.format, { quality: 100 });
+      var totalLength = 0;
 
-    r.on("data", function(chunk) {
-      totalLength += chunk.length;
-      chunks.push(chunk);
-    });
+      var r = savePixels(pixels, options.format, { quality: 100 });
 
-    r.on("end", function() {
-      var data = Buffer.concat(chunks, totalLength).toString("base64");
-      var datauri = "data:image/" + options.format + ";base64," + data;
-      if (options.output)
-        options.output(options.image, datauri, options.format);
-      if (options.callback) options.callback();
-    });
+      r.on("data", function(chunk) {
+        totalLength += chunk.length;
+        chunks.push(chunk);
+      });
+
+      r.on("end", function() {
+        var data = Buffer.concat(chunks, totalLength).toString("base64");
+        var datauri = "data:image/" + options.format + ";base64," + data;
+        if (options.output)
+          options.output(options.image, datauri, options.format);
+        if (options.callback) options.callback();
+      });
     }
-    if(res){
-      pixels=res;
+    if (res) {
+      pixels = res;
       generateOutput();
     }
-    else if(!options.extraManipulation) generateOutput();
+    else if (!options.extraManipulation) generateOutput();
   });
 };

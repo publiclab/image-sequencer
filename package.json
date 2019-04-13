@@ -1,13 +1,13 @@
 {
   "name": "image-sequencer",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "A modular JavaScript image manipulation library modeled on a storyboard.",
   "main": "src/ImageSequencer.js",
   "scripts": {
     "debug": "TEST=true node ./index.js -i ./examples/images/monarch.png -s invert",
-    "test": "TEST=true tape test/core/*.js test/core/ui/user-interface.js test/core/modules/QR.js | tap-spec; browserify test/core/modules/image-sequencer.js test/core/modules/chain.js test/core/modules/meta-modules.js test/core/modules/replace.js test/core/modules/import-export.js test/core/modules/run.js test/core/modules/dynamic-imports.js test/core/util/parse-input.js test/core/modules/benchmark.js| tape-run --render=\"tap-spec\"",
+    "test": "TEST=true tape test/core/*.js test/core/ui/user-interface.js test/core/modules/canvas-resize.js test/core/modules/QR.js | tap-spec; browserify test/core/modules/image-sequencer.js test/core/modules/chain.js test/core/modules/meta-modules.js test/core/modules/replace.js test/core/modules/import-export.js test/core/modules/run.js test/core/modules/dynamic-imports.js test/core/util/parse-input.js test/core/modules/benchmark.js| tape-run --render=\"tap-spec\"",
     "test-ui": "jasmine test/spec/*.js",
-    "setup": "npm i && npm i -g grunt grunt-cli",
+    "setup": "npm i && npm i -g grunt grunt-cli && grunt build",
     "start": "grunt serve"
   },
   "repository": {
@@ -37,9 +37,10 @@
     "imagejs": "0.0.9",
     "imgareaselect": "git://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2",
     "jquery": "^3.3.1",
-    "jsdom": "^13.1.0",
+    "jsdom": "^14.0.0",
     "jsqr": "^1.1.1",
     "lodash": "^4.17.11",
+    "ndarray": "^1.0.18",
     "ndarray-gaussian-filter": "^1.0.0",
     "ora": "^3.0.0",
     "pace": "0.0.4",
@@ -70,7 +71,7 @@
     "tape-run": "^5.0.0",
     "uglify-es": "^3.3.7"
   },
-  "homepage": "https://github.com/publiclab/image-sequencer",
+  "homepage": "https://sequencer.publiclab.org",
   "bin": {
     "sequencer": "./index.js"
   }

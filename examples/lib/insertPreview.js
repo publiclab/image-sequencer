@@ -8,7 +8,7 @@ function generatePreview(previewStepName, customValues, path, selector) {
       img.src = src;
       $(img).css("max-width", "200%");
       $(img).css("transform", "translateX(-20%)");
-      var stepDiv = $('#'+selector+' .row').find('div').each(function() {
+      $(selector + ' .radio-group').find('div').each(function() {
         if ($(this).find('div').attr('data-value') === previewStepName) {
           $(this).find('div').append(img);
         }
@@ -27,7 +27,7 @@ function generatePreview(previewStepName, customValues, path, selector) {
   }
 
   function updatePreviews(src, selector) {
-    $('#'+selector+' img').remove();
+    $(selector+' img').remove();
 
     var previewSequencerSteps = {
       "resize": "125%",

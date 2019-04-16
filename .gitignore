@@ -27,6 +27,10 @@ build/Release
 node_modules
 node_modules/*
 
+# Dist Files
+dist/*
+dist
+
 # Optional npm cache directory
 .npm
 
@@ -44,3 +48,5 @@ test/core/modules/test_outputs
 test/core/modules/test_outputs/*
 node_modules/
 node_modules/*
+test_outputs
+/test_outputs

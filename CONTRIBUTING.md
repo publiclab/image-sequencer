@@ -11,6 +11,8 @@ Most contribution (we imagine) would be in the form of API-compatible modules, w
 * [Contributing Modules](#contributing-modules)
 * [Info File](#info-file)
 * [Ideas](#Contribution-ideas)
+* [Grunt Tasks](#grunt-tasks)
+* [UI Helper Methods](#ui-helper-methods)
 
 ****
 
@@ -26,7 +28,7 @@ If you find a bug please list it here, and help us develop Image Sequencer by [o
 
 ## Contributing modules
 
-Most contributions can happen in modules, rather than to core library code. Modules and their [corresponding info files](#info-file) are included into the library in this file: https://github.com/publiclab/image-sequencer/blob/master/src/Modules.js#L5-L7
+Most contributions can happen in modules, rather than to core library code. Modules and their [corresponding info files](#info-file) are included into the library in this file: https://github.com/publiclab/image-sequencer/blob/main/src/Modules.js#L5-L7
 
 Module names, descriptions, and parameters are set in the `info.json` file -- [see below](#info-file).
 
@@ -61,6 +63,8 @@ module.exports = function ModuleName(options,UI) {
 Image Sequencer modules are designed to be run either in the browser or in a Node.js environment. For dynamically loaded modules, that means that any uses of `require()` to include an external library must be compiled using a system like `browserify` or `webpack` to ensure browser compatibility. An example of this can be found here:
 
 https://github.com/tech4gt/image-sequencer
+
+### Browser/node compatibility
 
 If you wish to offer a module without browser-compatibility, please indicate this in the returned `info` object as:
 
@@ -108,7 +112,20 @@ function ModuleName(options,UI) {
       // load a standard info.json file.
       ];
 ```
+### Running a browser-only module in node
+If your module has browser specific code or you are consuming a dependency which does the `gl-context` api. We designed this api especially for webl based modules but since it runs the module in a headless browser, ti supports all browser specific APIs.
 
+The api must be used in the following format
+```js
+var step = this;
+
+    if (!options.inBrowser) {
+      require('../_nomodule/gl-context')(input, callback, step, options);
+    }
+    else {
+      /* Browser specific code */
+    }
+```
 
 ### options
 
@@ -139,7 +156,7 @@ input = {
   pixelManipulation: "general purpose pixel manipulation API, see https://github.com/publiclab/image-sequencer/blob/master/src/modules/_nomodule/PixelManipulation.js"
 }
 ```
-For example usage for pixelManipulation see https://github.com/publiclab/image-sequencer/blob/master/src/modules/Invert/Module.js
+For example usage of pixelManipulation see https://github.com/publiclab/image-sequencer/blob/main/src/modules/Invert/Module.js
 
 **The module is included in the browser inside a script tag and since the code runs directly in the browser if any other module is required apart from the apis available on the input object, it should be either bundled with the module code and imported in es6 format or the module code must be browserified before distribution for browser**
 
@@ -261,9 +278,9 @@ The `progressObj` parameter of `draw()` is not consumed unless a custom progress
 
 ### Module example
 
-See existing module `green-channel` for an example: https://github.com/publiclab/image-sequencer/tree/master/src/modules/GreenChannel/Module.js
+See existing module `channel` for an example: https://github.com/publiclab/image-sequencer/blob/main/src/modules/Channel/Module.js
 
-The `green-channel` module is included into the core modules here: https://github.com/publiclab/image-sequencer/blob/master/src/Modules.js#L5-L7
+The `channel` module is included into the core modules here: https://github.com/publiclab/image-sequencer/blob/main/src/Modules.js#L5-L7
 
 For help integrating, please open an issue.
 
@@ -345,4 +362,70 @@ module.exports =
             }
         }
     });
+```
+
+## Grunt Tasks
+This repository has different grunt tasks for different uses. The source code is in the [Gruntfile](https://github.com/publiclab/image-sequencer/blob/main/Gruntfile.js).
+
+The following command is used for running the tasks: `grunt [task-name]`. Here `[task-name]` should be replaced by the name of the task to be run. To run the default task run `grunt` without any options.
+
+#### Tasks
+1. **compile**: Compiles/Browserifies the dist files in `/dist/image-sequencer.js` and `/dist/image-sequencer-ui.js`.
+2. **build**: Compiles the files as in the **compile** task and minifies/uglifies dist files in `/dist/image-sequencer.min.js` and `/dist/image-sequencer-ui.min.js`.
+3. **watch**: Checks for any changes in the source code and runs the **compile** task if any changes are found.
+4. **serve**: Compiles the dist files as in the **compile** task and starts a local server on `localhost:3000` to host the demo site in `/examples/` directory. Also runs the **watch** task.
+5. **production**: Compiles and minifies dist files in `/dist/image-sequencer.js` and `/dist/image-sequencer-ui.js` without the `.min.js` extension to include minified files in the demo site. This script should only be used in production mode while deploying.
+6. **default**: Runs the **watch** task as default.
+
+## UI Helper Methods
+
+### scopeQuery
+
+###### Path: `/examples/lib/scopeQuery.js`
+
+The method returns a scoped `jQuery` object which only searches for elements inside a given scope (a DOM element).
+
+To use the method, 
+* import the `scopeSelector` and `scopeSelectorAll` methods from `lib/scopeQuery.js`
+* call the methods with scope as a parameter
+	
+```js
+var scopeQuery = require('./scopeQuery');
+
+var $step = scopeQuery.scopeSelector(scope),
+    $stepAll = scopeQuery.scopeSelectorAll(scope);	
+```
+This will return an object with a constructor which returns a `jQuery` object (from inside the scope) but with new `elem` and `elemAll` methods.
+
+#### Methods of the Returned Object
+* `elem()`: Selects an element inside the scope; 
+* `elemAll()`: Selects all the instances of a given element inside the scope;
+
+#### Example
+
+```js
+//The scope is a div element with id=“container“ and there are three divs in it 
+//with ids „1“, „2“, and „3“, and all of them have a „child“ class attribute
+
+var $step = require('./scopeQuery').scopeSelector(document.getElementById('container'));
+
+$step('#1'); // returns the div element with id=“1“
+$step('#1').hide().elemAll('.child').fadeOut(); // abruptly hides the div element with id=“1“ and fades out all other div elements
+```
+
+These two methods are chainable and will always return elements from inside the scope.
+
+#### Usage
+
+Instead of using
+
+```js
+$(step.ui.querySelector('query')).show().hide();
+$(step.ui.querySelectorAll('q2')).show().hide();
+```
+The following code can be used
+
+```js
+$step('query').show().hide();
+$stepAll('q2').show().hide();
 ```

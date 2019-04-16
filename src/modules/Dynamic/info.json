@@ -3,25 +3,25 @@
   "description": "A module which accepts JavaScript math expressions to produce each color channel based on the original image's color. See <a href='https://publiclab.org/wiki/infragram-sandbox'>Infragrammar</a>.",
   "inputs": {
     "red": {
-      "type": "input",
+      "type": "string",
       "desc": "Expression to return for red channel with R, G, B, and A inputs",
       "default": "r"
     },
     "green": {
-      "type": "input",
+      "type": "string",
       "desc": "Expression to return for green channel with R, G, B, and A inputs",
       "default": "g"
     },
     "blue": {
-      "type": "input",
+      "type": "string",
       "desc": "Expression to return for blue channel with R, G, B, and A inputs",
       "default": "b"
     },
     "monochrome (fallback)": {
-      "type": "input",
+      "type": "string",
       "desc": "Expression to return with R, G, B, and A inputs; fallback for other channels if none provided",
       "default": "r + g + b"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#dynamic-module"
 }

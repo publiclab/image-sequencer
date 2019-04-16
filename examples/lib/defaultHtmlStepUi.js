@@ -206,7 +206,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $(input)
         .data('initValue', $(input).val())
         .data('hasChangedBefore', false)
-        .on('input', function() {
+        .on('input change' , function() {
           $(this)
             .focus()
             .data('hasChangedBefore',

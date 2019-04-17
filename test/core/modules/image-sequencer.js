@@ -105,26 +105,26 @@ test('addSteps("name",o) adds a step', function(t) {
 
 test('addSteps("image","name",o) adds a step', function(t) {
   sequencer.addSteps('test', 'channel', {});
-  t.equal(sequencer.images.test.steps.length, 7, "Length of steps increased");
-  t.equal(sequencer.images.test.steps[6].options.name, "channel", "Correct Step Added");
+  t.equal(sequencer.steps.length, 7, "Length of steps increased");
+  t.equal(sequencer.steps[6].options.name, "channel", "Correct Step Added");
   t.end();
 });
 
 test('addSteps("name, name") adds two steps', function(t) {
   sequencer.addSteps('test', 'channel, invert')
-  t.equal(sequencer.images.test.steps.length, 9, 'Length of steps increase')
+  t.equal(sequencer.steps.length, 9, 'Length of steps increase')
   sequencer.removeSteps('test', [7, 8])
   t.end()
 })
 
 test('removeSteps("image",position) removes a step', function(t) {
   sequencer.removeSteps('test', 1);
-  t.equal(sequencer.images.test.steps.length, 6, "Length of steps reduced");
+  t.equal(sequencer.steps.length, 6, "Length of steps reduced");
   t.end();
 });
 
 test('removeSteps(position) removes a step', function(t) {
-  sequencer.removeSteps( 1);
+  sequencer.removeSteps(1);
   t.equal(sequencer.steps.length, 4, "Length of steps reduced");
   t.end();
 });
@@ -168,9 +168,6 @@ test('getSteps() returns correct array of steps', function(t){
   t.end();
 })
 
-<<<<<<< HEAD
-=======
-
 test('run() runs the sequencer and returns output to callback', function(t) {
   sequencer.run(function(out) {
     t.equal(typeof (sequencer.steps[sequencer.steps.length - 1].output), "object", "Output is Generated");
@@ -179,8 +176,6 @@ test('run() runs the sequencer and returns output to callback', function(t) {
   });
 });
 
-
->>>>>>> 6fa8b1b8808d202355f51f9e3471d2f0423d3288
 test('getStep(offset) returns the step at offset distance relative to current step', function(t) {
   sequencer.addSteps('invert', {});
   sequencer.addSteps('blend', {});

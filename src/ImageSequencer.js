@@ -24,7 +24,7 @@ ImageSequencer = function ImageSequencer(options) {
     if (!typeof (a) == "object") return a;
     if (objTypeOf(a) == "Array") return a.slice();
     if (objTypeOf(a) == "Object") {
-      var b = {}; 
+      var b = {};
       for (var v in a) {
         b[v] = copy(a[v]);
       }
@@ -178,7 +178,7 @@ ImageSequencer = function ImageSequencer(options) {
       loadPrevSteps(sequencer);
       json_q.callback.call(ret);
     });
-    
+
   }
 
   function replaceImage(selector, steps, options) {
@@ -212,7 +212,7 @@ ImageSequencer = function ImageSequencer(options) {
       }
     }
     else {
-      if (modules[name]){ 
+      if (modules[name]){
          modulesdata = modules[name][1];
         }
       else
@@ -245,7 +245,7 @@ ImageSequencer = function ImageSequencer(options) {
       return copy(this.steps.map(stepToString).slice(1).join(','));
     }
   }
-  
+
   // Stringifies one step of the sequence
   function stepToString(step) {
     var arg = (step.name)?step.name:step.options.name;
@@ -299,9 +299,10 @@ ImageSequencer = function ImageSequencer(options) {
     }
 
     stepSettings = stepSettings.split('|').reduce(function formatSettings(accumulator, current, i) {
-      var settingName = current.substr(0, current.indexOf(':')),
+      var settingName = current.substr(0, current.indexOf(':'));
         settingValue = current.substr(current.indexOf(':') + 1);
-      settingValue = settingValue.replace(/^\{/, '') // strip {} at start/end
+      settingValue = settingValue.replace(/^\(/, ''); // strip ( at start
+      settingValue = settingValue.replace(/^\{/, '').replace(/\}$/, ''); // strip {} at start/end
       settingValue = decodeURIComponent(settingValue);
       current = [
         settingName,

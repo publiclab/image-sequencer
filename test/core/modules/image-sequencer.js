@@ -1,3 +1,4 @@
+
 'use strict';
 
 var fs = require('fs');
@@ -103,48 +104,54 @@ test('addSteps("name",o) adds a step', function(t) {
   t.end();
 });
 
-test('addSteps("image","name",o) adds a step', function(t) {
-  sequencer.addSteps('test', 'channel', {});
-  t.equal(sequencer.steps.length, 7, "Length of steps increased");
-  t.equal(sequencer.steps[6].options.name, "channel", "Correct Step Added");
-  t.end();
-});
-
-test('addSteps("name, name") adds two steps', function(t) {
-  sequencer.addSteps('test', 'channel, invert')
-  t.equal(sequencer.steps.length, 9, 'Length of steps increase')
-  sequencer.removeSteps('test', [7, 8])
+test('addSteps("name,name") adds two steps', function(t) {
+  sequencer.addSteps('channel,invert')
+  t.equal(sequencer.steps.length, 7, 'Length of steps increase')
+  t.equal(sequencer.steps[5].options.name, "channel", "Correct Step Added");
+  t.equal(sequencer.steps[6].options.name, "invert", "Correct Step Added");
   t.end()
 })
 
-test('removeSteps("image",position) removes a step', function(t) {
-  sequencer.removeSteps('test', 1);
-  t.equal(sequencer.steps.length, 6, "Length of steps reduced");
-  t.end();
-});
+test('addSteps("name{parameter:value},name{parameter:value}") adds two steps', function(t) {
+  sequencer.addSteps('brightness{brightness:80},average{}')
+  t.equal(sequencer.steps.length, 9, 'Length of steps increase')
+  t.equal(sequencer.steps[7].options.name, "brightness", "Correct Step Added");
+  t.equal(sequencer.steps[7].options.brightness, '80', "Correct options loaded")
+  t.equal(sequencer.steps[8].options.name, "average", "Correct Step Added");
+  t.end()
+})
+
+test('addSteps("name{parameter:value}" adds a step', function(t) {
+  sequencer.addSteps('crop{x:120|y:80}')
+  t.equal(sequencer.steps.length, 10, 'Length of steps increase')
+  t.equal(sequencer.steps[9].options.name, "crop", "Correct Step Added");
+  t.equal(sequencer.steps[9].options.x, '120', "Correct options loaded")
+  t.equal(sequencer.steps[9].options.y, '80', "Correct options loaded")
+  t.end()
+})
 
 test('removeSteps(position) removes a step', function(t) {
   sequencer.removeSteps(1);
-  t.equal(sequencer.steps.length, 4, "Length of steps reduced");
+  t.equal(sequencer.steps.length, 9, "Length of steps reduced");
   t.end();
 });
 
 test('removeSteps([positions]) removes steps', function(t) {
   sequencer.removeSteps([1, 2]);
-  t.equal(sequencer.steps.length, 2, "Length of steps reduced");
+  t.equal(sequencer.steps.length, 7, "Length of steps reduced");
   t.end();
 });
 
 test('insertSteps(position,"module",options) inserts a step', function(t) {
   sequencer.insertSteps( 1, 'channel', {});
-  t.equal(sequencer.steps.length, 3, "Length of Steps increased");
+  t.equal(sequencer.steps.length, 8, "Length of Steps increased");
   t.equal(sequencer.steps[1].options.name, "channel", "Correct Step Inserted");
   t.end();
 });
 
 test('insertSteps(position,"module") inserts a step', function(t) {
   sequencer.insertSteps(1, 'channel');
-  t.equal(sequencer.steps.length, 4, "Length of Steps increased");
+  t.equal(sequencer.steps.length, 9, "Length of Steps increased");
   t.equal(sequencer.steps[1].options.name, "channel", "Correct Step Inserted");
   t.end();
 });

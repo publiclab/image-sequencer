@@ -243,7 +243,7 @@ to be added, in that particular order.
 optional_otions is just an optional parameter, in object form, which you might
 want to provide to the modules.
 
-A variety of syntaxes are supported by Image Sequencer to add multiple steps and configurations quickly for module chaining. This can be achieved by passing strings to `sequencer.addStep()`:
+A variety of syntaxes are supported by Image Sequencer to add multiple steps and configurations quickly for module chaining. The project supports the string syntax, designed to be compact and URL friendly, and JSON, for handling more complex sequences. This can be achieved by passing strings to `sequencer.addStep()`:
 
 
 ```js
@@ -251,7 +251,7 @@ sequencer.addSteps('invert,channel');
 sequencer.addSteps(['invert','channel']);
 ```
 
-For passing default configurations:
+For passing default configurations ({} is optional):
 
 ```js
 sequencer.addSteps('brightness{}');

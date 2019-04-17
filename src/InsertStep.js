@@ -6,8 +6,8 @@ function InsertStep(ref, index, name, o) {
     return ref.importJSON(ref.sequences[name]);
   }
 
-  if (ref.detectSyntax(name)) {
-    return ref.stringToStep(name)
+  if (ref.detectStringSyntax(name)) {
+    return ref.stringToSteps(name)
   }
 
   function insertStep(index, name, o_) {

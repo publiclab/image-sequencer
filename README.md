@@ -59,7 +59,7 @@ A diagram of this running 5 steps on a single sample image may help explain how 
 This library conveniently works in the browser, in Node, and on the command line (CLI).
 
 ### Unix based platforms
-You can set up a local environment to test the UI with `npm run setup` followed by `npm start`.
+You can set up a local environment to test the UI with `sudo npm run setup` followed by `npm start`.
 
 ### Windows
 Our npm scripts do not support windows shells, please run the following snippet in PowerShell.
@@ -243,10 +243,36 @@ to be added, in that particular order.
 optional_otions is just an optional parameter, in object form, which you might
 want to provide to the modules.
 
-Use string syntax (see below) to add multiple steps and configurations quickly by passing a string to `sequencer.addStep()`:
+A variety of syntaxes are supported by Image Sequencer to add multiple steps and configurations quickly for module chaining. This can be achieved by passing strings to `sequencer.addStep()`:
+
 
 ```js
-sequencer.addSteps('invert, channel');
+sequencer.addSteps('invert,channel');
+sequencer.addSteps(['invert','channel']);
+```
+
+For passing default configurations:
+
+```js
+sequencer.addSteps('brightness{}');
+```
+
+For passing custom configurations:
+
+```js
+sequencer.addSteps('brightness{brightness:80}');
+```
+
+For passing multiple custom configurations:
+
+```js
+sequencer.addSteps('crop{x:120|y:90}')
+```
+
+For passing multiple custom configurable modules:
+
+```js
+sequencer.addSteps('crop{x:130|y:80},brightness{brightness:80}')
 ```
 
 return value: **`sequencer`** (To allow method chaining)

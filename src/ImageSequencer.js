@@ -24,7 +24,7 @@ ImageSequencer = function ImageSequencer(options) {
     if (!typeof (a) == "object") return a;
     if (objTypeOf(a) == "Array") return a.slice();
     if (objTypeOf(a) == "Object") {
-      var b = {}; 
+      var b = {};
       for (var v in a) {
         b[v] = copy(a[v]);
       }
@@ -178,7 +178,7 @@ ImageSequencer = function ImageSequencer(options) {
       loadPrevSteps(sequencer);
       json_q.callback.call(ret);
     });
-    
+
   }
 
   function replaceImage(selector, steps, options) {
@@ -212,7 +212,7 @@ ImageSequencer = function ImageSequencer(options) {
       }
     }
     else {
-      if (modules[name]){ 
+      if (modules[name]){
          modulesdata = modules[name][1];
         }
       else
@@ -239,7 +239,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   // Checks if input is a string of comma separated module names
   function detectSyntax(str) {
-    let result = str.includes(',') ? true : false
+    let result = (str.includes(',') || str.includes('{')) ? true : false
     return result
   }
 
@@ -257,9 +257,9 @@ ImageSequencer = function ImageSequencer(options) {
     if (this.name != "ImageSequencer")
       sequencer = this.sequencer;
     if (detectSyntax(str))
-      names = parseSyntax(str)
-    names.forEach(function eachStep(stepName) {
-      sequencer.addSteps(stepName, {})
+      names = stringToJSON(str)
+    names.forEach(function eachStep(stepObj) {
+      sequencer.addSteps(stepObj.name, stepObj.options)
     })
   }
 
@@ -271,7 +271,7 @@ ImageSequencer = function ImageSequencer(options) {
       return copy(this.steps.map(stepToString).slice(1).join(','));
     }
   }
-  
+
   // Stringifies one step of the sequence
   function stepToString(step) {
     var arg = (step.name)?step.name:step.options.name;

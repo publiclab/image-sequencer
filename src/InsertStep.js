@@ -10,7 +10,7 @@ function InsertStep(ref, index, name, o) {
     return ref.stringToStep(name)
   }
 
-  function insertStep(image, index, name, o_) {
+  function insertStep(index, name, o_) {
     if (ref.modules[name]) var moduleInfo = ref.modules[name][1];
     else {
       console.log('Module ' + name + ' not found.');

@@ -1,12 +1,16 @@
 /*
 * Changes the Image Brightness
 */
+module.exports = function Brightness(options, UI) {
 
-module.exports = function Brightness(options,UI){
-
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
     var output;
 
-    function draw(input,callback,progressObj){
+
+
+    function draw(input, callback, progressObj) {
+
+        options.brightness = options.brightness || defaults.brightness;
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;
@@ -17,23 +21,20 @@ module.exports = function Brightness(options,UI){
         For eg. progressObj = new SomeProgressModule()
         */
 
-        var step = this;
+        var step = this, val = (options.brightness) / 100.0;;
 
-        function changePixel(r, g, b, a){
-	  options.brightness = 
-	  options.brightness || 100
-            var val = (options.brightness)/100.0
+        function changePixel(r, g, b, a) {
 
-            r = val*r<255?val*r:255
-            g = val*g<255?val*g:255
-            b = val*b<255?val*b:255
-            return [r, g, b, a]
+            r = Math.min(val * r, 255);
+            g = Math.min(val * g, 255);
+            b = Math.min(val * b, 255);
+            return [r, g, b, a];
         }
 
-        function output(image,datauri,mimetype){
+        function output(image, datauri, mimetype) {
 
             // This output is accessible by Image Sequencer
-            step.output = {src:datauri,format:mimetype};
+            step.output = { src: datauri, format: mimetype };
 
         }
 
@@ -49,7 +50,7 @@ module.exports = function Brightness(options,UI){
     }
     return {
         options: options,
-        draw:  draw,
+        draw: draw,
         output: output,
         UI: UI
     }

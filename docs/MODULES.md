@@ -6,30 +6,39 @@ List of Module Documentations
 1.  [Crop](#crop-module)
 2.  [Segmented-Colormap](#segmented-colormap-module)
 3.  [FisheyeGl](#fisheyeGl-module)
-4.  [Average](#average-module)
-5.  [Blend](#blend-module)
-6.  [Blur](#blur-module)
-7.  [Brightness](#brightness-module)
-8.  [Channel](#channel-module)
-9.  [Colorbar](#colorbar-module)
-10. [Colormap](#colormap-module)
-11. [Contrast](#contrast-module)
-12. [Convolution](#convolutioon-module)
-13. [DecodeQr](#decodeQr-module)
-14. [Dynamic](#dynamic-module)
-15. [Edge-Detect](#edge-detect-module)
-16. [Gamma-Correction](#gamma-correction-module)
-17. [Gradient](#gradient-module)
-18. [Histogram](#histogram-module)
-19. [Import-image](#import-image-module)
-20. [Invert](#invert-module)
-21. [Ndvi](#ndvi-module)
-22. [Ndvi-Colormap](#ndvi-colormap-module)
-23. [Overlay](#overlay-module)
-24. [Resize](#resize-module)
-25. [Rotate](#rotate-module)
-26. [Saturation](#saturation-module)
-
+4.  [Add QR](#Add-QR-module)
+5.  [Average](#average-module)
+6.  [Blend](#blend-module)
+7.  [Blur](#blur-module)
+8.  [Brightness](#brightness-module)
+9.  [Channel](#channel-module)
+10. [Colorbar](#colorbar-module)
+11. [Colormap](#colormap-module)
+12. [Contrast](#contrast-module)
+13. [Convolution](#convolution-module)
+14. [DecodeQr](#decodeQr-module)
+15. [Dither](#dither-module)
+16. [DrawRectangle](#draw-rectangle-module)
+17. [Dynamic](#dynamic-module)
+18. [Edge-Detect](#edge-detect-module)
+19. [FlipImage](#flipimage-module)
+20. [Gamma-Correction](#gamma-correction-module)
+21. [Gradient](#gradient-module)
+22. [Histogram](#histogram-module)
+23. [Import-image](#import-image-module)
+24. [Invert](#invert-module)
+25. [Ndvi](#ndvi-module)
+26. [Ndvi-Colormap](#ndvi-colormap-module)
+27. [Overlay](#overlay-module)
+28. [PaintBucket](#paint-bucket-module)
+29. [Resize](#resize-module)
+30. [ReplaceColor](#replacecolor-module)
+31. [Rotate](#rotate-module)
+32. [Saturation](#saturation-module)
+33. [Threshold](#threshold)
+34. [Tint](#tint)
+35. [ColorTemperature](#color-temperature)
+36. [Grid-Overlay](#grid-overlay)
 
 
 ## crop-module
@@ -99,6 +108,23 @@ where `options` is an object with the following properties:
 * scale : The ratio to which the original image is to be scaled (0 to 20; default 1.5)
 * x : Field of View x (0 to 2; default 1)
 * y : Field of View y (0 to 2; default 1)
+
+## add-qr-module
+
+This module Adds QR corresponding to the given string.
+
+#### Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('add-qr',options)
+           .run()
+```
+
+where `options` is an object with the following properties:
+* size : size of QR code in pixels (default 200)
+* qrCodeString : input string to generate QR code
+
 
 ## average-module
 
@@ -247,6 +273,42 @@ This module is used for decoding a QR in image (if present).
            .addSteps('decode-qr',options)
            .run()
 ```
+
+## dither-module
+
+This module approximates a color from a mixture of other colors when the required color is not available, creating illusions of the color that is not present actually.
+
+[more info on wikipedia](https://en.wikipedia.org/wiki/Dither)
+
+## Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('dither',options)
+           .run()
+```
+where `options` is an object with the following property:
+* dither : Can select the name of the Dithering Algorithm(default none)
+ 
+## draw-rectangle-module
+
+This module helps to draw a rectangle on the image with a starting and ending corner with the specified thickness and color of the border.
+
+## Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('draw-rectangle',options)
+           .run()
+```
+where `options` is an object with the following properties:
+* startingX : starting x position of the rectangle (default 0)
+* startingY : starting y position of the rectangle (default 0)
+* endX      : last x position of the rectangle (default "width")
+* endY      : last y position of the rectangle (default "height")
+* thickness : thickness of the border (default 1)
+* color     : RGBA values separated by a space (default "0 0 0 255") 
+
 ## dynamic-module
 
 This module is used for producing each color channel based on the original image's color.
@@ -280,6 +342,22 @@ where `options` is an object with the following properties:
 * blur :  Intensity of Gaussian blur (0 to 5; default 2)
 * highThresholdRatio : Upper Threshold Ratio ( default : 0.2)
 * lowThresholdratio : Lower Threshold Ratio ( default : 0.2)
+
+## flipimage-module 
+
+This module is used for flipping the image on the selected axis.
+#### Usage
+
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('flip-image',options)
+           .run()
+```
+
+where `options` is an object with the following properties:
+* Axis : select the required axis (default : vertical)
+
 
 ## gamma-correction-module
 
@@ -386,6 +464,24 @@ where `options` is an object with the following properties:
 * y : Y-position of the image on which the new image is overlayed (default 0)
 * offset : offset to the step on which the output of the last step is overlayed (default -2)
 
+## paint-bucket-module
+
+This module fills any polygonal shape with the specified color in pixels.
+
+## Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('paint-bucket',options)
+           .run()
+```
+
+where `options` is an object with the following property:
+* startingX : it is the value of the starting x-cordinate (default 10)
+* startingY : it is the value of the starting y-cordinate (default 10)
+* fillColor : they are four spaced seperated numbers representing the RGBA values of fill-color (default "100 100 100 255")
+* tolerance : it is the % tolerance (default 10)
+
 ## resize-module
 
 This module is used for resizing an image.
@@ -399,6 +495,22 @@ This module is used for resizing an image.
 
 where `options` is an object with the following property:
 * resize : Percentage value of resize (default 125%)
+
+## replacecolor-module
+
+This module is used in replacing the color with grey or any desired color.
+#### Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('replace-color',options)
+           .run()
+```
+where `options` is an object with the following properties:
+* replaceMethod : replaces with the desired color (default greyscale)
+* replaceColor : three space separated numbers representing the RGB values of color to be filled (default "0 0 255")
+* color : three space separated numbers representing the RGB values of color to be replaced (default "228 86 81")
+* tolerance : it is the % tolerance (default 50)
 
 ## rotate-module
 
@@ -428,4 +540,64 @@ This module is used for changing the saturation of the image.
 where `options` is an object with the following property:
 * saturation : saturation for the new image (between 0 and 2; default 0)
 
+## Threshold 
 
+Thresholding is used to create binary images.
+
+## Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('threshold',options)
+           .run()
+```
+where `options` is an object with the following property:
+* threshold : it allows to select the types of thresholding (default "manual thresholding")
+* input : it allows to select the range of thresholding value (default 120)
+
+
+## Tint 
+
+It adds color tint to an image
+
+## Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('tint',options)
+           .run()
+```
+where `options` is an object with the following property:
+* color : RGB values seperated by a space (default "0 0 255")
+* factor : amount of tint (default 0.5)
+
+
+## Color Temperature
+
+This changes the color temperature of the image.
+
+## Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('color-temperature',options)
+           .run()
+```
+where `options` is an object with the following property:
+* temperature : temperature between 0 - 40,000 kelvin (default 6000)
+
+## Grid Overlay
+
+This adds the grid over an image.
+
+## Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('grid-overlay',options)
+           .run()
+```
+where `options` is an object with the following property:
+* options.x : The value at which the grid line should start in x-axis.
+* options.y : The value at which the grid line should start in y-axis.
+* color : Color for the grid on the image.

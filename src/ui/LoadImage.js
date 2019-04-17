@@ -7,20 +7,20 @@ function LoadImage(ref, name, src, main_callback) {
     }
     return image;
   }
-  function CImage(src, callback) {
+  function CImage(src, step, callback) {
     var datauri;
     if (!!src.match(/^data:/i)) {
       datauri = src;
-      callback(datauri);
+      callback(datauri, step);
     }
     else if (!ref.options.inBrowser && !!src.match(/^https?:\/\//i)) {
-      require( src.match(/^(https?):\/\//i)[1] ).get(src,function(res){
+      require(src.match(/^(https?):\/\//i)[1]).get(src, function(res) {
         var data = '';
         var contentType = res.headers['content-type'];
         res.setEncoding('base64');
-        res.on('data',function(chunk) {data += chunk;});
-        res.on('end',function() {
-          callback("data:"+contentType+";base64,"+data);
+        res.on('data', function(chunk) { data += chunk; });
+        res.on('end', function() {
+          callback("data:" + contentType + ";base64," + data, step);
         });
       });
     }
@@ -32,74 +32,45 @@ function LoadImage(ref, name, src, main_callback) {
       image.onload = function() {
         canvas.width = image.naturalWidth;
         canvas.height = image.naturalHeight;
-        context.drawImage(image,0,0);
+        context.drawImage(image, 0, 0);
         datauri = canvas.toDataURL(ext);
-        callback(datauri);
+        callback(datauri, step);
       }
       image.src = src;
     }
     else {
       datauri = require('urify')(src);
-      callback(datauri);
+      callback(datauri, step);
     }
   }
 
   function loadImage(name, src) {
     var step = {
       name: "load-image",
-      description: "This initial step loads and displays the original image without any modifications.<br /><br />To work with a new or different image, drag one into the drop zone.",
+      description: "This initial step loads and displays the original image without any modifications.",
       ID: ref.options.sequencerCounter++,
-      imageName: name,
       inBrowser: ref.options.inBrowser,
-      ui: ref.options.ui
+      ui: ref.options.ui,
+      UI: ref.events,
+      output: ''
     };
 
-    var image = {
-      src: src,
-      steps: [{
-        options: {
-          id: step.ID,
-          name: "load-image",
-          description: "This initial step loads and displays the original image without any modifications.",
-          title: "Load Image",
-          step: step
-        },
-        UI: ref.events,
-        draw: function() {
-          UI.onDraw(options.step);
-          if(arguments.length==1){
-            this.output = CImage(arguments[0]);
-            options.step.output = this.output;
-            UI.onComplete(options.step);
-            return true;
-          }
-          else if(arguments.length==2) {
-            this.output = CImage(arguments[0]);
-            options.step.output = this.output;
-            arguments[1]();
-            UI.onComplete(options.step);
-            return true;
-          }
-          return false;
-        },
-      }]
-    };
-    CImage(src, function(datauri) {
+
+    CImage(src, step, function(datauri, step) {
       var output = makeImage(datauri);
-      ref.images[name] = image;
-      var loadImageStep = ref.images[name].steps[0];
-      loadImageStep.output = output;
-      loadImageStep.options.step.output = loadImageStep.output.src;
-      loadImageStep.UI.onSetup(loadImageStep.options.step);
-      loadImageStep.UI.onDraw(loadImageStep.options.step);
-      loadImageStep.UI.onComplete(loadImageStep.options.step);
+      ref.steps.push(step);
+      ref.steps[0].output = output;
+      ref.steps[0].UI.onSetup(ref.steps[0]);
+      ref.steps[0].UI.onDraw(ref.steps[0]);
+      ref.steps[0].UI.onComplete(ref.steps[0]);
 
       main_callback();
       return true;
     });
   }
 
-  return loadImage(name,src);
+  return loadImage(name, src);
 }
 
 module.exports = LoadImage;
+

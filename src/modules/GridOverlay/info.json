@@ -12,20 +12,11 @@
             "desc": "Y-position (measured from top) from where grid starts",
             "default": 100
         },
-        "color": {
-            "type": "select",
-            "desc": "Select the color for the grid.",
-            "default": "black",
-            "values": [
-                "black",
-                "blue",
-                "green",
-                "red",
-                "white",
-                "pink",
-                "orange"
-            ]
-        }
+        "color":{
+            "type": "string",
+            "desc": "RGBA values separated by a space",
+            "default": "0 0 0 255"
+          }
     },
     "only": "browser" 
 }

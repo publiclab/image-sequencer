@@ -122,11 +122,10 @@ test('addSteps("name{parameter:value},name{parameter:value}") adds two steps', f
 })
 
 test('addSteps("name{parameter:value}" adds a step', function(t) {
-  sequencer.addSteps('crop{x:120|y:80}')
+  sequencer.addSteps('brightness{brightness:1}')
   t.equal(sequencer.steps.length, 10, 'Length of steps increase')
-  t.equal(sequencer.steps[9].options.name, "crop", "Correct Step Added");
-  t.equal(sequencer.steps[9].options.x, '120', "Correct options loaded")
-  t.equal(sequencer.steps[9].options.y, '80', "Correct options loaded")
+  t.equal(sequencer.steps[9].options.name, "brightness", "Correct Step Added");
+  t.equal(sequencer.steps[9].options.brightness, '1', "Correct options loaded")
   t.end()
 })
 
@@ -176,7 +175,7 @@ test('getSteps() returns correct array of steps', function(t){
 })
 
 test('run() runs the sequencer and returns output to callback', function(t) {
-  sequencer.run(function(out) {
+  sequencer.run({ mode: 'test' }, function(out) {
     t.equal(typeof (sequencer.steps[sequencer.steps.length - 1].output), "object", "Output is Generated");
     t.equal(out, sequencer.steps[sequencer.steps.length - 1].output.src, "Output callback works");
     t.end();
@@ -193,7 +192,7 @@ test('getStep(offset) returns the step at offset distance relative to current st
 });
 
 test('toCliString() returns the CLI command for the sequence', function(t) {
-  t.deepEqual(sequencer.toCliString(), `sequencer -i [PATH] -s "channel channel channel invert blend" -d '{"channel":"green","offset":-2}'`, "works correctly");
+  t.deepEqual(sequencer.toCliString(), `sequencer -i [PATH] -s "channel channel channel channel invert brightness average brightness invert blend" -d \'{"channel":"green","brightness":"1","offset":-2}'`, "works correctly");
   t.end();
 });
 

@@ -283,7 +283,7 @@ ImageSequencer = function ImageSequencer(options) {
       this.sequences = require('./SavedSequences.json');
   }
 
-  var str = require('./Strings.js')(this.steps, this.images, modulesInfo, addSteps, copy)
+  var str = require('./Strings.js')(this.steps, modulesInfo, addSteps, copy)
 
   return {
     //literals and objects

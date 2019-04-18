@@ -1,14 +1,13 @@
-module.exports = function(steps, images, modulesInfo, addSteps, copy) {
+module.exports = function(steps, modulesInfo, addSteps, copy) {
   // Genates a CLI string for the current sequence
-  var steps = steps
-  var images = images || {}
-
   function toCliString() {
     var cliStringSteps = `"`, cliOptions = {};
     for (var step in this.steps) {
-      if (this.steps[step].options.name !== "load-image")
-        cliStringSteps += `${this.steps[step].options.name} `;
-      for (var inp in modulesInfo(this.steps[step].options.name).inputs) {
+      var name = (typeof this.steps[step].options !== "undefined")? this.steps[step].options.name : this.steps[step].name
+      if (name !== "load-image"){
+        cliStringSteps += `${name} `;
+      }
+      for (var inp in modulesInfo(name).inputs) {
         cliOptions[inp] = this.steps[step].options[inp];
       }
     }
@@ -21,13 +20,14 @@ module.exports = function(steps, images, modulesInfo, addSteps, copy) {
     if (step) {
       return stepToString(step);
     } else {
-      return copy(this.images.image1.steps).map(stepToString).slice(1).join(',');
+      return copy(this.steps.map(stepToString).slice(1).join(','));
     }
   }
 
   // Stringifies one step of the sequence
   function stepToString(step) {
-    let inputs = modulesInfo(step.options.name).inputs || {}, op = {};
+    var arg = (step.name)?step.name:step.options.name;
+    let inputs = modulesInfo(arg).inputs || {}, op = {};
 
     for (let input in inputs) {
 
@@ -39,12 +39,12 @@ module.exports = function(steps, images, modulesInfo, addSteps, copy) {
     }
 
     var configurations = Object.keys(op).map(key => key + ':' + op[key]).join('|');
-    return `${step.options.name}{${configurations}}`;
+    return `${arg}{${configurations}}`;
   }
 
   // exports the current sequence as an array of JSON steps
   function toJSON() {
-    return stringToJSON(toString());
+    return this.stringToJSON(this.toString());
   }
 
   // Coverts stringified sequence into an array of JSON steps

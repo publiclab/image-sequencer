@@ -4,22 +4,22 @@
   "url": "https://github.com/publiclab/image-sequencer/tree/master/MODULES.md",
   "inputs": {
     "x": {
-      "type": "integer",
+      "type": "string",
       "desc": "X-position (measured from left) from where cropping starts",
       "default": 0
     },
     "y": {
-      "type": "integer",
+      "type": "string",
       "desc": "Y-position (measured from top) from where cropping starts",
       "default": 0
     },
     "w": {
-      "type": "integer",
+      "type": "string",
       "desc": "Width of crop",
       "default": "(50%)"
     },
     "h": {
-      "type": "integer",
+      "type": "string",
       "desc": "Height of crop",
       "default": "(50%)"
     },

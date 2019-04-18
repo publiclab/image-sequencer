@@ -21,14 +21,21 @@ module.exports = function Crop(input,options,callback) {
     for(var i = 0; i < w ; i++){
       backgroundArray = backgroundArray.concat([backgroundColor[0],backgroundColor[1],backgroundColor[2],backgroundColor[3]]);
     }
-    var newarray = new Uint8Array(4*w*h);
+    // var newarray = new Uint8Array(4*w*h);
+    var array = []
     for (var n = oy; n < oy + h; n++) {
+      var offsetValue = 4*w*n;
       if(n<ih){
-      newarray.set(pixels.data.slice(n*4*iw + ox, n*4*iw + ox + 4*w),4*w*(n-oy));
+        var start = n*4*iw + ox*4;
+        var end = n*4*iw + ox*4 + 4*w;
+        var pushArray = Array.from(pixels.data.slice(start, end ))
+        array.push.apply(array,pushArray);
       } else {
-        newarray.set(backgroundArray,4*w*(n-oy));
+        array.push.apply(array,backgroundArray);
       }
     }
+    
+    var newarray = Uint8Array.from(array);
     pixels.data = newarray;
     pixels.shape = [w,h,4];
     pixels.stride[1] = 4*w;

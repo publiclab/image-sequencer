@@ -10,7 +10,7 @@ module.exports = function Brightness(options, UI) {
 
     function draw(input, callback, progressObj) {
 
-        options.brightness = parseInt(options.brightness) || defaults.brightness;
+        options.brightness = options.brightness || defaults.brightness;
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;

@@ -42,7 +42,6 @@ ImageSequencer = function ImageSequencer(options) {
     modules = require('./Modules'),
     sequences = require('./SavedSequences.json'),
     formatInput = require('./FormatInput'),
-    images = {},
     inputlog = [],
     events = require('./ui/UserInterface')(),
     fs = require('fs');
@@ -66,94 +65,78 @@ ImageSequencer = function ImageSequencer(options) {
 
   function addSteps() {
     var this_ = (this.name == "ImageSequencer") ? this : this.sequencer;
-    var args = (this.name == "ImageSequencer") ? [] : [this.images];
+    var args = [];
     var json_q = {};
     for (var arg in arguments) { args.push(copy(arguments[arg])); }
     json_q = formatInput.call(this_, args, "+");
 
     inputlog.push({ method: "addSteps", json_q: copy(json_q) });
-
-    for (var i in json_q)
-      for (var j in json_q[i])
-        require("./AddStep")(this_, i, json_q[i][j].name, json_q[i][j].o);
-
+      for (var j in json_q)
+        require("./AddStep")(this_, json_q[j].name, json_q[j].o);
     return this;
   }
 
-  function removeStep(image, index) {
+  function removeStep(ref, index) {
     //remove the step from images[image].steps and redraw remaining images
     if (index > 0) {
-      thisStep = images[image].steps[index];
+      //var this_ = (this.name == "ImageSequencer") ? this : this.sequencer;
+      thisStep = ref.steps[index];
       thisStep.UI.onRemove(thisStep.options.step);
-      images[image].steps.splice(index, 1);
+      ref.steps.splice(index, 1);
     }
     //tell the UI a step has been removed
   }
 
-  function removeSteps(image, index) {
-    var run = {}, indices;
+  function removeSteps() {
+    var   indices;
     var this_ = (this.name == "ImageSequencer") ? this : this.sequencer;
-    var args = (this.name == "ImageSequencer") ? [] : [this.images];
+    var args = [];
     for (var arg in arguments) args.push(copy(arguments[arg]));
 
     var json_q = formatInput.call(this_, args, "-");
     inputlog.push({ method: "removeSteps", json_q: copy(json_q) });
 
-    for (var img in json_q) {
-      indices = json_q[img].sort(function(a, b) { return b - a });
-      run[img] = indices[indices.length - 1];
+      indices = json_q.sort(function(a, b) { return b - a });
       for (var i in indices)
-        removeStep(img, indices[i]);
-    }
-    // this.run(run); // This is creating problems
+        removeStep(this_, indices[i]);
     return this;
   }
 
-  function insertSteps(image, index, name, o) {
-    var run = {};
+  function insertSteps() {
     var this_ = (this.name == "ImageSequencer") ? this : this.sequencer;
-    var args = (this.name == "ImageSequencer") ? [] : [this.images];
+    var args = []
     for (var arg in arguments) args.push(arguments[arg]);
 
     var json_q = formatInput.call(this_, args, "^");
     inputlog.push({ method: "insertSteps", json_q: copy(json_q) });
 
-    for (var img in json_q) {
-      var details = json_q[img];
+      var details = json_q;
       details = details.sort(function(a, b) { return b.index - a.index });
       for (var i in details)
-        require("./InsertStep")(this_, img, details[i].index, details[i].name, details[i].o);
-      run[img] = details[details.length - 1].index;
-    }
-    // this.run(run); // This is Creating issues
+        require("./InsertStep")(this_, details[i].index, details[i].name, details[i].o);
     return this;
   }
 
   // Config is an object which contains the runtime configuration like progress bar
   // information and index from which the sequencer should run
-  function run(config, t_image, t_from) {
+  function run(config) {
     var progressObj, index = 0;
     config = config || { mode: 'no-arg' };
     if (config.index) index = config.index;
 
-    if (config.mode != 'test') {
       if (config.mode != "no-arg" && typeof config != 'function') {
         if (config.progressObj) progressObj = config.progressObj;
         delete arguments['0'];
       }
-    }
-    else {
-      arguments['0'] = config.mode;
-    }
 
     var this_ = (this.name == "ImageSequencer") ? this : this.sequencer;
-    var args = (this.name == "ImageSequencer") ? [] : [this.images];
+    var args = [];
     for (var arg in arguments) args.push(copy(arguments[arg]));
 
     var callback = function() { };
     for (var arg in args)
       if (objTypeOf(args[arg]) == "Function")
-        callback = args.splice(arg, 1)[0];
+        callback = args.splice(arg, 1)[0]; //callback is formed
 
     var json_q = formatInput.call(this_, args, "r");
 
@@ -164,13 +147,17 @@ ImageSequencer = function ImageSequencer(options) {
 
   function loadImages() {
     var args = [];
+    var prevSteps = this.getSteps().slice(1).map(step=>step.options.name)
     var sequencer = this;
+    sequencer.image = arguments[0];
     for (var arg in arguments) args.push(copy(arguments[arg]));
     var json_q = formatInput.call(this, args, "l");
-
+    if(this.getSteps().length!=0){
+      this.options.sequencerCounter = 0;
+      inputlog = [];
+      this.steps = [];
+    }
     inputlog.push({ method: "loadImages", json_q: copy(json_q) });
-    var loadedimages = this.copy(json_q.loadedimages);
-
     var ret = {
       name: "ImageSequencer Wrapper",
       sequencer: this,
@@ -179,22 +166,19 @@ ImageSequencer = function ImageSequencer(options) {
       insertSteps: this.insertSteps,
       run: this.run,
       UI: this.UI,
-      setUI: this.setUI,
-      images: loadedimages
+      setUI: this.setUI
     };
-
-    function load(i) {
-      if (i == loadedimages.length) {
-        json_q.callback.call(ret);
-        return;
+    function loadPrevSteps(ref){
+      if(prevSteps.length!=0){
+        ref.addSteps(prevSteps)
+        prevSteps=[];
       }
-      var img = loadedimages[i];
-      require('./ui/LoadImage')(sequencer, img, json_q.images[img], function() {
-        load(++i);
-      });
     }
+    require('./ui/LoadImage')(sequencer, "image", json_q.image, function() {
+      loadPrevSteps(sequencer);
+      json_q.callback.call(ret);
+    });
 
-    load(0);
   }
 
   function replaceImage(selector, steps, options) {
@@ -205,12 +189,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   //returns the steps added
   function getSteps(){
-    var steps;
-    if(arguments[0])
-    steps= this.images.test.steps;
-    else
-    steps = this.images.image1.steps;
-    return [...steps];
+    return this.steps;
   }
 
   function setUI(UI) {
@@ -233,8 +212,9 @@ ImageSequencer = function ImageSequencer(options) {
       }
     }
     else {
-      if (modules[name])
-        modulesdata = modules[name][1];
+      if (modules[name]){
+         modulesdata = modules[name][1];
+        }
       else
         modulesdata = { 'inputs': sequences[name]['options'] };
     }
@@ -312,8 +292,9 @@ ImageSequencer = function ImageSequencer(options) {
     inputlog: inputlog,
     modules: modules,
     sequences: sequences,
-    images: images,
     events: events,
+    steps: steps,
+    image: image,
 
     //user functions
     loadImages: loadImages,

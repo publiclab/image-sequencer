@@ -239,10 +239,18 @@ function DefaultHtmlStepUi(_sequencer, options) {
     $(step.ui.querySelector(".load")).hide();
 
     step.imgElement.src = (step.name == "load-image") ? step.output.src : step.output;
+    _sequencer.getImageDimensions(step.imgElement.src, fetchImageDimensions);
     var imgthumbnail = step.ui.querySelector(".img-thumbnail");
     for (let index = 0; index < step.linkElements.length; index++) {
       if (step.linkElements[index].contains(imgthumbnail))
         step.linkElements[index].href = step.imgElement.src;
+    }
+
+    function fetchImageDimensions(dim){
+      if($("."+step.name+":last")){
+        $("."+step.name+":last").remove()
+      }
+      $(".step-image:last").append("<p class = '"+step.name+"'>(width = "+dim.width+", height = "+dim.height+")</p>");
     }
 
     // TODO: use a generalized version of this

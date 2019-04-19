@@ -283,6 +283,16 @@ ImageSequencer = function ImageSequencer(options) {
       this.sequences = require('./SavedSequences.json');
   }
 
+  function getImageDimensions(img, cb){
+    var getPixels = require("get-pixels");
+    var dimensions = {width: "", height: ""}
+    getPixels(img,function (err, pixels){
+      dimensions.width = pixels.shape[0];
+      dimensions.height = pixels.shape[1];
+      cb(dimensions);
+    })
+  }
+
   var str = require('./Strings.js')(this.steps, modulesInfo, addSteps, copy)
 
   return {
@@ -329,6 +339,7 @@ ImageSequencer = function ImageSequencer(options) {
     log: log,
     objTypeOf: objTypeOf,
     copy: copy,
+    getImageDimensions: getImageDimensions,
 
     setInputStep: require('./ui/SetInputStep')(sequencer)
   }

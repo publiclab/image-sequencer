@@ -46,6 +46,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
                   <div class="load load-spin" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
                   <div class="step-image">\
                     <a class="cal collapse in"><img class="img-thumbnail step-thumbnail"/></a>\
+                    <p class="'+step.name+'"><span class="widthDisp"></span><span class = "heightDisp"></span></p>\
                   </div>\
                 </div>\
               </div>\
@@ -247,10 +248,11 @@ function DefaultHtmlStepUi(_sequencer, options) {
     }
 
     function fetchImageDimensions(dim){
-      if($("."+step.name+":last")){
-        $("."+step.name+":last").remove()
-      }
-      $(".step-image:last").append("<p class = '"+step.name+"'>(width = "+dim.width+", height = "+dim.height+")</p>");
+     var paraArray = document.getElementsByClassName(step.name);
+     var widthDisp = paraArray[paraArray.length-1].getElementsByClassName('widthDisp')[0];
+     var heightDisp = paraArray[paraArray.length-1].getElementsByClassName('heightDisp')[0];
+     widthDisp.innerHTML = "(width: "+dim.width;
+     heightDisp.innerHTML = ", height: "+dim.height + ")";
     }
 
     // TODO: use a generalized version of this

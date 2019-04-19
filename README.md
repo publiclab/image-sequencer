@@ -59,7 +59,7 @@ A diagram of this running 5 steps on a single sample image may help explain how 
 This library conveniently works in the browser, in Node, and on the command line (CLI).
 
 ### Unix based platforms
-You can set up a local environment to test the UI with `npm run setup` followed by `npm start`.
+You can set up a local environment to test the UI with `sudo npm run setup` followed by `npm start`.
 
 ### Windows
 Our npm scripts do not support windows shells, please run the following snippet in PowerShell.
@@ -95,7 +95,7 @@ $ npm install image-sequencer -g
 ```
 $ npm run debug invert
 ```
- 
+
 ## Quick Usage
 
 ### Initializing the Sequencer
@@ -241,7 +241,39 @@ If multiple images are to be added, `modules` is an array, which holds the names
 to be added, in that particular order.
 
 optional_otions is just an optional parameter, in object form, which you might
-want to provide to the modules. 
+want to provide to the modules.
+
+A variety of syntaxes are supported by Image Sequencer to add multiple steps and configurations quickly for module chaining. The project supports the string syntax, designed to be compact and URL friendly, and JSON, for handling more complex sequences. This can be achieved by passing strings to `sequencer.addStep()`:
+
+
+```js
+sequencer.addSteps('invert,channel');
+sequencer.addSteps(['invert','channel']);
+```
+
+For passing default configurations ({} is optional):
+
+```js
+sequencer.addSteps('brightness{}');
+```
+
+For passing custom configurations:
+
+```js
+sequencer.addSteps('brightness{brightness:80}');
+```
+
+For passing multiple custom configurations:
+
+```js
+sequencer.addSteps('crop{x:120|y:90}')
+```
+
+For passing multiple custom configurable modules:
+
+```js
+sequencer.addSteps('crop{x:130|y:80},brightness{brightness:80}')
+```
 
 return value: **`sequencer`** (To allow method chaining)
 
@@ -398,7 +430,7 @@ Image sequencer supports stringifying a sequence which is appended to the url an
 channel{channel:green},invert{}
 ```
 
-Sequencer also supports the use of `()` in place of `{}` for backward compatibility with older links. (This syntax is deprecated and should be avoided as far as possible)
+The use of `()` in place of `{}` for backward compatibility with older links is now **deprecated**. (There is no longer support for the following syntax, and should be avoided)
 ```
 channel(channel:green),invert()
 ```
@@ -437,7 +469,7 @@ sequencer.importJSON([
 To see this in action, please refer to line # 51 of the following:
 
 [test/core/modules/import-export.js](https://github.com/publiclab/image-sequencer/blob/main/test/core/modules/import-export.js)
- 
+
 
 
 ## Creating a User Interface
@@ -514,7 +546,7 @@ sequencer.setUI({
 
 Image Sequencer object supports one imageURL at a time.
 
-Adding a seccond image to same sequencer will result to adding same set of steps added to prior image and flushing out the previous one. 
+Adding a seccond image to same sequencer will result to adding same set of steps added to prior image and flushing out the previous one.
 
 ```js
 s1 = new ImageSequencer(...);

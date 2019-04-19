@@ -6,6 +6,9 @@ function InsertStep(ref, index, name, o) {
     return ref.importJSON(ref.sequences[name]);
   }
 
+  if (ref.detectStringSyntax(name)) {
+    return ref.stringToSteps(name)
+  }
 
   function insertStep(index, name, o_) {
     if (ref.modules[name]) var moduleInfo = ref.modules[name][1];

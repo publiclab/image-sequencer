@@ -1,3 +1,4 @@
+
 'use strict';
 
 var fs = require('fs');
@@ -103,29 +104,53 @@ test('addSteps("name",o) adds a step', function(t) {
   t.end();
 });
 
+test('addSteps("name,name") adds two steps', function(t) {
+  sequencer.addSteps('channel,invert')
+  t.equal(sequencer.steps.length, 7, 'Length of steps increase')
+  t.equal(sequencer.steps[5].options.name, "channel", "Correct Step Added");
+  t.equal(sequencer.steps[6].options.name, "invert", "Correct Step Added");
+  t.end()
+})
+
+test('addSteps("name{parameter:value},name{parameter:value}") adds two steps', function(t) {
+  sequencer.addSteps('brightness{brightness:80},average{}')
+  t.equal(sequencer.steps.length, 9, 'Length of steps increase')
+  t.equal(sequencer.steps[7].options.name, "brightness", "Correct Step Added");
+  t.equal(sequencer.steps[7].options.brightness, '80', "Correct options loaded")
+  t.equal(sequencer.steps[8].options.name, "average", "Correct Step Added");
+  t.end()
+})
+
+test('addSteps("name{parameter:value}" adds a step', function(t) {
+  sequencer.addSteps('brightness{brightness:1}')
+  t.equal(sequencer.steps.length, 10, 'Length of steps increase')
+  t.equal(sequencer.steps[9].options.name, "brightness", "Correct Step Added");
+  t.equal(sequencer.steps[9].options.brightness, '1', "Correct options loaded")
+  t.end()
+})
 
 test('removeSteps(position) removes a step', function(t) {
-  sequencer.removeSteps( 1);
-  t.equal(sequencer.steps.length, 4, "Length of steps reduced");
+  sequencer.removeSteps(1);
+  t.equal(sequencer.steps.length, 9, "Length of steps reduced");
   t.end();
 });
 
 test('removeSteps([positions]) removes steps', function(t) {
   sequencer.removeSteps([1, 2]);
-  t.equal(sequencer.steps.length, 2, "Length of steps reduced");
+  t.equal(sequencer.steps.length, 7, "Length of steps reduced");
   t.end();
 });
 
 test('insertSteps(position,"module",options) inserts a step', function(t) {
   sequencer.insertSteps( 1, 'channel', {});
-  t.equal(sequencer.steps.length, 3, "Length of Steps increased");
+  t.equal(sequencer.steps.length, 8, "Length of Steps increased");
   t.equal(sequencer.steps[1].options.name, "channel", "Correct Step Inserted");
   t.end();
 });
 
 test('insertSteps(position,"module") inserts a step', function(t) {
   sequencer.insertSteps(1, 'channel');
-  t.equal(sequencer.steps.length, 4, "Length of Steps increased");
+  t.equal(sequencer.steps.length, 9, "Length of Steps increased");
   t.equal(sequencer.steps[1].options.name, "channel", "Correct Step Inserted");
   t.end();
 });
@@ -136,7 +161,7 @@ test('getSteps() returns correct array of steps', function(t){
   var sequencer = ImageSequencer({ ui: false });
   sequencer.loadImages('test', red);
   sequencer.addSteps(['blur','invert']);
-  var stepsArray = sequencer.getSteps('test');  
+  var stepsArray = sequencer.getSteps('test');
   t.equal(stepsArray.length, sequencer.steps.length, "getSteps() returns correct length of steps");
   var flag=0;
   for (var i = 0; i<sequencer.steps.length; i++){
@@ -149,15 +174,13 @@ test('getSteps() returns correct array of steps', function(t){
   t.end();
 })
 
-
 test('run() runs the sequencer and returns output to callback', function(t) {
-  sequencer.run(function(out) {
+  sequencer.run({ mode: 'test' }, function(out) {
     t.equal(typeof (sequencer.steps[sequencer.steps.length - 1].output), "object", "Output is Generated");
     t.equal(out, sequencer.steps[sequencer.steps.length - 1].output.src, "Output callback works");
     t.end();
   });
 });
-
 
 test('getStep(offset) returns the step at offset distance relative to current step', function(t) {
   sequencer.addSteps('invert', {});
@@ -169,7 +192,7 @@ test('getStep(offset) returns the step at offset distance relative to current st
 });
 
 test('toCliString() returns the CLI command for the sequence', function(t) {
-  t.deepEqual(sequencer.toCliString(), `sequencer -i [PATH] -s "channel channel channel invert blend" -d '{"channel":"green","offset":-2}'`, "works correctly");
+  t.deepEqual(sequencer.toCliString(), `sequencer -i [PATH] -s "channel channel channel channel invert brightness average brightness invert blend" -d \'{"channel":"green","brightness":"1","offset":-2}'`, "works correctly");
   t.end();
 });
 

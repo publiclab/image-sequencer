@@ -46,7 +46,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
                   <div class="load load-spin" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
                   <div class="step-image">\
                     <a class="cal collapse in"><img class="img-thumbnail step-thumbnail"/></a>\
-                    <p class="'+step.name+'"><span class="widthDisp"></span><span class = "heightDisp"></span></p>\
+                    <p class="'+step.name+'"><b><span class="widthDisp"></span><span class = "heightDisp"></span></b></p>\
                   </div>\
                 </div>\
               </div>\

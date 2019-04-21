@@ -272,3 +272,7 @@ a.name-header{
   align:center; 
   width:100%;
 }
+
+.toggle {
+  cursor: default;
+}

@@ -16,7 +16,7 @@ module.exports = exports = function(pixels, options){
         }
     
         for(var y = 0; y < pixels.shape[1]; y+=options.y){
-            for(var x = 0 ; x <= pixels.shape[0]; x++){
+            for(var x = 0 ; x < pixels.shape[0]; x++){
                 pixels.set(x, y, 0, color[0]);
                 pixels.set(x, y, 1, color[1]);
                 pixels.set(x, y, 2, color[2]);

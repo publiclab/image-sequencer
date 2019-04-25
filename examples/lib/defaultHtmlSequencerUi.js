@@ -47,6 +47,8 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
   
     if(!newStepName) newStepName = arguments[0]
 
+    if(typeof newStepName !== "string")
+    newStepName = $(".item")[0].getAttribute("data-value");
     /*
     * after adding the step we run the sequencer from defined step
     * and since loadImage is not a part of the drawarray the step lies at current

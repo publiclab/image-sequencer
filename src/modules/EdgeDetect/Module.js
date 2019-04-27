@@ -61,5 +61,5 @@ module.exports = function edgeDetect(options, UI) {
     draw: draw,
     output: output,
     UI: UI
-  }
-}
+  };
+};

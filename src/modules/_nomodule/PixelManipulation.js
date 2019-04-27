@@ -13,12 +13,12 @@ module.exports = function PixelManipulation(image, options) {
 
   options = options || {};
 
-  const getPixels = require("get-pixels"),
-    savePixels = require("save-pixels");
+  const getPixels = require('get-pixels'),
+    savePixels = require('save-pixels');
 
   getPixels(image.src, function(err, pixels) {
     if (err) {
-      console.log("Bad image path", image);
+      console.log('Bad image path', image);
       return;
     }
 
@@ -34,7 +34,7 @@ module.exports = function PixelManipulation(image, options) {
 
     if (!options.inBrowser && !process.env.TEST) {
       try {
-        var pace = require("pace")(pixels.shape[0] * pixels.shape[1]);
+        var pace = require('pace')(pixels.shape[0] * pixels.shape[1]);
       } catch (e) {
         options.inBrowser = true;
       }
@@ -78,14 +78,14 @@ module.exports = function PixelManipulation(image, options) {
 
       var r = savePixels(pixels, options.format, { quality: 100 });
 
-      r.on("data", function(chunk) {
+      r.on('data', function(chunk) {
         totalLength += chunk.length;
         chunks.push(chunk);
       });
 
-      r.on("end", function() {
-        var data = Buffer.concat(chunks, totalLength).toString("base64");
-        var datauri = "data:image/" + options.format + ";base64," + data;
+      r.on('end', function() {
+        var data = Buffer.concat(chunks, totalLength).toString('base64');
+        var datauri = 'data:image/' + options.format + ';base64,' + data;
         if (options.output)
           options.output(options.image, datauri, options.format);
         if (options.callback) options.callback();

@@ -10,6 +10,12 @@
     "setup": "npm i && npm i -g grunt grunt-cli && grunt build",
     "start": "grunt serve"
   },
+  "lint-staged": {
+    "*.js": [
+      "./node_modules/.bin/eslint --fix",
+      "git add"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/publiclab/image-sequencer.git"
@@ -30,6 +36,7 @@
     "commander": "^2.11.0",
     "data-uri-to-buffer": "^2.0.0",
     "downloadjs": "^1.4.7",
+    "eslint": "^5.16.0",
     "fisheyegl": "^0.1.2",
     "font-awesome": "~4.7.0",
     "geotiff": "^1.0.0-beta.6",
@@ -37,6 +44,7 @@
     "gifshot": "^0.4.5",
     "glfx": "0.0.4",
     "gpu.js": "^2.0.0-rc.12",
+    "husky": "^2.1.0",
     "image-sequencer-invert": "^1.0.0",
     "imagejs": "0.0.9",
     "imgareaselect": "git://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2",
@@ -44,6 +52,7 @@
     "jquery": "^3.3.1",
     "jsdom": "^15.0.0",
     "jsqr": "^1.1.1",
+    "lint-staged": "^8.1.5",
     "lodash": "^4.17.11",
     "ndarray": "^1.0.18",
     "ora": "^3.0.0",
@@ -79,6 +88,11 @@
     "tape": "^4.9.2",
     "tape-run": "^5.0.0",
     "uglify-es": "^3.3.7"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "homepage": "https://sequencer.publiclab.org",
   "bin": {

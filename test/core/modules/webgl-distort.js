@@ -6,14 +6,14 @@ require('../../../src/ImageSequencer.js');
 
 var sequencer = ImageSequencer({ ui: false });
 var options = {
-        nw: '0,0',
-        ne: '10,4',
-        se: '10,5',
-        sw: '0,4'
-    };
+  nw: '0,0',
+  ne: '10,4',
+  se: '10,5',
+  sw: '0,4'
+};
 var target = 'test_outputs';
-var red = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABlBMVEX+AAD///+KQee0AAAAAWJLR0QB/wIt3gAAAAd0SU1FB+EGHRIVAvrm6EMAAAAMSURBVAjXY2AgDQAAADAAAceqhY4AAAAldEVYdGRhdGU6Y3JlYXRlADIwMTctMDYtMjlUMTg6MjE6MDIrMDI6MDDGD83DAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE3LTA2LTI5VDE4OjIxOjAyKzAyOjAwt1J1fwAAAABJRU5ErkJggg==";
-var benchmark = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAp0lEQVQ4T62SsQ3CMBBF3y/YgDUYAQE9IzACEvS0LAAZgRGoYQZGAXpzKFISWYmxzsCV1v/vnnTWCwy4CRaCO4WjBtDVBFvBwcsZAKJibTUXPHKwHMBl5QL0rGaCZ/tWCoitNoLj14CfDf4HqEkGS4Oz9/ZxTv1SgJNg5YUNAG3RYGpwAUbZj+TZFKASrFPZjwapsMHE4AqMuyt4DFKZAHvBrsggBXoDQmQp9u/Xo6IAAAAASUVORK5CYII=";
+var red = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABlBMVEX+AAD///+KQee0AAAAAWJLR0QB/wIt3gAAAAd0SU1FB+EGHRIVAvrm6EMAAAAMSURBVAjXY2AgDQAAADAAAceqhY4AAAAldEVYdGRhdGU6Y3JlYXRlADIwMTctMDYtMjlUMTg6MjE6MDIrMDI6MDDGD83DAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE3LTA2LTI5VDE4OjIxOjAyKzAyOjAwt1J1fwAAAABJRU5ErkJggg==';
+var benchmark = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAp0lEQVQ4T62SsQ3CMBBF3y/YgDUYAQE9IzACEvS0LAAZgRGoYQZGAXpzKFISWYmxzsCV1v/vnnTWCwy4CRaCO4WjBtDVBFvBwcsZAKJibTUXPHKwHMBl5QL0rGaCZ/tWCoitNoLj14CfDf4HqEkGS4Oz9/ZxTv1SgJNg5YUNAG3RYGpwAUbZj+TZFKASrFPZjwapsMHE4AqMuyt4DFKZAHvBrsggBXoDQmQp9u/Xo6IAAAAASUVORK5CYII=';
 
 // Test 1 to check webgl-distort module is getting loaded
 test('Load distort module', function(t) {
@@ -35,15 +35,15 @@ test('Check Options', function(t) {
 // Test 3 to check webgl-distort module works as expected
 test('Distort module works correctly', function(t) {
   sequencer.run({ mode: 'test' }, function(out) {
-    var result = sequencer.steps[1].output.src
-    base64Img.imgSync(result, target, 'result')
-    base64Img.imgSync(benchmark, target, 'benchmark')
-    result = './test_outputs/result.png'
-    benchmark = './test_outputs/benchmark.png'
+    var result = sequencer.steps[1].output.src;
+    base64Img.imgSync(result, target, 'result');
+    base64Img.imgSync(benchmark, target, 'benchmark');
+    result = './test_outputs/result.png';
+    benchmark = './test_outputs/benchmark.png';
     looksSame(result, benchmark, function(err, res) {
-      if (err) console.log(err)
-      t.equal(res.equal, true)
-      t.end()
-    })
-  })
-})
+      if (err) console.log(err);
+      t.equal(res.equal, true);
+      t.end();
+    });
+  });
+});

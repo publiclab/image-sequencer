@@ -42,4 +42,4 @@ module.exports = {
   'tint': require('./modules/Tint'),
   'webgl-distort': require('./modules/WebglDistort'),
   'white-balance': require('./modules/WhiteBalance')
-}
+};

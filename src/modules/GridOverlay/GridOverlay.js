@@ -1,36 +1,28 @@
-module.exports = exports = function(pixels, options,priorstep){
+module.exports = exports = function(pixels, options){
     var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
 
-    options.color = options.color || defaults.color;
-    options.x = options.x || defaults.x;
-    options.y = options.y || defaults.y;
+    options.x = Number(options.x) || defaults.x;
+    options.y = Number(options.y) || defaults.y;
+    color = options.color || defaults.color;
+    color = color.split(" ");
 
-        var img = $(priorstep.imgElement);
-        if(Object.keys(img).length === 0){
-            img = $(priorstep.options.step.imgElement);
-        }
-        var canvas = document.createElement("canvas");
-        canvas.width = pixels.shape[0]; //img.width();
-        canvas.height = pixels.shape[1]; //img.height();
-        var ctx = canvas.getContext('2d');
-        ctx.drawImage(img[0], 0, 0);
-        var p=2;
-        function drawBoard(){
-            for (var x = 0; x <= canvas.width; x+=options.x) {
-                ctx.moveTo(0.5 + x + p, p);
-                ctx.lineTo(0.5 + x + p, canvas.height + p);
+        for(var x = 0; x < pixels.shape[0]; x+=options.x){
+            for(var y = 0 ; y < pixels.shape[1]; y++){
+                pixels.set(x, y, 0, color[0]);
+                pixels.set(x, y, 1, color[1]);
+                pixels.set(x, y, 2, color[2]);
+                pixels.set(x, y, 3, color[3]);
             }
-            for (var y = 0; y <= canvas.height; y+=options.y) {
-                ctx.moveTo(p, 0.5 + y + p);
-                ctx.lineTo(canvas.width + p, 0.5 + y + p);
-            }
-            ctx.strokeStyle = options.color;
-            ctx.stroke();
         }
-        
-        drawBoard();
+    
+        for(var y = 0; y < pixels.shape[1]; y+=options.y){
+            for(var x = 0 ; x < pixels.shape[0]; x++){
+                pixels.set(x, y, 0, color[0]);
+                pixels.set(x, y, 1, color[1]);
+                pixels.set(x, y, 2, color[2]);
+                pixels.set(x, y, 3, color[3]);
+            }
+        } 
 
-    var myImageData = ctx.getImageData(0,0,canvas.width,canvas.height);
-    pixels.data = myImageData.data
     return pixels;
 }

@@ -1,5 +1,4 @@
 const GPU = require('gpu.js').GPU
-const gpu = new GPU()
 
 /**
  * @method convolve
@@ -9,7 +8,10 @@ const gpu = new GPU()
  * @param {Boolean} normalize Whether to normailize the output by dividing it by the total value of the kernel.
  * @returns {Float32Array} 
  */
-const convolve = (arrays, kernel, pipeMode = false, normalize = false) => {
+const convolve = (arrays, kernel, options) => {
+  options.pipeMode = options.pipeMode || false
+  options.mode = options.mode || 'gpu'
+  
   const arrayX = arrays[0][0].length,
     arrayY = arrays[0].length,
     kernelX = kernel[0].length,
@@ -30,11 +32,11 @@ const convolve = (arrays, kernel, pipeMode = false, normalize = false) => {
   const padIt = (array) => {
     let out = []
 
-    for (var y = 0; y < array.length; y++){
+    for (var y = 0; y < array.length + paddingY * 2; y++){
       out.push([])
-      for (var x = 0; x < array[0].length; x++){
-        const positionX = Math.min(Math.max(x - paddingX, 0), arrayX - 1);
-        const positionY = Math.min(Math.max(y - paddingY, 0), arrayY - 1);
+      for (var x = 0; x < array[0].length + paddingX * 2; x++){
+        const positionX = Math.min(Math.max(x - paddingX, 0), array[0].length - 1);
+        const positionY = Math.min(Math.max(y - paddingY, 0), array.length - 1);
 
         out[y].push(array[positionY][positionX])
       }

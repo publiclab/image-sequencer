@@ -76,7 +76,7 @@ test('convolve works with multiple 3x4 arrays', t => {
   expectedOut2 = [
     [14, 19, 24],
     [12, 13, 14],
-    [15, 12, 09],
+    [15, 12,  9],
     [16, 13, 10]
   ]
 

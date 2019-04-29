@@ -42,11 +42,12 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
 
   function addStepUi() {
     if ($(addStepSel + " select").val() == "none") return;
+    var newStepName;
+    if(typeof arguments[0] !== "string")
+    newStepName = $(addStepSel + " select option").html().toLowerCase();
+    else newStepName = arguments[0]
 
-    var newStepName = $(addStepSel + " select").val();
-  
-    if(!newStepName) newStepName = arguments[0]
-
+    
     /*
     * after adding the step we run the sequencer from defined step
     * and since loadImage is not a part of the drawarray the step lies at current

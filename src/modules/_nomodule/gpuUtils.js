@@ -12,7 +12,7 @@ const convolve = (arrays, kernel, options = {}) => {
   const pipeMode = options.pipeMode || false,
   mode = options.mode || 'gpu'
 
-  const gpu = new GPU({mode})
+  const gpu = new GPU(mode != 'gpu' ? {mode} : {})
   
   const arrayX = arrays[0][0].length,
     arrayY = arrays[0].length,

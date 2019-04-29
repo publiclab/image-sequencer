@@ -8,9 +8,11 @@ const GPU = require('gpu.js').GPU
  * @param {Boolean} normalize Whether to normailize the output by dividing it by the total value of the kernel.
  * @returns {Float32Array} 
  */
-const convolve = (arrays, kernel, options) => {
-  options.pipeMode = options.pipeMode || false
-  options.mode = options.mode || 'gpu'
+const convolve = (arrays, kernel, options = {}) => {
+  const pipeMode = options.pipeMode || false,
+  mode = options.mode || 'gpu'
+
+  const gpu = new GPU({mode})
   
   const arrayX = arrays[0][0].length,
     arrayY = arrays[0].length,
@@ -20,9 +22,9 @@ const convolve = (arrays, kernel, options) => {
     paddingY = Math.floor(kernelY / 2);
 
   const matConvFunc = `function (array, kernel) {
-    var sum = 0;
-    for (var i = 0; i < ${kernelX}; i++){
-      for (var j = 0; j < ${kernelY}; j++){
+    let sum = 0;
+    for (let i = 0; i < ${kernelX}; i++){
+      for (let j = 0; j < ${kernelY}; j++){
         sum += kernel[j][i] * array[this.thread.y + j][this.thread.x + i];
       }
     }

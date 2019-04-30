@@ -9,7 +9,7 @@ module.exports = function runInBrowserContext(input, callback, step, options) {
 
     var obj = { input: input, modOptions: minOptions }
 
-    puppeteer.launch().then(function(browser) {
+    puppeteer.launch({headless: true, args:['--no-sandbox', '--disable-setuid-sandbox']}).then(function(browser) {
         browser.newPage().then(page => {
             /* Maybe there is a better way to this, loading the page coz localstorage API
             is not available otherwise */

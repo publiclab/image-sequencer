@@ -19,25 +19,20 @@ module.exports = exports = function (options, pixels, oldPixels, callback) {
       qrPixels.shape = [options.size, options.size, 4];
       qrPixels.stride[1] = 4 * options.size;
 
-      var width = oldPixels.shape[0],
-        height = oldPixels.shape[1];
-      var xe = width - options.size,
-        ye = height - options.size;
-      for (var m = 0; m < width; m++) {
-        for (var n = 0; n < height; n++) {
-          if (m >= xe && n >= ye) {
-            pixels.set(m, n, 0, qrPixels.get(m - xe, n - ye, 0));
-            pixels.set(m, n, 1, qrPixels.get(m - xe, n - ye, 1));
-            pixels.set(m, n, 2, qrPixels.get(m - xe, n - ye, 2));
-            pixels.set(m, n, 3, qrPixels.get(m - xe, n - ye, 3));
-          }
+            var width = oldPixels.shape[0],
+                height = oldPixels.shape[1];
+            var xe = width - options.size,
+                ye = height - options.size;
+                var pixelSetter = require('../../util/pixelSetter.js');
+            for (var m = 0; m < width; m++) {
+                for (var n = 0; n < height; n++) {
+                    if (m >= xe && n >= ye) {
+                        pixelSetter(m,n,[qrPixels.get(m - xe, n - ye, 0),qrPixels.get(m - xe, n - ye, 1),qrPixels.get(m - xe, n - ye, 2),qrPixels.get(m - xe, n - ye, 3)],pixels);
+                    }
 
-          else {
-            pixels.set(m, n, 0, oldPixels.get(m, n, 0));
-            pixels.set(m, n, 1, oldPixels.get(m, n, 1));
-            pixels.set(m, n, 2, oldPixels.get(m, n, 2));
-            pixels.set(m, n, 3, oldPixels.get(m, n, 3));
-          }
+                    else {
+                        pixelSetter(m,n,[qrPixels.get(m, n, 0),qrPixels.get(m, n, 1),qrPixels.get(m, n, 2),qrPixels.get(m, n, 3)],pixels)
+                    }
 
         }
       }

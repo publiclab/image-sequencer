@@ -23,25 +23,25 @@ module.exports = exports = function(pixels, options){
                  g >= cg * minFactor &&  g <= cg * maxFactor &&
                  b >= cb * minFactor &&  b <= cb * maxFactor);
   }
+    for(var i = 0; i < pixels.shape[0]; i++){
+        for(var j = 0; j < pixels.shape[1]; j++){
+            var r = pixels.get(i,j,0),
+                g = pixels.get(i,j,1),
+                b = pixels.get(i,j,2);
+            if(isSimilar(r,g,b)){
+                var pixelSetter = require('../../util/pixelSetter.js');
+                if (replaceMethod == "greyscale"){
+                    var avg = (r + g + b)/3;
+                    pixelSetter(i,j,[avg,avg,avg],pixels);
 
-  for(var i = 0; i < pixels.shape[0]; i++){
-    for(var j = 0; j < pixels.shape[1]; j++){
-      var r = pixels.get(i, j, 0),
-        g = pixels.get(i, j, 1),
-        b = pixels.get(i, j, 2);
-      if(isSimilar(r, g, b)){
-        if (replaceMethod == 'greyscale'){
-          var avg = (r + g + b) / 3;
-          pixels.set(i, j, 0, avg);
-          pixels.set(i, j, 1, avg);
-          pixels.set(i, j, 2, avg);
-        }else {
-          pixels.set(i, j, 0, replaceColor[0]);
-          pixels.set(i, j, 1, replaceColor[1]);
-          pixels.set(i, j, 2, replaceColor[2]);
+                }else {
+                    pixelSetter(i,j,replaceColor,pixels);
+
+                }
+            }
         }
+    
+    
       }
-    }
-  }
   return pixels;
 };

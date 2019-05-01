@@ -47,10 +47,8 @@ module.exports = exports = function(pixels, options) {
       } while (isSimilar(currx, south) && south < height);
 
       for (n = north + 1; n < south; n += 1) {
-        pixels.set(currx, n, 0, fillColor[0]);
-        pixels.set(currx, n, 1, fillColor[1]);
-        pixels.set(currx, n, 2, fillColor[2]);
-        pixels.set(currx, n, 3, fillColor[3]);
+        require('../../util/pixelSetter.js')(currx,n,fillColor,pixels);
+
         if (isSimilar(currx - 1, n)) {
           queuex.push(currx - 1);
           queuey.push(n);

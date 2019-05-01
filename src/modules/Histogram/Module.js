@@ -22,47 +22,44 @@ module.exports = function Channel(options, UI) {
       return [r, g, b, a];
     }
 
-    function extraManipulation(pixels) {
-      // if (!options.inBrowser)
-      //     require('fs').writeFileSync('./output/histo.txt', hist.reduce((tot, cur, idx) => `${tot}\n${idx} : ${cur}`, ``));
-      var newarray = new Uint8Array(4 * 256 * 256);
-      pixels.data = newarray;
-      pixels.shape = [256, 256, 4];
-      pixels.stride[1] = 4 * 256;
+        function extraManipulation(pixels) {
+            // if (!options.inBrowser)
+            //     require('fs').writeFileSync('./output/histo.txt', hist.reduce((tot, cur, idx) => `${tot}\n${idx} : ${cur}`, ``));
+            var newarray = new Uint8Array(4 * 256 * 256);
+            pixels.data = newarray;
+            pixels.shape = [256, 256, 4];
+            pixels.stride[1] = 4 * 256;
 
-      for (let x = 0; x < 256; x++) {
-        for (let y = 0; y < 256; y++) {
-          pixels.set(x, y, 0, 255);
-          pixels.set(x, y, 1, 255);
-          pixels.set(x, y, 2, 255);
-          pixels.set(x, y, 3, 255);
-        }
-      }
+            var pixelSetter = require('../../util/pixelSetter.js');
+            for (let x = 0; x < 256; x++) {
+                for (let y = 0; y < 256; y++) {
+                    pixelSetter(x,y,[255,255,255,255],pixels);
 
-      let startY = options.gradient ? 10 : 0;
-      if (options.gradient) {
-        for (let x = 0; x < 256; x++) {
-          for (let y = 0; y < 10; y++) {
-            pixels.set(x, 255 - y, 0, x);
-            pixels.set(x, 255 - y, 1, x);
-            pixels.set(x, 255 - y, 2, x);
-          }
-        }
-      }
+                }
+            }
 
-      let convfactor = (256 - startY) / Math.max(...hist);
+            let startY = options.gradient ? 10 : 0;
+            if (options.gradient) {
+                for (let x = 0; x < 256; x++) {
+                    for (let y = 0; y < 10; y++) {
+                        pixelSetter(x,255-y,[x,x,x],pixels);
 
-      for (let x = 0; x < 256; x++) {
-        let pixCount = Math.round(convfactor * hist[x]);
+                    }
+                }
+            }
 
-        for (let y = startY; y < pixCount; y++) {
-          pixels.set(x, 255 - y, 0, 204);
-          pixels.set(x, 255 - y, 1, 255);
-          pixels.set(x, 255 - y, 2, 153);
-        }
-      }
+            let convfactor = (256 - startY) / Math.max(...hist);
 
-      return pixels;
+            for (let x = 0; x < 256; x++) {
+                let pixCount = Math.round(convfactor * hist[x]);
+
+                for (let y = startY; y < pixCount; y++) {
+                    pixelSetter(x,255-y,[204,255,153],pixels);
+
+                }
+            }
+
+            return pixels;
     }
 
     function output(image, datauri, mimetype) {

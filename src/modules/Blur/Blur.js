@@ -20,13 +20,15 @@ module.exports = exports = function(pixels, blur) {
 
   const convolve = require('../_nomodule/gpuUtils').convolve;
 
-  const conPix = convolve([pixs.r, pixs.g, pixs.b], kernel);
+  const conPix = convolve([pixs.r, pixs.g, pixs.b], kernel)
+  var pixelSetter = require('../../util/pixelSetter.js');
 
   for (let y = 0; y < pixels.shape[1]; y++){
     for (let x = 0; x < pixels.shape[0]; x++){
-      pixels.set(x, y, 0, Math.max(0, Math.min(conPix[0][y][x], 255)));
-      pixels.set(x, y, 1, Math.max(0, Math.min(conPix[1][y][x], 255)));
-      pixels.set(x, y, 2, Math.max(0, Math.min(conPix[2][y][x], 255)));
+      var pixelvalue = [Math.max(0, Math.min(conPix[0][y][x], 255)),
+                        Math.max(0, Math.min(conPix[1][y][x], 255)),
+                        Math.max(0, Math.min(conPix[2][y][x], 255))];
+      pixelSetter(x,y,pixelvalue,pixels);
     }
   }
 

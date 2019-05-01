@@ -41,19 +41,16 @@ module.exports = function(pixels, highThresholdRatio, lowThresholdRatio, useHyst
   return pixels;
 };
 
+var pixelSetter = require('../../util/pixelSetter.js');
 
 function supress(pixels, pixel) {
-  pixels.set(pixel[0], pixel[1], 0, 0);
-  pixels.set(pixel[0], pixel[1], 1, 0);
-  pixels.set(pixel[0], pixel[1], 2, 0);
-  pixels.set(pixel[0], pixel[1], 3, 255);
+  pixelSetter(pixel[0],pixel[1],[0,0,0,255],pixels);
+
 }
 
 function preserve(pixels, pixel) {
-  pixels.set(pixel[0], pixel[1], 0, 255);
-  pixels.set(pixel[0], pixel[1], 1, 255);
-  pixels.set(pixel[0], pixel[1], 2, 255);
-  pixels.set(pixel[0], pixel[1], 3, 255);
+  pixelSetter(pixel[0],pixel[1],[255,255,255,255],pixels);
+
 }
 
 // sobelFilter function that convolves sobel kernel over every pixel

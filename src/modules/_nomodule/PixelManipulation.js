@@ -86,10 +86,8 @@ module.exports = function PixelManipulation(image, options) {
               y
             );
 
-            pixels.set(x, y, 0, pixel[0]);
-            pixels.set(x, y, 1, pixel[1]);
-            pixels.set(x, y, 2, pixel[2]);
-            pixels.set(x, y, 3, pixel[3]);
+            require('../../util/pixelSetter.js')(x,y,pixel,pixels);
+
           }
         }
       };

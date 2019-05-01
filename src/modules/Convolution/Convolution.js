@@ -20,13 +20,13 @@ module.exports = exports = function(pixels, constantFactor, kernelValues, texMod
   }
 
   const convolve = require('../_nomodule/gpuUtils').convolve;
-  const conPix = convolve([pixs.r, pixs.g, pixs.b], kernel, (pixels.shape[0] * pixels.shape[1]) < 400000 ? true : false);
+  const conPix = convolve([pixs.r, pixs.g, pixs.b], kernel, (pixels.shape[0] * pixels.shape[1]) < 400000 ? true : false)
+  var pixelSetter = require('../../util/pixelSetter.js');
 
   for (let y = 0; y < pixels.shape[1]; y++){
     for (let x = 0; x < pixels.shape[0]; x++){
-      pixels.set(x, y, 0, Math.max(0, Math.min(conPix[0][y][x], 255)));
-      pixels.set(x, y, 1, Math.max(0, Math.min(conPix[1][y][x], 255)));
-      pixels.set(x, y, 2, Math.max(0, Math.min(conPix[2][y][x], 255)));
+      var value = [Math.max(0, Math.min(conPix[0][y][x], 255)),Math.max(0, Math.min(conPix[1][y][x], 255)),Math.max(0, Math.min(conPix[2][y][x], 255))]
+      pixelSetter(x,y,value,pixels);
     }
   }
 

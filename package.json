@@ -5,7 +5,7 @@
   "main": "src/ImageSequencer.js",
   "scripts": {
     "debug": "TEST=true node ./index.js -i ./examples/images/monarch.png -s invert",
-    "test": "TEST=true istanbul cover tape test/core/*.js test/core/ui/user-interface.js test/core/modules/canvas-resize.js test/core/modules/QR.js test/core/modules/crop.js | tap-spec; browserify test/core/modules/image-sequencer.js test/core/modules/chain.js test/core/modules/meta-modules.js test/core/modules/replace.js test/core/modules/import-export.js test/core/modules/run.js test/core/modules/dynamic-imports.js test/core/util/*.js test/core/modules/benchmark.js| tape-run --render=\"tap-spec\"",
+    "test": "TEST=true istanbul cover tape test/core/*.js test/core/ui/user-interface.js test/core/modules/*.js | tap-spec; browserify test/core/sequencer/image-sequencer.js test/core/sequencer/chain.js test/core/sequencer/meta-modules.js test/core/sequencer/replace.js test/core/sequencer/import-export.js test/core/sequencer/run.js test/core/sequencer/dynamic-imports.js test/core/util/*.js test/core/sequencer/benchmark.js | tape-run --render=\"tap-spec\"",
     "test-ui": "jasmine test/spec/*.js",
     "setup": "npm i && npm i -g grunt grunt-cli && grunt build",
     "start": "grunt serve"

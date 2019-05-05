@@ -103,7 +103,7 @@ body > .container-fluid {
 }
 
 #add-step-btn{
-  margin-left: 10px;
+  width: 100%;
 }
 
 #addStep .labels {
@@ -271,4 +271,8 @@ a.name-header{
   margin-bottom:0px;
   align:center; 
   width:100%;
+}
+
+.selectize-input {
+  width: 100% !important;
 }

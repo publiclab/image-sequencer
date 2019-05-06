@@ -8,10 +8,10 @@
  */
 module.exports = function ImportImageModule(options, UI) {
 
-  options.imageUrl = options.url || "./images/monarch.png";
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+  options.imageUrl = options.inBrowser ? (options.url || defaults.url) : "./examples/images/monarch.png";
 
-  var output,
-      imgObj = new Image();
+  var output;
 
   // we should get UI to return the image thumbnail so we can attach our own UI extensions
 
@@ -22,7 +22,7 @@ module.exports = function ImportImageModule(options, UI) {
   }
 
   // This function is caled everytime the step has to be redrawn
-  function draw(input,callback) {
+  function draw(input, callback) {
 
     var step = this;
 
@@ -30,23 +30,13 @@ module.exports = function ImportImageModule(options, UI) {
     // TODO: develop a standard API method for saving each input state,
     // for reference in future steps (for blending, for example)
     step.metadata.input = input;
+    // options.format = require('../../util/GetFormat')(options.imageUrl);
 
-    function onLoad() {
-
-      // This output is accessible to Image Sequencer
-      step.output = {
-        src: imgObj.src,
-        format: options.format
-      }
-
-      // Tell Image Sequencer that step has been drawn
+    var helper = ImageSequencer({ inBrowser: options.inBrowser, ui: false });
+    helper.loadImages(options.imageUrl, () => {
+      step.output = helper.steps[0].output;
       callback();
-    }
-
-    options.format = require('../../util/GetFormat')(options.imageUrl);
-    imgObj.onload = onLoad;
-    imgObj.src = options.imageUrl;
-
+    });
   }
 
   return {

@@ -8,8 +8,8 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
 
   function onLoad() {
     importStepsFromUrlHash();
-    if (!$('#selectStep').val())
-      $(addStepSel + " #add-step-btn").prop("disabled", true);
+    if ($('#selectStep').val()==='none')
+        $(addStepSel + " #add-step-btn").prop("disabled", true);
       handleSaveSequence();
   }
 
@@ -26,6 +26,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
 
   function selectNewStepUi() {
     var m = $(addStepSel + " select").val();
+    if(!m) m = arguments[0];
     $(addStepSel + " .info").html(_sequencer.modulesInfo(m).description);
     $(addStepSel + " #add-step-btn").prop("disabled", false);
   }
@@ -41,9 +42,12 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
 
   function addStepUi() {
     if ($(addStepSel + " select").val() == "none") return;
+    var newStepName;
+    if(typeof arguments[0] !== "string")
+    newStepName = $(addStepSel + " select option").html().toLowerCase();
+    else newStepName = arguments[0]
 
-    var newStepName = $(addStepSel + " select").val();
-
+    
     /*
     * after adding the step we run the sequencer from defined step
     * and since loadImage is not a part of the drawarray the step lies at current
@@ -57,18 +61,19 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     }
     _sequencer
       .addSteps(newStepName, options)
-      .run({ index: _sequencer.images.image1.steps.length - sequenceLength - 1 });
+      .run({ index: _sequencer.steps.length - sequenceLength - 1 });
       $(addStepSel + " .info").html("Select a new module to add to your sequence.");
+      $(addStepSel + " select").val("none");
 
     //enable save-sequence button if disabled initially
     handleSaveSequence();
 
     // add to URL hash too
-    urlHash.setUrlHashParameter("steps", _sequencer.toString());
+    urlHash.setUrlHashParameter("steps", _sequencer.toString())
   }
 
   function handleSaveSequence(){
-    var stepCount=sequencer.images.image1.steps.length;
+    var stepCount=sequencer.steps.length;
     if(stepCount<2)
     $(" #save-seq").prop("disabled", true);
     else

@@ -42,6 +42,7 @@ module.exports = function CropModuleUi(step, ui) {
           converted[2],
           converted[3]
         );
+        $($(imgEl()).parents()[3]).find("input").trigger("change")
       }
     });
   }
@@ -77,7 +78,7 @@ module.exports = function CropModuleUi(step, ui) {
   }
 
   function setOptions(x1, y1, width, height) {
-    let options = $($(imgEl()).parents()[2]).find("input");
+    let options = $($(imgEl()).parents()[3]).find("input");
     options[0].value = x1;
     options[1].value = y1;
     options[2].value = width;

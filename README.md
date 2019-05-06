@@ -1,34 +1,45 @@
 Image Sequencer
 ====
 
-[![Build Status](https://travis-ci.org/publiclab/image-sequencer.svg?branch=master)](https://travis-ci.org/publiclab/image-sequencer)
+
+[![Build Status](https://travis-ci.org/publiclab/image-sequencer.svg?branch=master)](https://travis-ci.org/publiclab/image-sequencer) [![Maintainability](https://api.codeclimate.com/v1/badges/5906996dd2e90aca6398/maintainability)](https://codeclimate.com/github/publiclab/image-sequencer/maintainability) [![Codecov](https://img.shields.io/codecov/c/github/publiclab/image-sequencer.svg?logo=codecov)](https://codecov.io/gh/publiclab/image-sequencer)
+
+- **Latest Stable Demo**: https://sequencer.publiclab.org
+- **Latest Beta Demo**: https://beta.sequencer.publiclab.org
+- **Stable Branch**: https://github.com/publiclab/image-sequencer/tree/stable/
 
 ## Why
 
-Image Sequencer is different from other image processing systems in that it's _non-destructive_: instead of modifying the original image, it **creates a new image at each step in a sequence**. This is because it:
+Image Sequencer is different from other image processing systems because it's _non-destructive_: instead of modifying the original image, it **creates a new image at each step in a sequence**. This is because it:
 
 * produces a legible trail of operations, to "show your work" for evidential, educational, or reproducibility reasons
 * makes the creation of new tools or "modules" simpler -- each must accept an input image, and produce an output image
-* allows many images to be run through the same sequence of steps
+* allows many images to run through the same sequence of steps
 * works identically in the browser, on Node.js, and on the command line
 
-![workflow diagram](https://raw.githubusercontent.com/publiclab/image-sequencer/master/examples/images/diagram-workflows.png)
+The following diagrams attempt to explain how the applications various components interconnect:
 
-It is also for prototyping some other related ideas:
+![general diagram](https://publiclab.org/i/30547.png?s=o)
 
-* filter-like image processing -- applying a transform to an image from a given source, like a proxy. I.e. [every image tile of a satellite imagery web map](https://publiclab.org/notes/warren/05-10-2018/prototype-filter-map-tiles-in-real-time-in-a-browser-with-imagesequencer-ndvi-landsat)
-* test-based image processing -- the ability to create a sequence of steps that do the same task as some other image processing tool, provable with example before/after images to compare with
-* logging of each step to produce an evidentiary record of modifications to an original image
+![workflow diagram](https://raw.githubusercontent.com/publiclab/image-sequencer/main/examples/images/diagram-workflows.png)
+
+It also for prototypes other related ideas:
+
+* filter-like image processing -- apply a transform to an image from a given source, like a proxy. I.e. [every image tile of a satellite imagery web map](https://publiclab.org/notes/warren/05-10-2018/prototype-filter-map-tiles-in-real-time-in-a-browser-with-imagesequencer-ndvi-landsat)
+* test-based image processing -- the ability to create a sequence of steps that do the same task as other image processing tools, provable with example before/after images to compare with
+* logging each step -- to produce an evidentiary record of modifications to an original image
 * cascading changes -- change an earlier step's settings, and see those changes affect later steps
-* "small modules"-based extensibility: see [Contributing](https://github.com/publiclab/image-sequencer/blob/master/CONTRIBUTING.md)
+* "small modules" -- based extensibility: see [Contributing](https://github.com/publiclab/image-sequencer/blob/main/CONTRIBUTING.md)
+
 
 ## Examples
 
-* [Simple Demo](https://publiclab.github.io/image-sequencer/)
+* [Simple Demo](https://sequencer.publiclab.org)
+* [Latest Beta Demo](https://beta.sequencer.publiclab.org)
 
 A diagram of this running 5 steps on a single sample image may help explain how it works:
 
-![example workflow](https://raw.githubusercontent.com/publiclab/image-sequencer/master/examples/images/diagram-6-steps.png)
+![example workflow](https://raw.githubusercontent.com/publiclab/image-sequencer/main/examples/images/diagram-6-steps.png)
 
 ## Jump to:
 
@@ -39,21 +50,21 @@ A diagram of this running 5 steps on a single sample image may help explain how 
 * [Method Chaining](#method-chaining)
 * [Multiple Images](#multiple-images)
 * [Creating a User Interface](#creating-a-user-interface)
-* [Contributing](https://github.com/publiclab/image-sequencer/blob/master/CONTRIBUTING.md)
-* [Submit a Module](https://github.com/publiclab/image-sequencer/blob/master/CONTRIBUTING.md#contributing-modules)
+* [Contributing](https://github.com/publiclab/image-sequencer/blob/main/CONTRIBUTING.md)
+* [Submit a Module](https://github.com/publiclab/image-sequencer/blob/main/CONTRIBUTING.md#contributing-modules)
 * [Get Demo Bookmarklet](https://publiclab.org/w/imagesequencerbookmarklet)
 
 ## Installation
 
-This library works in the browser, in Node, and on the command line (CLI), which we think is great.
+This library conveniently works in the browser, in Node, and on the command line (CLI).
 
 ### Unix based platforms
-You can set up a local environment to test the UI with `sudo npm run setup` followed by `npm start` 
+You can set up a local environment to test the UI with `sudo npm run setup` followed by `npm start`.
 
 ### Windows
 Our npm scripts do not support windows shells, please run the following snippet in PowerShell.
 ```powershell
-npm i ; npm i -g grunt grunt-cli ; grunt serve
+npm i ; npm i -g grunt grunt-cli ; grunt build; grunt serve
 ```
 In case of a port conflict please run the following
 ```powershell
@@ -62,12 +73,12 @@ npm i -g http-server ; http-server -p 3000
 
 ### Browser
 
-Just include [image-sequencer.js](https://publiclab.github.io/image-sequencer/dist/image-sequencer.js) in the Head section of your web page. See the [demo here](https://publiclab.github.io/image-sequencer/)!
+Just include [image-sequencer.min.js](https://github.com/publiclab/image-sequencer/blob/stable/dist/image-sequencer.min.js) in the Head section of your web page. See the [demo here](https://sequencer.publiclab.org)!
 
 ### Node (via NPM)
 
 (You must have NPM for this)
-Add `image-sequencer` to your list of dependencies and run `$ npm install`
+Add `image-sequencer` to your list of dependencies and run `npm install`
 
 ### CLI
 
@@ -87,8 +98,16 @@ $ npm run debug invert
 
 ## Quick Usage
 
+### Initializing the Sequencer
+
+The Image Sequencer Library exports a function ImageSequencer which initializes a sequencer.
+
+```js
+var sequencer = ImageSequencer();
+```
+
 Image Sequencer can be used to run modules on an HTML Image Element using the
-`replaceImage` method. The method accepts two parameters - `selector` and `steps`.
+`replaceImage` method, which accepts two parameters - `selector` and `steps`.
 `selector` is a CSS selector. If it matches multiple images, all images will be
 modified. `steps` may be the name of a module or array of names of modules.
 
@@ -96,7 +115,7 @@ Note: Browser CORS Restrictions apply. Some browsers may not allow local images
 from other folders, and throw a Security Error instead.
 
 ```js
-  sequencer.replaceImage(selector,steps,optional_options);
+sequencer.replaceImage(selector,steps,optional_options);
 ```
 
 `optional_options` allows passing additional arguments to the module itself.
@@ -104,8 +123,8 @@ from other folders, and throw a Security Error instead.
 For example:
 
 ```js
-  sequencer.replaceImage('#photo','invert');
-  sequencer.replaceImage('#photo',['invert','ndvi-red']);
+sequencer.replaceImage('#photo','invert');
+sequencer.replaceImage('#photo',['invert','ndvi-red']);
 ```
 
 ### Data URL usage
@@ -131,7 +150,7 @@ Image Sequencer also provides a CLI for applying operations to local files. The 
 The basic format for using the CLI is as follows:
 
 ```
-    $ ./index.js -i [PATH] -s step-name
+$ ./index.js -i [PATH] -s step-name
 ```
 
 *NOTE:* On Windows you'll have to use `node index.js` instead of `./index.js`.
@@ -139,7 +158,7 @@ The basic format for using the CLI is as follows:
 The CLI also can take multiple steps at once, like so:
 
 ```
-    $ ./index.js -i [PATH] -s "step-name-1 step-name-2 ..."
+$ ./index.js -i [PATH] -s "step-name-1 step-name-2 ..."
 ```
 
 But for this, double quotes must wrap the space-separated steps.
@@ -149,7 +168,7 @@ Options for the steps can be passed in one line as JSON in the details option li
 $ ./index.js -i [PATH] -s "brightness" -c '{"brightness":50}'
 
 ```
-Or the values can be given through terminal prompt like
+Or the values can be given through the terminal prompt like
 
 <img width="1436" alt="screen shot 2018-02-14 at 5 18 50 pm" src="https://user-images.githubusercontent.com/25617855/36202790-3c6e8204-11ab-11e8-9e17-7f3387ab0158.png">
 
@@ -182,15 +201,17 @@ var sequencer = ImageSequencer();
 ### Loading an Image into the Sequencer
 
 The `loadImage` method is used to load an image into the sequencer. It accepts
-a name and an image. The method also accepts an optional callback.
+an image `src`, either a URL or a data-url. The method also accepts an optional callback.
 
 ```js
-sequencer.loadImage(image_src,optional_callback);
+sequencer.loadImage(image_src, optional_callback);
 ```
+
 On `Node.js` the `image_src` may be a DataURI or a local path or a URL.
 
 On browsers, it may be a DatURI, a local image or a URL (Unless this violates
 CORS Restrictions). To sum up, these are accepted:
+
 * Images in the same domain (or directory - for a local implementation)
 * CORS-Proof images in another domain.
 * DataURLs
@@ -200,7 +221,7 @@ The callback is called within the scope of a sequencer. For example:
 (addSteps is defined later)
 
 ```js
-sequencer.loadImage('SRC',function(){
+sequencer.loadImage('SRC', function(){
   this.addSteps('module-name');
 });
 ```
@@ -218,11 +239,43 @@ sequencer.addSteps(modules, optional_options);
 ```
 
 If only one module is to be added, `modules` is simply the name of the module.
-If multiple images are to be added, `modules` is an array of the names of modules
-which are to be added, in that particular order.
+If multiple images are to be added, `modules` is an array, which holds the names of modules
+to be added, in that particular order.
 
-optional_otions is just additional parameters, in object form, which you might
-want to provide to the modules. It's an optional parameter.
+optional_otions is just an optional parameter, in object form, which you might
+want to provide to the modules.
+
+A variety of syntaxes are supported by Image Sequencer to add multiple steps and configurations quickly for module chaining. The project supports the string syntax, designed to be compact and URL friendly, and JSON, for handling more complex sequences. This can be achieved by passing strings to `sequencer.addStep()`:
+
+
+```js
+sequencer.addSteps('invert,channel');
+sequencer.addSteps(['invert','channel']);
+```
+
+For passing default configurations ({} is optional):
+
+```js
+sequencer.addSteps('brightness{}');
+```
+
+For passing custom configurations:
+
+```js
+sequencer.addSteps('brightness{brightness:80}');
+```
+
+For passing multiple custom configurations:
+
+```js
+sequencer.addSteps('crop{x:120|y:90}')
+```
+
+For passing multiple custom configurable modules:
+
+```js
+sequencer.addSteps('crop{x:130|y:80},brightness{brightness:80}')
+```
 
 return value: **`sequencer`** (To allow method chaining)
 
@@ -273,7 +326,7 @@ return value: **`sequencer`** (To allow method chaining)
 ### Removing a step from the sequencer
 
 The `removeSteps` method is used to remove unwanted steps from the sequencer.
-It accepts the index of the step as an input or an array of the unwanted indices
+It accepts the index of the step as an input or an array of the unwanted indices,
 if there are more than one.
 
 For example, if the modules ['ndvi-red','crop','invert'] were added in this order,
@@ -300,7 +353,7 @@ role it played in `addSteps`.
 
 Indexes can be negative. Negative sign with an index means that counting will be
 done in reverse order. If the index is out of bounds, the counting will wrap in
-the original direction of counting. So, an `index` of -1 means that the module is
+the original direction of counting. So, an `index` of -1 means the module is
 inserted at the end.
 
 ```js
@@ -326,12 +379,11 @@ Methods can be chained on the Image Sequencer:
 * run() can not be in the middle of the chain.
 * If the chain starts with loadImage() or loadImages(), the following methods are
 applied only to the newly loaded images.
-* If no name is provided to the image, a name will be generated for it. The name will
-be of the form "image<number>". For Ex: "image1", "image2", "image3", etc.
+
 
 Valid Chains:
 ```js
-sequencer.loadImage('red',function(){
+sequencer.loadImage(function(){
   this.addSteps('invert').run(function(out){
     //do something with ouptut.
   });
@@ -346,156 +398,20 @@ sequencer.addSteps('invert').run().addSteps('ndvi-red');
 ```
 
 
-## Multiple Images
-Image Sequencer is capable of handling multiple images at once.
 
-### Initializing a sequencer with multiple images.
-This is just like before.
-```js
-var sequencer = ImageSequencer();
-```
+## Fetching current steps
 
-### Loading Multiple Images into the Sequencer
-
-Multiple images can be loaded by the method `loadImages`. Everything is the same,
-except that now, a unique identification called `image_name` has to be provided
-with each image. This is a string literal.
-
-* 3/2 parameters :
-    ```js
-    sequencer.loadImages(image_name,
-      image_src,optional_callback);
-    ```
-* 1/2 parameters (JSON) :
-    ```js
-    sequencer.loadImages({
-      images: {
-        image1_name: image_src,
-        image2_name: image_src,
-        ...
-      },
-      callback: optional_callback
-    });
-    ```
-
-return value: **none**
-
-
-### Adding Steps on Multiple Images
-
-The same method `addSteps` is used for this. There's just a slight obvious change
-in the syntax that the image name has to be supplied too. `image_name` as well as,
-`module_name` in the following examples can be either strings or arrays of strings.
+The `getSteps` method can be used to get the array of current steps in `this` instance of sequencer.For example
 
 ```js
-sequencer.addSteps(image_name,module_name,optional_options);
+sequencer.getSteps()
 ```
 
-If no Image Name is specified, the module is added to **all** images.
-
-```js
-sequencer.addSteps(module_name,optional_options);
-```
-
-All this can be passed in as JSON:
-
-```js
-sequencer.addSteps({
-  image1_name: {name: module_name, o: optional_options},
-  image2_name: {name: module_name, o: optional_options},
-  ...
-});
-```
-
-return value: **`sequencer`** (To allow method chaining)
-
-
-### Running a Sequencer with multiple images
-
-The same `run` method can be used with a slight change in syntax.
-The `run` method accepts parameters `image` and `from`. `from` is the index from
-where the function starts generating output. By default, it will run across all
-the steps. (from = 1) If no image is specified, the sequencer will be run over **all
-the images**. `image_name` may be an array of image names.
-
-```js
-sequencer.run(); //All images from first step
-```
-
-```js
-sequencer.run(image_name,from); //Image 'image' from 'from'
-```
-
-The `run` method also accepts an optional callback just like before:
-
-```js
-  sequencer.run(image_name,from,function(out){
-    // This gets called back.
-    // "out" is the DataURL of final image.
-  });
-```
-
-JSON input is also acceptable.
-
-```js
-sequencer.run({
-  image1_name: from,
-  image2_name: from,
-  ...
-});
-```
-
-return value: **`sequencer`** (To allow method chaining)
-
-
-### Removing Steps from an Image
-
-Similarly, `removeSteps` can also accept an `image_name` parameter. Either, both,
-or none of `image_name` and `steps` them may be an array. JSON input is also acceptable.
-
-```js
-sequencer.removeSteps("image_name",[steps]);
-```
-
-```js
-sequencer.removeSteps("image_name",step);
-```
-
-```js
-sequencer.removeSteps({
-  image1_name: [steps],
-  image2_name: [steps],
-  ...
-});
-```
-return value: **`sequencer`** (To allow method chaining)
-
-
-### Inserting steps on an image
-
-The `insertSteps` method can also accept an `image_name` parameter. `image_name`
-may be an array. Everything else remains the same. JSON Input is acceptable too.
-
-```js
-sequencer.insertSteps("image",index,"module_name",o);
-```
-```js
-sequencer.insertSteps([image],index,"module_name",o);
-```
-```js
-sequencer.insertSteps({
-  image1: [
-    {index:index1, name: module_name1, o:optional_options1},
-    {index:index2, name: module_name2, o:optional_options2},
-    ...
-  ]
-});
-```
-return value: **`sequencer`** (To allow method chaining)
+returns an array of steps associated with the current sequencer.
 
 ## Saving Sequences
 
-IMAGE SEQUENCER supports saving a sequence of modules and their associated settings in a simple string syntax. These sequences can be saved in the local storage inside the browser and inside a JSON file in node.js. sequences can be saved in node context using the CLI option
+IMAGE SEQUENCER supports saving a sequence of modules and their associated settings in a simple string syntax. These sequences can be saved in the local storage of the browser and inside a JSON file in node.js. sequences can be saved in node context using the CLI option
 
 ```shell
 --save-sequence "name stringified-sequence"
@@ -516,7 +432,7 @@ Image sequencer supports stringifying a sequence which is appended to the url an
 channel{channel:green},invert{}
 ```
 
-Sequencer also supports the use of `()` in place of `{}` for backward compatibility with older links. (This syntax is deprecated and should be avoided as far as possible)
+The use of `()` in place of `{}` for backward compatibility with older links is now **deprecated**. (There is no longer support for the following syntax, and should be avoided)
 ```
 channel(channel:green),invert()
 ```
@@ -535,6 +451,29 @@ Image Sequencer can also generate a string for usage in the CLI for the current 
 sequencer.toCliString()
 ```
 
+
+## Importing steps using JSON array
+
+Image sequencer provides the following core API function to import the given sequence of JSON steps into sequencer.
+
+```js
+sequencer.importJSON(obj)
+```
+It can be implemented the following way for example:
+
+```js
+sequencer.importJSON([
+    { name: 'blur', options: {} }
+  ]);
+  ```
+  where name is the name of step to be added, options object can be the one used to provide various params to the sequencer which can customise the default ones.
+
+To see this in action, please refer to line # 51 of the following:
+
+[test/core/modules/import-export.js](https://github.com/publiclab/image-sequencer/blob/main/test/core/modules/import-export.js)
+
+
+
 ## Creating a User Interface
 
 Image Sequencer provides the following events which can be used to generate a UI:
@@ -551,7 +490,7 @@ and remove the loading GIF generated above.
 for instance, to remove the DIV generated above.
 * `notify` : This event is triggered whenever we need to shoot a notification to the
 user-interface.For example when the step is not available, we can shoot a notification,
-by sending appropriate message.For HTML UI it adds a DOM node to the browser, for CLI 
+by sending appropriate message.For HTML UI it adds a DOM node to the browser, for CLI
 and node , it logs the notification output to the respective console.
 
 How to define these functions:
@@ -605,12 +544,37 @@ sequencer.setUI({
 });
 ```
 
-Note: `identity.imageName` is the "name" of that particular image. This name can
-be specified while loading the image via `sequencer.loadImage("name","SRC")`. If
-not specified, the name of a loaded image defaults to a name like "image1",
-"image2", et cetra.
+## Using multiple images on same sequencer:
 
-Details of all modules can be sought using `sequencer.modulesInfo()`.
+Image Sequencer object supports one imageURL at a time.
+
+Adding a seccond image to same sequencer will result to adding same set of steps added to prior image and flushing out the previous one.
+
+```js
+s1 = new ImageSequencer(...);
+s1.loadImage(url1);
+s1.addSteps('blur');
+s1.run();
+s1.addImage(url2);
+s1.run();
+```
+However if we want to use more than one image, we can either initialize a sequencer for each image like:
+
+```js
+sequencer1 = new ImageSequencer(...);
+sequencer1.loadImage(...);
+sequencer1.addSteps(steps);
+sequencer1.run();
+
+sequencer2 = new ImageSequencer(...);
+sequencer2.loadImage(...);
+sequencer2.addSteps(steps);
+sequencer2.run();
+```
+
+
+
+**Note**: Details of all modules can be sought using `sequencer.modulesInfo()`.
 This method returns an object which defines the name and inputs of the modules. If a module name (hyphenated) is passed in the method, then only the details of that module are returned.
 
 The `notify` function takes two parameters `msg` and `id`, former being the message to be displayed on console (in case of CLI and node ) and a HTML component(in browser). The id is optional and is useful for HTML interface to give appropriate IDs.

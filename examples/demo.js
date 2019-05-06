@@ -1,5 +1,6 @@
 var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js'),
     setupCache = require('./lib/cache.js'),
+    intermediateHtmlStepUi = require('./lib/intermediateHtmlStepUi.js'),
     DefaultHtmlStepUi = require('./lib/defaultHtmlStepUi.js'),
     urlHash = require('./lib/urlHash.js'),
     insertPreview = require('./lib/insertPreview.js');
@@ -22,7 +23,10 @@ window.onload = function() {
         );
     }
     // Null option
-    addStepSelect.append('<option value="none" disabled selected>More modules...</option>');
+    addStepSelect.append('<option value="" disabled selected>Select a Module</option>');
+    addStepSelect.selectize({
+      sortField: 'text'
+  });
   }
   refreshOptions();
 
@@ -75,8 +79,8 @@ window.onload = function() {
     newStep = $(this).attr('data-value');
     //$("#addStep option[value=" + newStep + "]").attr('selected', 'selected');
     $("#addStep select").val(newStep);
-    ui.selectNewStepUi();
-    ui.addStepUi();
+    ui.selectNewStepUi(newStep);
+    ui.addStepUi(newStep);
     $(this).removeClass('selected');
   });
 
@@ -114,7 +118,7 @@ window.onload = function() {
 
     var button = event.target;
     button.disabled = true;
-
+    button.innerHTML='<i class="fa fa-circle-o-notch fa-spin"></i>'
 
     try {
       // Select all images from previous steps
@@ -166,6 +170,7 @@ window.onload = function() {
           modal.modal();
 
           button.disabled = false;
+          button.innerHTML = 'View GIF';
           isWorkingOnGifGeneration = false;
         }
       });
@@ -173,6 +178,7 @@ window.onload = function() {
     catch (e) {
       console.error(e);
       button.disabled = false;
+      button.innerHTML = 'View GIF';
       isWorkingOnGifGeneration = false;
 
     }
@@ -185,27 +191,35 @@ window.onload = function() {
     takePhotoSelector: "#take-photo",
     onLoad: function onFileReaderLoad(progress) {
       var reader = progress.target;
-      var step = sequencer.images.image1.steps[0];
-      var util=IntermediateHtmlStepUi(sequencer);
+      var step = sequencer.steps[0];
+      var util= intermediateHtmlStepUi(sequencer);
       step.output.src = reader.result;
       sequencer.run({ index: 0 });
-      step.options.step.imgElement.src = reader.result;
-      insertPreview.updatePreviews(reader.result,'addStep');
-      insertPreview.updatePreviews(sequencer.images.image1.steps[0].options.step.imgElement.src,'insertStep');
+      if(typeof step.options !=="undefined")
+        step.options.step.imgElement.src = reader.result;
+      else
+        step.imgElement.src = reader.result;
+      insertPreview.updatePreviews(reader.result,'#addStep');
+      insertPreview.updatePreviews(sequencer.steps[0].imgElement.src,'.insertDiv');
     },
     onTakePhoto: function (url) {
-      var step = sequencer.images.image1.steps[0];
+      var step = sequencer.steps[0];
       step.output.src = url;
       sequencer.run({ index: 0 });
-      step.options.step.imgElement.src = url;
+      if(typeof step.options !=="undefined")
+        step.options.step.imgElement.src = url;
+      else
+        step.imgElement.src = url;
+      insertPreview.updatePreviews(url,'#addStep');
+      insertPreview.updatePreviews(sequencer.steps[0].imgElement.src,'.insertDiv');
     }
   });
 
   setupCache();
 
   if (urlHash.getUrlHashParameter('src')) {
-    insertPreview.updatePreviews(urlHash.getUrlHashParameter('src'),'addStep');
+    insertPreview.updatePreviews(urlHash.getUrlHashParameter('src'),'#addStep');
   } else {
-    insertPreview.updatePreviews("images/tulips.png",'addStep');
+    insertPreview.updatePreviews("images/tulips.png",'#addStep');
   }
 };

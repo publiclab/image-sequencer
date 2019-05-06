@@ -1,12 +1,22 @@
 {
     "name": "White Balance",
-    "description": "Change the colour balance of the image by adjusting the colour temperature.",
+    "description": "Render neutral colours correctly based on the whitest pixel in the image.",
     "inputs": {
-      "temperature": {
-        "type": "string",
-        "desc": "Temperature between 0 - 40,000 Kelvin",
-        "default": "6000"
+      "red": {
+        "type": "integer",
+        "desc": "Red component of the whitest pixel ",
+        "default": 255
+      },
+      "green": {
+        "type": "integer",
+        "desc": "Green component of the whitest pixel ",
+        "default": 255
+      },
+      "blue": {
+        "type": "integer",
+        "desc": "Blue component of the whitest pixel ",
+        "default": 255
       }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#white-balance"
 }

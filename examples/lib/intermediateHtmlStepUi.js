@@ -66,20 +66,20 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
 
 
   function selectNewStepUi() {
-    var insertSelect = $(step.ui.querySelector('.insert-step-select'))
+    var insertSelect = $step('.insert-step-select')
     var m = insertSelect.val();
-    $(step.ui.querySelector('.insertDiv .info')).html(_sequencer.modulesInfo(m).description);
-    $(step.ui.querySelector('.insertDiv .add-step-btn')).prop("disabled", false);
+    $step('.insertDiv .info').html(_sequencer.modulesInfo(m).description);
+    $step('.insertDiv .add-step-btn').prop("disabled", false);
   }
     
     
   var toggleDiv = function(callback = function(){}){
-    $(step.ui.querySelector('.insertDiv')).collapse('toggle');
-    if ($(step.ui.querySelector('.insert-text')).css('display') != "none"){
-      $(step.ui.querySelector('.insert-text')).fadeToggle(200, function(){$(step.ui.querySelector('.no-insert-text')).fadeToggle(200, callback)})
+    $step('.insertDiv').collapse('toggle');
+    if ($step('.insert-text').css('display') != "none"){
+      $step('.insert-text').fadeToggle(200, function(){$step('.no-insert-text').fadeToggle(200, callback)})
     }
     else {
-      $(step.ui.querySelector('.no-insert-text')).fadeToggle(200, function(){$(step.ui.querySelector('.insert-text')).fadeToggle(200, callback)})
+      $step('.no-insert-text').fadeToggle(200, function(){$step('.insert-text').fadeToggle(200, callback)})
     }
   }
 
@@ -89,7 +89,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     var addStepUI = stepUI();
     addStepUI = parser.parseFromString(addStepUI, "text/html").querySelector("div")
 
-    if ($(step.ui.querySelector('.insertDiv')).length > 0){
+    if ($step('.insertDiv').length > 0){
       toggleDiv();
     }
     else {
@@ -103,9 +103,9 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       });
     }
 
-    $(step.ui.querySelector('.insertDiv .close-insert-box')).off('click').on('click', function(){toggleDiv(function(){})});
+    $step('.insertDiv .close-insert-box').off('click').on('click', function(){toggleDiv(function(){})});
     
-    var insertStepSelect = $(step.ui.querySelector('.insert-step-select'));
+    var insertStepSelect = $step('.insert-step-select');
     insertStepSelect.html("");
     // Add modules to the insertStep dropdown
     for (var m in modulesInfo) {
@@ -117,26 +117,26 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     insertStepSelect.selectize({
       sortField: 'text'
     });
-    $(step.ui.querySelector('.inserDiv .add-step-btn')).prop('disabled', true);
+    $step('.inserDiv .add-step-btn').prop('disabled', true);
     
     insertStepSelect.append('<option value="" disabled selected>Select a Module</option>');
-    $(step.ui.querySelector('.insertDiv .radio-group .radio')).on("click", function () {
+    $step('.insertDiv .radio-group .radio').on("click", function () {
       $(this).parent().find('.radio').removeClass('selected');
       $(this).addClass('selected');
       newStep = $(this).attr('data-value');
-      $(step.ui.querySelector('.insert-step-select')).val(newStep);
+      $step('.insert-step-select').val(newStep);
       selectNewStepUi();
       insert(id);
       $(this).removeClass('selected');
     });
     insertStepSelect.on('change', selectNewStepUi);
-    $(step.ui.querySelector('.insertDiv .add-step-btn')).on('click', function () { insert(id) });
+    $step('.insertDiv .add-step-btn').on('click', function () { insert(id) });
   }
 
   function insert(id) {
 
     options = options || {};
-    var insertStepSelect = $(step.ui.querySelector('.insert-step-select'));
+    var insertStepSelect = $step('.insert-step-select');
     if (insertStepSelect.val() == "none") return;
 
     var newStepName = insertStepSelect.val()

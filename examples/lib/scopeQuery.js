@@ -1,10 +1,10 @@
 /**
  * @method $scope
- * @param {"DOMNode"|"JQuery"} scope DOM Node or JQuery class as the scope 
+ * @param {"DOMNode"} scope A DOM Node as the scope 
  */
 function $scope(scope) {
   return function(queryString){
-    var element = $(scope).find(queryString);
+    var element = $(scope.querySelector(queryString));
 
     element.elem = function(queryString){
       return new $scope(scope)(queryString);
@@ -19,11 +19,11 @@ function $scope(scope) {
 
 /**
  * @method $scopeAll
- * @param {"DOMNode"|"JQuery"} scope DOM Node or JQuery class as the scope 
+ * @param {"DOMNode"} scope A DOM Node as the scope 
  */
 function $scopeAll(scope){
   return function(queryString){
-    var element = $(scope).find(queryString);
+    var element = $(scope.querySelectorAll(queryString));
 
     element.elem = function(queryString){
       return new $scope(scope)(queryString);
@@ -39,7 +39,7 @@ function $scopeAll(scope){
 /**
  * @method scopeSelector
  * @description A scoped jQuery selector
- * @param {"DOMNode"|"JQuery"} scope DOM Node or JQuery class as the scope 
+ * @param {"DOMNode"} scope DOM Node as the scope 
  */
 function scopeSelector(scope){
   return $scope(scope);
@@ -48,7 +48,7 @@ function scopeSelector(scope){
 /**
  * @method scopeSelectorAll
  * @description A scoped jQuery multiple selector
- * @param {"DOMNode"|"JQuery"} scope DOM Node or JQuery class as the scope 
+ * @param {"DOMNode} scope DOM Node as the scope 
  */
 function scopeSelectorAll(scope){
   return $scopeAll(scope);

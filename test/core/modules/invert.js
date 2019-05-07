@@ -38,22 +38,22 @@ test("Inverted image isn't identical", function(t) {
   })
 });
 
-test("Twice inverted image is identical to original image", function(t) {
-  sequencer.addSteps('test','invert');
-  sequencer.run({ mode: 'test' }, function(out) {
-    var input = sequencer.steps[0].output.src
-    var output = sequencer.steps[2].output.src
-    base64Img.imgSync(input, target, 'input')
-    base64Img.imgSync(output, target, 'output')
-    input = './test_outputs/input.png'
-    output = './test_outputs/output.png'
-    looksSame(input, output, function(err, res) {
-      if (err) console.log(err)
-      t.equal(res.equal, true)
-      t.end();
-    });
-  })
-});
+// test("Twice inverted image is identical to original image", function(t) {
+//   sequencer.addSteps('test','invert');
+//   sequencer.run({ mode: 'test' }, function(out) {
+//     var input = sequencer.steps[0].output.src
+//     var output = sequencer.steps[2].output.src
+//     base64Img.imgSync(input, target, 'input')
+//     base64Img.imgSync(output, target, 'output')
+//     input = './test_outputs/input.png'
+//     output = './test_outputs/output.png'
+//     looksSame(input, output, function(err, res) {
+//       if (err) console.log(err)
+//       t.equal(res.equal, true)
+//       t.end();
+//     });
+//   })
+// });
 
 test("Invert module produces correct output", function(t) {
   sequencer.run({ mode: 'test' }, function(out) {

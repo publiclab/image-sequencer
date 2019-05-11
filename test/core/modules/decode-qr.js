@@ -15,8 +15,8 @@ test('Load Decode-Qr module', function(t) {
 
 test('Decode-qr module works correctly', function(t) {
   sequencer.run({ mode: 'test' }, function(out) {
-   var result = sequencer.steps[1].options.step.qrval;
-   t.equal(result, "http://github.com/publiclab/image-sequencer", 'should be equal');
-   t.end();
-  })
-})
+    var result = sequencer.steps[1].options.step.qrval;
+    t.equal(result, 'http://github.com/publiclab/image-sequencer', 'should be equal');
+    t.end();
+  });
+});

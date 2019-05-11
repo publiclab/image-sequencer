@@ -11,9 +11,9 @@ module.exports = function GridOverlay(options,UI) {
     var step = this;
     
     function extraManipulation(pixels) {
-     pixels = require('./GridOverlay')(pixels, options);
-     return pixels
-   }
+      pixels = require('./GridOverlay')(pixels, options);
+      return pixels;
+    }
 
     function output(image, datauri, mimetype) {
 
@@ -32,12 +32,12 @@ module.exports = function GridOverlay(options,UI) {
     });
 
   
- }
+  }
 
   return {
     options: options,
     draw: draw,
     output: output,
     UI: UI
-  }
-}
+  };
+};

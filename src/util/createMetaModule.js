@@ -57,8 +57,8 @@ module.exports = function createMetaModule(mapFunction, moduleOptions) {
       draw: draw,
       output: output,
       UI: UI
-    }
+    };
   }
 
   return [MetaModule, moduleOptions.infoJson];
-}
+};

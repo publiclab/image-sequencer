@@ -25,7 +25,7 @@ self.addEventListener('fetch', function(event) {
     caches.open(staticCacheName).then(function(cache) {
       return cache.match(event.request).then(function (response) {
         return response || fetch(event.request).then(function(response) {
-          if(event.request.method == "GET")
+          if(event.request.method == 'GET')
             cache.put(event.request, response.clone());
           return response;
         });

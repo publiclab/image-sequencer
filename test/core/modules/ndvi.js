@@ -5,4 +5,4 @@ const testModule = require('../templates/module-test'),
     filter: 'blue'
   };
 
-testModule('ndvi', options, benchmark, image)
+testModule('ndvi', options, benchmark, image);

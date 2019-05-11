@@ -8,4 +8,4 @@ const testModule = require('../templates/module-test'),
     h: '45'
   };
 
-testModule('crop', options, benchmark, image)
+testModule('crop', options, benchmark, image);

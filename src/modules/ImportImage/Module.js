@@ -9,7 +9,7 @@
 module.exports = function ImportImageModule(options, UI) {
 
   var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
-  options.imageUrl = options.inBrowser ? (options.url || defaults.url) : "./examples/images/monarch.png";
+  options.imageUrl = options.inBrowser ? (options.url || defaults.url) : './examples/images/monarch.png';
 
   var output;
 
@@ -44,5 +44,5 @@ module.exports = function ImportImageModule(options, UI) {
     draw: draw,
     output: output,
     UI: UI
-  }
-}
+  };
+};

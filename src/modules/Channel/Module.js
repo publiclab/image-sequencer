@@ -17,9 +17,9 @@ module.exports = function Channel(options, UI) {
     var step = this;
 
     function changePixel(r, g, b, a) {
-      if (options.channel === "red") return [r, 0, 0, a];
-      if (options.channel === "green") return [0, g, 0, a];
-      if (options.channel === "blue") return [0, 0, b, a];
+      if (options.channel === 'red') return [r, 0, 0, a];
+      if (options.channel === 'green') return [0, g, 0, a];
+      if (options.channel === 'blue') return [0, 0, b, a];
     }
 
     function output(image, datauri, mimetype) {
@@ -46,5 +46,5 @@ module.exports = function Channel(options, UI) {
     draw: draw,
     output: output,
     UI: UI
-  }
-}
+  };
+};

@@ -2,7 +2,7 @@ var fs = require('fs');
 var getDirectories = function(rootDir, cb) {
   fs.readdir(rootDir, function(err, files) {
     var dirs = [];
-    if (typeof (files) == "undefined" || files.length == 0) {
+    if (typeof (files) == 'undefined' || files.length == 0) {
       cb(dirs);
       return [];
     }
@@ -21,15 +21,15 @@ var getDirectories = function(rootDir, cb) {
       }
     }
   });
-}
+};
 
-module.exports = function ExportBin(dir = "./output/", ref, basic, filename) {
+module.exports = function ExportBin(dir = './output/', ref, basic, filename) {
 
   // If user did not give an output filename so we can continue without doing anything
-  dir = (dir[dir.length - 1] == "/") ? dir : dir + "/";
+  dir = (dir[dir.length - 1] == '/') ? dir : dir + '/';
   if (ref.options.inBrowser) return false;
   fs.access(dir, function(err) {
-    if (err) console.error(err)
+    if (err) console.error(err);
   });
   if (filename && basic) {
     var steps = ref.steps;
@@ -53,17 +53,17 @@ module.exports = function ExportBin(dir = "./output/", ref, basic, filename) {
           var datauri = steps.slice(-1)[0].output.src;
           var ext = steps.slice(-1)[0].output.format;
           var buffer = require('data-uri-to-buffer')(datauri);
-          fs.writeFile(root + "image" + "_" + (steps.length - 1) + "." + ext, buffer, function() { });
+          fs.writeFile(root + 'image' + '_' + (steps.length - 1) + '.' + ext, buffer, function() { });
         }
         else {
           for (var i in steps) {
             var datauri = steps[i].output.src;
             var ext = steps[i].output.format;
             var buffer = require('data-uri-to-buffer')(datauri);
-            fs.writeFile(root + "image" + "_" + i + "." + ext, buffer, function() { });
+            fs.writeFile(root + 'image' + '_' + i + '.' + ext, buffer, function() { });
           }
         }
       });
     });
   }
-}
+};

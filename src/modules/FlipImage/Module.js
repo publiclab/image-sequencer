@@ -4,7 +4,7 @@
 module.exports = function FlipImage(options, UI) {
   options.Axis = options.Axis || require('./info.json').inputs.Axis.default;
 
-	var output,
+  var output,
     getPixels = require('get-pixels');
 
   function draw(input, callback, progressObj) {
@@ -38,7 +38,7 @@ module.exports = function FlipImage(options, UI) {
         inBrowser: options.inBrowser,
         callback: callback
       });
-    })
+    });
 
   }
 
@@ -47,5 +47,5 @@ module.exports = function FlipImage(options, UI) {
     draw: draw,
     output: output,
     UI: UI
-  }
-}
+  };
+};

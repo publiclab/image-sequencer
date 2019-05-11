@@ -1,18 +1,18 @@
-var fs = require('fs')
+var fs = require('fs');
 
 /*
 * This function checks if the directory exists, if not it creates one on the given path
 * Callback is called with argument error if an error is encountered
 */
 function makedir(path,callback){
-    fs.access(path,function(err){
-        if(err) fs.mkdir(path,function(err){
-            if(err) callback(err);
-            callback();
-        });
-        else callback()
+  fs.access(path,function(err){
+    if(err) fs.mkdir(path,function(err){
+      if(err) callback(err);
+      callback();
     });
-};
+    else callback();
+  });
+}
 
 // Takes an array of steps and checks if they are valid steps for the sequencer.
 function validateSteps(steps, sequencer) {
@@ -37,9 +37,9 @@ function validateConfig(config_, options_) {
       for (var input in options_) {
         if (!config_[options_[input]]) {
           console.error(
-            "\x1b[31m%s\x1b[0m",
+            '\x1b[31m%s\x1b[0m',
             `Options Object does not have the required details "${
-            options_[input]
+              options_[input]
             }" not specified. Fallback case activated`
           );
           return false;
@@ -52,7 +52,7 @@ function validateConfig(config_, options_) {
 }
 
 module.exports = exports = {
-    makedir: makedir,
-    validateSteps: validateSteps,
-    validateConfig: validateConfig
-}
+  makedir: makedir,
+  validateSteps: validateSteps,
+  validateConfig: validateConfig
+};

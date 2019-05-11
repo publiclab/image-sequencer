@@ -1,4 +1,4 @@
-const GPU = require('gpu.js').GPU
+const GPU = require('gpu.js').GPU;
 
 /**
  * @method convolve
@@ -10,9 +10,9 @@ const GPU = require('gpu.js').GPU
  */
 const convolve = (arrays, kernel, options = {}) => {
   const pipeMode = options.pipeMode || false,
-  mode = options.mode || 'gpu'
+    mode = options.mode || 'gpu';
 
-  const gpu = new GPU(mode != 'gpu' ? {mode} : {})
+  const gpu = new GPU(mode != 'gpu' ? {mode} : {});
   
   const arrayX = arrays[0][0].length,
     arrayY = arrays[0].length,
@@ -32,38 +32,38 @@ const convolve = (arrays, kernel, options = {}) => {
   }`;
 
   const padIt = (array) => {
-    let out = []
+    let out = [];
 
     for (var y = 0; y < array.length + paddingY * 2; y++){
-      out.push([])
+      out.push([]);
       for (var x = 0; x < array[0].length + paddingX * 2; x++){
         const positionX = Math.min(Math.max(x - paddingX, 0), array[0].length - 1);
         const positionY = Math.min(Math.max(y - paddingY, 0), array.length - 1);
 
-        out[y].push(array[positionY][positionX])
+        out[y].push(array[positionY][positionX]);
       }
     }
 
-    return out
-  }
+    return out;
+  };
 
   const convolveKernel = gpu.createKernel(matConvFunc, {
     output: [arrayX, arrayY],
     pipeline: pipeMode
-  })
+  });
   
   let outs = [];
   for (var i = 0; i < arrays.length; i++){
-    const paddedArray = padIt(arrays[i])
+    const paddedArray = padIt(arrays[i]);
 
-    const outArr = convolveKernel(paddedArray, kernel)
+    const outArr = convolveKernel(paddedArray, kernel);
 
-    if (pipeMode) outs.push(outArr.toArray())
-    else outs.push(outArr)
+    if (pipeMode) outs.push(outArr.toArray());
+    else outs.push(outArr);
   }
 
-  return outs
-}
+  return outs;
+};
 
 /**
  * 
@@ -74,21 +74,21 @@ const convolve = (arrays, kernel, options = {}) => {
  * @returns {Float32Array}
  */
 const compute = (outputSize, computeFunc, constants, pipeMode) => {
-  computeFunc = computeFunc.toString()
+  computeFunc = computeFunc.toString();
 
   const compute = gpu.createKernel(computeFunc, {
     output: outputSize,
     constants,
     pipeline: pipeMode
-  })
+  });
 
-  compute.build()
+  compute.build();
 
-  if (pipeMode) return compute().toArray()
-  else return compute()
-}
+  if (pipeMode) return compute().toArray();
+  else return compute();
+};
 
 module.exports = {
   convolve,
   compute
-}
+};

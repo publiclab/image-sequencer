@@ -28,11 +28,11 @@ module.exports = function Dither(pixels, type) {
 
   for (let currentPixel = 0; currentPixel <= imageDataLength; currentPixel += 4) {
 
-    if (type === "none") {
+    if (type === 'none') {
       // No dithering
       pixels.data[currentPixel] = pixels.data[currentPixel] < threshold ? 0 : 255;
 
-    } else if (type === "bayer") {
+    } else if (type === 'bayer') {
 
       // 4x4 Bayer ordered dithering algorithm
       let x = currentPixel / 4 % w;
@@ -40,7 +40,7 @@ module.exports = function Dither(pixels, type) {
       let map = Math.floor((pixels.data[currentPixel] + bayerThresholdMap[x % 4][y % 4]) / 2);
       pixels.data[currentPixel] = (map < threshold) ? 0 : 255;
 
-    } else if (type === "floydsteinberg") {
+    } else if (type === 'floydsteinberg') {
 
       // Floyd–Steinberg dithering algorithm
       newPixel = pixels.data[currentPixel] < 129 ? 0 : 255;
@@ -73,4 +73,4 @@ module.exports = function Dither(pixels, type) {
   }
   return pixels;
 
-}
+};

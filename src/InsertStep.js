@@ -7,7 +7,7 @@ function InsertStep(ref, index, name, o) {
   }
 
   if (ref.detectStringSyntax(name)) {
-    return ref.stringToSteps(name)
+    return ref.stringToSteps(name);
   }
 
   function insertStep(index, name, o_) {
@@ -43,7 +43,7 @@ function InsertStep(ref, index, name, o) {
         let step = stepsArray[i];
         ref.insertSteps(index + Number.parseInt(i), step['name'], step['options']);
       }
-    }
+    };
 
     // Tell UI that a step has been set up.
     o = o || {};

@@ -10,6 +10,12 @@
     "setup": "npm i && npm i -g grunt grunt-cli && grunt build",
     "start": "grunt serve"
   },
+  "lint-staged": {
+    "*.js": [
+      "./node_modules/.bin/eslint --fix",
+      "git add"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/publiclab/image-sequencer.git"
@@ -30,6 +36,7 @@
     "commander": "^2.11.0",
     "data-uri-to-buffer": "^2.0.0",
     "downloadjs": "^1.4.7",
+    "eslint": "^5.16.0",
     "fisheyegl": "^0.1.2",
     "font-awesome": "~4.7.0",
     "geotiff": "^1.0.0-beta.6",
@@ -62,23 +69,31 @@
     "@babel/plugin-syntax-object-rest-spread": "^7.2.0",
     "babelify": "^10.0.0",
     "browserify": "16.2.3",
+    "eslint": "^5.16.0",
     "grunt": "^1.0.3",
     "grunt-browser-sync": "^2.2.0",
     "grunt-browserify": "^5.0.0",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-uglify-es": "^3.3.0",
     "grunt-contrib-watch": "^1.1.0",
+    "husky": "^2.2.0",
     "image-filter-core": "~2.0.2",
     "image-filter-threshold": "~2.0.1",
     "jasmine-core": "^3.3.0",
     "jasmine-jquery": "^2.1.1",
     "jasmine-spec-reporter": "^4.2.1",
+    "lint-staged": "^8.1.6",
     "looks-same": "^7.0.0",
     "matchdep": "^2.0.0",
     "tap-spec": "^5.0.0",
     "tape": "^4.9.2",
     "tape-run": "^6.0.0",
     "uglify-es": "^3.3.7"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "homepage": "https://sequencer.publiclab.org",
   "bin": {

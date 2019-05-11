@@ -4,4 +4,4 @@ const testModule = require('../templates/module-test'),
   },
   benchmark = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAklEQVR4AewaftIAAAApSURBVKXBAQEAAAiAIPN242uEMAtHIJFEEkkkkUQSSSSRRBJJJJFEEj1AkwGaEGLV7wAAAABJRU5ErkJggg==';
 
-testModule('color-temperature', options, benchmark)
+testModule('color-temperature', options, benchmark);

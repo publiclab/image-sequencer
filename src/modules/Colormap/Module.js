@@ -38,5 +38,5 @@ module.exports = function Colormap(options, UI) {
     draw: draw,
     output: output,
     UI: UI
-  }
-}
+  };
+};

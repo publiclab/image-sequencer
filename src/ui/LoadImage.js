@@ -4,12 +4,12 @@ function LoadImage(ref, name, src, main_callback) {
     var image = {
       src: datauri,
       format: datauri.split(':')[1].split(';')[0].split('/')[1]
-    }
+    };
     return image;
   }
   function CImage(src, step, callback) {
     var datauri;
-    if (!!src.match(/^data:/i)) {
+    if (src.match(/^data:/i)) {
       datauri = src;
       callback(datauri, step);
     }
@@ -20,7 +20,7 @@ function LoadImage(ref, name, src, main_callback) {
         res.setEncoding('base64');
         res.on('data', function(chunk) { data += chunk; });
         res.on('end', function() {
-          callback("data:" + contentType + ";base64," + data, step);
+          callback('data:' + contentType + ';base64,' + data, step);
         });
       });
     }
@@ -35,7 +35,7 @@ function LoadImage(ref, name, src, main_callback) {
         context.drawImage(image, 0, 0);
         datauri = canvas.toDataURL(ext);
         callback(datauri, step);
-      }
+      };
       image.src = src;
     }
     else {
@@ -46,8 +46,8 @@ function LoadImage(ref, name, src, main_callback) {
 
   function loadImage(name, src) {
     var step = {
-      name: "load-image",
-      description: "This initial step loads and displays the original image without any modifications.",
+      name: 'load-image',
+      description: 'This initial step loads and displays the original image without any modifications.',
       ID: ref.options.sequencerCounter++,
       inBrowser: ref.options.inBrowser,
       ui: ref.options.ui,

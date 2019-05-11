@@ -4,4 +4,4 @@ const testModule = require('../templates/module-test'),
     saturation: 1.2
   };
 
-testModule('saturation', options, benchmark)
+testModule('saturation', options, benchmark);

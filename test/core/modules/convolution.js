@@ -6,4 +6,4 @@ const testModule = require('../templates/module-test'),
     kernelValues: '1 0 1 0 1 0 1 0 1'
   };
 
-testModule('convolution', options, benchmark, image)
+testModule('convolution', options, benchmark, image);

@@ -18,6 +18,15 @@ module.exports = {
         'linebreak-style': ['error','unix'],
         'quotes': ['error','single'],
         'semi': ['error','always'],
-        'no-undef': 0
+        'no-undef': 0,
+        'no-console': 'off',
+        'no-unused-vars': 'off',
+        'no-redeclare': 'off',
+        'no-inner-declarations':'off',
+        'no-empty':'off',
+        'no-mixed-spaces-and-tabs':'off',
+        'no-self-assign':'off',
+        'no-constant-condition':'off',
+        'no-dupe-keys':'off'
     }
 };

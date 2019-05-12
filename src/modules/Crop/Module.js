@@ -51,7 +51,7 @@ module.exports = function CropModule(options, UI) {
       step.output = {
         src: out,
         format: format
-      }
+      };
 
       // This output is accessible to the UI
       options.step.output = out;
@@ -81,5 +81,5 @@ module.exports = function CropModule(options, UI) {
     draw: draw,
     output: output,
     UI: UI
-  }
-}
+  };
+};

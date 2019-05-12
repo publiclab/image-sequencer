@@ -5,4 +5,4 @@ const testModule = require('../templates/module-test'),
     exposure: 3
   };
 
-testModule('exposure', options, benchmark, image)
+testModule('exposure', options, benchmark, image);

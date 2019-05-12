@@ -4,11 +4,11 @@ var setupCache = function() {
       .then(function(registration) {
         const installingWorker = registration.installing;
         installingWorker.onstatechange = () => {
-          console.log(installingWorker)
+          console.log(installingWorker);
           if (installingWorker.state === 'installed') {
             location.reload();
           }
-        }
+        };
         console.log('Registration successful, scope is:', registration.scope);
       })
       .catch(function(error) {
@@ -19,12 +19,12 @@ var setupCache = function() {
   if ('serviceWorker' in navigator) {
     caches.keys().then(function(cacheNames) {
       cacheNames.forEach(function(cacheName) {
-        $("#clear-cache").append(" " + cacheName);
+        $('#clear-cache').append(' ' + cacheName);
       });
     });
   }
 
-  $("#clear-cache").click(function() {
+  $('#clear-cache').click(function() {
     if ('serviceWorker' in navigator) {
       caches.keys().then(function(cacheNames) {
         cacheNames.forEach(function(cacheName) {
@@ -34,6 +34,6 @@ var setupCache = function() {
     }
     location.reload();
   });
-}
+};
 
 module.exports = setupCache;

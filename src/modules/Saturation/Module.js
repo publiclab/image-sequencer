@@ -3,7 +3,7 @@
  */
 module.exports = function Saturation(options,UI) {
   
- var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
   var output;
 
   function draw(input, callback, progressObj) {
@@ -55,5 +55,5 @@ module.exports = function Saturation(options,UI) {
     draw: draw,
     output: output,
     UI: UI
-  }
-}
+  };
+};

@@ -24,7 +24,7 @@ module.exports = function edgeDetect(options, UI) {
     return internalSequencer.loadImage(input.src, function () {
       internalSequencer.importJSON([{ 'name': 'blur', 'options': {blur: options.blur} }]);
       return internalSequencer.run(function onCallback(internalOutput) {
-         require('get-pixels')(internalOutput, function(err, blurPixels){
+        require('get-pixels')(internalOutput, function(err, blurPixels){
           if (err){
             return;
           }
@@ -51,7 +51,7 @@ module.exports = function edgeDetect(options, UI) {
             inBrowser: options.inBrowser,
             callback: callback
           });
-        })
+        });
       });
     });
   }
@@ -61,5 +61,5 @@ module.exports = function edgeDetect(options, UI) {
     draw: draw,
     output: output,
     UI: UI
-  }
-}
+  };
+};

@@ -1,44 +1,44 @@
 module.exports = function(steps, modulesInfo, addSteps, copy) {
   // Genates a CLI string for the current sequence
   function toCliString() {
-    var cliStringSteps = `"`, cliOptions = {};
+    var cliStringSteps = '"', cliOptions = {};
     for (var step in this.steps) {
-      var name = (typeof this.steps[step].options !== "undefined")? this.steps[step].options.name : this.steps[step].name
-      if (name !== "load-image"){
+      var name = (typeof this.steps[step].options !== 'undefined')? this.steps[step].options.name : this.steps[step].name;
+      if (name !== 'load-image'){
         cliStringSteps += `${name} `;
       }
       for (var inp in modulesInfo(name).inputs) {
         cliOptions[inp] = this.steps[step].options[inp];
       }
     }
-    cliStringSteps = cliStringSteps.substr(0, cliStringSteps.length - 1) + `"`;
-    return `sequencer -i [PATH] -s ${cliStringSteps} -d '${JSON.stringify(cliOptions)}'`
+    cliStringSteps = cliStringSteps.substr(0, cliStringSteps.length - 1) + '"';
+    return `sequencer -i [PATH] -s ${cliStringSteps} -d '${JSON.stringify(cliOptions)}'`;
   }
 
   // Checks if input is a string of comma separated module names
   function detectStringSyntax(str) {
-    let result = (str.includes(',') || str.includes('{')) ? true : false
-    return result
+    let result = (str.includes(',') || str.includes('{')) ? true : false;
+    return result;
   }
 
   // Parses input string and returns array of module names
   function parseStringSyntax(str) {
-    let stringifiedNames = str.replace(/\s/g, '')
-    let moduleNames = stringifiedNames.split(',')
-    return moduleNames
+    let stringifiedNames = str.replace(/\s/g, '');
+    let moduleNames = stringifiedNames.split(',');
+    return moduleNames;
   }
 
   // imports string of comma separated module names to sequencer steps
   function stringToSteps(str) {
     let sequencer = this;
-    let names = []
-    if (this.name != "ImageSequencer")
+    let names = [];
+    if (this.name != 'ImageSequencer')
       sequencer = this.sequencer;
     if (detectStringSyntax(str))
-      names = stringToJSON(str)
+      names = stringToJSON(str);
     names.forEach(function eachStep(stepObj) {
-      sequencer.addSteps(stepObj.name, stepObj.options)
-    })
+      sequencer.addSteps(stepObj.name, stepObj.options);
+    });
   }
 
   // Strigifies the current sequence
@@ -96,7 +96,7 @@ module.exports = function(steps, modulesInfo, addSteps, copy) {
 
     if (str.indexOf(bracesStrings[0]) === -1) { // if there are no settings specified
       var moduleName = str.substr(0);
-      stepSettings = "";
+      stepSettings = '';
     } else {
       var moduleName = str.substr(0, str.indexOf(bracesStrings[0]));
       stepSettings = str.slice(str.indexOf(bracesStrings[0]) + 1, -1);
@@ -112,20 +112,20 @@ module.exports = function(steps, modulesInfo, addSteps, copy) {
         settingName,
         settingValue
       ];
-      if (!!settingName) accumulator[settingName] = settingValue;
+      if (settingName) accumulator[settingName] = settingValue;
       return accumulator;
     }, {});
 
     return {
       name: moduleName,
       options: stepSettings
-    }
+    };
   }
 
   // imports a string into the sequencer steps
   function importString(str) {
     let sequencer = this;
-    if (this.name != "ImageSequencer")
+    if (this.name != 'ImageSequencer')
       sequencer = this.sequencer;
     var stepsFromString = stringToJSON(str);
     stepsFromString.forEach(function eachStep(stepObj) {
@@ -136,7 +136,7 @@ module.exports = function(steps, modulesInfo, addSteps, copy) {
   // imports a array of JSON steps into the sequencer steps
   function importJSON(obj) {
     let sequencer = this;
-    if (this.name != "ImageSequencer")
+    if (this.name != 'ImageSequencer')
       sequencer = this.sequencer;
     obj.forEach(function eachStep(stepObj) {
       sequencer.addSteps(stepObj.name, stepObj.options);
@@ -155,5 +155,5 @@ module.exports = function(steps, modulesInfo, addSteps, copy) {
     stringToJSONstep: stringToJSONstep,
     importString: importString,
     importJSON: importJSON
-  }
-}
+  };
+};

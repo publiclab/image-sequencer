@@ -1,5 +1,5 @@
 var urlHash = require('./urlHash.js'),
-    insertPreview = require('./insertPreview.js');
+  insertPreview = require('./insertPreview.js');
 
 function IntermediateHtmlStepUi(_sequencer, step, options) {
   function stepUI() {
@@ -66,7 +66,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
 
 
   function selectNewStepUi() {
-    var insertSelect = $step('.insert-step-select')
+    var insertSelect = $step('.insert-step-select');
     var m = insertSelect.val();
     $step('.insertDiv .info').html(_sequencer.modulesInfo(m).description);
     $step('.insertDiv .add-step-btn').prop("disabled", false);
@@ -76,28 +76,28 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
   var toggleDiv = function(callback = function(){}){
     $step('.insertDiv').collapse('toggle');
     if ($step('.insert-text').css('display') != "none"){
-      $step('.insert-text').fadeToggle(200, function(){$step('.no-insert-text').fadeToggle(200, callback)})
+      $step('.insert-text').fadeToggle(200, function(){$step('.no-insert-text').fadeToggle(200, callback)});
     }
     else {
-      $step('.no-insert-text').fadeToggle(200, function(){$step('.insert-text').fadeToggle(200, callback)})
+      $step('.no-insert-text').fadeToggle(200, function(){$step('.insert-text').fadeToggle(200, callback)});
     }
-  }
+  };
 
   insertStep = function (id) {
     var modulesInfo = _sequencer.modulesInfo();
     var parser = new DOMParser();
     var addStepUI = stepUI();
-    addStepUI = parser.parseFromString(addStepUI, "text/html").querySelector("div")
+    addStepUI = parser.parseFromString(addStepUI, 'text/html').querySelector('div');
 
     if ($step('.insertDiv').length > 0){
       toggleDiv();
     }
     else {
       step.ui
-      .querySelector("div.step")
-      .insertAdjacentElement('afterend',
-        addStepUI
-      );
+        .querySelector('div.step')
+        .insertAdjacentElement('afterend',
+          addStepUI
+        );
       toggleDiv(function(){
         insertPreview.updatePreviews(step.output, '.insertDiv');
       });
@@ -111,7 +111,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     for (var m in modulesInfo) {
       if (modulesInfo[m] !== undefined)
         insertStepSelect.append(
-          '<option value="' + m + '">' + modulesInfo[m].name + "</option>"
+          '<option value="' + m + '">' + modulesInfo[m].name + '</option>'
         );
     }
     insertStepSelect.selectize({
@@ -139,25 +139,25 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     var insertStepSelect = $step('.insert-step-select');
     if (insertStepSelect.val() == "none") return;
 
-    var newStepName = insertStepSelect.val()
+    var newStepName = insertStepSelect.val();
     toggleDiv();
     var sequenceLength = 1;
     if (sequencer.sequences[newStepName]) {
       sequenceLength = sequencer.sequences[newStepName].length;
-    } else if (sequencer.modules[newStepName][1]["length"]) {
-      sequenceLength = sequencer.modules[newStepName][1]["length"];
+    } else if (sequencer.modules[newStepName][1]['length']) {
+      sequenceLength = sequencer.modules[newStepName][1]['length'];
     }
     _sequencer
       .insertSteps(id + 1, newStepName).run({ index: id });
 
     // add to URL hash too
-    urlHash.setUrlHashParameter("steps", _sequencer.toString());
+    urlHash.setUrlHashParameter('steps', _sequencer.toString());
 
   }
 
   return {
     insertStep
-  }
+  };
 }
 module.exports = IntermediateHtmlStepUi;
 

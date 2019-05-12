@@ -49,28 +49,28 @@ function setInputStepInit() {
         };
         document.getElementById('close').addEventListener('click', function () {
           stopStream(stream);
-         });
+        });
       }
       function handleError(error) {
         console.log('navigator.getUserMedia error: ', error);
       }
-  navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError);
+      navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError);
   
 
-  document.getElementById('capture').addEventListener('click', function(stream){
-    context.drawImage(video, 0, 0, 400, 300);
-    options.onTakePhoto(canvas.toDataURL());
-  });
+      document.getElementById('capture').addEventListener('click', function(stream){
+        context.drawImage(video, 0, 0, 400, 300);
+        options.onTakePhoto(canvas.toDataURL());
+      });
 
-  function stopStream(stream) {
-    stream.getVideoTracks().forEach(function (track) {
-        track.stop();
-    });
-    document.getElementById('video').style.display='none';
-    document.getElementById('capture').style.display='none';
-    document.getElementById('close').style.display='none';
-  }
-}
+      function stopStream(stream) {
+        stream.getVideoTracks().forEach(function (track) {
+          track.stop();
+        });
+        document.getElementById('video').style.display='none';
+        document.getElementById('capture').style.display='none';
+        document.getElementById('close').style.display='none';
+      }
+    }
  
     fileInput.on('change', handleFile);
     takePhoto.on('click', runVideo);
@@ -91,7 +91,7 @@ function setInputStepInit() {
       dropzone.removeClass('hover');
     });
 
-  }
+  };
 
 }
 module.exports = setInputStepInit;

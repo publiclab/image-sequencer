@@ -17,12 +17,12 @@ module.exports = function GetFormat(src) {
   }
 
   function isDataUrl(src) {
-    return src.substr(0, 10) === "data:image"
+    return src.substr(0, 10) === 'data:image';
   }
 
   format = format.toLowerCase();
 
-  if (format === "jpeg") format = "jpg";
+  if (format === 'jpeg') format = 'jpg';
 
   function validateFormat(data){
     let supportedFormats = [
@@ -37,4 +37,4 @@ module.exports = function GetFormat(src) {
 
   return validateFormat(format)?format:'jpg';
 
-}
+};

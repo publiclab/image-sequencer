@@ -1,47 +1,47 @@
 module.exports = function Gamma(options, UI) {
 
-    var output;
+  var output;
 
-    function draw(input, callback, progressObj) {
+  function draw(input, callback, progressObj) {
 
-        progressObj.stop(true);
-        progressObj.overrideFlag = true;
+    progressObj.stop(true);
+    progressObj.overrideFlag = true;
 
-        var step = this;
+    var step = this;
 
-        var defaults = require('./../../util/getDefaults.js')(require('./info.json')),
-            adjustment = options.adjustment || defaults.adjustment;
-        var val = adjustment / defaults.adjustment;
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json')),
+      adjustment = options.adjustment || defaults.adjustment;
+    var val = adjustment / defaults.adjustment;
 
-        function changePixel(r, g, b, a) {
+    function changePixel(r, g, b, a) {
 
-            r = Math.pow(r / 255, val) * 255;
-            g = Math.pow(g / 255, val) * 255;
-            b = Math.pow(b / 255, val) * 255;
+      r = Math.pow(r / 255, val) * 255;
+      g = Math.pow(g / 255, val) * 255;
+      b = Math.pow(b / 255, val) * 255;
 
-            return [r, g, b, a];
-        }
+      return [r, g, b, a];
+    }
 
-        function output(image, datauri, mimetype) {
+    function output(image, datauri, mimetype) {
 
-            step.output = { src: datauri, format: mimetype };
-
-        }
-
-        return require('../_nomodule/PixelManipulation.js')(input, {
-            output: output,
-            changePixel: changePixel,
-            format: input.format,
-            image: options.image,
-            inBrowser: options.inBrowser,
-            callback: callback
-        });
+      step.output = { src: datauri, format: mimetype };
 
     }
-    return {
-        options: options,
-        draw: draw,
-        output: output,
-        UI: UI
-    }
-}
+
+    return require('../_nomodule/PixelManipulation.js')(input, {
+      output: output,
+      changePixel: changePixel,
+      format: input.format,
+      image: options.image,
+      inBrowser: options.inBrowser,
+      callback: callback
+    });
+
+  }
+  return {
+    options: options,
+    draw: draw,
+    output: output,
+    UI: UI
+  };
+};

@@ -44,7 +44,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     if ($(addStepSel + ' select').val() == 'none') return;
     var newStepName;
     if(typeof arguments[0] !== 'string')
-      newStepName = $(addStepSel + ' select option').html().toLowerCase();
+      newStepName = $(addStepSel + ' select option').html().toLowerCase().split(' ').join('-');
     else newStepName = arguments[0];
 
     

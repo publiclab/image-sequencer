@@ -4449,9 +4449,9 @@ log-update@^2.3.0:
     wrap-ansi "^3.0.1"
 
 looks-same@^7.0.0:
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/looks-same/-/looks-same-7.2.0.tgz#54772d2ed088f77691e271c4531d7ba97a5818eb"
-  integrity sha512-LCE5Md8ZQ9Wn5lJbaGW4r6Fs00P8p8+JOjvXKkq9LdI/datYG8JOSRycMes+bp2h/UJ/RYYzJjvP0CXLPeVq1A==
+  version "7.2.1"
+  resolved "https://registry.yarnpkg.com/looks-same/-/looks-same-7.2.1.tgz#cf8f58828ab906c80f19f2cdb30bf02e5a0afe3e"
+  integrity sha512-gAp0RSAKG0dF07uKTrAUzF2bSFuz85IY8JIAD2xj0oVWWhJSVtCWP9PXaQciGjDQJXQ2qcaun189xyqcYbGFbw==
   dependencies:
     color-diff "^1.1.0"
     concat-stream "^1.6.2"

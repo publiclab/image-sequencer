@@ -370,7 +370,24 @@ module.exports =
 
 ## Linting
 
-We are now using `eslint` and `husky` to help lint and format our code each time we commit. If we want `husky` to not verify the commit and push it, it's possible to use `git commit -m "message" --no-verify.`
+We are now using `eslint` and `husky` to help lint and format our code each time we commit. Eslint defines coding standards and helps in cleaning up the code. To run eslint for checking errors globally or within a specific file run:
+
+```
+npx eslint . 
+
+npx eslint <file path>
+```
+And to fix those errors globally or in a file, run these in your terminal:
+```
+npx eslint . --fix
+
+npx eslint <file path> --fix
+```
+Be sure to not include the angular brackets(<>).
+
+Husky ensures automation of the above steps with git-hooks(eg. git add,git commit..). However we don't want to check and fix changes of the entire codebase with each commit and that the fixes made by eslint appear unstaged and require us to commit them  again and that is where lint-staged helps.
+
+If we want `husky` to not verify the commit and push it anyway, use `git commit -m "message" --no-verify.`
 
 ## Grunt Tasks
 

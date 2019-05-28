@@ -38,15 +38,15 @@ module.exports = function ColorTemperature(options, UI) {
       for (let i = 0; i < pixels.shape[0]; i++) {
         for (let j = 0; j < pixels.shape[1]; j++) {
 
-          r_data = pixels.get(i, j, 0);
+          var r_data = pixels.get(i, j, 0);
           r_new_data = (255 / r) * r_data;
           pixels.set(i, j, 0, r_new_data);
 
-          g_data = pixels.get(i, j, 1);
+          var g_data = pixels.get(i, j, 1);
           g_new_data = (255 / g) * g_data;
           pixels.set(i, j, 1, g_new_data);
 
-          b_data = pixels.get(i, j, 2);
+          var b_data = pixels.get(i, j, 2);
           b_new_data = (255 / b) * b_data;
           pixels.set(i, j, 2, b_new_data);
         }

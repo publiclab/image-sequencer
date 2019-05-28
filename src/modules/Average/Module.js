@@ -4,7 +4,7 @@
 module.exports = function Average(options, UI) {
 
   var output;
-
+  var getPixels = require('get-pixels');
   options.step.metadata = options.step.metadata || {};
 
   function draw(input, callback, progressObj) {

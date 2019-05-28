@@ -1,6 +1,6 @@
 // hide on save
 module.exports = function CropModuleUi(step, ui) {
-
+  const $ = window.$;
   let inputWidth = 0,
     inputHeight = 0;
 

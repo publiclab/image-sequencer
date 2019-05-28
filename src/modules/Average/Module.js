@@ -16,6 +16,7 @@ module.exports = function Average(options, UI) {
 
     // do the averaging
     function extraManipulation(pixels) {
+      const $ = window.$;
       var i = 0, sum = [0, 0, 0, 0];
       while (i < pixels.data.length) {
         sum[0] += pixels.data[i++];

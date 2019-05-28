@@ -1,6 +1,7 @@
 // Uses a given image as input and replaces it with the output.
 // Works only in the browser.
 function ReplaceImage(ref,selector,steps,options) {
+  const $ = window.$;
   if(!ref.options.inBrowser) return false; // This isn't for Node.js
   var tempSequencer = ImageSequencer({ui: false});
   var this_ = ref;

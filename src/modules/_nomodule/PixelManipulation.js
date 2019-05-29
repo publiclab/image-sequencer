@@ -1,7 +1,7 @@
 /*
-* General purpose per-pixel manipulation
-* accepting a changePixel() method to remix a pixel's channels
-*/
+ * General purpose per-pixel manipulation
+ * accepting a changePixel() method to remix a pixel's channels
+ */
 module.exports = function PixelManipulation(image, options) {
 
   // To handle the case where pixelmanipulation is called on the input object itself
@@ -16,7 +16,7 @@ module.exports = function PixelManipulation(image, options) {
   const getPixels = require('get-pixels'),
     savePixels = require('save-pixels');
 
-  getPixels(image.src, function(err, pixels) {
+  getPixels(image.src, function (err, pixels) {
     if (err) {
       console.log('Bad image path', image);
       return;
@@ -47,25 +47,41 @@ module.exports = function PixelManipulation(image, options) {
       /* Allows for Flexibility
        if per pixel manipulation is not required */
 
-      for (var x = 0; x < pixels.shape[0]; x++) {
-        for (var y = 0; y < pixels.shape[1]; y++) {
-          let pixel = options.changePixel(
-            pixels.get(x, y, 0),
-            pixels.get(x, y, 1),
-            pixels.get(x, y, 2),
-            pixels.get(x, y, 3),
-            x,
-            y
-          );
-
-          pixels.set(x, y, 0, pixel[0]);
-          pixels.set(x, y, 1, pixel[1]);
-          pixels.set(x, y, 2, pixel[2]);
-          pixels.set(x, y, 3, pixel[3]);
-
-          if (!options.inBrowser && !process.env.TEST) pace.op();
+      const imports = {
+        env:{
+          changePixel:options.changePixel,
+          getPixels: pixels.get,
+          setPixels: pixels.set,
+          paceOp: require('pace').op,
+          consoleLog:console.log
         }
-      }
+      };
+      const inBrowser = (options.inBrowser)?1:0;
+      const test = (process.env.TEST)?1:0;
+      WebAssembly.instantiateStreaming(fetch('./program.wasm'), imports)
+        .then(wasm => {
+          wasm.instance.exports.manipulatePixel(pixels.shape[0],pixels.shape[1],inBrowser, test);
+        });
+
+      // for (var x = 0; x < pixels.shape[0]; x++) {
+      //   for (var y = 0; y < pixels.shape[1]; y++) {
+      //     let pixel = options.changePixel(
+      //       pixels.get(x, y, 0),
+      //       pixels.get(x, y, 1),
+      //       pixels.get(x, y, 2),
+      //       pixels.get(x, y, 3),
+      //       x,
+      //       y
+      //     );
+
+      //     pixels.set(x, y, 0, pixel[0]);
+      //     pixels.set(x, y, 1, pixel[1]);
+      //     pixels.set(x, y, 2, pixel[2]);
+      //     pixels.set(x, y, 3, pixel[3]);
+
+      //     if (!options.inBrowser && !process.env.TEST) pace.op();
+      //   }
+      // }
     }
     // perform any extra operations on the entire array:
     var res;
@@ -76,14 +92,16 @@ module.exports = function PixelManipulation(image, options) {
       var chunks = [];
       var totalLength = 0;
 
-      var r = savePixels(pixels, options.format, { quality: 100 });
+      var r = savePixels(pixels, options.format, {
+        quality: 100
+      });
 
-      r.on('data', function(chunk) {
+      r.on('data', function (chunk) {
         totalLength += chunk.length;
         chunks.push(chunk);
       });
 
-      r.on('end', function() {
+      r.on('end', function () {
         var data = Buffer.concat(chunks, totalLength).toString('base64');
         var datauri = 'data:image/' + options.format + ';base64,' + data;
         if (options.output)
@@ -94,7 +112,6 @@ module.exports = function PixelManipulation(image, options) {
     if (res) {
       pixels = res;
       generateOutput();
-    }
-    else if (!options.extraManipulation) generateOutput();
+    } else if (!options.extraManipulation) generateOutput();
   });
 };

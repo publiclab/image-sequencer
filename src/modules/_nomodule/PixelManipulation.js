@@ -49,11 +49,23 @@ module.exports = function PixelManipulation(image, options) {
 
       const imports = {
         env:{
-          changePixel:options.changePixel,
-          getPixels: pixels.get,
-          setPixels: pixels.set,
-          paceOp: require('pace').op,
-          consoleLog:console.log
+          // paceOp: require('pace').op,
+          consoleLog:console.log,
+          perform: function(x,y){
+            let pixel = options.changePixel(
+              pixels.get(x, y, 0),
+              pixels.get(x, y, 1),
+              pixels.get(x, y, 2),
+              pixels.get(x, y, 3),
+              x,
+              y
+            );
+        
+            pixels.set(x, y, 0, pixel[0]);
+            pixels.set(x, y, 1, pixel[1]);
+            pixels.set(x, y, 2, pixel[2]);
+            pixels.set(x, y, 3, pixel[3]);
+          }
         }
       };
       const inBrowser = (options.inBrowser)?1:0;

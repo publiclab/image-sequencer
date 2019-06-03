@@ -84,11 +84,6 @@ window.onload = function() {
     $(this).removeClass('selected');
   });
 
-  $('#download-btn').click(function() {
-    $('.step-thumbnail:last()').trigger('click');
-    return false;
-  });
-
   function displayMessageOnSaveSequence(){
     $('.savesequencemsg').fadeIn();
     setTimeout(function() {

@@ -134,7 +134,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
       );
       $(step.ui.querySelector('div.panel-footer')).prepend(
         '<button class="pull-right btn btn-default btn-sm insert-step" >\
-          <span class="insert-text"><i class="fa fa-plus"></i> Insert Step</span><span class="no-insert-text" style="display:none">Close</span>\
+        <span class="insert-text"><i class="fa fa-plus"></i> Insert Step</span><span class="no-insert-text" style="display:none">Close</span></button>\
+        <button class="pull-right btn btn-default btn-sm download-btn" style="margin-right:2px" >\
+        <i class="fa fa-download"></i>\
         </button>'
       );  
     }
@@ -166,6 +168,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     });
     
     $(step.imgElement).on('mousemove', _.debounce(() => imageHover(step), 150));
+    $(step.imgElement).on('click', (e) => {e.preventDefault(); });
 
     function saveOptions(e) {
       e.preventDefault();
@@ -250,11 +253,21 @@ function DefaultHtmlStepUi(_sequencer, options) {
       return output.split('/')[1].split(';')[0];
     }
 
-    for (let index = 0; index < step.linkElements.length; index++) {
+    $(step.ui.querySelectorAll('.download-btn')).on('click', () => { 
 
-      step.linkElements[index].download = step.name + '.' + fileExtension(step.imgElement.src);
-      step.linkElements[index].target = '_blank';
-    }
+      for (let index = 0; index < step.linkElements.length; index++){
+        
+        var element = document.createElement('a');
+        element.setAttribute('href', step.linkElements[index].href);
+        element.setAttribute('download', step.name + '.' + fileExtension(step.imgElement.src));
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        
+        element.click();
+
+        document.body.removeChild(element);
+      }
+    });
 
     // fill inputs with stored step options
     if (_sequencer.modulesInfo().hasOwnProperty(step.name)) {

@@ -103,9 +103,11 @@ module.exports = function PixelManipulation(image, options) {
         }
       };
 
+      const inBrowser = (options.inBrowser) ? 1 : 0;
+      const test = (process.env.TEST) ? 1 : 0;
+
       if (options.inBrowser) {
-        const inBrowser = (options.inBrowser) ? 1 : 0;
-        const test = (process.env.TEST) ? 1 : 0;
+        
         fetch('./manipulation.wasm').then(response =>
           response.arrayBuffer()
         ).then(bytes =>

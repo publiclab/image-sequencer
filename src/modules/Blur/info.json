@@ -8,7 +8,7 @@
             "default": 2,
             "min": 0,
             "max": 5,
-            "step": 0.25
+            "step": 0.05
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#blur-module"

@@ -1,14 +1,20 @@
 {
   "name": "image-sequencer",
-  "version": "3.3.0",
+  "version": "3.3.5",
   "description": "A modular JavaScript image manipulation library modeled on a storyboard.",
   "main": "src/ImageSequencer.js",
   "scripts": {
     "debug": "TEST=true node ./index.js -i ./examples/images/monarch.png -s invert",
-    "test": "TEST=true istanbul cover tape test/core/*.js test/core/ui/user-interface.js test/core/modules/canvas-resize.js test/core/modules/QR.js test/core/modules/crop.js | tap-spec; browserify test/core/modules/image-sequencer.js test/core/modules/chain.js test/core/modules/meta-modules.js test/core/modules/replace.js test/core/modules/import-export.js test/core/modules/run.js test/core/modules/dynamic-imports.js test/core/util/parse-input.js test/core/modules/benchmark.js| tape-run --render=\"tap-spec\"",
-    "test-ui": "jasmine test/spec/*.js",
+    "test": "TEST=true istanbul cover tape test/core/*.js test/core/ui/user-interface.js test/core/modules/*.js | tap-spec; browserify test/core/sequencer/image-sequencer.js test/core/sequencer/chain.js test/core/sequencer/meta-modules.js test/core/sequencer/replace.js test/core/sequencer/import-export.js test/core/sequencer/run.js test/core/sequencer/dynamic-imports.js test/core/util/*.js test/core/sequencer/benchmark.js | tape-run --render=\"tap-spec\"",
+    "test-ui": "node node_modules/jasmine/bin/jasmine test/spec/*.js",
     "setup": "npm i && npm i -g grunt grunt-cli && grunt build",
     "start": "grunt serve"
+  },
+  "lint-staged": {
+    "*.js": [
+      "./node_modules/.bin/eslint --fix",
+      "git add"
+    ]
   },
   "repository": {
     "type": "git",
@@ -24,27 +30,30 @@
     "url": "https://github.com/publiclab/image-sequencer/issues"
   },
   "dependencies": {
+    "base64-img": "^1.0.4",
     "bootstrap": "~3.4.0",
     "buffer": "~5.2.1",
     "commander": "^2.11.0",
     "data-uri-to-buffer": "^2.0.0",
     "downloadjs": "^1.4.7",
+    "eslint": "^5.16.0",
     "fisheyegl": "^0.1.2",
     "font-awesome": "~4.7.0",
     "geotiff": "^1.0.0-beta.6",
     "get-pixels": "~3.3.0",
     "gifshot": "^0.4.5",
     "glfx": "0.0.4",
+    "gpu.js": "^2.0.0-rc.12",
     "image-sequencer-invert": "^1.0.0",
     "imagejs": "0.0.9",
     "imgareaselect": "git://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2",
     "istanbul": "^0.4.5",
+    "jasmine": "^3.4.0",
     "jquery": "^3.3.1",
-    "jsdom": "^14.0.0",
+    "jsdom": "^15.0.0",
     "jsqr": "^1.1.1",
     "lodash": "^4.17.11",
     "ndarray": "^1.0.18",
-    "ndarray-gaussian-filter": "^1.0.0",
     "ora": "^3.0.0",
     "pace": "0.0.4",
     "puppeteer": "^1.14.0",
@@ -56,25 +65,36 @@
     "webgl-distort": "0.0.2"
   },
   "devDependencies": {
-    "base64-img": "^1.0.4",
+    "@babel/core": "^7.4.3",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.3",
+    "@babel/plugin-syntax-object-rest-spread": "^7.2.0",
+    "babelify": "^10.0.0",
     "browserify": "16.2.3",
+    "eslint": "^5.16.0",
     "grunt": "^1.0.3",
     "grunt-browser-sync": "^2.2.0",
     "grunt-browserify": "^5.0.0",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-uglify-es": "^3.3.0",
     "grunt-contrib-watch": "^1.1.0",
+    "husky": "^2.2.0",
     "image-filter-core": "~2.0.2",
     "image-filter-threshold": "~2.0.1",
     "jasmine-core": "^3.3.0",
     "jasmine-jquery": "^2.1.1",
     "jasmine-spec-reporter": "^4.2.1",
+    "lint-staged": "^8.1.6",
     "looks-same": "^7.0.0",
     "matchdep": "^2.0.0",
     "tap-spec": "^5.0.0",
     "tape": "^4.9.2",
-    "tape-run": "^5.0.0",
+    "tape-run": "^6.0.0",
     "uglify-es": "^3.3.7"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "homepage": "https://sequencer.publiclab.org",
   "bin": {

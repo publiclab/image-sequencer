@@ -33,19 +33,19 @@ function ReplaceImage(ref,selector,steps,options) {
       }
 
       var base64 = btoa(raw);
-      var dataURL="data:image/"+ext+";base64," + base64;
+      var dataURL='data:image/'+ext+';base64,' + base64;
       make(dataURL);
     };
 
-    if(url.substr(0,11).toLowerCase()!="data:image/") xmlHTTP.send();
+    if(url.substr(0,11).toLowerCase()!='data:image/') xmlHTTP.send();
     else make(url);
 
     function make(url) {
       tempSequencer.loadImage(url, function(){
         // this.addSteps(steps).run({stop:function(){}},function(out){
-        var sequence = this.addSteps(steps)
+        var sequence = this.addSteps(steps);
         if (ref.detectStringSyntax(steps))
-          sequence = this.stringToSteps(steps)
+          sequence = this.stringToSteps(steps);
         sequence.run({stop:function(){}},function(out){
           img.src = out;
         });

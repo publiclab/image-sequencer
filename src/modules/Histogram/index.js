@@ -1,4 +1,4 @@
 module.exports = [
-    require('./Module.js'),
-    require('./info.json')
-]
+  require('./Module.js'),
+  require('./info.json')
+];

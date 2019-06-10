@@ -19,30 +19,40 @@ module.exports = function edgeDetect(options, UI) {
 
     var step = this;
 
+    // Blur the image
+    const internalSequencer = ImageSequencer({ inBrowser: false, ui: false });
+    return internalSequencer.loadImage(input.src, function () {
+      internalSequencer.importJSON([{ 'name': 'blur', 'options': {blur: options.blur} }]);
+      return internalSequencer.run(function onCallback(internalOutput) {
+        require('get-pixels')(internalOutput, function(err, blurPixels){
+          if (err){
+            return;
+          }
 
-    // Extra Manipulation function used as an enveloper for applying gaussian blur and Convolution
-    function changePixel(r, g, b, a) {
-      return [(r + g + b) / 3, (r + g + b) / 3, (r + g + b) / 3, a];
-    }
+          // Extra Manipulation function used as an enveloper for applying gaussian blur and Convolution
+          function changePixel(r, g, b, a) {
+            return [(r + g + b) / 3, (r + g + b) / 3, (r + g + b) / 3, a];
+          }
 
-    function extraManipulation(pixels) {
-      pixels = require('ndarray-gaussian-filter')(pixels, options.blur);
-      pixels = require('./EdgeUtils')(pixels, options.highThresholdRatio, options.lowThresholdRatio, options.hysteresis);
-      return pixels;
-    }
+          function extraManipulation(){
+            return require('./EdgeUtils')(blurPixels, options.highThresholdRatio, options.lowThresholdRatio, options.hysteresis);
+          }
 
-    function output(image, datauri, mimetype) {
-      step.output = { src: datauri, format: mimetype };
-    }
-
-    return require('../_nomodule/PixelManipulation.js')(input, {
-      output: output,
-      changePixel: changePixel,
-      extraManipulation: extraManipulation,
-      format: input.format,
-      image: options.image,
-      inBrowser: options.inBrowser,
-      callback: callback
+          function output(image, datauri, mimetype) {
+            step.output = { src: datauri, format: mimetype };
+          }
+      
+          return require('../_nomodule/PixelManipulation.js')(input, {
+            output: output,
+            changePixel: changePixel,
+            extraManipulation: extraManipulation,
+            format: input.format,
+            image: options.image,
+            inBrowser: options.inBrowser,
+            callback: callback
+          });
+        });
+      });
     });
   }
 
@@ -51,5 +61,5 @@ module.exports = function edgeDetect(options, UI) {
     draw: draw,
     output: output,
     UI: UI
-  }
-}
+  };
+};

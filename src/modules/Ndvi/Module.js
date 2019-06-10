@@ -19,8 +19,8 @@ module.exports = function Ndvi(options, UI) {
     var step = this;
 
     function changePixel(r, g, b, a) {
-      if (options.filter == "red") var ndvi = (b - r) / (1.00 * b + r);
-      if (options.filter == "blue") var ndvi = (r - b) / (1.00 * b + r);
+      if (options.filter == 'red') var ndvi = (b - r) / (1.00 * b + r);
+      if (options.filter == 'blue') var ndvi = (r - b) / (1.00 * b + r);
       var x = 255 * (ndvi + 1) / 2;
       return [x, x, x, a];
     }
@@ -55,5 +55,5 @@ module.exports = function Ndvi(options, UI) {
     draw: draw,
     output: output,
     UI: UI
-  }
-}
+  };
+};

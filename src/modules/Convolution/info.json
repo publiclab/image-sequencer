@@ -5,10 +5,11 @@
   		"constantFactor":{
   			"type": "float",
   			"desc": "a constant factor, multiplies all the kernel values by that factor",
-  			"default": 0.1111,
-        "placeholder": 0.1111
+  			"default": 0.111,
+        "min": 0.001,
+        "max": 2,
+        "step": 0.001     
   		},
-        
       "kernelValues": {
         "type": "string",
         "desc": "nine space separated numbers representing the kernel values in left to right and top to bottom format.",

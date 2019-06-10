@@ -9,18 +9,11 @@ module.exports = function GridOverlay(options,UI) {
     progressObj.overrideFlag = true;
 
     var step = this;
-    if (!options.step.inBrowser) { // This module is only for browser
-     this.output = input;
-     callback();
-   }
-   else{
-    var priorStep = this.getStep(-1); // get the previous step to add text onto it.
-
+    
     function extraManipulation(pixels) {
-     //if (options.step.inBrowser) 
-     pixels = require('./GridOverlay')(pixels, options,priorStep);
-     return pixels
-   }
+      pixels = require('./GridOverlay')(pixels, options);
+      return pixels;
+    }
 
     function output(image, datauri, mimetype) {
 
@@ -38,13 +31,13 @@ module.exports = function GridOverlay(options,UI) {
       callback: callback
     });
 
+  
   }
- }
 
   return {
     options: options,
     draw: draw,
     output: output,
     UI: UI
-  }
-}
+  };
+};

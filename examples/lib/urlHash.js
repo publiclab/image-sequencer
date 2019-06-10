@@ -42,8 +42,8 @@ function setUrlHashParameter(param, value) {
 }
 
 module.exports =  {
-                    getUrlHashParameter: getUrlHashParameter,
-                    setUrlHashParameter: setUrlHashParameter,
-                    getUrlHashParameters: getUrlHashParameters,
-                    setUrlHashParameters: setUrlHashParameters
-                  }
+  getUrlHashParameter: getUrlHashParameter,
+  setUrlHashParameter: setUrlHashParameter,
+  getUrlHashParameters: getUrlHashParameters,
+  setUrlHashParameters: setUrlHashParameters
+};

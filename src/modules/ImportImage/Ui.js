@@ -25,14 +25,14 @@ module.exports = function ImportImageModuleUi(step, ui) {
 
     // setup file input listener
     sequencer.setInputStep({
-      dropZoneSelector: "#" + dropzoneId,
-      fileInputSelector: "#" + dropzoneId + " .file-input",
+      dropZoneSelector: '#' + dropzoneId,
+      fileInputSelector: '#' + dropzoneId + ' .file-input',
       onLoad: function onLoadFromInput(progress) {
         var reader = progress.target;
         step.options.imageUrl = reader.result;
         step.options.url = reader.result;
         sequencer.run();
-        setUrlHashParameter("steps", sequencer.toString());
+        setUrlHashParameter('steps', sequencer.toString());
       }
     });
 
@@ -44,11 +44,11 @@ module.exports = function ImportImageModuleUi(step, ui) {
         step.options.imageUrl = src;
         sequencer.run();
 
-    });
+      });
 
   }
 
   return {
     setup: setup
-  }
-}
+  };
+};

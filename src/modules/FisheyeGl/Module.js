@@ -18,14 +18,14 @@ module.exports = function DoNothing(options, UI) {
       // Create a canvas, if it doesn't already exist.
       if (!document.querySelector('#image-sequencer-canvas')) {
         var canvas = document.createElement('canvas');
-        canvas.style.display = "none";
+        canvas.style.display = 'none';
         canvas.setAttribute('id', 'image-sequencer-canvas');
         document.body.append(canvas);
       }
       else var canvas = document.querySelector('#image-sequencer-canvas');
 
       distorter = FisheyeGl({
-        selector: "#image-sequencer-canvas"
+        selector: '#image-sequencer-canvas'
       });
 
       // Parse the inputs
@@ -65,5 +65,5 @@ module.exports = function DoNothing(options, UI) {
     draw: draw,
     output: output,
     UI: UI
-  }
-}
+  };
+};

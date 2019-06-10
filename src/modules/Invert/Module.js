@@ -40,12 +40,12 @@ function Invert(options, UI) {
     draw: draw,
     output: output,
     UI: UI
-  }
+  };
 }
 var info = {
-  "name": "Invert",
-  "description": "Inverts the image.",
-  "inputs": {
+  'name': 'Invert',
+  'description': 'Inverts the image.',
+  'inputs': {
   }
-}
+};
 module.exports = [Invert, info];

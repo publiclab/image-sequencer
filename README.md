@@ -578,3 +578,11 @@ sequencer2.run();
 This method returns an object which defines the name and inputs of the modules. If a module name (hyphenated) is passed in the method, then only the details of that module are returned.
 
 The `notify` function takes two parameters `msg` and `id`, former being the message to be displayed on console (in case of CLI and node ) and a HTML component(in browser). The id is optional and is useful for HTML interface to give appropriate IDs.
+
+## Using WebAssembly for heavy pixel processing
+
+As of now, any of the modules, which uses changePixel function uses wasm as well. Both node and browser code use WebAssembly and the only region of fallback to the initial code is the one under browserified unit tests.
+
+The main advantage we get using wasm is blazing fast speed attained in processing pixels for many modules that is very clear from the benchmarks itself.
+
+The only limitation encountered was that the browser and node code for implementing wasm had to be written separately. This is because in browser we use ```fetch``` and in node we use ```fs``` module which both can't be used in other environment.

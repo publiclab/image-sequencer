@@ -1,5 +1,5 @@
 {
-    "name": "White Balance",
+    "name": "white-balance",
     "description": "Render neutral colours correctly based on the whitest pixel in the image.",
     "inputs": {
       "red": {

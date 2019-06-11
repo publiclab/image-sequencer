@@ -1,5 +1,5 @@
 {
-  "name": "Resize",
+  "name": "resize",
   "description": "Resize image by given percentage value",
   "inputs": {
     "resize": {

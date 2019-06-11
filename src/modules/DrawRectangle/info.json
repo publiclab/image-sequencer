@@ -1,5 +1,5 @@
 {
-    "name": "Draw Rectangle",
+    "name": "draw-rectangle",
     "description": "It draws a rectangle on the image",
     "inputs": {
   		"startingX":{

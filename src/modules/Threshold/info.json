@@ -1,5 +1,5 @@
 {
-  "name": "Threshold",
+  "name": "threshold",
   "description": "Thresholding is used to create binary images",
   "inputs": {
     "threshold": {

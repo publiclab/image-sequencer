@@ -1,5 +1,5 @@
 {
-  "name": "Paint Bucket",
+  "name": "paint-bucket",
   "description": "Fill color in pixels",
   "inputs": {
       "startingX": {

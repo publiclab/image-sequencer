@@ -1,5 +1,5 @@
 {
-    "name": "Gamma Correction",
+    "name": "gamma-correction",
     "description": "Apply gamma correction on the image <a href='https://en.wikipedia.org/wiki/Gamma_correction'>Read more</a>",
     "inputs": {
         "adjustment": {

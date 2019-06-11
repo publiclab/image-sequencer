@@ -1,5 +1,5 @@
 {
-    "name": "Text-Overlay",
+    "name": "text-overlay",
     "description": "Overlay text on image.",
     "inputs": {
         "text": {

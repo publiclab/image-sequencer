@@ -27,17 +27,17 @@ function ReplaceImage(ref,selector,steps,options) {
       // https://stackoverflow.com/a/20048852/1116657
       var raw = '';
       var i,j,subArray,chunk = 5000;
-      for (i=0,j=arr.length; i<j; i+=chunk) {
-        subArray = arr.subarray(i,i+chunk);
+      for (i = 0,j = arr.length; i < j; i += chunk) {
+        subArray = arr.subarray(i,i + chunk);
         raw += String.fromCharCode.apply(null, subArray);
       }
 
       var base64 = btoa(raw);
-      var dataURL='data:image/'+ext+';base64,' + base64;
+      var dataURL = 'data:image/' + ext + ';base64,' + base64;
       make(dataURL);
     };
 
-    if(url.substr(0,11).toLowerCase()!='data:image/') xmlHTTP.send();
+    if(url.substr(0,11).toLowerCase() != 'data:image/') xmlHTTP.send();
     else make(url);
 
     function make(url) {
@@ -55,7 +55,7 @@ function ReplaceImage(ref,selector,steps,options) {
 
   for (var i = 0; i < images.length; i++) {
     replaceImage(images[i],steps);
-    if (i == images.length-1)
+    if (i == images.length - 1)
       options.callback();
   }
 }

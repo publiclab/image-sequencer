@@ -47,10 +47,10 @@ module.exports = function Dynamic(options,UI) {
     /* Functions to get the neighbouring pixel by position (x,y) */
     function getNeighbourPixel(pixels,curX,curY,distX,distY){
       return [
-        pixels.get(curX+distX,curY+distY,0)
-        ,pixels.get(curX+distX,curY+distY,1)
-        ,pixels.get(curX+distX,curY+distY,2)
-        ,pixels.get(curX+distX,curY+distY,3)
+        pixels.get(curX + distX,curY + distY,0)
+        ,pixels.get(curX + distX,curY + distY,1)
+        ,pixels.get(curX + distX,curY + distY,2)
+        ,pixels.get(curX + distX,curY + distY,3)
       ];
     }
 

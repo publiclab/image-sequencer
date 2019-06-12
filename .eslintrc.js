@@ -27,6 +27,7 @@ module.exports = {
         'no-mixed-spaces-and-tabs':'off',
         'no-self-assign':'off',
         'no-constant-condition':'off',
-        'no-dupe-keys':'off'
+        'no-dupe-keys':'off',
+        'space-infix-ops': [2, {'int32Hint': false}]
     }
 };

@@ -30,7 +30,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
             <div class="panel-heading">\
               <div class="trash-container pull-right"></div>\
               <h3 class="panel-title">' +  
-                '<span class="toggle">' +step.name + ' <span class="caret toggleIcon rotated"></span>\
+                '<span class="toggle">' + step.name + ' <span class="caret toggleIcon rotated"></span>\
                  <span class="load-spin pull-right" style="display:none;padding:1px 8px;"><i class="fa fa-circle-o-notch fa-spin"></i></span>\
               </h3>\
             </div>\
@@ -106,7 +106,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
               '"max="' +
               inputDesc.max +
               '"step="' +
-              (inputDesc.step ? inputDesc.step : 1)+ '">' + '<span>' + paramVal + '</span>';
+              (inputDesc.step ? inputDesc.step : 1) + '">' + '<span>' + paramVal + '</span>';
 
           }
           else html += '">';
@@ -308,7 +308,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       var xPos = e.pageX - offset.left;
       var yPos = e.pageY - offset.top;
       var myData = context.getImageData(xPos, yPos, 1, 1);
-      img[0].title = 'rgb: ' +myData.data[0]+','+ myData.data[1]+','+myData.data[2];//+ rgbdata;
+      img[0].title = 'rgb: ' + myData.data[0] + ',' + myData.data[1] + ',' + myData.data[2];//+ rgbdata;
     }); 
   }
 
@@ -323,7 +323,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
   }
 
   function notify(msg,id){
-    if ($('#'+id).length == 0) {
+    if ($('#' + id).length == 0) {
       var notification = document.createElement('span');
       notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> ' + msg ;
       notification.id = id;
@@ -332,7 +332,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $('body').append(notification);
     }
   
-    $('#'+id).fadeIn(500).delay(200).fadeOut(500);
+    $('#' + id).fadeIn(500).delay(200).fadeOut(500);
   }
     
   
@@ -348,7 +348,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 }
 
 if(typeof window === 'undefined'){
-  module.exports={
+  module.exports = {
     DefaultHtmlStepUi: DefaultHtmlStepUi
   };
 }

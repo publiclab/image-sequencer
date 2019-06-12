@@ -30,9 +30,9 @@ function setInputStepInit() {
 
     function runVideo(){
       /* event handler for Take-Photo */
-      document.getElementById('video').style.display='inline';
-      document.getElementById('capture').style.display='inline';
-      document.getElementById('close').style.display='inline';
+      document.getElementById('video').style.display = 'inline';
+      document.getElementById('capture').style.display = 'inline';
+      document.getElementById('close').style.display = 'inline';
       
       var video = document.getElementById('video');
       canvas = document.getElementById('canvas'),
@@ -66,9 +66,9 @@ function setInputStepInit() {
         stream.getVideoTracks().forEach(function (track) {
           track.stop();
         });
-        document.getElementById('video').style.display='none';
-        document.getElementById('capture').style.display='none';
-        document.getElementById('close').style.display='none';
+        document.getElementById('video').style.display = 'none';
+        document.getElementById('capture').style.display = 'none';
+        document.getElementById('close').style.display = 'none';
       }
     }
  

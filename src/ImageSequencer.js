@@ -152,7 +152,7 @@ ImageSequencer = function ImageSequencer(options) {
     sequencer.image = arguments[0];
     for (var arg in arguments) args.push(copy(arguments[arg]));
     var json_q = formatInput.call(this, args, 'l');
-    if(this.getSteps().length!=0){
+    if(this.getSteps().length != 0){
       this.options.sequencerCounter = 0;
       inputlog = [];
       this.steps = [];
@@ -169,9 +169,9 @@ ImageSequencer = function ImageSequencer(options) {
       setUI: this.setUI
     };
     function loadPrevSteps(ref){
-      if(prevSteps.length!=0){
+      if(prevSteps.length != 0){
         ref.addSteps(prevSteps);
-        prevSteps=[];
+        prevSteps = [];
       }
     }
     require('./ui/LoadImage')(sequencer, 'image', json_q.image, function() {

@@ -8,7 +8,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
 
   function onLoad() {
     importStepsFromUrlHash();
-    if ($('#selectStep').val()==='none')
+    if ($('#selectStep').val() === 'none')
       $(addStepSel + ' #add-step-btn').prop('disabled', true);
     handleSaveSequence();
   }
@@ -73,8 +73,8 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
   }
 
   function handleSaveSequence(){
-    var stepCount=sequencer.steps.length;
-    if(stepCount<2)
+    var stepCount = sequencer.steps.length;
+    if(stepCount < 2)
       $(' #save-seq').prop('disabled', true);
     else
       $(' #save-seq').prop('disabled', false);

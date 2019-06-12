@@ -22,9 +22,9 @@ module.exports = function Rotate(options, UI) {
     }
 
     function extraManipulation(pixels) {
-      var rotate_value = (options.rotate)%360;
+      var rotate_value = (options.rotate) % 360;
 
-      if(rotate_value%360 == 0)
+      if(rotate_value % 360 == 0)
         return pixels;
 
       var bitmap = new imagejs.Bitmap({width: pixels.shape[0], height: pixels.shape[1]});

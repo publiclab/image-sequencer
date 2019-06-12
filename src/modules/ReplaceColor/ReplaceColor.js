@@ -11,13 +11,13 @@ module.exports = exports = function(pixels, options){
     cb = color[2];
 
   var tolerance = options.tolerance || 50;
-  var maxFactor = (1 + tolerance/100);
-  var minFactor = (1 - tolerance/100);
+  var maxFactor = (1 + tolerance / 100);
+  var minFactor = (1 - tolerance / 100);
 
   function isSimilar(r, g, b){
-    return ( r >= cr*minFactor &&  r <= cr*maxFactor &&
-                 g >= cg*minFactor &&  g <= cg*maxFactor &&
-                 b >= cb*minFactor &&  b <= cb*maxFactor);
+    return ( r >= cr * minFactor &&  r <= cr * maxFactor &&
+                 g >= cg * minFactor &&  g <= cg * maxFactor &&
+                 b >= cb * minFactor &&  b <= cb * maxFactor);
   }
 
   for(var i = 0; i < pixels.shape[0]; i++){
@@ -27,7 +27,7 @@ module.exports = exports = function(pixels, options){
         b = pixels.get(i,j,2);
       if(isSimilar(r,g,b)){
         if (replaceMethod == 'greyscale'){
-          var avg = (r + g + b)/3;
+          var avg = (r + g + b) / 3;
           pixels.set(i,j,0,avg);
           pixels.set(i,j,1,avg);
           pixels.set(i,j,2,avg);

@@ -24,10 +24,10 @@ module.exports = function Crop(input,options,callback) {
     // var newarray = new Uint8Array(4*w*h);
     var array = [];
     for (var n = oy; n < oy + h; n++) {
-      var offsetValue = 4*w*n;
-      if(n<ih){
-        var start = n*4*iw + ox*4;
-        var end = n*4*iw + ox*4 + 4*w;
+      var offsetValue = 4 * w * n;
+      if(n < ih){
+        var start = n * 4 * iw + ox * 4;
+        var end = n * 4 * iw + ox * 4 + 4 * w;
         var pushArray = Array.from(pixels.data.slice(start, end ));
         array.push.apply(array,pushArray);
       } else {
@@ -38,7 +38,7 @@ module.exports = function Crop(input,options,callback) {
     var newarray = Uint8Array.from(array);
     pixels.data = newarray;
     pixels.shape = [w,h,4];
-    pixels.stride[1] = 4*w;
+    pixels.stride[1] = 4 * w;
 
     options.format = input.format;
 

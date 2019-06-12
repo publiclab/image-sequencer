@@ -69,8 +69,8 @@ function sobelFilter(pixels, x, y) {
         yn = y + b - 1;
 
       if (isOutOfBounds(pixels, xn, yn)) {
-        gradX += pixels.get(xn+1, yn+1, 0) * kernelx[a][b];
-        gradY += pixels.get(xn+1, yn+1, 0) * kernely[a][b];
+        gradX += pixels.get(xn + 1, yn + 1, 0) * kernelx[a][b];
+        gradY += pixels.get(xn + 1, yn + 1, 0) * kernely[a][b];
       }
       else {
         gradX += pixels.get(xn, yn, 0) * kernelx[a][b];
@@ -120,7 +120,7 @@ function nonMaxSupress(pixels, grads, angles) {
 
       let angleCategory = categorizeAngle(angles[x][y]);
 
-      if (!isOutOfBounds(pixels, x - 1, y - 1) && !isOutOfBounds(pixels, x+1, y+1)){
+      if (!isOutOfBounds(pixels, x - 1, y - 1) && !isOutOfBounds(pixels, x + 1, y + 1)){
         switch (angleCategory){
         case 1:
           if (!((grads[x][y] >= grads[x][y + 1]) && (grads[x][y] >= grads[x][y - 1]))) {
@@ -186,17 +186,17 @@ function hysteresis(strongEdgePixels, weakEdgePixels){
     let x = pixel[0],
       y = pixel[1];
 
-    if (weakEdgePixels.includes([x+1, y])) {
-      removeElem(weakEdgePixels, [x+1, y]);
+    if (weakEdgePixels.includes([x + 1, y])) {
+      removeElem(weakEdgePixels, [x + 1, y]);
     } 
-    else if (weakEdgePixels.includes([x-1, y])) {
-      removeElem(weakEdgePixels, [x-1, y]);
+    else if (weakEdgePixels.includes([x - 1, y])) {
+      removeElem(weakEdgePixels, [x - 1, y]);
     }
-    else if (weakEdgePixels.includes([x, y+1])) {
-      removeElem(weakEdgePixels, [x, y+1]);
+    else if (weakEdgePixels.includes([x, y + 1])) {
+      removeElem(weakEdgePixels, [x, y + 1]);
     } 
-    else if(weakEdgePixels.includes([x, y-1])) {
-      removeElem(weakEdgePixels, [x, y-1]);
+    else if(weakEdgePixels.includes([x, y - 1])) {
+      removeElem(weakEdgePixels, [x, y - 1]);
     }
   });
 }

@@ -63,7 +63,7 @@ window.onload = function() {
   }
 
   var resetSequence = function(){
-    var r=confirm('Do you want to reset the sequence?');
+    var r = confirm('Do you want to reset the sequence?');
     if (r)
       window.location = '/';
   };
@@ -113,7 +113,7 @@ window.onload = function() {
 
     var button = event.target;
     button.disabled = true;
-    button.innerHTML='<i class="fa fa-circle-o-notch fa-spin"></i>';
+    button.innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i>';
 
     try {
       // Select all images from previous steps
@@ -187,10 +187,10 @@ window.onload = function() {
     onLoad: function onFileReaderLoad(progress) {
       var reader = progress.target;
       var step = sequencer.steps[0];
-      var util= intermediateHtmlStepUi(sequencer);
+      var util = intermediateHtmlStepUi(sequencer);
       step.output.src = reader.result;
       sequencer.run({ index: 0 });
-      if(typeof step.options !=='undefined')
+      if(typeof step.options !== 'undefined')
         step.options.step.imgElement.src = reader.result;
       else
         step.imgElement.src = reader.result;
@@ -201,7 +201,7 @@ window.onload = function() {
       var step = sequencer.steps[0];
       step.output.src = url;
       sequencer.run({ index: 0 });
-      if(typeof step.options !=='undefined')
+      if(typeof step.options !== 'undefined')
         step.options.step.imgElement.src = url;
       else
         step.imgElement.src = url;

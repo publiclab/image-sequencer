@@ -18,9 +18,9 @@ module.exports = function Exposure(options,UI){
 
     function changePixel(r, g, b, a){
 
-      r = Math.min(255, r*exposure);
-      g = Math.min(255, g*exposure);
-      b = Math.min(255, b*exposure);
+      r = Math.min(255, r * exposure);
+      g = Math.min(255, g * exposure);
+      b = Math.min(255, b * exposure);
       return [r, g, b, a];
     }
 

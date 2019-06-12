@@ -25,7 +25,7 @@ module.exports = function DoNothing(options,UI) {
 
 
       // Tell Image Sequencer that this step is complete
-      options.step.qrval = (decoded)?decoded.data:'undefined';
+      options.step.qrval = (decoded) ? decoded.data : 'undefined';
     });
 
     function output(image, datauri, mimetype){

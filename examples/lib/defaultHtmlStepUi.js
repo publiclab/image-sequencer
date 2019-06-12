@@ -186,7 +186,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     
     $(step.imgElement).on('mousemove', _.debounce(() => imageHover(step), 150));
     $(step.imgElement).on('click', (e) => {e.preventDefault(); });
-    $(step.ui.querySelector('#color-picker')).colorpicker();
+    $(step.ui.querySelectorAll('#color-picker')).colorpicker();
 
     function saveOptions(e) {
       e.preventDefault();

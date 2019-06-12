@@ -7,7 +7,7 @@ module.exports = function Tint(options, UI) {
   function draw(input, callback, progressObj) {
 
     var color = options.color || defaults.color;
-    color = color.substring(color.indexOf('(')+1,color.length-1); // extract only the values from rgba(_,_,_,_)
+    color = color.substring(color.indexOf('(') + 1, color.length - 1); // extract only the values from rgba(_,_,_,_)
     color = color.split(',');
     
     var factor = options.factor || defaults.factor;

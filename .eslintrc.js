@@ -29,6 +29,9 @@ module.exports = {
         'no-constant-condition':'off',
         'no-dupe-keys':'off',
         'space-infix-ops': ['error', {'int32Hint': false}], // Enforce spaces around operators 
-        'comma-spacing': ['error', { "before": false, "after": true }], // require spacing after a comma 
+        'comma-spacing': ['error', { "before": false, "after": true }], // require spacing after a comma
+        'comma-style': ['error', 'last'], // requires comma after and on the same line
+        
+
     }
 };

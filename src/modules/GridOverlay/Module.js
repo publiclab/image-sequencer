@@ -1,5 +1,5 @@
 
-module.exports = function GridOverlay(options,UI) {
+module.exports = function GridOverlay(options, UI) {
   
   var output;
 

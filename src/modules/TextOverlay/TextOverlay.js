@@ -1,4 +1,4 @@
-module.exports = exports = function(pixels, options,priorstep){
+module.exports = exports = function(pixels, options, priorstep){
   var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
 
   options.text = options.text || defaults.text;
@@ -21,7 +21,7 @@ module.exports = exports = function(pixels, options,priorstep){
   ctx.font = options.size + 'px ' + options.font;
   ctx.fillText(options.text, options.x, options.y);
 
-  var myImageData = ctx.getImageData(0,0,canvas.width,canvas.height);
+  var myImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
   pixels.data = myImageData.data;
   return pixels;
 };

@@ -46,7 +46,7 @@ window.onload = function() {
     $(':root').animate({scrollTop: 0});
   }
 
-  $('#move-up').on('click',topFunction);
+  $('#move-up').on('click', topFunction);
 
 
   // UI for each step:
@@ -70,7 +70,7 @@ window.onload = function() {
 
   $('#addStep select').on('change', ui.selectNewStepUi);
   $('#addStep #add-step-btn').on('click', ui.addStepUi);
-  $('#resetButton').on('click',resetSequence);
+  $('#resetButton').on('click', resetSequence);
 
   //Module button radio selection
   $('.radio-group .radio').on('click', function() {
@@ -194,8 +194,8 @@ window.onload = function() {
         step.options.step.imgElement.src = reader.result;
       else
         step.imgElement.src = reader.result;
-      insertPreview.updatePreviews(reader.result,'#addStep');
-      insertPreview.updatePreviews(sequencer.steps[0].imgElement.src,'.insertDiv');
+      insertPreview.updatePreviews(reader.result, '#addStep');
+      insertPreview.updatePreviews(sequencer.steps[0].imgElement.src, '.insertDiv');
     },
     onTakePhoto: function (url) {
       var step = sequencer.steps[0];
@@ -205,16 +205,16 @@ window.onload = function() {
         step.options.step.imgElement.src = url;
       else
         step.imgElement.src = url;
-      insertPreview.updatePreviews(url,'#addStep');
-      insertPreview.updatePreviews(sequencer.steps[0].imgElement.src,'.insertDiv');
+      insertPreview.updatePreviews(url, '#addStep');
+      insertPreview.updatePreviews(sequencer.steps[0].imgElement.src, '.insertDiv');
     }
   });
 
   setupCache();
 
   if (urlHash.getUrlHashParameter('src')) {
-    insertPreview.updatePreviews(urlHash.getUrlHashParameter('src'),'#addStep');
+    insertPreview.updatePreviews(urlHash.getUrlHashParameter('src'), '#addStep');
   } else {
-    insertPreview.updatePreviews('images/tulips.png','#addStep');
+    insertPreview.updatePreviews('images/tulips.png', '#addStep');
   }
 };

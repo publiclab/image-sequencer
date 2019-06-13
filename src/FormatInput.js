@@ -1,5 +1,5 @@
 function objTypeOf(object){
-  return Object.prototype.toString.call(object).split(' ')[1].slice(0,-1);
+  return Object.prototype.toString.call(object).split(' ')[1].slice(0, -1);
 }
 
 function getPrimitive(object){
@@ -23,7 +23,7 @@ function copy(a) {
   return a;
 }
 
-function formatInput(args,format,images) {
+function formatInput(args, format, images) {
   var json_q = {};
   var format_i = format;
   if (format == '+')
@@ -35,7 +35,7 @@ function formatInput(args,format,images) {
   else if (format == 'r')
     format = ['o_number'];
   else if (format == 'l')
-    format = ['string','o_function'];
+    format = ['string', 'o_function'];
     
 
   if(format[format.length - 1] == 'o_object') {
@@ -54,7 +54,7 @@ function formatInput(args,format,images) {
 
   if(args.length == format.length) {//making of arrays
     for (var i in format) {
-      if (format[i].substr(format[i].length - 2,2) == '_a')
+      if (format[i].substr(format[i].length - 2, 2) == '_a')
         args[i] = makeArray(args[i]);
     }
   }

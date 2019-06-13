@@ -10,15 +10,15 @@ describe('URL manipulation methods', function() {
   beforeEach(()=>{
     urlHash = UrlHash;
 
-    spyOn(urlHash,'getUrlHashParameters');
-    spyOn(urlHash,'getUrlHashParameter');
-    spyOn(urlHash,'setUrlHashParameters');
-    spyOn(urlHash,'setUrlHashParameter');
+    spyOn(urlHash, 'getUrlHashParameters');
+    spyOn(urlHash, 'getUrlHashParameter');
+    spyOn(urlHash, 'setUrlHashParameters');
+    spyOn(urlHash, 'setUrlHashParameter');
 
     urlHash.getUrlHashParameters();
     urlHash.getUrlHashParameter('module');
     urlHash.setUrlHashParameters(params);
-    urlHash.setUrlHashParameter('module','brightness');
+    urlHash.setUrlHashParameter('module', 'brightness');
   });
 
   it('gets url hash params from window hash', function() {
@@ -34,7 +34,7 @@ describe('URL manipulation methods', function() {
   });
 
   it('accepts param key-value pair and sets url hash params', function() {
-    expect(urlHash.setUrlHashParameter).toHaveBeenCalledWith('module','brightness');
+    expect(urlHash.setUrlHashParameter).toHaveBeenCalledWith('module', 'brightness');
   });
 
 });

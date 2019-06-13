@@ -12,7 +12,7 @@ module.exports = function UserInterface(events = {}) {
       console.log('Added Step "' + step.name + '"');
     } else {
       // Create a NodeJS Object
-      console.log('\x1b[36m%s\x1b[0m','Added Step "' + step.name + '"');
+      console.log('\x1b[36m%s\x1b[0m', 'Added Step "' + step.name + '"');
     }
   };
 
@@ -24,7 +24,7 @@ module.exports = function UserInterface(events = {}) {
       console.log('Drawing Step "' + step.name + '"');
     } else {
       // Don't do anything
-      console.log('\x1b[33m%s\x1b[0m','Drawing Step "' + step.name + '"');
+      console.log('\x1b[33m%s\x1b[0m', 'Drawing Step "' + step.name + '"');
     }
   };
 
@@ -37,7 +37,7 @@ module.exports = function UserInterface(events = {}) {
       console.log('Drawn Step "' + step.name + '"');
     } else {
       // Update the NodeJS Object
-      console.log('\x1b[32m%s\x1b[0m','Drawn Step "' + step.name + '"');
+      console.log('\x1b[32m%s\x1b[0m', 'Drawn Step "' + step.name + '"');
     }
   };
 
@@ -49,7 +49,7 @@ module.exports = function UserInterface(events = {}) {
       console.log('Removing Step "' + step.name + '"');
     } else {
       // Delete the NodeJS Object
-      console.log('\x1b[31m%s\x1b[0m','Removing Step "' + step.name + '"');
+      console.log('\x1b[31m%s\x1b[0m', 'Removing Step "' + step.name + '"');
     }
   };
 

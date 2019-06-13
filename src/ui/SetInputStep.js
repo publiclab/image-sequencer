@@ -39,7 +39,7 @@ function setInputStepInit() {
       context = canvas.getContext('2d'),
       vendorUrl = window.URL || window.webkitURL;
 
-      const constraints = { audio: false,video: true};
+      const constraints = { audio: false, video: true};
 
       function handleSuccess(stream) {
         window.stream = stream; // make stream available to browser console

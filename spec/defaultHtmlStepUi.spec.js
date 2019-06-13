@@ -18,19 +18,19 @@ describe('Sequencer step HTML', function() {
   beforeEach(()=>{
     defaultHtmlStepUi = new DefaultHtmlStepUi(sequencer);
 
-    spyOn(defaultHtmlStepUi,'getPreview');
-    spyOn(defaultHtmlStepUi,'onSetup');
-    spyOn(defaultHtmlStepUi,'onComplete');
-    spyOn(defaultHtmlStepUi,'onDraw');
-    spyOn(defaultHtmlStepUi,'onRemove');
-    spyOn(defaultHtmlStepUi,'notify');
+    spyOn(defaultHtmlStepUi, 'getPreview');
+    spyOn(defaultHtmlStepUi, 'onSetup');
+    spyOn(defaultHtmlStepUi, 'onComplete');
+    spyOn(defaultHtmlStepUi, 'onDraw');
+    spyOn(defaultHtmlStepUi, 'onRemove');
+    spyOn(defaultHtmlStepUi, 'notify');
 
     defaultHtmlStepUi.getPreview();
-    defaultHtmlStepUi.onSetup(step,options);
+    defaultHtmlStepUi.onSetup(step, options);
     defaultHtmlStepUi.onComplete(step);
     defaultHtmlStepUi.onDraw(step);
     defaultHtmlStepUi.onRemove(step);
-    defaultHtmlStepUi.notify('Step removed','remove-notification');
+    defaultHtmlStepUi.notify('Step removed', 'remove-notification');
   });
 
 
@@ -39,7 +39,7 @@ describe('Sequencer step HTML', function() {
   });
 
   it('load initial setup ui', function() {
-    expect(defaultHtmlStepUi.onSetup).toHaveBeenCalledWith(step,options);
+    expect(defaultHtmlStepUi.onSetup).toHaveBeenCalledWith(step, options);
   });
 
   it('load completion ui', function() {
@@ -55,7 +55,7 @@ describe('Sequencer step HTML', function() {
   });
 
   it('notification ui', function() {
-    expect(defaultHtmlStepUi.notify).toHaveBeenCalledWith('Step removed','remove-notification');
+    expect(defaultHtmlStepUi.notify).toHaveBeenCalledWith('Step removed', 'remove-notification');
   });
 
 });

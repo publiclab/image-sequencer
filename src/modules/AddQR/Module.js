@@ -18,7 +18,7 @@ module.exports = function AddQR(options, UI) {
         return [r, g, b, a];
       }
            
-      function extraManipulation(pixels,generateOutput) {
+      function extraManipulation(pixels, generateOutput) {
         if (err) {
           console.log(err);
           return;

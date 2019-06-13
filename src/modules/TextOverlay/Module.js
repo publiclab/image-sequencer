@@ -1,5 +1,5 @@
 
-module.exports = function TextOverlay(options,UI) {
+module.exports = function TextOverlay(options, UI) {
   
   var output;
    
@@ -18,7 +18,7 @@ module.exports = function TextOverlay(options,UI) {
 
       function extraManipulation(pixels) {
         //if (options.step.inBrowser) 
-        pixels = require('./TextOverlay')(pixels, options,priorStep);
+        pixels = require('./TextOverlay')(pixels, options, priorStep);
         return pixels;
       }
 

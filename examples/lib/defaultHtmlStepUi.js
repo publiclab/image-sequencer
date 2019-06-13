@@ -147,14 +147,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
         .prepend(
           parser.parseFromString(tools, 'text/html').querySelector('div')
         );
-      $(step.ui.querySelectorAll('.remove')).on('click', function() {notify('Step Removed','remove-notification');});  
+      $(step.ui.querySelectorAll('.remove')).on('click', function() {notify('Step Removed', 'remove-notification');});  
       $(step.ui.querySelectorAll('.insert-step')).on('click', function() { util.insertStep(step.ID); });    
       // Insert the step's UI in the right place
       if (stepOptions.index == _sequencer.steps.length) {
         stepsEl.appendChild(step.ui);
-        $('#steps .step-container:nth-last-child(1) .insert-step').prop('disabled',true);
+        $('#steps .step-container:nth-last-child(1) .insert-step').prop('disabled', true);
         if($('#steps .step-container:nth-last-child(2)'))
-          $('#steps .step-container:nth-last-child(2) .insert-step').prop('disabled',false);
+          $('#steps .step-container:nth-last-child(2) .insert-step').prop('disabled', false);
       } else {
         stepsEl.insertBefore(step.ui, $(stepsEl).children()[stepOptions.index]);
       }
@@ -209,7 +209,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $(input)
         .data('initValue', $(input).val())
         .data('hasChangedBefore', false)
-        .on('input change' , function() {
+        .on('input change', function() {
           $(this)
             .focus()
             .data('hasChangedBefore',
@@ -302,7 +302,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       canvas.width = img.width();
       canvas.height = img.height();
       var context = canvas.getContext('2d');
-      context.drawImage(this,0,0);
+      context.drawImage(this, 0, 0);
 
       var offset = $(this).offset();
       var xPos = e.pageX - offset.left;
@@ -314,7 +314,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
   function onRemove(step) {
     step.ui.remove();
-    $('#steps .step-container:nth-last-child(1) .insert-step').prop('disabled',true);
+    $('#steps .step-container:nth-last-child(1) .insert-step').prop('disabled', true);
     $('div[class*=imgareaselect-]').remove();
   }
 
@@ -322,7 +322,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     return step.imgElement;
   }
 
-  function notify(msg,id){
+  function notify(msg, id){
     if ($('#' + id).length == 0) {
       var notification = document.createElement('span');
       notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> ' + msg ;

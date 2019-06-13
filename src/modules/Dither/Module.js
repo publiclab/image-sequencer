@@ -2,7 +2,7 @@ module.exports = function Dither(options, UI){
   var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
   var output;
 
-  function draw(input,callback,progressObj){
+  function draw(input, callback, progressObj){
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;

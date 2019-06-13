@@ -160,7 +160,7 @@ test('insertSteps(position,"module") inserts a step', function(t) {
 test('getSteps() returns correct array of steps', function(t){
   var sequencer = ImageSequencer({ ui: false });
   sequencer.loadImages('test', red);
-  sequencer.addSteps(['blur','invert']);
+  sequencer.addSteps(['blur', 'invert']);
   var stepsArray = sequencer.getSteps('test');
   t.equal(stepsArray.length, sequencer.steps.length, 'getSteps() returns correct length of steps');
   var flag = 0;

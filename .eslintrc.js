@@ -17,7 +17,7 @@ module.exports = {
         'indent': ['error',2],
         'linebreak-style': ['error','unix'],
         'quotes': ['error','single'],
-        'semi': ['error','always'],
+        'semi': ['error','always'], //
         'no-undef': 0,
         'no-console': 'off',
         'no-unused-vars': 'off',
@@ -28,6 +28,7 @@ module.exports = {
         'no-self-assign':'off',
         'no-constant-condition':'off',
         'no-dupe-keys':'off',
-        'space-infix-ops': ['error', {'int32Hint': false}]
+        'space-infix-ops': ['error', {'int32Hint': false}], // Enforce spaces around operators 
+        'comma-spacing': ['error', { "before": false, "after": true }], // require spacing after a comma 
     }
 };

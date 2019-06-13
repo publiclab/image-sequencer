@@ -14,7 +14,7 @@ test('benchmark all modules', function(t) {
 
   console.log('############ Benchmarks ############');
 
-  var sequencer = ImageSequencer({ ui: false, inBrowser: false });
+  var sequencer = ImageSequencer({ ui: false, inBrowser: false,useWasm:true });
   var mods = Object.keys(sequencer.modules);
 
   sequencer.loadImages(image);

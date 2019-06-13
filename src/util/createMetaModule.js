@@ -36,7 +36,7 @@ module.exports = function createMetaModule(mapFunction, moduleOptions) {
     */
 
     // ui: false prevents internal logs
-    var internalSequencer = ImageSequencer({ inBrowser: false, ui: false });
+    var internalSequencer = ImageSequencer({ inBrowser: false, ui: false,useWasm:true });
 
     function draw(input, callback) {
 

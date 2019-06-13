@@ -6,7 +6,7 @@ var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js'),
   insertPreview = require('./lib/insertPreview.js');
 
 window.onload = function() {
-  sequencer = ImageSequencer();
+  sequencer = ImageSequencer({useWasm:true});
 
   function refreshOptions() {
     // Load information of all modules (Name, Inputs, Outputs)

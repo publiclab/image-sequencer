@@ -50,7 +50,7 @@ module.exports = function canvasResize(options, UI) {
       image: options.image,
       inBrowser: options.inBrowser,
       callback: callback,
-      useWasm:true
+      useWasm:options.useWasm
     });
 
   }

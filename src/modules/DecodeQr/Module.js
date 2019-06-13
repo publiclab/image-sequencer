@@ -40,7 +40,7 @@ module.exports = function DoNothing(options,UI) {
       format: input.format,
       image: options.image,
       callback: callback,
-      useWasm:true
+      useWasm:options.useWasm
     });
 
   }

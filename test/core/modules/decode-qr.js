@@ -2,7 +2,7 @@ var test = require('tape');
 
 require('../../../src/ImageSequencer.js');
 
-var sequencer = ImageSequencer({ ui: false });
+var sequencer = ImageSequencer({ ui: false,useWasm:true });
 
 var Qr = require('../images/IS-QR');
 

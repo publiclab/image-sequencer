@@ -1,7 +1,7 @@
 describe('Default sequencer HTML', function() {
 
   var DefaultHtmlSequencerUi = require('../examples/lib/defaultHtmlSequencerUi');
-  var sequencer = require('../src/ImageSequencer')();
+  var sequencer = require('../src/ImageSequencer')({useWasm:true});
   var defaultHtmlSequencerUi;
 
   beforeEach(()=>{

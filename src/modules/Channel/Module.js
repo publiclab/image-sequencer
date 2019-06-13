@@ -36,7 +36,7 @@ module.exports = function Channel(options, UI) {
       image: options.image,
       inBrowser: options.inBrowser,
       callback: callback,
-      useWasm:true
+      useWasm:options.useWasm
     });
 
   }

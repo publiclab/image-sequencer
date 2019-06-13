@@ -12,7 +12,8 @@ const red = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iA
  */
 module.exports = (moduleName, options, input) => {
   let sequencer = ImageSequencer({
-    ui: false
+    ui: false,
+    useWasm:true
   });
   sequencer.loadImages(input || red);
   sequencer.addSteps(moduleName, options);

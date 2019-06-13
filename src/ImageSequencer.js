@@ -8,7 +8,6 @@ ImageSequencer = function ImageSequencer(options) {
   options = options || {};
   options.inBrowser = options.inBrowser === undefined ? isBrowser : options.inBrowser;
   options.sequencerCounter = 0;
-
   function objTypeOf(object) {
     return Object.prototype.toString.call(object).split(' ')[1].slice(0, -1);
   }

@@ -37,7 +37,7 @@ module.exports = function FlipImage(options, UI) {
         image: options.image,
         inBrowser: options.inBrowser,
         callback: callback,
-        useWasm:true
+        useWasm:options.useWasm
       });
     });
 

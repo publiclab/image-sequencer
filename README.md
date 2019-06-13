@@ -586,3 +586,14 @@ As of now, any of the modules, which uses changePixel function uses wasm as well
 The main advantage we get using wasm is blazing fast speed attained in processing pixels for many modules that is very clear from the benchmarks itself.
 
 The only limitation encountered was that the browser and node code for implementing wasm had to be written separately. This is because in browser we use ```fetch``` and in node we use ```fs``` module which both can't be used in other environment.
+
+Also, one can toggle between the two modes, the wasm one and the non-wasm in the following way:
+
+```js
+let sequencer = ImageSequencer({useWasm:true}) // for wasm mode or
+
+let sequencer = ImageSequencer({useWasm:false}) //for non-wasm mode or simply
+
+let sequencer = ImageSequencer() // also for non-wasm mode
+
+```

@@ -70,7 +70,7 @@ module.exports = function Dynamic(options, UI, util) {
         image: baseStepImage,
         inBrowser: options.inBrowser,
         callback: callback,
-        useWasm:true
+        useWasm:options.useWasm
       });
     });
   }

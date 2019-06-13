@@ -16,7 +16,7 @@ target = 'test_outputs';
  * @param {String} [input="red_image"] optional input image. Default is a red image.
  */
 module.exports = (moduleName, options, benchmark, input) => {
-  let sequencer = ImageSequencer({ui: false});
+  let sequencer = ImageSequencer({ui: false, useWasm:true});
 
   test(`${moduleName} module loads correctly`, t => {
     sequencer.loadImages(input || red);

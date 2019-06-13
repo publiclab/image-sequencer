@@ -22,7 +22,7 @@ module.exports = exports = function(pixels, options){
       pixels.set(x, y, 2, color[2]);
       pixels.set(x, y, 3, color[3]);
     }
-  } 
+  }
 
   return pixels;
 };

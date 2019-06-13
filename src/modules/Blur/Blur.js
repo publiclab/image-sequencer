@@ -44,11 +44,11 @@ module.exports = exports = function(pixels, blur) {
 
     for (let y = -2; y <= 2; y++) {
       kernel.push([]);
-      for (let x = -2; x <= 2; x++) { 
+      for (let x = -2; x <= 2; x++) {
         let r = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
         kernel[y + 2].push(Math.exp(-(r / s)));
         sum += kernel[y + 2][x + 2];
-      } 
+      }
     }
 
     for (let x = 0; x < 5; x++){

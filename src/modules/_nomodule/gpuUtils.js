@@ -6,7 +6,7 @@ const GPU = require('gpu.js').GPU;
  * @param {Float32Array|Unit8Array|Float64Array} kernel kernelto be convolved on all the matrices.
  * @param {Boolean} pipeMode Whether to save the output to a texture.
  * @param {Boolean} normalize Whether to normailize the output by dividing it by the total value of the kernel.
- * @returns {Float32Array} 
+ * @returns {Float32Array}
  */
 const convolve = (arrays, kernel, options = {}) => {
   const pipeMode = options.pipeMode || false,
@@ -66,7 +66,7 @@ const convolve = (arrays, kernel, options = {}) => {
 };
 
 /**
- * 
+ *
  * @param {Float32Array|'Object'} outputSize Output size of the compute function.
  * @param {Function} computeFunc The compute function. Cannot be an arrow function.
  * @param {'Object'} constants Constants to be passed to the function. Can be accessed inside the compute function using `this.constants`.

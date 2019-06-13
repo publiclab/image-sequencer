@@ -98,7 +98,7 @@ function categorizeAngle(angle){
   * 2 => NE-SW
   * 3 => N-S
   * 4 => NW-SE
-  */  
+  */
 }
 
 function isOutOfBounds(pixels, x, y){
@@ -107,7 +107,7 @@ function isOutOfBounds(pixels, x, y){
 
 const removeElem = (arr = [], elem) => {
   return arr = arr.filter((arrelem) => {
-    return arrelem !== elem; 
+    return arrelem !== elem;
   });
 };
 
@@ -188,13 +188,13 @@ function hysteresis(strongEdgePixels, weakEdgePixels){
 
     if (weakEdgePixels.includes([x + 1, y])) {
       removeElem(weakEdgePixels, [x + 1, y]);
-    } 
+    }
     else if (weakEdgePixels.includes([x - 1, y])) {
       removeElem(weakEdgePixels, [x - 1, y]);
     }
     else if (weakEdgePixels.includes([x, y + 1])) {
       removeElem(weakEdgePixels, [x, y + 1]);
-    } 
+    }
     else if(weakEdgePixels.includes([x, y - 1])) {
       removeElem(weakEdgePixels, [x, y - 1]);
     }

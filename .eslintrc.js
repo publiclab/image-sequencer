@@ -31,7 +31,6 @@ module.exports = {
         'space-infix-ops': ['error', {'int32Hint': false}], // Enforce spaces around operators 
         'comma-spacing': ['error', { "before": false, "after": true }], // require spacing after a comma
         'comma-style': ['error', 'last'], // requires comma after and on the same line
-        
-
+        'no-trailing-spaces': ['error', { 'skipBlankLines': true }], // Disallows trailing whitespace on end of lines and empty lines
     }
 };

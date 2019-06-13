@@ -29,7 +29,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
           <div class="panel panel-default">\
             <div class="panel-heading">\
               <div class="trash-container pull-right"></div>\
-              <h3 class="panel-title">' +  
+              <h3 class="panel-title">' +
                 '<span class="toggle">' + step.name + ' <span class="caret toggleIcon rotated"></span>\
                  <span class="load-spin pull-right" style="display:none;padding:1px 8px;"><i class="fa fa-circle-o-notch fa-spin"></i></span>\
               </h3>\
@@ -138,7 +138,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         <button class="pull-right btn btn-default btn-sm download-btn" style="margin-right:2px" >\
         <i class="fa fa-download"></i>\
         </button>'
-      );  
+      );
     }
 
     if (step.name != 'load-image') {
@@ -147,8 +147,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
         .prepend(
           parser.parseFromString(tools, 'text/html').querySelector('div')
         );
-      $(step.ui.querySelectorAll('.remove')).on('click', function() {notify('Step Removed', 'remove-notification');});  
-      $(step.ui.querySelectorAll('.insert-step')).on('click', function() { util.insertStep(step.ID); });    
+      $(step.ui.querySelectorAll('.remove')).on('click', function() {notify('Step Removed', 'remove-notification');});
+      $(step.ui.querySelectorAll('.insert-step')).on('click', function() { util.insertStep(step.ID); });
       // Insert the step's UI in the right place
       if (stepOptions.index == _sequencer.steps.length) {
         stepsEl.appendChild(step.ui);
@@ -201,7 +201,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       return inputChanged;
     }
 
-    var 
+    var
       changedInputs = 0,
       optionsChanged = false;
     $(step.ui.querySelector('.input-form')).on('submit', saveOptions);
@@ -253,7 +253,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       return output.split('/')[1].split(';')[0];
     }
 
-    $(step.ui.querySelectorAll('.download-btn')).on('click', () => { 
+    $(step.ui.querySelectorAll('.download-btn')).on('click', () => {
 
       for (let index = 0; index < step.linkElements.length; index++){
         
@@ -297,7 +297,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     var img = $(step.imgElement);
 
-    img.mousemove(function(e) { 
+    img.mousemove(function(e) {
       var canvas = document.createElement('canvas');
       canvas.width = img.width();
       canvas.height = img.height();
@@ -309,7 +309,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       var yPos = e.pageY - offset.top;
       var myData = context.getImageData(xPos, yPos, 1, 1);
       img[0].title = 'rgb: ' + myData.data[0] + ',' + myData.data[1] + ',' + myData.data[2];//+ rgbdata;
-    }); 
+    });
   }
 
   function onRemove(step) {
@@ -341,7 +341,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     onSetup: onSetup,
     onComplete: onComplete,
     onRemove: onRemove,
-    onDraw: onDraw, 
+    onDraw: onDraw,
     notify: notify,
     imageHover: imageHover
   };

@@ -1,5 +1,5 @@
 /*
- * Rotates image 
+ * Rotates image
  */
 module.exports = function Rotate(options, UI) {
 
@@ -31,7 +31,7 @@ module.exports = function Rotate(options, UI) {
       bitmap._data.data = pixels.data;
 
       var rotated = bitmap.rotate({
-        degrees: rotate_value, 
+        degrees: rotate_value,
       });
       pixels.data = rotated._data.data;
             

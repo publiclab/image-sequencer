@@ -31,6 +31,7 @@ module.exports = {
   'invert': require('image-sequencer-invert'),
   'ndvi': require('./modules/Ndvi'),
   'ndvi-colormap': require('./modules/NdviColormap'),
+  'noise-reduction': require('./modules/NoiseReduction'),
   'paint-bucket': require('./modules/PaintBucket'),
   'overlay': require('./modules/Overlay'),
   'replace-color': require('./modules/ReplaceColor'),

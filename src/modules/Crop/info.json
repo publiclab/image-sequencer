@@ -25,7 +25,7 @@
     },
     "backgroundColor": {
       "type": "text",
-      "desc": "Background Color (Four space separated RGBA values)",
+      "desc": "Background Color",
       "default": "rgba(255,255,255,255)",
       "id": "color-picker"
     }

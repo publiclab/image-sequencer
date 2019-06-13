@@ -10,13 +10,13 @@
       },
       "replaceColor": {
         "type": "String",
-        "desc": "three space separated numbers representing the RGB values of color to be filled",
+        "desc": "Pick color to be filled",
         "default": "rgb(0,0,255)",
         "id": "color-picker"
       },
       "color": {
           "type": "String",
-          "desc": "three space separated numbers representing the RGB values of color to be replaced",
+          "desc": "Pick color to be replaced",
           "default": "rgb(228,86,81)",
           "id": "color-picker"
         },

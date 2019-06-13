@@ -34,7 +34,7 @@
 
       "color":{
         "type": "text",
-        "desc": "RGBA values separated by a space",
+        "desc": "Select color",
         "default": "rgba(20,20,20,1)",
         "id": "color-picker"
       }

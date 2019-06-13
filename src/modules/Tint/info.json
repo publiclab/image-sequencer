@@ -4,7 +4,7 @@
   "inputs": {
       "color":{
         "type": "text",
-        "desc": "RGB values separated by a space",
+        "desc": "Select color",
         "default": "rgb(0,0,255)",
         "id": "color-picker"
       },

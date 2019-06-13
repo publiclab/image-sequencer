@@ -41,7 +41,7 @@ module.exports = function Resize(options, UI) {
       });
 
       pixels.data = resized._data.data;
-      pixels.shape = [new_width,new_height,4];
+      pixels.shape = [new_width, new_height, 4];
       pixels.stride[1] = 4 * new_width;
 
       return pixels;

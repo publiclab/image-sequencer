@@ -18,8 +18,8 @@ test('replaceImage works.', function (t){
   if (typeof(window) === 'undefined')
     t.end();
 
-  sequencer.replaceImage('img','invert',{ callback: function(){
-    t.equal(0,0, 'replaceImage works');
+  sequencer.replaceImage('img', 'invert', { callback: function(){
+    t.equal(0, 0, 'replaceImage works');
     t.end();
   } });
 });

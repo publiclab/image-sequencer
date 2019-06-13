@@ -8,19 +8,19 @@ describe('Preview UI HTML', function() {
   beforeEach(()=>{
     insertPreview = InsertPreview;
 
-    spyOn(insertPreview,'generatePreview');
-    spyOn(insertPreview,'updatePreviews');
+    spyOn(insertPreview, 'generatePreview');
+    spyOn(insertPreview, 'updatePreviews');
 
-    insertPreview.generatePreview('brightness',options,'src','selector');
-    insertPreview.updatePreviews('src','selector');
+    insertPreview.generatePreview('brightness', options, 'src', 'selector');
+    insertPreview.updatePreviews('src', 'selector');
   });
 
   it('generate preview ui', function() {
-    expect(insertPreview.generatePreview).toHaveBeenCalledWith('brightness',options,'src','selector');
+    expect(insertPreview.generatePreview).toHaveBeenCalledWith('brightness', options, 'src', 'selector');
   });
 
   it('update preview ui', function() {
-    expect(insertPreview.updatePreviews).toHaveBeenCalledWith('src','selector');
+    expect(insertPreview.updatePreviews).toHaveBeenCalledWith('src', 'selector');
   });
 
 });

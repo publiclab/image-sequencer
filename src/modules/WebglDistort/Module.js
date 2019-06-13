@@ -127,7 +127,7 @@ module.exports = function DoNothing(options, UI) {
       var offsetY = matrix2northmost - matrix1northmost;
 
       canvas.draw(texture,
-        image.width,//  * ratio,
+        image.width, //  * ratio,
         image.height// * ratio
       );
 

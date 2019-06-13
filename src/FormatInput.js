@@ -1,13 +1,13 @@
 function objTypeOf(object){
-  return Object.prototype.toString.call(object).split(' ')[1].slice(0,-1);
+  return Object.prototype.toString.call(object).split(' ')[1].slice(0, -1);
 }
 
 function getPrimitive(object){
-  return (objTypeOf(object)=='Array')?object[0]:object;
+  return (objTypeOf(object) == 'Array') ? object[0] : object;
 }
 
 function makeArray(input) {
-  return (objTypeOf(input)=='Array')?input:[input];
+  return (objTypeOf(input) == 'Array') ? input : [input];
 }
 
 function copy(a) {
@@ -23,7 +23,7 @@ function copy(a) {
   return a;
 }
 
-function formatInput(args,format,images) {
+function formatInput(args, format, images) {
   var json_q = {};
   var format_i = format;
   if (format == '+')
@@ -35,26 +35,26 @@ function formatInput(args,format,images) {
   else if (format == 'r')
     format = ['o_number'];
   else if (format == 'l')
-    format = ['string','o_function'];
+    format = ['string', 'o_function'];
     
 
-  if(format[format.length-1] == 'o_object') {
-    if(objTypeOf(args[args.length-1]) != 'Object')
+  if(format[format.length - 1] == 'o_object') {
+    if(objTypeOf(args[args.length - 1]) != 'Object')
       args.push({});
   }
-  else if (format[format.length-1] == 'o_number') {
-    if(typeof(args[args.length-1]) != 'number' && objTypeOf(args[0])!='Object')
+  else if (format[format.length - 1] == 'o_number') {
+    if(typeof(args[args.length - 1]) != 'number' && objTypeOf(args[0]) != 'Object')
       args.push(1);
   }
-  else if (format[format.length-1] == 'o_function') {
-    if(objTypeOf(args[args.length-1]) != 'Function' && objTypeOf(args[0])!='Object')
+  else if (format[format.length - 1] == 'o_function') {
+    if(objTypeOf(args[args.length - 1]) != 'Function' && objTypeOf(args[0]) != 'Object')
       args.push(function(){});
   }
 
 
   if(args.length == format.length) {//making of arrays
     for (var i in format) {
-      if (format[i].substr(format[i].length-2,2)=='_a')
+      if (format[i].substr(format[i].length - 2, 2) == '_a')
         args[i] = makeArray(args[i]);
     }
   }
@@ -62,8 +62,8 @@ function formatInput(args,format,images) {
   if (args.length == 1 ) {
     if(format_i == 'r') json_q = {0:copy(args[0])};
     else if(format_i == '-') {
-      json_q=[];
-      json_q= copy(args[0]);
+      json_q = [];
+      json_q = copy(args[0]);
     }
   }
   else if (format_i == 'r' ) {
@@ -90,8 +90,8 @@ function formatInput(args,format,images) {
     if(format_i == '^') {
       var size = this.steps.length;
       var index = args[0];
-      index = (index==size)?index:index%size;
-      if (index<0) index += size+1;
+      index = (index == size) ? index : index % size;
+      if (index < 0) index += size + 1;
       json_q.push({
         index: index,
         name: args[1],

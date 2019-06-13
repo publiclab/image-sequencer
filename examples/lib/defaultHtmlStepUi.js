@@ -29,8 +29,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
           <div class="panel panel-default">\
             <div class="panel-heading">\
               <div class="trash-container pull-right"></div>\
-              <h3 class="panel-title">' +  
-                '<span class="toggle">' +step.name + ' <span class="caret toggleIcon rotated"></span>\
+              <h3 class="panel-title">' +
+                '<span class="toggle">' + step.name + ' <span class="caret toggleIcon rotated"></span>\
                  <span class="load-spin pull-right" style="display:none;padding:1px 8px;"><i class="fa fa-circle-o-notch fa-spin"></i></span>\
               </h3>\
             </div>\
@@ -106,7 +106,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
               '"max="' +
               inputDesc.max +
               '"step="' +
-              (inputDesc.step ? inputDesc.step : 1)+ '">' + '<span>' + paramVal + '</span>';
+              (inputDesc.step ? inputDesc.step : 1) + '">' + '<span>' + paramVal + '</span>';
 
           }
           else html += '">';
@@ -138,7 +138,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         <button class="pull-right btn btn-default btn-sm download-btn" style="margin-right:2px" >\
         <i class="fa fa-download"></i>\
         </button>'
-      );  
+      );
     }
 
     if (step.name != 'load-image') {
@@ -147,14 +147,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
         .prepend(
           parser.parseFromString(tools, 'text/html').querySelector('div')
         );
-      $(step.ui.querySelectorAll('.remove')).on('click', function() {notify('Step Removed','remove-notification');});  
-      $(step.ui.querySelectorAll('.insert-step')).on('click', function() { util.insertStep(step.ID); });    
+      $(step.ui.querySelectorAll('.remove')).on('click', function() {notify('Step Removed', 'remove-notification');});
+      $(step.ui.querySelectorAll('.insert-step')).on('click', function() { util.insertStep(step.ID); });
       // Insert the step's UI in the right place
       if (stepOptions.index == _sequencer.steps.length) {
         stepsEl.appendChild(step.ui);
-        $('#steps .step-container:nth-last-child(1) .insert-step').prop('disabled',true);
+        $('#steps .step-container:nth-last-child(1) .insert-step').prop('disabled', true);
         if($('#steps .step-container:nth-last-child(2)'))
-          $('#steps .step-container:nth-last-child(2) .insert-step').prop('disabled',false);
+          $('#steps .step-container:nth-last-child(2) .insert-step').prop('disabled', false);
       } else {
         stepsEl.insertBefore(step.ui, $(stepsEl).children()[stepOptions.index]);
       }
@@ -201,7 +201,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       return inputChanged;
     }
 
-    var 
+    var
       changedInputs = 0,
       optionsChanged = false;
     $(step.ui.querySelector('.input-form')).on('submit', saveOptions);
@@ -209,7 +209,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $(input)
         .data('initValue', $(input).val())
         .data('hasChangedBefore', false)
-        .on('input change' , function() {
+        .on('input change', function() {
           $(this)
             .focus()
             .data('hasChangedBefore',
@@ -253,7 +253,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       return output.split('/')[1].split(';')[0];
     }
 
-    $(step.ui.querySelectorAll('.download-btn')).on('click', () => { 
+    $(step.ui.querySelectorAll('.download-btn')).on('click', () => {
 
       for (let index = 0; index < step.linkElements.length; index++){
         
@@ -297,24 +297,24 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     var img = $(step.imgElement);
 
-    img.mousemove(function(e) { 
+    img.mousemove(function(e) {
       var canvas = document.createElement('canvas');
       canvas.width = img.width();
       canvas.height = img.height();
       var context = canvas.getContext('2d');
-      context.drawImage(this,0,0);
+      context.drawImage(this, 0, 0);
 
       var offset = $(this).offset();
       var xPos = e.pageX - offset.left;
       var yPos = e.pageY - offset.top;
       var myData = context.getImageData(xPos, yPos, 1, 1);
-      img[0].title = 'rgb: ' +myData.data[0]+','+ myData.data[1]+','+myData.data[2];//+ rgbdata;
-    }); 
+      img[0].title = 'rgb: ' + myData.data[0] + ',' + myData.data[1] + ',' + myData.data[2];//+ rgbdata;
+    });
   }
 
   function onRemove(step) {
     step.ui.remove();
-    $('#steps .step-container:nth-last-child(1) .insert-step').prop('disabled',true);
+    $('#steps .step-container:nth-last-child(1) .insert-step').prop('disabled', true);
     $('div[class*=imgareaselect-]').remove();
   }
 
@@ -322,8 +322,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
     return step.imgElement;
   }
 
-  function notify(msg,id){
-    if ($('#'+id).length == 0) {
+  function notify(msg, id){
+    if ($('#' + id).length == 0) {
       var notification = document.createElement('span');
       notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> ' + msg ;
       notification.id = id;
@@ -332,7 +332,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $('body').append(notification);
     }
   
-    $('#'+id).fadeIn(500).delay(200).fadeOut(500);
+    $('#' + id).fadeIn(500).delay(200).fadeOut(500);
   }
     
   
@@ -341,14 +341,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
     onSetup: onSetup,
     onComplete: onComplete,
     onRemove: onRemove,
-    onDraw: onDraw, 
+    onDraw: onDraw,
     notify: notify,
     imageHover: imageHover
   };
 }
 
 if(typeof window === 'undefined'){
-  module.exports={
+  module.exports = {
     DefaultHtmlStepUi: DefaultHtmlStepUi
   };
 }

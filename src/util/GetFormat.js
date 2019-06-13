@@ -35,6 +35,6 @@ module.exports = function GetFormat(src) {
     return supportedFormats.includes(data);
   }
 
-  return validateFormat(format)?format:'jpg';
+  return validateFormat(format) ? format : 'jpg';
 
 };

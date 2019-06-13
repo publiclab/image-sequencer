@@ -11,15 +11,15 @@ module.exports = function flipImage(oldPixels, pixels, axis) {
 
   function flip(){
     if(axis.toLowerCase() == 'vertical'){
-      for (var n=0; n < width; n++){
-        for (var m=0; m < height; m++){
+      for (var n = 0; n < width; n++){
+        for (var m = 0; m < height; m++){
           copyPixel(n, m, n, height - m - 1);
         }
       }
     }
     else {
-      for (var n=0; n < width; n++){
-        for (var m=0; m < height; m++){
+      for (var n = 0; n < width; n++){
+        for (var m = 0; m < height; m++){
           copyPixel(n, m, width - n - 1, m);
         }
       }

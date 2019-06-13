@@ -45,7 +45,8 @@ module.exports = function Ndvi(options, UI) {
       format: input.format,
       image: options.image,
       inBrowser: options.inBrowser,
-      callback: modifiedCallback
+      callback: modifiedCallback,
+      useWasm:true
     });
 
   }

@@ -36,7 +36,8 @@ module.exports = function AddQR(options, UI) {
         format: input.format,
         image: options.image,
         inBrowser: options.inBrowser,
-        callback: callback
+        callback: callback,
+        useWasm:true
       });
     });
 

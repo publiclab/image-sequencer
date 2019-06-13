@@ -83,7 +83,6 @@ module.exports = function PixelManipulation(image, options) {
 
       const imports = {
         env: {
-          // paceOp: require('pace').op,
           consoleLog: console.log,
           perform: function (x, y) {
             let pixel = options.changePixel(
@@ -103,50 +102,43 @@ module.exports = function PixelManipulation(image, options) {
         }
       };
 
+      function perPixelManipulation() {
+        for (var x = 0; x < pixels.shape[0]; x++) {
+          for (var y = 0; y < pixels.shape[1]; y++) {
+            imports.env.perform(x,y);
+          }
+        }
+      }
+
       const inBrowser = (options.inBrowser) ? 1 : 0;
       const test = (process.env.TEST) ? 1 : 0;
+      if (options.useWasm) {
+        if (options.inBrowser) {
 
-      if (options.inBrowser) {
-        
-        fetch('./manipulation.wasm').then(response =>
-          response.arrayBuffer()
-        ).then(bytes =>
-          WebAssembly.instantiate(bytes, imports)
-        ).then(results => {
-          results.instance.exports.manipulatePixel(pixels.shape[0], pixels.shape[1], inBrowser, test);
-          extraOperation();
-        }).catch(err => {
-          
-          for (var x = 0; x < pixels.shape[0]; x++) {
-            for (var y = 0; y < pixels.shape[1]; y++) {
-              let pixel = options.changePixel(
-                pixels.get(x, y, 0),
-                pixels.get(x, y, 1),
-                pixels.get(x, y, 2),
-                pixels.get(x, y, 3),
-                x,
-                y
-              );
-
-              pixels.set(x, y, 0, pixel[0]);
-              pixels.set(x, y, 1, pixel[1]);
-              pixels.set(x, y, 2, pixel[2]);
-              pixels.set(x, y, 3, pixel[3]);
-
-            }
-          }
-          extraOperation();
-          // console.log(err)
-        });
+          fetch('./manipulation.wasm').then(response =>
+            response.arrayBuffer()
+          ).then(bytes =>
+            WebAssembly.instantiate(bytes, imports)
+          ).then(results => {
+            results.instance.exports.manipulatePixel(pixels.shape[0], pixels.shape[1], inBrowser, test);
+            extraOperation();
+          }).catch(err => {
+            perPixelManipulation();
+            extraOperation();
+          });
+        } else {
+          const fs = require('fs');
+          const buf = fs.readFileSync('./manipulation.wasm');
+          WebAssembly.instantiate(buf, imports).then(results => {
+            results.instance.exports.manipulatePixel(pixels.shape[0], pixels.shape[1], inBrowser, test);
+            extraOperation();
+          }).catch(err => {
+            console.log(err);
+          });
+        }
       } else {
-        const fs = require('fs');
-        const buf = fs.readFileSync('./manipulation.wasm');
-        WebAssembly.instantiate(buf, imports).then(results => {
-          results.instance.exports.manipulatePixel(pixels.shape[0], pixels.shape[1], inBrowser, test);
-          extraOperation();
-        }).catch(err => {
-          console.log(err);
-        });
+        perPixelManipulation();
+        extraOperation();
       }
     }
   });

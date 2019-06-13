@@ -39,7 +39,8 @@ module.exports = function DoNothing(options,UI) {
       output: output,
       format: input.format,
       image: options.image,
-      callback: callback
+      callback: callback,
+      useWasm:true
     });
 
   }

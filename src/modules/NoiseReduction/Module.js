@@ -2,7 +2,7 @@ module.exports = function NoiseReduction(options, UI){
   var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
   var output;
   
-  function draw(input,callback,progressObj){
+  function draw(input, callback, progressObj){
   
     progressObj.stop(true);
     progressObj.overrideFlag = true;
@@ -26,7 +26,8 @@ module.exports = function NoiseReduction(options, UI){
       extraManipulation: extraManipulation,
       format: input.format,
       image: options.image,
-      callback: callback
+      callback: callback,
+      useWasm:options.useWasm
     });
   }
   return {

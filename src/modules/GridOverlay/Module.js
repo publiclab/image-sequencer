@@ -29,7 +29,7 @@ module.exports = function GridOverlay(options, UI) {
       image: options.image,
       inBrowser: options.inBrowser,
       callback: callback,
-      useWasm:options.useWasm
+      useWasm: options.useWasm
     });
 
   

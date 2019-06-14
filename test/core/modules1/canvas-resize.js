@@ -8,21 +8,7 @@ var red = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAA
 sequencer.loadImages(red);
 sequencer.addSteps('canvas-resize', options);
 
-// // Test 1 to check brightness module is getting loaded
-// test('Load canvas-resize module', function(t) {
- 
-//   t.equal(sequencer.steps[1].options.name, 'canvas-resize', 'Canvas resize module is getting loaded');
-//   t.end();
-// });
 
-// Test 2 to check options are correct
-// test('Check Options', function(t) {
-//   t.equal(sequencer.steps[1].options.width, 500, 'Options are correct');
-//   t.equal(sequencer.steps[1].options.height, 500, 'Options are correct');
-//   t.end();
-// });
-
-// Test 3 to check brightness module works as expected
 test('canvas-resize ', function(t) {
   var startTime = new Date().getMilliseconds();
   sequencer.run({ mode: 'test' }, function(out) {

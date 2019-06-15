@@ -1,0 +1,13 @@
+{
+    "name": "Noise Reduction",
+    "description": "Reduces noise from Image",
+    "inputs": {
+        "method": {
+            "type": "select",
+            "desc": "Select the noise filtering method",
+            "default": "Median Filtering",
+            "values": ["Mean Filtering","Median Filtering"]
+        }
+    },
+    "docs-link":""
+}

@@ -1,8 +1,8 @@
 /*
  * Saturate an image with a value from 0 to 1
  */
-module.exports = function Saturation(options,UI) {
-  
+module.exports = function Saturation(options, UI) {
+
   var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
   var output;
 
@@ -40,6 +40,7 @@ module.exports = function Saturation(options,UI) {
 
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
+      ui: options.step.ui,
       changePixel: changePixel,
       format: input.format,
       image: options.image,

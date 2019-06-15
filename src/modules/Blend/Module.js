@@ -30,7 +30,7 @@ module.exports = function Dynamic(options, UI, util) {
       this.output = input;
       UI.notify('Offset Unavailable', 'offset-notification');
       callback();
-    } 
+    }
 
     getPixels(priorStep.output.src, function(err, pixels) {
       options.firstImagePixels = pixels;
@@ -57,6 +57,7 @@ module.exports = function Dynamic(options, UI, util) {
       // run PixelManipulatin on second image's pixels
       return require('../_nomodule/PixelManipulation.js')(input, {
         output: output,
+        ui: options.step.ui,
         changePixel: changePixel,
         format: input.format,
         image: options.image,

@@ -18,15 +18,15 @@ module.exports = function Balance(options, UI) {
     function extraManipulation(pixels) {
 
       var i = 0;
-      var red_factor = 255/options.red;
-      var green_factor = 255/options.green;
-      var blue_factor = 255/options.blue;
+      var red_factor = 255 / options.red;
+      var green_factor = 255 / options.green;
+      var blue_factor = 255 / options.blue;
 
       while (i < pixels.data.length) {
-        pixels.data[i] = Math.min(255, pixels.data[i]*red_factor);
-        pixels.data[i+1] = Math.min(255, pixels.data[i+1]*green_factor);
-        pixels.data[i+2] = Math.min(255, pixels.data[i+2]*blue_factor);
-        i+=4;
+        pixels.data[i] = Math.min(255, pixels.data[i] * red_factor);
+        pixels.data[i + 1] = Math.min(255, pixels.data[i + 1] * green_factor);
+        pixels.data[i + 2] = Math.min(255, pixels.data[i + 2] * blue_factor);
+        i += 4;
       }
 
       return pixels;
@@ -40,6 +40,7 @@ module.exports = function Balance(options, UI) {
 
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
+      ui: options.step.ui,
       extraManipulation: extraManipulation,
       format: input.format,
       image: options.image,

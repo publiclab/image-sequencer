@@ -9,13 +9,13 @@ module.exports = exports = function(pixels, options){
 	  ih = pixels.shape[1],
     thickness = Number(options.thickness) || defaults.thickness,
 	  ex =  options.endX = Number(options.endX) - thickness || iw - 1,
-	  ey = options.endY = Number(options.endY) -thickness || ih - 1,
+	  ey = options.endY = Number(options.endY) - thickness || ih - 1,
     color = options.color || defaults.color;
   color = color.split(' ');
 
   var drawSide = function(startX, startY, endX, endY){
-    for (var n=startX; n <= endX+thickness; n++){
-      for (var k=startY; k <= endY+thickness; k++){
+    for (var n = startX; n <= endX + thickness; n++){
+      for (var k = startY; k <= endY + thickness; k++){
         pixels.set(n, k, 0, color[0]);
         pixels.set(n, k, 1, color[1]);
         pixels.set(n, k, 2, color[2]);

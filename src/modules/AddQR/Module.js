@@ -13,12 +13,12 @@ module.exports = function AddQR(options, UI) {
 
     var step = this;
 
-    return getPixels(input.src, function (err, oldPixels) {
+    return getPixels(input.src, function(err, oldPixels) {
       function changePixel(r, g, b, a) {
         return [r, g, b, a];
       }
-           
-      function extraManipulation(pixels,generateOutput) {
+
+      function extraManipulation(pixels, generateOutput) {
         if (err) {
           console.log(err);
           return;
@@ -31,6 +31,7 @@ module.exports = function AddQR(options, UI) {
 
       return require('../_nomodule/PixelManipulation.js')(input, {
         output: output,
+        ui: options.step.ui,
         changePixel: changePixel,
         extraManipulation: extraManipulation,
         format: input.format,

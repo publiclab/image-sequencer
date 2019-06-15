@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 require('./src/ImageSequencer');
-sequencer = ImageSequencer({ ui: false });
+sequencer = ImageSequencer({ ui: true });
 var fs = require('fs');
 var program = require('commander');
 var utils = require('./src/CliUtils');
@@ -61,7 +61,7 @@ else {
       }
     },
     notify: function(msg) {
-      console.log('\x1b[36m%s\x1b[0m','🌟  '+msg);
+      console.log('\x1b[36m%s\x1b[0m', '🌟  ' + msg);
     }
   });
 

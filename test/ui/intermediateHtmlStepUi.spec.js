@@ -7,7 +7,7 @@ describe('Intermediate step HTML', function() {
   beforeEach(()=>{
     intermediateHtmlStepUi = new IntermediateHtmlStepUi(sequencer);
 
-    spyOn(intermediateHtmlStepUi,'insertStep');
+    spyOn(intermediateHtmlStepUi, 'insertStep');
 
     intermediateHtmlStepUi.insertStep();
   });

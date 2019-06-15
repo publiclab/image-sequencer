@@ -1,4 +1,4 @@
-module.exports = function Dither(options, UI) {
+module.exports = function NoiseReduction(options, UI) {
   var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
   var output;
 
@@ -8,10 +8,10 @@ module.exports = function Dither(options, UI) {
     progressObj.overrideFlag = true;
 
     var step = this;
-    options.dither = options.dither || defaults.dither;
+    options.method = options.method || defaults.method;
 
     function extraManipulation(pixels) {
-      pixels = require('./Dither')(pixels, options.dither);
+      pixels = require('./NoiseReduction.js')(pixels, options.method);
       return pixels;
     }
 

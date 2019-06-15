@@ -1,6 +1,6 @@
 
-module.exports = function GridOverlay(options,UI) {
-  
+module.exports = function GridOverlay(options, UI) {
+
   var output;
 
   function draw(input, callback, progressObj) {
@@ -9,7 +9,7 @@ module.exports = function GridOverlay(options,UI) {
     progressObj.overrideFlag = true;
 
     var step = this;
-    
+
     function extraManipulation(pixels) {
       pixels = require('./GridOverlay')(pixels, options);
       return pixels;
@@ -24,6 +24,7 @@ module.exports = function GridOverlay(options,UI) {
 
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
+      ui: options.step.ui,
       extraManipulation: extraManipulation,
       format: input.format,
       image: options.image,
@@ -31,7 +32,7 @@ module.exports = function GridOverlay(options,UI) {
       callback: callback
     });
 
-  
+
   }
 
   return {

@@ -3,6 +3,10 @@ Contributing to Image Sequencer
 
 Happily accepting pull requests; to edit the core library, modify files in `./src/`. To build, run `npm install` followed by `grunt build`.
 
+On ARM based devices, the `gl` module may require some libraries to be re-installed:
+
+`sudo apt-get install -y build-essential libxi-dev libglu1-mesa-dev libglew-dev pkg-config` -- see https://github.com/stackgl/headless-gl#ubuntudebian for more.
+
 Most contribution (we imagine) would be in the form of API-compatible modules, which need not be directly included.
 
 ## Jump To
@@ -276,6 +280,8 @@ module.exports = function ModuleName(options,UI) {
 
 The `progressObj` parameter of `draw()` is not consumed unless a custom progress bar needs to be drawn, for which this default spinner should be stopped with `progressObj.stop()` and image-sequencer is informed about the custom progress bar with `progressObj.overrideFlag = true;` following which this object can be overriden with custom progress object.
 
+The pixelManipulation API can draw progress bars internally using the `pace` npm package. The option is disabled by default but can be enabled by passing `ui: true` in the options for pixelManipulation. The recommended way is to use `ui: options.step.ui`. This will only show the progress if the ui is set to true by the user, while creating the sequencer object.
+
 ### Module example
 
 See existing module `channel` for an example: https://github.com/publiclab/image-sequencer/blob/main/src/modules/Channel/Module.js
@@ -364,7 +370,29 @@ module.exports =
     });
 ```
 
+## Linting
+
+We are now using `eslint` and `husky` to help lint and format our code each time we commit. Eslint defines coding standards and helps in cleaning up the code. To run eslint for checking errors globally or within a specific file run:
+
+```
+npx eslint . 
+
+npx eslint <file path>
+```
+And to fix those errors globally or in a file, run these in your terminal:
+```
+npx eslint . --fix
+
+npx eslint <file path> --fix
+```
+Be sure to not include the angular brackets(<>).
+
+Husky ensures automation of the above steps with git-hooks(eg. git add,git commit..). However we don't want to check and fix changes of the entire codebase with each commit and that the fixes made by eslint appear unstaged and require us to commit them  again and that is where lint-staged helps.
+
+If we want `husky` to not verify the commit and push it anyway, use `git commit -m "message" --no-verify.`
+
 ## Grunt Tasks
+
 This repository has different grunt tasks for different uses. The source code is in the [Gruntfile](https://github.com/publiclab/image-sequencer/blob/main/Gruntfile.js).
 
 The following command is used for running the tasks: `grunt [task-name]`. Here `[task-name]` should be replaced by the name of the task to be run. To run the default task run `grunt` without any options.

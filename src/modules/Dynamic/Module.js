@@ -1,9 +1,9 @@
-module.exports = function Dynamic(options,UI) {
+module.exports = function Dynamic(options, UI) {
 
   var output;
 
   // This function is called on every draw.
-  function draw(input,callback,progressObj) {
+  function draw(input, callback, progressObj) {
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;
@@ -26,8 +26,8 @@ module.exports = function Dynamic(options,UI) {
 
     channels.forEach(function(channel) {
       if (options.hasOwnProperty(channel)) options[channel + '_function'] = generator(options[channel]);
-      else if (channel === 'alpha')        options['alpha_function'] = function() { return 255; };
-      else                                 options[channel + '_function'] = generator(options.monochrome);
+      else if (channel === 'alpha') options['alpha_function'] = function() { return 255; };
+      else options[channel + '_function'] = generator(options.monochrome);
     });
 
     function changePixel(r, g, b, a) {
@@ -45,12 +45,12 @@ module.exports = function Dynamic(options,UI) {
     }
 
     /* Functions to get the neighbouring pixel by position (x,y) */
-    function getNeighbourPixel(pixels,curX,curY,distX,distY){
+    function getNeighbourPixel(pixels, curX, curY, distX, distY) {
       return [
-        pixels.get(curX+distX,curY+distY,0)
-        ,pixels.get(curX+distX,curY+distY,1)
-        ,pixels.get(curX+distX,curY+distY,2)
-        ,pixels.get(curX+distX,curY+distY,3)
+        pixels.get(curX + distX, curY + distY, 0),
+        pixels.get(curX + distX, curY + distY, 1),
+        pixels.get(curX + distX, curY + distY, 2),
+        pixels.get(curX + distX, curY + distY, 3)
       ];
     }
 
@@ -71,7 +71,7 @@ module.exports = function Dynamic(options,UI) {
       }
     }
 
-    function output(image,datauri,mimetype){
+    function output(image, datauri, mimetype) {
 
       // This output is accessible by Image Sequencer
       step.output = { src: datauri, format: mimetype };
@@ -79,6 +79,7 @@ module.exports = function Dynamic(options,UI) {
     }
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
+      ui: options.step.ui,
       changePixel: changePixel,
       getNeighbourPixel: getNeighbourPixel,
       getNeighborPixel: getNeighbourPixel,

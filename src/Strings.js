@@ -3,7 +3,7 @@ module.exports = function(steps, modulesInfo, addSteps, copy) {
   function toCliString() {
     var cliStringSteps = '"', cliOptions = {};
     for (var step in this.steps) {
-      var name = (typeof this.steps[step].options !== 'undefined')? this.steps[step].options.name : this.steps[step].name;
+      var name = (typeof this.steps[step].options !== 'undefined') ? this.steps[step].options.name : this.steps[step].name;
       if (name !== 'load-image'){
         cliStringSteps += `${name} `;
       }
@@ -52,7 +52,7 @@ module.exports = function(steps, modulesInfo, addSteps, copy) {
 
   // Stringifies one step of the sequence
   function stepToString(step) {
-    var arg = (step.name)?step.name:step.options.name;
+    var arg = (step.name) ? step.name : step.options.name;
     let inputs = modulesInfo(arg).inputs || {}, op = {};
 
     for (let input in inputs) {

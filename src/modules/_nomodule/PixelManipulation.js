@@ -32,7 +32,7 @@ module.exports = function PixelManipulation(image, options) {
     // TODO: this could possibly be more efficient; see
     // https://github.com/p-v-o-s/infragram-js/blob/master/public/infragram.js#L173-L181
 
-    if (!options.inBrowser && !process.env.TEST) {
+    if (!options.inBrowser && !process.env.TEST && options.ui) {
       try {
         var pace = require('pace')(pixels.shape[0] * pixels.shape[1]);
       } catch (e) {
@@ -63,7 +63,7 @@ module.exports = function PixelManipulation(image, options) {
           pixels.set(x, y, 2, pixel[2]);
           pixels.set(x, y, 3, pixel[3]);
 
-          if (!options.inBrowser && !process.env.TEST) pace.op();
+          if (!options.inBrowser && !process.env.TEST && options.ui) pace.op();
         }
       }
     }

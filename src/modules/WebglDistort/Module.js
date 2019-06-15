@@ -54,51 +54,51 @@ module.exports = function DoNothing(options, UI) {
 
       var texture = canvas.texture(image);
 
-      var bbox1 = {
-          nw: {
-            x: matrix1[0],
-            y: matrix1[1]
-          },
-          ne: {
-            x: matrix1[2],
-            y: matrix1[3]
-          },
-          se: {
-            x: matrix1[4],
-            y: matrix1[5]
-          },
-          sw: {
-            x: matrix1[6],
-            y: matrix1[7]
-          }
-        },
-        bbox2 = {
-          nw: {
-            x: matrix2[0],
-            y: matrix2[1]
-          },
-          ne: {
-            x: matrix2[2],
-            y: matrix2[3]
-          },
-          se: {
-            x: matrix2[4],
-            y: matrix2[5]
-          },
-          sw: {
-            x: matrix2[6],
-            y: matrix2[7]
-          }
-        };
+      // var bbox1 = {
+      //     nw: {
+      //       x: matrix1[0],
+      //       y: matrix1[1]
+      //     },
+      //     ne: {
+      //       x: matrix1[2],
+      //       y: matrix1[3]
+      //     },
+      //     se: {
+      //       x: matrix1[4],
+      //       y: matrix1[5]
+      //     },
+      //     sw: {
+      //       x: matrix1[6],
+      //       y: matrix1[7]
+      //     }
+      //   },
+      //   bbox2 = {
+      //     nw: {
+      //       x: matrix2[0],
+      //       y: matrix2[1]
+      //     },
+      //     ne: {
+      //       x: matrix2[2],
+      //       y: matrix2[3]
+      //     },
+      //     se: {
+      //       x: matrix2[4],
+      //       y: matrix2[5]
+      //     },
+      //     sw: {
+      //       x: matrix2[6],
+      //       y: matrix2[7]
+      //     }
+      //   };
 
       var matrix1Xs = [],
         matrix1Ys = [];
 
-      for (var i = 0; i < matrix1.length; i += 2) {
+      for (let i = 0; i < matrix1.length; i += 2) {
         matrix1Xs.push(matrix1[i]);
       }
 
-      for (var i = 1; i < matrix1.length; i += 2) {
+      for (let i = 1; i < matrix1.length; i += 2) {
         matrix1Ys.push(matrix1[i]);
       }
 
@@ -110,11 +110,11 @@ module.exports = function DoNothing(options, UI) {
       var matrix2Xs = [],
         matrix2Ys = [];
 
-      for (var i = 0; i < matrix2.length; i += 2) {
+      for (let i = 0; i < matrix2.length; i += 2) {
         matrix2Xs.push(matrix2[i]);
       }
 
-      for (var i = 1; i < matrix2.length; i += 2) {
+      for (let i = 1; i < matrix2.length; i += 2) {
         matrix2Ys.push(matrix2[i]);
       }
 
@@ -127,15 +127,15 @@ module.exports = function DoNothing(options, UI) {
       var offsetY = matrix2northmost - matrix1northmost;
 
       canvas.draw(texture,
-        image.width,//  * ratio,
+        image.width, //  * ratio,
         image.height// * ratio
       );
 
       var ratioY = (matrix2southmost - matrix2northmost)
-                / (matrix1southmost - matrix1northmost);
+        / (matrix1southmost - matrix1northmost);
 
       var ratioX = (matrix2eastmost - matrix2westmost)
-                / (matrix1eastmost - matrix1westmost);
+        / (matrix1eastmost - matrix1westmost);
 
       var ratio = Math.max(ratioX, ratioY);
 
@@ -146,7 +146,7 @@ module.exports = function DoNothing(options, UI) {
       }
 
       // stretch output matrix y to fix:
-      for (var i = 1; i < matrix2.length; i += 2) {
+      for (let i = 1; i < matrix2.length; i += 2) {
         matrix2[i] -= offsetY;
         matrix2[i] /= ratio;
       }
@@ -200,7 +200,7 @@ module.exports = function DoNothing(options, UI) {
       image.onload = () => {
         warpWebGl(
           'img',
-          [0, 0, 1023, 0, 1023, 767, 0, 767], // matrix 1 (before) corner coordinates, NW, NE, SE, SW
+          [0, 0, image.naturalWidth, 0, image.naturalWidth, image.naturalHeight, 0, image.naturalHeight], // matrix 1 (before) corner coordinates, NW, NE, SE, SW
           // [0, 100, 1023, -50, 1223, 867, 100, 767]  // matrix 2 (after) corner coordinates
           cornerCoordinates
         );

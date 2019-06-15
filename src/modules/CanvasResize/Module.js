@@ -10,10 +10,10 @@ module.exports = function canvasResize(options, UI) {
 
   function draw(input, callback, progressObj) {
 
-    options.width = options.width || defaults.width;
-    options.height = options.height || defaults.height;
-    options.x = options.x || defaults.x;
-    options.y = options.y || defaults.y;
+    options.width = parseInt(options.width || defaults.width);
+    options.height = parseInt(options.height || defaults.height);
+    options.x = parseInt(options.x || defaults.x);
+    options.y = parseInt(options.y || defaults.y);
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;
@@ -21,8 +21,7 @@ module.exports = function canvasResize(options, UI) {
     var step = this;
 
     function extraManipulation(pixels) {
-
-      let newPixels = require('ndarray')(new Uint8Array(4 * options.width * options.height).fill(255), [options.width, options.height, 4]);
+      let newPixels = require('ndarray')(new Uint8Array(4 * options.width * options.height).fill(0), [options.width, options.height, 4]);
       let iMax = options.width - options.x,
         jMax = options.height - options.y;
       for (let i = 0; i < iMax && i < pixels.shape[0]; i++) {
@@ -46,6 +45,7 @@ module.exports = function canvasResize(options, UI) {
 
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
+      ui: options.step.ui,
       extraManipulation: extraManipulation,
       format: input.format,
       image: options.image,

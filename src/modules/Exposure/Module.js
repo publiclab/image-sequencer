@@ -2,12 +2,12 @@
 * Changes the Image Exposure
 */
 
-module.exports = function Exposure(options,UI){
+module.exports = function Exposure(options, UI) {
 
   var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
   var output;
 
-  function draw(input,callback,progressObj){
+  function draw(input, callback, progressObj) {
 
     options.exposure = options.exposure || defaults.exposure;
     var exposure = Math.pow(2, options.exposure);
@@ -16,23 +16,24 @@ module.exports = function Exposure(options,UI){
 
     var step = this;
 
-    function changePixel(r, g, b, a){
+    function changePixel(r, g, b, a) {
 
-      r = Math.min(255, r*exposure);
-      g = Math.min(255, g*exposure);
-      b = Math.min(255, b*exposure);
+      r = Math.min(255, r * exposure);
+      g = Math.min(255, g * exposure);
+      b = Math.min(255, b * exposure);
       return [r, g, b, a];
     }
 
-    function output(image,datauri,mimetype){
+    function output(image, datauri, mimetype) {
 
       // This output is accessible by Image Sequencer
-      step.output = {src:datauri,format:mimetype};
+      step.output = { src: datauri, format: mimetype };
 
     }
 
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
+      ui: options.step.ui,
       changePixel: changePixel,
       format: input.format,
       image: options.image,
@@ -43,7 +44,7 @@ module.exports = function Exposure(options,UI){
   }
   return {
     options: options,
-    draw:  draw,
+    draw: draw,
     output: output,
     UI: UI
   };

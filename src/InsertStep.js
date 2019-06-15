@@ -21,6 +21,7 @@ function InsertStep(ref, index, name, o) {
     o.number = ref.options.sequencerCounter++; //Gives a Unique ID to each step
     o.name = o_.name || name || moduleInfo.name;
     o.description = o_.description || moduleInfo.description;
+    o.moduleInfo = o_.moduleInfo || moduleInfo;
     o.selector = o_.selector || 'ismod-' + name;
     o.container = o_.container || ref.options.selector;
     o.inBrowser = ref.options.inBrowser;
@@ -30,6 +31,7 @@ function InsertStep(ref, index, name, o) {
     o.step = {
       name: o.name,
       description: o.description,
+      moduleInfo: o.moduleInfo,
       ID: o.number,
       inBrowser: ref.options.inBrowser,
       ui: ref.options.ui,

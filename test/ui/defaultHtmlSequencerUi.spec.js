@@ -7,11 +7,11 @@ describe('Default sequencer HTML', function() {
   beforeEach(()=>{
     defaultHtmlSequencerUi = new DefaultHtmlSequencerUi(sequencer);
 
-    spyOn(defaultHtmlSequencerUi,'onLoad');
-    spyOn(defaultHtmlSequencerUi,'selectNewStepUi');
-    spyOn(defaultHtmlSequencerUi,'removeStepUi');
-    spyOn(defaultHtmlSequencerUi,'addStepUi');
-    spyOn(defaultHtmlSequencerUi,'importStepsFromUrlHash');
+    spyOn(defaultHtmlSequencerUi, 'onLoad');
+    spyOn(defaultHtmlSequencerUi, 'selectNewStepUi');
+    spyOn(defaultHtmlSequencerUi, 'removeStepUi');
+    spyOn(defaultHtmlSequencerUi, 'addStepUi');
+    spyOn(defaultHtmlSequencerUi, 'importStepsFromUrlHash');
 
     defaultHtmlSequencerUi.onLoad();
     defaultHtmlSequencerUi.selectNewStepUi();

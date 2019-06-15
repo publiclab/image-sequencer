@@ -40,6 +40,7 @@ module.exports = function Balance(options, UI) {
 
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
+      ui: options.step.ui,
       extraManipulation: extraManipulation,
       format: input.format,
       image: options.image,

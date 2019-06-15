@@ -21,11 +21,11 @@ module.exports = function edgeDetect(options, UI) {
 
     // Blur the image
     const internalSequencer = ImageSequencer({ inBrowser: false, ui: false });
-    return internalSequencer.loadImage(input.src, function () {
-      internalSequencer.importJSON([{ 'name': 'blur', 'options': {blur: options.blur} }]);
+    return internalSequencer.loadImage(input.src, function() {
+      internalSequencer.importJSON([{ 'name': 'blur', 'options': { blur: options.blur } }]);
       return internalSequencer.run(function onCallback(internalOutput) {
-        require('get-pixels')(internalOutput, function(err, blurPixels){
-          if (err){
+        require('get-pixels')(internalOutput, function(err, blurPixels) {
+          if (err) {
             return;
           }
 
@@ -34,16 +34,17 @@ module.exports = function edgeDetect(options, UI) {
             return [(r + g + b) / 3, (r + g + b) / 3, (r + g + b) / 3, a];
           }
 
-          function extraManipulation(){
+          function extraManipulation() {
             return require('./EdgeUtils')(blurPixels, options.highThresholdRatio, options.lowThresholdRatio, options.hysteresis);
           }
 
           function output(image, datauri, mimetype) {
             step.output = { src: datauri, format: mimetype };
           }
-      
+
           return require('../_nomodule/PixelManipulation.js')(input, {
             output: output,
+            ui: options.step.ui,
             changePixel: changePixel,
             extraManipulation: extraManipulation,
             format: input.format,

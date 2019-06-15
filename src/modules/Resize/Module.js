@@ -31,7 +31,7 @@ module.exports = function Resize(options, UI) {
       new_width = Math.round(pixels.shape[0] * (resize_value / 100));
       new_height = Math.round(pixels.shape[1] * (resize_value / 100));
 
-      var bitmap = new imagejs.Bitmap({width: pixels.shape[0], height: pixels.shape[1]});
+      var bitmap = new imagejs.Bitmap({ width: pixels.shape[0], height: pixels.shape[1] });
       bitmap._data.data = pixels.data;
 
 
@@ -54,6 +54,7 @@ module.exports = function Resize(options, UI) {
 
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
+      ui: options.step.ui,
       changePixel: changePixel,
       extraManipulation: extraManipulation,
       format: input.format,

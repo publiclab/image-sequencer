@@ -14,12 +14,12 @@ module.exports = function FlipImage(options, UI) {
 
     var step = this;
 
-    return getPixels(input.src, function(err, oldPixels){
+    return getPixels(input.src, function(err, oldPixels) {
       function changePixel(r, g, b, a) {
         return [r, g, b, a];
       }
       function extraManipulation(pixels) {
-        if (err){
+        if (err) {
           console.log(err);
           return;
         }
@@ -28,9 +28,10 @@ module.exports = function FlipImage(options, UI) {
       function output(image, datauri, mimetype) {
         step.output = { src: datauri, format: mimetype };
       }
-      
+
       return require('../_nomodule/PixelManipulation.js')(input, {
         output: output,
+        ui: options.step.ui,
         changePixel: changePixel,
         extraManipulation: extraManipulation,
         format: input.format,

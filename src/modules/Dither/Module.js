@@ -1,8 +1,8 @@
-module.exports = function Dither(options, UI){
+module.exports = function Dither(options, UI) {
   var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
   var output;
 
-  function draw(input, callback, progressObj){
+  function draw(input, callback, progressObj) {
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;
@@ -15,7 +15,7 @@ module.exports = function Dither(options, UI){
       return pixels;
     }
 
-    function output(image,  datauri, mimetype){
+    function output(image, datauri, mimetype) {
       // This output is accessible by Image Sequencer
       step.output = { src: datauri, format: mimetype };
 
@@ -23,6 +23,7 @@ module.exports = function Dither(options, UI){
 
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
+      ui: options.step.ui,
       extraManipulation: extraManipulation,
       format: input.format,
       image: options.image,

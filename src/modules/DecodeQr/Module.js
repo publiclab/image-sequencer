@@ -15,9 +15,9 @@ module.exports = function DoNothing(options, UI) {
 
     var step = this;
 
-    getPixels(input.src, function(err, pixels){
+    getPixels(input.src, function(err, pixels) {
 
-      if(err) throw err;
+      if (err) throw err;
 
       var w = pixels.shape[0];
       var h = pixels.shape[1];
@@ -28,7 +28,7 @@ module.exports = function DoNothing(options, UI) {
       options.step.qrval = (decoded) ? decoded.data : 'undefined';
     });
 
-    function output(image, datauri, mimetype){
+    function output(image, datauri, mimetype) {
       // This output is accessible by Image Sequencer
       step.output = {
         src: datauri,
@@ -37,6 +37,7 @@ module.exports = function DoNothing(options, UI) {
     }
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
+      ui: options.step.ui,
       format: input.format,
       image: options.image,
       callback: callback

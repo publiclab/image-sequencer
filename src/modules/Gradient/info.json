@@ -1,5 +1,5 @@
 {
-    "name": "Gradient",
+    "name": "gradient",
     "description": "Gives a gradient of the image",
     "inputs": {},
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#gradient-module"

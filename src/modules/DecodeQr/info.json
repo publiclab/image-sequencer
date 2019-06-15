@@ -1,5 +1,5 @@
 {
-  "name": "Decode QR",
+  "name": "decode-qr",
   "description": "Search for and decode a QR code in the image",
   "inputs": {
   },

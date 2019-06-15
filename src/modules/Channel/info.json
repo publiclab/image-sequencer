@@ -1,5 +1,5 @@
 {
-  "name": "Channel",
+  "name": "channel",
   "description": "Displays only one color channel of an image -- default is green",
   "inputs": {
     "channel": {

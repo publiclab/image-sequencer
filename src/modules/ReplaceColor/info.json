@@ -1,5 +1,5 @@
 {
-    "name": "ReplaceColor",
+    "name": "replace-color",
     "description": "Replace color with grey or your desired color",
     "inputs": {
       "replaceMethod": {

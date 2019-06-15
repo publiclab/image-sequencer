@@ -1,5 +1,5 @@
 {
-    "name": "NDVI-Colormap",
+    "name": "ndvi-colormap",
     "description": "Sequentially Applies NDVI and Colormap steps",
     "inputs": {},
     "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#ndvi-colormap-module"

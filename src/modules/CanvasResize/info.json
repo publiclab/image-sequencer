@@ -1,5 +1,5 @@
 {
-    "name": "Resize Canvas",
+    "name": "canvas-resize",
     "description": "This module resizes the canvas and overlays the ouput of the previous step at given location",
     "inputs": {
         "width": {

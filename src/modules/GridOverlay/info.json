@@ -1,5 +1,5 @@
 {
-    "name": "GridOverlay",
+    "name": "grid-overlay",
     "description": "Overlays a grid over an Image",
     "inputs": {
         "x": {

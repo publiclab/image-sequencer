@@ -1,5 +1,5 @@
 {
-  "name": "Tint",
+  "name": "tint",
   "description": "Add color tint to an image",
   "inputs": {
       "color":{

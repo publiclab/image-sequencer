@@ -1,5 +1,5 @@
 {
-    "name": "Rotate",
+    "name": "rotate",
     "description": "Rotates image by specified degrees",
     "inputs": {
       "rotate": {

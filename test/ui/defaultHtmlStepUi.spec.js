@@ -15,6 +15,16 @@ describe('Sequencer step HTML', function() {
   };
   // options = JSON.parse(options)
 
+  beforeAll(() => {
+    const { JSDOM } = require('jsdom');
+    var { window } = new JSDOM();
+
+    const { document } = window;
+    global.window = window;
+    global.document = document;
+    const $ = global.jQuery = global.$ = require('jquery');
+  });
+
   beforeEach(()=>{
     defaultHtmlStepUi = new DefaultHtmlStepUi(sequencer);
 

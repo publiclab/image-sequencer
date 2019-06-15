@@ -74,6 +74,7 @@ module.exports = function Channel(options, UI) {
 
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
+      ui: options.step.ui,
       changePixel: changePixel,
       extraManipulation: extraManipulation,
       format: input.format,

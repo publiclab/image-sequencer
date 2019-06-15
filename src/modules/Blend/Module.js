@@ -57,6 +57,7 @@ module.exports = function Dynamic(options, UI, util) {
       // run PixelManipulatin on second image's pixels
       return require('../_nomodule/PixelManipulation.js')(input, {
         output: output,
+        ui: options.step.ui,
         changePixel: changePixel,
         format: input.format,
         image: options.image,

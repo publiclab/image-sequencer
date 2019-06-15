@@ -40,6 +40,7 @@ module.exports = function Brightness(options, UI) {
 
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
+      ui: options.step.ui, //don't pass this in if you don't want your module to support progress bars
       changePixel: changePixel,
       format: input.format,
       image: options.image,

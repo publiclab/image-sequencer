@@ -581,19 +581,21 @@ The `notify` function takes two parameters `msg` and `id`, former being the mess
 
 ## Using WebAssembly for heavy pixel processing
 
-As of now, any of the modules, which uses changePixel function uses wasm as well. Both node and browser code use WebAssembly and the only region of fallback to the initial code is the one under browserified unit tests.
+Any module which uses the `changePixel` function gets WebAssembly acceleration (`wasm`). Both node and browser code use WebAssembly and the only code which falls back to non-`wasm` code is the [browserified unit tests](https://github.com/publiclab/image-sequencer/blob/main/test/core/sequencer/benchmark.js).
 
-The main advantage we get using wasm is blazing fast speed attained in processing pixels for many modules that is very clear from the benchmarks itself.
+The main advantage we get using `wasm` is blazing fast speed attained in processing pixels for many modules that is very clear from [checking module benchmarks](https://travis-ci.org/publiclab/image-sequencer/jobs/544415673#L1931).
 
-The only limitation encountered was that the browser and node code for implementing wasm had to be written separately. This is because in browser we use ```fetch``` and in node we use ```fs``` module which both can't be used in other environment.
 
-Also, one can toggle between the two modes, the wasm one and the non-wasm in the following way:
+The only limitation is that browser and node code for `wasm` had to be written separately, and switched between. This is because in browser we use `fetch` to retrieve the compiled `wasm` program while in node we use the `fs` module, each of which cannot be used in the other's environment.
+
+
+`wasm` mode is enabled by default. If you need to force this mode to be on or off, you can use the `useWasm` option when initializing ImageSequencer:
 
 ```js
-let sequencer = ImageSequencer({useWasm:true}) // for wasm mode or
+let sequencer = ImageSequencer({useWasm:true}) // for wasm mode or simply
 
-let sequencer = ImageSequencer({useWasm:false}) //for non-wasm mode or simply
+let sequencer = ImageSequencer() // also for wasm mode i.e. default mode
 
-let sequencer = ImageSequencer() // also for non-wasm mode
+let sequencer = ImageSequencer({useWasm:false}) //for non-wasm mode 
 
 ```

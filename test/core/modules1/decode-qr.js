@@ -3,8 +3,7 @@ var test = require('tape');
 require('../../../src/ImageSequencer.js');
 
 var sequencer = ImageSequencer({
-  ui: false,
-  useWasm:true
+  ui: false
 });
 
 var Qr = require('../images/IS-QR');
@@ -18,7 +17,7 @@ test('Decode-qr ', function (t) {
     mode: 'test'
   }, function (out) {
     var endTime = new Date().getMilliseconds();
-    console.log(`decode-qr module ran in ${(endTime - startTime)} milliseconds`);    
+    console.log(`decode-qr module ran in ${(endTime - startTime)} milliseconds`);
     sequencer = null;
     t.end();
   });

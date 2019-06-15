@@ -52,7 +52,7 @@
 
     <script>
 
-      var sequencer = ImageSequencer({useWasm:true});
+      var sequencer = ImageSequencer();
       document.querySelector('#pencils').onclick = function() {
         sequencer.replaceImage('#pencils','invert');
       }

@@ -7,7 +7,7 @@ var DOM = new JSDOM('<body></body>');
 global.document = DOM.window.document;
 
 var DefaultHtmlStepUi = require('../../../examples/lib/defaultHtmlStepUi');
-var sequencer = require('../../../src/ImageSequencer.js')({useWasm:true});
+var sequencer = require('../../../src/ImageSequencer.js')();
 var UserInterface = require('../../../src/ui/UserInterface');
 
 test('Notify function works for all three UIs', function (t) {

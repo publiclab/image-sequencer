@@ -1,8 +1,8 @@
 var test = require('tape');
 require('../../../src/ImageSequencer.js');
 
-var sequencer1 = ImageSequencer({ ui: false,useWasm:true });
-var sequencer2 = ImageSequencer({ ui: false,useWasm:true });
+var sequencer1 = ImageSequencer({ ui: false });
+var sequencer2 = ImageSequencer({ ui: false });
 var red = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAQABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAABgj/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABykX//Z';
 
 test('Load ndvi-colormap meta module', function(t) {

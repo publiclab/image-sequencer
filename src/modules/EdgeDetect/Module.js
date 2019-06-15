@@ -20,7 +20,7 @@ module.exports = function edgeDetect(options, UI) {
     var step = this;
 
     // Blur the image
-    const internalSequencer = ImageSequencer({ inBrowser: false, ui: false, useWasm:true });
+    const internalSequencer = ImageSequencer({ inBrowser: false, ui: false});
     return internalSequencer.loadImage(input.src, function () {
       internalSequencer.importJSON([{ 'name': 'blur', 'options': {blur: options.blur} }]);
       return internalSequencer.run(function onCallback(internalOutput) {

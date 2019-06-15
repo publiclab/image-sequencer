@@ -1,6 +1,6 @@
 function generatePreview(previewStepName, customValues, path, selector) {
 
-  var previewSequencer = ImageSequencer({useWasm:true});
+  var previewSequencer = ImageSequencer();
   function insertPreview(src) {
     var img = document.createElement('img');
     img.classList.add('img-thumbnail');

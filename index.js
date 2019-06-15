@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 require('./src/ImageSequencer');
-sequencer = ImageSequencer({ ui: false,useWasm:true });
+sequencer = ImageSequencer({ ui: false });
 var fs = require('fs');
 var program = require('commander');
 var utils = require('./src/CliUtils');

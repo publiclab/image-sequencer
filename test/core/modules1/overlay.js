@@ -5,7 +5,7 @@ const test = require('tape'),
     offset: -1
   };
 
-let sequencer = ImageSequencer({ui: false,useWasm:true});
+let sequencer = ImageSequencer({ui: false});
 sequencer.loadImages(image);
 sequencer.addSteps('colorbar', {});
 sequencer.addSteps('overlay', options);

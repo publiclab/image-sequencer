@@ -12,13 +12,12 @@ const red = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iA
  */
 module.exports = (moduleName, options, input) => {
   let sequencer = ImageSequencer({
-    ui: false,
-    useWasm:true
+    ui: false
   });
   sequencer.loadImages(input || red);
   sequencer.addSteps(moduleName, options);
 
-  test(`${moduleName}`,t => {
+  test(`${moduleName}`, t => {
     var startTime = new Date().getMilliseconds();
     sequencer.run({
       mode: 'test'

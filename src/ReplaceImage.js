@@ -2,7 +2,7 @@
 // Works only in the browser.
 function ReplaceImage(ref, selector, steps, options) {
   if(!ref.options.inBrowser) return false; // This isn't for Node.js
-  var tempSequencer = ImageSequencer({ui: false, useWasm:true});
+  var tempSequencer = ImageSequencer({ui: false});
   var this_ = ref;
   if (window.hasOwnProperty('$')) var input = $(selector);
   else var input = document.querySelectorAll(selector);

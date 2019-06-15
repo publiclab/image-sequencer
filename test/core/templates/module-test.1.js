@@ -18,11 +18,11 @@ module.exports = (moduleName, options, input) => {
   sequencer.addSteps(moduleName, options);
 
   test(`${moduleName}`, t => {
-    var startTime = new Date().getMilliseconds();
+    var startTime = Date.now();
     sequencer.run({
       mode: 'test'
     }, () => {
-      var endTime = new Date().getMilliseconds();
+      var endTime = Date.now();
       console.log(`${moduleName} ran in ${(endTime - startTime)} milliseconds`);
       sequencer = null;
       t.end();

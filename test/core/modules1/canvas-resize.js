@@ -10,9 +10,9 @@ sequencer.addSteps('canvas-resize', options);
 
 
 test('canvas-resize ', function(t) {
-  var startTime = new Date().getMilliseconds();
+  var startTime = Date.now();
   sequencer.run({ mode: 'test' }, function(out) {
-    var endTime = new Date().getMilliseconds();
+    var endTime = Date.now();
     console.log(`canvas-resize module ran in ${(endTime - startTime)} milliseconds`);
     sequencer = null;
     t.end();

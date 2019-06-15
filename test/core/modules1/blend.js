@@ -11,9 +11,9 @@ sequencer.addSteps('brightness', {});
 sequencer.addSteps('blend', options);
 
 test('blend module', t => {
-  var startTime = new Date().getMilliseconds();
+  var startTime = Date.now();
   sequencer.run({mode: 'test'}, () => {
-    var endTime = new Date().getMilliseconds();
+    var endTime = Date.now();
     console.log(`blend module ran in ${(endTime - startTime)} milliseconds`);
     sequencer = null;
     t.end();

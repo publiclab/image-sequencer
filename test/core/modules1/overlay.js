@@ -12,9 +12,9 @@ sequencer.addSteps('overlay', options);
 
 
 test('overlay module', t => {
-  var startTime = new Date().getMilliseconds();
+  var startTime = Date.now();
   sequencer.run({mode: 'test'}, () => {
-    var endTime = new Date().getMilliseconds();
+    var endTime = Date.now();
     console.log(`overlay module ran in ${(endTime - startTime)} milliseconds`);
     sequencer = null;
     t.end();

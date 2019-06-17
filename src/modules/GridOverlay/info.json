@@ -14,8 +14,10 @@
         },
         "color":{
             "type": "string",
-            "desc": "RGBA values separated by a space",
-            "default": "0 0 0 255"
+            "desc": "Pick color",
+            "default": "rgba(0,0,0,1)",
+            "id": "color-picker"
+
           }
     },
     "only": "browser" 

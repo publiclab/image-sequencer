@@ -1,9 +1,13 @@
 module.exports = exports = function(pixels, options){
-  var color = options.color || '228 86 81';
-  var replaceColor = options.replaceColor || '0 0 255';
+  var color = options.color || 'rgb(228,86,81)';
+  color = color.substring(color.indexOf('(') + 1, color.length - 1); // extract only the values from rgba(_,_,_,_)
+
+  var replaceColor = options.replaceColor || 'rgb(0,0,255)';
+  replaceColor = replaceColor.substring(replaceColor.indexOf('(') + 1, replaceColor.length - 1); // extract only the values from rgba(_,_,_,_)
+
   var replaceMethod = options.replaceMethod || 'greyscale';
-  color = color.split(' ');
-  replaceColor = replaceColor.split(' ');
+  color = color.split(',');
+  replaceColor = replaceColor.split(',');
 
 
   var cr = color[0],

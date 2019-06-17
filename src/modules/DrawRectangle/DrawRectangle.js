@@ -11,7 +11,8 @@ module.exports = exports = function(pixels, options){
 	  ex =  options.endX = Number(options.endX) - thickness || iw - 1,
 	  ey = options.endY = Number(options.endY) - thickness || ih - 1,
     color = options.color || defaults.color;
-  color = color.split(' ');
+  color = color.substring(color.indexOf('(') + 1, color.length - 1); // extract only the values from rgba(_,_,_,_)
+  color = color.split(',');
 
   var drawSide = function(startX, startY, endX, endY){
     for (var n = startX; n <= endX + thickness; n++){
@@ -19,7 +20,7 @@ module.exports = exports = function(pixels, options){
         pixels.set(n, k, 0, color[0]);
         pixels.set(n, k, 1, color[1]);
         pixels.set(n, k, 2, color[2]);
-        pixels.set(n, k, 3, color[3]);
+        //pixels.set(n, k, 3, color[3]);
       }
     }
   };

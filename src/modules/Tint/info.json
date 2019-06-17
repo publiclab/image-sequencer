@@ -3,9 +3,10 @@
   "description": "Add color tint to an image",
   "inputs": {
       "color":{
-        "type": "String",
-        "desc": "RGB values separated by a space",
-        "default": "0 0 255"
+        "type": "text",
+        "desc": "Select color",
+        "default": "rgb(0,0,255)",
+        "id": "color-picker"
       },
       "factor": {
           "type": "range",

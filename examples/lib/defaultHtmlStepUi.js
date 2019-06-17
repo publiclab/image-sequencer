@@ -81,35 +81,52 @@ function DefaultHtmlStepUi(_sequencer, options) {
         var inputDesc = isInput ? mapHtmlTypes(inputs[paramName]) : {};
         if (!isInput) {
           html += '<span class="output"></span>';
-        } else if (inputDesc.type.toLowerCase() == 'select') {
+        }
+        else if (inputDesc.type.toLowerCase() == 'select') {
+
           html += '<select class="form-control target" name="' + paramName + '">';
           for (var option in inputDesc.values) {
             html += '<option>' + inputDesc.values[option] + '</option>';
           }
           html += '</select>';
-        } else {
+        }
+        else {
           let paramVal = step.options[paramName] || inputDesc.default;
-          html =
-            '<input class="form-control target" type="' +
-            inputDesc.type +
-            '" name="' +
-            paramName +
-            '" value="' +
-            paramVal +
-            '" placeholder ="' +
-            (inputDesc.placeholder || '');
 
-          if (inputDesc.type.toLowerCase() == 'range') {
+          if (inputDesc.id == 'color-picker') { // separate input field for color-picker
             html +=
-              '"min="' +
-              inputDesc.min +
-              '"max="' +
-              inputDesc.max +
-              '"step="' +
-              (inputDesc.step ? inputDesc.step : 1) + '">' + '<span>' + paramVal + '</span>';
-
+              '<div id="color-picker" class="input-group colorpicker-component">' +
+              '<input class="form-control target" type="' +
+              inputDesc.type +
+              '" name="' +
+              paramName +
+              '" value="' +
+              paramVal + '">' + '<span class="input-group-addon"><i></i></span>' +
+              '</div>';
           }
-          else html += '">';
+          else { // use this if the the field isn't color-picker
+            html =
+              '<input class="form-control target" type="' +
+              inputDesc.type +
+              '" name="' +
+              paramName +
+              '" value="' +
+              paramVal +
+              '" placeholder ="' +
+              (inputDesc.placeholder || '');
+              
+            if (inputDesc.type.toLowerCase() == 'range') {
+              html +=
+                '"min="' +
+                inputDesc.min +
+                '"max="' +
+                inputDesc.max +
+                '"step="' +
+                (inputDesc.step ? inputDesc.step : 1) + '">' + '<span>' + paramVal + '</span>';
+
+            }
+            else html += '">';
+          }
         }
 
         var div = document.createElement('div');
@@ -169,6 +186,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     
     $(step.imgElement).on('mousemove', _.debounce(() => imageHover(step), 150));
     $(step.imgElement).on('click', (e) => {e.preventDefault(); });
+    $(step.ui.querySelectorAll('#color-picker')).colorpicker();
 
     function saveOptions(e) {
       e.preventDefault();
@@ -354,4 +372,3 @@ if(typeof window === 'undefined'){
 }
 
 module.exports = DefaultHtmlStepUi;
-

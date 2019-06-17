@@ -15,7 +15,7 @@ test('benchmark all modules', function(t) {
   var sequencerDefault = ImageSequencer({ ui: false, inBrowser: false });
 
   console.log('############ Benchmarks ############');
-  runBenchmarks(sequencerDefault);
+  runBenchmarks(sequencerDefault, t);
   console.log('####################################');
 
 });
@@ -24,11 +24,11 @@ test('benchmark all modules with WebAssembly', function(t) {
   var sequencerWebAssembly = ImageSequencer({ ui: false, inBrowser: false, useWasm: true });
 
   console.log('############ Benchmarks with WebAssembly ############');
-  runBenchmarks(sequencerWebAssembly);
+  runBenchmarks(sequencerWebAssembly, t);
   console.log('####################################');
 });
 
-function runBenchmarks(sequencer) {
+function runBenchmarks(sequencer, t) {
   var mods = Object.keys(sequencer.modules);
 
   sequencer.loadImages(image);

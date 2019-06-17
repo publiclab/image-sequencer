@@ -17,7 +17,8 @@ module.exports = function Crop(input, options, callback) {
     var iw = pixels.shape[0]; //Width of Original Image
     var ih = pixels.shape[1]; //Height of Original Image
     var backgroundArray = [];
-    backgroundColor = options.backgroundColor.split(' ');
+    backgroundColor = options.backgroundColor.substring(options.backgroundColor.indexOf('(') + 1, options.backgroundColor.length - 1); // extract only the values from rgba(_,_,_,_)
+    backgroundColor = backgroundColor.split(',');
     for(var i = 0; i < w ; i++){
       backgroundArray = backgroundArray.concat([backgroundColor[0], backgroundColor[1], backgroundColor[2], backgroundColor[3]]);
     }

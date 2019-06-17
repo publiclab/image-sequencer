@@ -13,7 +13,7 @@ test('canvas-resize ', function(t) {
   var startTime = Date.now();
   sequencer.run({ mode: 'test' }, function(out) {
     var endTime = Date.now();
-    console.log(`canvas-resize module ran in ${(endTime - startTime)} milliseconds`);
+    console.log(`Module canvas-resize ran in: ${(endTime - startTime)} milliseconds`);
     sequencer = null;
     t.end();
   });

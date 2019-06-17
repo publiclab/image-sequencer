@@ -17,7 +17,7 @@ test('Decode-qr ', function (t) {
     mode: 'test'
   }, function (out) {
     var endTime = Date.now();
-    console.log(`decode-qr module ran in ${(endTime - startTime)} milliseconds`);
+    console.log(`Module decode-qr ran in: ${(endTime - startTime)} milliseconds`);
     sequencer = null;
     t.end();
   });

@@ -14,7 +14,7 @@ test('blend module', t => {
   var startTime = Date.now();
   sequencer.run({mode: 'test'}, () => {
     var endTime = Date.now();
-    console.log(`blend module ran in ${(endTime - startTime)} milliseconds`);
+    console.log(`Module blend: ran in ${(endTime - startTime)} milliseconds`);
     sequencer = null;
     t.end();
   });

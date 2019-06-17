@@ -23,7 +23,7 @@ module.exports = (moduleName, options, input) => {
       mode: 'test'
     }, () => {
       var endTime = Date.now();
-      console.log(`${moduleName} ran in ${(endTime - startTime)} milliseconds`);
+      console.log(`Module ${moduleName} ran in: ${(endTime - startTime)} milliseconds`);
       sequencer = null;
       t.end();
     });

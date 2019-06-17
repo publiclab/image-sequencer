@@ -105,7 +105,7 @@ module.exports = function PixelManipulation(image, options) {
       function perPixelManipulation() {
         for (var x = 0; x < pixels.shape[0]; x++) {
           for (var y = 0; y < pixels.shape[1]; y++) {
-            imports.env.perform(x,y);
+            imports.env.perform(x, y);
           }
         }
       }
@@ -115,11 +115,12 @@ module.exports = function PixelManipulation(image, options) {
       if (options.useWasm) {
         if (options.inBrowser) {
 
-          fetch('./manipulation.wasm').then(response =>
+          fetch('../../../dist/manipulation.wasm').then(response =>
             response.arrayBuffer()
           ).then(bytes =>
             WebAssembly.instantiate(bytes, imports)
           ).then(results => {
+            console.log('yes');
             results.instance.exports.manipulatePixel(pixels.shape[0], pixels.shape[1], inBrowser, test);
             extraOperation();
           }).catch(err => {
@@ -128,7 +129,9 @@ module.exports = function PixelManipulation(image, options) {
           });
         } else {
           const fs = require('fs');
-          const buf = fs.readFileSync('./manipulation.wasm');
+          const path = require('path');
+          const wasmPath = path.join(__dirname, '../../../', 'dist', 'manipulation.wasm');
+          const buf = fs.readFileSync(wasmPath);
           WebAssembly.instantiate(buf, imports).then(results => {
             results.instance.exports.manipulatePixel(pixels.shape[0], pixels.shape[1], inBrowser, test);
             extraOperation();

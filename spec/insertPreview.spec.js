@@ -1,7 +1,7 @@
 describe('Preview UI HTML', function() {
 
   var InsertPreview = require('../examples/lib/insertPreview');
-  var sequencer = require('../src/ImageSequencer')({useWasm:true});
+  var sequencer = require('../src/ImageSequencer')();
   var insertPreview;
   var options = { brightness: 50 };
 

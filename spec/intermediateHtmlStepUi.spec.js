@@ -1,7 +1,7 @@
 describe('Intermediate step HTML', function() {
 
   var IntermediateHtmlStepUi = require('../examples/lib/intermediateHtmlStepUi');
-  var sequencer = require('../src/ImageSequencer')({useWasm:true});
+  var sequencer = require('../src/ImageSequencer')();
   var intermediateHtmlStepUi;
 
   beforeEach(()=>{

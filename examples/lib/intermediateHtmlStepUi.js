@@ -69,13 +69,13 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     var insertSelect = $step('.insert-step-select');
     var m = insertSelect.val();
     $step('.insertDiv .info').html(_sequencer.modulesInfo(m).description);
-    $step('.insertDiv .add-step-btn').prop("disabled", false);
+    $step('.insertDiv .add-step-btn').prop('disabled', false);
   }
     
     
   var toggleDiv = function(callback = function(){}){
     $step('.insertDiv').collapse('toggle');
-    if ($step('.insert-text').css('display') != "none"){
+    if ($step('.insert-text').css('display') != 'none'){
       $step('.insert-text').fadeToggle(200, function(){$step('.no-insert-text').fadeToggle(200, callback)});
     }
     else {
@@ -106,7 +106,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     $step('.insertDiv .close-insert-box').off('click').on('click', function(){toggleDiv(function(){})});
     
     var insertStepSelect = $step('.insert-step-select');
-    insertStepSelect.html("");
+    insertStepSelect.html('');
     // Add modules to the insertStep dropdown
     for (var m in modulesInfo) {
       if (modulesInfo[m] !== undefined)
@@ -120,7 +120,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     $step('.inserDiv .add-step-btn').prop('disabled', true);
     
     insertStepSelect.append('<option value="" disabled selected>Select a Module</option>');
-    $step('.insertDiv .radio-group .radio').on("click", function () {
+    $step('.insertDiv .radio-group .radio').on('click', function () {
       $(this).parent().find('.radio').removeClass('selected');
       $(this).addClass('selected');
       newStep = $(this).attr('data-value');
@@ -137,7 +137,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
 
     options = options || {};
     var insertStepSelect = $step('.insert-step-select');
-    if (insertStepSelect.val() == "none") return;
+    if (insertStepSelect.val() == 'none') return;
 
     var newStepName = insertStepSelect.val();
     toggleDiv();

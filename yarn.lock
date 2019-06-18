@@ -678,6 +678,13 @@ body@^5.1.0:
     raw-body "~1.1.0"
     safe-json-parse "~1.0.1"
 
+bootstrap-colorpicker@^2.5.3:
+  version "2.5.3"
+  resolved "https://registry.yarnpkg.com/bootstrap-colorpicker/-/bootstrap-colorpicker-2.5.3.tgz#b50aff8590fbaa6b5aa63a5624e4213f1659a49d"
+  integrity sha512-xdllX8LSMvKULs3b8JrgRXTvyvjkSMHHHVuHjjN5FNMqr6kRe5NPiMHFmeAFjlgDF73MspikudLuEwR28LbzLw==
+  dependencies:
+    jquery ">=1.10"
+
 bootstrap@~3.4.0:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-3.4.1.tgz#c3a347d419e289ad11f4033e3c4132b87c081d72"
@@ -3049,9 +3056,9 @@ gpu-mock.js@^1.0.1:
   integrity sha1-gecUajfu47bWJ/H+qnSibVExSKI=
 
 gpu.js@^2.0.0-rc.12:
-  version "2.0.0-rc.14"
-  resolved "https://registry.yarnpkg.com/gpu.js/-/gpu.js-2.0.0-rc.14.tgz#83c896c7902d606ff51b35677eb801636787bf20"
-  integrity sha512-8SmrWsEJvI/SY2cluqEYZfv1guVJJ0BNowlJtE1uRLOvj4alB79GxmMelXRJY3XoJUe1akEs39/2+zdJaE/xFg==
+  version "2.0.0-rc.15"
+  resolved "https://registry.yarnpkg.com/gpu.js/-/gpu.js-2.0.0-rc.15.tgz#e77991a5bc73147f4a70713122a3be79f2bec1d8"
+  integrity sha512-Pv9skvUMnDdff73eTUT1+NQrk2gA0yCBV0UGjhFIbL7RbCGLhAQEcCX0leThH77EOCtrcb8Zoug7ms5OwF02UA==
   dependencies:
     acorn "^5.1.1"
     gl "^4.3.3"
@@ -4038,7 +4045,7 @@ jpeg-js@^0.3.2:
   resolved "https://registry.yarnpkg.com/jpeg-js/-/jpeg-js-0.3.4.tgz#dc2ba501ee3d58b7bb893c5d1fab47294917e7e7"
   integrity sha512-6IzjQxvnlT8UlklNmDXIJMWxijULjqGrzgqc0OG7YadZdvm7KPQ1j0ehmQQHckgEWOfgpptzcnWgESovxudpTA==
 
-jquery@^3.3.1:
+jquery@>=1.10, jquery@^3.3.1:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.4.1.tgz#714f1f8d9dde4bdfa55764ba37ef214630d80ef2"
   integrity sha512-36+AdBzCL+y6qjw5Tx7HgzeGCzC81MDDgaUP8ld2zhx58HdqXGoBd+tHdrBMiyjGQs0Hxs/MLZTu/eHNJJuWPw==

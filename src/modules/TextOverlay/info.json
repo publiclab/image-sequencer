@@ -1,5 +1,5 @@
 {
-    "name": "Text-Overlay",
+    "name": "text-overlay",
     "description": "Overlay text on image.",
     "inputs": {
         "text": {
@@ -30,18 +30,10 @@
             ]
         },
         "color": {
-            "type": "select",
+            "type": "text",
             "desc": "Select the text color.",
-            "default": "black",
-            "values": [
-                "black",
-                "blue",
-                "green",
-                "red",
-                "white",
-                "pink",
-                "orange"
-            ]
+            "default": "rgba(20,120,90,1)",
+            "id": "color-picker"
         },
         "size": {
             "type" : "integer",

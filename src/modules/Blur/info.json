@@ -1,5 +1,5 @@
 {
-    "name": "Blur",
+    "name": "blur",
     "description": "Applies a Gaussian blur given by the intensity value",
     "inputs": {
         "blur": {

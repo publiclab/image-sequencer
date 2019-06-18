@@ -1,5 +1,5 @@
 {
-    "name": "Color Temperature",
+    "name": "color-temperature",
     "description": "Changes the color temperature of the image.",
     "inputs": {
       "temperature": {

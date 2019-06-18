@@ -1,5 +1,5 @@
 {
-    "name": "Dither",
+    "name": "dither",
     "description": "Approximates a color from a mixture of other colors when the required color is not available, creating illusions of the color that is not present actually.<a href='https://en.wikipedia.org/wiki/Dither'>Read more</a>",
     "inputs": {
       "dither": {

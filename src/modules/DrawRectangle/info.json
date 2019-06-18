@@ -1,5 +1,5 @@
 {
-    "name": "Draw Rectangle",
+    "name": "draw-rectangle",
     "description": "It draws a rectangle on the image",
     "inputs": {
   		"startingX":{
@@ -33,9 +33,10 @@
       },
 
       "color":{
-        "type": "string",
-        "desc": "RGBA values separated by a space",
-        "default": "0 0 0 255"
+        "type": "text",
+        "desc": "Select color",
+        "default": "rgba(20,20,20,1)",
+        "id": "color-picker"
       }
     },
  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#draw-rectangle-module"

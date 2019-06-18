@@ -1,5 +1,5 @@
 {
-  "name": "Brightness",
+  "name": "brightness",
   "description": "Change the brightness of the image by given percent value",
   "inputs": {
       "brightness": {

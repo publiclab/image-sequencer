@@ -1,5 +1,5 @@
 {
-    "name": "WebGl Distort",
+    "name": "webgl-distort",
     "requires": [
         "webgl"
     ],

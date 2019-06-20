@@ -32,7 +32,13 @@ module.exports = function PixelManipulation(image, options) {
     // https://github.com/p-v-o-s/infragram-js/blob/master/public/infragram.js#L173-L181
 
 
-
+    if (!options.inBrowser && !process.env.TEST && options.ui) {
+      try {
+        var pace = require('pace')(pixels.shape[0] * pixels.shape[1]);
+      } catch (e) {
+        options.inBrowser = true;
+      }
+    }
     if (options.preProcess) pixels = options.preProcess(pixels); // Allow for preprocessing
 
     function extraOperation() {
@@ -113,7 +119,6 @@ module.exports = function PixelManipulation(image, options) {
           ).then(bytes =>
             WebAssembly.instantiate(bytes, imports)
           ).then(results => {
-            console.log('yes');
             results.instance.exports.manipulatePixel(pixels.shape[0], pixels.shape[1], inBrowser, test);
             extraOperation();
           }).catch(err => {
@@ -121,17 +126,20 @@ module.exports = function PixelManipulation(image, options) {
             extraOperation();
           });
         } else {
-          const fs = require('fs');
-          const path = require('path');
-          const wasmPath = path.join(__dirname, '../../../', 'dist', 'manipulation.wasm');
-          const buf = fs.readFileSync(wasmPath);
-          WebAssembly.instantiate(buf, imports).then(results => {
-            results.instance.exports.manipulatePixel(pixels.shape[0], pixels.shape[1], inBrowser, test);
-            extraOperation();
-          }).catch(err => {
+          try{
+            const fs = require('fs');
+            const path = require('path');
+            const wasmPath = path.join(__dirname, '../../../', 'dist', 'manipulation.wasm');
+            const buf = fs.readFileSync(wasmPath);
+            WebAssembly.instantiate(buf, imports).then(results => {
+              results.instance.exports.manipulatePixel(pixels.shape[0], pixels.shape[1], inBrowser, test);
+              extraOperation();
+            });
+          }
+          catch(err){
             perPixelManipulation();
             extraOperation();
-          });
+          }
         }
       } else {
         perPixelManipulation();

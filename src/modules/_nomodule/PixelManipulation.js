@@ -129,7 +129,8 @@ module.exports = function PixelManipulation(image, options) {
             results.instance.exports.manipulatePixel(pixels.shape[0], pixels.shape[1], inBrowser, test);
             extraOperation();
           }).catch(err => {
-            console.log(err);
+            perPixelManipulation();
+            extraOperation();
           });
         }
       } else {

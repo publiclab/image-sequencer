@@ -12,7 +12,7 @@ var image = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAIAAADTED8xA
 var imageName = 'image1';
 
 test('benchmark all modules', function(t) {
-  var sequencerDefault = ImageSequencer({ ui: false, inBrowser: false });
+  var sequencerDefault = ImageSequencer({ ui: false, inBrowser: false, useWasm:false });
 
   console.log('############ Benchmarks ############');
   runBenchmarks(sequencerDefault, t);

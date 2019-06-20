@@ -3,7 +3,6 @@
  * accepting a changePixel() method to remix a pixel's channels
  */
 module.exports = function PixelManipulation(image, options) {
-
   // To handle the case where pixelmanipulation is called on the input object itself
   // like input.pixelManipulation(options)
   if (arguments.length <= 1) {
@@ -32,13 +31,7 @@ module.exports = function PixelManipulation(image, options) {
     // TODO: this could possibly be more efficient; see
     // https://github.com/p-v-o-s/infragram-js/blob/master/public/infragram.js#L173-L181
 
-    if (!options.inBrowser && !process.env.TEST) {
-      try {
-        var pace = require('pace')(pixels.shape[0] * pixels.shape[1]);
-      } catch (e) {
-        options.inBrowser = true;
-      }
-    }
+
 
     if (options.preProcess) pixels = options.preProcess(pixels); // Allow for preprocessing
 

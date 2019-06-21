@@ -1,6 +1,6 @@
 describe('URL manipulation methods', function() {
 
-  var UrlHash = require('../../examples/lib/urlHash');
+  var UrlHash = require('../../../examples/lib/urlHash');
   var urlHash;
   var params = {
     module: 'brightness',

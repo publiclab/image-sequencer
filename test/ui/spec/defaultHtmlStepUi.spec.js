@@ -5,8 +5,8 @@ global.document = DOM.window.document;
 
 describe('Sequencer step HTML', function() {
 
-  var DefaultHtmlStepUi = require('../../examples/lib/defaultHtmlStepUi');
-  var sequencer = require('../../src/ImageSequencer')();
+  var DefaultHtmlStepUi = require('../../../examples/lib/defaultHtmlStepUi');
+  var sequencer = require('../../../src/ImageSequencer')();
   var defaultHtmlStepUi;
   var step = 'brightness';
   var options = {

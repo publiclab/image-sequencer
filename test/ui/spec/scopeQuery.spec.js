@@ -1,4 +1,4 @@
-const scopeQuery = require('../../examples/lib/scopeQuery');
+const scopeQuery = require('../../../examples/lib/scopeQuery');
 
 describe('scopeQuery Method', function() {
 
@@ -29,13 +29,13 @@ describe('scopeQuery Method', function() {
     global.window = window;
     global.document = document;
     const $ = global.jQuery = global.$ = require('jquery');
-  })
+  });
   
   
   it('scope 1 querySelector', function() {
 
-    const $scope1 = scopeQuery.scopeSelector(document.querySelector('#scope1'))
-    const $scope1All = scopeQuery.scopeSelectorAll(document.querySelector('#scope1'))
+    const $scope1 = scopeQuery.scopeSelector(document.querySelector('#scope1'));
+    const $scope1All = scopeQuery.scopeSelectorAll(document.querySelector('#scope1'));
 
     expect($scope1('.child').length).toBe(1);
     expect($scope1All('.child').length).toBe(6);
@@ -51,12 +51,12 @@ describe('scopeQuery Method', function() {
 
     expect($scope1All().elem('.child').length).toBe(1);
     expect($scope1All().elemAll('.child').length).toBe(6);
-  })
+  });
 
   it('scope 2 querySelector', function() {
 
-    const $scope2 = scopeQuery.scopeSelector(document.querySelector('#scope2'))
-    const $scope2All = scopeQuery.scopeSelectorAll(document.querySelector('#scope2'))
+    const $scope2 = scopeQuery.scopeSelector(document.querySelector('#scope2'));
+    const $scope2All = scopeQuery.scopeSelectorAll(document.querySelector('#scope2'));
 
     expect($scope2('.child').length).toBe(1);
     expect($scope2All('.child').length).toBe(5);
@@ -72,9 +72,9 @@ describe('scopeQuery Method', function() {
 
     expect($scope2All().elem('.child').length).toBe(1);
     expect($scope2All().elemAll('.child').length).toBe(5);
-  })
+  });
 
-})
+});
 
 global.document = null;
 global.$ = null;

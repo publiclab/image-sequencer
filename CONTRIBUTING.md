@@ -280,7 +280,6 @@ module.exports = function ModuleName(options,UI) {
 
 The `progressObj` parameter of `draw()` is not consumed unless a custom progress bar needs to be drawn, for which this default spinner should be stopped with `progressObj.stop()` and image-sequencer is informed about the custom progress bar with `progressObj.overrideFlag = true;` following which this object can be overriden with custom progress object.
 
-The pixelManipulation API can draw progress bars internally using the `pace` npm package. The option is disabled by default but can be enabled by passing `ui: true` in the options for pixelManipulation. The recommended way is to use `ui: options.step.ui`. This will only show the progress if the ui is set to true by the user, while creating the sequencer object.
 
 ### Module example
 

@@ -40,7 +40,8 @@ module.exports = function DoNothing(options, UI) {
       ui: options.step.ui,
       format: input.format,
       image: options.image,
-      callback: callback
+      callback: callback,
+      useWasm:options.useWasm
     });
 
   }

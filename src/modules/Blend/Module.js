@@ -62,7 +62,8 @@ module.exports = function Dynamic(options, UI, util) {
         format: input.format,
         image: options.image,
         inBrowser: options.inBrowser,
-        callback: callback
+        callback: callback,
+        useWasm:options.useWasm
       });
     });
   }

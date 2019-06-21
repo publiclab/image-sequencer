@@ -3,6 +3,7 @@
 var fs = require('fs');
 var test = require('tape');
 var DataURItoBuffer = require('data-uri-to-buffer');
+require('events').EventEmitter.prototype.setMaxListeners(100);
 
 ImageSequencer = require('../../../src/ImageSequencer.js');
 
@@ -11,10 +12,23 @@ var image = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAIAAADTED8xA
 var imageName = 'image1';
 
 test('benchmark all modules', function(t) {
+  var sequencerDefault = ImageSequencer({ ui: false, inBrowser: false, useWasm:false });
 
   console.log('############ Benchmarks ############');
+  runBenchmarks(sequencerDefault, t);
+  console.log('####################################');
 
-  var sequencer = ImageSequencer({ ui: false, inBrowser: false });
+});
+
+test('benchmark all modules with WebAssembly', function(t) {
+  var sequencerWebAssembly = ImageSequencer({ ui: false, inBrowser: false, useWasm: true });
+
+  console.log('############ Benchmarks with WebAssembly ############');
+  runBenchmarks(sequencerWebAssembly, t);
+  console.log('####################################');
+});
+
+function runBenchmarks(sequencer, t) {
   var mods = Object.keys(sequencer.modules);
 
   sequencer.loadImages(image);
@@ -29,11 +43,11 @@ test('benchmark all modules', function(t) {
     var end = Date.now();
     console.log('Module ' + mods[0] + ' ran in: ' + (end - global.start) + ' milliseconds');
     mods.splice(0, 1);
-    if (mods.length > 1) { //Last one is test module, we need not benchmark it
+    if (mods.length > 1) { // Last one is test module, we need not benchmark it
       sequencer.steps[global.idx].output.src = image;
       global.idx++;
       if (mods[0] === 'import-image' || (!!sequencer.modulesInfo(mods[0]).requires && sequencer.modulesInfo(mods[0]).requires.includes('webgl'))) {
-        /* Not currently working */
+        /* Not currently working for this module, which is for importing a new image */
         console.log('Bypassing import-image');
         mods.splice(0, 1);
       }
@@ -41,8 +55,7 @@ test('benchmark all modules', function(t) {
       global.start = Date.now();
       sequencer.run({ index: global.idx }, cb);
     } else {
-      console.log('####################################');
       t.end();
     }
   }
-});
+}

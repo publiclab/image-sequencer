@@ -32,13 +32,6 @@ module.exports = function PixelManipulation(image, options) {
     // https://github.com/p-v-o-s/infragram-js/blob/master/public/infragram.js#L173-L181
 
 
-    if (!options.inBrowser && !process.env.TEST && options.ui) {
-      try {
-        var pace = require('pace')(pixels.shape[0] * pixels.shape[1]);
-      } catch (e) {
-        options.inBrowser = true;
-      }
-    }
     if (options.preProcess) pixels = options.preProcess(pixels); // Allow for preprocessing
 
     function extraOperation() {
@@ -101,7 +94,7 @@ module.exports = function PixelManipulation(image, options) {
         }
       };
 
-      function perPixelManipulation() {
+      function perPixelManipulation() { // pure JavaScript code
         for (var x = 0; x < pixels.shape[0]; x++) {
           for (var y = 0; y < pixels.shape[1]; y++) {
             imports.env.perform(x, y);
@@ -122,6 +115,8 @@ module.exports = function PixelManipulation(image, options) {
             results.instance.exports.manipulatePixel(pixels.shape[0], pixels.shape[1], inBrowser, test);
             extraOperation();
           }).catch(err => {
+            console.log(err);
+            console.log('WebAssembly acceleration errored; falling back to JavaScript in PixelManipulation');
             perPixelManipulation();
             extraOperation();
           });
@@ -137,6 +132,8 @@ module.exports = function PixelManipulation(image, options) {
             });
           }
           catch(err){
+            console.log(err);
+            console.log('WebAssembly acceleration errored; falling back to JavaScript in PixelManipulation');
             perPixelManipulation();
             extraOperation();
           }

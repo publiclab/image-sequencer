@@ -89,7 +89,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         var inputDesc = isInput ? mapHtmlTypes(inputs[paramName]) : {};
         if (!isInput) {
           html += '<span class="output"></span>';
-        } 
+        }
         else if (inputDesc.type.toLowerCase() == 'select') {
 
           html += '<select class="form-control target" name="' + paramName + '">';
@@ -102,7 +102,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
           let paramVal = step.options[paramName] || inputDesc.default;
 
           if (inputDesc.id == 'color-picker') { // separate input field for color-picker
-            html += 
+            html +=
               '<div id="color-picker" class="input-group colorpicker-component">' +
               '<input class="form-control target" type="' +
               inputDesc.type +
@@ -130,7 +130,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
                 '"max="' +
                 inputDesc.max +
                 '"step="' +
-                (inputDesc.step ? inputDesc.step : 1)+ '">' + '<span>' + paramVal + '</span>';
+                (inputDesc.step ? inputDesc.step : 1) + '">' + '<span>' + paramVal + '</span>';
 
             }
             else html += '">';
@@ -194,7 +194,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     
     $(step.imgElement).on('mousemove', _.debounce(() => imageHover(step), 150));
     $(step.imgElement).on('click', (e) => {e.preventDefault(); });
-    $(step.ui.querySelectorAll('#color-picker')).colorpicker();
+    $stepAll('#color-picker').colorpicker();
 
     function saveOptions(e) {
       e.preventDefault();
@@ -268,7 +268,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     $step('.load').hide();
 
     step.imgElement.src = (step.name == 'load-image') ? step.output.src : step.output;
-    var imgthumbnail = step.ui.querySelector('.img-thumbnail');
+    var imgthumbnail = $step('.img-thumbnail');
     for (let index = 0; index < step.linkElements.length; index++) {
       if (step.linkElements[index].contains(imgthumbnail))
         step.linkElements[index].href = step.imgElement.src;
@@ -279,7 +279,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       return output.split('/')[1].split(';')[0];
     }
 
-    $(step.ui.querySelectorAll('.download-btn')).on('click', () => {
+    $stepAll('.download-btn').on('click', () => {
 
       for (let index = 0; index < step.linkElements.length; index++){
         

@@ -45,7 +45,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
                 <div class="col-md-8 cal collapse in step-column">\
                   <div class="load load-spin" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
                   <div class="step-image">\
-                    <a class="cal collapse in"><img class="img-thumbnail step-thumbnail"/></a>\
+                    <a class="cal collapse in"><img id="StepImageElement" class="img-thumbnail step-thumbnail"/></a>\
                   </div>\
                 </div>\
               </div>\
@@ -81,7 +81,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         var inputDesc = isInput ? mapHtmlTypes(inputs[paramName]) : {};
         if (!isInput) {
           html += '<span class="output"></span>';
-        } 
+        }
         else if (inputDesc.type.toLowerCase() == 'select') {
 
           html += '<select class="form-control target" name="' + paramName + '">';
@@ -94,7 +94,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
           let paramVal = step.options[paramName] || inputDesc.default;
 
           if (inputDesc.id == 'color-picker') { // separate input field for color-picker
-            html += 
+            html +=
               '<div id="color-picker" class="input-group colorpicker-component">' +
               '<input class="form-control target" type="' +
               inputDesc.type +
@@ -122,7 +122,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
                 '"max="' +
                 inputDesc.max +
                 '"step="' +
-                (inputDesc.step ? inputDesc.step : 1)+ '">' + '<span>' + paramVal + '</span>';
+                (inputDesc.step ? inputDesc.step : 1) + '">' + '<span>' + paramVal + '</span>';
 
             }
             else html += '">';

@@ -5,6 +5,7 @@ module.exports = {
   'add-qr': require('./modules/AddQR'),
   'average': require('./modules/Average'),
   'blend': require('./modules/Blend'),
+  'blob-analysis': require('./modules/BlobAnalysis'),
   'blur': require('./modules/Blur'),
   'brightness': require('./modules/Brightness'),
   'canvas-resize': require('./modules/CanvasResize'),

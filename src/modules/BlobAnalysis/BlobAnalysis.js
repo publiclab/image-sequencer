@@ -1,16 +1,20 @@
-module.exports = function(pixels, options, step){
+module.exports = function(pixels, options, priorStep){
 
-  var img = $(step.imgElement);
-  
+  var cv = require('../../../examples/opencv');
+  var img = $(priorStep.imgElement);
+  if(Object.keys(img).length === 0){
+    img = $(priorStep.options.step.imgElement);
+  }
+
   var canvas = document.createElement('canvas');
   canvas.width = pixels.shape[0];
   canvas.height = pixels.shape[1];
   var ctx = canvas.getContext('2d');
   ctx.drawImage(img[0], 0, 0);
+  let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-  var imgToProcess = document.getElementById('StepImageElement');
 
-  let src = cv.imread(imgToProcess);
+  let src = cv.matFromImageData(imgData);
   let dst = new cv.Mat();
   let gray = new cv.Mat();
   let opening = new cv.Mat();

@@ -1,6 +1,5 @@
 {
     "name": "Blob Analysis",
     "description": "Blob/Region identification for microscopic images.",
-    "inputs": {},
-    "only": "browser" 
+    "inputs": {}
 }

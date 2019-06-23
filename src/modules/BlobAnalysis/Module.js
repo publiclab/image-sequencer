@@ -14,10 +14,11 @@ module.exports = function BlobAnalysis(options, UI){
       callback();
     }
     else{
-  
+      var priorStep = this.getStep(-1); // get the previous step to add text onto it.
+
       function extraManipulation(pixels){
   
-        pixels = require('./BlobAnalysis')(pixels, options, options.step);
+        pixels = require('./BlobAnalysis')(pixels, options, priorStep);
         return pixels;
       }
   

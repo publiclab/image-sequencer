@@ -66,10 +66,13 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
 
 
   function selectNewStepUi() {
-    var insertSelect = $step('.insert-step-select');
+    //var insertSelect = $step('.insert-step-select');
+    var insertSelect = $(step.ui.querySelector('.insert-step-select'));
     var m = insertSelect.val();
-    $step('.insertDiv .info').html(_sequencer.modulesInfo(m).description);
-    $step('.insertDiv .add-step-btn').prop('disabled', false);
+    // $step('.insertDiv .info').html(_sequencer.modulesInfo(m).description);
+    // $step('.insertDiv .add-step-btn').prop('disabled', false);
+    $(step.ui.querySelector('.insertDiv .info').html(_sequencer.modulesInfo(m).description));
+    $(step.ui.querySelector('.insertDiv .add-step-btn').prop('disabled', false));
   }
     
     
@@ -106,7 +109,8 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
 
     $step('.insertDiv .close-insert-box').off('click').on('click', function(){toggleDiv(function(){});});
     
-    var insertStepSelect = $step('.insert-step-select');
+    //var insertStepSelect = $step('.insert-step-select');
+    var insertStepSelect = $(step.ui.querySelector('.insert-step-select'));
     insertStepSelect.html('');
     // Add modules to the insertStep dropdown
     for (var m in modulesInfo) {
@@ -118,14 +122,17 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     insertStepSelect.selectize({
       sortField: 'text'
     });
-    $step('.inserDiv .add-step-btn').prop('disabled', true);
+    //$step('.inserDiv .add-step-btn').prop('disabled', true);
+    $(step.ui.querySelector('.inserDiv .add-step-btn')).prop('disabled', true);
     
     insertStepSelect.append('<option value="" disabled selected>Select a Module</option>');
-    $step('.insertDiv .radio-group .radio').on('click', function () {
+    //$step('.insertDiv .radio-group .radio').on('click', function () {
+    $(step.ui.querySelector('.insertDiv .radio-group .radio')).on('click', function () {
       $(this).parent().find('.radio').removeClass('selected');
       $(this).addClass('selected');
       newStep = $(this).attr('data-value');
-      $step('.insert-step-select').val(newStep);
+      //$step('.insert-step-select').val(newStep);
+      $(step.ui.querySelector('.insert-step-select')).val(newStep);
       selectNewStepUi();
       insert(id, $step);
       $(this).removeClass('selected');
@@ -137,7 +144,8 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
   function insert(id, $step) {
 
     options = options || {};
-    var insertStepSelect = $step('.insert-step-select');
+    //var insertStepSelect = $step('.insert-step-select');
+    var insertStepSelect = $(step.ui.querySelector('.insert-step-select'));
     if (insertStepSelect.val() == 'none') return;
 
     var newStepName = insertStepSelect.val();

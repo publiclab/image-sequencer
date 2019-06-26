@@ -1,6 +1,6 @@
 {
   "name": "image-sequencer",
-  "version": "3.5.0",
+  "version": "3.5.1",
   "description": "A modular JavaScript image manipulation library modeled on a storyboard.",
   "main": "src/ImageSequencer.js",
   "scripts": {

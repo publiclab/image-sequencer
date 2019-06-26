@@ -73,24 +73,25 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
   }
     
     
-  var toggleDiv = function(callback = function(){}){
+  var toggleDiv = function($step, callback = function(){}){
     $step('.insertDiv').collapse('toggle');
     if ($step('.insert-text').css('display') != 'none'){
-      $step('.insert-text').fadeToggle(200, function(){$step('.no-insert-text').fadeToggle(200, callback)});
+      $step('.insert-text').fadeToggle(200, function(){$step('.no-insert-text').fadeToggle(200, callback);});
     }
     else {
-      $step('.no-insert-text').fadeToggle(200, function(){$step('.insert-text').fadeToggle(200, callback)});
+      $step('.no-insert-text').fadeToggle(200, function(){$step('.insert-text').fadeToggle(200, callback);});
     }
   };
 
   insertStep = function (id) {
+    const $step = step.ui.$step,
+      $stepAll = step.ui.$stepAll;
     var modulesInfo = _sequencer.modulesInfo();
     var parser = new DOMParser();
     var addStepUI = stepUI();
     addStepUI = parser.parseFromString(addStepUI, 'text/html').querySelector('div');
-
     if ($step('.insertDiv').length > 0){
-      toggleDiv();
+      toggleDiv($step);
     }
     else {
       step.ui
@@ -98,12 +99,12 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
         .insertAdjacentElement('afterend',
           addStepUI
         );
-      toggleDiv(function(){
+      toggleDiv($step, function(){
         insertPreview.updatePreviews(step.output, '.insertDiv');
       });
     }
 
-    $step('.insertDiv .close-insert-box').off('click').on('click', function(){toggleDiv(function(){})});
+    $step('.insertDiv .close-insert-box').off('click').on('click', function(){toggleDiv(function(){});});
     
     var insertStepSelect = $step('.insert-step-select');
     insertStepSelect.html('');
@@ -126,21 +127,21 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       newStep = $(this).attr('data-value');
       $step('.insert-step-select').val(newStep);
       selectNewStepUi();
-      insert(id);
+      insert(id, $step);
       $(this).removeClass('selected');
     });
     insertStepSelect.on('change', selectNewStepUi);
-    $step('.insertDiv .add-step-btn').on('click', function () { insert(id) });
-  }
+    $step('.insertDiv .add-step-btn').on('click', function () { insert(id, $step); });
+  };
 
-  function insert(id) {
+  function insert(id, $step) {
 
     options = options || {};
     var insertStepSelect = $step('.insert-step-select');
     if (insertStepSelect.val() == 'none') return;
 
     var newStepName = insertStepSelect.val();
-    toggleDiv();
+    toggleDiv($step);
     var sequenceLength = 1;
     if (sequencer.sequences[newStepName]) {
       sequenceLength = sequencer.sequences[newStepName].length;

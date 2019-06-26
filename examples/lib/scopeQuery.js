@@ -15,6 +15,7 @@ function $scope(scope) {
     element.getDomElem = function(i = 0){
       return element[i];
     };
+    element.getScope = () => scope;
 
     return element;
   };

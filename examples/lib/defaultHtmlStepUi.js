@@ -8,15 +8,14 @@
 // output values, step information.
 // See documetation for more details.
 
-var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js'),
+const intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js'),
   urlHash = require('./urlHash.js'),
   _ = require('lodash'),
   mapHtmlTypes = require('./mapHtmltypes'),
-  scopeQuery = require('./scopeQuery'),
-  $stepAll,
-  $step;
+  scopeQuery = require('./scopeQuery');
 
 function DefaultHtmlStepUi(_sequencer, options) {
+  let $step, $stepAll;
 
   options = options || {};
   var stepsEl = options.stepsEl || document.querySelector('#steps');
@@ -74,6 +73,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     $step = scopeQuery.scopeSelector(step.ui);
     $stepAll = scopeQuery.scopeSelectorAll(step.ui);
+    step.ui.$step = $step;
+    step.ui.$stepAll = $stepAll;
 
     step.linkElements = step.ui.querySelectorAll('a');
     step.imgElement = $step('a img.img-thumbnail')[0];

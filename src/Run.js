@@ -2,8 +2,10 @@ const getStepUtils = require('./util/getStep.js');
 
 function Run(ref, json_q, callback, ind, progressObj) {
   if (!progressObj) progressObj = { stop: function() { } };
-
   function drawStep(drawarray, pos) {
+    console.log(drawarray);
+    console.log(ref.getSteps());
+    console.log(pos);
     if (pos == drawarray.length && drawarray[pos - 1] !== undefined) {
       if (ref.objTypeOf(callback) == 'Function' && ref.steps.slice(-1)[0].output) {
         var steps = ref.steps;

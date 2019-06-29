@@ -1,6 +1,6 @@
 /**
  * @method $scope
- * @param {"DOMNode"} scope A DOM Node as the scope 
+ * @param {"DOMNode"} scope A DOM Node as the scope
  */
 function $scope(scope) {
   return function(queryString){
@@ -8,18 +8,22 @@ function $scope(scope) {
 
     element.elem = function(queryString){
       return new $scope(scope)(queryString);
-    }
+    };
     element.elemAll = function(queryString){
       return new $scopeAll(scope)(queryString);
-    }
+    };
+    element.getDomElem = function(i = 0){
+      return element[i];
+    };
+    element.getScope = () => scope;
 
     return element;
-  }
+  };
 }
 
 /**
  * @method $scopeAll
- * @param {"DOMNode"} scope A DOM Node as the scope 
+ * @param {"DOMNode"} scope A DOM Node as the scope
  */
 function $scopeAll(scope){
   return function(queryString){
@@ -27,19 +31,23 @@ function $scopeAll(scope){
 
     element.elem = function(queryString){
       return new $scope(scope)(queryString);
-    }
+    };
     element.elemAll = function(queryString){
       return new $scopeAll(scope)(queryString);
-    }
+    };
+    element.getDomElem = function(i = 0){
+      return element[i];
+    };
+    element.getScope = () => scope;
 
     return element;
-  }
+  };
 }
 
 /**
  * @method scopeSelector
  * @description A scoped jQuery selector
- * @param {"DOMNode"} scope DOM Node as the scope 
+ * @param {"DOMNode"} scope DOM Node as the scope
  */
 function scopeSelector(scope){
   return $scope(scope);
@@ -48,7 +56,7 @@ function scopeSelector(scope){
 /**
  * @method scopeSelectorAll
  * @description A scoped jQuery multiple selector
- * @param {"DOMNode} scope DOM Node as the scope 
+ * @param {"DOMNode} scope DOM Node as the scope
  */
 function scopeSelectorAll(scope){
   return $scopeAll(scope);
@@ -57,4 +65,4 @@ function scopeSelectorAll(scope){
 module.exports = {
   scopeSelector,
   scopeSelectorAll
-}
+};

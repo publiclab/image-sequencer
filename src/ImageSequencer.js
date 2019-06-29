@@ -111,6 +111,7 @@ ImageSequencer = function ImageSequencer(options) {
 
     var details = json_q;
     details = details.sort(function(a, b) { return b.index - a.index; });
+    console.log(details);
     for (var i in details)
       require('./InsertStep')(this_, details[i].index, details[i].name, details[i].o);
     return this;

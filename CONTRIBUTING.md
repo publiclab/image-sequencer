@@ -425,8 +425,10 @@ var $step = scopeQuery.scopeSelector(scope),
 This will return an object with a constructor which returns a `jQuery` object (from inside the scope) but with new `elem` and `elemAll` methods.
 
 #### Methods of the Returned Object
-* `elem()`: Selects an element inside the scope; 
-* `elemAll()`: Selects all the instances of a given element inside the scope;
+* `elem()`: Selects an element inside the scope.
+* `elemAll()`: Selects all the instances of a given element inside the scope.
+* `getScope()`: Returns the scope as a DOM element.
+* `getDomElem()`: Returns the scoped element as a DOM element instead of a jquery object.
 
 #### Example
 

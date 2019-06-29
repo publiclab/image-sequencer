@@ -8,7 +8,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
 
   function onLoad() {
     importStepsFromUrlHash();
-    if ($('#selectStep').val() === 'none')
+    if (!$('#selectStep').val())
       $(addStepSel + ' #add-step-btn').prop('disabled', true);
     handleSaveSequence();
   }

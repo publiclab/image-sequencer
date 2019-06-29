@@ -2,9 +2,9 @@ var urlHash = require('./urlHash.js'),
   insertPreview = require('./insertPreview.js');
 
 function IntermediateHtmlStepUi(_sequencer, step, options) {
-  function stepUI() {
-    return '<div class="row insertDiv collapse">\
-          <section class="panel panel-primary .insert-step">\
+  function stepUI(id) {
+    return '<div class="row insertDiv collapse index' + id + '">\
+          <section class="panel panel-primary insert-step">\
             <button class="btn btn-default close-insert-box"><i class="fa fa-times" aria-hidden="true"></i> Close</button>\
             <div class="form-inline">\
               <div class="panel-body">\
@@ -49,7 +49,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
                 </div>\
                 <div class="row center-align">\
                   <div class="col-md-8">\
-                    <select class="insert-step-select">\
+                    <select class="form-control input-lg insert-step-select">\
                       <!-- The default null selection has been appended manually in demo.js\
                       This is because the options in select are overritten when options are appended.-->\
                     </select>\
@@ -66,13 +66,11 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
 
 
   function selectNewStepUi() {
-    //var insertSelect = $step('.insert-step-select');
-    var insertSelect = $(step.ui.querySelector('.insert-step-select'));
-    var m = insertSelect.val();
-    // $step('.insertDiv .info').html(_sequencer.modulesInfo(m).description);
-    // $step('.insertDiv .add-step-btn').prop('disabled', false);
-    $(step.ui.querySelector('.insertDiv .info').html(_sequencer.modulesInfo(m).description));
-    $(step.ui.querySelector('.insertDiv .add-step-btn').prop('disabled', false));
+    var insertStepSel = '.insert-step';
+    var m = $(insertStepSel + ' select').val();
+    if(!m) m = arguments[0];
+    $(insertStepSel + ' .info').html(_sequencer.modulesInfo(m).description);
+    $(insertStepSel + ' #add-step-btn').prop('disabled', false);
   }
     
     
@@ -92,9 +90,10 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
   };
 
   insertStep = function (id) {
+    console.warn('Hi from insertStep function' + '  ' + id);
     var modulesInfo = _sequencer.modulesInfo();
     var parser = new DOMParser();
-    var addStepUI = stepUI();
+    var addStepUI = stepUI(id);
     addStepUI = parser.parseFromString(addStepUI, 'text/html').querySelector('div');
 
     //if ($step('.insertDiv').length > 0){
@@ -128,34 +127,36 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
           '<option value="' + m + '">' + modulesInfo[m].name + '</option>'
         );
     }
-    insertStepSelect.selectize({
-      sortField: 'text'
-    });
+    // insertStepSelect.selectize({
+    //   sortField: 'text'
+    // });
     //$step('.inserDiv .add-step-btn').prop('disabled', true);
-    $(step.ui.querySelector('.inserDiv .add-step-btn')).prop('disabled', true);
+    $('.inserDiv .add-step-btn').prop('disabled', true);
     
     insertStepSelect.append('<option value="" disabled selected>Select a Module</option>');
     //$step('.insertDiv .radio-group .radio').on('click', function () {
-    $(step.ui.querySelector('.insertDiv .radio-group .radio')).on('click', function () {
+    $('.index' + id + ' .radio-group .radio').on('click', function () {
+      console.log(id);
       $(this).parent().find('.radio').removeClass('selected');
       $(this).addClass('selected');
       newStep = $(this).attr('data-value');
       //$step('.insert-step-select').val(newStep);
       $(step.ui.querySelector('.insert-step-select')).val(newStep);
       selectNewStepUi();
-      insert(id);
       $(this).removeClass('selected');
+      insert(id);
+
     });
     insertStepSelect.on('change', selectNewStepUi);
     //$step('.insertDiv .add-step-btn').on('click', function () { insert(id) });
-    $(step.ui.querySelector('.insertDiv .add-step-btn')).on('click', function () { insert(id); });
+    $(step.ui.querySelector('.add-step-btn')).on('click', function () {
+      insert(id); });
   };
 
   function insert(id) {
-
     options = options || {};
     //var insertStepSelect = $step('.insert-step-select');
-    var insertStepSelect = $(step.ui.querySelector('.insert-step-select'));
+    var insertStepSelect = $('.insert-step-select');
     if (insertStepSelect.val() == 'none') return;
 
     var newStepName = insertStepSelect.val();
@@ -167,7 +168,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       sequenceLength = sequencer.modules[newStepName][1]['length'];
     }
     _sequencer
-      .insertSteps(id + 1, newStepName).run({ index: id });
+      .insertSteps(id + 1, newStepName).run({index:id});
 
     // add to URL hash too
     urlHash.setUrlHashParameter('steps', _sequencer.toString());

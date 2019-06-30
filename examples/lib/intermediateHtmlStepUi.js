@@ -105,7 +105,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       });
     }
 
-    $step('.insertDiv .close-insert-box').off('click').on('click', function(){toggleDiv(function(){});});
+    $step('.insertDiv .close-insert-box').off('click').on('click', function(){toggleDiv($step, function(){});});
     
     var insertStepSelect = $step('.insert-step-select');
     insertStepSelect.html('');
@@ -130,22 +130,21 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       newStep = $(this).attr('data-value');
       $step('.insert-step-select').val(newStep);
       selectNewStepUi($step);
-      insert(id, $step);
       $(this).removeClass('selected');
-      insert(id);
+      insert(id, $step, newStep);
 
     });
     insertStepSelect.on('change', () => {selectNewStepUi($step);});
-    $step('.insertDiv .add-step-btn').on('click', function () { insert(id, $step); });
+    $step('.insertDiv .add-step-btn').on('click', function () { insert(id, $step, $(this).attr('data-value')); });
   };
 
-  function insert(id, $step) {
+  function insert(id, $step, newStepName) {
 
     options = options || {};
     var insertStepSelect = $('.insert-step-select');
     if (insertStepSelect.val() == 'none') return;
-
-    var newStepName = insertStepSelect.val();
+    if(!newStepName)
+      var newStepName = insertStepSelect.val();
     toggleDiv($step);
     var sequenceLength = 1;
     if (sequencer.sequences[newStepName]) {

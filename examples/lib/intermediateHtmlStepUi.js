@@ -116,9 +116,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
           '<option value="' + m + '">' + modulesInfo[m].name + '</option>'
         );
     }
-    // insertStepSelect.selectize({
-    //   sortField: 'text'
-    // });
+
     $('.inserDiv .add-step-btn').prop('disabled', true);
     
     insertStepSelect.append('<option value="" disabled selected>Select a Module</option>');

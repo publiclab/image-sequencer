@@ -1,7 +1,7 @@
 Contributing to Image Sequencer
 ===
 
-Happily accepting pull requests; to edit the core library, modify files in `./src/`. To build, run `npm install` followed by `grunt build`.
+Happily accepting pull requests; to edit the core library, modify files in `./src/`. To build, run `yarn install` followed by `grunt build`.
 
 On ARM based devices, the `gl` module may require some libraries to be re-installed:
 

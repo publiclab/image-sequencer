@@ -56,15 +56,21 @@ A diagram of this running 5 steps on a single sample image may help explain how 
 
 ## Installation
 
+### Installing Yarn
+We use yarn as our package manager so it has to be preinstalled.
+```sh
+npm i -g yarn
+```
+
 This library conveniently works in the browser, in Node, and on the command line (CLI).
 
 ### Unix based platforms
-You can set up a local environment to test the UI with `sudo npm run setup` followed by `npm start`.
+You can set up a local environment to test the UI with `yarn run setup` followed by `yarn start`.
 
 ### Windows
 Our npm scripts do not support windows shells, please run the following snippet in PowerShell.
 ```powershell
-npm i ; npm i -g grunt grunt-cli ; grunt build; grunt serve
+yarn install ; npm i -g grunt grunt-cli ; grunt build; grunt serve
 ```
 In case of a port conflict please run the following
 ```powershell
@@ -84,16 +90,16 @@ Add `image-sequencer` to your list of dependencies and run `npm install`
 
 Globally install Image Sequencer:
 
-```
-$ npm install image-sequencer -g
+```sh
+npm install image-sequencer -g
 ```
 
 (You should have Node.JS and NPM for this.)
 
 ### To run the debug script
 
-```
-$ npm run debug invert
+```sh
+yarn run debug invert
 ```
 
 ## Quick Usage

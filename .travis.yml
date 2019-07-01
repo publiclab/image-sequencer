@@ -6,13 +6,13 @@ node_js:
 env:
   - CXX=g++-4.8
 before_script:
-  - npm install grunt-cli -g # for "grunt build"
+  - npm install grunt-cli yarn -g # for "grunt build"
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 script:
-  - npm test
-  - npm run test-ui
+  - yarn test
+  - yarn run test-ui
   - grunt build
 after_success:
   - bash <(curl -s https://codecov.io/bash)
@@ -32,4 +32,4 @@ before_install:
 install:
   - export DISPLAY=':99.0' # for tape-run
   - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 & # for tape-run
-  - npm install # for tape-run
+  - yarn install # for tape-run

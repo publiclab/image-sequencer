@@ -44,7 +44,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     if ($(addStepSel + ' select').val() == 'none') return;
     var newStepName;
     if(typeof arguments[0] !== 'string')
-      newStepName = $(addStepSel + ' select option').html().toLowerCase().split(' ').join('-');
+      newStepName = $(addStepSel + ' select').val().toLowerCase().split(' ').join('-');
     else newStepName = arguments[0];
 
     
@@ -64,7 +64,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
       .run({ index: _sequencer.steps.length - sequenceLength - 1 });
     $(addStepSel + ' .info').html('Select a new module to add to your sequence.');
     $(addStepSel + ' select').val('none');
-
+    
     //enable save-sequence button if disabled initially
     handleSaveSequence();
 

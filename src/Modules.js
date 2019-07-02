@@ -29,6 +29,7 @@ module.exports = {
   'grid-overlay': require('./modules/GridOverlay'),
   'import-image': require('./modules/ImportImage'),
   'invert': require('image-sequencer-invert'),
+  'minify-image': require('./modules/MinifyImage'),
   'ndvi': require('./modules/Ndvi'),
   'ndvi-colormap': require('./modules/NdviColormap'),
   'noise-reduction': require('./modules/NoiseReduction'),

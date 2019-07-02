@@ -7,7 +7,6 @@ module.exports = function AddQR(options, UI) {
   getPixels = require('get-pixels');
 
   function draw(input, callback, progressObj) {
-
     progressObj.stop(true);
     progressObj.overrideFlag = true;
 

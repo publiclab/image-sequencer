@@ -1,0 +1,8 @@
+{
+    "name": "minify-image",
+    "description": "Minifies the given image",
+    "url": "https://github.com/publiclab/image-sequencer/tree/master/MODULES.md",
+    "inputs": { },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#add-qr-module"
+  }
+  

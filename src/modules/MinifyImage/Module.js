@@ -12,11 +12,11 @@ module.exports = function MinifyImage(options, UI) {
     progressObj.overrideFlag = true;
 
     var step = this;
-    let filePath =  './images/';
+    let filePath =  __dirname + '/images/';
     var returnPath = base64Img.imgSync(input.src, filePath, 'test');
     (async () => {
       const files = await imagemin([returnPath], {
-        destination: './results/',
+        destination: __dirname + '/results/',
         plugins: [
           imageminJpegtran(),
           imageminPngquant({
@@ -24,7 +24,7 @@ module.exports = function MinifyImage(options, UI) {
           })
         ]
       });
-      var destPath = './results/test.' + input.format;
+      var destPath = __dirname + '/results/test.' + input.format;
       var data = base64Img.base64Sync(destPath);
       output(data, input.format );
       if(callback) callback();

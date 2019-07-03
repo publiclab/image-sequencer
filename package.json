@@ -35,6 +35,7 @@
     "bootstrap-colorpicker": "^2.5.3",
     "buffer": "~5.2.1",
     "commander": "^2.11.0",
+    "compressorjs": "^1.0.5",
     "data-uri-to-buffer": "^2.0.0",
     "downloadjs": "^1.4.7",
     "eslint": "^5.16.0",

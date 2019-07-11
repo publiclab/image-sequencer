@@ -14,7 +14,7 @@ module.exports = function BlobAnalysis(options, UI){
       callback();
     }
     else{
-      var priorStep = this.getStep(-1); // get the previous step to add text onto it.
+      var priorStep = this.getStep(-1); // get the previous step to process it
 
       function extraManipulation(pixels){
   

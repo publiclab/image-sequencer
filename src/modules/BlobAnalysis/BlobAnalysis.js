@@ -1,6 +1,7 @@
 module.exports = function(pixels, options, priorStep){
 
-  var cv = require('../../../examples/opencv');
+  // var cv = require('../../../examples/opencv_3.3.1');
+  
   var img = $(priorStep.imgElement);
   if(Object.keys(img).length === 0){
     img = $(priorStep.options.step.imgElement);

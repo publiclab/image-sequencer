@@ -9,38 +9,39 @@ List of Module Documentations
 4.  [Add QR](#Add-QR-module)
 5.  [Average](#average-module)
 6.  [Blend](#blend-module)
-7.  [Blur](#blur-module)
-8.  [Brightness](#brightness-module)
-9.  [Channel](#channel-module)
-10. [Colorbar](#colorbar-module)
-11. [Colormap](#colormap-module)
-12. [Contrast](#contrast-module)
-13. [Convolution](#convolution-module)
-14. [DecodeQr](#decodeQr-module)
-15. [Dither](#dither-module)
-16. [DrawRectangle](#draw-rectangle-module)
-17. [Dynamic](#dynamic-module)
-18. [Edge-Detect](#edge-detect-module)
-19. [FlipImage](#flipimage-module)
-20. [Gamma-Correction](#gamma-correction-module)
-21. [Gradient](#gradient-module)
-22. [Histogram](#histogram-module)
-23. [Import-image](#import-image-module)
-24. [Invert](#invert-module)
-25. [Ndvi](#ndvi-module)
-26. [Ndvi-Colormap](#ndvi-colormap-module)
-27. [Overlay](#overlay-module)
-28. [PaintBucket](#paint-bucket-module)
-29. [Resize](#resize-module)
-30. [ReplaceColor](#replacecolor-module)
-31. [Rotate](#rotate-module)
-32. [Saturation](#saturation-module)
-33. [Threshold](#threshold)
-34. [Tint](#tint)
-35. [ColorTemperature](#color-temperature)
-36. [Grid-Overlay](#grid-overlay)
-37. [MinifyImage](#minify-image)
-38. [Text-Overlay](#text-overlay)
+7.  [Blob-Analysis](#blob-analysis)
+8.  [Blur](#blur-module)
+9.  [Brightness](#brightness-module)
+10. [Channel](#channel-module)
+11. [Colorbar](#colorbar-module)
+12. [Colormap](#colormap-module)
+13. [Contrast](#contrast-module)
+14. [Convolution](#convolution-module)
+15. [DecodeQr](#decodeQr-module)
+16. [Dither](#dither-module)
+17. [DrawRectangle](#draw-rectangle-module)
+18. [Dynamic](#dynamic-module)
+19. [Edge-Detect](#edge-detect-module)
+20. [FlipImage](#flipimage-module)
+21. [Gamma-Correction](#gamma-correction-module)
+22. [Gradient](#gradient-module)
+23. [Histogram](#histogram-module)
+24. [Import-image](#import-image-module)
+25. [Invert](#invert-module)
+26. [Ndvi](#ndvi-module)
+27. [Ndvi-Colormap](#ndvi-colormap-module)
+28. [Overlay](#overlay-module)
+29. [PaintBucket](#paint-bucket-module)
+30. [Resize](#resize-module)
+31. [ReplaceColor](#replacecolor-module)
+32. [Rotate](#rotate-module)
+33. [Saturation](#saturation-module)
+34. [Threshold](#threshold)
+35. [Tint](#tint)
+36. [ColorTemperature](#color-temperature)
+37. [Grid-Overlay](#grid-overlay)
+38. [MinifyImage](#minify-image)
+39. [Text-Overlay](#text-overlay)
 
 
 ## crop-module
@@ -154,6 +155,20 @@ This module is used for blending two images .
 where `options` is an object with the following properties:
 * offset: step of image with which current image is to be blended(Two steps back is -2, three                steps back is -3 etc; default -2) 
 * func: function used to blend two images (default : function(r1, g1, b1, a1, r2, g2, b2, a2) {            return [ r1, g2, b2, a2 ] })
+
+## Blob Analysis
+
+This module uses Opencv.js for detecting and marking blob/region in microscopic images. It requires an opencv.js file to 
+be loaded before using the functionalities which is currently being loaded to the webpage via script.It supports both environments, Node.js and browser for processing. 
+
+As the size of opencv.js file is quite large, the future versions will focus on loading it asynchronously, on demand of the the module to optimise performance.
+
+#### Usage
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('blob-analysis')
+           .run()
+```
 
 ## blur-module
 

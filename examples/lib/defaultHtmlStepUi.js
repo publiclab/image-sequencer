@@ -8,18 +8,21 @@
 // output values, step information.
 // See documetation for more details.
 
-var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js');
-var urlHash = require('./urlHash.js');
-var _ = require('lodash');
-var mapHtmlTypes = require('./mapHtmltypes');
+const intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js'),
+  urlHash = require('./urlHash.js'),
+  _ = require('lodash'),
+  mapHtmlTypes = require('./mapHtmltypes'),
+  scopeQuery = require('./scopeQuery');
 
 function DefaultHtmlStepUi(_sequencer, options) {
-  
+  let $step, $stepAll;
+
   options = options || {};
   var stepsEl = options.stepsEl || document.querySelector('#steps');
   var selectStepSel = options.selectStepSel = options.selectStepSel || '#selectStep';
 
   function onSetup(step, stepOptions) {
+
     if (step.options && step.options.description)
       step.description = step.options.description;
 
@@ -67,8 +70,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
     var parser = new DOMParser();
     step.ui = parser.parseFromString(step.ui, 'text/html');
     step.ui = step.ui.querySelector('div.container-fluid');
+
+    $step = scopeQuery.scopeSelector(step.ui);
+    $stepAll = scopeQuery.scopeSelectorAll(step.ui);
+    step.ui.$step = $step;
+    step.ui.$stepAll = $stepAll;
+
     step.linkElements = step.ui.querySelectorAll('a');
-    step.imgElement = step.ui.querySelector('a img.img-thumbnail');
+    step.imgElement = $step('a img.img-thumbnail')[0];
 
     if (_sequencer.modulesInfo().hasOwnProperty(step.name)) {
       var inputs = _sequencer.modulesInfo(step.name).inputs;
@@ -144,12 +153,12 @@ function DefaultHtmlStepUi(_sequencer, options) {
           html +
           '\
                          </div>';
-        step.ui.querySelector('div.details').appendChild(div);
+        $step('div.details').append(div);
       }
-      $(step.ui.querySelector('div.panel-footer')).append(
+      $step('div.panel-footer').append(
         '<div class="cal collapse in"><button type="submit" class="btn btn-sm btn-default btn-save" disabled = "true" >Apply</button> <small style="padding-top:2px;">Press apply to see changes</small></div>'
       );
-      $(step.ui.querySelector('div.panel-footer')).prepend(
+      $step('div.panel-footer').prepend(
         '<button class="pull-right btn btn-default btn-sm insert-step" >\
         <span class="insert-text"><i class="fa fa-plus"></i> Insert Step</span><span class="no-insert-text" style="display:none">Close</span></button>\
         <button class="pull-right btn btn-default btn-sm download-btn" style="margin-right:2px" >\
@@ -159,13 +168,13 @@ function DefaultHtmlStepUi(_sequencer, options) {
     }
 
     if (step.name != 'load-image') {
-      step.ui
-        .querySelector('div.trash-container')
+      $step('div.trash-container')
         .prepend(
           parser.parseFromString(tools, 'text/html').querySelector('div')
         );
-      $(step.ui.querySelectorAll('.remove')).on('click', function() {notify('Step Removed', 'remove-notification');});
-      $(step.ui.querySelectorAll('.insert-step')).on('click', function() { util.insertStep(step.ID); });
+
+      $stepAll('.remove').on('click', function() {notify('Step Removed', 'remove-notification');});
+      $stepAll('.insert-step').on('click', function() { util.insertStep(step.ID); });
       // Insert the step's UI in the right place
       if (stepOptions.index == _sequencer.steps.length) {
         stepsEl.appendChild(step.ui);
@@ -179,19 +188,19 @@ function DefaultHtmlStepUi(_sequencer, options) {
     else {
       $('#load-image').append(step.ui);
     }
-    $(step.ui.querySelector('.toggle')).on('click', () => {
-      $(step.ui.querySelector('.toggleIcon')).toggleClass('rotated');
-      $(step.ui.querySelectorAll('.cal')).collapse('toggle');
+    $step('.toggle').on('click', () => {
+      $step('.toggleIcon').toggleClass('rotated');
+      $stepAll('.cal').collapse('toggle');
     });
     
     $(step.imgElement).on('mousemove', _.debounce(() => imageHover(step), 150));
     $(step.imgElement).on('click', (e) => {e.preventDefault(); });
-    $(step.ui.querySelectorAll('#color-picker')).colorpicker();
+    $stepAll('#color-picker').colorpicker();
 
     function saveOptions(e) {
       e.preventDefault();
       if (optionsChanged){
-        $(step.ui.querySelector('div.details'))
+        $step('div.details')
           .find('input,select')
           .each(function(i, input) {
             $(input)
@@ -204,7 +213,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         // modify the url hash
         urlHash.setUrlHashParameter('steps', _sequencer.toString());
         // disable the save button
-        $(step.ui.querySelector('.btn-save')).prop('disabled', true);
+        $step('.btn-save').prop('disabled', true);
         optionsChanged = false;
         changedInputs = 0;
       }
@@ -215,15 +224,15 @@ function DefaultHtmlStepUi(_sequencer, options) {
       changedInputs += hasChangedBefore ? inputChanged ? 0 : -1 : inputChanged ? 1 : 0;
       optionsChanged = changedInputs > 0;
 
-      $(step.ui.querySelector('.btn-save')).prop('disabled', !optionsChanged);
+      $step('.btn-save').prop('disabled', !optionsChanged);
       return inputChanged;
     }
 
     var
       changedInputs = 0,
       optionsChanged = false;
-    $(step.ui.querySelector('.input-form')).on('submit', saveOptions);
-    $(step.ui.querySelectorAll('.target')).each(function(i, input) {
+    $step('.input-form').on('submit', saveOptions);
+    $stepAll('.target').each(function(i, input) {
       $(input)
         .data('initValue', $(input).val())
         .data('hasChangedBefore', false)
@@ -248,19 +257,19 @@ function DefaultHtmlStepUi(_sequencer, options) {
   }
 
 
-  function onDraw(step) {
-    $(step.ui.querySelector('.load')).show();
-    $(step.ui.querySelector('img')).hide();
-    $(step.ui.querySelectorAll('.load-spin')).show();
+  function onDraw() {
+    $step('.load').show();
+    $step('img').hide();
+    $stepAll('.load-spin').show();
   }
 
   function onComplete(step) {
-    $(step.ui.querySelector('img')).show();
-    $(step.ui.querySelectorAll('.load-spin')).hide();
-    $(step.ui.querySelector('.load')).hide();
+    $step('img').show();
+    $stepAll('.load-spin').hide();
+    $step('.load').hide();
 
     step.imgElement.src = (step.name == 'load-image') ? step.output.src : step.output;
-    var imgthumbnail = step.ui.querySelector('.img-thumbnail');
+    var imgthumbnail = $step('.img-thumbnail').getDomElem();
     for (let index = 0; index < step.linkElements.length; index++) {
       if (step.linkElements[index].contains(imgthumbnail))
         step.linkElements[index].href = step.imgElement.src;
@@ -271,7 +280,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       return output.split('/')[1].split(';')[0];
     }
 
-    $(step.ui.querySelectorAll('.download-btn')).on('click', () => {
+    $stepAll('.download-btn').on('click', () => {
 
       for (let index = 0; index < step.linkElements.length; index++){
         
@@ -294,18 +303,18 @@ function DefaultHtmlStepUi(_sequencer, options) {
       for (var i in inputs) {
         if (step.options[i] !== undefined) {
           if (inputs[i].type.toLowerCase() === 'input')
-            $(step.ui.querySelector('div[name="' + i + '"] input'))
+            $step('div[name="' + i + '"] input')
               .val(step.options[i])
               .data('initValue', step.options[i]);
           if (inputs[i].type.toLowerCase() === 'select')
-            $(step.ui.querySelector('div[name="' + i + '"] select'))
+            $step('div[name="' + i + '"] select')
               .val(step.options[i])
               .data('initValue', step.options[i]);
         }
       }
       for (var i in outputs) {
         if (step[i] !== undefined)
-          $(step.ui.querySelector('div[name="' + i + '"] input'))
+          $step('div[name="' + i + '"] input')
             .val(step[i]);
       }
     }

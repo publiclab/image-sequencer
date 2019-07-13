@@ -1,12 +1,12 @@
 {
   "name": "image-sequencer",
-  "version": "3.4.5",
+  "version": "3.5.1",
   "description": "A modular JavaScript image manipulation library modeled on a storyboard.",
   "main": "src/ImageSequencer.js",
   "scripts": {
     "debug": "TEST=true node ./index.js -i ./examples/images/monarch.png -s invert",
-    "test": "TEST=true istanbul cover tape test/core/*.js test/core/ui/user-interface.js test/core/modules/*.js | tap-spec; browserify test/core/sequencer/image-sequencer.js test/core/sequencer/chain.js test/core/sequencer/meta-modules.js test/core/sequencer/replace.js test/core/sequencer/import-export.js test/core/sequencer/run.js test/core/sequencer/dynamic-imports.js test/core/util/*.js test/core/sequencer/benchmark.js | tape-run --render=\"tap-spec\"",
-    "test-ui": "node node_modules/jasmine/bin/jasmine test/spec/*.js",
+    "test": "TEST=true istanbul cover tape test/core/*.js test/core/ui/user-interface.js test/core/modules/*.js | tap-spec; node test/core/sequencer/benchmark.js;  browserify test/core/sequencer/meta-modules.js test/core/sequencer/image-sequencer.js test/core/sequencer/chain.js  test/core/sequencer/replace.js test/core/sequencer/import-export.js test/core/sequencer/run.js test/core/sequencer/dynamic-imports.js test/core/util/*.js | tape-run --render=\"tap-spec\"",
+    "test-ui": "node node_modules/jasmine/bin/jasmine test/ui/spec/*.js",
     "setup": "npm i && npm i -g grunt grunt-cli && grunt build",
     "start": "grunt serve"
   },
@@ -30,11 +30,13 @@
     "url": "https://github.com/publiclab/image-sequencer/issues"
   },
   "dependencies": {
+    "atob": "^2.1.2",
     "base64-img": "^1.0.4",
     "bootstrap": "~3.4.0",
     "bootstrap-colorpicker": "^2.5.3",
     "buffer": "~5.2.1",
     "commander": "^2.11.0",
+    "compressorjs": "^1.0.5",
     "data-uri-to-buffer": "^2.0.0",
     "downloadjs": "^1.4.7",
     "eslint": "^5.16.0",
@@ -47,6 +49,9 @@
     "gpu.js": "^2.0.0-rc.12",
     "image-sequencer-invert": "^1.0.0",
     "imagejs": "0.0.9",
+    "imagemin": "^7.0.0",
+    "imagemin-jpegtran": "^6.0.0",
+    "imagemin-pngquant": "^8.0.0",
     "imgareaselect": "git://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2",
     "istanbul": "^0.4.5",
     "jasmine": "^3.4.0",
@@ -62,6 +67,7 @@
     "readline-sync": "^1.4.7",
     "save-pixels": "~2.3.4",
     "selectize": "^0.12.6",
+    "spawn-sync": "^2.0.0",
     "urify": "^2.1.1",
     "webgl-distort": "0.0.2"
   },
@@ -84,7 +90,7 @@
     "jasmine-core": "^3.3.0",
     "jasmine-jquery": "^2.1.1",
     "jasmine-spec-reporter": "^4.2.1",
-    "lint-staged": "^8.1.6",
+    "lint-staged": "^9.1.0",
     "looks-same": "^7.0.0",
     "matchdep": "^2.0.0",
     "tap-spec": "^5.0.0",

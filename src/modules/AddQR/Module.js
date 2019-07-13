@@ -28,7 +28,6 @@ module.exports = function AddQR(options, UI) {
       function output(image, datauri, mimetype) {
         step.output = { src: datauri, format: mimetype };
       }
-
       return require('../_nomodule/PixelManipulation.js')(input, {
         output: output,
         ui: options.step.ui,
@@ -37,7 +36,8 @@ module.exports = function AddQR(options, UI) {
         format: input.format,
         image: options.image,
         inBrowser: options.inBrowser,
-        callback: callback
+        callback: callback,
+        useWasm:options.useWasm
       });
     });
 

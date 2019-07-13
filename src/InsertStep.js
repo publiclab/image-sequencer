@@ -25,7 +25,7 @@ function InsertStep(ref, index, name, o) {
     o.selector = o_.selector || 'ismod-' + name;
     o.container = o_.container || ref.options.selector;
     o.inBrowser = ref.options.inBrowser;
-
+    o.useWasm = (ref.options.useWasm === false) ? false : true;
     if (index == -1) index = ref.steps.length;
 
     o.step = {

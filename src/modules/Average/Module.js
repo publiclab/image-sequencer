@@ -62,7 +62,8 @@ module.exports = function Average(options, UI) {
       extraManipulation: extraManipulation,
       format: input.format,
       image: options.image,
-      callback: callback
+      callback: callback,
+      useWasm:options.useWasm
     });
 
   }

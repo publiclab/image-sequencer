@@ -32,7 +32,7 @@ module.exports = function ImportImageModule(options, UI) {
     step.metadata.input = input;
     // options.format = require('../../util/GetFormat')(options.imageUrl);
 
-    var helper = ImageSequencer({ inBrowser: options.inBrowser, ui: false });
+    var helper = ImageSequencer({ inBrowser: options.inBrowser, ui: false, useWasm: options.useWasm });
     helper.loadImages(options.imageUrl, () => {
       step.output = helper.steps[0].output;
       callback();

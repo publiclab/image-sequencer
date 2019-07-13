@@ -50,7 +50,8 @@ module.exports = function edgeDetect(options, UI) {
             format: input.format,
             image: options.image,
             inBrowser: options.inBrowser,
-            callback: callback
+            callback: callback,
+            useWasm: options.useWasm
           });
         });
       });

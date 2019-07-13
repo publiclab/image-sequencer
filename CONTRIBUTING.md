@@ -280,7 +280,6 @@ module.exports = function ModuleName(options,UI) {
 
 The `progressObj` parameter of `draw()` is not consumed unless a custom progress bar needs to be drawn, for which this default spinner should be stopped with `progressObj.stop()` and image-sequencer is informed about the custom progress bar with `progressObj.overrideFlag = true;` following which this object can be overriden with custom progress object.
 
-The pixelManipulation API can draw progress bars internally using the `pace` npm package. The option is disabled by default but can be enabled by passing `ui: true` in the options for pixelManipulation. The recommended way is to use `ui: options.step.ui`. This will only show the progress if the ui is set to true by the user, while creating the sequencer object.
 
 ### Module example
 
@@ -426,8 +425,10 @@ var $step = scopeQuery.scopeSelector(scope),
 This will return an object with a constructor which returns a `jQuery` object (from inside the scope) but with new `elem` and `elemAll` methods.
 
 #### Methods of the Returned Object
-* `elem()`: Selects an element inside the scope; 
-* `elemAll()`: Selects all the instances of a given element inside the scope;
+* `elem()`: Selects an element inside the scope.
+* `elemAll()`: Selects all the instances of a given element inside the scope.
+* `getScope()`: Returns the scope as a DOM element.
+* `getDomElem()`: Returns the scoped element as a DOM element instead of a jquery object.
 
 #### Example
 

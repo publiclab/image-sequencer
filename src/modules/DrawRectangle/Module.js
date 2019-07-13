@@ -32,7 +32,8 @@ module.exports = function DrawRectangle(options, UI) {
       extraManipulation: extraManipulation,
       format: input.format,
       image: options.image,
-      callback: callback
+      callback: callback,
+      useWasm:options.useWasm
     });
 
   }

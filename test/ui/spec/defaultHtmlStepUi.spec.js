@@ -5,8 +5,8 @@ global.document = DOM.window.document;
 
 describe('Sequencer step HTML', function() {
 
-  var DefaultHtmlStepUi = require('../examples/lib/defaultHtmlStepUi');
-  var sequencer = require('../src/ImageSequencer')();
+  var DefaultHtmlStepUi = require('../../../examples/lib/defaultHtmlStepUi');
+  var sequencer = require('../../../src/ImageSequencer')();
   var defaultHtmlStepUi;
   var step = 'brightness';
   var options = {
@@ -14,6 +14,16 @@ describe('Sequencer step HTML', function() {
     description: 'Change the brightness of the image by given percent value'
   };
   // options = JSON.parse(options)
+
+  beforeAll(() => {
+    const { JSDOM } = require('jsdom');
+    var { window } = new JSDOM();
+
+    const { document } = window;
+    global.window = window;
+    global.document = document;
+    const $ = global.jQuery = global.$ = require('jquery');
+  });
 
   beforeEach(()=>{
     defaultHtmlStepUi = new DefaultHtmlStepUi(sequencer);

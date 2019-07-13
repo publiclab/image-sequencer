@@ -38,16 +38,16 @@ module.exports = function ColorTemperature(options, UI) {
       for (let i = 0; i < pixels.shape[0]; i++) {
         for (let j = 0; j < pixels.shape[1]; j++) {
 
-                    var rgbdata = [pixels.get(i, j, 0),pixels.get(i, j, 1),pixels.get(i, j, 2)];
-                    rgbdata[0] = (255 / r) * rgbdata[0];
-                    rgbdata[1] = (255 / g) * rgbdata[1];
-                    rgbdata[2] = (255 / b) * rgbdata[2];
-                    require('../../util/pixelSetter.js')(i,j,rgbdata,pixels);
+          var rgbdata = [pixels.get(i, j, 0), pixels.get(i, j, 1), pixels.get(i, j, 2)];
+          rgbdata[0] = (255 / r) * rgbdata[0];
+          rgbdata[1] = (255 / g) * rgbdata[1];
+          rgbdata[2] = (255 / b) * rgbdata[2];
+          require('../../util/pixelSetter.js')(i, j, rgbdata, pixels);
 
-                }
-            }
+        }
+      }
 
-            return pixels
+      return pixels;
     }
 
     function output(image, datauri, mimetype) {

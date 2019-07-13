@@ -44,12 +44,12 @@ module.exports = function(pixels, highThresholdRatio, lowThresholdRatio, useHyst
 var pixelSetter = require('../../util/pixelSetter.js');
 
 function supress(pixels, pixel) {
-  pixelSetter(pixel[0],pixel[1],[0,0,0,255],pixels);
+  pixelSetter(pixel[0], pixel[1], [0, 0, 0, 255], pixels);
 
 }
 
 function preserve(pixels, pixel) {
-  pixelSetter(pixel[0],pixel[1],[255,255,255,255],pixels);
+  pixelSetter(pixel[0], pixel[1], [255, 255, 255, 255], pixels);
 
 }
 

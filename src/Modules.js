@@ -28,6 +28,7 @@ module.exports = {
   'gradient': require('./modules/Gradient'),
   'grid-overlay': require('./modules/GridOverlay'),
   'import-image': require('./modules/ImportImage'),
+  'minify-image': require('./modules/MinifyImage'),
   'invert': require('image-sequencer-invert'),
   'ndvi': require('./modules/Ndvi'),
   'ndvi-colormap': require('./modules/NdviColormap'),

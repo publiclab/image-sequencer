@@ -39,6 +39,7 @@ List of Module Documentations
 34. [Tint](#tint)
 35. [ColorTemperature](#color-temperature)
 36. [Grid-Overlay](#grid-overlay)
+37. [MinifyImage](#minify-image)
 
 
 ## crop-module
@@ -601,3 +602,17 @@ where `options` is an object with the following property:
 * options.x : The value at which the grid line should start in x-axis.
 * options.y : The value at which the grid line should start in y-axis.
 * color : Color for the grid on the image.
+
+# Minify Image
+
+This module minifies the image using lossy compression that is the image-dimensions are not lost but the size is reduced.
+
+The module supports jpg/jpeg/webp images in browser; but the node version supports all of the types.
+
+## Usage
+
+```js
+sequencer.loadImage('PATH')
+           .addSteps('minify-image')
+           .run()
+```

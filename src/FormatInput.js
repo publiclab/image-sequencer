@@ -57,13 +57,13 @@ function formatInput(args, format, images) {
   var format_i = format;
   // Format the input as per the arguments allowed in function signature
   if (format == '+')
-    format = ['o_string_a', 'string_a', 'o_object'];
+    format = ['string_a', 'o_object'];
   else if (format == '-')
-    format = ['o_string_a', 'number_a'];
+    format = ['number_a'];
   else if (format == '^')
-    format = ['o_string_a', 'number', 'string', 'o_object'];
+    format = ['number', 'string', 'o_object'];
   else if (format == 'r')
-    format = ['o_string_a', 'o_number'];
+    format = ['o_number'];
   else if (format == 'l')
     format = ['o_string', 'string', 'o_function'];
 

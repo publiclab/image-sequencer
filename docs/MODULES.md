@@ -3,7 +3,7 @@ Documentation of various Modules
 
 List of Module Documentations
 
-1.  [Add QR](#Add-QR-module)
+1.  [Add QR](#add-qr-module)
 2.  [Average](#average-module)
 3.  [Blend](#blend-module)
 4.  [Blur](#blur-module)
@@ -15,12 +15,12 @@ List of Module Documentations
 10. [Contrast](#contrast-module)
 11. [Convolution](#convolution-module)
 12. [Crop](#crop-module)
-13. [DecodeQr](#decodeQr-module)
+13. [DecodeQr](#decodeqr-module)
 14. [Dither](#dither-module)
 15. [DrawRectangle](#draw-rectangle-module)
 16. [Dynamic](#dynamic-module)
 17. [Edge-Detect](#edge-detect-module)
-18. [FisheyeGl](#fisheyeGl-module)
+18. [FisheyeGl](#fisheyegl-module)
 19. [FlipImage](#flipimage-module)
 20. [Gamma-Correction](#gamma-correction-module)
 21. [Gradient](#gradient-module)

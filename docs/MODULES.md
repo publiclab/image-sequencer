@@ -40,6 +40,7 @@ List of Module Documentations
 35. [ColorTemperature](#color-temperature)
 36. [Grid-Overlay](#grid-overlay)
 37. [MinifyImage](#minify-image)
+38. [Text-Overlay](#text-overlay)
 
 
 ## crop-module
@@ -616,3 +617,17 @@ sequencer.loadImage('PATH')
            .addSteps('minify-image')
            .run()
 ```
+# Text Overlay
+
+The modules allows to add text to image in both browser and node environment. We have the options to modify the font-size and also support few font-styles. The text color can also be modified.
+
+## Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('grid-overlay',options)
+           .run()
+```
+The options can take various attributes like,
+```
+var options = { text : 'Hello World', size : '12'};

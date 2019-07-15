@@ -60,6 +60,7 @@
     "jsqr": "^1.1.1",
     "lodash": "^4.17.11",
     "ndarray": "^1.0.18",
+    "opencvjs": "git://github.com/ucisysarch/opencvjs.git#7fe821305dffdc3ca6c7edfaa779d045f0406961",
     "ora": "^3.0.0",
     "pace": "0.0.4",
     "puppeteer": "^1.14.0",

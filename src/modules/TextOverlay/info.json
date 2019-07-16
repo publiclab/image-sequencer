@@ -40,6 +40,5 @@
             "desc": "Enter the font size in pixels.",
             "default": "12"
         }
-    },
-    "only": "browser" 
+    }
 }

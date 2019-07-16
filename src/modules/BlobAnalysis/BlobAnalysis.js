@@ -1,6 +1,6 @@
 module.exports = function(pixels, options, priorStep){
 
-  // var cv = require('../../../examples/opencv_3.3.1');
+  var $ = require('jquery'); // to make Blob-analysis work for node.js
   
   var img = $(priorStep.imgElement);
   if(Object.keys(img).length === 0){

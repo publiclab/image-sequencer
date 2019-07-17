@@ -68,6 +68,8 @@
     "save-pixels": "~2.3.4",
     "selectize": "^0.12.6",
     "spawn-sync": "^2.0.0",
+    "threads": "^1.0.0-beta.2",
+    "tiny-worker": "^2.2.0",
     "urify": "^2.1.1",
     "webgl-distort": "0.0.2"
   },

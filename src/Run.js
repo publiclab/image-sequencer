@@ -1,5 +1,5 @@
 const getStepUtils = require('./util/getStep.js');
-
+const { spawn, Thread, Worker } = require('threads');
 function Run(ref, json_q, callback, ind, progressObj) {
   if (!progressObj) progressObj = { stop: function() { } };
 
@@ -66,23 +66,44 @@ function Run(ref, json_q, callback, ind, progressObj) {
     drawStep(drawarray, ind);
   }
 
-  function filter(json_q) {
- 
-    if (json_q[0] == 0 && ref.steps.length == 1)
-      delete json_q[0];
-    else if (json_q[0] == 0) json_q[0]++;
-    var prevstep = ref.steps[json_q[0] - 1];
-    while (
-      typeof prevstep == 'undefined' ||
-        typeof prevstep.output == 'undefined'
-    ) {
-      prevstep = ref.steps[--json_q[0] - 1];
-    }
-    
-    return json_q;
+  async function main(json_q) {
+    steps = ref.steps.map(step=>{
+      var processed_step  = {};
+      if(step.name)  processed_step.name = step.name;
+      else processed_step.name = step.options.name;
+      if(step.output) processed_step.output = step.output;
+      else processed_step.output = step.options.output;
+      return processed_step;
+    });
+    const filter = await spawn(new Worker('./workers/filter'));
+    var json_q = await filter(json_q, steps);
+    await Thread.terminate(filter);
   }
+   
   
-  var json_q = filter(json_q);
+  
+  main(json_q).catch(console.error);
+
+  // function filter(json_q) {
+ 
+  //   if (json_q[0] == 0 && ref.steps.length == 1)
+  //     delete json_q[0];
+  //   else if (json_q[0] == 0) json_q[0]++;
+  //   var prevstep = ref.steps[json_q[0] - 1];
+  //   console.log(prevstep)
+  //   while (
+  //     typeof prevstep == 'undefined' ||
+  //       typeof prevstep.output == 'undefined'
+  //   ) {
+  //     console.log(prevstep)
+  //     prevstep = ref.steps[--json_q[0] - 1];
+  //   }
+    
+  //   return json_q;
+  // }
+  
+  // var json_q = filter(json_q);
+  
   
   return drawSteps(json_q);
 }

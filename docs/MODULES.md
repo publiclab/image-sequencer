@@ -44,27 +44,6 @@ List of Module Documentations
 
 
 
-## fisheyeGl-module
-
-This module is used for correcting Fisheye or Lens Distortion
-
-#### Usage
-
-```js
-  sequencer.loadImage('PATH')
-           .addSteps('fisheye-gl',options)
-           .run()
-```
-
-where `options` is an object with the following properties:
-* a : a correction (0 to 4; default 1)
-* b : b correction (0 to 4; default 1)
-* Fx : x correction (0 to 4; default 1)
-* Fy : y correction (0 to 4; default 1)
-* scale : The ratio to which the original image is to be scaled (0 to 20; default 1.5)
-* x : Field of View x (0 to 2; default 1)
-* y : Field of View y (0 to 2; default 1)
-
 ## add-qr-module
 
 This module Adds QR corresponding to the given string.
@@ -337,6 +316,29 @@ where `options` is an object with the following properties:
 * blur :  Intensity of Gaussian blur (0 to 5; default 2)
 * highThresholdRatio : Upper Threshold Ratio ( default : 0.2)
 * lowThresholdratio : Lower Threshold Ratio ( default : 0.2)
+
+
+## fisheyeGl-module
+
+This module is used for correcting Fisheye or Lens Distortion
+
+#### Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('fisheye-gl',options)
+           .run()
+```
+
+where `options` is an object with the following properties:
+* a : a correction (0 to 4; default 1)
+* b : b correction (0 to 4; default 1)
+* Fx : x correction (0 to 4; default 1)
+* Fy : y correction (0 to 4; default 1)
+* scale : The ratio to which the original image is to be scaled (0 to 20; default 1.5)
+* x : Field of View x (0 to 2; default 1)
+* y : Field of View y (0 to 2; default 1)
+
 
 ## flipimage-module 
 

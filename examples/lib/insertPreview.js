@@ -44,9 +44,16 @@ function updatePreviews(src, selector) {
     }
   };
 
-  Object.keys(previewSequencerSteps).forEach(function (step, index) {
-    generatePreview(step, Object.values(previewSequencerSteps)[index], src, selector);
+  var sequencer = ImageSequencer();
+  sequencer.loadImage(src);
+  sequencer.addSteps('resize', {['resize']: '30%'});
+  sequencer.run((src) => {
+
+    Object.keys(previewSequencerSteps).forEach(function (step, index) {
+      generatePreview(step, Object.values(previewSequencerSteps)[index], src, selector);
+    });
   });
+
 }
 
 module.exports = {

@@ -42,27 +42,6 @@ List of Module Documentations
 37. [Tint](#tint)
 
 
-## crop-module
-
-This module is used to crop an image.
-
-#### Usage
-
-```js
-  sequencer.loadImage('PATH')
-           .addSteps('crop',options)
-           .run();
-```
-Where `options` is an object having the properties `x`, `y`, `w`, `h`. This diagram defines these properties:
-
-![Image](CropManual.png)
-
-#### Defaults
-
-* `options.x` : 0
-* `options.y` : 0
-* `options.w` : half of image width
-* `options.h` : half of image height
 
 
 ## segmented-colormap-module
@@ -262,6 +241,29 @@ This module is used for performing image-convolution.
 where `options` is an object with the following properties:
 * constantFactor : a constant factor, multiplies all the kernel values by that factor (default :                     1/9)
 * kernelValues : nine space separated numbers representing the kernel values in left to right and                   top to bottom format(default : 1 1 1 1 1 1 1 1 1)
+
+## crop-module
+
+This module is used to crop an image.
+
+#### Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('crop',options)
+           .run();
+```
+Where `options` is an object having the properties `x`, `y`, `w`, `h`. This diagram defines these properties:
+
+![Image](CropManual.png)
+
+#### Defaults
+
+* `options.x` : 0
+* `options.y` : 0
+* `options.w` : half of image width
+* `options.h` : half of image height
+
 
 ## decodeQr-module
 

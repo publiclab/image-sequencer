@@ -71,9 +71,11 @@ This module is used for averaging all the pixels of the image.
            .run()
 ```
 
+
 ## blend-module
 
 This module is used for blending two images .
+
 #### Usage
 
 ```js
@@ -86,9 +88,11 @@ where `options` is an object with the following properties:
 * offset: step of image with which current image is to be blended(Two steps back is -2, three                steps back is -3 etc; default -2) 
 * func: function used to blend two images (default : function(r1, g1, b1, a1, r2, g2, b2, a2) {            return [ r1, g2, b2, a2 ] })
 
+
 ## blur-module
 
 This module is used for applying a Gaussian blur effect.
+
 #### Usage
 
 ```js
@@ -100,10 +104,10 @@ This module is used for applying a Gaussian blur effect.
 where `options` is an object with the following property:
 * blur : Intensity of Gaussian blur (0 to 5; default 2)
 
+
 ## brightness-module
 
 This module is used for changing the brightness of the image.
-
 
 #### Usage
 
@@ -115,6 +119,7 @@ This module is used for changing the brightness of the image.
 
 where `options` is an object with the following property:
 * brightness : brightness of the image in percentage (0 to 100; default 100)
+
 
 ## channel-module
 
@@ -130,6 +135,7 @@ This module is used for forming a grayscale image by applying one of the three p
 
 where `options` is an object with the following property:
 * channel : color of the channel (red, green, blue; default green)
+
 
 ## colorbar-module
 
@@ -148,6 +154,7 @@ where `options` is an object with the following properties:
 * x : X-position of the image on which the new image is overlayed (default 0)
 * y : Y-position of the image on which the new image is overlayed (default 0)
 * h : height of resulting cropped image (default : 50% of input image width )
+
 
 ## colormap-module
 
@@ -195,6 +202,7 @@ This module is used for changing the contrast of the image.
 where `options` is an object with the following property:
 * contrast : contrast for the given image (-100 to 100; default : 70)
 
+
 ## convolution-module
 
 This module is used for performing image-convolution.
@@ -210,6 +218,7 @@ This module is used for performing image-convolution.
 where `options` is an object with the following properties:
 * constantFactor : a constant factor, multiplies all the kernel values by that factor (default :                     1/9)
 * kernelValues : nine space separated numbers representing the kernel values in left to right and                   top to bottom format(default : 1 1 1 1 1 1 1 1 1)
+
 
 ## crop-module
 
@@ -246,6 +255,7 @@ This module is used for decoding a QR in image (if present).
            .run()
 ```
 
+
 ## dither-module
 
 This module approximates a color from a mixture of other colors when the required color is not available, creating illusions of the color that is not present actually.
@@ -261,6 +271,7 @@ This module approximates a color from a mixture of other colors when the require
 ```
 where `options` is an object with the following property:
 * dither : Can select the name of the Dithering Algorithm(default none)
+ 
  
 ## draw-rectangle-module
 
@@ -281,6 +292,7 @@ where `options` is an object with the following properties:
 * thickness : thickness of the border (default 1)
 * color     : RGBA values separated by a space (default "0 0 0 255") 
 
+
 ## dynamic-module
 
 This module is used for producing each color channel based on the original image's color.
@@ -298,6 +310,7 @@ where `options` is an object with the following properties:
 * green : expression for green channel (R, G, B and A as inputs; default g)
 * blue : expression for blue channel (R, G, B and A as inputs; default b)
 * monochrome: fallback for other channels if none provided (default : r+g+b/3)
+
 
 ## edge-detect-module
 
@@ -341,6 +354,7 @@ where `options` is an object with the following properties:
 ## flipimage-module 
 
 This module is used for flipping the image on the selected axis.
+
 #### Usage
 
 
@@ -371,6 +385,7 @@ where `options` is an object with the following property:
 ## gradient-module
 
 This module is used for finding gradient of the image.
+
 #### Usage
 
 ```js
@@ -397,7 +412,6 @@ where `options` is an object with the following property:
 * color : Color for the grid on the image.
 
 
-
 ## histogram-module
 
 This module is used for calculating histogram of the image.
@@ -412,9 +426,11 @@ This module is used for calculating histogram of the image.
 where `options` is an object with the following property:
 * gradient : boolean value used to toggle gradient along x-axis (true or false; default true)
 
+
 ## import-image-module
 
 This module is used for importing a new image and replacing the original with it.
+
 #### Usage
 
 ```js
@@ -426,9 +442,11 @@ This module is used for importing a new image and replacing the original with it
 where `options` is an object with the following property:
 * url : url of the  new image (local image url or data url;default : "./images/monarch.png")
 
+
 ## invert-module
 
 This module is used for inverting the image.
+
 #### Usage
 
 ```js
@@ -452,9 +470,11 @@ sequencer.loadImage('PATH')
            .run()
 ```
 
+
 ## ndvi-module  
 
 This module is used for applying ndvi technique to the image.
+
 #### Usage
 
 ```js
@@ -466,9 +486,11 @@ This module is used for applying ndvi technique to the image.
 where `options` is an object with the following property:
 * filter : filter for NDVI (blue or red; default red)
 
+
 ## ndvi-colormap-module
 
 This module is used for demonstrating ndvi and colormap properties consecutively.
+
 #### Usage
 
 ```js
@@ -477,9 +499,11 @@ This module is used for demonstrating ndvi and colormap properties consecutively
            .run()
 ```
 
+
 ## overlay-module
 
-This module is used for overlaying an Image over another .
+This module is used for overlaying an Image over another.
+
 #### Usage
 
 ```js
@@ -492,6 +516,7 @@ where `options` is an object with the following properties:
 * x : X-position of the image on which the new image is overlayed (default 0)
 * y : Y-position of the image on which the new image is overlayed (default 0)
 * offset : offset to the step on which the output of the last step is overlayed (default -2)
+
 
 ## paint-bucket-module
 
@@ -511,9 +536,11 @@ where `options` is an object with the following property:
 * fillColor : they are four spaced seperated numbers representing the RGBA values of fill-color (default "100 100 100 255")
 * tolerance : it is the % tolerance (default 10)
 
+
 ## replacecolor-module
 
 This module is used in replacing the color with grey or any desired color.
+
 #### Usage
 
 ```js
@@ -531,6 +558,7 @@ where `options` is an object with the following properties:
 ## resize-module
 
 This module is used for resizing an image.
+
 #### Usage
 
 ```js
@@ -542,9 +570,11 @@ This module is used for resizing an image.
 where `options` is an object with the following property:
 * resize : Percentage value of resize (default 125%)
 
+
 ## rotate-module
 
 This module is used for rotating an image.
+
 #### Usage
 
 ```js
@@ -556,9 +586,11 @@ This module is used for rotating an image.
 where `options` is an object with the following property:
 * rotate : angular value for rotation in degrees (between 0 and 360; default 0)
 
+
 ## saturation-module
 
 This module is used for changing the saturation of the image.
+
 #### Usage
 
 ```js
@@ -626,5 +658,3 @@ It adds color tint to an image
 where `options` is an object with the following property:
 * color : RGB values seperated by a space (default "0 0 255")
 * factor : amount of tint (default 0.5)
-
-

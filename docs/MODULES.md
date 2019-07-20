@@ -492,20 +492,6 @@ where `options` is an object with the following property:
 * fillColor : they are four spaced seperated numbers representing the RGBA values of fill-color (default "100 100 100 255")
 * tolerance : it is the % tolerance (default 10)
 
-## resize-module
-
-This module is used for resizing an image.
-#### Usage
-
-```js
-  sequencer.loadImage('PATH')
-           .addSteps('resize',options)
-           .run()
-```
-
-where `options` is an object with the following property:
-* resize : Percentage value of resize (default 125%)
-
 ## replacecolor-module
 
 This module is used in replacing the color with grey or any desired color.
@@ -521,6 +507,21 @@ where `options` is an object with the following properties:
 * replaceColor : three space separated numbers representing the RGB values of color to be filled (default "0 0 255")
 * color : three space separated numbers representing the RGB values of color to be replaced (default "228 86 81")
 * tolerance : it is the % tolerance (default 50)
+
+
+## resize-module
+
+This module is used for resizing an image.
+#### Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('resize',options)
+           .run()
+```
+
+where `options` is an object with the following property:
+* resize : Percentage value of resize (default 125%)
 
 ## rotate-module
 

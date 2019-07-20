@@ -456,7 +456,7 @@ This module is used for inverting the image.
 ```
 
 
-# Minify Image
+## Minify Image
 
 This module minifies the image using lossy compression that is the image-dimensions are not lost but the size is reduced.
 

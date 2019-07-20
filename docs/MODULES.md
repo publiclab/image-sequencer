@@ -44,30 +44,6 @@ List of Module Documentations
 
 
 
-## segmented-colormap-module
-
-This module is used to map the pixels of the image to a segmented colormap.
-
-#### Usage
-
-```js
-  sequencer.loadImage('PATH')
-           .addSteps('segmented-colormap',options)
-           .run()
-```
-
-where `options` is an object with the property `colormap`. `options.colormap` can be:
-
-* "default" : [[0, [0, 0, 255], [38, 195, 195]], [0.5, [0, 150, 0], [255, 255, 0]], [0.75, [255, 255, 0], [255, 50, 50]]]
-
-* "greyscale" : [[0, [0, 0, 0], [255, 255, 255]], [1, [255, 255, 255], [255, 255, 255]]]
-
-* "stretched" : [[0, [0, 0, 255], [0, 0, 255]], [0.1, [0, 0, 255], [38, 195, 195]], [0.5, [0, 150, 0], [255, 255, 0]], [0.7, [255, 255, 0], [255, 50, 50]], [0.9, [255, 50, 50], [255, 50, 50]]]
-
-* "fastie" : [[0, [255, 255, 255], [0, 0, 0]], [0.167, [0, 0, 0], [255, 255, 255]], [0.33, [255, 255, 255], [0, 0, 0]], [0.5, [0, 0, 0], [140, 140, 255]], [0.55, [140, 140, 255], [0, 255, 0]], [0.63, [0, 255, 0], [255, 255, 0]], [0.75, [255, 255, 0], [255, 0, 0]], [0.95, [255, 0, 0], [255, 0, 255]]]
-
-* A custom array.
-
 ## fisheyeGl-module
 
 This module is used for correcting Fisheye or Lens Distortion
@@ -210,6 +186,22 @@ This module is used for mapping brightness values (average of red, green & blue)
 
 where `options` is an object with the following property:
 * colormap : Name of the Colormap ( greyscale, stretched, fastie, brntogrn, blutoredjet,                        colors16)
+
+
+## Color Temperature
+
+This changes the color temperature of the image.
+
+## Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('color-temperature',options)
+           .run()
+```
+where `options` is an object with the following property:
+* temperature : temperature between 0 - 40,000 kelvin (default 6000)
+
 
 ## contrast-module
 
@@ -575,20 +567,6 @@ where `options` is an object with the following property:
 * factor : amount of tint (default 0.5)
 
 
-## Color Temperature
-
-This changes the color temperature of the image.
-
-## Usage
-
-```js
-  sequencer.loadImage('PATH')
-           .addSteps('color-temperature',options)
-           .run()
-```
-where `options` is an object with the following property:
-* temperature : temperature between 0 - 40,000 kelvin (default 6000)
-
 ## Grid Overlay
 
 This adds the grid over an image.
@@ -618,3 +596,28 @@ sequencer.loadImage('PATH')
            .addSteps('minify-image')
            .run()
 ```
+
+
+## segmented-colormap-module
+
+This module is used to map the pixels of the image to a segmented colormap.
+
+#### Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('segmented-colormap',options)
+           .run()
+```
+
+where `options` is an object with the property `colormap`. `options.colormap` can be:
+
+* "default" : [[0, [0, 0, 255], [38, 195, 195]], [0.5, [0, 150, 0], [255, 255, 0]], [0.75, [255, 255, 0], [255, 50, 50]]]
+
+* "greyscale" : [[0, [0, 0, 0], [255, 255, 255]], [1, [255, 255, 255], [255, 255, 255]]]
+
+* "stretched" : [[0, [0, 0, 255], [0, 0, 255]], [0.1, [0, 0, 255], [38, 195, 195]], [0.5, [0, 150, 0], [255, 255, 0]], [0.7, [255, 255, 0], [255, 50, 50]], [0.9, [255, 50, 50], [255, 50, 50]]]
+
+* "fastie" : [[0, [255, 255, 255], [0, 0, 0]], [0.167, [0, 0, 0], [255, 255, 255]], [0.33, [255, 255, 255], [0, 0, 0]], [0.5, [0, 0, 0], [140, 140, 255]], [0.55, [140, 140, 255], [0, 255, 0]], [0.63, [0, 255, 0], [255, 255, 0]], [0.75, [255, 255, 0], [255, 0, 0]], [0.95, [255, 0, 0], [255, 0, 255]]]
+
+* A custom array.

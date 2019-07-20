@@ -23,7 +23,10 @@ function generatePreview(previewStepName, customValues, path, selector) {
       previewSequencer.addSteps(previewStepName, { [previewStepName]: customValues }).run(insertPreview);
     }
   }
-  previewSequencer.loadImage(path, loadPreview);
+  if(previewStepName === 'resize')
+    insertPreview(path);
+  else
+    previewSequencer.loadImage(path, loadPreview);
 }
 
 function updatePreviews(src, selector) {
@@ -44,9 +47,17 @@ function updatePreviews(src, selector) {
     }
   };
 
-  Object.keys(previewSequencerSteps).forEach(function (step, index) {
-    generatePreview(step, Object.values(previewSequencerSteps)[index], src, selector);
+  var sequencer = ImageSequencer();
+
+  sequencer.loadImage(src, function(){
+    this.addSteps('resize', {['resize']: '30%'});
+    this.run((src)=>{
+      Object.keys(previewSequencerSteps).forEach(function (step, index) {
+        generatePreview(step, Object.values(previewSequencerSteps)[index], src, selector);
+      });
+    });
   });
+
 }
 
 module.exports = {

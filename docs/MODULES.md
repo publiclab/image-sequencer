@@ -379,6 +379,25 @@ This module is used for finding gradient of the image.
            .run()
 ```
 
+
+## Grid Overlay
+
+This adds the grid over an image.
+
+## Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('grid-overlay',options)
+           .run()
+```
+where `options` is an object with the following property:
+* options.x : The value at which the grid line should start in x-axis.
+* options.y : The value at which the grid line should start in y-axis.
+* color : Color for the grid on the image.
+
+
+
 ## histogram-module
 
 This module is used for calculating histogram of the image.
@@ -607,22 +626,5 @@ It adds color tint to an image
 where `options` is an object with the following property:
 * color : RGB values seperated by a space (default "0 0 255")
 * factor : amount of tint (default 0.5)
-
-
-## Grid Overlay
-
-This adds the grid over an image.
-
-## Usage
-
-```js
-  sequencer.loadImage('PATH')
-           .addSteps('grid-overlay',options)
-           .run()
-```
-where `options` is an object with the following property:
-* options.x : The value at which the grid line should start in x-axis.
-* options.y : The value at which the grid line should start in y-axis.
-* color : Color for the grid on the image.
 
 

@@ -23,7 +23,10 @@ function generatePreview(previewStepName, customValues, path, selector) {
       previewSequencer.addSteps(previewStepName, { [previewStepName]: customValues }).run(insertPreview);
     }
   }
-  previewSequencer.loadImage(path, loadPreview);
+  if(previewStepName === 'resize')
+    insertPreview(path);
+  else
+    previewSequencer.loadImage(path, loadPreview);
 }
 
 function updatePreviews(src, selector) {
@@ -44,10 +47,29 @@ function updatePreviews(src, selector) {
     }
   };
 
-  Object.keys(previewSequencerSteps).forEach(function (step, index) {
-    generatePreview(step, Object.values(previewSequencerSteps)[index], src, selector);
-  });
+  var img = new Image();
+  img.onload = function(){
+    var height = img.height;
+    var width = img.width;
+
+    let percentage = (80 / height) * 100; //take the min resize value that fits the preview area => (new-width/orig_ht) - '80 as the preview area has 80*80 dimension
+    percentage = Math.max((80 / width) * 100, percentage); // make sure that one dimension doesn't resize greater, leading distorting preview-area fitting
+    percentage = Math.ceil(percentage);
+
+    var sequencer = ImageSequencer();
+
+    sequencer.loadImage(src, function(){
+      this.addSteps('resize', {['resize']: percentage + '%'});
+      this.run((src)=>{
+        Object.keys(previewSequencerSteps).forEach(function (step, index) {
+          generatePreview(step, Object.values(previewSequencerSteps)[index], src, selector);
+        });
+      });
+    });
+  };
+  img.src = src;
 }
+
 
 module.exports = {
   generatePreview : generatePreview,

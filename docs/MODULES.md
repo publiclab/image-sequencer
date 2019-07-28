@@ -38,9 +38,9 @@ List of Module Documentations
 33. [Rotate](#rotate-module)
 34. [Saturation](#saturation-module)
 35. [Segmented-Colormap](#segmented-colormap-module)
-36. [Threshold](#threshold)
-37. [Tint](#tint)
-38. [Text-Overlay](#text-overlay)
+36. [Text-Overlay](#text-overlay)
+37. [Threshold](#threshold)
+38. [Tint](#tint)
 
 
 ## add-qr-module
@@ -596,6 +596,20 @@ where `options` is an object with the property `colormap`. `options.colormap` ca
 * A custom array.
 
 
+## Text Overlay
+
+The modules allows to add text to image in both browser and node environment. We have the options to modify the font-size and also support few font-styles. The text color can also be modified.
+#### Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('grid-overlay',options)
+           .run()
+```
+The options can take various attributes like,
+var options = { text : 'Hello World', size : '12'};
+
+
 ## Threshold 
 
 Thresholding is used to create binary images.
@@ -624,18 +638,3 @@ It adds color tint to an image
 where `options` is an object with the following property:
 * color : RGB values seperated by a space (default "0 0 255")
 * factor : amount of tint (default 0.5)
-
-
-## Text Overlay
-
-The modules allows to add text to image in both browser and node environment. We have the options to modify the font-size and also support few font-styles. The text color can also be modified.
-#### Usage
-
-```js
-  sequencer.loadImage('PATH')
-           .addSteps('grid-overlay',options)
-           .run()
-```
-The options can take various attributes like,
-```
-var options = { text : 'Hello World', size : '12'};

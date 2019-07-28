@@ -1,9 +1,11 @@
 module.exports = function flipImage(oldPixels, pixels, axis) {
+  const pixelSetter = require('../../util/pixelSetter.js');
+
   var width = oldPixels.shape[0],
     height = oldPixels.shape[1];
   
   function copyPixel(x1, y1, x2, y2){
-    require('../../util/pixelSetter.js')(x1, y1, [oldPixels.get(x2, y2, 0), oldPixels.get(x2, y2, 1), oldPixels.get(x2, y2, 2), oldPixels.get(x2, y2, 3)], pixels);
+    pixelSetter(x1, y1, [oldPixels.get(x2, y2, 0), oldPixels.get(x2, y2, 1), oldPixels.get(x2, y2, 2), oldPixels.get(x2, y2, 3)], pixels);
     
   }
 

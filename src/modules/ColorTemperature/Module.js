@@ -1,4 +1,6 @@
 module.exports = function ColorTemperature(options, UI) {
+  
+  const pixelSetter = require('../../util/pixelSetter.js');
 
   var output;
 
@@ -42,7 +44,7 @@ module.exports = function ColorTemperature(options, UI) {
           rgbdata[0] = (255 / r) * rgbdata[0];
           rgbdata[1] = (255 / g) * rgbdata[1];
           rgbdata[2] = (255 / b) * rgbdata[2];
-          require('../../util/pixelSetter.js')(i, j, rgbdata, pixels);
+          pixelSetter(i, j, rgbdata, pixels);
 
         }
       }

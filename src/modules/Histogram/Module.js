@@ -7,7 +7,9 @@ module.exports = function Channel(options, UI) {
 
   function draw(input, callback, progressObj) {
 
-    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+    const defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+    const pixelSetter = require('../../util/pixelSetter.js');
+
     options.gradient = options.gradient || defaults.gradient;
     options.gradient = JSON.parse(options.gradient);
 
@@ -30,7 +32,6 @@ module.exports = function Channel(options, UI) {
       pixels.shape = [256, 256, 4];
       pixels.stride[1] = 4 * 256;
 
-      var pixelSetter = require('../../util/pixelSetter.js');
       for (let x = 0; x < 256; x++) {
         for (let y = 0; y < 256; y++) {
           pixelSetter(x, y, [255, 255, 255, 255], pixels);

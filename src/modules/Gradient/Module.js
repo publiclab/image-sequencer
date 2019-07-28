@@ -1,4 +1,5 @@
 module.exports = function Invert(options, UI) {
+  const pixelSetter = require('../../util/pixelSetter.js');
 
   var output;
 
@@ -22,7 +23,7 @@ module.exports = function Invert(options, UI) {
       for (var i = 0; i < pixels.shape[0]; i++) {
         for (var j = 0; j < pixels.shape[1]; j++) {
           let val = (i / width) * 255;
-          require('../../util/pixelSetter.js')(i, j, [val, val, val, 255], pixels);
+          pixelSetter(i, j, [val, val, val, 255], pixels);
                 
         }
       }

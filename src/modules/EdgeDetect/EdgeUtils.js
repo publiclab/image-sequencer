@@ -1,4 +1,6 @@
 // Define kernels for the sobel filter
+
+const pixelSetter = require('../../util/pixelSetter.js');
 const kernelx = [
     [-1, 0, 1],
     [-2, 0, 2],
@@ -40,8 +42,6 @@ module.exports = function(pixels, highThresholdRatio, lowThresholdRatio, useHyst
 
   return pixels;
 };
-
-var pixelSetter = require('../../util/pixelSetter.js');
 
 function supress(pixels, pixel) {
   pixelSetter(pixel[0], pixel[1], [0, 0, 0, 255], pixels);

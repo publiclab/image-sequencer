@@ -1,4 +1,6 @@
 module.exports = exports = function(pixels, options){
+  const pixelSetter = require('../../util/pixelSetter.js');
+
   var color = options.color || 'rgb(228,86,81)';
   color = color.substring(color.indexOf('(') + 1, color.length - 1); // extract only the values from rgba(_,_,_,_)
 
@@ -29,7 +31,6 @@ module.exports = exports = function(pixels, options){
         g = pixels.get(i, j, 1),
         b = pixels.get(i, j, 2);
       if(isSimilar(r, g, b)){
-        var pixelSetter = require('../../util/pixelSetter.js');
         if (replaceMethod == 'greyscale'){
           var avg = (r + g + b) / 3;
           pixelSetter(i, j, [avg, avg, avg], pixels);

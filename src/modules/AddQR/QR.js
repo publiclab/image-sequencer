@@ -1,4 +1,6 @@
 module.exports = exports = function (options, pixels, oldPixels, callback) {
+  const pixelSetter = require('../../util/pixelSetter.js');
+
   var QRCode = require('qrcode');
   QRCode.toDataURL(options.qrCodeString, function (err, url) {
     var getPixels = require('get-pixels');
@@ -23,7 +25,6 @@ module.exports = exports = function (options, pixels, oldPixels, callback) {
         height = oldPixels.shape[1];
       var xe = width - options.size,
         ye = height - options.size;
-      var pixelSetter = require('../../util/pixelSetter.js');
       for (var m = 0; m < width; m++) {
         for (var n = 0; n < height; n++) {
           if (m >= xe && n >= ye) {

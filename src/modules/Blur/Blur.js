@@ -1,4 +1,6 @@
 module.exports = exports = function(pixels, blur) {
+  const pixelSetter = require('../../util/pixelSetter.js');
+
   let kernel = kernelGenerator(blur),
     pixs = {
       r: [],
@@ -21,7 +23,6 @@ module.exports = exports = function(pixels, blur) {
   const convolve = require('../_nomodule/gpuUtils').convolve;
 
   const conPix = convolve([pixs.r, pixs.g, pixs.b], kernel);
-  var pixelSetter = require('../../util/pixelSetter.js');
 
   for (let y = 0; y < pixels.shape[1]; y++){
     for (let x = 0; x < pixels.shape[0]; x++){

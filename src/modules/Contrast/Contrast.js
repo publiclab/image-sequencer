@@ -1,4 +1,5 @@
 var _ = require('lodash');
+const pixelSetter = require('../../util/pixelSetter.js');
 
 module.exports = exports = function(pixels, contrast) {
   let oldpix = _.cloneDeep(pixels);
@@ -21,7 +22,7 @@ module.exports = exports = function(pixels, contrast) {
         if (rgbarray[idx] > 255) rgbarray[idx] = 255;
       }
             
-      require('../../util/pixelSetter.js')(i, j, rgbarray, pixels);
+      pixelSetter(i, j, rgbarray, pixels);
             
     }
   }

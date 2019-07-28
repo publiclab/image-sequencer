@@ -1,4 +1,6 @@
 var _ = require('lodash');
+const pixelSetter = require('../../util/pixelSetter.js');
+
 module.exports = exports = function(pixels, constantFactor, kernelValues, texMode) {
   let kernel = kernelGenerator(constantFactor, kernelValues),
     pixs = {
@@ -21,7 +23,6 @@ module.exports = exports = function(pixels, constantFactor, kernelValues, texMod
 
   const convolve = require('../_nomodule/gpuUtils').convolve;
   const conPix = convolve([pixs.r, pixs.g, pixs.b], kernel, (pixels.shape[0] * pixels.shape[1]) < 400000 ? true : false);
-  var pixelSetter = require('../../util/pixelSetter.js');
 
   for (let y = 0; y < pixels.shape[1]; y++){
     for (let x = 0; x < pixels.shape[0]; x++){

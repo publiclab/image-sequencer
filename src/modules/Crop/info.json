@@ -6,12 +6,14 @@
     "x": {
       "type": "string",
       "desc": "X-position (measured from left) from where cropping starts",
-      "default": 0
+      "default": 0,
+      "id": "x-coord"
     },
     "y": {
       "type": "string",
       "desc": "Y-position (measured from top) from where cropping starts",
-      "default": 0
+      "default": 0,
+      "id": "y-coord"
     },
     "w": {
       "type": "string",

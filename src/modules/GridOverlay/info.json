@@ -5,12 +5,14 @@
         "x": {
             "type": "integer",
             "desc": "X-position (measured from left) from where grid starts",
-            "default": 100
+            "default": 100,
+            "id": "x-coord"
         },
         "y": {
             "type": "integer",
             "desc": "Y-position (measured from top) from where grid starts",
-            "default": 100
+            "default": 100,
+            "id": "y-coord"
         },
         "color":{
             "type": "string",

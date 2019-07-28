@@ -10,12 +10,14 @@
         "x": {
             "type": "integer",
             "desc": "Starting text horizontal position.",
-            "default": "20"
+            "default": "20",
+            "id": "x-coord"
         },
         "y": {
             "type": "integer",
             "desc": "Starting text vertical position.",
-            "default": "20"
+            "default": "20",
+            "id": "y-coord"
         },
         "font": {
             "type": "select",

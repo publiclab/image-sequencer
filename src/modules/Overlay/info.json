@@ -5,12 +5,14 @@
         "x": {
             "type": "integer",
             "desc": "X-position of the image on which the new image is overlayed",
-            "default": 0
+            "default": 0,
+            "id": "x-coord"
         },
         "y": {
             "type": "integer",
             "desc": "Y-position of the image on which the new image is overlayed",
-            "default": 0
+            "default": 0,
+            "id": "y-coord"
         },
         "offset": {
             "type": "integer",

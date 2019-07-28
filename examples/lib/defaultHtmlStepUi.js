@@ -117,6 +117,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
             html =
               '<input class="form-control target" type="' +
               inputDesc.type +
+              '"id="' +
+              inputDesc.id +
               '" name="' +
               paramName +
               '" value="' +
@@ -195,6 +197,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     
     $(step.imgElement).on('mousemove', _.debounce(() => imageHover(step), 150));
     $(step.imgElement).on('click', (e) => {e.preventDefault(); });
+    $(step.imgElement).on('click', clickForInputs(step));
     $stepAll('#color-picker').colorpicker();
 
     function saveOptions(e) {
@@ -336,6 +339,21 @@ function DefaultHtmlStepUi(_sequencer, options) {
       var yPos = e.pageY - offset.top;
       var myData = context.getImageData(xPos, yPos, 1, 1);
       img[0].title = 'rgb: ' + myData.data[0] + ',' + myData.data[1] + ',' + myData.data[2];//+ rgbdata;
+    });
+  }
+
+  function clickForInputs(step){
+
+    var img = $(step.imgElement);
+
+    img.click(function(e) {
+      let offset = $(this).offset();
+      let xPos = e.pageX - offset.left;
+      let yPos = e.pageY - offset.top;
+      //trigger change event when click changes input values as val() does not trigger change itself
+      $step('#x-coord').val(Math.ceil(xPos)).trigger('change');
+      $step('#y-coord').val(Math.ceil(yPos)).trigger('change');
+
     });
   }
 

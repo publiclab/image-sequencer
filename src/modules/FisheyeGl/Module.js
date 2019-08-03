@@ -1,32 +1,31 @@
 /*
- * Resolves Fisheye Effect
- */
-module.exports = function DoNothing(options,UI) {
+* Resolves Fisheye Effect
+*/
+module.exports = function DoNothing(options, UI) {
 
   var output;
 
-  require('fisheyegl');
+  var gl = require('fisheyegl');
 
-  function draw(input,callback) {
+  function draw(input, callback) {
 
     var step = this;
 
-    if (!options.inBrowser) { // This module is only for browser
-      this.output = input;
-      callback();
+    if (!options.inBrowser) {
+      require('../_nomodule/gl-context')(input, callback, step, options);
     }
     else {
       // Create a canvas, if it doesn't already exist.
       if (!document.querySelector('#image-sequencer-canvas')) {
         var canvas = document.createElement('canvas');
-        canvas.style.display = "none";
-        canvas.setAttribute('id','image-sequencer-canvas');
+        canvas.style.display = 'none';
+        canvas.setAttribute('id', 'image-sequencer-canvas');
         document.body.append(canvas);
       }
       else var canvas = document.querySelector('#image-sequencer-canvas');
 
       distorter = FisheyeGl({
-        selector: "#image-sequencer-canvas"
+        selector: '#image-sequencer-canvas'
       });
 
       // Parse the inputs
@@ -48,10 +47,10 @@ module.exports = function DoNothing(options,UI) {
       distorter.fov.y = options.y;
 
       // generate fisheyegl output
-      distorter.setImage(input.src,function(){
+      distorter.setImage(input.src, function() {
 
         // this output is accessible to Image Sequencer
-        step.output = {src: canvas.toDataURL(), format: input.format};
+        step.output = { src: canvas.toDataURL(), format: input.format };
 
         // Tell Image Sequencer and UI that step has been drawn
         callback();
@@ -66,5 +65,5 @@ module.exports = function DoNothing(options,UI) {
     draw: draw,
     output: output,
     UI: UI
-  }
-}
+  };
+};

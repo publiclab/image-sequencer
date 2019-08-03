@@ -1,9 +1,9 @@
-module.exports = function Colormap(options,UI) {
+module.exports = function Colormap(options, UI) {
 
   var output;
 
   // This function is called on every draw.
-  function draw(input,callback,progressObj) {
+  function draw(input, callback, progressObj) {
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;
@@ -16,7 +16,7 @@ module.exports = function Colormap(options,UI) {
       return [res[0], res[1], res[2], 255];
     }
 
-    function output(image,datauri,mimetype){
+    function output(image, datauri, mimetype) {
 
       // This output is accessible by Image Sequencer
       step.output = { src: datauri, format: mimetype };
@@ -24,11 +24,13 @@ module.exports = function Colormap(options,UI) {
     }
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
+      ui: options.step.ui,
       changePixel: changePixel,
       format: input.format,
       image: options.image,
       inBrowser: options.inBrowser,
-      callback: callback
+      callback: callback,
+      useWasm:options.useWasm
     });
 
   }
@@ -38,5 +40,5 @@ module.exports = function Colormap(options,UI) {
     draw: draw,
     output: output,
     UI: UI
-  }
-}
+  };
+};

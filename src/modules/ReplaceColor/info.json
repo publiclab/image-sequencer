@@ -1,0 +1,33 @@
+{
+    "name": "replace-color",
+    "description": "Replace color with grey or your desired color",
+    "inputs": {
+      "replaceMethod": {
+        "type": "select",
+        "desc": "Replace Method",
+        "default": "greyscale",
+        "values": ["greyscale","replaceByColor"]
+      },
+      "replaceColor": {
+        "type": "String",
+        "desc": "Pick color to be filled",
+        "default": "rgb(0,0,255)",
+        "id": "color-picker"
+      },
+      "color": {
+          "type": "String",
+          "desc": "Pick color to be replaced",
+          "default": "rgb(228,86,81)",
+          "id": "color-picker"
+        },
+      "tolerance": {
+          "type": "range",
+          "desc": "% tolerance",
+          "default": "50",
+          "min": "0",
+          "max": "100",
+          "step": "1"
+        }
+    },
+	"docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#replacecolor-module" 
+  }

@@ -1,0 +1,31 @@
+{
+  "name": "paint-bucket",
+  "description": "Fill color in pixels",
+  "inputs": {
+      "startingX": {
+          "type": "integer",
+          "desc": "value of the starting x-coordinate",
+          "default": "10"
+      },
+      "startingY": {
+          "type": "integer",
+          "desc": "value of the starting y-coordinate",
+          "default": "10"
+      },
+      "fillColor": {
+        "type": "String",
+        "desc": "Pick color to fill",
+        "default": "rgba(100,100,100,1)",
+        "id": "color-picker"
+      },
+      "tolerance": {
+        "type": "range",
+        "desc": "% tolerance",
+        "default": "10",
+        "min": "0",
+        "max": "100",
+        "step": "1"
+      }
+  },
+ "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#paint-bucket-module" 
+}

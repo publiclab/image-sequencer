@@ -1,0 +1,21 @@
+{
+  "name": "tint",
+  "description": "Add color tint to an image",
+  "inputs": {
+      "color":{
+        "type": "text",
+        "desc": "Select color",
+        "default": "rgb(0,0,255)",
+        "id": "color-picker"
+      },
+      "factor": {
+          "type": "range",
+          "desc": "Amount of tint",
+          "default": "0.5",
+          "min": "0",
+          "max": "1",
+          "step": "0.01"
+      }
+  },
+ "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#tint"
+}

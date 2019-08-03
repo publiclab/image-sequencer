@@ -1,44 +1,49 @@
-module.exports = function Gamma(options,UI){
+module.exports = function Gamma(options, UI) {
 
-    var output;
+  var output;
 
-    function draw(input,callback,progressObj){
+  function draw(input, callback, progressObj) {
 
-        progressObj.stop(true);
-        progressObj.overrideFlag = true;
+    progressObj.stop(true);
+    progressObj.overrideFlag = true;
 
-        var step = this;
+    var step = this;
 
-        function changePixel(r, g, b, a){
-            var val = options.adjustment || 0.2;
+    var defaults = require('./../../util/getDefaults.js')(require('./info.json')),
+      adjustment = options.adjustment || defaults.adjustment;
+    var val = adjustment / defaults.adjustment;
 
-            r = Math.pow(r / 255, val) * 255;
-            g = Math.pow(g / 255, val) * 255;
-            b = Math.pow(b / 255, val) * 255;
+    function changePixel(r, g, b, a) {
 
-            return [r , g, b, a];
-        }
+      r = Math.pow(r / 255, val) * 255;
+      g = Math.pow(g / 255, val) * 255;
+      b = Math.pow(b / 255, val) * 255;
 
-        function output(image,datauri,mimetype){
+      return [r, g, b, a];
+    }
 
-            step.output = {src:datauri,format:mimetype};
+    function output(image, datauri, mimetype) {
 
-        }
-
-        return require('../_nomodule/PixelManipulation.js')(input, {
-            output: output,
-            changePixel: changePixel,
-            format: input.format,
-            image: options.image,
-            inBrowser: options.inBrowser,
-            callback: callback
-        });
+      step.output = { src: datauri, format: mimetype };
 
     }
-    return {
-        options: options,
-        draw:  draw,
-        output: output,
-        UI: UI
-    }
-}
+
+    return require('../_nomodule/PixelManipulation.js')(input, {
+      output: output,
+      ui: options.step.ui,
+      changePixel: changePixel,
+      format: input.format,
+      image: options.image,
+      inBrowser: options.inBrowser,
+      callback: callback,
+      useWasm:options.useWasm
+    });
+
+  }
+  return {
+    options: options,
+    draw: draw,
+    output: output,
+    UI: UI
+  };
+};

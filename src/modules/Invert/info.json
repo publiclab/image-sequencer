@@ -1,7 +1,7 @@
 {
-  "name": "Invert",
+  "name": "invert",
   "description": "Inverts the image.",
   "inputs": {
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#invert-module"
 }

@@ -1,16 +1,23 @@
+sudo: required
 language: node_js
 node_js:
-  - '4'
-  - '5'
-  - '6'
-  - '7' # Node.js 7 is most stable version
+  - '8'
+  - '10'
 env:
   - CXX=g++-4.8
 before_script:
   - npm install grunt-cli -g # for "grunt build"
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 script:
   - npm test
+  - npm run test-ui
   - grunt build
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 addons:
   apt:
     sources:
@@ -18,6 +25,10 @@ addons:
     packages:
       - g++-4.8
       - xvfb # for tape-run
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install xserver-xorg-dev libxext-dev libxi-dev
+  - sudo apt-get install -y build-essential libxi-dev libglu1-mesa-dev libglew-dev pkg-config libglu1-mesa-dev freeglut3-dev mesa-common-dev
 install:
   - export DISPLAY=':99.0' # for tape-run
   - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 & # for tape-run

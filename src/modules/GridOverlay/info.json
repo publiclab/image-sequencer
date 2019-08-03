@@ -1,0 +1,24 @@
+{
+    "name": "grid-overlay",
+    "description": "Overlays a grid over an Image",
+    "inputs": {
+        "x": {
+            "type": "integer",
+            "desc": "X-position (measured from left) from where grid starts",
+            "default": 100
+        },
+        "y": {
+            "type": "integer",
+            "desc": "Y-position (measured from top) from where grid starts",
+            "default": 100
+        },
+        "color":{
+            "type": "string",
+            "desc": "Pick color",
+            "default": "rgba(0,0,0,1)",
+            "id": "color-picker"
+
+          }
+    },
+    "only": "browser" 
+}

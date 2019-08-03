@@ -2,7 +2,6 @@
 
 <html>
 
-
 <head>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,44 +10,56 @@
   <link rel="icon" sizes="192x192" href="../icons/ic_192.png">
   <link rel="manifest" href="manifest.json">
 
+  <!--Adding meta Tag for search engine optimisation-->
+  <meta property="og:description"
+    content="A pure JavaScript sequential image processing system, inspired by storyboards. Instead of modifying the original image, it creates a new image at each step in a sequence.">
+  <meta property="og:site_name" content="sequencer.publiclab.org">
+  <meta property="og:url" content="https://sequencer.publiclab.org">
+  <meta property="og:title" content="Image Sequencer">
+  <meta name="Description"
+    content="Image Sequencer is an image editing tool that creates a new downloadble image at each step.It works in browser and supports both node and CLI.">
+  <meta name="Keywords" content="image editing downloadable browser node CLI">
+
   <title>Image Sequencer</title>
 
   <script src="../node_modules/jquery/dist/jquery.min.js"></script>
   <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="../src/ui/prepareDynamic.js"></script>
   <script src="../dist/image-sequencer.js" charset="utf-8"></script>
-  <script src="lib/urlHash.js" charset="utf-8"></script>
-  <script src="lib/defaultHtmlStepUi.js" charset="utf-8"></script>
-  <script src="lib/defaultHtmlSequencerUi.js" charset="utf-8"></script>
-  <script src="lib/intermediateHtmlStepUi.js" charset="utf-8"></script>
-  <script src="demo.js" charset="utf-8"></script>
+  <script src="../dist/image-sequencer-ui.js" charset="utf-8"></script>
+  <script src="../node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script>
   <!-- for crop module: -->
   <script src="../node_modules/imgareaselect/jquery.imgareaselect.dev.js"></script>
-  <script src="gifshot.js" type="text/javascript"></script>
+  <script src="../node_modules/gifshot/dist/gifshot.min.js" type="text/javascript"></script>
 
   <!-- Download.js for large files -->
-  <script src="../node_modules/downloadjs/download.min.js" type="text/javascript"/>
+  <script src="../node_modules/downloadjs/download.min.js" type="text/javascript" />
 
   <script src="lib/scrollToTop.js"></script>
-
+  <script src="../node_modules/selectize/dist/js/standalone/selectize.min.js"></script>
 </head>
-
 
 <body>
 
   <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="../node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="../node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css" rel="stylesheet">
 
+  <link rel="stylesheet" href="demo.css">
+  <link href="../node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="../node_modules/selectize/dist/css/selectize.default.css" rel="stylesheet">
+  <!-- for crop module: -->
   <!-- for crop module: -->
   <link href="../node_modules/imgareaselect/distfiles/css/imgareaselect-default.css" rel="stylesheet">
+  <link href="./selectize.default.css" rel="stylesheet">
   <link rel="stylesheet" href="demo.css">
 
   <div class="container-fluid">
 
     <header class="text-center">
-      <h1>Image Sequencer</h1>
+      <h1><a href="/" target='_blank' class="name-header">Image Sequencer</a></h1>
       <p>
-        A pure JavaScript sequential image processing system, inspired by storyboards. Instead of modifying the original image, it
+        A pure JavaScript sequential image processing system, inspired by storyboards. Instead of modifying the original
+        image, it
         creates a new image at each step in a sequence.
         <a href="https://publiclab.org/image-sequencer">Learn more</a>
       </p>
@@ -57,18 +68,18 @@
         <a href="https://github.com/publiclab/image-sequencer">
           <i class="fa fa-github"></i>
         </a>
-       by <a href= "https://publiclab.org" title = "Publiclab Website"><i class = "fa fa-globe"></i> Publiclab</a>
+        by <a href="https://publiclab.org" title="Publiclab Website"><i class="fa fa-globe"></i> Publiclab</a>
       </p>
     </header>
 
-    <div id="dropzone">
+    <div id="dropzone" class="dropzone">
       <p>
         <i>Select or drag in an image to start!</i>
       </p>
       <center>
         <input type="file" id="fileInput" value="" accept="image/*"><br />
-        <button type="button" id="take-photo">Take a Photo</button>
-        <video  id="video" width="400" height="300" style="display:none"></video>
+        <button type="button" id="take-photo" class="btn btn-primary btn-block btn-lg ">Take a Photo</button>
+        <video id="video" width="100%" height="100%" style="display:none"></video>
         <a href="#" id="capture" style="display:none" class="btn btn-primary btn-md">Click Picture</a>
         <a href="#" id="close" style="display:none" class="btn btn-default btn-md">Close</a>
         <canvas id="canvas" width="400" height="300" style="display:none"></canvas>
@@ -80,69 +91,79 @@
     </section>
 
     <hr />
-  <div class="row">
-    <div class="col-sm-8">
-    <section id="addStep" class="panel panel-primary">
-      <div class="form-inline">
-        <div class="panel-body">
-          <p class="info">Select a new module to add to your sequence.</p>
-          <div class="row center-align radio-group">
-            <div>
-              <div class="radio" data-value="brightness">
-                <i class="fa fa-sun-o fa-4x i-over"></i>
+    <p class="alert alert-success savesequencemsg">Saved Sequence Success. Sequence can be found among other modules.
+    </p>
+    <div class="row">
+      <div class="col-sm-8">
+        <section id="addStep" class="panel panel-primary">
+          <div class="form-inline">
+            <div class="panel-body">
+              <div style="display:flex; justify-content:center;">
               </div>
-              <p>Brightness</p>
-            </div>
-            <div>
-              <div class="radio" data-value="contrast">
-                <i class="fa fa-adjust fa-4x i-over"></i>
+              <p class="info">Select a new module to add to your sequence.</p>
+              <div class="row center-align radio-group">
+                <div>
+                  <div class="radio" data-value="resize">
+                    <i class="fa fa-arrows-alt fa-4x i-over"></i>
+                  </div>
+                  <p>Resize</p>
+                </div>
+                <div>
+                  <div class="radio" data-value="brightness">
+                    <i class="fa fa-sun-o fa-4x i-over"></i>
+                  </div>
+                  <p>Brightness</p>
+                </div>
+                <div>
+                  <div class="radio" data-value="contrast">
+                    <i class="fa fa-adjust fa-4x i-over"></i>
+                  </div>
+                  <p>Contrast</p>
+                </div>
+                <div>
+                  <div class="radio" data-value="saturation">
+                    <i class="fa fa-tint fa-4x i-over i-small"></i>
+                  </div>
+                  <p>Saturation</p>
+                </div>
+                <div>
+                  <div class="radio" data-value="rotate">
+                    <i class="fa fa-rotate-right fa-4x i-over"></i>
+                  </div>
+                  <p>Rotate</p>
+                </div>
+                <div>
+                  <div class="radio" data-value="crop">
+                    <i class="fa fa-crop fa-4x i-over"></i>
+                  </div>
+                  <p>Crop</p>
+                </div>
               </div>
-              <p>Contrast</p>
-            </div>
-            <div>
-              <div class="radio" data-value="saturation">
-                <i class="fa fa-tint fa-4x i-over i-small"></i>
-              </div>
-              <p>Saturation</p>
-            </div>
-            <div>
-              <div class="radio" data-value="rotate">
-                <i class="fa fa-rotate-right fa-4x i-over"></i>
-              </div>
-              <p>Rotate</p>
-            </div>
-            <div>
-              <div class="radio" data-value="crop">
-                <i class="fa fa-crop fa-4x i-over"></i>
-              </div>
-              <p>Crop</p>
-            </div>
-          </div>
-          <div class="center-align">
-            <select class="form-control input-lg" id="selectStep">
-              <!-- The default null selection has been appended manually in demo.js
+              <div class="row center-align">
+                <div class="col-md-8">
+
+                  <select id="selectStep">
+                    <!-- The default null selection has been appended manually in demo.js
               This is because the options in select are overritten when options are appended.-->
-            </select>
-            <button class="btn btn-success btn-lg" name="add" id="add-step-btn">Add Step</button>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <button class="btn btn-success btn-lg" name="add" id="add-step-btn">Add Step</button></div>
+              </div>
+              <div class="row center-align">
+                <button id="resetButton" class="btn btn-default btn-lg"
+                  style=" margin: 20px 35px 0px 35px; width:100%;">Clear All Steps</button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="sequence-actions" class="panel">
-      <div class="panel-body">
-
-        <div class="row center-align">
-          <button class="btn btn-primary btn-lg" name="save-sequence" id="save-seq">Save Sequence</button>
-          <button class="btn btn-primary btn-lg js-view-as-gif" id="gif">View GIF</button>
-        </div>
-
+        </section>
 
         <div class="modal fade" id="js-download-gif-modal" tabindex="-1" role="dialog">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Your gif is ready</h4>
               </div>
               <div class="modal-body">
@@ -160,35 +181,58 @@
         </div>
 
       </div>
-    </section>
-
-    </div>
-    <div class="col-sm-4">
-    <section id="dwnld" class="panel panel-primary">
-      <div class="form-inline">
-        <div class="panel-body">
-          <div style="text-align:center;">
-            <button class="btn btn-success btn-lg" id="download-btn" name="download">Download PNG</button>
+      <div class="col-sm-4">
+        <section id="dwnld" class="panel panel-primary">
+          <div class="form-inline">
+            <div class="panel-body">
+              <div style="text-align:center;">
+                <h2 style="margin-top:20px">Save</h2>
+                <select class="form-control input-md" id="selectSaveOption" style="margin-top:20px">
+                  <option>Save as PNG</option>
+                  <option>Save as GIF (all steps)</option>
+                  <option>Save sequence</option>
+                  <option>Save sequence string</option>
+                </select>
+                <p><button id="saveButton" class="btn btn-primary btn-lg save-button">Save</button></p>
+                <p><button class="btn btn-default btn-lg js-view-as-gif" id="gif">Preview GIF</button></p>
+              </div>
+            </div>
           </div>
+        </section>
+      </div>
+    </div>
+
+    <footer>
+      <hr style="margin:20px;">
+      <center><button class="btn btn-default btn-sm" id="clear-cache">Clear offline cache</button></center>
+      <div class="row">
+        <div class="col-md-6">
+          <h2>Need Help?</h2>
+          <p>
+            <a class="btn btn-default" href="https://github.com/publiclab/image-sequencer/issues">Ask a question</a>
+            <a class="btn btn-default" href="https://publiclab.org/chat">Ask in our chatroom</a>
+          </p>
+        </div>
+        <div class="col-md-6">
+          <h2>Improve this tool</h2>
+          <p>
+            This is an open source toolkit which you can help improve on Github
+          </p>
+          <p>
+            <a class="btn btn-default" href="https://github.com/publiclab/image-sequencer">View the code &raquo;</a>
+          </p>
         </div>
       </div>
-    </section>
-    </div>
-  </div>
+    </footer>
 
-  <form class="move-up" action="#up">
-    <button><i class="fa fa-arrow-circle-o-up"></i></button>
-  </form>
+    <button id="move-up"><i class="fa fa-arrow-circle-o-up"></i></button>
 
-  <footer>
-    <hr style="margin:20px;"><center><a class="color:grey;" id="clear-cache">Clear offline cache</a></center>
-  </footer>
-
-  <script type="text/javascript">
-    $(function() {
-      var sequencer;
-    })
-  </script>
+    <script type="text/javascript">
+      $(function () {
+        var sequencer;
+      })
+    </script>
+    <script async src="../node_modules/opencv.js/opencv.js" type="text/javascript"></script>
 
 </body>
 

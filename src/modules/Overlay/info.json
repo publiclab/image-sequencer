@@ -1,6 +1,6 @@
 {
-    "name": "Overlay",
-    "description": "Overlays an Image over another at a given position(x,y)",
+    "name": "overlay",
+    "description": "Overlays an Image over another at a given position(x,y) in pixels or in %",
     "inputs": {
         "x": {
             "type": "integer",
@@ -18,5 +18,5 @@
             "default": -2
         }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#overlay-module"
 }

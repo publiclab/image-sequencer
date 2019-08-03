@@ -1,0 +1,12 @@
+{
+    "name": "color-temperature",
+    "description": "Changes the color temperature of the image.",
+    "inputs": {
+      "temperature": {
+        "type": "integer",
+        "desc": "Temperature between 0 - 40,000 Kelvin",
+        "default": 6000
+      }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#color-temperature"
+}

@@ -30,7 +30,8 @@ function Invert(options, UI) {
       format: input.format,
       image: options.image,
       inBrowser: options.inBrowser,
-      callback: callback
+      callback: callback,
+      useWasm:options.useWasm
     });
 
   }
@@ -40,12 +41,12 @@ function Invert(options, UI) {
     draw: draw,
     output: output,
     UI: UI
-  }
+  };
 }
 var info = {
-  "name": "Invert",
-  "description": "Inverts the image.",
-  "inputs": {
+  'name': 'invert',
+  'description': 'Inverts the image.',
+  'inputs': {
   }
-}
+};
 module.exports = [Invert, info];

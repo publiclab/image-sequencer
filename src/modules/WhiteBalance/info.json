@@ -1,0 +1,22 @@
+{
+    "name": "white-balance",
+    "description": "Render neutral colours correctly based on the whitest pixel in the image.",
+    "inputs": {
+      "red": {
+        "type": "integer",
+        "desc": "Red component of the whitest pixel ",
+        "default": 255
+      },
+      "green": {
+        "type": "integer",
+        "desc": "Green component of the whitest pixel ",
+        "default": 255
+      },
+      "blue": {
+        "type": "integer",
+        "desc": "Blue component of the whitest pixel ",
+        "default": 255
+      }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#white-balance"
+}

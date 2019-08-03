@@ -1,0 +1,26 @@
+{
+    "name": "canvas-resize",
+    "description": "This module resizes the canvas and overlays the ouput of the previous step at given location",
+    "inputs": {
+        "width": {
+            "type": "integer",
+            "desc": "Final width of the canvas",
+            "default": 1000
+        },
+        "height": {
+            "type": "integer",
+            "desc": "Final height of the canvas",
+            "default": 1000
+        },
+        "x": {
+            "type": "integer",
+            "desc": "X-cord of the top left corner of the image on the canvas",
+            "default": 500
+        },
+        "y": {
+            "type": "float",
+            "desc": "Y-cord of the top left corner of the image on the canvas",
+            "default": 500
+        }
+    }
+}

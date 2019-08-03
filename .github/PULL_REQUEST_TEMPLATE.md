@@ -1,11 +1,11 @@
-Fixes #[Add issue number here.]
+Fixes #0000  (<=== Replace `0000` with the Issue Number)
 
 Make sure these boxes are checked before your pull request (PR) is ready to be reviewed and merged. Thanks!
 
-* [ ] tests pass -- look for a green checkbox ✔️ a few minutes after opening your PR -- or run tests locally with `rake test`
+* [ ] tests pass -- look for a green checkbox ✔️ a few minutes after opening your PR -- or run tests locally with `npm test`
 * [ ] code is in uniquely-named feature branch and has no merge conflicts
 * [ ] PR is descriptively titled
-* [ ] ask `@publiclab/reviewers` for help, in a comment below
+* [ ] ask `@publiclab/is-reviewers` for help, in a comment below
 
 > We're happy to help you get this ready -- don't be afraid to ask for help, and **don't be discouraged** if your tests fail at first!
 

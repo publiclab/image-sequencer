@@ -1,0 +1,30 @@
+{
+    "name": "webgl-distort",
+    "requires": [
+        "webgl"
+    ],
+    "description": "Transform perspective of an image based on corner coordinates",
+    "inputs": {
+        "nw": {
+            "type": "String",
+            "desc": "Comma separated X and Y coordinates of top-left corner",
+            "default": "0,100"
+        },
+        "ne": {
+            "type": "String",
+            "desc": "Comma separated X and Y coordinates of top-right corner",
+            "default": "1023,-50"
+        },
+        "se": {
+            "type": "String",
+            "desc": "Comma separated X and Y coordinates of bottom-right corner",
+            "default": "1223,867"
+        },
+        "sw": {
+            "type": "String",
+            "desc": "Comma separated X and Y coordinates of bottom-left corner",
+            "default": "100,767"
+        }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#webgl-distort"
+}

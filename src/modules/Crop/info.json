@@ -1,28 +1,34 @@
 {
-  "name": "Crop",
-  "description": "Crop image to given x, y, w, h in pixels, measured from top left",
+  "name": "crop",
+  "description": "Crop image to given x, y, w, h in pixels or % , measured from top left",
   "url": "https://github.com/publiclab/image-sequencer/tree/master/MODULES.md",
   "inputs": {
     "x": {
-      "type": "integer",
+      "type": "string",
       "desc": "X-position (measured from left) from where cropping starts",
       "default": 0
     },
     "y": {
-      "type": "integer",
+      "type": "string",
       "desc": "Y-position (measured from top) from where cropping starts",
       "default": 0
     },
     "w": {
-      "type": "integer",
+      "type": "string",
       "desc": "Width of crop",
-      "default": "(100%)"
+      "default": "(50%)"
     },
     "h": {
-      "type": "integer",
+      "type": "string",
       "desc": "Height of crop",
-      "default": "(100%)"
+      "default": "(50%)"
+    },
+    "backgroundColor": {
+      "type": "text",
+      "desc": "Background Color",
+      "default": "rgba(255,255,255,255)",
+      "id": "color-picker"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#crop-module"
 }

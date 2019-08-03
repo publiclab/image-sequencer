@@ -1,45 +1,45 @@
 module.exports = function Convolution(options, UI) {
 
-    options.kernelValues = options.kernelValues || '1 1 1 1 1 1 1 1 1';
-    options.constantFactor = options.constantFactor || 1/9;
-    var output;
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
 
-    function draw(input, callback, progressObj) {
+  options.kernelValues = options.kernelValues || defaults.kernelValues;
+  options.constantFactor = options.constantFactor || defaults.constantFactor;
+  options.texMode = options.texMode || defaults.texMode;
+  var output;
 
-        progressObj.stop(true);
-        progressObj.overrideFlag = true;
+  function draw(input, callback, progressObj) {
 
-        var step = this;
+    progressObj.stop(true);
+    progressObj.overrideFlag = true;
 
-        function changePixel(r, g, b, a) {
-            return [r, g, b, a]
-        }
+    var step = this;
 
-        function extraManipulation(pixels) {
-            pixels = require('./Convolution')(pixels, options.constantFactor, options.kernelValues)
-            return pixels
-        }
+    function extraManipulation(pixels) {
+      pixels = require('./Convolution')(pixels, options.constantFactor, options.kernelValues, options.texMode);
+      return pixels;
+    }
 
-        function output(image, datauri, mimetype) {
+    function output(image, datauri, mimetype) {
 
-            step.output = { src: datauri, format: mimetype };
-
-        }
-
-        return require('../_nomodule/PixelManipulation.js')(input, {
-            output: output,
-            changePixel: changePixel,
-            extraManipulation: extraManipulation,
-            format: input.format,
-            image: options.image,
-            callback: callback
-        });
+      step.output = { src: datauri, format: mimetype };
 
     }
-    return {
-        options: options,
-        draw: draw,
-        output: output,
-        UI: UI
-    }
-}
+
+    return require('../_nomodule/PixelManipulation.js')(input, {
+      output: output,
+      ui: options.step.ui,
+      extraManipulation: extraManipulation,
+      format: input.format,
+      image: options.image,
+      callback: callback,
+      useWasm:options.useWasm
+    });
+
+  }
+  return {
+    options: options,
+    draw: draw,
+    output: output,
+    UI: UI
+  };
+};

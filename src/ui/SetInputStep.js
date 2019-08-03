@@ -30,47 +30,47 @@ function setInputStepInit() {
 
     function runVideo(){
       /* event handler for Take-Photo */
-      document.getElementById('video').style.display='inline';
-      document.getElementById('capture').style.display='inline';
-      document.getElementById('close').style.display='inline';
+      document.getElementById('video').style.display = 'inline';
+      document.getElementById('capture').style.display = 'inline';
+      document.getElementById('close').style.display = 'inline';
       
       var video = document.getElementById('video');
       canvas = document.getElementById('canvas'),
       context = canvas.getContext('2d'),
       vendorUrl = window.URL || window.webkitURL;
 
-  navigator.getMedia = navigator.getUserMedia || navigator.wekitGetUserMedia ||
-                        navigator.mozGetUserMedia || navigator.msGetUserMedia;
+      const constraints = { audio: false, video: true};
 
-  navigator.getMedia({
-    video: true,
-    audio: false
-  }, function(stream){ // success callback
-    video.srcObject = stream;
-    video.onloadedmetadata = function(e) {
-       video.play();
-     };
-    document.getElementById('close').addEventListener('click', function () {
-      stopStream(stream);
-     });
-  }, function(error){ // error
-    console.log("error");
-  });
+      function handleSuccess(stream) {
+        window.stream = stream; // make stream available to browser console
+        video.srcObject = stream;
+        video.onloadedmetadata = function(e) {
+          video.play();
+        };
+        document.getElementById('close').addEventListener('click', function () {
+          stopStream(stream);
+        });
+      }
+      function handleError(error) {
+        console.log('navigator.getUserMedia error: ', error);
+      }
+      navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError);
+  
 
-  document.getElementById('capture').addEventListener('click', function(stream){
-    context.drawImage(video, 0, 0, 400, 300);
-    options.onTakePhoto(canvas.toDataURL());
-  });
+      document.getElementById('capture').addEventListener('click', function(stream){
+        context.drawImage(video, 0, 0, 400, 300);
+        options.onTakePhoto(canvas.toDataURL());
+      });
 
-  function stopStream(stream) {
-    stream.getVideoTracks().forEach(function (track) {
-        track.stop();
-    });
-    document.getElementById('video').style.display='none';
-    document.getElementById('capture').style.display='none';
-    document.getElementById('close').style.display='none';
-  }
-}
+      function stopStream(stream) {
+        stream.getVideoTracks().forEach(function (track) {
+          track.stop();
+        });
+        document.getElementById('video').style.display = 'none';
+        document.getElementById('capture').style.display = 'none';
+        document.getElementById('close').style.display = 'none';
+      }
+    }
  
     fileInput.on('change', handleFile);
     takePhoto.on('click', runVideo);
@@ -91,7 +91,7 @@ function setInputStepInit() {
       dropzone.removeClass('hover');
     });
 
-  }
+  };
 
 }
 module.exports = setInputStepInit;

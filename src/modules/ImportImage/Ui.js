@@ -7,9 +7,9 @@ module.exports = function ImportImageModuleUi(step, ui) {
     var dropzoneId = 'dropzone-import-image-' + step.ID;
 
     // add a file input listener
-    var dropZone ='\
-    <div style="padding: 30px;margin: 10px 20% 30px;border: 4px dashed #ccc;border-radius: 8px;text-align: center;color: #444;" id="' + dropzoneId + '">\
-      <p>\
+    var dropZone = '\
+    <div class="dropzone" style="padding: 30px;margin: 10px 20% 30px;border: 4px dashed #ccc;border-radius: 8px;text-align: center;color: #444;" id="' + dropzoneId + '">\
+          <p>\
         <i>Select or drag in an image to overlay.</i>\
       </p>\
       <center>\
@@ -25,14 +25,14 @@ module.exports = function ImportImageModuleUi(step, ui) {
 
     // setup file input listener
     sequencer.setInputStep({
-      dropZoneSelector: "#" + dropzoneId,
-      fileInputSelector: "#" + dropzoneId + " .file-input",
+      dropZoneSelector: '#' + dropzoneId,
+      fileInputSelector: '#' + dropzoneId + ' .file-input',
       onLoad: function onLoadFromInput(progress) {
         var reader = progress.target;
         step.options.imageUrl = reader.result;
         step.options.url = reader.result;
         sequencer.run();
-        setUrlHashParameter("steps", sequencer.toString());
+        setUrlHashParameter('steps', sequencer.toString());
       }
     });
 
@@ -44,11 +44,11 @@ module.exports = function ImportImageModuleUi(step, ui) {
         step.options.imageUrl = src;
         sequencer.run();
 
-    });
+      });
 
   }
 
   return {
     setup: setup
-  }
-}
+  };
+};

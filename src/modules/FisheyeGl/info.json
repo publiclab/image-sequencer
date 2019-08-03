@@ -1,5 +1,5 @@
 {
-  "name": "Fisheye GL",
+  "name": "fisheye-gl",
   "description": "Correct fisheye, or barrel distortion, in images (with WebGL -- adapted from fisheye-correction-webgl by @bluemir).",
   "requires": [ "webgl" ],
   "inputs": {
@@ -63,5 +63,5 @@
       "default": "(inbuilt)"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#fisheyegl-module"
 }

@@ -1,0 +1,19 @@
+{
+    "name": "add-qr",
+    "description": "Adds QR corresponding to the given string",
+    "url": "https://github.com/publiclab/image-sequencer/tree/master/MODULES.md",
+    "inputs": {
+      "size": {
+        "type": "integer",
+        "desc": "size of QR code in pixels",
+        "default": 200
+      },
+      "qrCodeString":{
+        "type": "string",
+        "desc": "input string to generate QR code",
+        "default": "https://github.com/publiclab/image-sequencer"
+      }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#add-qr-module"
+  }
+  

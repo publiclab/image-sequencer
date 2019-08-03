@@ -1,12 +1,12 @@
 {
-  "name": "Decode QR",
+  "name": "decode-qr",
   "description": "Search for and decode a QR code in the image",
   "inputs": {
   },
   "outputs": {
     "qrval": {
-      "type": "text"
+      "type": "string"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#decodeqr-module"
 }

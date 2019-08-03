@@ -1,0 +1,13 @@
+{
+  "name": "flip-image",
+  "description": "Flip The Image On The Specified Axis.",
+  "inputs": {
+    "Axis": {
+      "type": "select",
+      "desc": "Axis",
+      "default": "Vertical",
+      "values": ["Horizontal", "Vertical"]
+    }
+  },
+   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#flipimage-module"
+}

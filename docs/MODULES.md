@@ -86,6 +86,19 @@ where `options` is an object with the following properties:
 * offset: step of image with which current image is to be blended(Two steps back is -2, three                steps back is -3 etc; default -2) 
 * func: function used to blend two images (default : function(r1, g1, b1, a1, r2, g2, b2, a2) {            return [ r1, g2, b2, a2 ] })
 
+## Blob Analysis
+
+This module uses Opencv.js for detecting and marking blob/region in microscopic images. It requires an opencv.js file to 
+be loaded before using the functionalities which is currently being loaded to the webpage via script.It supports both environments, Node.js and browser for processing. 
+
+As the size of opencv.js file is quite large, the future versions will focus on loading it asynchronously, on demand of the the module to optimise performance.
+
+#### Usage
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('blob-analysis')
+           .run()
+```
 
 ## blur-module
 

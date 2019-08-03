@@ -9,6 +9,7 @@ List of Module Documentations
 4.  [Add QR](#Add-QR-module)
 5.  [Average](#average-module)
 6.  [Blend](#blend-module)
+7.  [Blob-Analysis](#blob-analysis)
 7.  [Blur](#blur-module)
 8.  [Brightness](#brightness-module)
 9.  [Channel](#channel-module)
@@ -39,6 +40,8 @@ List of Module Documentations
 34. [Tint](#tint)
 35. [ColorTemperature](#color-temperature)
 36. [Grid-Overlay](#grid-overlay)
+37. [MinifyImage](#minify-image)
+38. [Text-Overlay](#text-overlay)
 
 
 ## crop-module
@@ -152,6 +155,20 @@ This module is used for blending two images .
 where `options` is an object with the following properties:
 * offset: step of image with which current image is to be blended(Two steps back is -2, three                steps back is -3 etc; default -2) 
 * func: function used to blend two images (default : function(r1, g1, b1, a1, r2, g2, b2, a2) {            return [ r1, g2, b2, a2 ] })
+
+## Blob Analysis
+
+This module uses Opencv.js for detecting and marking blob/region in microscopic images. It requires an opencv.js file to 
+be loaded before using the functionalities which is currently being loaded to the webpage via script.It supports both environments, Node.js and browser for processing. 
+
+As the size of opencv.js file is quite large, the future versions will focus on loading it asynchronously, on demand of the the module to optimise performance.
+
+#### Usage
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('blob-analysis')
+           .run()
+```
 
 ## blur-module
 
@@ -601,3 +618,31 @@ where `options` is an object with the following property:
 * options.x : The value at which the grid line should start in x-axis.
 * options.y : The value at which the grid line should start in y-axis.
 * color : Color for the grid on the image.
+
+# Minify Image
+
+This module minifies the image using lossy compression that is the image-dimensions are not lost but the size is reduced.
+
+The module supports jpg/jpeg/webp images in browser; but the node version supports all of the types.
+
+## Usage
+
+```js
+sequencer.loadImage('PATH')
+           .addSteps('minify-image')
+           .run()
+```
+# Text Overlay
+
+The modules allows to add text to image in both browser and node environment. We have the options to modify the font-size and also support few font-styles. The text color can also be modified.
+
+## Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('grid-overlay',options)
+           .run()
+```
+The options can take various attributes like,
+```
+var options = { text : 'Hello World', size : '12'};

@@ -1,4 +1,7 @@
 module.exports = exports = function(pixels, options, priorstep){
+
+  var $ = require('jquery'); // to make text-overlay work for node.js
+
   var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
 
   options.text = options.text || defaults.text;

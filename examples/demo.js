@@ -88,24 +88,39 @@ window.onload = function() {
     $('.savesequencemsg').fadeIn();
     setTimeout(function() {
       $('.savesequencemsg').fadeOut();
-    }, 1000);
+    }, 3000);
   }
 
   $('body').on('click', 'button.remove', ui.removeStepUi);
-  $('#save-seq').click(() => {
+  function saveSequence() { // 1. save seq
     var result = window.prompt('Please give a name to your sequence... (Saved sequence will only be available in this browser).');
     if(result){
       result = result + ' (local)';
-      sequencer.saveSequence(result, sequencer.toString());
+      sequencer.saveSequence(result, sequencer.toString()); // 1.a study saveSequence
       sequencer.loadModules();
       displayMessageOnSaveSequence();
       refreshOptions();
+    }
+  }
+  $('#saveButton').on('click', function(){
+
+    let dropDownValue = $('#selectSaveOption option:selected').val();
+    console.log(dropDownValue);
+    if(dropDownValue == 'save-image')
+    {
+      $('.download-btn:last()').trigger('click');
+    }
+    else if(dropDownValue == 'save-gif'){
+
+    }
+    else if(dropDownValue == 'save-seq'){
+      saveSequence();
     }
   });
 
   var isWorkingOnGifGeneration = false;
 
-  $('.js-view-as-gif').on('click', function(event) {
+  $('.js-view-as-gif').on('click', function(event) { // 2. gif view
     // Prevent user from triggering generation multiple times
     if (isWorkingOnGifGeneration) return;
 
@@ -144,7 +159,7 @@ window.onload = function() {
 
           var modal = $('#js-download-gif-modal');
 
-          $('#js-download-as-gif-button').one('click', function() {
+          $('#js-download-as-gif-button').one('click', function() { // 3. save gif
             // Trigger download
             download(image, 'index.gif', 'image/gif');
 

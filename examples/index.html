@@ -91,7 +91,7 @@
     </section>
 
     <hr />
-    <p class="alert alert-success savesequencemsg">Saved Sequence Success. Sequence can be found among other modules.
+    <p class="alert alert-success savesequencemsg">Saved Sequence Success. Sequence can be found among other modules in browser's localStorage.
     </p>
     <div class="row">
       <div class="col-sm-8">
@@ -188,10 +188,10 @@
               <div style="text-align:center;">
                 <h2 style="margin-top:20px">Save</h2>
                 <select class="form-control input-md" id="selectSaveOption" style="margin-top:20px">
-                  <option>Save as PNG</option>
-                  <option>Save as GIF (all steps)</option>
-                  <option>Save sequence</option>
-                  <option>Save sequence string</option>
+                  <option value="save-image">Save as PNG</option>
+                  <option value="save-gif">Save as GIF (all steps)</option>
+                  <option value="save-seq">Save sequence</option>
+                  <option value="save-seq-string">Save sequence string</option>
                 </select>
                 <p><button id="saveButton" class="btn btn-primary btn-lg save-button">Save</button></p>
                 <p><button class="btn btn-default btn-lg js-view-as-gif" id="gif">Preview GIF</button></p>

@@ -111,7 +111,7 @@ window.onload = function() {
       $('.download-btn:last()').trigger('click');
     }
     else if(dropDownValue == 'save-gif'){
-
+      // download gif
     }
     else if(dropDownValue == 'save-seq'){
       saveSequence();

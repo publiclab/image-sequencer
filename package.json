@@ -45,6 +45,7 @@
     "geotiff": "^1.0.0-beta.6",
     "get-pixels": "~3.3.0",
     "gifshot": "^0.4.5",
+    "gl": "^4.3.3",
     "glfx": "0.0.4",
     "gpu.js": "^2.0.0-rc.12",
     "image-sequencer-invert": "^1.0.0",

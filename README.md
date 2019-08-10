@@ -57,6 +57,21 @@ A diagram of this running 5 steps on a single sample image may help explain how 
 ## Installation
 
 This library conveniently works in the browser, in Node, and on the command line (CLI).
+To install the app, run the following commands in a command line:
+
+* `git clone https://github.com/vaibhavmatta/image-sequencer`
+* `cd image-sequencer`
+* `npm install`
+
+## Running locally:
+
+To run the app locally on your machine, run the following commands in a command line:
+
+### MacOS 
+
+* `npm run start`
+
+This will automatically run the app in your browser.
 
 ### Unix based platforms
 You can set up a local environment to test the UI with `sudo npm run setup` followed by `npm start`.

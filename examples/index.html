@@ -55,7 +55,7 @@
 
   <div class="container-fluid">
 
-    <header class="text-center">
+    <header class="text-center" style="min-width: 450px">
       <h1><a href="/" target='_blank' class="name-header">Image Sequencer</a></h1>
       <p>
         A pure JavaScript sequential image processing system, inspired by storyboards. Instead of modifying the original
@@ -139,15 +139,15 @@
                   <p>Crop</p>
                 </div>
               </div>
-              <div class="row center-align">
-                <div class="col-md-8">
+              <div class="row justify-content-center">
+                <div class="col-lg-8">
 
-                  <select id="selectStep">
+                  <select id="selectStep" class="text-center">
                     <!-- The default null selection has been appended manually in demo.js
               This is because the options in select are overritten when options are appended.-->
                   </select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-lg-4">
                   <button class="btn btn-success btn-lg" name="add" id="add-step-btn">Add Step</button></div>
               </div>
               <div class="row center-align">

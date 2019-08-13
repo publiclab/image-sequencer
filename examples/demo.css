@@ -44,6 +44,7 @@ body > .container-fluid {
 .panel {
   margin-left: 20px;
   margin-right: 20px;
+  min-width:400px;
 }
 
 .nomargin {
@@ -61,6 +62,7 @@ body > .container-fluid {
   border-radius: 8px;
   text-align: center;
   color: #444;
+  min-width:300px;
 }
 
 .hover {
@@ -103,7 +105,10 @@ body > .container-fluid {
 }
 
 #add-step-btn{
-  margin-left: 10px;
+  width: 100%
+}
+.selectize-input {
+  width: 100%;
 }
 
 #addStep .labels {
@@ -140,7 +145,6 @@ body > .container-fluid {
 #dwnld {
   max-width: 500px;
   margin: 20px auto;
-  margin-left: 5px;
 }
 
 #gif_element {

@@ -1,5 +1,6 @@
 module.exports = exports = function(pixels, options){
   var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+  const pixelSetter = require('../../util/pixelSetter.js');
 
   options.startingX = options.startingX || defaults.startingX;
   options.startingY = options.startingY || defaults.startingY;
@@ -17,10 +18,8 @@ module.exports = exports = function(pixels, options){
   var drawSide = function(startX, startY, endX, endY){
     for (var n = startX; n <= endX + thickness; n++){
       for (var k = startY; k <= endY + thickness; k++){
-        pixels.set(n, k, 0, color[0]);
-        pixels.set(n, k, 1, color[1]);
-        pixels.set(n, k, 2, color[2]);
-        //pixels.set(n, k, 3, color[3]);
+
+        pixelSetter(n, k, color, pixels); //to remove 4th channel - pixels.set(n, k, 3, color[3]);
       }
     }
   };

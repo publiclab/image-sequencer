@@ -2,6 +2,7 @@ module.exports = exports = function(pixels, options) {
 
 
   let defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+  const pixelSetter = require('../../util/pixelSetter.js');
 
   let fillColor = options.fillColor || defaults.fillColor,
     x = parseInt(options.startingX) || defaults.startingX,
@@ -47,10 +48,8 @@ module.exports = exports = function(pixels, options) {
       } while (isSimilar(currx, south) && south < height);
 
       for (n = north + 1; n < south; n += 1) {
-        pixels.set(currx, n, 0, fillColor[0]);
-        pixels.set(currx, n, 1, fillColor[1]);
-        pixels.set(currx, n, 2, fillColor[2]);
-        pixels.set(currx, n, 3, fillColor[3]);
+        pixelSetter(currx, n, fillColor, pixels);
+
         if (isSimilar(currx - 1, n)) {
           queuex.push(currx - 1);
           queuey.push(n);

@@ -181,7 +181,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
         $('#steps .step-container:nth-last-child(1) .insert-step').prop('disabled', true);
         if($('#steps .step-container:nth-last-child(2)'))
           $('#steps .step-container:nth-last-child(2) .insert-step').prop('disabled', false);
-      } else {
+      }
+      else {
         stepsEl.insertBefore(step.ui, $(stepsEl).children()[stepOptions.index]);
       }
     }
@@ -197,7 +198,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     $(step.imgElement).on('click', (e) => {e.preventDefault(); });
     $stepAll('#color-picker').colorpicker();
 
-    function saveOptions(e) {
+    function saveOptions(e) { // 1. SAVE OPTIONS
       e.preventDefault();
       if (optionsChanged){
         $step('div.details')

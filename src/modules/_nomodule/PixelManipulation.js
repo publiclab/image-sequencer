@@ -5,6 +5,9 @@
 module.exports = function PixelManipulation(image, options) {
   // To handle the case where pixelmanipulation is called on the input object itself
   // like input.pixelManipulation(options)
+  
+  const pixelSetter = require('../../util/pixelSetter.js');
+
   if (arguments.length <= 1) {
     options = image;
     image = this;
@@ -86,10 +89,8 @@ module.exports = function PixelManipulation(image, options) {
               y
             );
 
-            pixels.set(x, y, 0, pixel[0]);
-            pixels.set(x, y, 1, pixel[1]);
-            pixels.set(x, y, 2, pixel[2]);
-            pixels.set(x, y, 3, pixel[3]);
+            pixelSetter(x, y, pixel, pixels);
+
           }
         }
       };

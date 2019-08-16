@@ -4,6 +4,8 @@ require('./util/getStep.js');
 
 ImageSequencer = function ImageSequencer(options) {
 
+  var str = require('./Strings.js')(this.steps, modulesInfo, addSteps, copy);
+
   var sequencer = (this.name == 'ImageSequencer') ? this : this.sequencer;
   options = options || {};
   options.inBrowser = options.inBrowser === undefined ? isBrowser : options.inBrowser;
@@ -256,8 +258,8 @@ ImageSequencer = function ImageSequencer(options) {
     fs.writeFileSync('./src/Modules.js', mods);
   }
 
-  function saveSequence(name, sequenceString) {
-    const sequence = stringToJSON(sequenceString);
+  function saveSequence(name, sequenceString) { // 4. save sequence
+    const sequence = str.stringToJSON(sequenceString);
     // Save the given sequence string as a module
     if (options.inBrowser) {
       // Inside the browser we save the meta-modules using the Web Storage API
@@ -282,7 +284,6 @@ ImageSequencer = function ImageSequencer(options) {
       this.sequences = require('./SavedSequences.json');
   }
 
-  var str = require('./Strings.js')(this.steps, modulesInfo, addSteps, copy);
 
   return {
     //literals and objects

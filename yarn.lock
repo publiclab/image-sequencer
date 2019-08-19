@@ -3560,20 +3560,20 @@ got@^8.3.1:
     url-parse-lax "^3.0.0"
     url-to-options "^1.0.1"
 
-gpu-mock.js@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/gpu-mock.js/-/gpu-mock.js-1.0.1.tgz#81e7146a37eee3b6d627f1feaa74a26d513148a2"
-  integrity sha1-gecUajfu47bWJ/H+qnSibVExSKI=
+gpu-mock.js@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/gpu-mock.js/-/gpu-mock.js-1.1.0.tgz#1d6ea04f512aed9394e10d42026e90a9c1847d93"
+  integrity sha512-kDMvQ04qIqbrpGyYCShx8NhZYMiolb1XUkjnJn92/jcMsxjcPF7KFfDMJEg0VUwxVJzD4djzJNWbmJCs00YEVg==
 
 gpu.js@^2.0.0-rc.12:
-  version "2.0.0-rc.20"
-  resolved "https://registry.yarnpkg.com/gpu.js/-/gpu.js-2.0.0-rc.20.tgz#98c46a6ede63c7c1c2e6a6834a469f204788e649"
-  integrity sha512-u1t03tge0Kp2HRGzG24QOkB92/OC+Xd2nomycs7n6xlWXV+asqHbSLM/JWlSrmLMsPjJG6IjVzuzHe5STyrIIg==
+  version "2.0.0-rc.25"
+  resolved "https://registry.yarnpkg.com/gpu.js/-/gpu.js-2.0.0-rc.25.tgz#90e67aa76a3e51778c032a1815418f8ed9588384"
+  integrity sha512-8dAsLaIjLAQAHb1Xk6eSmKa8R1QCxz1gambA4TtkAdEO1/Gan3GHhZVHlYlE/CU6TYQMoyzS4CusgfPu/HRBhQ==
   dependencies:
     acorn "^5.1.1"
     gl "^4.3.3"
     gl-wiretap "^0.6.0"
-    gpu-mock.js "^1.0.1"
+    gpu-mock.js "^1.1.0"
 
 graceful-fs@^4.1.10:
   version "4.2.0"

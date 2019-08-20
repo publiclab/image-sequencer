@@ -1,4 +1,6 @@
 module.exports = exports = function(pixels, options){
+  const pixelSetter = require('../../util/pixelSetter.js');
+
   var color = options.color || 'rgb(228,86,81)';
   color = color.substring(color.indexOf('(') + 1, color.length - 1); // extract only the values from rgba(_,_,_,_)
 
@@ -23,7 +25,6 @@ module.exports = exports = function(pixels, options){
                  g >= cg * minFactor &&  g <= cg * maxFactor &&
                  b >= cb * minFactor &&  b <= cb * maxFactor);
   }
-
   for(var i = 0; i < pixels.shape[0]; i++){
     for(var j = 0; j < pixels.shape[1]; j++){
       var r = pixels.get(i, j, 0),
@@ -32,16 +33,16 @@ module.exports = exports = function(pixels, options){
       if(isSimilar(r, g, b)){
         if (replaceMethod == 'greyscale'){
           var avg = (r + g + b) / 3;
-          pixels.set(i, j, 0, avg);
-          pixels.set(i, j, 1, avg);
-          pixels.set(i, j, 2, avg);
+          pixelSetter(i, j, [avg, avg, avg], pixels);
+
         }else {
-          pixels.set(i, j, 0, replaceColor[0]);
-          pixels.set(i, j, 1, replaceColor[1]);
-          pixels.set(i, j, 2, replaceColor[2]);
+          pixelSetter(i, j, replaceColor, pixels);
+
         }
       }
     }
+    
+    
   }
   return pixels;
 };

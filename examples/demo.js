@@ -5,7 +5,7 @@ var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js'),
   urlHash = require('./lib/urlHash.js'),
   insertPreview = require('./lib/insertPreview.js');
 
-window.onload = function() {
+window.onload = function () {
   sequencer = ImageSequencer();
 
   function refreshOptions() {
@@ -62,7 +62,7 @@ window.onload = function() {
     sequencer.loadImage('images/tulips.png', ui.onLoad);
   }
 
-  var resetSequence = function(){
+  var resetSequence = function () {
     var r = confirm('Do you want to reset the sequence?');
     if (r)
       window.location = '/';
@@ -73,7 +73,7 @@ window.onload = function() {
   $('#resetButton').on('click', resetSequence);
 
   //Module button radio selection
-  $('.radio-group .radio').on('click', function() {
+  $('.radio-group .radio').on('click', function () {
     $(this).parent().find('.radio').removeClass('selected');
     $(this).addClass('selected');
     newStep = $(this).attr('data-value');
@@ -84,29 +84,44 @@ window.onload = function() {
     $(this).removeClass('selected');
   });
 
-  function displayMessageOnSaveSequence(){
+  function displayMessageOnSaveSequence() {
     $('.savesequencemsg').fadeIn();
-    setTimeout(function() {
+    setTimeout(function () {
       $('.savesequencemsg').fadeOut();
-    }, 1000);
+    }, 3000);
   }
 
   $('body').on('click', 'button.remove', ui.removeStepUi);
-  $('#save-seq').click(() => {
+  function saveSequence() { // 1. save seq
     var result = window.prompt('Please give a name to your sequence... (Saved sequence will only be available in this browser).');
-    if(result){
+    if (result) {
       result = result + ' (local)';
-      sequencer.saveSequence(result, sequencer.toString());
+      sequencer.saveSequence(result, sequencer.toString()); // 1.a study saveSequence
       sequencer.loadModules();
       displayMessageOnSaveSequence();
       refreshOptions();
     }
+  }
+  $('#saveButton').on('click', function () {
+    // different handlers triggered for different dropdown options
+
+    let dropDownValue = $('#selectSaveOption option:selected').val();
+
+    if (dropDownValue == 'save-image') {
+      $('.download-btn:last()').trigger('click');
+    }
+    else if (dropDownValue == 'save-gif') {
+      handleSavePNG();
+    }
+    else if (dropDownValue == 'save-seq') {
+      saveSequence();
+    }
   });
 
-  var isWorkingOnGifGeneration = false;
+  let isWorkingOnGifGeneration = false;
 
-  $('.js-view-as-gif').on('click', function(event) {
-    // Prevent user from triggering generation multiple times
+  $('.js-view-as-gif').on('click', function (event) {
+    /* Prevent user from triggering generation multiple times*/
     if (isWorkingOnGifGeneration) return;
 
     isWorkingOnGifGeneration = true;
@@ -116,23 +131,10 @@ window.onload = function() {
     button.innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i>';
 
     try {
-      // Select all images from previous steps
-      var imgs = document.getElementsByClassName('step-thumbnail');
+      /* Get gif resources of previous steps  */
+      let options = getGifResources();
 
-      var imgSrcs = [];
-
-      for (var i = 0; i < imgs.length; i++) {
-        imgSrcs.push(imgs[i].src);
-      }
-
-      var options = {
-        'gifWidth': imgs[0].width,
-        'gifHeight': imgs[0].height,
-        'images': imgSrcs,
-        'frameDuration': 7,
-      };
-
-      gifshot.createGIF(options, function(obj) {
+      gifshot.createGIF(options, function (obj) { // gif generation
         if (!obj.error) {
           // Final gif encoded with base64 format
           var image = obj.image;
@@ -141,13 +143,11 @@ window.onload = function() {
           animatedImage.id = 'gif_element';
           animatedImage.src = image;
 
+          let modal = $('#js-download-gif-modal');
 
-          var modal = $('#js-download-gif-modal');
-
-          $('#js-download-as-gif-button').one('click', function() {
+          $('#js-download-as-gif-button').one('click', function () {
             // Trigger download
-            download(image, 'index.gif', 'image/gif');
-
+            downloadGif(image);
             // Close modal
             modal.modal('hide');
           });
@@ -175,9 +175,41 @@ window.onload = function() {
       button.disabled = false;
       button.innerHTML = 'View GIF';
       isWorkingOnGifGeneration = false;
-
     }
   });
+
+  function getGifResources() {
+    /* Returns an object with specific gif options */
+    let imgs = document.getElementsByClassName('step-thumbnail');
+    var imgSrcs = [];
+
+    // Pushes image sources of all the modules in dom
+    for (var i = 0; i < imgs.length; i++) {
+      imgSrcs.push(imgs[i].src);
+    }
+
+    var options = { // gif frame options
+      'gifWidth': imgs[0].width,
+      'gifHeight': imgs[0].height,
+      'images': imgSrcs,
+      'frameDuration': 7,
+    };
+
+    return options;
+  }
+
+  function handleSavePNG() {
+    let options = getGifResources();
+    gifshot.createGIF(options, function(obj){
+
+      downloadGif(obj.image);
+
+    });
+  }
+
+  function downloadGif(image) {
+    download(image, 'index.gif', 'image/gif');// downloadjs library function
+  }
 
   // image selection and drag/drop handling from examples/lib/imageSelection.js
   sequencer.setInputStep({
@@ -190,7 +222,7 @@ window.onload = function() {
       var util = intermediateHtmlStepUi(sequencer);
       step.output.src = reader.result;
       sequencer.run({ index: 0 });
-      if(typeof step.options !== 'undefined')
+      if (typeof step.options !== 'undefined')
         step.options.step.imgElement.src = reader.result;
       else
         step.imgElement.src = reader.result;
@@ -201,7 +233,7 @@ window.onload = function() {
       var step = sequencer.steps[0];
       step.output.src = url;
       sequencer.run({ index: 0 });
-      if(typeof step.options !== 'undefined')
+      if (typeof step.options !== 'undefined')
         step.options.step.imgElement.src = url;
       else
         step.imgElement.src = url;

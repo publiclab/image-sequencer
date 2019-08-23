@@ -7909,9 +7909,9 @@ tap-spec@^5.0.0:
     through2 "^2.0.0"
 
 tape-run@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/tape-run/-/tape-run-6.0.0.tgz#9a942c2cd5e6de0c5ce6c042a3279d156280d0c5"
-  integrity sha512-sOraSXldPqW2eaCP5HcOhraMEZPIxgZCWmmaZtHBDAPVdI6tmOuioKLq7H+PNbM1Qp6BhdXNctvc+3qMqiO+sg==
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/tape-run/-/tape-run-6.0.1.tgz#f017357c094a8c005aecffd7579ac8ef56a3e86c"
+  integrity sha512-j6k5NbHL6Ww2E3uxng7pZPr5uNFWkVuZd1u5ZWW2QunofLl08nASxmzmrj0Tphvtse6rKO9FA1ibruzY2a1IGA==
   dependencies:
     "@juliangruber/tap-finished" "0.0.2"
     browser-run "^6.0.0"

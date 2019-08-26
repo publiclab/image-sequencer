@@ -68,10 +68,10 @@ module.exports = function Rotate(options, UI) {
       });
 
       pixels1.data = rotated._data.data;
-      var pixels2 = require('ndarray')(new Uint8Array(4 * (Math.floor(Math.abs(width * cos) + Math.abs(height * sin) + 2) * (Math.floor(Math.abs(width * sin) + Math.abs(height * cos)) + 2))).fill(0), [Math.floor(Math.abs(width * cos) + Math.abs(height * sin)) + 2, Math.floor(Math.abs(width * sin) + Math.abs(height * cos)) + 2, 4]);
+      var pixels2 = require('ndarray')(new Uint8Array(4 * (Math.floor(Math.abs(width * cos) + Math.abs(height * sin) + 5) * (Math.floor(Math.abs(width * sin) + Math.abs(height * cos)) + 5))).fill(0), [Math.floor(Math.abs(width * cos) + Math.abs(height * sin)) + 5, Math.floor(Math.abs(width * sin) + Math.abs(height * cos)) + 4, 4]);
       for (var n = 0; n < pixels2.shape[0]; n++){
         for (var m = 0; m < pixels2.shape[1]; m++){
-          copyPixel2(n, m, n + Math.floor(dimension / 2 -  Math.abs(width * cos / 2) - Math.abs(height * sin / 2)), m + Math.floor(dimension / 2 - Math.abs(height * cos / 2) - Math.abs(width * sin / 2)));
+          copyPixel2(n, m, n + Math.floor(dimension / 2 -  Math.abs(width * cos / 2) - Math.abs(height * sin / 2)) - 1, m + Math.floor(dimension / 2 - Math.abs(height * cos / 2) - Math.abs(width * sin / 2)) - 1);
         }
       }
       return pixels2;

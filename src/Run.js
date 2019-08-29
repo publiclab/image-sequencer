@@ -43,7 +43,7 @@ function Run(ref, json_q, callback, ind, progressObj) {
         inputForNextStep,
         function onEachStep() {
 
-          // This output is accessible by UI        
+          // This output is accessible by UI
           ref.steps[i].options.step.output = ref.steps[i].output.src;
 
           // Tell UI that step has been drawn.
@@ -75,7 +75,7 @@ function Run(ref, json_q, callback, ind, progressObj) {
     while (
       typeof prevstep == 'undefined' ||
         typeof prevstep.output == 'undefined'
-    ) {        
+    ) {
       prevstep = ref.steps[--json_q[0] - 1];
     }
     

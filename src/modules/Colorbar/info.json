@@ -1,5 +1,5 @@
 {
-    "name": "Colorbar",
+    "name": "colorbar",
     "description": "Generates a colorbar to lay over the image",
     "inputs": {
         "colormap": {

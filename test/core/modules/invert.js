@@ -21,7 +21,7 @@ var invert = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9h
 
 test('Load invert module', function(t) {
   sequencer.loadImages( red);
-  t.equal(sequencer.steps.length, 1,'Image loaded');
+  t.equal(sequencer.steps.length, 1, 'Image loaded');
   sequencer.addSteps('invert');
   t.equal(sequencer.steps[1].options.name, 'invert', 'Invert step added');
   t.end();
@@ -33,7 +33,7 @@ test('Inverted image isn\'t identical', function(t) {
     var output = sequencer.steps[1].output.src;
     input = DataURItoBuffer(input);
     output = DataURItoBuffer(output);
-    t.notEqual(input,output,'Not equal');
+    t.notEqual(input, output, 'Not equal');
     t.end();
   });
 });

@@ -1,5 +1,5 @@
 {
-    "name": "Convolution",
+    "name": "convolution",
     "description": "Image Convolution using a given 3x3 kernel matrix <a href='https://en.wikipedia.org/wiki/Kernel_(image_processing)'>Read more</a>",
     "inputs": {
   		"constantFactor":{

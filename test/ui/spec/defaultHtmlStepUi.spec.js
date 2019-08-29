@@ -5,8 +5,8 @@ global.document = DOM.window.document;
 
 describe('Sequencer step HTML', function() {
 
-  var DefaultHtmlStepUi = require('../../examples/lib/defaultHtmlStepUi');
-  var sequencer = require('../../src/ImageSequencer')();
+  var DefaultHtmlStepUi = require('../../../examples/lib/defaultHtmlStepUi');
+  var sequencer = require('../../../src/ImageSequencer')();
   var defaultHtmlStepUi;
   var step = 'brightness';
   var options = {
@@ -15,22 +15,32 @@ describe('Sequencer step HTML', function() {
   };
   // options = JSON.parse(options)
 
+  beforeAll(() => {
+    const { JSDOM } = require('jsdom');
+    var { window } = new JSDOM();
+
+    const { document } = window;
+    global.window = window;
+    global.document = document;
+    const $ = global.jQuery = global.$ = require('jquery');
+  });
+
   beforeEach(()=>{
     defaultHtmlStepUi = new DefaultHtmlStepUi(sequencer);
 
-    spyOn(defaultHtmlStepUi,'getPreview');
-    spyOn(defaultHtmlStepUi,'onSetup');
-    spyOn(defaultHtmlStepUi,'onComplete');
-    spyOn(defaultHtmlStepUi,'onDraw');
-    spyOn(defaultHtmlStepUi,'onRemove');
-    spyOn(defaultHtmlStepUi,'notify');
+    spyOn(defaultHtmlStepUi, 'getPreview');
+    spyOn(defaultHtmlStepUi, 'onSetup');
+    spyOn(defaultHtmlStepUi, 'onComplete');
+    spyOn(defaultHtmlStepUi, 'onDraw');
+    spyOn(defaultHtmlStepUi, 'onRemove');
+    spyOn(defaultHtmlStepUi, 'notify');
 
     defaultHtmlStepUi.getPreview();
-    defaultHtmlStepUi.onSetup(step,options);
+    defaultHtmlStepUi.onSetup(step, options);
     defaultHtmlStepUi.onComplete(step);
     defaultHtmlStepUi.onDraw(step);
     defaultHtmlStepUi.onRemove(step);
-    defaultHtmlStepUi.notify('Step removed','remove-notification');
+    defaultHtmlStepUi.notify('Step removed', 'remove-notification');
   });
 
 
@@ -39,7 +49,7 @@ describe('Sequencer step HTML', function() {
   });
 
   it('load initial setup ui', function() {
-    expect(defaultHtmlStepUi.onSetup).toHaveBeenCalledWith(step,options);
+    expect(defaultHtmlStepUi.onSetup).toHaveBeenCalledWith(step, options);
   });
 
   it('load completion ui', function() {
@@ -55,7 +65,7 @@ describe('Sequencer step HTML', function() {
   });
 
   it('notification ui', function() {
-    expect(defaultHtmlStepUi.notify).toHaveBeenCalledWith('Step removed','remove-notification');
+    expect(defaultHtmlStepUi.notify).toHaveBeenCalledWith('Step removed', 'remove-notification');
   });
 
 });

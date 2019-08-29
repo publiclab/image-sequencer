@@ -1,5 +1,5 @@
 {
-  "name": "PaintBucket",
+  "name": "paint-bucket",
   "description": "Fill color in pixels",
   "inputs": {
       "startingX": {
@@ -14,9 +14,9 @@
       },
       "fillColor": {
         "type": "String",
-        "desc": "four space separated numbers representing the RGBA values of fill-color",
-        "default": "100 100 100 255",
-        "placeholder": "100 100 100 255"
+        "desc": "Pick color to fill",
+        "default": "rgba(100,100,100,1)",
+        "id": "color-picker"
       },
       "tolerance": {
         "type": "range",

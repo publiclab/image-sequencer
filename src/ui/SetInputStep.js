@@ -30,16 +30,16 @@ function setInputStepInit() {
 
     function runVideo(){
       /* event handler for Take-Photo */
-      document.getElementById('video').style.display='inline';
-      document.getElementById('capture').style.display='inline';
-      document.getElementById('close').style.display='inline';
+      document.getElementById('video').style.display = 'inline';
+      document.getElementById('capture').style.display = 'inline';
+      document.getElementById('close').style.display = 'inline';
       
       var video = document.getElementById('video');
       canvas = document.getElementById('canvas'),
       context = canvas.getContext('2d'),
       vendorUrl = window.URL || window.webkitURL;
 
-      const constraints = { audio: false,video: true};
+      const constraints = { audio: false, video: true};
 
       function handleSuccess(stream) {
         window.stream = stream; // make stream available to browser console
@@ -66,9 +66,9 @@ function setInputStepInit() {
         stream.getVideoTracks().forEach(function (track) {
           track.stop();
         });
-        document.getElementById('video').style.display='none';
-        document.getElementById('capture').style.display='none';
-        document.getElementById('close').style.display='none';
+        document.getElementById('video').style.display = 'none';
+        document.getElementById('capture').style.display = 'none';
+        document.getElementById('close').style.display = 'none';
       }
     }
  

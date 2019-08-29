@@ -30,7 +30,8 @@ function Invert(options, UI) {
       format: input.format,
       image: options.image,
       inBrowser: options.inBrowser,
-      callback: callback
+      callback: callback,
+      useWasm:options.useWasm
     });
 
   }
@@ -43,7 +44,7 @@ function Invert(options, UI) {
   };
 }
 var info = {
-  'name': 'Invert',
+  'name': 'invert',
   'description': 'Inverts the image.',
   'inputs': {
   }

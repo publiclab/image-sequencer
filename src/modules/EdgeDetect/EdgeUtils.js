@@ -1,11 +1,13 @@
 // Define kernels for the sobel filter
+
+const pixelSetter = require('../../util/pixelSetter.js');
 const kernelx = [
     [-1, 0, 1],
     [-2, 0, 2],
     [-1, 0, 1]
   ],
   kernely = [
-    [-1,-2,-1],
+    [-1, -2, -1],
     [ 0, 0, 0],
     [ 1, 2, 1]
   ];
@@ -41,19 +43,14 @@ module.exports = function(pixels, highThresholdRatio, lowThresholdRatio, useHyst
   return pixels;
 };
 
-
 function supress(pixels, pixel) {
-  pixels.set(pixel[0], pixel[1], 0, 0);
-  pixels.set(pixel[0], pixel[1], 1, 0);
-  pixels.set(pixel[0], pixel[1], 2, 0);
-  pixels.set(pixel[0], pixel[1], 3, 255);
+  pixelSetter(pixel[0], pixel[1], [0, 0, 0, 255], pixels);
+
 }
 
 function preserve(pixels, pixel) {
-  pixels.set(pixel[0], pixel[1], 0, 255);
-  pixels.set(pixel[0], pixel[1], 1, 255);
-  pixels.set(pixel[0], pixel[1], 2, 255);
-  pixels.set(pixel[0], pixel[1], 3, 255);
+  pixelSetter(pixel[0], pixel[1], [255, 255, 255, 255], pixels);
+
 }
 
 // sobelFilter function that convolves sobel kernel over every pixel
@@ -69,8 +66,8 @@ function sobelFilter(pixels, x, y) {
         yn = y + b - 1;
 
       if (isOutOfBounds(pixels, xn, yn)) {
-        gradX += pixels.get(xn+1, yn+1, 0) * kernelx[a][b];
-        gradY += pixels.get(xn+1, yn+1, 0) * kernely[a][b];
+        gradX += pixels.get(xn + 1, yn + 1, 0) * kernelx[a][b];
+        gradY += pixels.get(xn + 1, yn + 1, 0) * kernely[a][b];
       }
       else {
         gradX += pixels.get(xn, yn, 0) * kernelx[a][b];
@@ -98,7 +95,7 @@ function categorizeAngle(angle){
   * 2 => NE-SW
   * 3 => N-S
   * 4 => NW-SE
-  */  
+  */
 }
 
 function isOutOfBounds(pixels, x, y){
@@ -107,7 +104,7 @@ function isOutOfBounds(pixels, x, y){
 
 const removeElem = (arr = [], elem) => {
   return arr = arr.filter((arrelem) => {
-    return arrelem !== elem; 
+    return arrelem !== elem;
   });
 };
 
@@ -120,7 +117,7 @@ function nonMaxSupress(pixels, grads, angles) {
 
       let angleCategory = categorizeAngle(angles[x][y]);
 
-      if (!isOutOfBounds(pixels, x - 1, y - 1) && !isOutOfBounds(pixels, x+1, y+1)){
+      if (!isOutOfBounds(pixels, x - 1, y - 1) && !isOutOfBounds(pixels, x + 1, y + 1)){
         switch (angleCategory){
         case 1:
           if (!((grads[x][y] >= grads[x][y + 1]) && (grads[x][y] >= grads[x][y - 1]))) {
@@ -186,17 +183,17 @@ function hysteresis(strongEdgePixels, weakEdgePixels){
     let x = pixel[0],
       y = pixel[1];
 
-    if (weakEdgePixels.includes([x+1, y])) {
-      removeElem(weakEdgePixels, [x+1, y]);
-    } 
-    else if (weakEdgePixels.includes([x-1, y])) {
-      removeElem(weakEdgePixels, [x-1, y]);
+    if (weakEdgePixels.includes([x + 1, y])) {
+      removeElem(weakEdgePixels, [x + 1, y]);
     }
-    else if (weakEdgePixels.includes([x, y+1])) {
-      removeElem(weakEdgePixels, [x, y+1]);
-    } 
-    else if(weakEdgePixels.includes([x, y-1])) {
-      removeElem(weakEdgePixels, [x, y-1]);
+    else if (weakEdgePixels.includes([x - 1, y])) {
+      removeElem(weakEdgePixels, [x - 1, y]);
+    }
+    else if (weakEdgePixels.includes([x, y + 1])) {
+      removeElem(weakEdgePixels, [x, y + 1]);
+    }
+    else if(weakEdgePixels.includes([x, y - 1])) {
+      removeElem(weakEdgePixels, [x, y - 1]);
     }
   });
 }

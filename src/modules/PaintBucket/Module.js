@@ -23,11 +23,13 @@ module.exports = function PaintBucket(options, UI) {
 
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
+      ui: options.step.ui,
       extraManipulation: extraManipulation,
       format: input.format,
       image: options.image,
       inBrowser: options.inBrowser,
-      callback: callback
+      callback: callback,
+      useWasm:options.useWasm
     });
   }
 

@@ -1,5 +1,5 @@
 {
-  "name": "Flip Image",
+  "name": "flip-image",
   "description": "Flip The Image On The Specified Axis.",
   "inputs": {
     "Axis": {

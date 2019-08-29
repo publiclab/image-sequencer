@@ -1,5 +1,5 @@
 {
-    "name": "Add QR",
+    "name": "add-qr",
     "description": "Adds QR corresponding to the given string",
     "url": "https://github.com/publiclab/image-sequencer/tree/master/MODULES.md",
     "inputs": {

@@ -1,5 +1,5 @@
 {
-    "name": "Contrast",
+    "name": "contrast",
     "description": "Change the contrast of the image by given value",
     "inputs": {
         "contrast": {

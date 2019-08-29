@@ -1,0 +1,14 @@
+{
+    "name": "minify-image",
+    "description": "Minifies the given image (Works for jpg/jpeg/webp images in browser)",
+    "url": "https://github.com/publiclab/image-sequencer/tree/master/MODULES.md",
+    "inputs": { 
+      "quality":{
+        "type": "float",
+          "desc": "quality aspect of the given image",
+          "default": "0.5"
+      }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#add-qr-module"
+  }
+  

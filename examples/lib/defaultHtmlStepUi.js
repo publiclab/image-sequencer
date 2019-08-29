@@ -8,18 +8,21 @@
 // output values, step information.
 // See documetation for more details.
 
-var intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js');
-var urlHash = require('./urlHash.js');
-var _ = require('lodash');
-var mapHtmlTypes = require('./mapHtmltypes');
+const intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js'),
+  urlHash = require('./urlHash.js'),
+  _ = require('lodash'),
+  mapHtmlTypes = require('./mapHtmltypes'),
+  scopeQuery = require('./scopeQuery');
 
 function DefaultHtmlStepUi(_sequencer, options) {
-  
+  let $step, $stepAll;
+
   options = options || {};
   var stepsEl = options.stepsEl || document.querySelector('#steps');
   var selectStepSel = options.selectStepSel = options.selectStepSel || '#selectStep';
 
   function onSetup(step, stepOptions) {
+
     if (step.options && step.options.description)
       step.description = step.options.description;
 
@@ -29,8 +32,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
           <div class="panel panel-default">\
             <div class="panel-heading">\
               <div class="trash-container pull-right"></div>\
-              <h3 class="panel-title">' +  
-                '<span class="toggle">' +step.name + ' <span class="caret toggleIcon rotated"></span>\
+              <h3 class="panel-title">' +
+                '<span class="toggle">' + step.name + ' <span class="caret toggleIcon rotated"></span>\
                  <span class="load-spin pull-right" style="display:none;padding:1px 8px;"><i class="fa fa-circle-o-notch fa-spin"></i></span>\
               </h3>\
             </div>\
@@ -67,8 +70,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
     var parser = new DOMParser();
     step.ui = parser.parseFromString(step.ui, 'text/html');
     step.ui = step.ui.querySelector('div.container-fluid');
+
+    $step = scopeQuery.scopeSelector(step.ui);
+    $stepAll = scopeQuery.scopeSelectorAll(step.ui);
+    step.ui.$step = $step;
+    step.ui.$stepAll = $stepAll;
+
     step.linkElements = step.ui.querySelectorAll('a');
-    step.imgElement = step.ui.querySelector('a img.img-thumbnail');
+    step.imgElement = $step('a img.img-thumbnail')[0];
 
     if (_sequencer.modulesInfo().hasOwnProperty(step.name)) {
       var inputs = _sequencer.modulesInfo(step.name).inputs;
@@ -81,35 +90,52 @@ function DefaultHtmlStepUi(_sequencer, options) {
         var inputDesc = isInput ? mapHtmlTypes(inputs[paramName]) : {};
         if (!isInput) {
           html += '<span class="output"></span>';
-        } else if (inputDesc.type.toLowerCase() == 'select') {
+        }
+        else if (inputDesc.type.toLowerCase() == 'select') {
+
           html += '<select class="form-control target" name="' + paramName + '">';
           for (var option in inputDesc.values) {
             html += '<option>' + inputDesc.values[option] + '</option>';
           }
           html += '</select>';
-        } else {
+        }
+        else {
           let paramVal = step.options[paramName] || inputDesc.default;
-          html =
-            '<input class="form-control target" type="' +
-            inputDesc.type +
-            '" name="' +
-            paramName +
-            '" value="' +
-            paramVal +
-            '" placeholder ="' +
-            (inputDesc.placeholder || '');
 
-          if (inputDesc.type.toLowerCase() == 'range') {
+          if (inputDesc.id == 'color-picker') { // separate input field for color-picker
             html +=
-              '"min="' +
-              inputDesc.min +
-              '"max="' +
-              inputDesc.max +
-              '"step="' +
-              (inputDesc.step ? inputDesc.step : 1)+ '">' + '<span>' + paramVal + '</span>';
-
+              '<div id="color-picker" class="input-group colorpicker-component">' +
+              '<input class="form-control target" type="' +
+              inputDesc.type +
+              '" name="' +
+              paramName +
+              '" value="' +
+              paramVal + '">' + '<span class="input-group-addon"><i></i></span>' +
+              '</div>';
           }
-          else html += '">';
+          else { // use this if the the field isn't color-picker
+            html =
+              '<input class="form-control target" type="' +
+              inputDesc.type +
+              '" name="' +
+              paramName +
+              '" value="' +
+              paramVal +
+              '" placeholder ="' +
+              (inputDesc.placeholder || '');
+              
+            if (inputDesc.type.toLowerCase() == 'range') {
+              html +=
+                '"min="' +
+                inputDesc.min +
+                '"max="' +
+                inputDesc.max +
+                '"step="' +
+                (inputDesc.step ? inputDesc.step : 1) + '">' + '<span>' + paramVal + '</span>';
+
+            }
+            else html += '">';
+          }
         }
 
         var div = document.createElement('div');
@@ -127,50 +153,55 @@ function DefaultHtmlStepUi(_sequencer, options) {
           html +
           '\
                          </div>';
-        step.ui.querySelector('div.details').appendChild(div);
+        $step('div.details').append(div);
       }
-      $(step.ui.querySelector('div.panel-footer')).append(
+      $step('div.panel-footer').append(
         '<div class="cal collapse in"><button type="submit" class="btn btn-sm btn-default btn-save" disabled = "true" >Apply</button> <small style="padding-top:2px;">Press apply to see changes</small></div>'
       );
-      $(step.ui.querySelector('div.panel-footer')).prepend(
+      $step('div.panel-footer').prepend(
         '<button class="pull-right btn btn-default btn-sm insert-step" >\
-          <span class="insert-text"><i class="fa fa-plus"></i> Insert Step</span><span class="no-insert-text" style="display:none">Close</span>\
+        <span class="insert-text"><i class="fa fa-plus"></i> Insert Step</span><span class="no-insert-text" style="display:none">Close</span></button>\
+        <button class="pull-right btn btn-default btn-sm download-btn" style="margin-right:2px" >\
+        <i class="fa fa-download"></i>\
         </button>'
-      );  
+      );
     }
 
     if (step.name != 'load-image') {
-      step.ui
-        .querySelector('div.trash-container')
+      $step('div.trash-container')
         .prepend(
           parser.parseFromString(tools, 'text/html').querySelector('div')
         );
-      $(step.ui.querySelectorAll('.remove')).on('click', function() {notify('Step Removed','remove-notification');});  
-      $(step.ui.querySelectorAll('.insert-step')).on('click', function() { util.insertStep(step.ID); });    
+
+      $stepAll('.remove').on('click', function() {notify('Step Removed', 'remove-notification');});
+      $stepAll('.insert-step').on('click', function() { util.insertStep(step.ID); });
       // Insert the step's UI in the right place
       if (stepOptions.index == _sequencer.steps.length) {
         stepsEl.appendChild(step.ui);
-        $('#steps .step-container:nth-last-child(1) .insert-step').prop('disabled',true);
+        $('#steps .step-container:nth-last-child(1) .insert-step').prop('disabled', true);
         if($('#steps .step-container:nth-last-child(2)'))
-          $('#steps .step-container:nth-last-child(2) .insert-step').prop('disabled',false);
-      } else {
+          $('#steps .step-container:nth-last-child(2) .insert-step').prop('disabled', false);
+      }
+      else {
         stepsEl.insertBefore(step.ui, $(stepsEl).children()[stepOptions.index]);
       }
     }
     else {
       $('#load-image').append(step.ui);
     }
-    $(step.ui.querySelector('.toggle')).on('click', () => {
-      $(step.ui.querySelector('.toggleIcon')).toggleClass('rotated');
-      $(step.ui.querySelectorAll('.cal')).collapse('toggle');
+    $step('.toggle').on('click', () => {
+      $step('.toggleIcon').toggleClass('rotated');
+      $stepAll('.cal').collapse('toggle');
     });
     
     $(step.imgElement).on('mousemove', _.debounce(() => imageHover(step), 150));
+    $(step.imgElement).on('click', (e) => {e.preventDefault(); });
+    $stepAll('#color-picker').colorpicker();
 
-    function saveOptions(e) {
+    function saveOptions(e) { // 1. SAVE OPTIONS
       e.preventDefault();
       if (optionsChanged){
-        $(step.ui.querySelector('div.details'))
+        $step('div.details')
           .find('input,select')
           .each(function(i, input) {
             $(input)
@@ -183,7 +214,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         // modify the url hash
         urlHash.setUrlHashParameter('steps', _sequencer.toString());
         // disable the save button
-        $(step.ui.querySelector('.btn-save')).prop('disabled', true);
+        $step('.btn-save').prop('disabled', true);
         optionsChanged = false;
         changedInputs = 0;
       }
@@ -194,19 +225,19 @@ function DefaultHtmlStepUi(_sequencer, options) {
       changedInputs += hasChangedBefore ? inputChanged ? 0 : -1 : inputChanged ? 1 : 0;
       optionsChanged = changedInputs > 0;
 
-      $(step.ui.querySelector('.btn-save')).prop('disabled', !optionsChanged);
+      $step('.btn-save').prop('disabled', !optionsChanged);
       return inputChanged;
     }
 
-    var 
+    var
       changedInputs = 0,
       optionsChanged = false;
-    $(step.ui.querySelector('.input-form')).on('submit', saveOptions);
-    $(step.ui.querySelectorAll('.target')).each(function(i, input) {
+    $step('.input-form').on('submit', saveOptions);
+    $stepAll('.target').each(function(i, input) {
       $(input)
         .data('initValue', $(input).val())
         .data('hasChangedBefore', false)
-        .on('input change' , function() {
+        .on('input change', function() {
           $(this)
             .focus()
             .data('hasChangedBefore',
@@ -227,19 +258,19 @@ function DefaultHtmlStepUi(_sequencer, options) {
   }
 
 
-  function onDraw(step) {
-    $(step.ui.querySelector('.load')).show();
-    $(step.ui.querySelector('img')).hide();
-    $(step.ui.querySelectorAll('.load-spin')).show();
+  function onDraw() {
+    $step('.load').show();
+    $step('img').hide();
+    $stepAll('.load-spin').show();
   }
 
   function onComplete(step) {
-    $(step.ui.querySelector('img')).show();
-    $(step.ui.querySelectorAll('.load-spin')).hide();
-    $(step.ui.querySelector('.load')).hide();
+    $step('img').show();
+    $stepAll('.load-spin').hide();
+    $step('.load').hide();
 
     step.imgElement.src = (step.name == 'load-image') ? step.output.src : step.output;
-    var imgthumbnail = step.ui.querySelector('.img-thumbnail');
+    var imgthumbnail = $step('.img-thumbnail').getDomElem();
     for (let index = 0; index < step.linkElements.length; index++) {
       if (step.linkElements[index].contains(imgthumbnail))
         step.linkElements[index].href = step.imgElement.src;
@@ -250,11 +281,21 @@ function DefaultHtmlStepUi(_sequencer, options) {
       return output.split('/')[1].split(';')[0];
     }
 
-    for (let index = 0; index < step.linkElements.length; index++) {
+    $stepAll('.download-btn').on('click', () => {
 
-      step.linkElements[index].download = step.name + '.' + fileExtension(step.imgElement.src);
-      step.linkElements[index].target = '_blank';
-    }
+      for (let index = 0; index < step.linkElements.length; index++){
+        
+        var element = document.createElement('a');
+        element.setAttribute('href', step.linkElements[index].href);
+        element.setAttribute('download', step.name + '.' + fileExtension(step.imgElement.src));
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        
+        element.click();
+
+        document.body.removeChild(element);
+      }
+    });
 
     // fill inputs with stored step options
     if (_sequencer.modulesInfo().hasOwnProperty(step.name)) {
@@ -263,18 +304,18 @@ function DefaultHtmlStepUi(_sequencer, options) {
       for (var i in inputs) {
         if (step.options[i] !== undefined) {
           if (inputs[i].type.toLowerCase() === 'input')
-            $(step.ui.querySelector('div[name="' + i + '"] input'))
+            $step('div[name="' + i + '"] input')
               .val(step.options[i])
               .data('initValue', step.options[i]);
           if (inputs[i].type.toLowerCase() === 'select')
-            $(step.ui.querySelector('div[name="' + i + '"] select'))
+            $step('div[name="' + i + '"] select')
               .val(step.options[i])
               .data('initValue', step.options[i]);
         }
       }
       for (var i in outputs) {
         if (step[i] !== undefined)
-          $(step.ui.querySelector('div[name="' + i + '"] input'))
+          $step('div[name="' + i + '"] input')
             .val(step[i]);
       }
     }
@@ -284,24 +325,24 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     var img = $(step.imgElement);
 
-    img.mousemove(function(e) { 
+    img.mousemove(function(e) {
       var canvas = document.createElement('canvas');
       canvas.width = img.width();
       canvas.height = img.height();
       var context = canvas.getContext('2d');
-      context.drawImage(this,0,0);
+      context.drawImage(this, 0, 0);
 
       var offset = $(this).offset();
       var xPos = e.pageX - offset.left;
       var yPos = e.pageY - offset.top;
       var myData = context.getImageData(xPos, yPos, 1, 1);
-      img[0].title = 'rgb: ' +myData.data[0]+','+ myData.data[1]+','+myData.data[2];//+ rgbdata;
-    }); 
+      img[0].title = 'rgb: ' + myData.data[0] + ',' + myData.data[1] + ',' + myData.data[2];//+ rgbdata;
+    });
   }
 
   function onRemove(step) {
     step.ui.remove();
-    $('#steps .step-container:nth-last-child(1) .insert-step').prop('disabled',true);
+    $('#steps .step-container:nth-last-child(1) .insert-step').prop('disabled', true);
     $('div[class*=imgareaselect-]').remove();
   }
 
@@ -309,8 +350,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
     return step.imgElement;
   }
 
-  function notify(msg,id){
-    if ($('#'+id).length == 0) {
+  function notify(msg, id){
+    if ($('#' + id).length == 0) {
       var notification = document.createElement('span');
       notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> ' + msg ;
       notification.id = id;
@@ -319,7 +360,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $('body').append(notification);
     }
   
-    $('#'+id).fadeIn(500).delay(200).fadeOut(500);
+    $('#' + id).fadeIn(500).delay(200).fadeOut(500);
   }
     
   
@@ -328,17 +369,16 @@ function DefaultHtmlStepUi(_sequencer, options) {
     onSetup: onSetup,
     onComplete: onComplete,
     onRemove: onRemove,
-    onDraw: onDraw, 
+    onDraw: onDraw,
     notify: notify,
     imageHover: imageHover
   };
 }
 
 if(typeof window === 'undefined'){
-  module.exports={
+  module.exports = {
     DefaultHtmlStepUi: DefaultHtmlStepUi
   };
 }
 
 module.exports = DefaultHtmlStepUi;
-

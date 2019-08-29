@@ -1,5 +1,5 @@
 {
-    "name": "Saturation",
+    "name": "saturation",
     "description": "Change the saturation of the image by given value, from 0-1, with 1 being 100% saturated.",
     "inputs": {
         "saturation": {

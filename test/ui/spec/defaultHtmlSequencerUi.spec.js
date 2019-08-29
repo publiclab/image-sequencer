@@ -1,17 +1,17 @@
 describe('Default sequencer HTML', function() {
 
-  var DefaultHtmlSequencerUi = require('../examples/lib/defaultHtmlSequencerUi');
-  var sequencer = require('../src/ImageSequencer')();
+  var DefaultHtmlSequencerUi = require('../../../examples/lib/defaultHtmlSequencerUi');
+  var sequencer = require('../../../src/ImageSequencer')();
   var defaultHtmlSequencerUi;
 
   beforeEach(()=>{
     defaultHtmlSequencerUi = new DefaultHtmlSequencerUi(sequencer);
 
-    spyOn(defaultHtmlSequencerUi,'onLoad');
-    spyOn(defaultHtmlSequencerUi,'selectNewStepUi');
-    spyOn(defaultHtmlSequencerUi,'removeStepUi');
-    spyOn(defaultHtmlSequencerUi,'addStepUi');
-    spyOn(defaultHtmlSequencerUi,'importStepsFromUrlHash');
+    spyOn(defaultHtmlSequencerUi, 'onLoad');
+    spyOn(defaultHtmlSequencerUi, 'selectNewStepUi');
+    spyOn(defaultHtmlSequencerUi, 'removeStepUi');
+    spyOn(defaultHtmlSequencerUi, 'addStepUi');
+    spyOn(defaultHtmlSequencerUi, 'importStepsFromUrlHash');
 
     defaultHtmlSequencerUi.onLoad();
     defaultHtmlSequencerUi.selectNewStepUi();

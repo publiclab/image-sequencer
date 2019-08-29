@@ -27,6 +27,7 @@
   <script src="../src/ui/prepareDynamic.js"></script>
   <script src="../dist/image-sequencer.js" charset="utf-8"></script>
   <script src="../dist/image-sequencer-ui.js" charset="utf-8"></script>
+  <script src="../node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script>
   <!-- for crop module: -->
   <script src="../node_modules/imgareaselect/jquery.imgareaselect.dev.js"></script>
   <script src="../node_modules/gifshot/dist/gifshot.min.js" type="text/javascript"></script>
@@ -41,6 +42,7 @@
 <body>
 
   <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css" rel="stylesheet">
 
   <link rel="stylesheet" href="demo.css">
   <link href="../node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
@@ -53,7 +55,7 @@
 
   <div class="container-fluid">
 
-    <header class="text-center">
+    <header class="text-center" style="min-width: 450px">
       <h1><a href="/" target='_blank' class="name-header">Image Sequencer</a></h1>
       <p>
         A pure JavaScript sequential image processing system, inspired by storyboards. Instead of modifying the original
@@ -89,7 +91,7 @@
     </section>
 
     <hr />
-    <p class="alert alert-success savesequencemsg">Saved Sequence Success. Sequence can be found among other modules.
+    <p class="alert alert-success savesequencemsg">Saved Sequence Success. Sequence can be found among other modules in browser's localStorage.
     </p>
     <div class="row">
       <div class="col-sm-8">
@@ -137,15 +139,15 @@
                   <p>Crop</p>
                 </div>
               </div>
-              <div class="row center-align">
-                <div class="col-md-8">
+              <div class="row justify-content-center">
+                <div class="col-lg-8">
 
-                  <select id="selectStep">
+                  <select id="selectStep" class="text-center">
                     <!-- The default null selection has been appended manually in demo.js
               This is because the options in select are overritten when options are appended.-->
                   </select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-lg-4">
                   <button class="btn btn-success btn-lg" name="add" id="add-step-btn">Add Step</button></div>
               </div>
               <div class="row center-align">
@@ -186,10 +188,10 @@
               <div style="text-align:center;">
                 <h2 style="margin-top:20px">Save</h2>
                 <select class="form-control input-md" id="selectSaveOption" style="margin-top:20px">
-                  <option>Save as PNG</option>
-                  <option>Save as GIF (all steps)</option>
-                  <option>Save sequence</option>
-                  <option>Save sequence string</option>
+                  <option value="save-image">Save as PNG</option>
+                  <option value="save-gif">Save as GIF (all steps)</option>
+                  <option value="save-seq">Save sequence</option>
+                  <option value="save-seq-string">Save sequence string</option>
                 </select>
                 <p><button id="saveButton" class="btn btn-primary btn-lg save-button">Save</button></p>
                 <p><button class="btn btn-default btn-lg js-view-as-gif" id="gif">Preview GIF</button></p>
@@ -230,6 +232,7 @@
         var sequencer;
       })
     </script>
+    <script async src="../node_modules/opencv.js/opencv.js" type="text/javascript"></script>
 
 </body>
 

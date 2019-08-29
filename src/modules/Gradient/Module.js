@@ -1,9 +1,11 @@
 module.exports = function Invert(options, UI) {
+  const pixelSetter = require('../../util/pixelSetter.js');
 
   var output;
 
   // The function which is called on every draw.
-  function draw(input, callback, progressObj) {
+  function draw(input, callback) {
+
     var getPixels = require('get-pixels');
     var savePixels = require('save-pixels');
 
@@ -21,10 +23,8 @@ module.exports = function Invert(options, UI) {
       for (var i = 0; i < pixels.shape[0]; i++) {
         for (var j = 0; j < pixels.shape[1]; j++) {
           let val = (i / width) * 255;
-          pixels.set(i, j, 0, val);
-          pixels.set(i, j, 1, val);
-          pixels.set(i, j, 2, val);
-          pixels.set(i, j, 3, 255);
+          pixelSetter(i, j, [val, val, val, 255], pixels);
+                
         }
       }
       var chunks = [];

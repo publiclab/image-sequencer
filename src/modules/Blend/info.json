@@ -1,5 +1,5 @@
 {
-  "name": "Blend",
+  "name": "blend",
   "description": "Blend two chosen image steps with the given function. Defaults to using the red channel from image 1 and the green and blue and alpha channels of image 2. Easier to use interfaces coming soon!",
   "inputs": {
     "offset": {

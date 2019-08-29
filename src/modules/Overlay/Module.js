@@ -65,11 +65,13 @@ module.exports = function Dynamic(options, UI, util) {
       // run PixelManipulation on first Image pixels
       return require('../_nomodule/PixelManipulation.js')(baseStepOutput, {
         output: output,
+        ui: options.step.ui,
         changePixel: changePixel,
         format: baseStepOutput.format,
         image: baseStepImage,
         inBrowser: options.inBrowser,
-        callback: callback
+        callback: callback,
+        useWasm:options.useWasm
       });
     });
   }

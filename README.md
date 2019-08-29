@@ -578,3 +578,24 @@ sequencer2.run();
 This method returns an object which defines the name and inputs of the modules. If a module name (hyphenated) is passed in the method, then only the details of that module are returned.
 
 The `notify` function takes two parameters `msg` and `id`, former being the message to be displayed on console (in case of CLI and node ) and a HTML component(in browser). The id is optional and is useful for HTML interface to give appropriate IDs.
+
+## Using WebAssembly for heavy pixel processing
+
+Any module which uses the `changePixel` function gets WebAssembly acceleration (`wasm`). Both node and browser code use WebAssembly and the only code which falls back to non-`wasm` code is the [browserified unit tests](https://github.com/publiclab/image-sequencer/blob/main/test/core/sequencer/benchmark.js).
+
+The main advantage we get using `wasm` is blazing fast speed attained in processing pixels for many modules that is very clear from [checking module benchmarks](https://travis-ci.org/publiclab/image-sequencer/jobs/544415673#L1931).
+
+
+The only limitation is that browser and node code for `wasm` had to be written separately, and switched between. This is because in browser we use `fetch` to retrieve the compiled `wasm` program while in node we use the `fs` module, each of which cannot be used in the other's environment.
+
+
+`wasm` mode is enabled by default. If you need to force this mode to be on or off, you can use the `useWasm` option when initializing ImageSequencer:
+
+```js
+let sequencer = ImageSequencer({useWasm:true}) // for wasm mode or simply
+
+let sequencer = ImageSequencer() // also for wasm mode i.e. default mode
+
+let sequencer = ImageSequencer({useWasm:false}) //for non-wasm mode 
+
+```

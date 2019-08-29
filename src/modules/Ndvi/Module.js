@@ -41,11 +41,13 @@ module.exports = function Ndvi(options, UI) {
 
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
+      ui: options.step.ui,
       changePixel: changePixel,
       format: input.format,
       image: options.image,
       inBrowser: options.inBrowser,
-      callback: modifiedCallback
+      callback: modifiedCallback,
+      useWasm:options.useWasm
     });
 
   }

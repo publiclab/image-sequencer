@@ -1,4 +1,4 @@
-module.exports = function parseCornerCoordinateInputs(options,coord,callback) {
+module.exports = function parseCornerCoordinateInputs(options, coord, callback) {
   var getPixels = require('get-pixels');
   getPixels(coord.src, function(err, pixels) {
     var iw = pixels.shape[0],

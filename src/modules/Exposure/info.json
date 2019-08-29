@@ -1,5 +1,5 @@
 {
-  "name": "Exposure",
+  "name": "exposure",
   "description": "Change the exposure of the image by given exposure value",
   "inputs": {
       "exposure": {

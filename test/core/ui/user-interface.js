@@ -24,7 +24,7 @@ test('Notify function works for all three UIs', function (t) {
     console.log = oldLog;
     return result;
   }
-  t.equal(doesLogMessage(UserInterface().notify, 'Test Message'),true,'Default notify() produces correct output');
+  t.equal(doesLogMessage(UserInterface().notify, 'Test Message'), true, 'Default notify() produces correct output');
   sequencer.setUI(DefaultHtmlStepUi(sequencer));
   t.equal(typeof sequencer.events.notify, 'function', 'Html UI contains notify function');
   t.end();

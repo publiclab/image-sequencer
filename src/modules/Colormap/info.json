@@ -1,5 +1,5 @@
 {
-  "name": "Colormap",
+  "name": "colormap",
   "description": "Maps brightness values (average of red, green & blue) to a given color lookup table, made up of a set of one more color gradients.\n\nFor example, 'cooler' colors like blue could represent low values, while 'hot' colors like red could represent high values.",
   "inputs": {
     "colormap": {

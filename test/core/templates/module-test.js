@@ -36,7 +36,6 @@ module.exports = (moduleName, options, benchmark, input) => {
 
   test(`${moduleName} module works correctly`, t => {
     sequencer.run({mode: 'test'}, () => {
-
       let result = sequencer.steps[1].output.src;
 
       base64Img.imgSync(result, target, 'result');

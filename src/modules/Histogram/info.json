@@ -1,5 +1,5 @@
 {
-    "name": "Histogram",
+    "name": "histogram",
     "description": "Calculates the histogram for the image",
     "inputs": {
         "gradient": {

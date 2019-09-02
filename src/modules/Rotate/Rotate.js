@@ -1,11 +1,5 @@
-module.exports = function Rotate(pixels, pixels2, options){
+module.exports = function Rotate(pixels, pixels2, options, rotate_value, width, height, cos, sin){
   var imagejs = require('imagejs');
-  var rotate_value = (options.rotate) % 360;
-  var radians = 3.141592653589793 * rotate_value / 180;
-  var width = pixels.shape[0];
-  var height = pixels.shape[1];
-  var cos = Math.cos(radians);
-  var sin = Math.sin(radians);
   var height_half = Math.floor(height / 2);
   var width_half = Math.floor(width / 2);
   var dimension = width + height;

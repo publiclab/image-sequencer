@@ -1146,9 +1146,9 @@ buffer-xor@^1.0.3:
   integrity sha1-JuYe0UIvtw3ULm42cp7VHYVf6Nk=
 
 buffer@^5.0.2, buffer@^5.2.1, buffer@~5.4.0:
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/buffer/-/buffer-5.4.0.tgz#33294f5c1f26e08461e528b69fa06de3c45cbd8c"
-  integrity sha512-Xpgy0IwHK2N01ncykXTy6FpCWuM+CJSHoPVBLyNqyrWxsedpLvwsYUhf0ME3WRFNUhos0dMamz9cOS/xRDtU5g==
+  version "5.4.2"
+  resolved "https://registry.yarnpkg.com/buffer/-/buffer-5.4.2.tgz#2012872776206182480eccb2c0fba5f672a2efef"
+  integrity sha512-iy9koArjAFCzGnx3ZvNA6Z0clIbbFgbdWQ0mKD3hO0krOrZh8UgA6qMKcZvwLJxS+D6iVR76+5/pV56yMNYTag==
   dependencies:
     base64-js "^1.0.2"
     ieee754 "^1.1.4"

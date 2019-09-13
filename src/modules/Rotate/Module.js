@@ -28,6 +28,7 @@ module.exports = function Rotate(options, UI) {
       var height = pixels.shape[1];
       var cos = Math.cos(radians);
       var sin = Math.sin(radians);
+      //final dimensions after rotation
       var pixels2 = require('ndarray')(new Uint8Array(4 * (Math.floor(Math.abs(width * cos) + Math.abs(height * sin) + 5) * (Math.floor(Math.abs(width * sin) + Math.abs(height * cos)) + 5))).fill(0), [Math.floor(Math.abs(width * cos) + Math.abs(height * sin)) + 5, Math.floor(Math.abs(width * sin) + Math.abs(height * cos)) + 4, 4]);
       pixels = require('./Rotate')(pixels, pixels2, options, rotate_value, width, height, cos, sin);
       return pixels;

@@ -33,7 +33,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
             <div class="panel-heading">\
               <div class="trash-container pull-right"></div>\
               <h3 class="panel-title">' +
-                '<span class="toggle">' + step.name + ' <span class="caret toggleIcon rotated"></span>\
+                '<span class="toggle mouse">' + step.name + ' <span class="caret toggleIcon rotated"></span>\
                  <span class="load-spin pull-right" style="display:none;padding:1px 8px;"><i class="fa fa-circle-o-notch fa-spin"></i></span>\
               </h3>\
             </div>\

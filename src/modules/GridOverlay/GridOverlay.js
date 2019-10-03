@@ -2,11 +2,11 @@ module.exports = exports = function(pixels, options){
   var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
   const pixelSetter = require('../../util/pixelSetter.js');
 
-  if(Number(options.x)==0){
+  if(Number(options.x) == 0){
     options.x = 1;
-  } 
-  if( Number(options.y)==0) {
-    options.y =1;
+  }
+  if( Number(options.y) == 0) {
+    options.y = 1;
   }
 
   options.x = Math.abs(Number(options.x)) || defaults.x;
@@ -17,14 +17,14 @@ module.exports = exports = function(pixels, options){
 
   for(var x = 0; x < pixels.shape[0]; x += options.x){
     for(var y = 0 ; y < pixels.shape[1]; y++){
-      pixelSetter(x, y, color, pixels); // to remove 4th channel - pixels.set(x, y, 3, color[3]);
+      pixelSetter(x, y, [color[0], color[1], color[2]], pixels); // to remove 4th channel - pixels.set(x, y, 3, color[3]);
                 
     }
   }
     
   for(var y = 0; y < pixels.shape[1]; y += options.y){
     for(var x = 0 ; x < pixels.shape[0]; x++){
-      pixelSetter(x, y, color, pixels); // to remove 4th channel - pixels.set(x, y, 3, color[3]);
+      pixelSetter(x, y, [color[0], color[1], color[2]], pixels); // to remove 4th channel - pixels.set(x, y, 3, color[3]);
 
     }
   }

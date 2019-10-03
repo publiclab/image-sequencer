@@ -19,7 +19,7 @@ module.exports = exports = function(pixels, options){
     for (var n = startX; n <= endX + thickness; n++){
       for (var k = startY; k <= endY + thickness; k++){
 
-        pixelSetter(n, k, color, pixels); //to remove 4th channel - pixels.set(n, k, 3, color[3]);
+        pixelSetter(n, k, [color[0], color[1], color[2]], pixels); //to remove 4th channel - pixels.set(n, k, 3, color[3]);
       }
     }
   };

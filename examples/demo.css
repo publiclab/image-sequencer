@@ -47,6 +47,10 @@ body > .container-fluid {
   min-width:400px;
 }
 
+.mouse {
+  cursor: pointer !important;
+}
+
 .nomargin {
   margin: 0 !important;
 }

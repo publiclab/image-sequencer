@@ -32,7 +32,7 @@ module.exports = exports = function (options, pixels, oldPixels, callback) {
           }
 
           else {
-            pixelSetter(m, n, [qrPixels.get(m, n, 0), qrPixels.get(m, n, 1), qrPixels.get(m, n, 2), qrPixels.get(m, n, 3)], pixels);
+            pixelSetter(m, n, [oldPixels.get(m, n, 0), oldPixels.get(m, n, 1), oldPixels.get(m, n, 2), oldPixels.get(m, n, 3)], pixels);
           }
 
         }

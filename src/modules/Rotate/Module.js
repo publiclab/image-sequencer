@@ -23,20 +23,17 @@ module.exports = function Rotate(options, UI) {
 
     function extraManipulation(pixels) {
       var rotate_value = (options.rotate) % 360;
-
-      if (rotate_value % 360 == 0)
-        return pixels;
-
-      var bitmap = new imagejs.Bitmap({ width: pixels.shape[0], height: pixels.shape[1] });
-      bitmap._data.data = pixels.data;
-
-      var rotated = bitmap.rotate({
-        degrees: rotate_value,
-      });
-      pixels.data = rotated._data.data;
-
+      var radians = (Math.PI) * rotate_value / 180;
+      var width = pixels.shape[0];
+      var height = pixels.shape[1];
+      var cos = Math.cos(radians);
+      var sin = Math.sin(radians);
+      //final dimensions after rotation
+      var pixels2 = require('ndarray')(new Uint8Array(4 * (Math.floor(Math.abs(width * cos) + Math.abs(height * sin) + 5) * (Math.floor(Math.abs(width * sin) + Math.abs(height * cos)) + 5))).fill(0), [Math.floor(Math.abs(width * cos) + Math.abs(height * sin)) + 5, Math.floor(Math.abs(width * sin) + Math.abs(height * cos)) + 4, 4]);
+      pixels = require('./Rotate')(pixels, pixels2, options, rotate_value, width, height, cos, sin);
       return pixels;
     }
+      
 
     function output(image, datauri, mimetype) {
       // This output is accesible by Image Sequencer

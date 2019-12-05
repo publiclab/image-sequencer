@@ -258,7 +258,8 @@ a.name-header{
 }
 
 .trash-container button.btn-xs {
-  margin-top: -5px !important;
+  position: relative;
+  bottom: 7px;
 }
 
 .toggleIcon {
@@ -283,4 +284,23 @@ a.name-header{
 
 .toggle {
   cursor: default;
+}
+
+.dimension-tooltip:hover{
+  text-decoration: none;  
+}
+
+.dimension-tooltip:focus{
+  outline: none;
+}
+
+.dimension-tooltip:focus-within{
+  outline: none;
+}
+
+.dimension-tooltip{
+  position: relative;
+  bottom: 7px;
+  font-size: 16px;
+  color: #444;
 }

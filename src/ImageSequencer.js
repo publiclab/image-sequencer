@@ -329,6 +329,7 @@ ImageSequencer = function ImageSequencer(options) {
     log: log,
     objTypeOf: objTypeOf,
     copy: copy,
+    getImageDimensions: require('./util/getImageDimensions'),
 
     setInputStep: require('./ui/SetInputStep')(sequencer)
   };

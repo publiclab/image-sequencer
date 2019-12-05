@@ -31,7 +31,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       <div class="container-fluid step-container">\
           <div class="panel panel-default">\
             <div class="panel-heading">\
-              <div class="trash-container pull-right"></div>\
+              <div class="trash-container pull-right"><button type="button" class="btn btn-link ' + step.name + ' dimension-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title=""><i class="fa fa-info-circle"></i></button></div>\
               <h3 class="panel-title">' +
                 '<span class="toggle mouse">' + step.name + ' <span class="caret toggleIcon rotated"></span>\
                  <span class="load-spin pull-right" style="display:none;padding:1px 8px;"><i class="fa fa-circle-o-notch fa-spin"></i></span>\
@@ -59,7 +59,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       </div>';
 
     var tools =
-    '<div class="trash">\
+    '<div class="trash" style="display: inline-block">\
       <button confirm="Are you sure?" class="remove btn btn-default btn-xs">\
         <i class="fa fa-trash"></i>\
       </button>\
@@ -319,6 +319,13 @@ function DefaultHtmlStepUi(_sequencer, options) {
             .val(step[i]);
       }
     }
+
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+      _sequencer.getImageDimensions(step.imgElement.src, function (dim) {
+        step.ui.querySelector('.' + step.name).attributes['data-original-title'].value = `<div style="text-align: center"><p>Image Width: ${dim.width}<br>Image Height: ${dim.height}</br></div>`;
+      });
+    });
   }
 
   function imageHover(step){

@@ -11,11 +11,24 @@
   font-style: normal;
 }
 
+ 
+ :root {
+    --primary-color: #448;
+    --bg-color: #fff;
+    --text-color: #292922;
+}
+
+[data-theme="dark"] {
+    --primary-color: #9A97F3;
+    --bg-color: #161625;
+    --text-color: #818cab;
+}
+
 body {
   padding: 20px;
   margin: 0 auto 200px;
   max-width: 1000px;
-  background: #f8f8fa;
+  background: var(--bg-color);
 }
 
 footer {
@@ -24,7 +37,6 @@ footer {
 
 h1 {
   font-family: 'League Spartan';
-  color: #445;
 }
 
 body > .container,
@@ -62,15 +74,15 @@ body > .container-fluid {
 .dropzone {
   padding: 30px;
   margin: 0 20% 30px;
-  border: 4px dashed #ccc;
+  border: 4px dashed #444;
   border-radius: 8px;
   text-align: center;
-  color: #444;
+  color: var(--bg-color);
   min-width:300px;
 }
 
 .hover {
-  background: #eee;
+  background: var(--bg-color);
 }
 
 .dropzone input {
@@ -96,7 +108,7 @@ body > .container-fluid {
 
 .load {
   padding: 30px;
-  background: #eee;
+  background: var(--bg-color);
   border-radius: 8px;
   text-align: center;
   font-size: 2em;
@@ -211,9 +223,9 @@ body > .container-fluid {
 }
 
 .notification {
-  background-color: #808b96;
+  background-color: var(--bg-color);
   padding:4px;
-  color:white;
+  color:var(--text-color);
   border-radius:3px;
   font-size:2rem;
   position:fixed;
@@ -234,7 +246,7 @@ body > .container-fluid {
   left: 15px;
   top: 15px;
   z-index: 2;
-  color: white;
+  color: var(--bg-color);
 }
 
 .i-small {
@@ -248,7 +260,7 @@ body > .container-fluid {
 }
 a.name-header{
   text-decoration: none;
-  color: #445;
+  color: var(--primary-color);
 }
 
 .step-column{
@@ -303,4 +315,74 @@ a.name-header{
   bottom: 7px;
   font-size: 16px;
   color: #444;
+}
+
+p{
+  color: var(--text-color)
+}
+
+.form-inline{
+  background: var(--bg-color)
+}
+
+h2{
+  color: var(--text-color)
+}
+
+.theme-switch-wrapper {
+  display: flex;
+  align-items: center;
+
+  em {
+    padding-left: 10px;
+    font-size: 1rem;
+  }
+}
+.theme-switch {
+  display: inline-block;
+  height: 34px;
+  position: relative;
+  width: 60px;
+}
+
+.theme-switch input {
+  display:none;
+}
+
+.slider {
+  background-color: #ccc;
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: .4s;
+}
+
+.slider:before {
+  background-color: #fff;
+  bottom: 4px;
+  content: "";
+  height: 26px;
+  left: 4px;
+  position: absolute;
+  transition: .4s;
+  width: 26px;
+}
+
+input:checked + .slider {
+  background-color: #66bb6a;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }

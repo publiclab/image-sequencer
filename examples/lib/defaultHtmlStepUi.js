@@ -69,9 +69,10 @@ function DefaultHtmlStepUi(_sequencer, options) {
     step.ui = parser.parseFromString(step.ui, 'text/html'); // convert the markup string to a DOM node
     step.ui = step.ui.querySelector('div.container-fluid');
 
-    step.$step = scopeQuery.scopeSelector(step.ui); // Shorthand methods for scoped DOM queries. Read the docs(CONTRIBUTING.md) for more info
-    step.$stepAll = scopeQuery.scopeSelectorAll(step.ui);
-    let {$step, $stepAll} = step;
+    $step = scopeQuery.scopeSelector(step.ui);	    step.$step = scopeQuery.scopeSelector(step.ui); // Shorthand methods for scoped DOM queries. Read the docs(CONTRIBUTING.md) for more info
+    $stepAll = scopeQuery.scopeSelectorAll(step.ui);	    step.$stepAll = scopeQuery.scopeSelectorAll(step.ui);
+    step.ui.$step = $step;	    let {$step, $stepAll} = step;
+    step.ui.$stepAll = $stepAll;
 
     step.linkElements = step.ui.querySelectorAll('a'); // all the anchor tags in the step UI
     step.imgElement = $step('a img.img-thumbnail')[0]; // the output image
@@ -255,14 +256,13 @@ function DefaultHtmlStepUi(_sequencer, options) {
   }
 
 
-  function onDraw({$step, $stepAll}) {
+  function onDraw() {
     $step('.load').show();
     $step('img').hide();
     $stepAll('.load-spin').show();
   }
 
   function onComplete(step) {
-    let {$step, $stepAll} = step;
     $step('img').show();
     $stepAll('.load-spin').hide();
     $step('.load').hide();

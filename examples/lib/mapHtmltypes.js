@@ -1,3 +1,4 @@
+// maps module input types to their respective html <input> tag types
 function mapHtmlTypes(inputInfo){
   var htmlType;
   switch(inputInfo.type.toLowerCase()){

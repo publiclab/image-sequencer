@@ -69,10 +69,18 @@ body > .container-fluid {
   min-width:300px;
 }
 
+.dropzone input {
+  max-width: 100%;
+}
+
 .import-image-zone {
   margin: 10px auto 30px auto;
   max-width: 230px;
   min-width: 230px;
+}
+
+.import-image-zone input {
+  max-width: fit-content;
 }
 
 .hover {

@@ -1,8 +1,9 @@
 var urlHash = require('./urlHash.js'),
   insertPreview = require('./insertPreview.js');
 
+// for inserting a module selector in between the sequence
 function IntermediateHtmlStepUi(_sequencer, step, options) {
-  function stepUI() {
+  function stepUI() { // basic markup for the selector
     return '<div class="row insertDiv collapse">\
           <section class="panel panel-primary .insert-step">\
             <button class="btn btn-default close-insert-box"><i class="fa fa-times" aria-hidden="true"></i> Close</button>\
@@ -64,7 +65,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
         </div>';
   }
 
-  var toggleDiv = function($step, callback = function(){}){
+  var toggleDiv = function($step, callback = function(){}){ // toggle the selector div
     $step('.insertDiv').collapse('toggle');
     if ($step('.insert-text').css('display') != 'none'){
       $step('.insert-text').fadeToggle(200, function(){$step('.no-insert-text').fadeToggle(200, callback);});
@@ -74,7 +75,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     }
   };
 
-  insertStep = function (id) {
+  insertStep = function (id) { // handle module select and insert the module in the sequence
     const $step = step.ui.$step,
       $stepAll = step.ui.$stepAll;
     var modulesInfo = _sequencer.modulesInfo();
@@ -113,9 +114,9 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       sortField: 'text'
     });
     $('.insertDiv .radio-group .radio').on('click', function () {
-      var newStepName = $(this).attr('data-value');
+      var newStepName = $(this).attr('data-value'); // find the name of the module to be inserted
       id = $($step('.insertDiv').parents()[3]).prevAll().length;
-      insert(id, $step, newStepName);
+      insert(id, $step, newStepName); // insert the selected module
     });
     $step('.insertDiv .add-step-btn').on('click', function () {
       var newStepName = insertStepSelect.val();
@@ -123,7 +124,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       insert(id, $step, newStepName); });
   };
 
-  function insert(id, $step, newStepName) {
+  function insert(id, $step, newStepName) { // insert the module at the coorect index
     toggleDiv($step);
     $step('.insertDiv').removeClass('insertDiv');
     _sequencer.insertSteps(id + 1, newStepName).run({ index: id });

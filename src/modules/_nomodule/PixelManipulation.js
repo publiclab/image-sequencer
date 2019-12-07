@@ -2,6 +2,12 @@
  * General purpose per-pixel manipulation
  * accepting a changePixel() method to remix a pixel's channels
  */
+/**
+ * @method PixelManipulation
+ * @description Function for changing pixel values of the image via different callback functions. Read the docs for more info
+ * @param {Object} image ndarray of pixels of the image
+ * @param {Object} options object containing callbacks for manipulating pixels. Read the docs for more info
+ */
 module.exports = function PixelManipulation(image, options) {
   // To handle the case where pixelmanipulation is called on the input object itself
   // like input.pixelManipulation(options)
@@ -35,11 +41,11 @@ module.exports = function PixelManipulation(image, options) {
     // https://github.com/p-v-o-s/infragram-js/blob/master/public/infragram.js#L173-L181
 
 
-    if (options.preProcess) pixels = options.preProcess(pixels); // Allow for preprocessing
+    if (options.preProcess) pixels = options.preProcess(pixels); // Allow for preprocessing of pixels
 
     function extraOperation() {
       var res;
-      if (options.extraManipulation) res = options.extraManipulation(pixels, generateOutput);
+      if (options.extraManipulation) res = options.extraManipulation(pixels, generateOutput); // extraManipulation is used to manipulate each pixel individually
       // there may be a more efficient means to encode an image object,
       // but node modules and their documentation are essentially arcane on this point
       function generateOutput() {
@@ -80,7 +86,7 @@ module.exports = function PixelManipulation(image, options) {
         env: {
           consoleLog: console.log,
           perform: function (x, y) {
-            let pixel = options.changePixel(
+            let pixel = options.changePixel( // changePixel function is run over every pixel
               pixels.get(x, y, 0),
               pixels.get(x, y, 1),
               pixels.get(x, y, 2),

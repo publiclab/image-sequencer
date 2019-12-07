@@ -189,9 +189,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
     else {
       $('#load-image').append(step.ui);
     }
-    $(step.ui.querySelector('.toggle')).on('click', () => {
-      $(step.ui.querySelector('.toggleIcon')).toggleClass('rotated');
-      $(step.ui.querySelectorAll('.cal')).collapse('toggle');
+    $step('.toggle').on('click', () => {
+      $step('.toggleIcon').toggleClass('rotated');
+      $stepAll('.cal').collapse('toggle');
     });
     
     $(step.imgElement).on('mousemove', _.debounce(() => imageHover(step), 150));

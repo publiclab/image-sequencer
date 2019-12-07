@@ -24,7 +24,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     if (step.options && step.options.description)
       step.description = step.options.description;
 
-    step.ui =
+    step.ui = // basic UI markup for the step
       '\
       <div class="container-fluid step-container">\
           <div class="panel panel-default">\
@@ -66,15 +66,17 @@ function DefaultHtmlStepUi(_sequencer, options) {
     var util = intermediateHtmlStepUi(_sequencer, step);
 
     var parser = new DOMParser();
-    step.ui = parser.parseFromString(step.ui, 'text/html');
+    step.ui = parser.parseFromString(step.ui, 'text/html'); // convert the markup string to a DOM node
     step.ui = step.ui.querySelector('div.container-fluid');
-    step.$step = scopeQuery.scopeSelector(step.ui);
+
+    step.$step = scopeQuery.scopeSelector(step.ui); // Shorthand methods for scoped DOM queries. Read the docs(CONTRIBUTING.md) for more info
     step.$stepAll = scopeQuery.scopeSelectorAll(step.ui);
     let {$step, $stepAll} = step;
-    step.linkElements = step.ui.querySelectorAll('a');
-    step.imgElement = $step('a img.img-thumbnail')[0];
 
-    if (_sequencer.modulesInfo().hasOwnProperty(step.name)) {
+    step.linkElements = step.ui.querySelectorAll('a'); // all the anchor tags in the step UI
+    step.imgElement = $step('a img.img-thumbnail')[0]; // the output image
+
+    if (_sequencer.modulesInfo().hasOwnProperty(step.name)) { // for inserting module parameter inputs in the UI
       var inputs = _sequencer.modulesInfo(step.name).inputs;
       var outputs = _sequencer.modulesInfo(step.name).outputs;
       var merged = Object.assign(inputs, outputs); // combine outputs w inputs
@@ -150,10 +152,10 @@ function DefaultHtmlStepUi(_sequencer, options) {
                          </div>';
         $step('div.details').append(div);
       }
-      $step('div.panel-footer').append(
+      $step('div.panel-footer').append( // save btn
         '<div class="cal collapse in"><button type="submit" class="btn btn-sm btn-default btn-save" disabled = "true" >Apply</button> <small style="padding-top:2px;">Press apply to see changes</small></div>'
       );
-      $step('div.panel-footer').prepend(
+      $step('div.panel-footer').prepend( // tools: download and insert step
         '<button class="pull-right btn btn-default btn-sm insert-step" >\
         <span class="insert-text"><i class="fa fa-plus"></i> Insert Step</span><span class="no-insert-text" style="display:none">Close</span></button>\
         <button class="pull-right btn btn-default btn-sm download-btn" style="margin-right:2px" >\
@@ -168,8 +170,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
           parser.parseFromString(tools, 'text/html').querySelector('div')
         );
 
-      $stepAll('.remove').on('click', function() {notify('Step Removed', 'remove-notification');});
-      $stepAll('.insert-step').on('click', function() { util.insertStep(step.ID); });
+      $stepAll('.remove').on('click', function() {notify('Step Removed', 'remove-notification');}); // notification on removal of a step
+      $stepAll('.insert-step').on('click', function() { util.insertStep(step.ID); }); // insert a step in between the sequence
       // Insert the step's UI in the right place
       if (stepOptions.index == _sequencer.steps.length) {
         stepsEl.appendChild(step.ui);
@@ -182,14 +184,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
       }
     }
     else {
-      $('#load-image').append(step.ui);
+      $('#load-image').append(step.ui); // default UI without extra tools for the first step(load image)
     }
-    $step('.toggle').on('click', () => {
+    $step('.toggle').on('click', () => { // dropdown
       $step('.toggleIcon').toggleClass('rotated');
       $stepAll('.cal').collapse('toggle');
     });
     
-    $(step.imgElement).on('mousemove', _.debounce(() => imageHover(step), 150));
+    $(step.imgElement).on('mousemove', _.debounce(() => imageHover(step), 150)); // shows the pixel coordinates on hover
     $(step.imgElement).on('click', (e) => {e.preventDefault(); });
     $stepAll('#color-picker').colorpicker();
 
@@ -215,7 +217,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       }
     }
 
-    function handleInputValueChange(currentValue, initValue, hasChangedBefore) {
+    function handleInputValueChange(currentValue, initValue, hasChangedBefore) { // checks whether inputs have changed and disables/enables the save button based on this
       var inputChanged = !(isNaN(initValue) || isNaN(currentValue) ? currentValue === initValue : currentValue - initValue === 0);
       changedInputs += hasChangedBefore ? inputChanged ? 0 : -1 : inputChanged ? 1 : 0;
       optionsChanged = changedInputs > 0;
@@ -324,7 +326,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     });
   }
 
-  function imageHover(step){
+  function imageHover(step){ // function for find the corrdinates
 
     var img = $(step.imgElement);
 
@@ -353,7 +355,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     return step.imgElement;
   }
 
-  function notify(msg, id){
+  function notify(msg, id){ // general pupose notfication function
     if ($('#' + id).length == 0) {
       var notification = document.createElement('span');
       notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> ' + msg ;

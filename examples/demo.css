@@ -80,7 +80,7 @@ body > .container-fluid {
 }
 
 .import-image-zone input {
-  max-width: fit-content;
+  max-width: 120%;
 }
 
 .hover {

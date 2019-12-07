@@ -6,7 +6,7 @@ var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js'),
   insertPreview = require('./lib/insertPreview.js');
 
 window.onload = function () {
-  sequencer = ImageSequencer();
+  sequencer = ImageSequencer(); // sets the global sequencer variable
 
   function refreshOptions() {
     // Load information of all modules (Name, Inputs, Outputs)
@@ -30,9 +30,9 @@ window.onload = function () {
   }
   refreshOptions();
 
-  $(window).on('scroll', scrollFunction);
+  $(window).on('scroll', scrollFunction); // Scroll-up arrow
 
-  function scrollFunction() {
+  function scrollFunction() { // toggles the scroll-up arrow
     var shouldDisplay = $('body').scrollTop() > 20 || $(':root').scrollTop() > 20;
 
     $('#move-up').css({
@@ -41,7 +41,7 @@ window.onload = function () {
   }
 
 
-  function topFunction() {
+  function topFunction() { // scrolls to the top
     $('body').animate({scrollTop: 0});
     $(':root').animate({scrollTop: 0});
   }
@@ -84,7 +84,7 @@ window.onload = function () {
     $(this).removeClass('selected');
   });
 
-  function displayMessageOnSaveSequence() {
+  function displayMessageOnSaveSequence() { // displays a notification on saving a sequence to the browser
     $('.savesequencemsg').fadeIn();
     setTimeout(function () {
       $('.savesequencemsg').fadeOut();
@@ -120,7 +120,7 @@ window.onload = function () {
 
   let isWorkingOnGifGeneration = false;
 
-  $('.js-view-as-gif').on('click', function (event) {
+  $('.js-view-as-gif').on('click', function (event) { // GIF generation and display
     /* Prevent user from triggering generation multiple times*/
     if (isWorkingOnGifGeneration) return;
 
@@ -244,7 +244,7 @@ window.onload = function () {
 
   setupCache();
 
-  if (urlHash.getUrlHashParameter('src')) {
+  if (urlHash.getUrlHashParameter('src')) { // gets the sequence from the URL
     insertPreview.updatePreviews(urlHash.getUrlHashParameter('src'), '#addStep');
   } else {
     insertPreview.updatePreviews('images/tulips.png', '#addStep');

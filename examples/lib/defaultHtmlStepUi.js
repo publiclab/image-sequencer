@@ -69,9 +69,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
     step.ui = parser.parseFromString(step.ui, 'text/html'); // convert the markup string to a DOM node
     step.ui = step.ui.querySelector('div.container-fluid');
 
-    $step = scopeQuery.scopeSelector(step.ui);	    step.$step = scopeQuery.scopeSelector(step.ui); // Shorthand methods for scoped DOM queries. Read the docs(CONTRIBUTING.md) for more info
-    $stepAll = scopeQuery.scopeSelectorAll(step.ui);	    step.$stepAll = scopeQuery.scopeSelectorAll(step.ui);
-    step.ui.$step = $step;	    let {$step, $stepAll} = step;
+    $step = scopeQuery.scopeSelector(step.ui); // Shorthand methods for scoped DOM queries. Read the docs(CONTRIBUTING.md) for more info
+    $stepAll = scopeQuery.scopeSelectorAll(step.ui);
+    step.ui.$step = $step;
     step.ui.$stepAll = $stepAll;
 
     step.linkElements = step.ui.querySelectorAll('a'); // all the anchor tags in the step UI

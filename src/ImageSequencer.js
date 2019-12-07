@@ -2,6 +2,11 @@ if (typeof window !== 'undefined') { isBrowser = true; }
 else { var isBrowser = false; }
 require('./util/getStep.js');
 
+/**
+ * @method ImageSequencer
+ * @param {Object|Float32Array} options
+ * @returns {Object}
+ */
 ImageSequencer = function ImageSequencer(options) {
 
   var str = require('./Strings.js')(this.steps, modulesInfo, addSteps, copy);
@@ -14,14 +19,18 @@ ImageSequencer = function ImageSequencer(options) {
     return Object.prototype.toString.call(object).split(' ')[1].slice(0, -1);
   }
 
-  function log(color, msg) {
+  function log(color, msg) { // General colored console logs
     if (options.ui != 'none') {
       if (arguments.length == 1) console.log(arguments[0]);
       else if (arguments.length == 2) console.log(color, msg);
     }
   }
 
-  function copy(a) {
+  /**
+   * @method copy
+   * @param {"Object"|"Array"} The object/array to be cloned
+   */
+  function copy(a) { // Returns a copy of param object
     if (!typeof (a) == 'object') return a;
     if (objTypeOf(a) == 'Array') return a.slice();
     if (objTypeOf(a) == 'Object') {
@@ -53,10 +62,10 @@ ImageSequencer = function ImageSequencer(options) {
     for (o in sequencer) {
       modules[o] = sequencer[o];
     }
-    sequences = JSON.parse(window.localStorage.getItem('sequences'));
+    sequences = JSON.parse(window.localStorage.getItem('sequences')); // Gets saved sequences from localStorage
     if (!sequences) {
       sequences = {};
-      window.localStorage.setItem('sequences', JSON.stringify(sequences));
+      window.localStorage.setItem('sequences', JSON.stringify(sequences)); // Sets the localStorage entry as an empty option by default
     }
   }
 
@@ -64,11 +73,15 @@ ImageSequencer = function ImageSequencer(options) {
   // if (options.imageSelect || options.inBrowser) addStep('image-select');
   // else if (options.imageUrl) loadImage(imageUrl);
 
-  function addSteps() {
+  /**
+   * @method addSteps
+   * @return {Object}
+   */
+  function addSteps() { // add one or more steps
     var this_ = (this.name == 'ImageSequencer') ? this : this.sequencer;
     var args = [];
     var json_q = {};
-    for (var arg in arguments) { args.push(copy(arguments[arg])); }
+    for (var arg in arguments) { args.push(copy(arguments[arg])); } // gets all the module names from the arguments
     json_q = formatInput.call(this_, args, '+');
 
     inputlog.push({ method: 'addSteps', json_q: copy(json_q) });
@@ -77,18 +90,23 @@ ImageSequencer = function ImageSequencer(options) {
     return this;
   }
 
+  /**
+   *
+   * @param {Object} ref ImageSequencer Reference
+   * @param {Number} index
+   */
   function removeStep(ref, index) {
-    //remove the step from images[image].steps and redraw remaining images
+    // remove the step from images[image].steps and redraw remaining images
     if (index > 0) {
       //var this_ = (this.name == "ImageSequencer") ? this : this.sequencer;
       thisStep = ref.steps[index];
       thisStep.UI.onRemove(thisStep.options.step);
       ref.steps.splice(index, 1);
     }
-    //tell the UI a step has been removed
+    // tell the UI a step has been removed
   }
 
-  function removeSteps() {
+  function removeSteps() { // remove one or multiple steps
     var   indices;
     var this_ = (this.name == 'ImageSequencer') ? this : this.sequencer;
     var args = [];
@@ -103,7 +121,7 @@ ImageSequencer = function ImageSequencer(options) {
     return this;
   }
 
-  function insertSteps() {
+  function insertSteps() { // insert steps after a specific index
     var this_ = (this.name == 'ImageSequencer') ? this : this.sequencer;
     var args = [];
     for (var arg in arguments) args.push(arguments[arg]);
@@ -118,8 +136,11 @@ ImageSequencer = function ImageSequencer(options) {
     return this;
   }
 
-  // Config is an object which contains the runtime configuration like progress bar
-  // information and index from which the sequencer should run
+  /**
+   * @method run
+   * @param {Object} config object which contains the runtime configuration like progress bar information and index from which the sequencer should run
+   * @returns {Boolean}
+   */
   function run(config) {
     var progressObj, index = 0;
     config = config || { mode: 'no-arg' };
@@ -146,6 +167,10 @@ ImageSequencer = function ImageSequencer(options) {
     return true;
   }
 
+  /**
+   * @method loadImages
+   * @description load an image via dataURL or normal url. Read the docs for more info
+   */
   function loadImages() {
     var args = [];
     var prevSteps = this.getSteps().slice(1).map(step=>step.options.name);
@@ -182,17 +207,31 @@ ImageSequencer = function ImageSequencer(options) {
 
   }
 
-  function replaceImage(selector, steps, options) {
+  /**
+   *
+   * @param {String} selector DOM selector string for the image input
+   * @param {*} steps Current Steps
+   * @param {Object} options Options
+   */
+  function replaceImage(selector, steps, options) { // replace the current image
     options = options || {};
     options.callback = options.callback || function() { };
     return require('./ReplaceImage')(this, selector, steps, options);
   }
 
-  //returns the steps added
+  /**
+   * @method getSteps
+   * @description returns the current seqeucne of steps
+   */
   function getSteps(){
     return this.steps;
   }
 
+  /**
+   * @method setUI
+   * @description Used for setting up a UI for ImageSequencer via different callback methods. Read the docs for more info
+   * @param {Object} UI Object containing UI callback methods. Read the docs for more info
+   */
   function setUI(UI) {
     this.events = require('./ui/UserInterface')(UI);
   }
@@ -201,6 +240,11 @@ ImageSequencer = function ImageSequencer(options) {
     return require('./ExportBin')(dir, this, basic, filename);
   };
 
+  /**
+   * @method modulesInfo
+   * @description Returns information about the given module or all the available modules
+   * @param {String} name Module name
+   */
   function modulesInfo(name) {
     var modulesdata = {};
     if (name == 'load-image') return {};
@@ -222,6 +266,12 @@ ImageSequencer = function ImageSequencer(options) {
     return modulesdata;
   }
 
+  /**
+   * @method loadNewModule
+   * @description Adds a new local module to sequencer. Read the docs for mode info
+   * @param {String} name Name of the new module
+   * @param {Object} options An object containing path and info about the new module
+   */
   function loadNewModule(name, options) {
 
     if (!options) {
@@ -248,6 +298,12 @@ ImageSequencer = function ImageSequencer(options) {
     return this;
   }
 
+  /**
+   * @method saveNewModule
+   * @description saves a new local module to ImageSequencer
+   * @param {String} name Name of the new module
+   * @param {String} path Path to the new module
+   */
   function saveNewModule(name, path) {
     if (options.inBrowser) {
       // Not for browser context
@@ -258,6 +314,12 @@ ImageSequencer = function ImageSequencer(options) {
     fs.writeFileSync('./src/Modules.js', mods);
   }
 
+  /**
+   * @method saveSequence
+   * @description saves a sequence on the browser localStorage
+   * @param {String} name Name for the sequence
+   * @param {String} sequenceString Sequence data as a string
+   */
   function saveSequence(name, sequenceString) { // 4. save sequence
     const sequence = str.stringToJSON(sequenceString);
     // Save the given sequence string as a module

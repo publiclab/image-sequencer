@@ -75,12 +75,12 @@ body > .container-fluid {
 
 .import-image-zone {
   margin: 10px auto 30px auto;
-  max-width: 230px;
+  max-width: 250px;
   min-width: 230px;
 }
 
 .import-image-zone input {
-  max-width: 120%;
+  max-width: fit-content;
 }
 
 .hover {

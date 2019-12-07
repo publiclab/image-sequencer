@@ -1,3 +1,4 @@
+// genrate downscaled preview images for quick btns
 function generatePreview(previewStepName, customValues, path, selector) {
 
   var previewSequencer = ImageSequencer();

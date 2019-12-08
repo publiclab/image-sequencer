@@ -2,11 +2,12 @@
  * General purpose per-pixel manipulation
  * accepting a changePixel() method to remix a pixel's channels
  */
+
 /**
  * @method PixelManipulation
- * @description Function for changing pixel values of the image via different callback functions. Read the docs for more info
+ * @description Function for changing pixel values of the image via different callback functions. Read the docs for more info.
  * @param {Object} image ndarray of pixels of the image
- * @param {Object} options object containing callbacks for manipulating pixels. Read the docs for more info
+ * @param {Object} options object containing callbacks for manipulating pixels. Read the docs for more info.
  */
 module.exports = function PixelManipulation(image, options) {
   // To handle the case where pixelmanipulation is called on the input object itself
@@ -36,18 +37,18 @@ module.exports = function PixelManipulation(image, options) {
       };
     }
 
-    // iterate through pixels;
+    // Iterate through pixels;
     // TODO: this could possibly be more efficient; see
     // https://github.com/p-v-o-s/infragram-js/blob/master/public/infragram.js#L173-L181
 
 
-    if (options.preProcess) pixels = options.preProcess(pixels); // Allow for preprocessing of pixels
+    if (options.preProcess) pixels = options.preProcess(pixels); // Allow for preprocessing of pixels.
 
     function extraOperation() {
       var res;
-      if (options.extraManipulation) res = options.extraManipulation(pixels, generateOutput); // extraManipulation is used to manipulate each pixel individually
-      // there may be a more efficient means to encode an image object,
-      // but node modules and their documentation are essentially arcane on this point
+      if (options.extraManipulation) res = options.extraManipulation(pixels, generateOutput); // extraManipulation is used to manipulate each pixel individually.
+      // There may be a more efficient means to encode an image object,
+      // but node modules and their documentation are essentially arcane on this point.
       function generateOutput() {
         var chunks = [];
         var totalLength = 0;
@@ -86,7 +87,7 @@ module.exports = function PixelManipulation(image, options) {
         env: {
           consoleLog: console.log,
           perform: function (x, y) {
-            let pixel = options.changePixel( // changePixel function is run over every pixel
+            let pixel = options.changePixel( // changePixel function is run over every pixel.
               pixels.get(x, y, 0),
               pixels.get(x, y, 1),
               pixels.get(x, y, 2),
@@ -101,7 +102,7 @@ module.exports = function PixelManipulation(image, options) {
         }
       };
 
-      function perPixelManipulation() { // pure JavaScript code
+      function perPixelManipulation() {
         for (var x = 0; x < pixels.shape[0]; x++) {
           for (var y = 0; y < pixels.shape[1]; y++) {
             imports.env.perform(x, y);

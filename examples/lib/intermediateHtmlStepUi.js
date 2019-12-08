@@ -7,6 +7,7 @@ var urlHash = require('./urlHash.js'),
  * @param {Object} _sequencer Sequencer instance.
  * @param {Object} step Current step variable.
  * @param {Object} options Optional options Object.
+ * @returns {Object} Object containing the insertStep function.
  */
 function IntermediateHtmlStepUi(_sequencer, step, options) {
   function stepUI() {
@@ -77,6 +78,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
    * @description To toggle the module selector dropdown.
    * @param {Object} $step $step util function.
    * @param {Fucntion} callback Optional callback function.
+   * @returns {Null}
    */
   var toggleDiv = function($step, callback = function(){}){
     $step('.insertDiv').collapse('toggle');
@@ -91,6 +93,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
   /**
    * @method insertStep
    * @description Handler to insert selected module in the sequence.
+   * @returns {Null}
    */
   insertStep = function (id) {
     const $step = step.ui.$step,
@@ -141,7 +144,14 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       insert(id, $step, newStepName); });
   };
 
-  function insert(id, $step, newStepName) { // Insert the module at the corect index.
+  /**
+   * @method insert
+   * @description inserts the specified step at the specified index in the sequence.
+   * @param {Number} id Index of the step.
+   * @param {Function} $step $step util function.
+   * @param {String} newStepName Name of the new step.
+   */
+  function insert(id, $step, newStepName) {
     toggleDiv($step);
     $step('.insertDiv').removeClass('insertDiv');
     _sequencer.insertSteps(id + 1, newStepName).run({ index: id });

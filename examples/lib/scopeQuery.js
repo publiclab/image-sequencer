@@ -1,6 +1,7 @@
 /**
  * @method $scope
- * @param {"DOMNode"} scope A DOM Node as the scope
+ * @param {"DOMNode"} scope A DOM Node as the scope.
+ * @returns {Function} Constructor for the scopeSelector Object.
  */
 function $scope(scope) {
   return function(queryString){
@@ -23,7 +24,8 @@ function $scope(scope) {
 
 /**
  * @method $scopeAll
- * @param {"DOMNode"} scope A DOM Node as the scope
+ * @param {"DOMNode"} scope A DOM Node as the scope.
+ * @returns {Function} Constructor for the scopeSelectorAll Object.
  */
 function $scopeAll(scope){
   return function(queryString){
@@ -46,8 +48,9 @@ function $scopeAll(scope){
 
 /**
  * @method scopeSelector
- * @description A scoped jQuery selector
- * @param {"DOMNode"} scope DOM Node as the scope
+ * @description A scoped jQuery selector.
+ * @param {"DOMNode"} scope DOM Node as the scope.
+ * @returns {Function}
  */
 function scopeSelector(scope){
   return $scope(scope);
@@ -55,8 +58,9 @@ function scopeSelector(scope){
 
 /**
  * @method scopeSelectorAll
- * @description A scoped jQuery multiple selector
- * @param {"DOMNode} scope DOM Node as the scope
+ * @description A scoped jQuery multiple selector.
+ * @param {"DOMNode} scope DOM Node as the scope.
+ * @returns {Function}
  */
 function scopeSelectorAll(scope){
   return $scopeAll(scope);

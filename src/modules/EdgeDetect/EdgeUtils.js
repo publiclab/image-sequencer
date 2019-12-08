@@ -50,6 +50,7 @@ module.exports = function(pixels, highThresholdRatio, lowThresholdRatio, useHyst
  * @description Supresses (fills with background color) the specified (non-edge)pixel.
  * @param {Object} pixels ndarry of pixels.
  * @param {Float32Array} pixel Pixel coordinates.
+ * @returns {Null}
  */
 function supress(pixels, pixel) {
   pixelSetter(pixel[0], pixel[1], [0, 0, 0, 255], pixels);
@@ -60,6 +61,7 @@ function supress(pixels, pixel) {
  * @description Preserve the specified pixel(of an edge).
  * @param {Object} pixels ndarray of pixels.
  * @param {*} pixel Pixel coordinates.
+ * @returns {Null}
  */
 function preserve(pixels, pixel) {
   pixelSetter(pixel[0], pixel[1], [255, 255, 255, 255], pixels);
@@ -71,6 +73,7 @@ function preserve(pixels, pixel) {
  * @param {Object} pixels ndarray of pixels.
  * @param {Number} x x-coordinate of the pixel.
  * @param {Number} y y-coordinate of the pixel.
+ * @returns {Object} Object containing the gradient and angle.
  */
 function sobelFilter(pixels, x, y) {
   let val = pixels.get(x, y, 0),
@@ -106,6 +109,7 @@ function sobelFilter(pixels, x, y) {
  * @method categorizeAngle
  * @description Categorizes the given angle into 4 catagories according to the Category Map given below.
  * @param {Number} angle Angle in degrees.
+ * @returns {Number} Category number of the given angle.
  */
 function categorizeAngle(angle){
   if ((angle >= -22.5 && angle <= 22.5) || (angle < -157.5 && angle >= -180)) return 1;
@@ -127,6 +131,7 @@ function categorizeAngle(angle){
  * @param {Object} pixels ndarray of pixels.
  * @param {*} x x-coordinate of the pixel.
  * @param {*} y y-coordinate of the pixel.
+ * @returns {Boolean} True if the given coordinates are out of bounds.
  */
 function isOutOfBounds(pixels, x, y){
   return ((x < 0) || (y < 0) || (x >= pixels.shape[0]) || (y >= pixels.shape[1]));
@@ -182,7 +187,8 @@ function nonMaxSupress(pixels, grads, angles) {
 /**
  * @method convertToDegrees
  * @description converts the given angle(in radians) to degrees.
- * @param {Number} radians Angle in radians
+ * @param {Number} radians Angle in radians.
+ * @returns {Number} Angle in degrees.
  */
 var convertToDegrees = radians => (radians * 180) / Math.PI;
 

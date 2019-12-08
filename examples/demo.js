@@ -87,6 +87,7 @@ window.onload = function () {
   /**
    * @method displayMessageOnSaveSequence
    * @description When a sequence is saved to a browser, notification is displayed.
+   * @returns {Null}
    */
   function displayMessageOnSaveSequence() {
     $('.savesequencemsg').fadeIn();

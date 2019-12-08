@@ -21,7 +21,7 @@ module.exports = function edgeDetect(options, UI) {
 
     var step = this;
 
-    // Blur the image
+    // Blur the image.
     const internalSequencer = ImageSequencer({ inBrowser: false, ui: false });
     return internalSequencer.loadImage(input.src, function() {
       internalSequencer.importJSON([{ 'name': 'blur', 'options': { blur: options.blur } }]); // Blurs the image before detecting edges to reduce noise.

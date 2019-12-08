@@ -8,6 +8,7 @@
  * @description Function for changing pixel values of the image via different callback functions. Read the docs for more info.
  * @param {Object} image ndarray of pixels of the image
  * @param {Object} options object containing callbacks for manipulating pixels. Read the docs for more info.
+ * @returns {Null}
  */
 module.exports = function PixelManipulation(image, options) {
   // To handle the case where pixelmanipulation is called on the input object itself

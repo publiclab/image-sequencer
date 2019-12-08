@@ -14,6 +14,7 @@ target = 'test_outputs';
  * @param {"Object"} options module options
  * @param {String} benchmark dataURI of the benchmark image
  * @param {String} [input="red_image"] optional input image. Default is a red image.
+ * @returns {Null}
  */
 module.exports = (moduleName, options, benchmark, input) => {
   let sequencer = ImageSequencer({ui: false});

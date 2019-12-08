@@ -30,6 +30,7 @@ ImageSequencer = function ImageSequencer(options) {
    * @method copy
    * @description Returns a clone of the input object.
    * @param {Object|Float32Array} The object/array to be cloned.
+   * @returns {Object|Float32Array}
    */
   function copy(a) {
     if (!typeof (a) == 'object') return a;
@@ -97,6 +98,7 @@ ImageSequencer = function ImageSequencer(options) {
    * @description Removes the step at the specified index from the sequence.
    * @param {Object} ref ImageSequencer instance.
    * @param {Number} index Index of the step to be removed.
+   * @returns {Null}
    */
   function removeStep(ref, index) {
     // Remove the step from images[image].steps and redraw remaining images.
@@ -111,6 +113,7 @@ ImageSequencer = function ImageSequencer(options) {
   /**
    * @method removeSteps
    * @description Removes one or more steps from the sequence.
+   * @returns {Object}
    */
   function removeSteps() {
     var   indices;
@@ -130,6 +133,7 @@ ImageSequencer = function ImageSequencer(options) {
   /**
    * @method insertSteps
    * @description Insert steps at the specified index.
+   * @returns {Object}
    */
   function insertSteps() {
     var this_ = (this.name == 'ImageSequencer') ? this : this.sequencer;
@@ -180,6 +184,7 @@ ImageSequencer = function ImageSequencer(options) {
   /**
    * @method loadImages
    * @description Loads an image via dataURL or normal URL. Read the docs for more info.
+   * @returns {Null}
    */
   function loadImages() {
     var args = [];
@@ -222,7 +227,8 @@ ImageSequencer = function ImageSequencer(options) {
    * @description Replaces the current image in the sequencer.
    * @param {String} selector DOM selector string for the image input.
    * @param {*} steps Current steps Object.
-   * @param {Object} options Options
+   * @param {Object} options Options.
+   * @returns {*}
    */
   function replaceImage(selector, steps, options) {
     options = options || {};
@@ -233,6 +239,7 @@ ImageSequencer = function ImageSequencer(options) {
   /**
    * @method getSteps
    * @description Returns the current sequence of steps.
+   * @returns {Object}
    */
   function getSteps(){
     return this.steps;
@@ -242,6 +249,7 @@ ImageSequencer = function ImageSequencer(options) {
    * @method setUI
    * @description To set up a UI for ImageSequencer via different callback methods. Read the docs for more info.
    * @param {Object} UI Object containing UI callback methods. Read the docs for more info.
+   * @returns {Null}
    */
   function setUI(UI) {
     this.events = require('./ui/UserInterface')(UI);
@@ -255,6 +263,7 @@ ImageSequencer = function ImageSequencer(options) {
    * @method modulesInfo
    * @description Returns information about the given module or all the available modules.
    * @param {String} name Module name.
+   * @returns {Object}
    */
   function modulesInfo(name) {
     var modulesdata = {};
@@ -281,7 +290,8 @@ ImageSequencer = function ImageSequencer(options) {
    * @method loadNewModule
    * @description Adds a new local module to sequencer. Read the docs for mode info.
    * @param {String} name Name of the new module.
-   * @param {Object} options An object containing path and info about the new module.
+   * @param {Object} options An Object containing path and info about the new module.
+   * @returns {Object}
    */
   function loadNewModule(name, options) {
 
@@ -314,6 +324,7 @@ ImageSequencer = function ImageSequencer(options) {
    * @description Saves a new local module to ImageSequencer.
    * @param {String} name Name of the new module.
    * @param {String} path Path to the new module.
+   * @returns {Null}
    */
   function saveNewModule(name, path) {
     if (options.inBrowser) {
@@ -330,6 +341,7 @@ ImageSequencer = function ImageSequencer(options) {
    * @description Saves a sequence on the browser localStorage.
    * @param {String} name Name for the sequence.
    * @param {String} sequenceString Sequence data as a string.
+   * @returns {Null}
    */
   function saveSequence(name, sequenceString) { // 4. save sequence
     const sequence = str.stringToJSON(sequenceString);

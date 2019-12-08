@@ -224,6 +224,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
      * @param {*} currentValue The current value of the input.
      * @param {*} initValue The initial/old value of the input.
      * @param {Boolean} hasChangedBefore Whether the input was changed before.
+     * @returns {Boolean} True if the value has changed.
      */
     function handleInputValueChange(currentValue, initValue, hasChangedBefore) {
       var inputChanged = !(isNaN(initValue) || isNaN(currentValue) ? currentValue === initValue : currentValue - initValue === 0);
@@ -337,6 +338,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
    * @method imageHover
    * @description Handler to display image coordinates on hover.
    * @param {Object} step Current step variable.
+   * @returns {Null}
    */
   function imageHover(step){
 
@@ -372,6 +374,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
    * @description General purpose DOM toast notification.
    * @param {String} msg Message to be displayed.
    * @param {String} id A unique identifier for the notification.
+   * @returns {Null}
    */
   function notify(msg, id){
     if ($('#' + id).length == 0) {

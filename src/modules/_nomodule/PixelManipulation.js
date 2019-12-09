@@ -114,7 +114,7 @@ module.exports = function PixelManipulation(image, options) {
       const inBrowser = (options.inBrowser) ? 1 : 0;
       const test = (process.env.TEST) ? 1 : 0;
       if (options.useWasm) {
-        if (options.inBrowser) {
+        if (options.inBroHawser) {
 
           fetch('../../../dist/manipulation.wasm').then(response =>
             response.arrayBuffer()

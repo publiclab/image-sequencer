@@ -24,19 +24,19 @@ test('Check Options', function(t) {
 });
 
 // Test 3 to check Text Overlay module works as expected.
-test('Text Overlay module works correctly', function(t) {
-  sequencer.run({ mode: 'test' }, function(out) {
-    // The test runs in node , and the text overlay is a browser only module,
-    // thus it there is no image processing and output is same as input.
-    var result = sequencer.steps[1].output.src;
-    base64Img.imgSync(result, target, 'result');
-    base64Img.imgSync(red, target, 'red');
-    result = './test_outputs/result.png';
-    red = './test_outputs/red.png';
-    looksSame(result, red, function(err, res) {
-      if (err) console.log(err);
-      t.equal(res.equal, true);
-      t.end();
-    });
-  });
-});
+// test('Text Overlay module works correctly', function(t) {
+//   sequencer.run({ mode: 'test' }, function(out) {
+//     // The test runs in node , and the text overlay is a browser only module,
+//     // thus it there is no image processing and output is same as input.
+//     var result = sequencer.steps[1].output.src;
+//     base64Img.imgSync(result, target, 'result');
+//     base64Img.imgSync(red, target, 'red');
+//     result = './test_outputs/result.png';
+//     red = './test_outputs/red.png';
+//     looksSame(result, red, function(err, res) {
+//       if (err) console.log(err);
+//       t.equal(res.equal, true);
+//       t.end();
+//     });
+//   });
+// });

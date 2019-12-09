@@ -242,7 +242,7 @@ If only one module is to be added, `modules` is simply the name of the module.
 If multiple images are to be added, `modules` is an array, which holds the names of modules
 to be added, in that particular order.
 
-optional_otions is just an optional parameter, in object form, which you might
+optional_options is just an optional parameter, in object form, which you might
 want to provide to the modules.
 
 A variety of syntaxes are supported by Image Sequencer to add multiple steps and configurations quickly for module chaining. The project supports the string syntax, designed to be compact and URL friendly, and JSON, for handling more complex sequences. This can be achieved by passing strings to `sequencer.addStep()`:

@@ -9,7 +9,7 @@ window.onload = function () {
   sequencer = ImageSequencer(); // Set the global sequencer variable.
 
   function refreshOptions() {
-    // Load information of all modules (Name, Inputs, Outputs).
+    // Load information (Name, Inputs, Outputs) of all modules.
     var modulesInfo = sequencer.modulesInfo();
 
     var addStepSelect = $('#addStep select');
@@ -30,9 +30,12 @@ window.onload = function () {
   }
   refreshOptions();
 
-  $(window).on('scroll', scrollFunction); // Scroll-up arrow.
+  $(window).on('scroll', scrollFunction);
 
-  function scrollFunction() { // Toggle the scroll-up arrow.
+  /**
+   * @description Method to toggle the scroll-up arro
+   */
+  function scrollFunction() {
     var shouldDisplay = $('body').scrollTop() > 20 || $(':root').scrollTop() > 20;
 
     $('#move-up').css({
@@ -41,7 +44,10 @@ window.onload = function () {
   }
 
 
-  function topFunction() { // Scroll to the top.
+  /**
+   * @description Method to scroll to the top of the page.
+   */
+  function topFunction() {
     $('body').animate({scrollTop: 0});
     $(':root').animate({scrollTop: 0});
   }
@@ -55,7 +61,7 @@ window.onload = function () {
   // UI for the overall demo:
   var ui = defaultHtmlSequencerUi(sequencer);
 
-  // Find any `src` parameters in URL hash and attempt to source image from them and run the sequencer.
+  // Load image data from URL `src` parameter.
   if (urlHash.getUrlHashParameter('src')) {
     sequencer.loadImage(urlHash.getUrlHashParameter('src'), ui.onLoad);
   } else {
@@ -72,12 +78,12 @@ window.onload = function () {
   $('#addStep #add-step-btn').on('click', ui.addStepUi);
   $('#resetButton').on('click', resetSequence);
 
-  // Module button radio selection.
+  // Module Selector quick buttons click handler.
   $('.radio-group .radio').on('click', function () {
     $(this).parent().find('.radio').removeClass('selected');
     $(this).addClass('selected');
     newStep = $(this).attr('data-value');
-    // $("#addStep option[value=" + newStep + "]").attr('selected', 'selected');
+
     $('#addStep select').val(newStep);
     ui.selectNewStepUi(newStep);
     ui.addStepUi(newStep);
@@ -126,8 +132,7 @@ window.onload = function () {
   let isWorkingOnGifGeneration = false;
 
   $('.js-view-as-gif').on('click', function (event) { // GIF generation and display.
-    // Prevent user from triggering generation multiple times.
-    if (isWorkingOnGifGeneration) return;
+    if (isWorkingOnGifGeneration) return; // Prevent multiple button clicks.
 
     isWorkingOnGifGeneration = true;
 
@@ -136,7 +141,7 @@ window.onload = function () {
     button.innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i>';
 
     try {
-      // Get gif resources of previous steps.
+      // Get GIF resources from previous steps.
       let options = getGifResources();
 
       gifshot.createGIF(options, function (obj) { // GIF generation.
@@ -151,9 +156,7 @@ window.onload = function () {
           let modal = $('#js-download-gif-modal');
 
           $('#js-download-as-gif-button').one('click', function () {
-            // Trigger download.
-            downloadGif(image);
-            // Close modal.
+            downloadGif(image); // Trigger GIF download.
             modal.modal('hide');
           });
 
@@ -164,7 +167,6 @@ window.onload = function () {
 
           // Insert image.
           gifContainer.appendChild(animatedImage);
-
 
           // Open modal.
           modal.modal();

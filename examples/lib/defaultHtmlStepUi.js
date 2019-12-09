@@ -15,6 +15,7 @@ const intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js'),
   scopeQuery = require('./scopeQuery');
 
 function DefaultHtmlStepUi(_sequencer, options) {
+  let $step, $stepAll;
   options = options || {};
   var stepsEl = options.stepsEl || document.querySelector('#steps');
   var selectStepSel = options.selectStepSel = options.selectStepSel || '#selectStep';
@@ -24,7 +25,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     if (step.options && step.options.description)
       step.description = step.options.description;
 
-    step.ui = // Sasic UI markup for the step.
+    step.ui = // Basic UI markup for the step.
       '\
       <div class="container-fluid step-container">\
           <div class="panel panel-default">\
@@ -69,7 +70,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     step.ui = parser.parseFromString(step.ui, 'text/html'); // Convert the markup string to a DOM node.
     step.ui = step.ui.querySelector('div.container-fluid');
 
-    $step = scopeQuery.scopeSelector(step.ui); // Shorthand methods for scoped DOM queries. Read the docs(CONTRIBUTING.md) for more info.
+    $step = scopeQuery.scopeSelector(step.ui); // Shorthand methods for scoped DOM queries. Read the docs [CONTRIBUTING.md](https://github.com/publiclab/image-sequencer/blob/main/CONTRIBUTING.md) for more info.
     $stepAll = scopeQuery.scopeSelectorAll(step.ui);
     step.ui.$step = $step;
     step.ui.$stepAll = $stepAll;
@@ -80,7 +81,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     if (_sequencer.modulesInfo().hasOwnProperty(step.name)) {
       var inputs = _sequencer.modulesInfo(step.name).inputs;
       var outputs = _sequencer.modulesInfo(step.name).outputs;
-      var merged = Object.assign(inputs, outputs); // Combine outputs w inputs.
+      var merged = Object.assign(inputs, outputs); // Combine outputs with inputs.
 
       for (var paramName in merged) {
         var isInput = inputs.hasOwnProperty(paramName);
@@ -111,7 +112,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
               paramVal + '">' + '<span class="input-group-addon"><i></i></span>' +
               '</div>';
           }
-          else { // Use this if the the field isn't color-picker.
+          else { // Non color-picker input types.
             html =
               '<input class="form-control target" type="' +
               inputDesc.type +
@@ -156,7 +157,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $step('div.panel-footer').append( // Save button.
         '<div class="cal collapse in"><button type="submit" class="btn btn-sm btn-default btn-save" disabled = "true" >Apply</button> <small style="padding-top:2px;">Press apply to see changes</small></div>'
       );
-      $step('div.panel-footer').prepend( // Tools: download and insert step.
+      $step('div.panel-footer').prepend( // Markup for tools: download and insert step buttons.
         '<button class="pull-right btn btn-default btn-sm insert-step" >\
         <span class="insert-text"><i class="fa fa-plus"></i> Insert Step</span><span class="no-insert-text" style="display:none">Close</span></button>\
         <button class="pull-right btn btn-default btn-sm download-btn" style="margin-right:2px" >\

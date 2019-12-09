@@ -220,7 +220,13 @@ function doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio, grads, s
   }
 }
 
-function hysteresis(strongEdgePixels, weakEdgePixels){ // Hysteresis.
+/**
+ * @method hysteresis
+ * @description Filters weak edge pixels that are not connected to a strong edge pixel.
+ * @param {Float32array} strongEdgePixels 2D array of strong edge pixel coordinates.
+ * @param {*} weakEdgePixels 2D array of weak edge pixel coordinated.
+ */
+function hysteresis(strongEdgePixels, weakEdgePixels){
   strongEdgePixels.forEach(pixel => {
     let x = pixel[0],
       y = pixel[1];

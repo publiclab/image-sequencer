@@ -19,7 +19,13 @@ ImageSequencer = function ImageSequencer(options) {
     return Object.prototype.toString.call(object).split(' ')[1].slice(0, -1);
   }
 
-  function log(color, msg) { // General colored console logs
+  /**
+   * @method log
+   * @description Logs colored messages to the console using ASCII color codes.
+   * @param {String} color ASCII color code.
+   * @param {String} msg Message to be logged to the console.
+   */
+  function log(color, msg) {
     if (options.ui != 'none') {
       if (arguments.length == 1) console.log(arguments[0]);
       else if (arguments.length == 2) console.log(color, msg);
@@ -172,7 +178,7 @@ ImageSequencer = function ImageSequencer(options) {
     var callback = function() { };
     for (var arg in args)
       if (objTypeOf(args[arg]) == 'Function')
-        callback = args.splice(arg, 1)[0]; // Callback is formed
+        callback = args.splice(arg, 1)[0]; // Callback is formed.
 
     var json_q = formatInput.call(this_, args, 'r');
 

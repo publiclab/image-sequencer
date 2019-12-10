@@ -33,7 +33,10 @@
   <script src="../node_modules/gifshot/dist/gifshot.min.js" type="text/javascript"></script>
 
   <!-- Download.js for large files -->
-  <script src="../node_modules/downloadjs/download.min.js" type="text/javascript" />
+  <script src="../node_modules/downloadjs/download.min.js" type="text/javascript" ></script>
+
+  <!-- jspdf to enable save image as pdf -->
+  <script src="../node_modules/jspdf/dist/jspdf.min.js" type="text/javascript" ></script>
 
   <script src="lib/scrollToTop.js"></script>
   <script src="../node_modules/selectize/dist/js/standalone/selectize.min.js"></script>
@@ -190,6 +193,7 @@
                 <select class="form-control input-md mouse" id="selectSaveOption" style="margin-top:20px">
                   <option value="save-image">Save as PNG</option>
                   <option value="save-gif">Save as GIF (all steps)</option>
+                  <option value="save-pdf">Save as PDF</option>
                   <option value="save-seq">Save sequence</option>
                   <option value="save-seq-string">Save sequence string</option>
                 </select>

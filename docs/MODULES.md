@@ -8,40 +8,44 @@ List of Module Documentations
 3.  [Blend](#blend-module)
 4.  [Blur](#blur-module)
 5.  [Brightness](#brightness-module)
-6.  [Channel](#channel-module)
-7.  [Colorbar](#colorbar-module)
-8.  [Colormap](#colormap-module)
-9.  [ColorTemperature](#color-temperature)
-10. [Contrast](#contrast-module)
-11. [Convolution](#convolution-module)
-12. [Crop](#crop-module)
-13. [DecodeQr](#decodeQr-module)
-14. [Dither](#dither-module)
-15. [DrawRectangle](#draw-rectangle-module)
-16. [Dynamic](#dynamic-module)
-17. [Edge-Detect](#edge-detect-module)
-18. [FisheyeGl](#fisheyeGl-module)
-19. [FlipImage](#flipimage-module)
-20. [Gamma-Correction](#gamma-correction-module)
-21. [Gradient](#gradient-module)
-22. [Grid-Overlay](#grid-overlay)
-23. [Histogram](#histogram-module)
-24. [Import-image](#import-image-module)
-25. [Invert](#invert-module)
-26. [MinifyImage](#minify-image)
-27. [Ndvi](#ndvi-module)
-28. [Ndvi-Colormap](#ndvi-colormap-module)
-29. [NoiseReduction](#noise-reduction)
-30. [Overlay](#overlay-module)
-31. [PaintBucket](#paint-bucket-module)
-32. [ReplaceColor](#replacecolor-module)
-33. [Resize](#resize-module)
-34. [Rotate](#rotate-module)
-35. [Saturation](#saturation-module)
-36. [Segmented-Colormap](#segmented-colormap-module)
-37. [Text-Overlay](#text-overlay)
-38. [Threshold](#threshold)
-39. [Tint](#tint)
+6.  [Canvas-Resize](#canvas-resize-module)
+7.  [Channel](#channel-module)
+8.  [Colorbar](#colorbar-module)
+9.  [Colormap](#colormap-module)
+10. [ColorTemperature](#color-temperature)
+11. [Contrast](#contrast-module)
+12. [Convolution](#convolution-module)
+13. [Crop](#crop-module)
+14. [DecodeQr](#decodeQr-module)
+15. [Dither](#dither-module)
+16. [DrawRectangle](#draw-rectangle-module)
+17. [Dynamic](#dynamic-module)
+18. [Edge-Detect](#edge-detect-module)
+19. [Exposure](#exposure-module)
+20. [FisheyeGl](#fisheyeGl-module)
+21. [FlipImage](#flipimage-module)
+22. [Gamma-Correction](#gamma-correction-module)
+23. [Gradient](#gradient-module)
+24. [Grid-Overlay](#grid-overlay)
+25. [Histogram](#histogram-module)
+26. [Import-image](#import-image-module)
+27. [Invert](#invert-module)
+28. [MinifyImage](#minify-image)
+29. [Ndvi](#ndvi-module)
+30. [Ndvi-Colormap](#ndvi-colormap-module)
+31. [NoiseReduction](#noise-reduction)
+32. [Overlay](#overlay-module)
+33. [PaintBucket](#paint-bucket-module)
+34. [ReplaceColor](#replacecolor-module)
+35. [Resize](#resize-module)
+36. [Rotate](#rotate-module)
+37. [Saturation](#saturation-module)
+38. [Segmented-Colormap](#segmented-colormap-module)
+39. [Text-Overlay](#text-overlay)
+40. [Threshold](#threshold)
+41. [Tint](#tint)
+42. [WebGL-Distort](#webgl-distort-module)
+43. [White-Balance](#white-balance-module)
 
 
 ## add-qr-module
@@ -129,6 +133,24 @@ This module is used for changing the brightness of the image.
 
 where `options` is an object with the following property:
 * brightness : brightness of the image in percentage (0 to 100; default 100)
+
+
+## canvas-resize-module
+
+This module is used for resizing the canvas of the image.
+#### Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('canvas-resize',options)
+           .run()
+```
+
+where `options` is an object with the following property:
+* width: final width of the canvas (default 1000)
+* height: final height of the canvas (default 1000)
+* x: x-coordinate of the top left of the image on the canvas (default 500)
+* y: y-coordinate of the top left of the image on the canvas (default 500)
 
 
 ## channel-module
@@ -325,6 +347,21 @@ where `options` is an object with the following properties:
 * blur :  Intensity of Gaussian blur (0 to 5; default 2)
 * highThresholdRatio : Upper Threshold Ratio ( default : 0.2)
 * lowThresholdratio : Lower Threshold Ratio ( default : 0.2)
+
+
+## exposure-module
+
+This module is used for changing the exposure of the image.
+#### Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('exposure',options)
+           .run()
+```
+
+where `options` is an object with the following property:
+* exposure: exposure value for the new image (-3 to 4; default 1)
 
 
 ## fisheyeGl-module
@@ -667,3 +704,38 @@ It adds color tint to an image
 where `options` is an object with the following property:
 * color : RGB values seperated by a space (default "0 0 255")
 * factor : amount of tint (default 0.5)
+
+
+## webgl-distort-module
+
+This module is used for transforming the perspective of images based on corner coordinates.
+#### Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('webgl-distort',options)
+           .run()
+```
+
+where `options` is an object with the following property:
+* nw: top-left corner x and y coordinates separated by a comma (default "0,100")
+* ne: top-right corner x and y coordinates separated by a comma (default "1023,-50")
+* se: bottom-right corner x and y coordinates separated by a comma (default "1223,867")
+* sw: bottom-left corner x and y coordinates separated by a comma (default "100,767")
+
+
+## white-balance-module
+
+This module is used for rendering neutral colors of an image correctly based on the whitest pixel in the image.
+#### Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('white-balance',options)
+           .run()
+```
+
+where `options` is an object with the following property:
+* red: red component of the whitest pixel (default 255)
+* green: green component of the whitest pixel (default 255)
+* blue: blue component of the whitest pixel (default 255)

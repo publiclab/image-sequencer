@@ -15,8 +15,6 @@ const intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js'),
   scopeQuery = require('./scopeQuery');
 
 function DefaultHtmlStepUi(_sequencer, options) {
-  let $step, $stepAll;
-
   options = options || {};
   var stepsEl = options.stepsEl || document.querySelector('#steps');
   var selectStepSel = options.selectStepSel = options.selectStepSel || '#selectStep';
@@ -70,12 +68,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
     var parser = new DOMParser();
     step.ui = parser.parseFromString(step.ui, 'text/html');
     step.ui = step.ui.querySelector('div.container-fluid');
-
-    $step = scopeQuery.scopeSelector(step.ui);
-    $stepAll = scopeQuery.scopeSelectorAll(step.ui);
-    step.ui.$step = $step;
-    step.ui.$stepAll = $stepAll;
-
+    step.$step = scopeQuery.scopeSelector(step.ui);
+    step.$stepAll = scopeQuery.scopeSelectorAll(step.ui);
+    let {$step, $stepAll} = step;
     step.linkElements = step.ui.querySelectorAll('a');
     step.imgElement = $step('a img.img-thumbnail')[0];
 
@@ -258,13 +253,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
   }
 
 
-  function onDraw() {
+  function onDraw({$step, $stepAll}) {
     $step('.load').show();
     $step('img').hide();
     $stepAll('.load-spin').show();
   }
 
   function onComplete(step) {
+    let {$step, $stepAll} = step;
     $step('img').show();
     $stepAll('.load-spin').hide();
     $step('.load').hide();

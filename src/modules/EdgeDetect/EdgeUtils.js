@@ -36,7 +36,7 @@ module.exports = function(pixels, highThresholdRatio, lowThresholdRatio, useHyst
   }
   nonMaxSupress(pixels, grads, angles); // Non Maximum Suppression: Filter fine edges.
   doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio, grads, strongEdgePixels, weakEdgePixels); // Double Threshold: Categorizes edges into strong and weak edges based on two thresholds.
-  if(useHysteresis.toLowerCase() == 'true') hysteresis(strongEdgePixels, weakEdgePixels); // Optional Hysteresis to minimize edges generated due to noise. This process is quite slow.
+  if(useHysteresis.toLowerCase() == 'true') hysteresis(strongEdgePixels, weakEdgePixels); // Optional Hysteresis (very slow) to minimize edges generated due to noise
 
   strongEdgePixels.forEach(pixel => preserve(pixels, pixel)); // Makes the strong edges White.
   weakEdgePixels.forEach(pixel => supress(pixels, pixel)); // Makes the weak edges black(bg color) after filtering.
@@ -97,7 +97,7 @@ function sobelFilter(pixels, x, y) {
     }
   }
 
-  const grad = Math.sqrt(Math.pow(gradX, 2) + Math.pow(gradY, 2)), // gradient(magnitude)
+  const grad = Math.sqrt(Math.pow(gradX, 2) + Math.pow(gradY, 2)),
     angle = Math.atan2(gradY, gradX);
   return {
     pixel: [val, val, val, grad],

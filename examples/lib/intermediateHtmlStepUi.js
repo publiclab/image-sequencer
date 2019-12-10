@@ -96,8 +96,8 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
    * @returns {Null}
    */
   insertStep = function (id) {
-    const $step = step.ui.$step,
-      $stepAll = step.ui.$stepAll;
+    const $step = step.$step,
+      $stepAll = step.$stepAll;
     var modulesInfo = _sequencer.modulesInfo();
     var parser = new DOMParser();
     var addStepUI = stepUI();

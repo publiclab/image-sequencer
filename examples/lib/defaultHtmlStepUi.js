@@ -15,7 +15,6 @@ const intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js'),
   scopeQuery = require('./scopeQuery');
 
 function DefaultHtmlStepUi(_sequencer, options) {
-  let $step, $stepAll;
   options = options || {};
   var stepsEl = options.stepsEl || document.querySelector('#steps');
   var selectStepSel = options.selectStepSel = options.selectStepSel || '#selectStep';
@@ -70,11 +69,10 @@ function DefaultHtmlStepUi(_sequencer, options) {
     step.ui = parser.parseFromString(step.ui, 'text/html'); // Convert the markup string to a DOM node.
     step.ui = step.ui.querySelector('div.container-fluid');
 
-    $step = scopeQuery.scopeSelector(step.ui); // Shorthand methods for scoped DOM queries. Read the docs [CONTRIBUTING.md](https://github.com/publiclab/image-sequencer/blob/main/CONTRIBUTING.md) for more info.
-    $stepAll = scopeQuery.scopeSelectorAll(step.ui);
-    step.ui.$step = $step;
-    step.ui.$stepAll = $stepAll;
-
+    step.$step = scopeQuery.scopeSelector(step.ui); // Shorthand methods for scoped DOM queries. Read the docs [CONTRIBUTING.md](https://github.com/publiclab/image-sequencer/blob/main/CONTRIBUTING.md) for more info.
+    step.$stepAll = scopeQuery.scopeSelectorAll(step.ui);
+    let {$step, $stepAll} = step;
+    
     step.linkElements = step.ui.querySelectorAll('a'); // All the anchor tags in the step UI.
     step.imgElement = $step('a img.img-thumbnail')[0]; // The output image.
 
@@ -265,13 +263,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
   }
 
 
-  function onDraw() {
+  function onDraw({$step, $stepAll}) {
     $step('.load').show();
     $step('img').hide();
     $stepAll('.load-spin').show();
   }
 
   function onComplete(step) {
+    let {$step, $stepAll} = step;
     $step('img').show();
     $stepAll('.load-spin').hide();
     $step('.load').hide();

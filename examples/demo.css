@@ -69,12 +69,22 @@ body > .container-fluid {
   min-width:300px;
 }
 
-.hover {
-  background: #eee;
-}
-
 .dropzone input {
   max-width: 100%;
+}
+
+.import-image-zone {
+  margin: 10px auto 30px auto;
+  max-width: 250px;
+  min-width: 230px;
+}
+
+.import-image-zone input {
+  max-width: 100%;
+}
+
+.hover {
+  background: #eee;
 }
 
 .step {
@@ -252,7 +262,7 @@ a.name-header{
 }
 
 .step-column{
-  display:flex; 
+  display:flex;
   align-content: center;
   justify-content: center;
 }
@@ -276,9 +286,9 @@ a.name-header{
   width:100%;
 }
 .save-button{
-  margin-top:20px; 
+  margin-top:20px;
   margin-bottom:0px;
-  align:center; 
+  align:center;
   width:100%;
 }
 
@@ -287,7 +297,7 @@ a.name-header{
 }
 
 .dimension-tooltip:hover{
-  text-decoration: none;  
+  text-decoration: none;
 }
 
 .dimension-tooltip:focus{

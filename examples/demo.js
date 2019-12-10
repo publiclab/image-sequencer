@@ -209,34 +209,39 @@ window.onload = function () {
     });
   }
 
-  //returns the data URL for the last image in the sequence
+  /**
+  * Get the data URL for the last image in the sequence.
+  * @return {string} The data URL for the last image in the sequence.
+  */
   function getLastImage() {
-    //get the image of the last step
+    // Get the image from the last step.
     let imgs = document.getElementsByClassName('step-thumbnail');
     let lastStepImage = imgs[imgs.length-1];
     return lastStepImage.getAttribute("src");
   }
 
-  /*
-  * savePDF()
-  * Downloads the given image url as a PDF file, given a parameter with a data URL for the image
+  /**
+  * Download the given image URL as a PDF file.
+  * @param {string} imageDataURL - The data URL for the image.
   */
   function savePDF(imageDataURL) {
     sequencer.getImageDimensions(imageDataURL, function(dimensions) {
-      //get the dimensions of the image
+      // Get the dimensions of the image.
       let pageWidth = dimensions.width;
       let pageHeight = dimensions.height;
 
-      //create a new pdf with the same dimensions as the image
+      // Create a new pdf with the same dimensions as the image.
       const pdf = new jsPDF({
         orientation: pageHeight > pageWidth ? "portrait": "landscape",
         unit: "px",
         format: [pageHeight, pageWidth]
       });
 
-      //add the image to the pdf with dimensions equal to the internal dimensions of
+      // Add the image to the pdf with dimensions equal to the internal dimensions of the page.
       pdf.addImage(imageDataURL, 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
-      pdf.save("index.pdf"); //save the pdf with the filename specified here
+
+      // Save the pdf with the filename specified here:
+      pdf.save("index.pdf");
     });
   }
 

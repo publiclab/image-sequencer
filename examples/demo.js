@@ -33,16 +33,15 @@ window.onload = function () {
   $(window).on('scroll', scrollFunction);
 
   /**
-   * @description Method to toggle the scroll-up arro
+   * @description Method to toggle the scroll-up arrow.
    */
-  function scrollFunction() {
+  function scrollFunction(A, B) {
     var shouldDisplay = $('body').scrollTop() > 20 || $(':root').scrollTop() > 20;
 
     $('#move-up').css({
       display: shouldDisplay ? 'block' : 'none'
     });
   }
-
 
   /**
    * @description Method to scroll to the top of the page.
@@ -165,10 +164,10 @@ window.onload = function () {
           // Clear previous results.
           gifContainer.innerHTML = '';
 
-          // Insert image.
+          // Insert image
           gifContainer.appendChild(animatedImage);
 
-          // Open modal.
+          // Open modal
           modal.modal();
 
           button.disabled = false;

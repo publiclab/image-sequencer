@@ -4,7 +4,7 @@ require('./util/getStep.js');
 
 /**
  * @method ImageSequencer
- * @param {Object|Float32Array} options Optional options.
+ * @param {Object|Float32Array} options Optional options
  * @returns {Object}
  */
 ImageSequencer = function ImageSequencer(options) {
@@ -22,7 +22,7 @@ ImageSequencer = function ImageSequencer(options) {
   /**
    * @method log
    * @description Logs colored messages to the console using ASCII color codes.
-   * @param {String} color ASCII color code.
+   * @param {String} color ASCII color code
    * @param {String} msg Message to be logged to the console.
    */
   function log(color, msg) {
@@ -35,7 +35,7 @@ ImageSequencer = function ImageSequencer(options) {
   /**
    * @method copy
    * @description Returns a clone of the input object.
-   * @param {Object|Float32Array} The object/array to be cloned.
+   * @param {Object|Float32Array} a The Object/Array to be cloned
    * @returns {Object|Float32Array}
    */
   function copy(a) {
@@ -83,7 +83,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   /**
    * @method addSteps
-   * @description Add one of more steps to the sequence.
+   * @description Adds one of more steps to the sequence.
    * @return {Object}
    */
   function addSteps() {
@@ -102,8 +102,8 @@ ImageSequencer = function ImageSequencer(options) {
   /**
    * @method removeStep
    * @description Removes the step at the specified index from the sequence.
-   * @param {Object} ref ImageSequencer instance.
-   * @param {Number} index Index of the step to be removed.
+   * @param {Object} ref ImageSequencer instance
+   * @param {Number} index Index of the step to be removed
    * @returns {Null}
    */
   function removeStep(ref, index) {
@@ -138,7 +138,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   /**
    * @method insertSteps
-   * @description Insert steps at the specified index.
+   * @description Inserts steps at the specified index.
    * @returns {Object}
    */
   function insertSteps() {
@@ -178,7 +178,7 @@ ImageSequencer = function ImageSequencer(options) {
     var callback = function() { };
     for (var arg in args)
       if (objTypeOf(args[arg]) == 'Function')
-        callback = args.splice(arg, 1)[0]; // Callback is formed.
+        callback = args.splice(arg, 1)[0]; // Callback is formed
 
     var json_q = formatInput.call(this_, args, 'r');
 
@@ -232,8 +232,8 @@ ImageSequencer = function ImageSequencer(options) {
    * @method replaceImage
    * @description Replaces the current image in the sequencer.
    * @param {String} selector DOM selector string for the image input.
-   * @param {*} steps Current steps Object.
-   * @param {Object} options Options.
+   * @param {*} steps Current steps Object
+   * @param {Object} options
    * @returns {*}
    */
   function replaceImage(selector, steps, options) {
@@ -268,7 +268,7 @@ ImageSequencer = function ImageSequencer(options) {
   /**
    * @method modulesInfo
    * @description Returns information about the given module or all the available modules.
-   * @param {String} name Module name.
+   * @param {String} name Module name
    * @returns {Object}
    */
   function modulesInfo(name) {
@@ -295,7 +295,7 @@ ImageSequencer = function ImageSequencer(options) {
   /**
    * @method loadNewModule
    * @description Adds a new local module to sequencer. Read the docs for mode info.
-   * @param {String} name Name of the new module.
+   * @param {String} name Name of the new module
    * @param {Object} options An Object containing path and info about the new module.
    * @returns {Object}
    */
@@ -309,13 +309,13 @@ ImageSequencer = function ImageSequencer(options) {
       this.modules[name] = options;
 
     } else if (options.func && options.info) {
-      // Passed in options object.
+      // Passed in options object
       this.modules[name] = [
         options.func, options.info
       ];
 
     } else if (options.path && !this.inBrowser) {
-      // Load from path(only in node).
+      // Load from path(only in node)
       const module = [
         require(`${options.path}/Module.js`),
         require(`${options.path}/info.json`)
@@ -328,8 +328,8 @@ ImageSequencer = function ImageSequencer(options) {
   /**
    * @method saveNewModule
    * @description Saves a new local module to ImageSequencer.
-   * @param {String} name Name of the new module.
-   * @param {String} path Path to the new module.
+   * @param {String} name Name of the new module
+   * @param {String} path Path to the new module
    * @returns {Null}
    */
   function saveNewModule(name, path) {
@@ -345,8 +345,8 @@ ImageSequencer = function ImageSequencer(options) {
   /**
    * @method saveSequence
    * @description Saves a sequence on the browser localStorage.
-   * @param {String} name Name for the sequence.
-   * @param {String} sequenceString Sequence data as a string.
+   * @param {String} name Name for the sequence
+   * @param {String} sequenceString Sequence data as a string
    * @returns {Null}
    */
   function saveSequence(name, sequenceString) { // 4. save sequence
@@ -377,7 +377,7 @@ ImageSequencer = function ImageSequencer(options) {
 
 
   return {
-    // Literals and objects.
+    // Literals and objects
     name: 'ImageSequencer',
     options: options,
     inputlog: inputlog,
@@ -387,7 +387,7 @@ ImageSequencer = function ImageSequencer(options) {
     steps: steps,
     image: image,
 
-    // User functions.
+    // User functions
     loadImages: loadImages,
     loadImage: loadImages,
     addSteps: addSteps,
@@ -416,7 +416,7 @@ ImageSequencer = function ImageSequencer(options) {
     loadModules: loadModules,
     getSteps:getSteps,
 
-    // Other functions.
+    // Other functions
     log: log,
     objTypeOf: objTypeOf,
     copy: copy,

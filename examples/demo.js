@@ -25,7 +25,22 @@ window.onload = function () {
     // Null option
     addStepSelect.append('<option value="" disabled selected>Select a Module</option>');
     addStepSelect.selectize({
-      sortField: 'text'
+      sortField: 'text',
+      openOnFocus: false,
+      onInitialize: function () {
+          var that = this;
+          this.$control.on("click", function () {
+              that.ignoreFocusOpen = true;
+              setTimeout(function () {
+                  that.ignoreFocusOpen = false;
+              }, 50);
+          });
+      },
+      onFocus: function () {
+          if (!this.ignoreFocusOpen) {
+              this.open();
+          }
+      }
     });
   }
   refreshOptions();

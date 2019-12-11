@@ -12,12 +12,11 @@ window.onload = function () {
       sortField: 'text',
       openOnFocus: false,
       onInitialize: function () {
-          var that = this;
-          this.$control.on("click", function () {
-              that.ignoreFocusOpen = true;
-              setTimeout(function () {
-                  that.ignoreFocusOpen = false;
-              }, 50);
+          this.$control.on("click", () => {
+            this.ignoreFocusOpen = true;
+            setTimeout(() => {
+              this.ignoreFocusOpen = false;
+            }, 50);
           });
       },
       onFocus: function () {

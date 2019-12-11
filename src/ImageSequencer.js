@@ -189,7 +189,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   /**
    * @method loadImages
-   * @description Loads an image via dataURL or normal URL. Read the docs for more info.
+   * @description Loads an image via dataURL or normal URL. Read the docs(https://github.com/publiclab/image-sequencer/blob/main/README.md) for more info.
    * @returns {Null}
    */
   function loadImages() {
@@ -253,8 +253,8 @@ ImageSequencer = function ImageSequencer(options) {
 
   /**
    * @method setUI
-   * @description To set up a UI for ImageSequencer via different callback methods. Read the docs for more info.
-   * @param {Object} UI Object containing UI callback methods. Read the docs for more info.
+   * @description To set up a UI for ImageSequencer via different callback methods. Read the docs(https://github.com/publiclab/image-sequencer/blob/main/README.md) for more info.
+   * @param {Object} UI Object containing UI callback methods. Read the docs(https://github.com/publiclab/image-sequencer/blob/main/README.md) for more info.
    * @returns {Null}
    */
   function setUI(UI) {
@@ -294,7 +294,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   /**
    * @method loadNewModule
-   * @description Adds a new local module to sequencer. Read the docs for mode info.
+   * @description Adds a new local module to sequencer. Read the docs(https://github.com/publiclab/image-sequencer/blob/main/README.md) for mode info.
    * @param {String} name Name of the new module
    * @param {Object} options An Object containing path and info about the new module.
    * @returns {Object}

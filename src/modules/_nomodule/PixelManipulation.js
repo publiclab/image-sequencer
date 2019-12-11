@@ -5,9 +5,9 @@
 
 /**
  * @method PixelManipulation
- * @description Function for changing pixel values of the image via different callback functions. Read the docs for more info.
+ * @description Function for changing pixel values of the image via different callback functions. Read the docs(https://github.com/publiclab/image-sequencer/blob/main/CONTRIBUTING.md) for more info.
  * @param {Object} image ndarray of pixels of the image
- * @param {Object} options object containing callbacks for manipulating pixels. Read the docs for more info.
+ * @param {Object} options object containing callbacks for manipulating pixels.
  * @returns {Null}
  */
 module.exports = function PixelManipulation(image, options) {

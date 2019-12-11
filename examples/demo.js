@@ -116,6 +116,9 @@ window.onload = function () {
     else if (dropDownValue == 'save-seq') {
       saveSequence();
     }
+    else if (dropDownValue == 'save-to-publiclab.org' ){
+      SaveToPubliclab();
+    }
   });
 
   let isWorkingOnGifGeneration = false;
@@ -209,6 +212,18 @@ window.onload = function () {
 
   function downloadGif(image) {
     download(image, 'index.gif', 'image/gif');// downloadjs library function
+  }
+
+  function SaveToPubliclab() {
+    function postToPL(imgSrc) {
+      var uniq = Date.now();
+      $('body').append('<form method="post" id="postToPL' + uniq + '" action="https://publiclab.org/post" target="postToPLWindow"><input type="hidden" name="datauri_main_image" /></form>');
+      f = $('#postToPL' + uniq)[0];
+      f.datauri_main_image.value = imgSrc;
+      window.open('', 'postToPLWindow');
+      f.submit();
+    }
+    postToPL($('img')[sequencer.steps.length - 1].src);
   }
 
   // image selection and drag/drop handling from examples/lib/imageSelection.js

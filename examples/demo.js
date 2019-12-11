@@ -115,6 +115,8 @@ window.onload = function () {
     }
     else if (dropDownValue == 'save-seq') {
       saveSequence();
+    } else if(dropDownValue == 'save-pdf') {
+      savePDF(getLastImage());
     }
     else if (dropDownValue == 'save-to-publiclab.org' ){
       SaveToPubliclab();
@@ -209,6 +211,44 @@ window.onload = function () {
 
     });
   }
+
+  /**
+  * Get the data URL for the last image in the sequence.
+  * @return {string} The data URL for the last image in the sequence.
+  */
+  function getLastImage() {
+    // Get the image from the last step.
+    let imgs = document.getElementsByClassName('step-thumbnail');
+    let lastStepImage = imgs[imgs.length-1];
+    return lastStepImage.getAttribute("src");
+  }
+
+  /**
+  * Download the given image URL as a PDF file.
+  * @param {string} imageDataURL - The data URL for the image.
+  */
+  function savePDF(imageDataURL) {
+    sequencer.getImageDimensions(imageDataURL, function(dimensions) {
+      // Get the dimensions of the image.
+      let pageWidth = dimensions.width;
+      let pageHeight = dimensions.height;
+
+      // Create a new pdf with the same dimensions as the image.
+      const pdf = new jsPDF({
+        orientation: pageHeight > pageWidth ? "portrait": "landscape",
+        unit: "px",
+        format: [pageHeight, pageWidth]
+      });
+
+      // Add the image to the pdf with dimensions equal to the internal dimensions of the page.
+      pdf.addImage(imageDataURL, 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+
+      // Save the pdf with the filename specified here:
+      pdf.save("index.pdf");
+    });
+  }
+
+
 
   function downloadGif(image) {
     download(image, 'index.gif', 'image/gif');// downloadjs library function

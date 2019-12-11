@@ -15,19 +15,19 @@ window.onload = function () {
           this.$control.on("click", () => {
             this.ignoreFocusOpen = true;
             setTimeout(() => {
-              this.ignoreFocusOpen = false;
+              this.ignoreFocusOpen = false; // trigger onFocus and open dropdown
             }, 50);
           });
       },
       onFocus: function () {
           if (!this.ignoreFocusOpen) {
-              this.open();
+              this.open(); // open dropdown after timeout of onClick
           }
       }
   }
 
   function refreshOptions(options) {
-    if (options == undefined) options = { sortField: 'text' };
+    if (options == undefined) options = { sortField: 'text' }; // default options if parameter is empty
     // Load information of all modules (Name, Inputs, Outputs)
     var modulesInfo = sequencer.modulesInfo();
 

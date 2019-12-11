@@ -8,23 +8,7 @@ var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js'),
 window.onload = function () {
   sequencer = ImageSequencer();
 
-  function refreshOptions() {
-    // Load information of all modules (Name, Inputs, Outputs)
-    var modulesInfo = sequencer.modulesInfo();
-
-    var addStepSelect = $('#addStep select');
-    addStepSelect.html('');
-
-    // Add modules to the addStep dropdown
-    for (var m in modulesInfo) {
-      if (modulesInfo[m] && modulesInfo[m].name)
-        addStepSelect.append(
-          '<option value="' + m + '">' + modulesInfo[m].name + '</option>'
-        );
-    }
-    // Null option
-    addStepSelect.append('<option value="" disabled selected>Select a Module</option>');
-    addStepSelect.selectize({
+  options = {
       sortField: 'text',
       openOnFocus: false,
       onInitialize: function () {
@@ -41,9 +25,28 @@ window.onload = function () {
               this.open();
           }
       }
-    });
   }
-  refreshOptions();
+
+  function refreshOptions(options) {
+    if (options == undefined) options = { sortField: 'text' };
+    // Load information of all modules (Name, Inputs, Outputs)
+    var modulesInfo = sequencer.modulesInfo();
+
+    var addStepSelect = $('#addStep select');
+    addStepSelect.html('');
+
+    // Add modules to the addStep dropdown
+    for (var m in modulesInfo) {
+      if (modulesInfo[m] && modulesInfo[m].name)
+        addStepSelect.append(
+          '<option value="' + m + '">' + modulesInfo[m].name + '</option>'
+        );
+    }
+    // Null option
+    addStepSelect.append('<option value="" disabled selected>Select a Module</option>');
+    addStepSelect.selectize(options);
+  }
+  refreshOptions(options);
 
   $(window).on('scroll', scrollFunction);
 

@@ -1,4 +1,4 @@
-// Read More: https://en.wikipedia.org/wiki/Canny_edge_detector.
+// Read More: https://en.wikipedia.org/wiki/Canny_edge_detector
 
 const pixelSetter = require('../../util/pixelSetter.js');
 
@@ -48,8 +48,8 @@ module.exports = function(pixels, highThresholdRatio, lowThresholdRatio, useHyst
 /**
  * @method supress
  * @description Supresses (fills with background color) the specified (non-edge)pixel.
- * @param {Object} pixels ndarry of pixels.
- * @param {Float32Array} pixel Pixel coordinates.
+ * @param {Object} pixels ndarry of pixels
+ * @param {Float32Array} pixel Pixel coordinates
  * @returns {Null}
  */
 function supress(pixels, pixel) {
@@ -59,8 +59,8 @@ function supress(pixels, pixel) {
 /**
  * @method preserve
  * @description Preserve the specified pixel(of an edge).
- * @param {Object} pixels ndarray of pixels.
- * @param {*} pixel Pixel coordinates.
+ * @param {Object} pixels ndarray of pixels
+ * @param {*} pixel Pixel coordinates
  * @returns {Null}
  */
 function preserve(pixels, pixel) {
@@ -70,9 +70,9 @@ function preserve(pixels, pixel) {
 /**
  * @method sobelFiler
  * @description Runs the sobel filter on the specified and neighbouring pixels.
- * @param {Object} pixels ndarray of pixels.
- * @param {Number} x x-coordinate of the pixel.
- * @param {Number} y y-coordinate of the pixel.
+ * @param {Object} pixels ndarray of pixels
+ * @param {Number} x x-coordinate of the pixel
+ * @param {Number} y y-coordinate of the pixel
  * @returns {Object} Object containing the gradient and angle.
  */
 function sobelFilter(pixels, x, y) {
@@ -108,8 +108,8 @@ function sobelFilter(pixels, x, y) {
 /**
  * @method categorizeAngle
  * @description Categorizes the given angle into 4 catagories according to the Category Map given below.
- * @param {Number} angle Angle in degrees.
- * @returns {Number} Category number of the given angle.
+ * @param {Number} angle Angle in degrees
+ * @returns {Number} Category number of the given angle
  */
 function categorizeAngle(angle){
   if ((angle >= -22.5 && angle <= 22.5) || (angle < -157.5 && angle >= -180)) return 1;
@@ -128,9 +128,9 @@ function categorizeAngle(angle){
 /**
  * @method isOutOfBounds
  * @description Checks whether the given coordinates lie outside the bounds of the image. Used for error handling in convolution.
- * @param {Object} pixels ndarray of pixels.
- * @param {*} x x-coordinate of the pixel.
- * @param {*} y y-coordinate of the pixel.
+ * @param {Object} pixels ndarray of pixels
+ * @param {*} x x-coordinate of the pixel
+ * @param {*} y y-coordinate of the pixel
  * @returns {Boolean} True if the given coordinates are out of bounds.
  */
 function isOutOfBounds(pixels, x, y){
@@ -153,7 +153,7 @@ function nonMaxSupress(pixels, grads, angles) {
       let angleCategory = categorizeAngle(angles[x][y]);
 
       if (!isOutOfBounds(pixels, x - 1, y - 1) && !isOutOfBounds(pixels, x + 1, y + 1)){
-        switch (angleCategory){ // Non maximum suppression according to angle category.
+        switch (angleCategory){ // Non maximum suppression according to angle category
         case 1:
           if (!((grads[x][y] >= grads[x][y + 1]) && (grads[x][y] >= grads[x][y - 1]))) {
             pixelsToBeSupressed.push([x, y]);
@@ -186,9 +186,9 @@ function nonMaxSupress(pixels, grads, angles) {
 
 /**
  * @method convertToDegrees
- * @description converts the given angle(in radians) to degrees.
- * @param {Number} radians Angle in radians.
- * @returns {Number} Angle in degrees.
+ * @description Converts the given angle(in radians) to degrees.
+ * @param {Number} radians Angle in radians
+ * @returns {Number} Angle in degrees
  */
 var convertToDegrees = radians => (radians * 180) / Math.PI;
 
@@ -198,8 +198,8 @@ var findMaxInMatrix = arr => Math.max(...arr.map(el => el.map(val => val ? val :
 // Applies the double threshold to the image.
 function doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio, grads, strongEdgePixels, weakEdgePixels) {
 
-  const highThreshold = findMaxInMatrix(grads) * highThresholdRatio, // High Threshold relative to the strongest edge.
-    lowThreshold = highThreshold * lowThresholdRatio; // Low threshold relative to high threshold.
+  const highThreshold = findMaxInMatrix(grads) * highThresholdRatio, // High Threshold relative to the strongest edge
+    lowThreshold = highThreshold * lowThresholdRatio; // Low threshold relative to high threshold
 
   for (let x = 0; x < pixels.shape[0]; x++) {
     for (let y = 0; y < pixels.shape[1]; y++) {
@@ -223,8 +223,8 @@ function doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio, grads, s
 /**
  * @method hysteresis
  * @description Filters weak edge pixels that are not connected to a strong edge pixel.
- * @param {Float32array} strongEdgePixels 2D array of strong edge pixel coordinates.
- * @param {*} weakEdgePixels 2D array of weak edge pixel coordinated.
+ * @param {Float32array} strongEdgePixels 2D array of strong edge pixel coordinates
+ * @param {*} weakEdgePixels 2D array of weak edge pixel coordinated
  */
 function hysteresis(strongEdgePixels, weakEdgePixels){
   strongEdgePixels.forEach(pixel => {

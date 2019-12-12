@@ -21,6 +21,12 @@ module.exports = function(grunt) {
     },
 
     browserify: {
+      options: {
+        alias: {
+          'gpu.js': './node_modules/gpu.js/src/index.js'
+        },
+        exclude: ['gl'],
+      },
       core: {
         src: ['src/ImageSequencer.js'],
         dest: 'dist/image-sequencer.js'

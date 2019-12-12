@@ -46,7 +46,7 @@
     "get-pixels": "~3.3.0",
     "gifshot": "^0.4.5",
     "glfx": "0.0.4",
-    "gpu.js": "^2.0.0-rc.12",
+    "gpu.js": "^2.3.0",
     "image-sequencer-invert": "^1.0.0",
     "imagejs": "0.0.9",
     "imagemin": "^7.0.0",

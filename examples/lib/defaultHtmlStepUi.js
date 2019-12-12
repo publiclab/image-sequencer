@@ -152,7 +152,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
                          </div>';
         $step('div.details').append(div);
       }
-      $step('div.panel-footer').append( // Save button.
+      $step('div.panel-footer').append( // Save button
         '<div class="cal collapse in"><button type="submit" class="btn btn-sm btn-default btn-save" disabled = "true" >Apply</button> <small style="padding-top:2px;">Press apply to see changes</small></div>'
       );
       $step('div.panel-footer').prepend( // Markup for tools: download and insert step buttons.
@@ -186,7 +186,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     else {
       $('#load-image').append(step.ui); // Default UI without extra tools for the first step(load image).
     }
-    $step('.toggle').on('click', () => { // Step container dropdown.
+    $step('.toggle').on('click', () => { // Step container dropdown
       $step('.toggleIcon').toggleClass('rotated');
       $stepAll('.cal').collapse('toggle');
     });
@@ -220,9 +220,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
     /**
      * @method handleInputValueChange
      * @description Enables the save button on input change.
-     * @param {*} currentValue The current value of the input.
-     * @param {*} initValue The initial/old value of the input.
-     * @param {Boolean} hasChangedBefore Whether the input was changed before.
+     * @param {*} currentValue The current value of the input
+     * @param {*} initValue The initial/old value of the input
+     * @param {Boolean} hasChangedBefore Whether the input was changed before
      * @returns {Boolean} True if the value has changed.
      */
     function handleInputValueChange(currentValue, initValue, hasChangedBefore) {
@@ -337,7 +337,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
   /**
    * @method imageHover
    * @description Handler to display image coordinates on hover.
-   * @param {Object} step Current step variable.
+   * @param {Object} step Current step variable
    * @returns {Null}
    */
   function imageHover(step){
@@ -372,8 +372,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
   /**
    * @method notify
    * @description General purpose DOM toast notification.
-   * @param {String} msg Message to be displayed.
-   * @param {String} id A unique identifier for the notification.
+   * @param {String} msg Message to be displayed
+   * @param {String} id A unique identifier for the notification
    * @returns {Null}
    */
   function notify(msg, id){

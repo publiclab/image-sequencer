@@ -148,7 +148,7 @@ window.onload = function () {
       // Get GIF resources from previous steps.
       let options = getGifResources();
 
-      gifshot.createGIF(options, function (obj) { // GIF generation.
+      gifshot.createGIF(options, function (obj) { // GIF generation
         if (!obj.error) {
           // Final gif encoded with base64 format.
           var image = obj.image;
@@ -199,7 +199,7 @@ window.onload = function () {
       imgSrcs.push(imgs[i].src);
     }
 
-    var options = { // GIF frame options.
+    var options = { // GIF frame options
       'gifWidth': imgs[0].width,
       'gifHeight': imgs[0].height,
       'images': imgSrcs,

@@ -4,14 +4,14 @@ var urlHash = require('./urlHash.js'),
 /**
  * @method IntermediateHtmlStepUi
  * @description Inserts a module selector in between the current sequence.
- * @param {Object} _sequencer Sequencer instance.
- * @param {Object} step Current step variable.
- * @param {Object} options Optional options Object.
- * @returns {Object} Object containing the insertStep function.
+ * @param {Object} _sequencer Sequencer instance
+ * @param {Object} step Current step variable
+ * @param {Object} options Optional options Object
+ * @returns {Object} Object containing the insertStep function
  */
 function IntermediateHtmlStepUi(_sequencer, step, options) {
   function stepUI() {
-    // Basic markup for the selector.
+    // Basic markup for the selector
     return '<div class="row insertDiv collapse">\
           <section class="panel panel-primary .insert-step">\
             <button class="btn btn-default close-insert-box"><i class="fa fa-times" aria-hidden="true"></i> Close</button>\
@@ -75,9 +75,9 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
 
   /**
    * @method toggleDiv
-   * @description To toggle the module selector dropdown.
-   * @param {Object} $step $step util function.
-   * @param {Fucntion} callback Optional callback function.
+   * @description Toggles the module selector dropdown.
+   * @param {Object} $step $step util function
+   * @param {Fucntion} callback Optional callback function
    * @returns {Null}
    */
   var toggleDiv = function($step, callback = function(){}){
@@ -146,10 +146,10 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
 
   /**
    * @method insert
-   * @description inserts the specified step at the specified index in the sequence.
-   * @param {Number} id Index of the step.
-   * @param {Function} $step $step util function.
-   * @param {String} newStepName Name of the new step.
+   * @description Inserts the specified step at the specified index in the sequence.
+   * @param {Number} id Index of the step
+   * @param {Function} $step $step util function
+   * @param {String} newStepName Name of the new step
    */
   function insert(id, $step, newStepName) {
     toggleDiv($step);

@@ -231,7 +231,7 @@ ImageSequencer = function ImageSequencer(options) {
   /**
    * @method replaceImage
    * @description Replaces the current image in the sequencer.
-   * @param {String} selector DOM selector string for the image input.
+   * @param {String} selector DOM selector string for the image input
    * @param {*} steps Current steps Object
    * @param {Object} options
    * @returns {*}
@@ -305,7 +305,7 @@ ImageSequencer = function ImageSequencer(options) {
       return this;
 
     } else if (Array.isArray(options)) {
-      // Contains the array of module and info.
+      // Contains the array of module and info
       this.modules[name] = options;
 
     } else if (options.func && options.info) {
@@ -334,7 +334,7 @@ ImageSequencer = function ImageSequencer(options) {
    */
   function saveNewModule(name, path) {
     if (options.inBrowser) {
-      // Not for browser context.
+      // Not for browser context
       return;
     }
     var mods = fs.readFileSync('./src/Modules.js').toString();

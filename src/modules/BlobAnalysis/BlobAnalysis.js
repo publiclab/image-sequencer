@@ -1,6 +1,6 @@
 module.exports = function(pixels, options, priorStep){
 
-  var $ = require('jquery'); // To make Blob-analysis work in Node.
+  var $ = require('jquery'); // To make Blob-analysis work in Node
   
   var img = $(priorStep.imgElement);
   if(Object.keys(img).length === 0){

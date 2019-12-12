@@ -25,7 +25,7 @@ module.exports = function(pixels, options, priorStep){
   let unknown = new cv.Mat();
   let markers = new cv.Mat();
  
-  // Gray and Threshold the image.
+  // Gray and Threshold the image
   cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
   cv.threshold(gray, gray, 0, 255, cv.THRESH_BINARY_INV + cv.THRESH_OTSU);
  

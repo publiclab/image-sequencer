@@ -15,12 +15,12 @@ window.onload = function () {
           this.$control.on("click", () => {
             this.ignoreFocusOpen = true;
             setTimeout(() => { 
-              // Trigger onFocus and open dropdown
+              // Trigger onFocus and open dropdown.
               this.ignoreFocusOpen = false;
             }, 50);
           });
       }, 
-      // Open dropdown after timeout of onClick
+      // Open dropdown after timeout of onClick.
       onFocus: function () {
           if (!this.ignoreFocusOpen) {
               this.open();
@@ -29,7 +29,7 @@ window.onload = function () {
   }
 
   function refreshOptions(options) {
-    // Default options if parameter is empty
+    // Default options if parameter is empty.
     if (options == undefined) options = { sortField: 'text' };
     // Load information of all modules (Name, Inputs, Outputs)
     var modulesInfo = sequencer.modulesInfo();

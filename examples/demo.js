@@ -14,20 +14,23 @@ window.onload = function () {
       onInitialize: function () {
           this.$control.on("click", () => {
             this.ignoreFocusOpen = true;
-            setTimeout(() => {
-              this.ignoreFocusOpen = false; // trigger onFocus and open dropdown
+            setTimeout(() => { 
+              // Trigger onFocus and open dropdown
+              this.ignoreFocusOpen = false;
             }, 50);
           });
-      },
+      }, 
+      // Open dropdown after timeout of onClick
       onFocus: function () {
           if (!this.ignoreFocusOpen) {
-              this.open(); // open dropdown after timeout of onClick
+              this.open();
           }
       }
   }
 
   function refreshOptions(options) {
-    if (options == undefined) options = { sortField: 'text' }; // default options if parameter is empty
+    // Default options if parameter is empty
+    if (options == undefined) options = { sortField: 'text' };
     // Load information of all modules (Name, Inputs, Outputs)
     var modulesInfo = sequencer.modulesInfo();
 

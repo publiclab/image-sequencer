@@ -23,7 +23,7 @@ module.exports = function(pixels, highThresholdRatio, lowThresholdRatio, useHyst
     grads.push([]);
     angles.push([]);
     for (var y = 0; y < pixels.shape[1]; y++) {
-      var result = sobelFilter( // Convolves the sobel filter on every pixel.
+      var result = sobelFilter( // Convolves the sobel filter on every pixel
         pixels,
         x,
         y
@@ -36,7 +36,7 @@ module.exports = function(pixels, highThresholdRatio, lowThresholdRatio, useHyst
   }
   nonMaxSupress(pixels, grads, angles); // Non Maximum Suppression: Filter fine edges.
   doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio, grads, strongEdgePixels, weakEdgePixels); // Double Threshold: Categorizes edges into strong and weak edges based on two thresholds.
-  if(useHysteresis.toLowerCase() == 'true') hysteresis(strongEdgePixels, weakEdgePixels); // Optional Hysteresis (very slow) to minimize edges generated due to noise
+  if(useHysteresis.toLowerCase() == 'true') hysteresis(strongEdgePixels, weakEdgePixels); // Optional Hysteresis (very slow) to minimize edges generated due to noise.
 
   strongEdgePixels.forEach(pixel => preserve(pixels, pixel)); // Makes the strong edges White.
   weakEdgePixels.forEach(pixel => supress(pixels, pixel)); // Makes the weak edges black(bg color) after filtering.
@@ -87,7 +87,7 @@ function sobelFilter(pixels, x, y) {
         yn = y + b - 1;
 
       if (isOutOfBounds(pixels, xn, yn)) { // Fallback for coordinates which lie outside the image.
-        gradX += pixels.get(xn + 1, yn + 1, 0) * kernelx[a][b]; // Fallback to nearest pixel.
+        gradX += pixels.get(xn + 1, yn + 1, 0) * kernelx[a][b]; // Fallback to nearest pixel
         gradY += pixels.get(xn + 1, yn + 1, 0) * kernely[a][b];
       }
       else {

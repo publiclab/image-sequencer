@@ -24,7 +24,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     if (step.options && step.options.description)
       step.description = step.options.description;
 
-    step.ui = // Basic UI markup for the step.
+    step.ui = // Basic UI markup for the step
       '\
       <div class="container-fluid step-container">\
           <div class="panel panel-default">\
@@ -73,13 +73,13 @@ function DefaultHtmlStepUi(_sequencer, options) {
     step.$stepAll = scopeQuery.scopeSelectorAll(step.ui);
     let {$step, $stepAll} = step;
     
-    step.linkElements = step.ui.querySelectorAll('a'); // All the anchor tags in the step UI.
-    step.imgElement = $step('a img.img-thumbnail')[0]; // The output image.
+    step.linkElements = step.ui.querySelectorAll('a'); // All the anchor tags in the step UI
+    step.imgElement = $step('a img.img-thumbnail')[0]; // The output image
 
     if (_sequencer.modulesInfo().hasOwnProperty(step.name)) {
       var inputs = _sequencer.modulesInfo(step.name).inputs;
       var outputs = _sequencer.modulesInfo(step.name).outputs;
-      var merged = Object.assign(inputs, outputs); // Combine outputs with inputs.
+      var merged = Object.assign(inputs, outputs); // Combine outputs with inputs
 
       for (var paramName in merged) {
         var isInput = inputs.hasOwnProperty(paramName);
@@ -99,7 +99,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         else {
           let paramVal = step.options[paramName] || inputDesc.default;
 
-          if (inputDesc.id == 'color-picker') { // Separate input field for color-picker.
+          if (inputDesc.id == 'color-picker') { // Separate input field for color-picker
             html +=
               '<div id="color-picker" class="input-group colorpicker-component">' +
               '<input class="form-control target" type="' +
@@ -110,7 +110,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
               paramVal + '">' + '<span class="input-group-addon"><i></i></span>' +
               '</div>';
           }
-          else { // Non color-picker input types.
+          else { // Non color-picker input types
             html =
               '<input class="form-control target" type="' +
               inputDesc.type +
@@ -155,7 +155,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $step('div.panel-footer').append( // Save button
         '<div class="cal collapse in"><button type="submit" class="btn btn-sm btn-default btn-save" disabled = "true" >Apply</button> <small style="padding-top:2px;">Press apply to see changes</small></div>'
       );
-      $step('div.panel-footer').prepend( // Markup for tools: download and insert step buttons.
+      $step('div.panel-footer').prepend( // Markup for tools: download and insert step buttons
         '<button class="pull-right btn btn-default btn-sm insert-step" >\
         <span class="insert-text"><i class="fa fa-plus"></i> Insert Step</span><span class="no-insert-text" style="display:none">Close</span></button>\
         <button class="pull-right btn btn-default btn-sm download-btn" style="margin-right:2px" >\
@@ -170,8 +170,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
           parser.parseFromString(tools, 'text/html').querySelector('div')
         );
 
-      $stepAll('.remove').on('click', function() {notify('Step Removed', 'remove-notification');}); // Notification on removal of a step.
-      $stepAll('.insert-step').on('click', function() { util.insertStep(step.ID); }); // Insert a step in between the sequence.
+      $stepAll('.remove').on('click', function() {notify('Step Removed', 'remove-notification');}); // Notification on removal of a step
+      $stepAll('.insert-step').on('click', function() { util.insertStep(step.ID); }); // Insert a step in between the sequence
 
       if (stepOptions.index == _sequencer.steps.length) {
         stepsEl.appendChild(step.ui);
@@ -184,14 +184,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
       }
     }
     else {
-      $('#load-image').append(step.ui); // Default UI without extra tools for the first step(load image).
+      $('#load-image').append(step.ui); // Default UI without extra tools for the first step(load image)
     }
     $step('.toggle').on('click', () => { // Step container dropdown
       $step('.toggleIcon').toggleClass('rotated');
       $stepAll('.cal').collapse('toggle');
     });
     
-    $(step.imgElement).on('mousemove', _.debounce(() => imageHover(step), 150)); // Shows the pixel coordinates on hover.
+    $(step.imgElement).on('mousemove', _.debounce(() => imageHover(step), 150)); // Shows the pixel coordinates on hover
     $(step.imgElement).on('click', (e) => {e.preventDefault(); });
     $stepAll('#color-picker').colorpicker();
 
@@ -208,9 +208,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
           });
         _sequencer.run({ index: step.index - 1 });
 
-        // Modify the URL hash.
+        // Modify the URL hash
         urlHash.setUrlHashParameter('steps', _sequencer.toString());
-        // Disable the save button.
+        // Disable the save button
         $step('.btn-save').prop('disabled', true);
         optionsChanged = false;
         changedInputs = 0;
@@ -219,11 +219,11 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     /**
      * @method handleInputValueChange
-     * @description Enables the save button on input change.
+     * @description Enables the save button on input change
      * @param {*} currentValue The current value of the input
      * @param {*} initValue The initial/old value of the input
      * @param {Boolean} hasChangedBefore Whether the input was changed before
-     * @returns {Boolean} True if the value has changed.
+     * @returns {Boolean} True if the value has changed
      */
     function handleInputValueChange(currentValue, initValue, hasChangedBefore) {
       var inputChanged = !(isNaN(initValue) || isNaN(currentValue) ? currentValue === initValue : currentValue - initValue === 0);
@@ -303,7 +303,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       }
     });
 
-    // Fill inputs with stored step options.
+    // Fill inputs with stored step options
     if (_sequencer.modulesInfo().hasOwnProperty(step.name)) {
       var inputs = _sequencer.modulesInfo(step.name).inputs;
       var outputs = _sequencer.modulesInfo(step.name).outputs;
@@ -371,7 +371,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
   /**
    * @method notify
-   * @description General purpose DOM toast notification.
+   * @description General purpose DOM toast notification
    * @param {String} msg Message to be displayed
    * @param {String} id A unique identifier for the notification
    * @returns {Null}

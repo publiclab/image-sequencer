@@ -15,7 +15,7 @@ window.onload = function () {
     var addStepSelect = $('#addStep select');
     addStepSelect.html('');
 
-    // Add modules to the addStep dropdown.
+    // Add modules to the addStep dropdown
     for (var m in modulesInfo) {
       if (modulesInfo[m] && modulesInfo[m].name)
         addStepSelect.append(
@@ -135,8 +135,8 @@ window.onload = function () {
 
   let isWorkingOnGifGeneration = false;
 
-  $('.js-view-as-gif').on('click', function (event) { // GIF generation and display.
-    if (isWorkingOnGifGeneration) return; // Prevent multiple button clicks.
+  $('.js-view-as-gif').on('click', function (event) { // GIF generation and display
+    if (isWorkingOnGifGeneration) return; // Prevent multiple button clicks
 
     isWorkingOnGifGeneration = true;
 
@@ -145,12 +145,12 @@ window.onload = function () {
     button.innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i>';
 
     try {
-      // Get GIF resources from previous steps.
+      // Get GIF resources from previous steps
       let options = getGifResources();
 
       gifshot.createGIF(options, function (obj) { // GIF generation
         if (!obj.error) {
-          // Final gif encoded with base64 format.
+          // Final GIF encoded with base64 format
           var image = obj.image;
           var animatedImage = document.createElement('img');
 
@@ -160,13 +160,13 @@ window.onload = function () {
           let modal = $('#js-download-gif-modal');
 
           $('#js-download-as-gif-button').one('click', function () {
-            downloadGif(image); // Trigger GIF download.
+            downloadGif(image); // Trigger GIF download
             modal.modal('hide');
           });
 
           var gifContainer = document.getElementById('js-download-modal-gif-container');
 
-          // Clear previous results.
+          // Clear previous results
           gifContainer.innerHTML = '';
 
           // Insert image
@@ -190,11 +190,11 @@ window.onload = function () {
   });
 
   function getGifResources() {
-    // Returns an object with specific gif options.
+    // Returns an object with specific gif options
     let imgs = document.getElementsByClassName('step-thumbnail');
     var imgSrcs = [];
 
-    // Pushes image sources of all the modules in the DOM.
+    // Pushes image sources of all the modules in the DOM
     for (var i = 0; i < imgs.length; i++) {
       imgSrcs.push(imgs[i].src);
     }
@@ -257,7 +257,7 @@ window.onload = function () {
 
 
   function downloadGif(image) {
-    download(image, 'index.gif', 'image/gif'); // Downloadjs library function.
+    download(image, 'index.gif', 'image/gif'); // Downloadjs library function
   }
 
   function SaveToPubliclab() {
@@ -305,7 +305,7 @@ window.onload = function () {
 
   setupCache();
 
-  if (urlHash.getUrlHashParameter('src')) { // Gets the sequence from the URL.
+  if (urlHash.getUrlHashParameter('src')) { // Gets the sequence from the URL
     insertPreview.updatePreviews(urlHash.getUrlHashParameter('src'), '#addStep');
   } else {
     insertPreview.updatePreviews('images/tulips.png', '#addStep');

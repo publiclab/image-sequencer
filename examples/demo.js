@@ -8,7 +8,29 @@ var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js'),
 window.onload = function () {
   sequencer = ImageSequencer();
 
-  function refreshOptions() {
+  options = {
+      sortField: 'text',
+      openOnFocus: false,
+      onInitialize: function () {
+          this.$control.on("click", () => {
+            this.ignoreFocusOpen = true;
+            setTimeout(() => { 
+              // Trigger onFocus and open dropdown.
+              this.ignoreFocusOpen = false;
+            }, 50);
+          });
+      }, 
+      // Open dropdown after timeout of onClick.
+      onFocus: function () {
+          if (!this.ignoreFocusOpen) {
+              this.open();
+          }
+      }
+  }
+
+  function refreshOptions(options) {
+    // Default options if parameter is empty.
+    if (options == undefined) options = { sortField: 'text' };
     // Load information of all modules (Name, Inputs, Outputs)
     var modulesInfo = sequencer.modulesInfo();
 
@@ -24,11 +46,9 @@ window.onload = function () {
     }
     // Null option
     addStepSelect.append('<option value="" disabled selected>Select a Module</option>');
-    addStepSelect.selectize({
-      sortField: 'text'
-    });
+    addStepSelect.selectize(options);
   }
-  refreshOptions();
+  refreshOptions(options);
 
   $(window).on('scroll', scrollFunction);
 
@@ -115,6 +135,11 @@ window.onload = function () {
     }
     else if (dropDownValue == 'save-seq') {
       saveSequence();
+    } else if(dropDownValue == 'save-pdf') {
+      savePDF(getLastImage());
+    }
+    else if (dropDownValue == 'save-to-publiclab.org' ){
+      SaveToPubliclab();
     }
   });
 
@@ -207,8 +232,58 @@ window.onload = function () {
     });
   }
 
+  /**
+  * Get the data URL for the last image in the sequence.
+  * @return {string} The data URL for the last image in the sequence.
+  */
+  function getLastImage() {
+    // Get the image from the last step.
+    let imgs = document.getElementsByClassName('step-thumbnail');
+    let lastStepImage = imgs[imgs.length-1];
+    return lastStepImage.getAttribute("src");
+  }
+
+  /**
+  * Download the given image URL as a PDF file.
+  * @param {string} imageDataURL - The data URL for the image.
+  */
+  function savePDF(imageDataURL) {
+    sequencer.getImageDimensions(imageDataURL, function(dimensions) {
+      // Get the dimensions of the image.
+      let pageWidth = dimensions.width;
+      let pageHeight = dimensions.height;
+
+      // Create a new pdf with the same dimensions as the image.
+      const pdf = new jsPDF({
+        orientation: pageHeight > pageWidth ? "portrait": "landscape",
+        unit: "px",
+        format: [pageHeight, pageWidth]
+      });
+
+      // Add the image to the pdf with dimensions equal to the internal dimensions of the page.
+      pdf.addImage(imageDataURL, 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+
+      // Save the pdf with the filename specified here:
+      pdf.save("index.pdf");
+    });
+  }
+
+
+
   function downloadGif(image) {
     download(image, 'index.gif', 'image/gif');// downloadjs library function
+  }
+
+  function SaveToPubliclab() {
+    function postToPL(imgSrc) {
+      var uniq = Date.now();
+      $('body').append('<form method="post" id="postToPL' + uniq + '" action="https://publiclab.org/post" target="postToPLWindow"><input type="hidden" name="datauri_main_image" /></form>');
+      f = $('#postToPL' + uniq)[0];
+      f.datauri_main_image.value = imgSrc;
+      window.open('', 'postToPLWindow');
+      f.submit();
+    }
+    postToPL($('img')[sequencer.steps.length - 1].src);
   }
 
   // image selection and drag/drop handling from examples/lib/imageSelection.js

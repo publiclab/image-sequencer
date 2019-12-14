@@ -3,7 +3,7 @@ var urlHash = require('./urlHash.js'),
 
 /**
  * @method IntermediateHtmlStepUi
- * @description Inserts a module selector in between the current sequence.
+ * @description Inserts a module selector in between the current sequence
  * @param {Object} _sequencer Sequencer instance
  * @param {Object} step Current step variable
  * @param {Object} options Optional options Object
@@ -92,7 +92,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
 
   /**
    * @method insertStep
-   * @description Handler to insert selected module in the sequence.
+   * @description Handler to insert selected module in the sequence
    * @returns {Null}
    */
   insertStep = function (id) {
@@ -123,7 +123,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     
     var insertStepSelect = $step('.insert-step-select');
     insertStepSelect.html('');
-    // Add modules to the insertStep dropdown.
+    // Add modules to the insertStep dropdown
     for (var m in modulesInfo) {
       if (modulesInfo[m] && modulesInfo[m].name)
         insertStepSelect.append(
@@ -134,9 +134,9 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       sortField: 'text'
     });
     $('.insertDiv .radio-group .radio').on('click', function () {
-      var newStepName = $(this).attr('data-value'); // Get the name of the module to be inserted.
+      var newStepName = $(this).attr('data-value'); // Get the name of the module to be inserted
       id = $($step('.insertDiv').parents()[3]).prevAll().length;
-      insert(id, $step, newStepName); // Insert the selected module.
+      insert(id, $step, newStepName); // Insert the selected module
     });
     $step('.insertDiv .add-step-btn').on('click', function () {
       var newStepName = insertStepSelect.val();
@@ -146,7 +146,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
 
   /**
    * @method insert
-   * @description Inserts the specified step at the specified index in the sequence.
+   * @description Inserts the specified step at the specified index in the sequence
    * @param {Number} id Index of the step
    * @param {Function} $step $step util function
    * @param {String} newStepName Name of the new step

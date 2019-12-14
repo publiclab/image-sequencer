@@ -9,7 +9,7 @@ module.exports = function ImportImageModuleUi(step, ui) {
     // add a file input listener
     var dropZone = '\
     <div class="dropzone import-image-zone" id="' + dropzoneId + '">\
-          <p>\
+          <p id="dropzone-text">\
         <i>Select or drag in an image to overlay.</i>\
       </p>\
       <center>\

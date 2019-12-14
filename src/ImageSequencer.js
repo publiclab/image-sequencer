@@ -21,9 +21,9 @@ ImageSequencer = function ImageSequencer(options) {
 
   /**
    * @method log
-   * @description Logs colored messages to the console using ASCII color codes.
+   * @description Logs colored messages to the console using ASCII color codes
    * @param {String} color ASCII color code
-   * @param {String} msg Message to be logged to the console.
+   * @param {String} msg Message to be logged to the console
    */
   function log(color, msg) {
     if (options.ui != 'none') {
@@ -70,10 +70,10 @@ ImageSequencer = function ImageSequencer(options) {
     for (o in sequencer) {
       modules[o] = sequencer[o];
     }
-    sequences = JSON.parse(window.localStorage.getItem('sequences')); // Get saved sequences from localStorage.
+    sequences = JSON.parse(window.localStorage.getItem('sequences')); // Get saved sequences from localStorage
     if (!sequences) {
       sequences = {};
-      window.localStorage.setItem('sequences', JSON.stringify(sequences)); // Set the localStorage entry as an empty Object by default.
+      window.localStorage.setItem('sequences', JSON.stringify(sequences)); // Set the localStorage entry as an empty Object by default
     }
   }
 
@@ -90,7 +90,7 @@ ImageSequencer = function ImageSequencer(options) {
     var this_ = (this.name == 'ImageSequencer') ? this : this.sequencer;
     var args = [];
     var json_q = {};
-    for (var arg in arguments) { args.push(copy(arguments[arg])); } // Get all the module names from the arguments.
+    for (var arg in arguments) { args.push(copy(arguments[arg])); } // Get all the module names from the arguments
     json_q = formatInput.call(this_, args, '+');
 
     inputlog.push({ method: 'addSteps', json_q: copy(json_q) });
@@ -107,7 +107,7 @@ ImageSequencer = function ImageSequencer(options) {
    * @returns {Null}
    */
   function removeStep(ref, index) {
-    // Remove the step from images[image].steps and redraw remaining images.
+    // Remove the step from images[image].steps and redraw remaining images
     if (index > 0) {
       // var this_ = (this.name == "ImageSequencer") ? this : this.sequencer;
       thisStep = ref.steps[index];
@@ -118,7 +118,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   /**
    * @method removeSteps
-   * @description Removes one or more steps from the sequence.
+   * @description Removes one or more steps from the sequence
    * @returns {Object}
    */
   function removeSteps() {
@@ -138,7 +138,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   /**
    * @method insertSteps
-   * @description Inserts steps at the specified index.
+   * @description Inserts steps at the specified index
    * @returns {Object}
    */
   function insertSteps() {
@@ -230,7 +230,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   /**
    * @method replaceImage
-   * @description Replaces the current image in the sequencer.
+   * @description Replaces the current image in the sequencer
    * @param {String} selector DOM selector string for the image input
    * @param {*} steps Current steps Object
    * @param {Object} options
@@ -244,7 +244,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   /**
    * @method getSteps
-   * @description Returns the current sequence of steps.
+   * @description Returns the current sequence of steps
    * @returns {Object}
    */
   function getSteps(){
@@ -267,7 +267,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   /**
    * @method modulesInfo
-   * @description Returns information about the given module or all the available modules.
+   * @description Returns information about the given module or all the available modules
    * @param {String} name Module name
    * @returns {Object}
    */
@@ -327,7 +327,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   /**
    * @method saveNewModule
-   * @description Saves a new local module to ImageSequencer.
+   * @description Saves a new local module to ImageSequencer
    * @param {String} name Name of the new module
    * @param {String} path Path to the new module
    * @returns {Null}
@@ -351,9 +351,9 @@ ImageSequencer = function ImageSequencer(options) {
    */
   function saveSequence(name, sequenceString) { // 4. save sequence
     const sequence = str.stringToJSON(sequenceString);
-    // Save the given sequence string as a module.
+    // Save the given sequence string as a module
     if (options.inBrowser) {
-      // Inside the browser we save the meta-modules using the Web Storage API.
+      // Inside the browser we save the meta-modules using the Web Storage API
       var sequences = JSON.parse(window.localStorage.getItem('sequences'));
       sequences[name] = sequence;
       window.localStorage.setItem('sequences', JSON.stringify(sequences));
@@ -367,7 +367,7 @@ ImageSequencer = function ImageSequencer(options) {
   }
 
   function loadModules() {
-    // This function loads the modules and saved sequences.
+    // loadModules function loads the modules and saved sequences.
     this.modules = require('./Modules');
     if (options.inBrowser)
       this.sequences = JSON.parse(window.localStorage.getItem('sequences'));

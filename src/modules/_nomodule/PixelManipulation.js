@@ -38,7 +38,7 @@ module.exports = function PixelManipulation(image, options) {
       };
     }
 
-    // Iterate through pixels;
+    // Iterate through pixels
     // TODO: this could possibly be more efficient; see
     // https://github.com/p-v-o-s/infragram-js/blob/master/public/infragram.js#L173-L181
 

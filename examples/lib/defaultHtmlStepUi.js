@@ -20,7 +20,6 @@ function DefaultHtmlStepUi(_sequencer, options) {
   var selectStepSel = options.selectStepSel = options.selectStepSel || '#selectStep';
 
   function onSetup(step, stepOptions) {
-
     if (step.options && step.options.description)
       step.description = step.options.description;
 
@@ -176,6 +175,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         $('#steps .step-container:nth-last-child(1) .insert-step').prop('disabled', true);
         if($('#steps .step-container:nth-last-child(2)'))
           $('#steps .step-container:nth-last-child(2) .insert-step').prop('disabled', false);
+          $('#load-image .insert-step').prop('disabled', false);
       }
       else {
         stepsEl.insertBefore(step.ui, $(stepsEl).children()[stepOptions.index]);
@@ -183,6 +183,16 @@ function DefaultHtmlStepUi(_sequencer, options) {
     }
     else {
       $('#load-image').append(step.ui);
+
+
+      $step('div.panel-footer').prepend( `
+          <button class="right btn btn-default btn-sm insert-step">
+            <span class="insert-text"><i class="fa fa-plus"></i> Insert Step</span>
+            <span class="no-insert-text" style="display:none">Close</span>
+          </button>`
+      );
+
+      $stepAll('.insert-step').on('click', function() { util.insertStep(step.ID); });
     }
     $step('.toggle').on('click', () => {
       $step('.toggleIcon').toggleClass('rotated');

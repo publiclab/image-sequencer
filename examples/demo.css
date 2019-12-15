@@ -314,3 +314,9 @@ a.name-header{
   font-size: 16px;
   color: #444;
 }
+
+/* Non float rightward alignment*/
+.right {
+  margin-left: auto;
+  display: block;
+}

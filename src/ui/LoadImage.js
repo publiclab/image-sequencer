@@ -27,7 +27,6 @@ function LoadImage(ref, name, src, main_callback) {
     else if (ref.options.inBrowser) {
       var ext = src.split('.').pop();
       var image = document.createElement('img');
-      image.crossOrigin = 'Anonymous';
       var canvas = document.createElement('canvas');
       var context = canvas.getContext('2d');
       
@@ -38,6 +37,7 @@ function LoadImage(ref, name, src, main_callback) {
         datauri = canvas.toDataURL(ext);
         callback(datauri, step);
       };
+      image.crossOrigin = 'Anonymous';
       image.src = src;
     }
     else {

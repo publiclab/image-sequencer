@@ -27,8 +27,10 @@ function LoadImage(ref, name, src, main_callback) {
     else if (ref.options.inBrowser) {
       var ext = src.split('.').pop();
       var image = document.createElement('img');
+      image.crossOrigin = 'Anonymous';
       var canvas = document.createElement('canvas');
       var context = canvas.getContext('2d');
+      
       image.onload = function() {
         canvas.width = image.naturalWidth;
         canvas.height = image.naturalHeight;

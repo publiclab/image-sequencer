@@ -168,7 +168,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         );
 
       $stepAll('.remove').on('click', function() {notify('Step Removed', 'remove-notification');});
-      $stepAll('.insert-step').on('click', function() { util.insertStep(step.ID); });
+      $step('.insert-step').on('click', function() { util.insertStep(step.ID); });
       // Insert the step's UI in the right place
       if (stepOptions.index == _sequencer.steps.length) {
         stepsEl.appendChild(step.ui);
@@ -192,7 +192,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
           </button>`
       );
 
-      $stepAll('.insert-step').on('click', function() { util.insertStep(step.ID); });
+      $step('.insert-step').on('click', function() { util.insertStep(step.ID); });
     }
     $step('.toggle').on('click', () => {
       $step('.toggleIcon').toggleClass('rotated');

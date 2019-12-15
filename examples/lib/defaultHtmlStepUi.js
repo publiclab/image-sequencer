@@ -186,7 +186,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
 
       $step('div.panel-footer').prepend( `
-          <button class="right btn btn-default btn-sm insert-step">
+          <button class="right btn btn-default btn-sm insert-step" disabled="true">
             <span class="insert-text"><i class="fa fa-plus"></i> Insert Step</span>
             <span class="no-insert-text" style="display:none">Close</span>
           </button>`

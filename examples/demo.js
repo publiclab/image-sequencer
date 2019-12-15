@@ -14,12 +14,12 @@ window.onload = function () {
       onInitialize: function () {
           this.$control.on("click", () => {
             this.ignoreFocusOpen = true;
-            setTimeout(() => { 
+            setTimeout(() => {
               // Trigger onFocus and open dropdown.
               this.ignoreFocusOpen = false;
             }, 50);
           });
-      }, 
+      },
       // Open dropdown after timeout of onClick.
       onFocus: function () {
           if (!this.ignoreFocusOpen) {
@@ -111,6 +111,13 @@ window.onload = function () {
     }, 3000);
   }
 
+  $("#addStep select").on("change", ui.selectNewStepUi);
+  $("#addStep #add-step-btn").on("click", ui.addStepUi);
+  $('#addStep #download-btn').click(function() {
+    $('img:last()').trigger("click");
+
+    return false;
+  });
   $('body').on('click', 'button.remove', ui.removeStepUi);
   function saveSequence() { // 1. save seq
     var result = window.prompt('Please give a name to your sequence... (Saved sequence will only be available in this browser).');
@@ -317,11 +324,39 @@ window.onload = function () {
     }
   });
 
-  setupCache();
-
-  if (urlHash.getUrlHashParameter('src')) {
-    insertPreview.updatePreviews(urlHash.getUrlHashParameter('src'), '#addStep');
-  } else {
-    insertPreview.updatePreviews('images/tulips.png', '#addStep');
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js', { scope: '/examples/' })
+      .then(function(registration) {
+        const installingWorker = registration.installing;
+        installingWorker.onstatechange = () => {
+          console.log(installingWorker)
+          if (installingWorker.state === 'installed') {
+            location.reload();
+          }
+        }
+        console.log('Registration successful, scope is:', registration.scope);
+      })
+      .catch(function(error) {
+        console.log('Service worker registration failed, error:', error);
+      });
   }
+
+  if ('serviceWorker' in navigator) {
+        caches.keys().then(function(cacheNames) {
+          cacheNames.forEach(function(cacheName) {
+            $("#clear-cache").append(" " + cacheName);
+          });
+        });
+      }
+
+  $("#clear-cache").click(function() {
+      if ('serviceWorker' in navigator) {
+        caches.keys().then(function(cacheNames) {
+          cacheNames.forEach(function(cacheName) {
+            caches.delete(cacheName);
+          });
+        });
+      }
+  location.reload();
+  });
 };

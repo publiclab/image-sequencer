@@ -29,7 +29,6 @@ function generatePreview(previewStepName, customValues, path, DomNode) {
 }
 
 function updatePreviews(src, DomNode) {
-  console.log(DomNode);
   $(DomNode).find('img').remove();
 
   var previewSequencerSteps = {

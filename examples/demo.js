@@ -303,7 +303,6 @@ window.onload = function () {
         step.imgElement.src = reader.result;
       
       insertPreview.updatePreviews(reader.result, document.querySelector('#addStep'));
-      // insertPreview.updatePreviews(sequencer.steps[0].imgElement.src, document.querySelector('.insertDiv'));
     },
     onTakePhoto: function (url) {
       var step = sequencer.steps[0];
@@ -314,7 +313,6 @@ window.onload = function () {
       else
         step.imgElement.src = url;
       insertPreview.updatePreviews(url, document.querySelector('#addStep'));
-      // insertPreview.updatePreviews(sequencer.steps[0].imgElement.src, '.insertDiv');
     }
   });
 

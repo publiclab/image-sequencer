@@ -18,9 +18,6 @@ describe('Add step', () => {
     const previousLength = await page.evaluate(() => document.querySelectorAll('.step').length);
     await page.click('[data-value=\'brightness\']');
     const previousLength1 = await page.evaluate(() => document.querySelectorAll('.step').length);
-    console.log(previousLength);
-    console.log(previousLength1);
-
     expect(previousLength).toBe(1);
     expect(previousLength1).toBe(2);
   }, timeout);

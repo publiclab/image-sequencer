@@ -166,4 +166,4 @@ module.exports = function PixelManipulation(image, options) {
       }
     }
   });
-}
+};

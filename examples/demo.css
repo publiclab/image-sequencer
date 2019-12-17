@@ -296,19 +296,19 @@ a.name-header{
   cursor: default;
 }
 
-.dimension-tooltip:hover{
+.general-tooltip:hover{
   text-decoration: none;
 }
 
-.dimension-tooltip:focus{
+.general-tooltip:focus{
   outline: none;
 }
 
-.dimension-tooltip:focus-within{
+.general-tooltip:focus-within{
   outline: none;
 }
 
-.dimension-tooltip{
+.general-tooltip{
   position: relative;
   bottom: 7px;
   font-size: 16px;

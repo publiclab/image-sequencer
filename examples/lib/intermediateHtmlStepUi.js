@@ -81,6 +81,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     var parser = new DOMParser();
     var addStepUI = stepUI();
     addStepUI = parser.parseFromString(addStepUI, 'text/html').querySelector('div');
+
     if ($step('.insertDiv').length > 0){
       toggleDiv($step);
     }
@@ -91,9 +92,11 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
           addStepUI
         );
       toggleDiv($step, function(){
-        insertPreview.updatePreviews(step.output, '.insertDiv');
+        if (step.name === 'load-image') insertPreview.updatePreviews(step.output.src, $step('.insertDiv').getDomElem());
+        else insertPreview.updatePreviews(step.output, $step('.insertDiv').getDomElem());
       });
     }
+    
 
     $step('.insertDiv .close-insert-box').off('click').on('click', function(){
       toggleDiv($step);
@@ -102,6 +105,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     
     var insertStepSelect = $step('.insert-step-select');
     insertStepSelect.html('');
+
     // Add modules to the insertStep dropdown
     for (var m in modulesInfo) {
       if (modulesInfo[m] && modulesInfo[m].name)
@@ -109,14 +113,17 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
           '<option value="' + m + '">' + modulesInfo[m].name + '</option>'
         );
     }
+
     insertStepSelect.selectize({
       sortField: 'text'
     });
+
     $('.insertDiv .radio-group .radio').on('click', function () {
       var newStepName = $(this).attr('data-value');
       id = $($step('.insertDiv').parents()[3]).prevAll().length;
       insert(id, $step, newStepName);
     });
+
     $step('.insertDiv .add-step-btn').on('click', function () {
       var newStepName = insertStepSelect.val();
       id = $($step('.insertDiv').parents()[3]).prevAll().length;

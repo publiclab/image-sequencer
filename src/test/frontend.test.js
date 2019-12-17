@@ -1,8 +1,8 @@
 const timeout = process.env.SLOWMO ? 30000 : 10000;
 const fs = require('fs');
 beforeAll(async () => {
-
-  await page.goto('file:///home/keshav/image-sequencer/examples/index.html', {waitUntil: 'domcontentloaded'});
+  path = fs.realpathSync('file://../examples/index.html');
+  await page.goto('file://' + path, {waitUntil: 'domcontentloaded'});
 });
 
 describe('title of the page', () => {

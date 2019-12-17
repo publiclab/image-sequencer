@@ -40,8 +40,8 @@ module.exports = function AddQR(options, UI) {
         inBrowser: options.inBrowser,
         callback: callback,
         useWasm:options.useWasm
-      })
-    })
+      });
+    });
   }
 
   return {

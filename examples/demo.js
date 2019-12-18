@@ -9,24 +9,24 @@ window.onload = function () {
   sequencer = ImageSequencer();
 
   options = {
-      sortField: 'text',
-      openOnFocus: false,
-      onInitialize: function () {
-          this.$control.on("click", () => {
-            this.ignoreFocusOpen = true;
-            setTimeout(() => { 
-              // Trigger onFocus and open dropdown.
-              this.ignoreFocusOpen = false;
-            }, 50);
-          });
-      }, 
-      // Open dropdown after timeout of onClick.
-      onFocus: function () {
-          if (!this.ignoreFocusOpen) {
-              this.open();
-          }
+    sortField: 'text',
+    openOnFocus: false,
+    onInitialize: function () {
+      this.$control.on('click', () => {
+        this.ignoreFocusOpen = true;
+        setTimeout(() => {
+          // Trigger onFocus and open dropdown.
+          this.ignoreFocusOpen = false;
+        }, 50);
+      });
+    },
+    // Open dropdown after timeout of onClick.
+    onFocus: function () {
+      if (!this.ignoreFocusOpen) {
+        this.open();
       }
-  }
+    }
+  };
 
   function refreshOptions(options) {
     // Default options if parameter is empty.
@@ -239,8 +239,8 @@ window.onload = function () {
   function getLastImage() {
     // Get the image from the last step.
     let imgs = document.getElementsByClassName('step-thumbnail');
-    let lastStepImage = imgs[imgs.length-1];
-    return lastStepImage.getAttribute("src");
+    let lastStepImage = imgs[imgs.length - 1];
+    return lastStepImage.getAttribute('src');
   }
 
   /**
@@ -255,8 +255,8 @@ window.onload = function () {
 
       // Create a new pdf with the same dimensions as the image.
       const pdf = new jsPDF({
-        orientation: pageHeight > pageWidth ? "portrait": "landscape",
-        unit: "px",
+        orientation: pageHeight > pageWidth ? 'portrait' : 'landscape',
+        unit: 'px',
         format: [pageHeight, pageWidth]
       });
 
@@ -264,7 +264,7 @@ window.onload = function () {
       pdf.addImage(imageDataURL, 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
 
       // Save the pdf with the filename specified here:
-      pdf.save("index.pdf");
+      pdf.save('index.pdf');
     });
   }
 
@@ -301,8 +301,8 @@ window.onload = function () {
         step.options.step.imgElement.src = reader.result;
       else
         step.imgElement.src = reader.result;
-      insertPreview.updatePreviews(reader.result, '#addStep');
-      insertPreview.updatePreviews(sequencer.steps[0].imgElement.src, '.insertDiv');
+      
+      insertPreview.updatePreviews(reader.result, document.querySelector('#addStep'));
     },
     onTakePhoto: function (url) {
       var step = sequencer.steps[0];
@@ -312,16 +312,15 @@ window.onload = function () {
         step.options.step.imgElement.src = url;
       else
         step.imgElement.src = url;
-      insertPreview.updatePreviews(url, '#addStep');
-      insertPreview.updatePreviews(sequencer.steps[0].imgElement.src, '.insertDiv');
+      insertPreview.updatePreviews(url, document.querySelector('#addStep'));
     }
   });
 
   setupCache();
 
   if (urlHash.getUrlHashParameter('src')) {
-    insertPreview.updatePreviews(urlHash.getUrlHashParameter('src'), '#addStep');
+    insertPreview.updatePreviews(urlHash.getUrlHashParameter('src'), document.querySelector('#addStep'));
   } else {
-    insertPreview.updatePreviews('images/tulips.png', '#addStep');
+    insertPreview.updatePreviews('images/tulips.png', document.querySelector('#addStep'));
   }
 };

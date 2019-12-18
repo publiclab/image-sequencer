@@ -33,6 +33,10 @@ function setInputStepInit() {
       document.getElementById('video').style.display = 'inline';
       document.getElementById('capture').style.display = 'inline';
       document.getElementById('close').style.display = 'inline';
+
+      fileInput.css('display', 'none');
+      takePhoto.css('display', 'none');
+      document.getElementById('dropzone-text').style.display = 'none';
       
       var video = document.getElementById('video');
       canvas = document.getElementById('canvas'),
@@ -69,6 +73,10 @@ function setInputStepInit() {
         document.getElementById('video').style.display = 'none';
         document.getElementById('capture').style.display = 'none';
         document.getElementById('close').style.display = 'none';
+
+        fileInput.css('display', 'block');
+        takePhoto.css('display', 'block');
+        document.getElementById('dropzone-text').style.display = 'block';
       }
     }
  

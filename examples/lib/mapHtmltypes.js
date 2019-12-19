@@ -2,8 +2,8 @@ function mapHtmlTypes(inputInfo){
   var htmlType;
   switch(inputInfo.type.toLowerCase()){
   case 'integer':
-htmlType = inputInfo.min != undefined ? 'range' : 'number';
-break;
+    htmlType = inputInfo.min != undefined ? 'range' : 'number';
+    break;
   case 'string':
     htmlType = 'text';
     break;
@@ -17,8 +17,8 @@ break;
     htmlType = inputInfo.min != undefined ? 'range' : 'text';
     break;
   default:
-htmlType = 'text';
-break;
+    htmlType = 'text';
+    break;
   }
   var response = Object.assign({}, inputInfo);
   response.type = htmlType;

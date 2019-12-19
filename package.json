@@ -8,7 +8,7 @@
     "test": "TEST=true istanbul cover tape test/core/*.js test/core/ui/user-interface.js test/core/modules/*.js | tap-spec; node test/core/sequencer/benchmark.js;  browserify test/core/sequencer/meta-modules.js test/core/sequencer/image-sequencer.js test/core/sequencer/chain.js  test/core/sequencer/replace.js test/core/sequencer/import-export.js test/core/sequencer/run.js test/core/sequencer/dynamic-imports.js test/core/util/*.js | tape-run --render=\"tap-spec\"",
     "test-ui": "node node_modules/jasmine/bin/jasmine test/ui/spec/*.js",
     "test-ui-2": "node ./node_modules/.bin/jest",
-    "setup": "npm i && npm i -g grunt grunt-cli && grunt build",
+    "setup": "npm i && npm i -g grunt grunt-cli && grunt build $$ npm rebuild --build-from-source",
     "start": "grunt serve"
   },
   "lint-staged": {

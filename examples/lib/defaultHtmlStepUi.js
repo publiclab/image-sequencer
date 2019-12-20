@@ -28,7 +28,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
       <div class="container-fluid step-container">\
           <div class="panel panel-default">\
             <div class="panel-heading">\
-              <div class="trash-container pull-right"><button type="button" class="btn btn-link ' + step.name + ' dimension-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title=""><i class="fa fa-info-circle"></i></button></div>\
+              <div class="trash-container pull-right">\
+                <a type="button" target="_blank" href="https://developer.mozilla.org/en-US/docs/WebAssembly" style="display: none;" class="btn btn-link general-tooltip wasm-tooltip" data-toggle="tooltip" data-html="true" data-original-title="<div style=\'text-align: center\'><p>This step is Web Assembly accelerated. Click to Read More</div>">\
+                  <i class="fa fa-bolt"></i>\
+                </a>\
+                <button type="button" class="btn btn-link ' + step.name + ' general-tooltip dimension-tooltip" data-toggle="tooltip" data-html="true" data-original-title="">\
+                  <i class="fa fa-info-circle"></i>\
+                </button>\
+              </div>\
               <h3 class="panel-title">' +
                 '<span class="toggle mouse">' + step.name + ' <span class="caret toggleIcon rotated"></span>\
                  <span class="load-spin pull-right" style="display:none;padding:1px 8px;"><i class="fa fa-circle-o-notch fa-spin"></i></span>\
@@ -335,7 +342,15 @@ function DefaultHtmlStepUi(_sequencer, options) {
       _sequencer.getImageDimensions(step.imgElement.src, function (dim) {
         step.ui.querySelector('.' + step.name).attributes['data-original-title'].value = `<div style="text-align: center"><p>Image Width: ${dim.width}<br>Image Height: ${dim.height}</br></div>`;
       });
-    });
+    })
+
+    // Handle the wasm bolt display
+
+    if (step.useWasm) {
+      if (step.wasmSuccess) $step('.wasm-tooltip').fadeIn();
+      else $step('.wasm-tooltip').fadeOut();
+    }
+    else $step('.wasm-tooltip').fadeOut();
   }
 
   function imageHover(step){

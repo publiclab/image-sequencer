@@ -15,6 +15,7 @@ module.exports = function PixelManipulation(image, options) {
   // like input.pixelManipulation(options)
   
   const pixelSetter = require('../../util/pixelSetter.js');
+  let wasmSuccess; // Whether wasm succeded or failed
 
   if (arguments.length <= 1) {
     options = image;
@@ -67,10 +68,11 @@ module.exports = function PixelManipulation(image, options) {
           var data = Buffer.concat(chunks, totalLength).toString('base64');
           var datauri = 'data:image/' + options.format + ';base64,' + data;
           if (options.output)
-            options.output(options.image, datauri, options.format);
+            options.output(options.image, datauri, options.format, wasmSuccess);
           if (options.callback) options.callback();
         });
       }
+
       if (res) {
         pixels = res;
         generateOutput();
@@ -113,6 +115,7 @@ module.exports = function PixelManipulation(image, options) {
 
       const inBrowser = (options.inBrowser) ? 1 : 0;
       const test = (process.env.TEST) ? 1 : 0;
+
       if (options.useWasm) {
         if (options.inBrowser) {
 
@@ -122,10 +125,14 @@ module.exports = function PixelManipulation(image, options) {
             WebAssembly.instantiate(bytes, imports)
           ).then(results => {
             results.instance.exports.manipulatePixel(pixels.shape[0], pixels.shape[1], inBrowser, test);
+            wasmSuccess = true;
+
             extraOperation();
           }).catch(err => {
             console.log(err);
             console.log('WebAssembly acceleration errored; falling back to JavaScript in PixelManipulation');
+            wasmSuccess = false;
+
             perPixelManipulation();
             extraOperation();
           });
@@ -137,17 +144,23 @@ module.exports = function PixelManipulation(image, options) {
             const buf = fs.readFileSync(wasmPath);
             WebAssembly.instantiate(buf, imports).then(results => {
               results.instance.exports.manipulatePixel(pixels.shape[0], pixels.shape[1], inBrowser, test);
+              wasmSuccess = true;
+
               extraOperation();
             });
           }
           catch(err){
             console.log(err);
             console.log('WebAssembly acceleration errored; falling back to JavaScript in PixelManipulation');
+            wasmSuccess = false;
+
             perPixelManipulation();
             extraOperation();
           }
         }
       } else {
+        wasmSuccess = false;
+
         perPixelManipulation();
         extraOperation();
       }

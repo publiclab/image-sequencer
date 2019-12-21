@@ -44,7 +44,6 @@ body > .container-fluid {
 .panel {
   margin-left: 20px;
   margin-right: 20px;
-  min-width:400px;
 }
 
 .mouse {
@@ -66,7 +65,6 @@ body > .container-fluid {
   border-radius: 8px;
   text-align: center;
   color: #444;
-  min-width:300px;
 }
 
 .dropzone input {
@@ -156,6 +154,13 @@ body > .container-fluid {
   margin: 0px 0px 0px 10px;
   width: 250px;
 }
+
+@media(max-width: 768px) {
+    #dropzone {
+      margin: 0 0% 30px;
+    }
+}
+
 #dwnld {
   max-width: 500px;
   margin: 20px auto;

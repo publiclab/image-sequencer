@@ -55,11 +55,8 @@ module.exports = function Dynamic(options, UI, util) {
           return [r1, g1, b1, a1];
       }
 
-      function output(image, datauri, mimetype) {
-
-        // This output is accessible by Image Sequencer
-        step.output = { src: datauri, format: mimetype };
-
+      function output(image, datauri, mimetype, wasmSuccess) {
+        step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
       }
 
       // run PixelManipulation on first Image pixels

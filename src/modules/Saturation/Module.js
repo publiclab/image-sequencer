@@ -31,11 +31,8 @@ module.exports = function Saturation(options, UI) {
       return [Math.round(r), Math.round(g), Math.round(b), a];
     }
 
-    function output(image, datauri, mimetype) {
-
-      // This output is accesible by Image Sequencer
-      step.output = { src: datauri, format: mimetype };
-
+    function output(image, datauri, mimetype, wasmSuccess) {
+      step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
     }
 
     return require('../_nomodule/PixelManipulation.js')(input, {

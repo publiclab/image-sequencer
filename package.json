@@ -5,10 +5,10 @@
   "main": "src/ImageSequencer.js",
   "scripts": {
     "debug": "TEST=true node ./index.js -i ./examples/images/monarch.png -s invert",
-    "test": "TEST=true istanbul cover tape test/core/*.js test/core/ui/user-interface.js test/core/modules/*.js | tap-spec; node test/core/sequencer/benchmark.js;  browserify test/core/sequencer/meta-modules.js test/core/sequencer/image-sequencer.js test/core/sequencer/chain.js  test/core/sequencer/replace.js test/core/sequencer/import-export.js test/core/sequencer/run.js test/core/sequencer/dynamic-imports.js test/core/util/*.js | tape-run --render=\"tap-spec\"",
+    "test": "TEST=true istanbul cover tape test/core/*.js test/core/ui/user-interface.js test/core/modules/*.js | tap-spec; node test/core/sequencer/benchmark.js; grunt tests; cat ./output/core-tests.js | tape-run --render=\"tap-spec\"",
     "test-ui": "node node_modules/jasmine/bin/jasmine test/ui/spec/*.js",
-    "test-ui-2":"node ./node_modules/.bin/jest",
-    "setup": "npm i && npm i -g grunt grunt-cli && grunt build",
+    "test-ui-2": "node ./node_modules/.bin/jest",
+    "setup": "npm i && npm i -g grunt grunt-cli && grunt build $$ npm rebuild --build-from-source",
     "start": "grunt serve"
   },
   "lint-staged": {
@@ -33,7 +33,7 @@
   "dependencies": {
     "atob": "^2.1.2",
     "base64-img": "^1.0.4",
-    "bootstrap": "~3.4.0",
+    "bootstrap": "^3.4.1",
     "bootstrap-colorpicker": "^2.5.3",
     "buffer": "~5.4.0",
     "commander": "^3.0.1",
@@ -47,7 +47,7 @@
     "get-pixels": "~3.3.0",
     "gifshot": "^0.4.5",
     "glfx": "0.0.4",
-    "gpu.js": "^2.0.0-rc.12",
+    "gpu.js": "^2.3.1",
     "image-sequencer-invert": "^1.0.0",
     "imagejs": "0.0.9",
     "imagemin": "^7.0.0",

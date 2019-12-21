@@ -38,6 +38,7 @@ function LoadImage(ref, name, src, main_callback) {
         callback(datauri, step);
       };
       image.crossOrigin = 'Anonymous';
+      // Allow to access remote images
       image.src = src;
     }
     else {

@@ -33,7 +33,7 @@ body > .container-fluid {
 
 .center-align {
   display: flex;
-  justify-content: center;
+  justify-content: left;
   text-align:center;
 }
 

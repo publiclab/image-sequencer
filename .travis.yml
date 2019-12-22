@@ -13,6 +13,7 @@ before_script:
 script:
   - npm test
   - npm run test-ui
+  - npm run test-ui-2
   - grunt build
 after_success:
   - bash <(curl -s https://codecov.io/bash)

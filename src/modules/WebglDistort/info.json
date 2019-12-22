@@ -1,8 +1,6 @@
 {
     "name": "webgl-distort",
-    "requires": [
-        "webgl"
-    ],
+    "requires": ["webgl"],
     "description": "Transform perspective of an image based on corner coordinates",
     "inputs": {
         "nw": {

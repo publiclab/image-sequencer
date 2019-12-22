@@ -5,6 +5,8 @@ var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js'),
   urlHash = require('./lib/urlHash.js'),
   insertPreview = require('./lib/insertPreview.js');
 
+const versionNumber = require('../package.json').version;
+
 window.onload = function () {
   sequencer = ImageSequencer();
 
@@ -27,6 +29,12 @@ window.onload = function () {
       }
     }
   };
+
+  function displayVersionNumber() {
+    console.log("Displayed version number successfully.");
+    $('#version-number-text').text("Image Sequencer v" + versionNumber);
+  }
+  displayVersionNumber();
 
   function refreshOptions(options) {
     // Default options if parameter is empty.
@@ -301,7 +309,7 @@ window.onload = function () {
         step.options.step.imgElement.src = reader.result;
       else
         step.imgElement.src = reader.result;
-      
+
       insertPreview.updatePreviews(reader.result, document.querySelector('#addStep'));
     },
     onTakePhoto: function (url) {

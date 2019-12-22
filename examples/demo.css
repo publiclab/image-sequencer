@@ -315,6 +315,12 @@ a.name-header{
   color: #444;
 }
 
+#version-number-text {
+  text-align: center;
+  padding-top: 100px;
+  color: gray;
+}
+
 /* Non float rightward alignment*/
 .right {
   margin-left: auto;

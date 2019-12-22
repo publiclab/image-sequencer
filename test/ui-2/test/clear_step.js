@@ -37,10 +37,11 @@ describe('Clear Steps', () => {
   test('Crop Module is added', async () => {
     await page.click('[data-value=\'crop\']');
     const Length6 = await page.evaluate(() => document.querySelectorAll('.step').length);
-    
+    expect(Length6).toBe(7);
+  }, timeout);
+  test('Clear Step is pressed', async () => {
     await page.click('#resetButton');
     const Length7 = await page.evaluate(() => document.querySelectorAll('.step').length);
-    expect(Length6).toBe(7);
     expect(Length7).toBe(0);
   }, timeout);
 });

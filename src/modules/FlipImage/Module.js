@@ -25,8 +25,9 @@ module.exports = function FlipImage(options, UI) {
         }
         return require('./flipImage')(oldPixels, pixels, options.Axis);
       }
-      function output(image, datauri, mimetype) {
-        step.output = { src: datauri, format: mimetype };
+      
+      function output(image, datauri, mimetype, wasmSuccess) {
+        step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
       }
 
       return require('../_nomodule/PixelManipulation.js')(input, {

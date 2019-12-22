@@ -10,7 +10,7 @@ module.exports = function BlobAnalysis(options, UI){
   
     var step = this;
 
-    var priorStep = this.getStep(-1); // get the previous step to process it
+    var priorStep = this.getStep(-1); // Get the previous step to process it
 
     function extraManipulation(pixels){
   
@@ -18,9 +18,8 @@ module.exports = function BlobAnalysis(options, UI){
       return pixels;
     }
   
-    function output(image, datauri, mimetype){
-  
-      step.output = { src: datauri, format: mimetype};
+    function output(image, datauri, mimetype, wasmSuccess) {
+      step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
     }
   
     return require('../_nomodule/PixelManipulation.js')(input, {

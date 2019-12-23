@@ -24,11 +24,8 @@ module.exports = function Exposure(options, UI) {
       return [r, g, b, a];
     }
 
-    function output(image, datauri, mimetype) {
-
-      // This output is accessible by Image Sequencer
-      step.output = { src: datauri, format: mimetype };
-
+    function output(image, datauri, mimetype, wasmSuccess) {
+      step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
     }
 
     return require('../_nomodule/PixelManipulation.js')(input, {

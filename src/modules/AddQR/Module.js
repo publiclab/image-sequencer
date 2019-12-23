@@ -18,12 +18,13 @@ module.exports = function AddQR(options, UI) {
         return [r, g, b, a];
       }
 
-      function extraManipulation(pixels, generateOutput) {
+      function extraManipulation(pixels) {
         if (err) {
           console.log(err);
           return;
         }
-        require('./QR')(options, pixels, oldPixels, generateOutput);
+        require('./QR')(options, pixels, oldPixels);
+        return pixels;
       }
 
       function output(image, datauri, mimetype, wasmSuccess) {

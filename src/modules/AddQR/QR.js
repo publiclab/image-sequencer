@@ -37,7 +37,8 @@ module.exports = exports = function (options, pixels, oldPixels, callback) {
 
         }
       }
-      callback();
+      
+      if (callback) callback();
 
     });
   });

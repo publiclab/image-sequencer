@@ -24,7 +24,6 @@ module.exports = function Brightness(options, UI) {
     var step = this, val = (options.brightness) / 100.0;
 
     function changePixel(r, g, b, a) {
-
       r = Math.min(val * r, 255);
       g = Math.min(val * g, 255);
       b = Math.min(val * b, 255);

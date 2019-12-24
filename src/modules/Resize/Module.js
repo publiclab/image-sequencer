@@ -17,10 +17,6 @@ module.exports = function Resize(options, UI) {
 
     var imagejs = require('imagejs');
 
-    function changePixel(r, g, b, a) {
-      return [r, g, b, a];
-    }
-
     function extraManipulation(pixels) {
       // value above 100% scales up, and below 100% scales down
       var resize_value = parseInt(options.resize.slice(0, -1));
@@ -50,10 +46,10 @@ module.exports = function Resize(options, UI) {
     function output(image, datauri, mimetype, wasmSuccess) {
       step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
     }
+
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       ui: options.step.ui,
-      changePixel: changePixel,
       extraManipulation: extraManipulation,
       format: input.format,
       image: options.image,

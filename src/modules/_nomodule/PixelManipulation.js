@@ -76,13 +76,6 @@ module.exports = function PixelManipulation(image, options) {
       function generateOutput() {
         if (isGIF) {
           const dataPromises = [];
-          // getDataUri(frames[0], options.format).then(datauri => {
-          //   console.log(perFrameShape, 'p')
-          //   if (options.output)
-          //     options.output(options.image, datauri, options.format, wasmSuccess);
-          //   if (options.callback) options.callback();
-          // })
-
           for (let f = 0; f < numFrames; f++) {
             dataPromises.push(getDataUri(frames[f], options.format));
           }
@@ -96,7 +89,6 @@ module.exports = function PixelManipulation(image, options) {
               gifHeight: perFrameShape[1]
             },
             function(obj) {
-              console.log('cb', perFrameShape);
               if (obj.error) {
                 console.log('gifshot error: ', obj.error);
               }
@@ -169,6 +161,8 @@ module.exports = function PixelManipulation(image, options) {
     else {
       frames.push(pixels);
     }
+
+    frames.forEach(frame => console.log(frame.shape));
 
     for (let f = 0; f < numFrames; f++) {
       let framePix = frames[f];

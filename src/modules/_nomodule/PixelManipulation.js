@@ -27,10 +27,10 @@ module.exports = function PixelManipulation(image, options) {
   let frames = []; // Ndarray of pixels of each frame
   let perFrameShape; // Width, Height and color chanels of each frame
   let wasmSuccess; // Whether wasm succeded or failed
-  let doRender = true; // To block rendering in async modules
+  let renderableFrames; // To block rendering in async modules
 
   function setRenderState(state) {
-    doRender = state;
+    renderableFrames += state ? 1 : -1;
   }
 
   if (arguments.length <= 1) {
@@ -78,7 +78,7 @@ module.exports = function PixelManipulation(image, options) {
     // There may be a more efficient means to encode an image object,
     // but node modules and their documentation are essentially arcane on this point.
     function generateOutput() {
-      if (doRender) {
+      if (!(renderableFrames < numFrames)) {
         if (isGIF) {
           const dataPromises = [];
           for (let f = 0; f < numFrames; f++) {
@@ -125,6 +125,7 @@ module.exports = function PixelManipulation(image, options) {
       ] = shape;
 
       numFrames = noOfFrames;
+      renderableFrames = noOfFrames;
       perFrameShape = [width, height, channels];
 
       const numPixelsInFrame = width * height;

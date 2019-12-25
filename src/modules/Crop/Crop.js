@@ -35,21 +35,7 @@ module.exports = function Crop(pixels, options, cb) {
     options.h = coord.h.valInp;
   });
 
-  console.log(w, h, iw, ih);
-
   const newPixels = new ndarray([], [w, h, 4]);
-
-  // for (var n = oy; n < oy + h; n++) {
-  //   var offsetValue = 4 * w * n;
-  //   if(n < ih){
-  //     var start = n * 4 * iw + ox * 4;
-  //     var end = n * 4 * iw + ox * 4 + 4 * w;
-  //     var pushArray = Array.from(pixels.data.slice(start, end ));
-  //     array.push.apply(array, pushArray);
-  //   } else {
-  //     array.push.apply(array, backgroundArray);
-  //   }
-  // }
 
   for (let x = 0; x < w; x++) {
     for (let y = 0; y < h; y++) {
@@ -67,11 +53,6 @@ module.exports = function Crop(pixels, options, cb) {
       ], newPixels); // Set the background color
     }
   }
-  
-  // var newarray = Uint8Array.from(array);
-  // pixels.data = newarray;
-  // pixels.shape = [w, h, 4];
-  // pixels.stride[1] = 4 * w;
 
   if (cb) cb();
 

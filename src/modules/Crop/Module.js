@@ -29,21 +29,19 @@ module.exports = function CropModule(options, UI) {
 
     function extraManipulation(pixels) {
       const newPixels = require('./Crop')(pixels, options, function() {
-        // // Tell the UI that the step has been drawn
-        // UI.onComplete(options.step);
+        // Tell the UI that the step has been drawn
+        UI.onComplete(options.step);
 
-        // // We should do this via event/listener:
-        // if (ui && ui.hide) ui.hide();
+        // We should do this via event/listener:
+        if (ui && ui.hide) ui.hide();
 
-        // // Start custom UI setup (draggable UI)
-        // // Only once we have an input image
-        // if (setupComplete === false && options.step.inBrowser && !options.noUI) {
-        //   setupComplete = true;
-        //   ui.setup();
-        // }
+        // Start custom UI setup (draggable UI)
+        // Only once we have an input image
+        if (setupComplete === false && options.step.inBrowser && !options.noUI) {
+          setupComplete = true;
+          ui.setup();
+        }
       });
-
-      console.log(newPixels);
       return newPixels;
     }
 

@@ -181,8 +181,8 @@ module.exports = function PixelManipulation(image, options) {
 
 
       if (options.preProcess){
-        framePix = options.preProcess(framePix); // Allow for preprocessing of framePix.
-        perFrameShape = framePix.shape;
+        frames[f] = options.preProcess(framePix) || framePix; // Allow for preprocessing of framePix.
+        perFrameShape = frames[f].shape;
       }
 
       if (options.changePixel) {
@@ -262,8 +262,8 @@ module.exports = function PixelManipulation(image, options) {
         perPixelManipulation();
       }
       if (options.extraManipulation){
-        framePix = options.extraManipulation(framePix, setRenderState, generateOutput) || framePix; // extraManipulation is used to manipulate each pixel individually.
-        perFrameShape = framePix.shape;
+        frames[f] = options.extraManipulation(framePix, setRenderState, generateOutput) || framePix; // extraManipulation is used to manipulate each pixel individually.
+        perFrameShape = frames[f].shape;
       }
     }
 

@@ -1,9 +1,9 @@
 const pixelSetter = require('../../util/pixelSetter.js'),
   getPixels = require('get-pixels'),
   QRCode = require('qrcode');
-module.exports = exports = function (options, pixels, oldPixels) {
+module.exports = exports = function (options, pixels, oldPixels, cb) {
 
-  QRCode.toDataURL(options.qrCodeString, {width: options.size, scale: 1}, function (err, url) {
+  QRCode.toDataURL(options.qrCodeString, {width: options.size, scale: 1}, function (error, url) {
     getPixels(url, function (err, qrPixels) {
       if (err) {
         console.log('get-pixels error: ', err);
@@ -20,12 +20,10 @@ module.exports = exports = function (options, pixels, oldPixels) {
           if (m >= xe && n >= ye) {
             pixelSetter(m, n, [qrPixels.get(m - xe, n - ye, 0), qrPixels.get(m - xe, n - ye, 1), qrPixels.get(m - xe, n - ye, 2), qrPixels.get(m - xe, n - ye, 3)], pixels);
           }
-          else {
-            pixelSetter(m, n, [oldPixels.get(m, n, 0), oldPixels.get(m, n, 1), oldPixels.get(m, n, 2), oldPixels.get(m, n, 3)], pixels);
-          }
-
         }
       }
+      
+      if(cb) cb();
     });
   });
 };

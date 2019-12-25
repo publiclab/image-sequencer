@@ -27,6 +27,11 @@ module.exports = function PixelManipulation(image, options) {
   let frames = []; // Ndarray of pixels of each frame
   let perFrameShape; // Width, Height and color chanels of each frame
   let wasmSuccess; // Whether wasm succeded or failed
+  let doRender = true; // To block rendering in async modules
+
+  function setRenderState(state) {
+    doRender = state;
+  }
 
   if (arguments.length <= 1) {
     options = image;
@@ -70,10 +75,10 @@ module.exports = function PixelManipulation(image, options) {
       return;
     }
 
-    function extraOperation() {
-      // There may be a more efficient means to encode an image object,
-      // but node modules and their documentation are essentially arcane on this point.
-      function generateOutput() {
+    // There may be a more efficient means to encode an image object,
+    // but node modules and their documentation are essentially arcane on this point.
+    function generateOutput() {
+      if (doRender) {
         if (isGIF) {
           const dataPromises = [];
           for (let f = 0; f < numFrames; f++) {
@@ -107,8 +112,6 @@ module.exports = function PixelManipulation(image, options) {
           });
         }
       }
-
-      generateOutput();
     }
 
     if (isGIF) {
@@ -161,8 +164,6 @@ module.exports = function PixelManipulation(image, options) {
     else {
       frames.push(pixels);
     }
-
-    frames.forEach(frame => console.log(frame.shape));
 
     for (let f = 0; f < numFrames; f++) {
       let framePix = frames[f];
@@ -260,11 +261,11 @@ module.exports = function PixelManipulation(image, options) {
         perPixelManipulation();
       }
       if (options.extraManipulation){
-        framePix = options.extraManipulation(framePix) || framePix; // extraManipulation is used to manipulate each pixel individually.
+        framePix = options.extraManipulation(framePix, setRenderState, generateOutput) || framePix; // extraManipulation is used to manipulate each pixel individually.
         perFrameShape = framePix.shape;
       }
     }
 
-    extraOperation();
+    generateOutput();
   });
 };

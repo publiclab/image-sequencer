@@ -303,6 +303,11 @@ window.onload = function () {
         step.imgElement.src = reader.result;
       
       insertPreview.updatePreviews(reader.result, document.querySelector('#addStep'));
+      //Change the tooltip as a new image is loaded
+      sequencer.getImageDimensions(reader.result, function (dim) {
+        step.ui.querySelector('.' + step.name).attributes['data-original-title'].value = `<div style="text-align: center"><p>Image Width: ${dim.width}<br>Image Height: ${dim.height}</br></div>`;
+      });
+      //
     },
     onTakePhoto: function (url) {
       var step = sequencer.steps[0];

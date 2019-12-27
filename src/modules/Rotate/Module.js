@@ -53,7 +53,7 @@ module.exports = function Rotate(options, UI) {
         ]
       );
 
-      pixels = require('./Rotate')(pixels, finalPixels, options, rotate_value, width, height, cos, sin);
+      pixels = require('./Rotate')(pixels, finalPixels, rotate_value, width, height, cos, sin);
       return pixels;
     }
       

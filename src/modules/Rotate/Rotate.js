@@ -2,7 +2,7 @@ const imagejs = require('imagejs'),
   ndarray = require('ndarray'),
   pixelSetter = require('../../util/pixelSetter');
 
-module.exports = function Rotate(pixels, finalPixels, options, rotate_value, width, height, cos, sin){
+module.exports = function Rotate(pixels, finalPixels, rotate_value, width, height, cos, sin){
   const height_half = Math.floor(height / 2),
     width_half = Math.floor(width / 2);
   dimension = width + height;

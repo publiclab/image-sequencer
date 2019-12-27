@@ -41,7 +41,6 @@ module.exports = function Resize(options, UI) {
         }
       }
 
-
       const resized = bitmap.resize({
         width: new_width,
         height: new_height,

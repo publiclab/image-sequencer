@@ -6,7 +6,9 @@ module.exports = function ColorTemperature(options, UI) {
 
   function draw(input, callback, progressObj) {
 
+    options.temperature = options.temperature === undefined ? '6000' : options.temperature;
     options.temperature = (options.temperature > '40000') ? '40000' : options.temperature;
+    options.temperature = (options.temperature < '0') ? '0' : options.temperature;
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;

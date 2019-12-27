@@ -22,6 +22,8 @@ module.exports = function Resize(options, UI) {
       // Value above 100% scales up, and below 100% scales down
       const resize_value = parseInt(options.resize.slice(0, -1));
 
+      if (resize_value == 100) return pixels;
+
 
       const new_width = Math.round(pixels.shape[0] * (resize_value / 100)),
         new_height = Math.round(pixels.shape[1] * (resize_value / 100));

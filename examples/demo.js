@@ -3,11 +3,9 @@ var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js'),
   intermediateHtmlStepUi = require('./lib/intermediateHtmlStepUi.js'),
   DefaultHtmlStepUi = require('./lib/defaultHtmlStepUi.js'),
   urlHash = require('./lib/urlHash.js'),
-  insertPreview = require('./lib/insertPreview.js');
+  insertPreview = require('./lib/insertPreview.js'),
+  versionManagement = require('./lib/versionManagement.js');
 
-//const semver = require('../node_modules/semver');
-const currentVersionNumber = require('../package.json').version;
-var latestVersionNumber;
 
 window.onload = function () {
   sequencer = ImageSequencer();
@@ -32,32 +30,18 @@ window.onload = function () {
     }
   };
 
+  versionManagement.getLatestVersionNumber(function(versionNumber) {
+    console.log("The latest version of image-sequencer is v" + versionNumber);
+  });
+  console.log(versionManagement.getLocalVersionNumber());
+
+  
+
+
   function displayVersionNumber() {
-    $('#version-number-text').text("Image Sequencer v" + currentVersionNumber);
+    $('#version-number-text').text("Image Sequencer v" + versionManagement.getLocalVersionNumber());
   }
   displayVersionNumber();
-
-  // Get the current version number from package.json on GitHub.
-  function getLatestVersionNumber() {
-    var request = new XMLHttpRequest();
-    request.onreadystatechange = function() {
-      if(request.readyState == 4 && request.status == 200) {
-        var response = JSON.parse(this.responseText);
-        latestVersionNumber = JSON.parse(atob(response.content)).version;
-        console.log("The latest NPM version number from GitHub is: " + latestVersionNumber);
-        if(true /* Local version is less than latest NPM version */) { //TODO: change to semver.lt(currentVersionNumber, latestVersionNumber) once semver is successfully included
-          console.log("Image sequencer is not on the latest version and should be updated.");
-        } else {
-          console.log("Image sequencer is up to date with the latest version.");
-        }
-      }
-    }
-    request.open("GET", "https://api.github.com/repos/publiclab/image-sequencer/contents/package.json", true);
-    request.send();
-  }
-  getLatestVersionNumber();
-
-  //TODO: implement function to fetch latest version of image-sequencer.
 
   function refreshOptions(options) {
     // Default options if parameter is empty.

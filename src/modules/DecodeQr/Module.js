@@ -19,7 +19,7 @@ module.exports = function DoNothing(options, UI) {
       const [width, height] = pixels.shape;
 
       const decoded = jsQR(pixels.data, width, height);
-  
+        
       options.step.qrval = decoded === null ? 'undefined ' : decoded.data;
 
       return pixels;

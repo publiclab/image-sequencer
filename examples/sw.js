@@ -1,4 +1,4 @@
-const staticCacheName = 'image-sequencer-static-v3.5.0';
+const staticCacheName = 'image-sequencer-static-v3.5.1';
 // const versionManagement = require('./lib/versionManagement.js');
 self.addEventListener('install', event => {
   console.log('Attempting to install service worker');

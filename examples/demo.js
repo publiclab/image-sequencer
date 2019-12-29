@@ -35,11 +35,12 @@ window.onload = function () {
   });
   console.log(versionManagement.getLocalVersionNumber());
 
-  
+
 
 
   function displayVersionNumber() {
     $('#version-number-text').text("Image Sequencer v" + versionManagement.getLocalVersionNumber());
+    $('#version-number-top-right').text("v" + versionManagement.getLocalVersionNumber());
   }
   displayVersionNumber();
 

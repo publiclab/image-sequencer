@@ -320,7 +320,12 @@ a.name-header{
   padding-top: 100px;
   color: gray;
 }
-
+#version-number-top-right {
+  position: fixed;
+  right: 2%;
+  top: 5%;
+  color: lightgray;
+}
 /* Non float rightward alignment*/
 .right {
   margin-left: auto;

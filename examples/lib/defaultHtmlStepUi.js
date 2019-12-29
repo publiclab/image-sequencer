@@ -45,7 +45,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
             <div class="panel-body cal collapse in">\
               <div class="row step">\
                 <div class="col-md-4 details container-fluid">\
-                  <div class="cal collapse in"><p>' +
+                  <div class="cal collapse in"><p><p>POS_X= <span class="test1">NULL</span> POS_Y= <span class="test2">NULL</span></p>' +
                     '<i>' + (step.description || '') + '</i>' +
                  '</p></div>\
                 </div>\
@@ -213,7 +213,10 @@ function DefaultHtmlStepUi(_sequencer, options) {
     $(step.imgElement).on('mousemove', _.debounce(() => imageHover(step), 150));
     $(step.imgElement).on('click', (e) => {e.preventDefault(); });
     $stepAll('#color-picker').colorpicker();
-
+    $(step.imgElement).mouseleave(function( event ) {
+      step.ui.querySelector('.test1').innerHTML = 'NULL';
+      step.ui.querySelector('.test2').innerHTML = 'NULL';
+    });
     function saveOptions(e) { // 1. SAVE OPTIONS
       e.preventDefault();
       if (optionsChanged){
@@ -342,7 +345,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       _sequencer.getImageDimensions(step.imgElement.src, function (dim) {
         step.ui.querySelector('.' + step.name).attributes['data-original-title'].value = `<div style="text-align: center"><p>Image Width: ${dim.width}<br>Image Height: ${dim.height}</br></div>`;
       });
-    })
+    });
 
     // Handle the wasm bolt display
 
@@ -369,6 +372,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
       var yPos = e.pageY - offset.top;
       var myData = context.getImageData(xPos, yPos, 1, 1);
       img[0].title = 'rgb: ' + myData.data[0] + ',' + myData.data[1] + ',' + myData.data[2];//+ rgbdata;
+      step.ui.querySelector('.test1').innerHTML = Math.ceil(xPos).toString();
+      step.ui.querySelector('.test2').innerHTML = Math.ceil(yPos).toString();
     });
   }
 

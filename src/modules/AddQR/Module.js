@@ -20,10 +20,10 @@ module.exports = function AddQR(options, UI) {
 
     function extraManipulation(pixels, setRenderState, generateOutput) {
       const oldPixels = _.cloneDeep(pixels);
-      setRenderState(false);
+      setRenderState(false); // Prevent rendering of final output image until extraManipulation completes.
 
       require('./QR')(options, pixels, oldPixels, () => {
-        setRenderState(true);
+        setRenderState(true); // Allow rendering in the callback.
         generateOutput();
       });
     }

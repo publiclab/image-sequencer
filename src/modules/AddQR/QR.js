@@ -9,20 +9,28 @@ module.exports = exports = function (options, pixels, oldPixels, cb) {
         console.log('get-pixels error: ', err);
       }
 
-      var width = oldPixels.shape[0],
+      const width = oldPixels.shape[0],
         height = oldPixels.shape[1];
 
-      var xe = width - options.size,
+      const xe = width - options.size, // Starting pixel coordinates
         ye = height - options.size;
       
-      for (var m = 0; m < width; m++) {
-        for (var n = 0; n < height; n++) {
-          if (m >= xe && n >= ye) {
-            pixelSetter(m, n, [qrPixels.get(m - xe, n - ye, 0), qrPixels.get(m - xe, n - ye, 1), qrPixels.get(m - xe, n - ye, 2), qrPixels.get(m - xe, n - ye, 3)], pixels);
-          }
+      for (let x = xe; x < width; x++) {
+        for (let y = ye; y < height; y++) {
+          pixelSetter(
+            x,
+            y,
+            [
+              qrPixels.get(x - xe, y - ye, 0),
+              qrPixels.get(x - xe, y - ye, 1),
+              qrPixels.get(x - xe, y - ye, 2),
+              qrPixels.get(x - xe, y - ye, 3)
+            ],
+            pixels
+          );
         }
       }
-      
+
       if(cb) cb();
     });
   });

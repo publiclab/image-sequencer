@@ -30,8 +30,14 @@ module.exports = function PixelManipulation(image, options) {
     renderableFrames, // To block rendering in async modules
     resolvedFrames = 0; // Number of WASM promises resolved.
 
+  /**
+   * @description Sets the render state of the current frame. True -> Renderable and False -> Not Renderable.
+   * @param {Boolean} state Render state of the frame
+   * @returns {Number} Total number of renderable frames.
+   */
   function setRenderState(state) {
     renderableFrames += state ? 1 : -1;
+    return renderableFrames;
   }
 
   if (arguments.length <= 1) {
@@ -43,9 +49,9 @@ module.exports = function PixelManipulation(image, options) {
 
   /**
    * @description Returns the DataURI of an image from its pixels
-   * @param {"ndarray"} pix pixels ndarray of pixels of the image
-   * @param {String} format Format/MimeType of the image input
-   * @returns {Promise} Promise with DataURI as parameter in the callback
+   * @param {"ndarray"} pix pixels ndarray of pixels of the image.
+   * @param {String} format Format/MimeType of the image input.
+   * @returns {Promise} Promise with DataURI as parameter in the callback.
    */
   const getDataUri = (pix, format) => {
     return new Promise(resolve => {
@@ -80,8 +86,10 @@ module.exports = function PixelManipulation(image, options) {
     // but node modules and their documentation are essentially arcane on this point.
     function generateOutput() {
       if (!(renderableFrames < numFrames) && !(resolvedFrames < numFrames)) {
+
         if (isGIF) {
-          const dataPromises = [];
+          const dataPromises = []; // Array of all DataURI promises
+
           for (let f = 0; f < numFrames; f++) {
             dataPromises.push(getDataUri(frames[f], options.format));
           }
@@ -89,7 +97,7 @@ module.exports = function PixelManipulation(image, options) {
           Promise.all(dataPromises).then(datauris => {
             gifshot.createGIF({
               images: datauris,
-              frameDuration: 1,
+              frameDuration: 1, // Duration of each frame in 1/10 seconds.
               numFrames: datauris.length,
               gifWidth: perFrameShape[0],
               gifHeight: perFrameShape[1]
@@ -115,6 +123,7 @@ module.exports = function PixelManipulation(image, options) {
       }
     }
 
+    // Get pixels of each frame
     if (isGIF) {
       const { shape } = pixels;
 
@@ -126,12 +135,19 @@ module.exports = function PixelManipulation(image, options) {
       ] = shape;
 
       numFrames = noOfFrames;
-      renderableFrames = noOfFrames;
-      perFrameShape = [width, height, channels];
+      renderableFrames = noOfFrames; // Total number of renderable frames (mutable)
+      perFrameShape = [width, height, channels]; // Shape of ndarray of each frame
 
       const numPixelsInFrame = width * height;
 
-      // Coalesce the GIF frames
+      /* Coalesce the GIF frames (Some GIFs store delta information in between frames
+         i.e. Only the pixels which change between frames are stored. All these frames need to be
+         "Coalesced" to get final GIF frame.
+         More Info: https://www.npmjs.com/package/gif-extract-frames#why
+      */
+
+      // Credit for the below code: https://www.npmjs.com/package/gif-extract-frames
+      // We couldn't use the library because it uses ES6 features which cannot be browserified
       for (let i = 0; i < numFrames; ++i) {
         if (i > 0) {
           const currIndex = pixels.index(i, 0, 0, 0);
@@ -176,6 +192,7 @@ module.exports = function PixelManipulation(image, options) {
       frames.push(pixels);
     }
 
+    // Manipulate every frame separately
     for (let f = 0; f < numFrames; f++) {
       let framePix = frames[f];
 
@@ -191,7 +208,7 @@ module.exports = function PixelManipulation(image, options) {
 
 
       if (options.preProcess){
-        frames[f] = options.preProcess(framePix) || framePix; // Allow for preprocessing of framePix.
+        frames[f] = options.preProcess(framePix, setRenderState) || framePix; // Allow for preprocessing of framePix.
         perFrameShape = frames[f].shape;
       }
 
@@ -218,6 +235,9 @@ module.exports = function PixelManipulation(image, options) {
           }
         };
 
+        /**
+         * @description Pure JS pixelmanipulation fallback when WASM is not working.
+         */
         function perPixelManipulation() {
           for (var x = 0; x < framePix.shape[0]; x++) {
             for (var y = 0; y < framePix.shape[1]; y++) {

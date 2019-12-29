@@ -1,4 +1,5 @@
 const timeout = process.env.SLOWMO ? 30000 : 10000;
+
 const fs = require('fs');
 beforeAll(async () => {
   path = fs.realpathSync('file://../examples/index.html');
@@ -7,7 +8,9 @@ beforeAll(async () => {
 
 describe('Clear Steps', () => {
   test('Resize Module is added', async () => {
+    
     await page.waitForSelector('.step');
+    
     const Length = await page.evaluate(() => document.querySelectorAll('.step').length);
     await page.click('[data-value=\'resize\']');
     const Length1 = await page.evaluate(() => document.querySelectorAll('.step').length);
@@ -39,11 +42,26 @@ describe('Clear Steps', () => {
     const Length6 = await page.evaluate(() => document.querySelectorAll('.step').length);
     expect(Length6).toBe(7);
   }, timeout);
-  test('Clear Step is pressed', async () => {
-    await page.click('#resetButton');
+  test('Delete step is pressed', async () => {
+    await page.evaluate(() => { document.querySelectorAll('.remove')[1].click(); });
     const Length7 = await page.evaluate(() => document.querySelectorAll('.step').length);
-    expect(Length7).toBe(0);
+    expect(Length7).toBe(6);
   }, timeout);
+
+  // test('Clear Step is pressed', async () => {
+  //   page.on('dialog', async dialog => {
+  //     (await dialog.accept());
+  //   });
+  //   await page.click('#resetButton');
+  //   try {
+  //     let someVar = await page.waitForSelector('.step');
+  //     const Length8 = await page.evaluate(() => document.querySelectorAll('.step').length);
+  //     expect(Length8).toBe(1);
+  //   }
+  //   catch (error) {
+  //     console.log(error);
+  //   }
+  // }, timeout);
 });
     
     

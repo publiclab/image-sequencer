@@ -152,7 +152,16 @@ module.exports = function PixelManipulation(image, options) {
       }
 
       for (let f = 0; f < numFrames; f++) {
-        frames.push(ndarray([], perFrameShape));
+        frames.push(
+          new ndarray(
+            new Uint8Array(
+              perFrameShape[0] *
+              perFrameShape[1] *
+              perFrameShape[2]
+            ),
+            perFrameShape
+          )
+        );
 
         for (let x = 0; x < width; x++) {
           for (let y = 0; y < height; y++) {

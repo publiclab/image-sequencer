@@ -1,11 +1,9 @@
+const jsQR = require('jsqr');
 /*
  * Decodes QR from a given image.
  */
 module.exports = function DoNothing(options, UI) {
-
-  var output;
-  var jsQR = require('jsqr');
-  var getPixels = require('get-pixels');
+  let output;
 
   // This function is called everytime a step has to be redrawn
   function draw(input, callback, progressObj) {
@@ -13,20 +11,19 @@ module.exports = function DoNothing(options, UI) {
     progressObj.stop(true);
     progressObj.overrideFlag = true;
 
-    var step = this;
+    const step = this;
 
-    getPixels(input.src, function(err, pixels) {
+    function extraManipulation(pixels) {
+      options.step.qrval = ''; // Reset the option to prevent undefined errors.
 
-      if (err) throw err;
+      const [width, height] = pixels.shape;
 
-      var w = pixels.shape[0];
-      var h = pixels.shape[1];
-      var decoded = jsQR(pixels.data, w, h);
+      const decoded = jsQR(pixels.data, width, height);
+  
+      options.step.qrval = decoded === null ? 'undefined ' : decoded.data;
 
-
-      // Tell Image Sequencer that this step is complete
-      options.step.qrval = (decoded) ? decoded.data : 'undefined';
-    });
+      return pixels;
+    }
 
     function output(image, datauri, mimetype, wasmSuccess) {
       step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
@@ -34,6 +31,7 @@ module.exports = function DoNothing(options, UI) {
     
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
+      extraManipulation: extraManipulation,
       ui: options.step.ui,
       format: input.format,
       image: options.image,

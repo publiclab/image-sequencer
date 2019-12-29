@@ -6,11 +6,7 @@ module.exports = function Gradient(options, UI) {
   var output;
 
   // The function which is called on every draw.
-  function draw(input, callback, progressObj) {
-
-    progressObj.stop(true);
-    progressObj.overrideFlag = true;
-
+  function draw(input, callback) {
     var step = this;
 
     function output(image, datauri, mimetype, wasmSuccess) {
@@ -18,9 +14,10 @@ module.exports = function Gradient(options, UI) {
     }
 
     function extraManipulation(pixels) {
-      for (var i = 0; i < pixels.shape[0]; i++) {
-        for (var j = 0; j < pixels.shape[1]; j++) {
-          let val = (i / pixels.shape[0]) * 255;
+      const [w, h] = pixels.shape;
+      for (var i = 0; i < w; i++) {
+        for (var j = 0; j < h; j++) {
+          let val = (i / w) * 255;
           pixelSetter(i, j, [val, val, val, 255], pixels);
         }
       }

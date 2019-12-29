@@ -7,7 +7,8 @@ module.exports = function parseCornerCoordinateInputs(options, coord, callback) 
     Object.keys(coord).forEach(convert);
     function convert(key) {
       var val = coord[key];
-      if (val.valInp && val.valInp.slice(-1) === '%') {
+      console.log(typeof val.valInp, 'val');
+      if (val.valInp && val.valInp.toString().slice(-1) === '%') {
         val.valInp = parseInt(val.valInp, 10);
         if (val.type === 'horizontal')
           val.valInp = val.valInp * iw / 100;

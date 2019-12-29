@@ -4,11 +4,11 @@ const ndarray = require('ndarray'),
 
 module.exports = function Crop(pixels, options, cb) {
   var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
-  options.x = parseInt(options.x) || defaults.x;
-  options.y = parseInt(options.y) || defaults.y;
+  options.x = options.x || defaults.x;
+  options.y = options.y || defaults.y;
 
-  options.w = parseInt(options.w) || Math.floor(pixels.shape[0]);
-  options.h = parseInt(options.h) || Math.floor(pixels.shape[1]);
+  options.w = options.w || Math.floor(pixels.shape[0]);
+  options.h = options.h || Math.floor(pixels.shape[1]);
   options.backgroundColor = options.backgroundColor || defaults.backgroundColor;
 
   const bg = options.backgroundColor.replace('rgba', '').replace('(', '').replace(')', '').split(',');

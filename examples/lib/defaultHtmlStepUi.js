@@ -340,7 +340,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
       changeDimension(step);
-    })
+    });
 
     // Handle the wasm bolt display
 

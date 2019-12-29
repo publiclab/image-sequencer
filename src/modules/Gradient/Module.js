@@ -18,6 +18,7 @@ module.exports = function Gradient(options, UI) {
       for (var i = 0; i < w; i++) {
         for (var j = 0; j < h; j++) {
           let val = (i / w) * 255;
+          
           pixelSetter(i, j, [val, val, val, 255], pixels);
         }
       }

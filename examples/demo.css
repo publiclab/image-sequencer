@@ -342,7 +342,7 @@ a.name-header{
  border-radius: 2px;
  padding: 16px;
  position: fixed;
- z-index: 1;
+ z-index: 1000;
  left: 10%;
  top: 30px;
 }

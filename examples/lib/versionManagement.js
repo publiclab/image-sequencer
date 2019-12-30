@@ -40,11 +40,15 @@ function compareVersionStrings(v1parts, v2parts) {
       }
   }
 
-  if (v1parts.length != v2parts.length) {
+  if (lengthsUnequal(v1parts, v2parts)) {
       return -1;
   }
 
   return compareDigit;
+}
+
+function lengthsUnequal(v1parts, v2parts) {
+  return v1parts.length != v2parts.length;
 }
 
 function compare(part1, part2) {

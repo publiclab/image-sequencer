@@ -34,14 +34,18 @@ function compareVersionStrings(v1parts, v2parts) {
           return 1;
       }
 
-      var compareDigit = compare(v1parts[i], v2parts[i]);
+      compareDigit = compare(v1parts[i], v2parts[i]);
       if(compareDigit != 0) {
         break;
       }
   }
 
-  if (lengthsUnequal(v1parts, v2parts)) {
-      return -1;
+  return checkLength(compareDigit, v1parts, v2parts);
+}
+
+function checkLength(compareDigit, v1parts, v2parts) {
+  if(lengthsUnequal(v1parts, v2parts)) {
+    return -1;
   }
 
   return compareDigit;
@@ -71,9 +75,6 @@ function isValidPart(x) {
     return (/^\d+$/).test(x);
 }
 
-function comparePart(v1Part, v2Part) {
-
-}
 function getLocalVersionNumber() {
   return require('../../package.json').version;
 }

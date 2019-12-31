@@ -31,12 +31,9 @@ window.onload = function () {
   };
 
   versionManagement.getLatestVersionNumber(function(versionNumber) {
-    console.log("The latest version of image-sequencer is v" + versionNumber);
+    console.log("The latest NPM version number for Image Sequencer (from GitHub) is v" + versionNumber);
   });
-  console.log(versionManagement.getLocalVersionNumber());
-
-
-
+  console.log("The local version number for Image Sequencer is v" + versionManagement.getLocalVersionNumber());
 
   function displayVersionNumber() {
     $('#version-number-text').text("Image Sequencer v" + versionManagement.getLocalVersionNumber());

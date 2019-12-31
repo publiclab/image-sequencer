@@ -35,8 +35,6 @@ module.exports = function Crop(pixels, options, cb) {
       h = Math.floor(coord.h.valInp);
     });
 
-  console.log(offsetY, offsetX, w, h);
-
   const newPixels = new ndarray([], [w, h, 4]);
 
   for (let x = 0; x < w; x++) {

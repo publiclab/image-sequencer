@@ -29,9 +29,6 @@ module.exports = function CropModule(options, UI) {
 
     function extraManipulation(pixels) {
       const newPixels = require('./Crop')(pixels, options, function() {
-        // Tell the UI that the step has been drawn
-        UI.onComplete(options.step);
-
         // We should do this via event/listener:
         if (ui && ui.hide) ui.hide();
 

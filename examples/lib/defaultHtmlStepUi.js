@@ -341,8 +341,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $('[data-toggle="tooltip"]').tooltip();
       _sequencer.getImageDimensions(step.imgElement.src, function (dim, isGIF) {
         step.ui.querySelector('.' + step.name).attributes['data-original-title'].value = `<div style="text-align: center"><p>Image Width: ${dim.width}<br>Image Height: ${dim.height}</br>${isGIF ? `Frames: ${dim.frames}` : ''}</div>`;
-      })
-    })
+      });
+    });
 
     // Handle the wasm bolt display
 

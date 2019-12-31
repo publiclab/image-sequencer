@@ -1,7 +1,7 @@
 const testModule = require('../templates/module-test'),
-  benchmark = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAklEQVR4AewaftIAAAAqSURBVKXBAQ0AAAiAMCSy/TcNwT+wRyCRRBJJJJFEEkkkkUQSSSSRRBI9GygBkdItUBEAAAAASUVORK5CYII=',
+  benchmark = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAklEQVR4AewaftIAAAAtSURBVKXBMQEAIAzAsK4q0MmDfCaiybxzP4FEEkkkkUQSSSSRRBJJJJFEEkm0X48CIHSzMhMAAAAASUVORK5CYII=',
   options = {
-    color: '30, 40, 190',
+    color: 'rgb(30,40,190)',
     factor: 0.6
   };
 

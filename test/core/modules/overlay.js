@@ -34,11 +34,11 @@ test('overlay module works correctly', t => {
 
     let result = sequencer.steps[2].output.src;
 
-    base64Img.imgSync(result, target, 'result');
-    base64Img.imgSync(benchmark, target, 'benchmark');
+    base64Img.imgSync(result, target, 'overlay-result');
+    base64Img.imgSync(benchmark, target, 'overlay-benchmark');
 
-    result = './test_outputs/result.png';
-    benchmark = './test_outputs/benchmark.png';
+    result = './test_outputs/overlay-result.png';
+    benchmark = './test_outputs/overlay-benchmark.png';
 
     looksSame(result, benchmark, function(err, res) {
       if (err) console.log(err);

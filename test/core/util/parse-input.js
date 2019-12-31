@@ -10,7 +10,7 @@ test('parseCornerCoordinateInputs works.', function (t) {
   callback = function (options, coord) {
     options.x = parseInt(coord.x.valInp);
     t.equal(options.x, 1, 'parseCornerCootesrdinateInputs Works.');
-    t.equal(typeof options.x, 'Number', 'Correct output type');
+    t.equal(typeof options.x, 'number', 'Correct output type');
     t.end();
   };
 

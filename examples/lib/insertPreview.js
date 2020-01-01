@@ -1,5 +1,4 @@
-function generatePreview(previewStepName, customValues, path, selector) {
-
+function generatePreview(previewStepName, customValues, path, DomNode) {
   var previewSequencer = ImageSequencer();
   function insertPreview(src) {
     var img = document.createElement('img');
@@ -8,9 +7,9 @@ function generatePreview(previewStepName, customValues, path, selector) {
     img.src = src;
     $(img).css('max-width', '200%');
     $(img).css('transform', 'translateX(-20%)');
-    $(selector + ' .radio-group').find('div').each(function() {
-      if ($(this).find('div').attr('data-value') === previewStepName) {
-        $(this).find('div').append(img);
+    $(DomNode.querySelector('.radio-group')).find('.radio').each(function() {
+      if ($(this).attr('data-value') === previewStepName) {
+        $(this).append(img);
       }
     });
   }
@@ -29,8 +28,8 @@ function generatePreview(previewStepName, customValues, path, selector) {
     previewSequencer.loadImage(path, loadPreview);
 }
 
-function updatePreviews(src, selector) {
-  $(selector + ' img').remove();
+function updatePreviews(src, DomNode) {
+  $(DomNode).find('img').remove();
 
   var previewSequencerSteps = {
     'resize': '125%',
@@ -48,6 +47,7 @@ function updatePreviews(src, selector) {
   };
 
   var img = new Image();
+
   img.onload = function(){
     var height = img.height;
     var width = img.width;
@@ -62,7 +62,7 @@ function updatePreviews(src, selector) {
       this.addSteps('resize', {['resize']: percentage + '%'});
       this.run((src)=>{
         Object.keys(previewSequencerSteps).forEach(function (step, index) {
-          generatePreview(step, Object.values(previewSequencerSteps)[index], src, selector);
+          generatePreview(step, Object.values(previewSequencerSteps)[index], src, DomNode);
         });
       });
     });

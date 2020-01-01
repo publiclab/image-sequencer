@@ -35,9 +35,8 @@ module.exports = function Rotate(options, UI) {
     }
       
 
-    function output(image, datauri, mimetype) {
-      // This output is accesible by Image Sequencer
-      step.output = { src: datauri, format: mimetype };
+    function output(image, datauri, mimetype, wasmSuccess) {
+      step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
     }
 
     return require('../_nomodule/PixelManipulation.js')(input, {

@@ -2,11 +2,20 @@
  * General purpose per-pixel manipulation
  * accepting a changePixel() method to remix a pixel's channels
  */
+
+/**
+ * @method PixelManipulation
+ * @description Function for changing pixel values of the image via different callback functions. Read the docs(https://github.com/publiclab/image-sequencer/blob/main/CONTRIBUTING.md) for more info.
+ * @param {Object} image ndarray of pixels of the image
+ * @param {Object} options object containing callbacks for manipulating pixels.
+ * @returns {Null}
+ */
 module.exports = function PixelManipulation(image, options) {
   // To handle the case where pixelmanipulation is called on the input object itself
   // like input.pixelManipulation(options)
   
   const pixelSetter = require('../../util/pixelSetter.js');
+  let wasmSuccess; // Whether wasm succeded or failed
 
   if (arguments.length <= 1) {
     options = image;
@@ -30,18 +39,18 @@ module.exports = function PixelManipulation(image, options) {
       };
     }
 
-    // iterate through pixels;
+    // Iterate through pixels
     // TODO: this could possibly be more efficient; see
     // https://github.com/p-v-o-s/infragram-js/blob/master/public/infragram.js#L173-L181
 
 
-    if (options.preProcess) pixels = options.preProcess(pixels); // Allow for preprocessing
+    if (options.preProcess) pixels = options.preProcess(pixels); // Allow for preprocessing of pixels.
 
     function extraOperation() {
       var res;
-      if (options.extraManipulation) res = options.extraManipulation(pixels, generateOutput);
-      // there may be a more efficient means to encode an image object,
-      // but node modules and their documentation are essentially arcane on this point
+      if (options.extraManipulation) res = options.extraManipulation(pixels, generateOutput); // extraManipulation is used to manipulate each pixel individually.
+      // There may be a more efficient means to encode an image object,
+      // but node modules and their documentation are essentially arcane on this point.
       function generateOutput() {
         var chunks = [];
         var totalLength = 0;
@@ -59,10 +68,11 @@ module.exports = function PixelManipulation(image, options) {
           var data = Buffer.concat(chunks, totalLength).toString('base64');
           var datauri = 'data:image/' + options.format + ';base64,' + data;
           if (options.output)
-            options.output(options.image, datauri, options.format);
+            options.output(options.image, datauri, options.format, wasmSuccess);
           if (options.callback) options.callback();
         });
       }
+
       if (res) {
         pixels = res;
         generateOutput();
@@ -80,7 +90,7 @@ module.exports = function PixelManipulation(image, options) {
         env: {
           consoleLog: console.log,
           perform: function (x, y) {
-            let pixel = options.changePixel(
+            let pixel = options.changePixel( // changePixel function is run over every pixel.
               pixels.get(x, y, 0),
               pixels.get(x, y, 1),
               pixels.get(x, y, 2),
@@ -95,7 +105,7 @@ module.exports = function PixelManipulation(image, options) {
         }
       };
 
-      function perPixelManipulation() { // pure JavaScript code
+      function perPixelManipulation() {
         for (var x = 0; x < pixels.shape[0]; x++) {
           for (var y = 0; y < pixels.shape[1]; y++) {
             imports.env.perform(x, y);
@@ -105,6 +115,7 @@ module.exports = function PixelManipulation(image, options) {
 
       const inBrowser = (options.inBrowser) ? 1 : 0;
       const test = (process.env.TEST) ? 1 : 0;
+
       if (options.useWasm) {
         if (options.inBrowser) {
 
@@ -114,10 +125,14 @@ module.exports = function PixelManipulation(image, options) {
             WebAssembly.instantiate(bytes, imports)
           ).then(results => {
             results.instance.exports.manipulatePixel(pixels.shape[0], pixels.shape[1], inBrowser, test);
+            wasmSuccess = true;
+
             extraOperation();
           }).catch(err => {
             console.log(err);
             console.log('WebAssembly acceleration errored; falling back to JavaScript in PixelManipulation');
+            wasmSuccess = false;
+
             perPixelManipulation();
             extraOperation();
           });
@@ -129,17 +144,23 @@ module.exports = function PixelManipulation(image, options) {
             const buf = fs.readFileSync(wasmPath);
             WebAssembly.instantiate(buf, imports).then(results => {
               results.instance.exports.manipulatePixel(pixels.shape[0], pixels.shape[1], inBrowser, test);
+              wasmSuccess = true;
+
               extraOperation();
             });
           }
           catch(err){
             console.log(err);
             console.log('WebAssembly acceleration errored; falling back to JavaScript in PixelManipulation');
+            wasmSuccess = false;
+
             perPixelManipulation();
             extraOperation();
           }
         }
       } else {
+        wasmSuccess = false;
+
         perPixelManipulation();
         extraOperation();
       }

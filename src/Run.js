@@ -45,6 +45,8 @@ function Run(ref, json_q, callback, ind, progressObj) {
 
           // This output is accessible by UI
           ref.steps[i].options.step.output = ref.steps[i].output.src;
+          ref.steps[i].options.step.wasmSuccess = ref.steps[i].output.wasmSuccess || false;
+          ref.steps[i].options.step.useWasm = ref.steps[i].output.useWasm || false;
 
           // Tell UI that step has been drawn.
           ref.steps[i].UI.onComplete(ref.steps[i].options.step);

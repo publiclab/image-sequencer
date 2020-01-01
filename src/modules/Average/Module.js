@@ -16,7 +16,6 @@ module.exports = function Average(options, UI) {
 
     // do the averaging
     function extraManipulation(pixels) {
-      const $ = window.$;
       var i = 0, sum = [0, 0, 0, 0];
       while (i < pixels.data.length) {
         sum[0] += pixels.data[i++];
@@ -48,13 +47,8 @@ module.exports = function Average(options, UI) {
       return pixels;
     }
 
-    function output(image, datauri, mimetype) {
-
-      // This output is accessible by Image Sequencer
-      step.output = {
-        src: datauri,
-        format: mimetype
-      };
+    function output(image, datauri, mimetype, wasmSuccess) {
+      step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
     }
 
     return require('../_nomodule/PixelManipulation.js')(input, {

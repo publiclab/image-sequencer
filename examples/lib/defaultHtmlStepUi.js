@@ -15,14 +15,11 @@ const intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js'),
   scopeQuery = require('./scopeQuery');
 
 function DefaultHtmlStepUi(_sequencer, options) {
-  let $step, $stepAll;
-
   options = options || {};
   var stepsEl = options.stepsEl || document.querySelector('#steps');
   var selectStepSel = options.selectStepSel = options.selectStepSel || '#selectStep';
 
   function onSetup(step, stepOptions) {
-
     if (step.options && step.options.description)
       step.description = step.options.description;
 
@@ -31,7 +28,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
       <div class="container-fluid step-container">\
           <div class="panel panel-default">\
             <div class="panel-heading">\
-              <div class="trash-container pull-right"><button type="button" class="btn btn-link ' + step.name + ' dimension-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title=""><i class="fa fa-info-circle"></i></button></div>\
+              <div class="trash-container pull-right">\
+                <a type="button" target="_blank" href="https://developer.mozilla.org/en-US/docs/WebAssembly" style="display: none;" class="btn btn-link general-tooltip wasm-tooltip" data-toggle="tooltip" data-html="true" data-original-title="<div style=\'text-align: center\'><p>This step is Web Assembly accelerated. Click to Read More</div>">\
+                  <i class="fa fa-bolt"></i>\
+                </a>\
+                <button type="button" class="btn btn-link ' + step.name + ' general-tooltip dimension-tooltip" data-toggle="tooltip" data-html="true" data-original-title="">\
+                  <i class="fa fa-info-circle"></i>\
+                </button>\
+              </div>\
               <h3 class="panel-title">' +
                 '<span class="toggle mouse">' + step.name + ' <span class="caret toggleIcon rotated"></span>\
                  <span class="load-spin pull-right" style="display:none;padding:1px 8px;"><i class="fa fa-circle-o-notch fa-spin"></i></span>\
@@ -70,12 +74,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
     var parser = new DOMParser();
     step.ui = parser.parseFromString(step.ui, 'text/html');
     step.ui = step.ui.querySelector('div.container-fluid');
-
-    $step = scopeQuery.scopeSelector(step.ui);
-    $stepAll = scopeQuery.scopeSelectorAll(step.ui);
-    step.ui.$step = $step;
-    step.ui.$stepAll = $stepAll;
-
+    step.$step = scopeQuery.scopeSelector(step.ui);
+    step.$stepAll = scopeQuery.scopeSelectorAll(step.ui);
+    let {$step, $stepAll} = step;
     step.linkElements = step.ui.querySelectorAll('a');
     step.imgElement = $step('a img.img-thumbnail')[0];
 
@@ -174,7 +175,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         );
 
       $stepAll('.remove').on('click', function() {notify('Step Removed', 'remove-notification');});
-      $stepAll('.insert-step').on('click', function() { util.insertStep(step.ID); });
+      $step('.insert-step').on('click', function() { util.insertStep(step.ID); });
       // Insert the step's UI in the right place
       if (stepOptions.index == _sequencer.steps.length) {
         stepsEl.appendChild(step.ui);
@@ -185,9 +186,24 @@ function DefaultHtmlStepUi(_sequencer, options) {
       else {
         stepsEl.insertBefore(step.ui, $(stepsEl).children()[stepOptions.index]);
       }
+
+      // Enable the load-image insert-step button when there are steps after load-image
+      // The logical operator is `> 0` because the number of steps is found before adding the step, actual logic is `steps.length + 1 > 1` which is later simplified.
+      if (_sequencer.steps.length > 0) $('#load-image .insert-step').prop('disabled', false);
+      else $('#load-image .insert-step').prop('disabled', true);
     }
     else {
       $('#load-image').append(step.ui);
+
+
+      $step('div.panel-footer').prepend( `
+          <button class="right btn btn-default btn-sm insert-step" disabled="true">
+            <span class="insert-text"><i class="fa fa-plus"></i> Insert Step</span>
+            <span class="no-insert-text" style="display:none">Close</span>
+          </button>`
+      );
+
+      $step('.insert-step').on('click', function() { util.insertStep(step.ID); });
     }
     $step('.toggle').on('click', () => {
       $step('.toggleIcon').toggleClass('rotated');
@@ -258,13 +274,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
   }
 
 
-  function onDraw() {
+  function onDraw({$step, $stepAll}) {
     $step('.load').show();
     $step('img').hide();
     $stepAll('.load-spin').show();
   }
 
   function onComplete(step) {
+    let {$step, $stepAll} = step;
     $step('img').show();
     $stepAll('.load-spin').hide();
     $step('.load').hide();
@@ -325,7 +342,15 @@ function DefaultHtmlStepUi(_sequencer, options) {
       _sequencer.getImageDimensions(step.imgElement.src, function (dim) {
         step.ui.querySelector('.' + step.name).attributes['data-original-title'].value = `<div style="text-align: center"><p>Image Width: ${dim.width}<br>Image Height: ${dim.height}</br></div>`;
       });
-    });
+    })
+
+    // Handle the wasm bolt display
+
+    if (step.useWasm) {
+      if (step.wasmSuccess) $step('.wasm-tooltip').fadeIn();
+      else $step('.wasm-tooltip').fadeOut();
+    }
+    else $step('.wasm-tooltip').fadeOut();
   }
 
   function imageHover(step){
@@ -350,6 +375,12 @@ function DefaultHtmlStepUi(_sequencer, options) {
   function onRemove(step) {
     step.ui.remove();
     $('#steps .step-container:nth-last-child(1) .insert-step').prop('disabled', true);
+
+    // Enable the load-image insert-step button when there are steps after load-image
+    // The logical operator is `> 2` because the number of steps is found before removing the step, actual logic is `steps.length - 1 > 1` which is later simplified.
+    if (_sequencer.steps.length - 1 > 1) $('#load-image .insert-step').prop('disabled', false);
+    else $('#load-image .insert-step').prop('disabled', true);
+
     $('div[class*=imgareaselect-]').remove();
   }
 

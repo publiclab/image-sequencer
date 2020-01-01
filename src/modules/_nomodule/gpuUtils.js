@@ -1,4 +1,4 @@
-const GPU = require('gpu.js').GPU;
+const { GPU } = require('gpu.js');
 
 /**
  * @method convolve

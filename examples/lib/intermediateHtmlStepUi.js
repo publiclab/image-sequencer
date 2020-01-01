@@ -64,7 +64,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
                     </select>\
                   <div>\
                   <div class="col-md-4">\
-                    <button class="btn btn-success btn-lg insert-save-btn add-step-btn" name="add">Add Step</button>\
+                    <button class="btn btn-primary btn-lg insert-save-btn add-step-btn" name="add">Add Step</button>\
                   <div>\
                 </div>\
               </div>\
@@ -117,13 +117,13 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
         else insertPreview.updatePreviews(step.output, $step('.insertDiv').getDomElem());
       });
     }
-    
+
 
     $step('.insertDiv .close-insert-box').off('click').on('click', function(){
       toggleDiv($step);
       $step('.insertDiv').removeClass('insertDiv');
     });
-    
+
     var insertStepSelect = $step('.insert-step-select');
     insertStepSelect.html('');
 

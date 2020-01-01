@@ -90,7 +90,10 @@ window.onload = function () {
   var resetSequence = function () {
     var r = confirm('Do you want to reset the sequence?');
     if (r)
-      window.location = '/';
+    {
+      window.location.hash = '';
+      location.reload();
+    }
   };
 
   $('#addStep select').on('change', ui.selectNewStepUi);

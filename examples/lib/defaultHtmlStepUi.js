@@ -23,12 +23,19 @@ function DefaultHtmlStepUi(_sequencer, options) {
     if (step.options && step.options.description)
       step.description = step.options.description;
 
-    step.ui =
+    step.ui = // Basic UI markup for the step
       '\
       <div class="container-fluid step-container">\
           <div class="panel panel-default">\
             <div class="panel-heading">\
-              <div class="trash-container pull-right"><button type="button" class="btn btn-link ' + step.name + ' dimension-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title=""><i class="fa fa-info-circle"></i></button></div>\
+              <div class="trash-container pull-right">\
+                <a type="button" target="_blank" href="https://developer.mozilla.org/en-US/docs/WebAssembly" style="display: none;" class="btn btn-link general-tooltip wasm-tooltip" data-toggle="tooltip" data-html="true" data-original-title="<div style=\'text-align: center\'><p>This step is Web Assembly accelerated. Click to Read More</div>">\
+                  <i class="fa fa-bolt"></i>\
+                </a>\
+                <button type="button" class="btn btn-link ' + step.name + ' general-tooltip dimension-tooltip" data-toggle="tooltip" data-html="true" data-original-title="">\
+                  <i class="fa fa-info-circle"></i>\
+                </button>\
+              </div>\
               <h3 class="panel-title">' +
                 '<span class="toggle mouse">' + step.name + ' <span class="caret toggleIcon rotated"></span>\
                  <span class="load-spin pull-right" style="display:none;padding:1px 8px;"><i class="fa fa-circle-o-notch fa-spin"></i></span>\
@@ -65,18 +72,20 @@ function DefaultHtmlStepUi(_sequencer, options) {
     var util = intermediateHtmlStepUi(_sequencer, step);
 
     var parser = new DOMParser();
-    step.ui = parser.parseFromString(step.ui, 'text/html');
+    step.ui = parser.parseFromString(step.ui, 'text/html'); // Convert the markup string to a DOM node.
     step.ui = step.ui.querySelector('div.container-fluid');
-    step.$step = scopeQuery.scopeSelector(step.ui);
+
+    step.$step = scopeQuery.scopeSelector(step.ui); // Shorthand methods for scoped DOM queries. Read the docs [CONTRIBUTING.md](https://github.com/publiclab/image-sequencer/blob/main/CONTRIBUTING.md) for more info.
     step.$stepAll = scopeQuery.scopeSelectorAll(step.ui);
     let {$step, $stepAll} = step;
-    step.linkElements = step.ui.querySelectorAll('a');
-    step.imgElement = $step('a img.img-thumbnail')[0];
+    
+    step.linkElements = step.ui.querySelectorAll('a'); // All the anchor tags in the step UI
+    step.imgElement = $step('a img.img-thumbnail')[0]; // The output image
 
     if (_sequencer.modulesInfo().hasOwnProperty(step.name)) {
       var inputs = _sequencer.modulesInfo(step.name).inputs;
       var outputs = _sequencer.modulesInfo(step.name).outputs;
-      var merged = Object.assign(inputs, outputs); // combine outputs w inputs
+      var merged = Object.assign(inputs, outputs); // Combine outputs with inputs
 
       for (var paramName in merged) {
         var isInput = inputs.hasOwnProperty(paramName);
@@ -96,7 +105,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         else {
           let paramVal = step.options[paramName] || inputDesc.default;
 
-          if (inputDesc.id == 'color-picker') { // separate input field for color-picker
+          if (inputDesc.id == 'color-picker') { // Separate input field for color-picker
             html +=
               '<div id="color-picker" class="input-group colorpicker-component">' +
               '<input class="form-control target" type="' +
@@ -107,7 +116,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
               paramVal + '">' + '<span class="input-group-addon"><i></i></span>' +
               '</div>';
           }
-          else { // use this if the the field isn't color-picker
+          else { // Non color-picker input types
             html =
               '<input class="form-control target" type="' +
               inputDesc.type +
@@ -149,10 +158,10 @@ function DefaultHtmlStepUi(_sequencer, options) {
                          </div>';
         $step('div.details').append(div);
       }
-      $step('div.panel-footer').append(
+      $step('div.panel-footer').append( // Save button
         '<div class="cal collapse in"><button type="submit" class="btn btn-sm btn-default btn-save" disabled = "true" >Apply</button> <small style="padding-top:2px;">Press apply to see changes</small></div>'
       );
-      $step('div.panel-footer').prepend(
+      $step('div.panel-footer').prepend( // Markup for tools: download and insert step buttons
         '<button class="pull-right btn btn-default btn-sm insert-step" >\
         <span class="insert-text"><i class="fa fa-plus"></i> Insert Step</span><span class="no-insert-text" style="display:none">Close</span></button>\
         <button class="pull-right btn btn-default btn-sm download-btn" style="margin-right:2px" >\
@@ -167,9 +176,10 @@ function DefaultHtmlStepUi(_sequencer, options) {
           parser.parseFromString(tools, 'text/html').querySelector('div')
         );
 
-      $stepAll('.remove').on('click', function() {notify('Step Removed', 'remove-notification');});
-      $step('.insert-step').on('click', function() { util.insertStep(step.ID); });
+      $stepAll('.remove').on('click', function() {notify('Step Removed', 'remove-notification');}); // Notification on removal of a step
+      $step('.insert-step').on('click', function() { util.insertStep(step.ID); }); // Insert a step in between the sequence
       // Insert the step's UI in the right place
+
       if (stepOptions.index == _sequencer.steps.length) {
         stepsEl.appendChild(step.ui);
         $('#steps .step-container:nth-last-child(1) .insert-step').prop('disabled', true);
@@ -186,8 +196,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       else $('#load-image .insert-step').prop('disabled', true);
     }
     else {
-      $('#load-image').append(step.ui);
-
+      $('#load-image').append(step.ui); // Default UI without extra tools for the first step(load image)
 
       $step('div.panel-footer').prepend( `
           <button class="right btn btn-default btn-sm insert-step" disabled="true">
@@ -198,12 +207,12 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
       $step('.insert-step').on('click', function() { util.insertStep(step.ID); });
     }
-    $step('.toggle').on('click', () => {
+    $step('.toggle').on('click', () => { // Step container dropdown
       $step('.toggleIcon').toggleClass('rotated');
       $stepAll('.cal').collapse('toggle');
     });
     
-    $(step.imgElement).on('mousemove', _.debounce(() => imageHover(step), 150));
+    $(step.imgElement).on('mousemove', _.debounce(() => imageHover(step), 150)); // Shows the pixel coordinates on hover
     $(step.imgElement).on('click', (e) => {e.preventDefault(); });
     $stepAll('#color-picker').colorpicker();
 
@@ -220,15 +229,23 @@ function DefaultHtmlStepUi(_sequencer, options) {
           });
         _sequencer.run({ index: step.index - 1 });
 
-        // modify the url hash
+        // Modify the URL hash
         urlHash.setUrlHashParameter('steps', _sequencer.toString());
-        // disable the save button
+        // Disable the save button
         $step('.btn-save').prop('disabled', true);
         optionsChanged = false;
         changedInputs = 0;
       }
     }
 
+    /**
+     * @method handleInputValueChange
+     * @description Enables the save button on input change
+     * @param {*} currentValue The current value of the input
+     * @param {*} initValue The initial/old value of the input
+     * @param {Boolean} hasChangedBefore Whether the input was changed before
+     * @returns {Boolean} True if the value has changed
+     */
     function handleInputValueChange(currentValue, initValue, hasChangedBefore) {
       var inputChanged = !(isNaN(initValue) || isNaN(currentValue) ? currentValue === initValue : currentValue - initValue === 0);
       changedInputs += hasChangedBefore ? inputChanged ? 0 : -1 : inputChanged ? 1 : 0;
@@ -286,7 +303,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         step.linkElements[index].href = step.imgElement.src;
     }
 
-    // TODO: use a generalized version of this
+    // TODO: use a generalized version of this.
     function fileExtension(output) {
       return output.split('/')[1].split(';')[0];
     }
@@ -307,7 +324,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       }
     });
 
-    // fill inputs with stored step options
+    // Fill inputs with stored step options
     if (_sequencer.modulesInfo().hasOwnProperty(step.name)) {
       var inputs = _sequencer.modulesInfo(step.name).inputs;
       var outputs = _sequencer.modulesInfo(step.name).outputs;
@@ -335,9 +352,23 @@ function DefaultHtmlStepUi(_sequencer, options) {
       _sequencer.getImageDimensions(step.imgElement.src, function (dim) {
         step.ui.querySelector('.' + step.name).attributes['data-original-title'].value = `<div style="text-align: center"><p>Image Width: ${dim.width}<br>Image Height: ${dim.height}</br></div>`;
       });
-    });
+    })
+
+    // Handle the wasm bolt display
+
+    if (step.useWasm) {
+      if (step.wasmSuccess) $step('.wasm-tooltip').fadeIn();
+      else $step('.wasm-tooltip').fadeOut();
+    }
+    else $step('.wasm-tooltip').fadeOut();
   }
 
+  /**
+   * @method imageHover
+   * @description Handler to display image coordinates on hover.
+   * @param {Object} step Current step variable
+   * @returns {Null}
+   */
   function imageHover(step){
 
     var img = $(step.imgElement);
@@ -373,6 +404,13 @@ function DefaultHtmlStepUi(_sequencer, options) {
     return step.imgElement;
   }
 
+  /**
+   * @method notify
+   * @description General purpose DOM toast notification
+   * @param {String} msg Message to be displayed
+   * @param {String} id A unique identifier for the notification
+   * @returns {Null}
+   */
   function notify(msg, id){
     if ($('#' + id).length == 0) {
       var notification = document.createElement('span');

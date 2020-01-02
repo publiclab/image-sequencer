@@ -21,6 +21,11 @@ module.exports = function(grunt) {
     },
 
     browserify: {
+      options: {
+        alias: {
+          'gpu.js': './node_modules/gpu.js/src/index.js'
+        }
+      },
       core: {
         src: ['src/ImageSequencer.js'],
         dest: 'dist/image-sequencer.js'
@@ -36,6 +41,10 @@ module.exports = function(grunt) {
       produi: {
         src: ['examples/demo.js'],
         dest: 'dist/image-sequencer-ui.brow.js'
+      },
+      tests: {
+        src: ['test/core/sequencer/meta-modules.js', 'test/core/sequencer/image-sequencer.js', 'test/core/sequencer/chain.js', 'test/core/sequencer/replace.js', 'test/core/sequencer/import-export.js', 'test/core/sequencer/run.js', 'test/core/sequencer/dynamic-imports.js', 'test/core/util/*.js'],
+        dest: './output/core-tests.js'
       }
     },
 
@@ -73,4 +82,6 @@ module.exports = function(grunt) {
   grunt.registerTask('serve', ['browserify:core', 'browserify:ui', 'browserSync', 'watch']);
   grunt.registerTask('compile', ['browserify:core', 'browserify:ui']);
   grunt.registerTask('production', ['browserify:prodcore', 'browserify:produi', 'uglify:prodcore', 'uglify:produi']);
+
+  grunt.registerTask('tests', ['browserify:tests']);
 };

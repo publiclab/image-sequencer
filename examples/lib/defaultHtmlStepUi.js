@@ -361,7 +361,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     else $step('.wasm-tooltip').fadeOut();
   }
   /**
-   * Updates Dimension of the image 
+   * @description Updates Dimension of the image 
    * @param {Object} step  - Current Step
    * @returns {void}
    *  

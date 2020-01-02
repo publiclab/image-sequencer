@@ -8,8 +8,8 @@ var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js'),
 
 
 window.onload = function () {
-  sequencer = ImageSequencer();
-
+  sequencer = ImageSequencer(); // Set the global sequencer variable
+  
   options = {
     sortField: 'text',
     openOnFocus: false,
@@ -65,7 +65,10 @@ window.onload = function () {
 
   $(window).on('scroll', scrollFunction);
 
-  function scrollFunction() {
+  /**
+   * @description Method to toggle the scroll-up arrow.
+   */
+  function scrollFunction(A, B) {
     var shouldDisplay = $('body').scrollTop() > 20 || $(':root').scrollTop() > 20;
 
     $('#move-up').css({
@@ -73,7 +76,9 @@ window.onload = function () {
     });
   }
 
-
+  /**
+   * @description Method to scroll to the top of the page.
+   */
   function topFunction() {
     $('body').animate({scrollTop: 0});
     $(':root').animate({scrollTop: 0});
@@ -88,7 +93,7 @@ window.onload = function () {
   // UI for the overall demo:
   var ui = defaultHtmlSequencerUi(sequencer);
 
-  // find any `src` parameters in URL hash and attempt to source image from them and run the sequencer
+  // Load image data from URL `src` parameter.
   if (urlHash.getUrlHashParameter('src')) {
     sequencer.loadImage(urlHash.getUrlHashParameter('src'), ui.onLoad);
   } else {
@@ -98,25 +103,33 @@ window.onload = function () {
   var resetSequence = function () {
     var r = confirm('Do you want to reset the sequence?');
     if (r)
-      window.location = '/';
+    {
+      window.location.hash = '';
+      location.reload();
+    }
   };
 
   $('#addStep select').on('change', ui.selectNewStepUi);
   $('#addStep #add-step-btn').on('click', ui.addStepUi);
   $('#resetButton').on('click', resetSequence);
 
-  //Module button radio selection
+  // Module Selector quick buttons click handler.
   $('.radio-group .radio').on('click', function () {
     $(this).parent().find('.radio').removeClass('selected');
     $(this).addClass('selected');
     newStep = $(this).attr('data-value');
-    //$("#addStep option[value=" + newStep + "]").attr('selected', 'selected');
+
     $('#addStep select').val(newStep);
     ui.selectNewStepUi(newStep);
     ui.addStepUi(newStep);
     $(this).removeClass('selected');
   });
 
+  /**
+   * @method displayMessageOnSaveSequence
+   * @description When a sequence is saved to a browser, notification is displayed.
+   * @returns {Null}
+   */
   function displayMessageOnSaveSequence() {
     $('.savesequencemsg').fadeIn();
     setTimeout(function () {
@@ -136,7 +149,7 @@ window.onload = function () {
     }
   }
   $('#saveButton').on('click', function () {
-    // different handlers triggered for different dropdown options
+    // Different handlers triggered for different dropdown options.
 
     let dropDownValue = $('#selectSaveOption option:selected').val();
 
@@ -158,9 +171,8 @@ window.onload = function () {
 
   let isWorkingOnGifGeneration = false;
 
-  $('.js-view-as-gif').on('click', function (event) {
-    /* Prevent user from triggering generation multiple times*/
-    if (isWorkingOnGifGeneration) return;
+  $('.js-view-as-gif').on('click', function (event) { // GIF generation and display
+    if (isWorkingOnGifGeneration) return; // Prevent multiple button clicks
 
     isWorkingOnGifGeneration = true;
 
@@ -169,12 +181,12 @@ window.onload = function () {
     button.innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i>';
 
     try {
-      /* Get gif resources of previous steps  */
+      // Get GIF resources from previous steps
       let options = getGifResources();
 
-      gifshot.createGIF(options, function (obj) { // gif generation
+      gifshot.createGIF(options, function (obj) { // GIF generation
         if (!obj.error) {
-          // Final gif encoded with base64 format
+          // Final GIF encoded with base64 format
           var image = obj.image;
           var animatedImage = document.createElement('img');
 
@@ -184,9 +196,7 @@ window.onload = function () {
           let modal = $('#js-download-gif-modal');
 
           $('#js-download-as-gif-button').one('click', function () {
-            // Trigger download
-            downloadGif(image);
-            // Close modal
+            downloadGif(image); // Trigger GIF download
             modal.modal('hide');
           });
 
@@ -197,7 +207,6 @@ window.onload = function () {
 
           // Insert image
           gifContainer.appendChild(animatedImage);
-
 
           // Open modal
           modal.modal();
@@ -217,16 +226,16 @@ window.onload = function () {
   });
 
   function getGifResources() {
-    /* Returns an object with specific gif options */
+    // Returns an object with specific gif options
     let imgs = document.getElementsByClassName('step-thumbnail');
     var imgSrcs = [];
 
-    // Pushes image sources of all the modules in dom
+    // Pushes image sources of all the modules in the DOM
     for (var i = 0; i < imgs.length; i++) {
       imgSrcs.push(imgs[i].src);
     }
 
-    var options = { // gif frame options
+    var options = { // GIF frame options
       'gifWidth': imgs[0].width,
       'gifHeight': imgs[0].height,
       'images': imgSrcs,
@@ -284,7 +293,7 @@ window.onload = function () {
 
 
   function downloadGif(image) {
-    download(image, 'index.gif', 'image/gif');// downloadjs library function
+    download(image, 'index.gif', 'image/gif'); // Downloadjs library function
   }
 
   function SaveToPubliclab() {
@@ -299,7 +308,7 @@ window.onload = function () {
     postToPL($('img')[sequencer.steps.length - 1].src);
   }
 
-  // image selection and drag/drop handling from examples/lib/imageSelection.js
+  // Image selection and drag/drop handling from examples/lib/imageSelection.js
   sequencer.setInputStep({
     dropZoneSelector: '#dropzone',
     fileInputSelector: '#fileInput',
@@ -331,7 +340,7 @@ window.onload = function () {
 
   setupCache();
 
-  if (urlHash.getUrlHashParameter('src')) {
+  if (urlHash.getUrlHashParameter('src')) {  // Gets the sequence from the URL
     insertPreview.updatePreviews(urlHash.getUrlHashParameter('src'), document.querySelector('#addStep'));
   } else {
     insertPreview.updatePreviews('images/tulips.png', document.querySelector('#addStep'));

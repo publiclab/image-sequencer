@@ -8,7 +8,7 @@ beforeAll(async () => {
   await page.goto('file://' + path, {waitUntil: 'domcontentloaded'});
 });
 
-describe('Clear Steps', () => {
+describe('Clear and Delete Steps', () => {
   
   test('Resize Module is added', async () => {
 
@@ -62,21 +62,21 @@ describe('Clear Steps', () => {
     expect(Length7).toBe(6);
   }, timeout);
 
-  // test('Clear Step is pressed', async () => {
+  test('Clear Step is pressed', async () => {
 
-  //   page.on('dialog', async dialog => {
-  //     (await dialog.accept());
-  //   });
-  //   await page.click('#resetButton');
-  //   try {
-  //     let someVar = await page.waitForSelector('.step');
-  //     const Length8 = await page.evaluate(() => document.querySelectorAll('.step').length);
-  //     expect(Length8).toBe(1);
-  //   }
-  //   catch (error) {
-  //     console.log(error);
-  //   }
-  // }, timeout);
+    page.on('dialog', async dialog => {
+      (await dialog.accept());
+    });
+    await page.click('#resetButton');
+    try {
+      let someVar = await page.waitForSelector('.step');
+      const Length8 = await page.evaluate(() => document.querySelectorAll('.step').length);
+      expect(Length8).toBe(1);
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }, timeout);
 });
     
     

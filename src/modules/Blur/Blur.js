@@ -1,8 +1,8 @@
 module.exports = exports = function(pixels, blur) {
   const pixelSetter = require('../../util/pixelSetter.js');
 
-  let kernel = kernelGenerator(blur),
-    pixs = {
+  let kernel = kernelGenerator(blur), // Generate the Gaussian kernel based on the sigma input.
+    pixs = { // Separates the rgb channel pixels to convolve on the GPU.
       r: [],
       g: [],
       b: [],
@@ -20,22 +20,22 @@ module.exports = exports = function(pixels, blur) {
     }
   }
 
-  const convolve = require('../_nomodule/gpuUtils').convolve;
+  const convolve = require('../_nomodule/gpuUtils').convolve; // GPU convolution function.
 
-  const conPix = convolve([pixs.r, pixs.g, pixs.b], kernel);
+  const conPix = convolve([pixs.r, pixs.g, pixs.b], kernel); // Convolves the pixels (all channels separately) on the GPU.
 
   for (let y = 0; y < pixels.shape[1]; y++){
     for (let x = 0; x < pixels.shape[0]; x++){
       var pixelvalue = [Math.max(0, Math.min(conPix[0][y][x], 255)),
         Math.max(0, Math.min(conPix[1][y][x], 255)),
         Math.max(0, Math.min(conPix[2][y][x], 255))];
-      pixelSetter(x, y, pixelvalue, pixels);
+      pixelSetter(x, y, pixelvalue, pixels); // Sets the image pixels according to the blurred values.
     }
   }
 
   return pixels;
 
-  //Generates a 5x5 Gaussian kernel
+  // Generates a 5x5 Gaussian kernel.
   function kernelGenerator(sigma = 1) {
 
     let kernel = [],

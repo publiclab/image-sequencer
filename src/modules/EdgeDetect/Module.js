@@ -1,6 +1,8 @@
 const Blur = require('../Blur/Blur');
 /*
 * Detect Edges in an Image
+* Uses Canny method for the same
+* Read more: https://en.wikipedia.org/wiki/Canny_edge_detector
 */
 module.exports = function edgeDetect(options, UI) {
 

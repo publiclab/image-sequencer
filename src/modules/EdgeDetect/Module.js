@@ -1,5 +1,7 @@
-/*
+/**
 * Detect Edges in an Image
+* Uses Canny method for the same
+* Read more: https://en.wikipedia.org/wiki/Canny_edge_detector
 */
 module.exports = function edgeDetect(options, UI) {
 
@@ -19,17 +21,17 @@ module.exports = function edgeDetect(options, UI) {
 
     var step = this;
 
-    // Blur the image
+    // Blur the image.
     const internalSequencer = ImageSequencer({ inBrowser: false, ui: false });
     return internalSequencer.loadImage(input.src, function() {
-      internalSequencer.importJSON([{ 'name': 'blur', 'options': { blur: options.blur } }]);
+      internalSequencer.importJSON([{ 'name': 'blur', 'options': { blur: options.blur } }]); // Blurs the image before detecting edges to reduce noise.
       return internalSequencer.run(function onCallback(internalOutput) {
         require('get-pixels')(internalOutput, function(err, blurPixels) {
           if (err) {
             return;
           }
 
-          // Extra Manipulation function used as an enveloper for applying gaussian blur and Convolution
+          // Extra Manipulation function used as an enveloper for applying gaussian blur and Convolution.
           function changePixel(r, g, b, a) {
             return [(r + g + b) / 3, (r + g + b) / 3, (r + g + b) / 3, a];
           }

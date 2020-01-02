@@ -1,3 +1,7 @@
+/**
+ * @description Maps module input types to their respective html <input> tag types.
+ * @param {Object} inputInfo Object containing the type and optionally min/max for range type inputs.
+ */
 function mapHtmlTypes(inputInfo){
   var htmlType;
   switch(inputInfo.type.toLowerCase()){

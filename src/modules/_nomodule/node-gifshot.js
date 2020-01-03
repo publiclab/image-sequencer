@@ -1,4 +1,3 @@
-const puppeteer = eval('require')('puppeteer');
 
 /**
  * @param {Object} options GIFShot options object
@@ -6,6 +5,7 @@ const puppeteer = eval('require')('puppeteer');
  * @returns {null}
  */
 function nodejsGIFShot(options, cb) {
+  const puppeteer = eval('require')('puppeteer');
 
   puppeteer.launch(
     {
@@ -25,12 +25,21 @@ function nodejsGIFShot(options, cb) {
                 });
               },
               options
-              ).then(obj => {
-                browser.close().then(() => {
-                  if (cb) cb(obj);
+              )
+                .then(obj => {
+                  browser.close().then(() => {
+                    if (cb) cb(obj);
+                  });
+                })
+                .catch(e => {
+                  console.log('Puppeteer error: ', e);
+                  browser.close().then(() => {
+                    if (cb) cb({
+                      error: true,
+                      errorMsg: e
+                    });
+                  });
                 });
-              })
-                .catch(e => console.log('Puppeteer error: ', e));
             });
         });
       });

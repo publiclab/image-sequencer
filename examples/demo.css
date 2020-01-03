@@ -353,21 +353,17 @@ a.name-header{
 }
 @-webkit-keyframes fadein {
  from {
-   bottom: 0;
    opacity: 0;
  }
  to {
-   bottom: 30px;
    opacity: 1;
  }
 }
 @keyframes fadein {
  from {
-   bottom: 0;
    opacity: 0;
  }
  to {
-   bottom: 30px;
    opacity: 1;
  }
 }

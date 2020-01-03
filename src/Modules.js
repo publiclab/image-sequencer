@@ -31,6 +31,7 @@ module.exports = {
   'import-image': require('./modules/ImportImage'),
   'minify-image': require('./modules/MinifyImage'),
   'invert': require('image-sequencer-invert'),
+  'matcher': require('./modules/Matcher'),
   'ndvi': require('./modules/Ndvi'),
   'ndvi-colormap': require('./modules/NdviColormap'),
   'noise-reduction': require('./modules/NoiseReduction'),

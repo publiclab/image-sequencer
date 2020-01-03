@@ -61,6 +61,7 @@
     "jspdf": "^1.5.3",
     "jsqr": "^1.1.1",
     "lodash": "^4.17.11",
+    "matcher-core": "git@github.com:publiclab/matcher-core.git#matcher-node",
     "ndarray": "^1.0.18",
     "opencv.js": "^1.2.1",
     "ora": "^3.0.0",

@@ -14,7 +14,7 @@ let sequencer = ImageSequencer({ui: false});
 sequencer.loadImages(GIF);
 sequencer.addSteps('brightness');
 
-test('Output is correct', t => {
+test('GIF Ouput is correct', t => {
   sequencer.run({mode: 'test'}, () => {
     let result = sequencer.steps[1].output.src;
 

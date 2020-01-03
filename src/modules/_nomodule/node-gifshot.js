@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer');
+const puppeteer = eval('require')('puppeteer');
 
 /**
  * @param {Object} options GIFShot options object
@@ -29,7 +29,8 @@ function nodejsGIFShot(options, cb) {
                 browser.close().then(() => {
                   if (cb) cb(obj);
                 });
-              });
+              })
+                .catch(e => console.log('Puppeteer error: ', e));
             });
         });
       });

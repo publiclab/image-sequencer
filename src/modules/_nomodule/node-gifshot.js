@@ -1,4 +1,4 @@
-const puppeteer = eval('require')('puppeteer');
+const puppeteer = require('puppeteer');
 
 /**
  * @param {Object} options GIFShot options object

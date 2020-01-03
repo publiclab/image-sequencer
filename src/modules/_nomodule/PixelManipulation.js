@@ -4,7 +4,8 @@ const pixelSetter = require('../../util/pixelSetter.js'),
   ndarray = require('ndarray'),
   gifshot = require('gifshot'),
   fs = require('fs'),
-  path = require('path');
+  nodejsGIFShot = require('./node-gifshot');
+path = require('path');
 /*
  * General purpose per-pixel manipulation
  * accepting a changePixel() method to remix a pixel's channels
@@ -95,23 +96,32 @@ module.exports = function PixelManipulation(image, options) {
           }
 
           Promise.all(dataPromises).then(datauris => {
-            gifshot.createGIF({
+            const gifshotOptions = {
               images: datauris,
               frameDuration: 1, // Duration of each frame in 1/10 seconds.
               numFrames: datauris.length,
               gifWidth: perFrameShape[0],
               gifHeight: perFrameShape[1]
-            },
-            function(obj) {
-              if (obj.error) {
-                console.log('gifshot error: ', obj.error);
+            };
+  
+            const gifshotCb = out => {
+              if (out.error) {
+                console.log('gifshot error: ', out.errorMsg);
               }
-
+  
               if (options.output)
-                options.output(options.image, obj.image, 'gif', wasmSuccess);
+                options.output(options.image, out.image, 'gif', wasmSuccess);
               if (options.callback) options.callback();
-            });
+            };
+
+            if (options.inBrowser) {
+              gifshot.createGIF(gifshotOptions, gifshotCb);
+            }
+            else {
+              nodejsGIFShot(gifshotOptions, gifshotCb);
+            }
           });
+
         }
         else {
           getDataUri(frames[0], options.format).then(datauri => {
@@ -126,7 +136,6 @@ module.exports = function PixelManipulation(image, options) {
     // Get pixels of each frame
     if (isGIF) {
       const { shape } = pixels;
-
       const [
         noOfFrames,
         width,

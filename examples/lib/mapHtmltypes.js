@@ -24,7 +24,7 @@ function mapHtmlTypes(inputInfo){
     htmlType = 'text';
     break;
   }
-  var response = inputInfo;
+  var response = Object.assign({}, inputInfo);
   response.type = htmlType;
   return response;
 }

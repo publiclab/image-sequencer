@@ -30,8 +30,7 @@ function nodejsGIFShot(options, cb) {
                   if (cb) cb(obj);
                 });
               });
-            }
-            );
+            });
         });
       });
     });

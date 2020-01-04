@@ -72,7 +72,7 @@ module.exports = function MinifyImage(options, UI) {
           plugins: [
             imageminJpegtran(),
             imageminPngquant({
-              quality: quality
+              quality: [0.6, 0.8]
             })
           ]
         });
@@ -95,3 +95,4 @@ module.exports = function MinifyImage(options, UI) {
     UI: UI
   };
 };
+

@@ -1,11 +1,10 @@
-const puppeteer = eval('require')('puppeteer');
-
 /**
  * @param {Object} options GIFShot options object
  * @param {Function} cb GIFShot callback
  * @returns {null}
  */
 function nodejsGIFShot(options, cb) {
+  const puppeteer = eval('require')('puppeteer');
   puppeteer.launch(
     {
       headless: true,

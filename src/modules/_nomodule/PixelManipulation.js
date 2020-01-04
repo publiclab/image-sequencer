@@ -22,8 +22,7 @@ module.exports = function PixelManipulation(image, options) {
   // To handle the case where pixelmanipulation is called on the input object itself
   // like input.pixelManipulation(options)
 
-  const imgType = image.src.split(':')[1].split(';')[0].split('/')[1], // MineType of the image -png, jpg, gif etc.
-    isGIF = imgType == 'gif';
+  const isGIF = image.src.includes('gif');
   let numFrames = 1, // Number of frames: 1 for a still image
     frames = [], // Ndarray of pixels of each frame
     perFrameShape, // Width, Height and color chanels of each frame

@@ -1,5 +1,6 @@
 module.exports = function MinifyImage(options, UI) {
   var output;
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
   if (!options.inBrowser) {
     base64Img = require('base64-img');
     imagemin = require('imagemin');
@@ -39,17 +40,18 @@ module.exports = function MinifyImage(options, UI) {
       return blob;
 
     }
+    var quality = options.quality || defaults.quality;
     if (options.inBrowser) {
       var Compressor = require('compressorjs');
       var blob = dataURItoBlob(input.src);
       new Compressor(blob, {
-        quality: options.quality || 0.5,
+        quality: quality,
         success(result) {
           var reader = new FileReader();
           reader.readAsDataURL(result);
           reader.onloadend = function () {
             base64data = reader.result;
-            output(base64data, input.format);
+            output(result, base64data, input.format);
             if (callback) callback();
             return;
           };
@@ -70,13 +72,13 @@ module.exports = function MinifyImage(options, UI) {
           plugins: [
             imageminJpegtran(),
             imageminPngquant({
-              quality: [0.6, 0.8]
+              quality: quality
             })
           ]
         });
         var destPath = __dirname + '/results/test.' + input.format;
         var data = base64Img.base64Sync(destPath);
-        output(data, input.format);
+        output(destPath, data, input.format);
         if (callback) callback();
       })();
     }
@@ -93,5 +95,3 @@ module.exports = function MinifyImage(options, UI) {
     UI: UI
   };
 };
-
-

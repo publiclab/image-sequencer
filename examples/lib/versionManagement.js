@@ -1,4 +1,10 @@
 /**
+ * Functions for getting version information.
+ * Note: these functions are not used by the service worker to check for updates;
+ * the service worker updates whenever sw.js has changed.
+ */
+
+/**
  * Get the current version number from package.json on the homepage.
  * @param {function} callback The function that uses the version number.
  */

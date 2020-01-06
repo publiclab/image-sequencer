@@ -1,7 +1,7 @@
 Image Sequencer
 ====
 
-
+[![Code of Conduct](https://img.shields.io/badge/code-of%20conduct-green.svg)](https://publiclab.org/conduct)
 [![Build Status](https://travis-ci.org/publiclab/image-sequencer.svg?branch=master)](https://travis-ci.org/publiclab/image-sequencer) [![Maintainability](https://api.codeclimate.com/v1/badges/5906996dd2e90aca6398/maintainability)](https://codeclimate.com/github/publiclab/image-sequencer/maintainability) [![Codecov](https://img.shields.io/codecov/c/github/publiclab/image-sequencer.svg?logo=codecov)](https://codecov.io/gh/publiclab/image-sequencer)
 
 - **Latest Stable Demo**: https://sequencer.publiclab.org

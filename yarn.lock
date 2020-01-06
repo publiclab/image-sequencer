@@ -3767,6 +3767,15 @@ fs-extra@^4.0.1:
     jsonfile "^4.0.0"
     universalify "^0.1.0"
 
+fs-extra@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-8.1.0.tgz#49d43c45a88cd9677668cb7be1b46efdb8d2e1c0"
+  integrity sha512-yhlQgA6mnOJUKOsRUFsgJdQCvkKhcz8tlZG5HBQfReYZy46OwLcY+Zia0mtdHsOo9y/hP+CxMN0TU9QxoOtG4g==
+  dependencies:
+    graceful-fs "^4.2.0"
+    jsonfile "^4.0.0"
+    universalify "^0.1.0"
+
 fs-minipass@^1.2.5:
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/fs-minipass/-/fs-minipass-1.2.5.tgz#06c277218454ec288df77ada54a03b8702aacb9d"
@@ -4168,7 +4177,7 @@ gpu.js@^2.3.1:
     gl-wiretap "^0.6.2"
     gpu-mock.js "^1.1.1"
 
-graceful-fs@^4.1.10, graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.2:
+graceful-fs@^4.1.10, graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.2:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.3.tgz#4a12ff1b60376ef09862c2093edd908328be8423"
   integrity sha512-a30VEBm4PEdx1dRB7MFK7BejejvCvBronbLjht+sHuGYj8PHs7M/5Z+rt5lw551vZ7yfTCj4Vuyy3mSJytDWRQ==
@@ -6284,14 +6293,16 @@ longest@^1.0.0:
   integrity sha1-MKCy2jj3N3DoKUoNIuZiXtd9AJc=
 
 looks-same@^7.0.0:
-  version "7.2.1"
-  resolved "https://registry.yarnpkg.com/looks-same/-/looks-same-7.2.1.tgz#cf8f58828ab906c80f19f2cdb30bf02e5a0afe3e"
-  integrity sha512-gAp0RSAKG0dF07uKTrAUzF2bSFuz85IY8JIAD2xj0oVWWhJSVtCWP9PXaQciGjDQJXQ2qcaun189xyqcYbGFbw==
+  version "7.2.2"
+  resolved "https://registry.yarnpkg.com/looks-same/-/looks-same-7.2.2.tgz#319d5c604e474846096633c7bf7262a68d5c5832"
+  integrity sha512-I8WvkX68SMfjmKpRIhIQW8U4p4VyWCnkLeRl/tzMIgMjnF+6JeWZqwZgFuMH7djm4VoGTQlyFZY5GFvN88nugg==
   dependencies:
     color-diff "^1.1.0"
     concat-stream "^1.6.2"
+    fs-extra "^8.1.0"
     js-graph-algorithms "1.0.18"
     lodash "^4.17.3"
+    nested-error-stacks "^2.1.0"
     parse-color "^1.0.0"
     pngjs "^3.3.3"
 
@@ -6800,6 +6811,11 @@ neo-async@^2.6.0:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha512-iyam8fBuCUpWeKPGpaNMetEocMt364qkCsfL9JuhjXX6dRnguRVOfk2GZaDpPjcOKiiXCPINZC1GczQ7iTq3Zw==
+
+nested-error-stacks@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/nested-error-stacks/-/nested-error-stacks-2.1.0.tgz#0fbdcf3e13fe4994781280524f8b96b0cdff9c61"
+  integrity sha512-AO81vsIO1k1sM4Zrd6Hu7regmJN1NSiAja10gc4bX3F0wd+9rQmcuHQaHVQCYIEC8iFXnE+mavh23GOt7wBgug==
 
 next-tick@1:
   version "1.0.0"

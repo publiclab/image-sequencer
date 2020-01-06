@@ -36,7 +36,6 @@ module.exports = function createMetaModule(mapFunction, moduleOptions) {
 
       var step = this;
 
-
       // map inputs to internal step options;
       // use this to set defaults for internal steps
       // and to expose internal settings as external meta-module parameters;

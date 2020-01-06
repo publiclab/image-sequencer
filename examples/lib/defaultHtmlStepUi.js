@@ -345,10 +345,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
-      _sequencer.getImageDimensions(step.imgElement.src, function (dim) {
-        step.ui.querySelector('.' + step.name).attributes['data-original-title'].value = `<div style="text-align: center"><p>Image Width: ${dim.width}<br>Image Height: ${dim.height}</br></div>`;
-      });
-    })
+      updateDimensions(step);
+    });
 
     // Handle the wasm bolt display
 
@@ -357,6 +355,17 @@ function DefaultHtmlStepUi(_sequencer, options) {
       else $step('.wasm-tooltip').fadeOut();
     }
     else $step('.wasm-tooltip').fadeOut();
+  }
+  /**
+   * @description Updates Dimension of the image 
+   * @param {Object} step  - Current Step
+   * @returns {void}
+   *  
+   */
+  function updateDimensions(step){
+    _sequencer.getImageDimensions(step.imgElement.src, function (dim) {
+      step.ui.querySelector('.' + step.name).attributes['data-original-title'].value = `<div style="text-align: center"><p>Image Width: ${dim.width}<br>Image Height: ${dim.height}</br></div>`;
+    });
   }
 
   /**
@@ -428,7 +437,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
     onRemove: onRemove,
     onDraw: onDraw,
     notify: notify,
-    imageHover: imageHover
+    imageHover: imageHover,
+    updateDimensions: updateDimensions
   };
 }
 

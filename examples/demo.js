@@ -312,6 +312,7 @@ window.onload = function () {
         step.imgElement.src = reader.result;
       
       insertPreview.updatePreviews(reader.result, document.querySelector('#addStep'));
+      DefaultHtmlStepUi(sequencer).updateDimensions(step);
     },
     onTakePhoto: function (url) {
       var step = sequencer.steps[0];

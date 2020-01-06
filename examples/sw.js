@@ -33,6 +33,7 @@ self.addEventListener('fetch', function(event) {
   );
 });
 
+// When the update modal sends a 'skipWaiting' message, call the skipWaiting method.
 self.addEventListener('message', function(event) {
   if(event.data.action === 'skipWaiting') {
     self.skipWaiting();

@@ -1104,10 +1104,10 @@ bluebird@*:
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.3.tgz#7d01c6f9616c9a51ab0f8c549a79dfe6ec33efa7"
   integrity sha512-/qKPUQlaW1OyR51WeCPBvRnAlnZFUJkCSG5HzGnuIqhgyJtF+T94lFnn33eiazjRm2LAHVy2guNnaq48X9SJuw==
 
-blueimp-canvas-to-blob@^3.14.0:
-  version "3.15.0"
-  resolved "https://registry.yarnpkg.com/blueimp-canvas-to-blob/-/blueimp-canvas-to-blob-3.15.0.tgz#7534d81c81624c4a1507f80673abd766f5e4b5cc"
-  integrity sha512-gogzDEkyXhIyEmbwkQ8WXHOXHgouVpRHRxy4Vy3CkDuTjNPdjHZofqCVE52vqCgeeCPGioSPjE91ECuClv9Big==
+blueimp-canvas-to-blob@^3.16.0:
+  version "3.17.0"
+  resolved "https://registry.yarnpkg.com/blueimp-canvas-to-blob/-/blueimp-canvas-to-blob-3.17.0.tgz#d796e72aa1fd37f9471e0396e64d323956564a23"
+  integrity sha512-LcuVZZtKtE4yUrLb0IQA7ndMm19gooDTrzvjjkvmQ1MhkFlSzTw+8Ftp+/ckfGeP2UDQvDsPyy8mIT69itAqbg==
 
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   version "4.11.8"
@@ -1952,11 +1952,11 @@ component-inherit@0.0.3:
   integrity sha1-ZF/ErfWLcrZJ1crmUTVhnbJv8UM=
 
 compressorjs@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/compressorjs/-/compressorjs-1.0.5.tgz#b02735a802177447a7a14d07d63cfff61c7580dd"
-  integrity sha512-QUcAxEOG/qc/BoSbmv9Y1lZrKz7uEPbMirNgT4c/S0xibRB24hz+2pkNBUs9FPvY5nKKxsELkXIono/DBwe8XQ==
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/compressorjs/-/compressorjs-1.0.6.tgz#75c55e2c3d797afeaa3084bd0cbf03e8374e4b6d"
+  integrity sha512-HgaDx4AGCjJOyOt08JsGO9VLJIHwy8guZDU1OG2jtuz77MG8PQr+reKt5J6aYZCajVIKXsFXJreZeEmk6lXFmA==
   dependencies:
-    blueimp-canvas-to-blob "^3.14.0"
+    blueimp-canvas-to-blob "^3.16.0"
     is-blob "^2.0.1"
 
 concat-map@0.0.1:

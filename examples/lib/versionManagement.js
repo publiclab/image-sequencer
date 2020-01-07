@@ -5,7 +5,9 @@
  * sw.js is changed when grunt replace:version is run. This task is run during
  * grunt build, serve, and productions tasks.
  */
+
 const package = require('../../package.json');
+
 /**
  * Get the current version number from package.json on the homepage.
  * @param {function} callback The function that uses the version number.

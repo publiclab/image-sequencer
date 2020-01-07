@@ -4,8 +4,7 @@ const pixelSetter = require('../../util/pixelSetter.js'),
   ndarray = require('ndarray'),
   gifshot = require('gifshot'),
   fs = require('fs'),
-  nodejsGIFShot = require('./node-gifshot');
-path = require('path');
+  path = require('path');
 /*
  * General purpose per-pixel manipulation
  * accepting a changePixel() method to remix a pixel's channels
@@ -117,6 +116,7 @@ module.exports = function PixelManipulation(image, options) {
               gifshot.createGIF(gifshotOptions, gifshotCb);
             }
             else {
+              const nodejsGIFShot = eval('require')('./node-gifshot');
               nodejsGIFShot(gifshotOptions, gifshotCb);
             }
           });

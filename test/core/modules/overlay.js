@@ -14,7 +14,7 @@ let sequencer = ImageSequencer({ui: false});
 
 test('overlay module loads correctly', t => {
   sequencer.loadImages(image);
-  sequencer.addSteps('colorbar', {});
+  sequencer.addSteps('brightness');
   sequencer.addSteps('overlay', options);
 
   t.equal(sequencer.steps[2].options.name, 'overlay', 'overlay module is getting loaded');

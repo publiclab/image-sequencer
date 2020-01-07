@@ -36,12 +36,12 @@ module.exports = function createMetaModule(mapFunction, moduleOptions) {
     */
 
     // ui: false prevents internal logs
-    var internalSequencer = ImageSequencer({ inBrowser: false, ui: false });
 
     function draw(input, callback) {
 
       var step = this;
-
+      
+      var internalSequencer = ImageSequencer({ inBrowser: false, ui: false });
       internalSequencer.loadImage(input.src, function onAddImage() {
         internalSequencer.importJSON(steps);
         internalSequencer.run(function onCallback(internalOutput) {

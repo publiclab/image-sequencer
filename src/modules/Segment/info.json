@@ -1,0 +1,14 @@
+{
+    "name": "segment",
+    "description": "Segments the image",
+    "inputs": {
+        "Segments": {
+            "type": "integer",
+            "desc": "No. of Segments to divide the Image",
+            "default": "3",
+            "min": "1",
+            "max": "7"
+        }
+    },
+    "docs-link":"https://towardsdatascience.com/introduction-to-image-segmentation-with-k-means-clustering-83fd0a9e2fc3"
+}

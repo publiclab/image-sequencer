@@ -2,6 +2,8 @@
  * Functions for getting version information.
  * Note: these functions are not used by the service worker to check for updates;
  * the service worker updates whenever sw.js has changed.
+ * sw.js is changed when grunt replace:version is run. This task is run during
+ * grunt build, serve, and productions tasks.
  */
 
 /**

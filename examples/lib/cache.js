@@ -6,9 +6,11 @@ var setupCache = function() {
     $('#update-prompt-modal').addClass('show');
   }
 
-  // When a new service worker has been loaded, the button in the update prompt
-  // modal should trigger the skipWaiting event to replace the current service
-  // worker with the new one.
+  /**
+  * When a new service worker has been loaded, the button in the update prompt
+  * modal should trigger the skipWaiting event to replace the current
+  * service worker with the new one.
+  */
   $('#reload').on('click', function() {
     newWorker.postMessage({ action: 'skipWaiting' });
   });
@@ -47,8 +49,10 @@ var setupCache = function() {
         console.log('Service worker registration failed, error:', error);
       });
 
-      // This is the event listener for when the service worker updates.
-      // When the service worker updates, reload the page.
+      /**
+      * This is the event listener for when the service worker updates.
+      * When the service worker updates, reload the page.
+      */
       let refreshing;
       navigator.serviceWorker.addEventListener('controllerchange', function() {
         if(refreshing) return;

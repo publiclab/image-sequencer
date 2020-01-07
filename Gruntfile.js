@@ -2,6 +2,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-uglify-es');
   grunt.loadNpmTasks('grunt-browser-sync');
+  grunt.loadNpmTasks('grunt-text-replace');
 
   require('matchdep')
     .filterDev('grunt-*')
@@ -48,6 +49,17 @@ module.exports = function(grunt) {
       }
     },
 
+    replace: {
+      version: {
+        src: ['examples/sw.js'],
+        overwrite: true,
+        replacements: [{
+          from: /image-sequencer-static-v.*/g,
+          to: "image-sequencer-static-v<%= pkg.version %>';"
+        }]
+      }
+    },
+
     uglify: {
       core: {
         src: ['./dist/image-sequencer.js'],
@@ -78,10 +90,10 @@ module.exports = function(grunt) {
 
   /* Default (development): Watch files and build on change. */
   grunt.registerTask('default', ['watch']);
-  grunt.registerTask('build', ['browserify:core', 'browserify:ui', 'uglify:core', 'uglify:ui']);
-  grunt.registerTask('serve', ['browserify:core', 'browserify:ui', 'browserSync', 'watch']);
+  grunt.registerTask('build', ['browserify:core', 'browserify:ui', 'replace:version', 'uglify:core', 'uglify:ui']);
+  grunt.registerTask('serve', ['browserify:core', 'browserify:ui', 'replace:version', 'browserSync', 'watch']);
   grunt.registerTask('compile', ['browserify:core', 'browserify:ui']);
-  grunt.registerTask('production', ['browserify:prodcore', 'browserify:produi', 'uglify:prodcore', 'uglify:produi']);
+  grunt.registerTask('production', ['browserify:prodcore', 'browserify:produi', 'replace:version', 'uglify:prodcore', 'uglify:produi']);
 
   grunt.registerTask('tests', ['browserify:tests']);
 };

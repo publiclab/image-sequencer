@@ -315,8 +315,55 @@ a.name-header{
   color: #444;
 }
 
+#version-number-text {
+  text-align: center;
+  padding-top: 100px;
+  color: gray;
+}
+#version-number-top-right {
+  position: fixed;
+  right: 2%;
+  top: 5%;
+  color: lightgray;
+}
 /* Non float rightward alignment*/
 .right {
   margin-left: auto;
   display: block;
+}
+
+#update-prompt-modal {
+ visibility: hidden;
+ min-width: 250px;
+ margin-left: -125px;
+ background-color: #333;
+ color: #fff;
+ text-align: center;
+ border-radius: 2px;
+ padding: 16px;
+ position: fixed;
+ z-index: 1000;
+ left: 10%;
+ top: 30px;
+}
+#update-prompt-modal.show {
+ visibility: visible;
+ -webkit-animation: fadein 0.5s;
+ animation: fadein 0.5s;
+}
+@-webkit-keyframes fadein {
+ from {
+   opacity: 0;
+ }
+ to {
+   opacity: 1;
+ }
+}
+@keyframes fadein {
+ from {
+   opacity: 0;
+ }
+ to {
+   opacity: 1;
+ }
 }

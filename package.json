@@ -88,7 +88,7 @@
     "grunt-contrib-uglify-es": "^3.3.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-text-replace": "^0.4.0",
-    "husky": "^3.0.5",
+    "husky": "^4.0.1",
     "image-filter-core": "~2.0.2",
     "image-filter-threshold": "~2.0.1",
     "jasmine-core": "^3.3.0",

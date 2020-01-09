@@ -1,50 +1,80 @@
-/*
- * Invert the image
- */
-function Sketch(options, UI) {
-
+module.exports = function Sketch(options, UI) {
+  // var defaults = require('../../util/getDefaults.js')(require('./info.json'));
   var output;
   
-  // The function which is called on every draw.
+
   function draw(input, callback, progressObj) {
-  
     progressObj.stop(true);
     progressObj.overrideFlag = true;
-  
+    
     var step = this;
-  
-    function changePixel(r, g, b, a) {
-      return [255 - r, 255 - g, 255 - b, a];
-    }
-  
-    function output(image, datauri, mimetype, wasmSuccess) {
-      step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
-    }
-  
-    return input.pixelManipulation({
-      output: output,
-      changePixel: changePixel,
-      format: input.format,
-      image: options.image,
-      inBrowser: options.inBrowser,
-      callback: callback,
-      useWasm:options.useWasm
+    var priorStep = this.getStep(-1);
+    // options.Segments = options.Segments || defaults.Segments ;
+    var Sketcher = require('./Sketch.js');
+    var getPixels = require('get-pixels');
+    getPixels(priorStep.output.src, function(err, pixels) {
+      // ImagePixels = pixels;
+      var $ = require('jquery'); // To make Blob-analysis work in Node
+      var img = $(priorStep.imgElement);
+      if(Object.keys(img).length === 0){
+        img = $(priorStep.options.step.imgElement);
+      }
+
+      var canvas = document.createElement('canvas');
+      canvas.width = pixels.shape[0];
+      canvas.height = pixels.shape[1];
+      
+      var context = canvas.getContext('2d');
+      
+      
+      
+      context.drawImage(img[0], 0, 0);
+      
+      
+      var sketcher = new Sketcher.Sketcher(canvas.width, canvas.height);
+      sketcher.progressUpdate(function (proportion, message) {
+        console.log((Math.round(proportion * 1000) / 10) + '% done - ' + message);
+        // document.title = (Math.round(proportion*1000)/10) + "% done - " + message;
+      });
+      sketcher.transformCanvas(canvas).whenReady(function () {
+        
+        function extraManipulation(pixels){
+          context = canvas.getContext('2d');
+          
+          var myImageData = context.getImageData(0, 0, canvas.width, canvas.height);
+          pixels.data = myImageData.data;
+         
+          return pixels;
+        }
+      
+        function output(image, datauri, mimetype, wasmSuccess) {
+          step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
+        }
+      
+        return require('../_nomodule/PixelManipulation.js')(input, {
+          output: output,
+          extraManipulation: extraManipulation,
+          format: input.format,
+          image: options.image,
+          inBrowser: options.inBrowser,
+          callback: callback
+        });
+        // return this.pixela;
+      });
+
     });
-  
+    
+    
+        
+       
+        
+        
+    
   }
-  
   return {
     options: options,
     draw: draw,
     output: output,
     UI: UI
   };
-}
-var info = {
-  'name': 'sketch',
-  'description': 'Converts image to its sketch.',
-  'inputs': {
-  }
 };
-module.exports = [Invert, info];
-  

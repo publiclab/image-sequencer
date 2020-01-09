@@ -2,7 +2,8 @@
  * Flip the image on vertical/horizontal axis.
  */
 module.exports = function FlipImage(options, UI) {
-  options.Axis = options.Axis || require('./info.json').inputs.Axis.default;
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+  options.Axis = options.Axis || defaults.Axis;
 
   var output,
     getPixels = require('get-pixels');

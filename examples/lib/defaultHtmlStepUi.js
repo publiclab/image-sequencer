@@ -314,18 +314,13 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     $stepAll('.download-btn').on('click', () => {
 
-      for (let index = 0; index < step.linkElements.length; index++){
-        
-        var element = document.createElement('a');
-        element.setAttribute('href', step.linkElements[index].href);
-        element.setAttribute('download', step.name + '.' + fileExtension(step.imgElement.src));
-        element.style.display = 'none';
-        document.body.appendChild(element);
-        
-        element.click();
-
-        document.body.removeChild(element);
-      }
+      var element = document.createElement('a');
+      element.setAttribute('href', step.output);
+      element.setAttribute('download', step.name + '.' + fileExtension(step.imgElement.src));
+      element.style.display = 'none';
+      document.body.appendChild(element);
+      
+      element.click();
     });
 
     // Fill inputs with stored step options
@@ -353,10 +348,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
-      _sequencer.getImageDimensions(step.imgElement.src, function (dim) {
-        step.ui.querySelector('.' + step.name).attributes['data-original-title'].value = `<div style="text-align: center"><p>Image Width: ${dim.width}<br>Image Height: ${dim.height}</br></div>`;
-      });
-    })
+      updateDimensions(step);
+    });
 
     // Handle the wasm bolt display
 
@@ -365,6 +358,17 @@ function DefaultHtmlStepUi(_sequencer, options) {
       else $step('.wasm-tooltip').fadeOut();
     }
     else $step('.wasm-tooltip').fadeOut();
+  }
+  /**
+   * @description Updates Dimension of the image 
+   * @param {Object} step  - Current Step
+   * @returns {void}
+   *  
+   */
+  function updateDimensions(step){
+    _sequencer.getImageDimensions(step.imgElement.src, function (dim) {
+      step.ui.querySelector('.' + step.name).attributes['data-original-title'].value = `<div style="text-align: center"><p>Image Width: ${dim.width}<br>Image Height: ${dim.height}</br></div>`;
+    });
   }
 
   /**
@@ -438,7 +442,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
     onRemove: onRemove,
     onDraw: onDraw,
     notify: notify,
-    imageHover: imageHover
+    imageHover: imageHover,
+    updateDimensions: updateDimensions
   };
 }
 

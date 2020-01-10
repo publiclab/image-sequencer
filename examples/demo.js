@@ -3,7 +3,9 @@ var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js'),
   intermediateHtmlStepUi = require('./lib/intermediateHtmlStepUi.js'),
   DefaultHtmlStepUi = require('./lib/defaultHtmlStepUi.js'),
   urlHash = require('./lib/urlHash.js'),
-  insertPreview = require('./lib/insertPreview.js');
+  insertPreview = require('./lib/insertPreview.js'),
+  versionManagement = require('./lib/versionManagement.js');
+
 
 window.onload = function () {
   sequencer = ImageSequencer(); // Set the global sequencer variable
@@ -27,6 +29,17 @@ window.onload = function () {
       }
     }
   };
+
+  versionManagement.getLatestVersionNumber(function(versionNumber) {
+    console.log("The latest NPM version number for Image Sequencer (from GitHub) is v" + versionNumber);
+  });
+  console.log("The local version number for Image Sequencer is v" + versionManagement.getLocalVersionNumber());
+
+  function displayVersionNumber() {
+    $('#version-number-text').text("Image Sequencer v" + versionManagement.getLocalVersionNumber());
+    $('#version-number-top-right').text("v" + versionManagement.getLocalVersionNumber());
+  }
+  displayVersionNumber();
 
   function refreshOptions(options) {
     // Default options if parameter is empty.
@@ -310,8 +323,9 @@ window.onload = function () {
         step.options.step.imgElement.src = reader.result;
       else
         step.imgElement.src = reader.result;
-      
+
       insertPreview.updatePreviews(reader.result, document.querySelector('#addStep'));
+      DefaultHtmlStepUi(sequencer).updateDimensions(step);
     },
     onTakePhoto: function (url) {
       var step = sequencer.steps[0];

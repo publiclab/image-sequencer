@@ -1,5 +1,5 @@
 module.exports = function Dynamic(options, UI) {
-
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
   var output;
 
   // This function is called on every draw.
@@ -11,7 +11,7 @@ module.exports = function Dynamic(options, UI) {
     var step = this;
 
     // start with monochrome, but if options.red, options.green, and options.blue are set, accept them too
-    options.monochrome = options.monochrome || '(R+G+B)/3';
+    options.monochrome = options.monochrome || defaults.monochrome;
 
     function generator(expression) {
       var func = 'f = function (r, g, b, a) { var R = r, G = g, B = b, A = a;';

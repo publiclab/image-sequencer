@@ -1,5 +1,4 @@
-const staticCacheName = 'image-sequencer-static-v3';
-
+const staticCacheName = 'image-sequencer-static-v3.5.1';
 self.addEventListener('install', event => {
   console.log('Attempting to install service worker');
 });
@@ -32,4 +31,11 @@ self.addEventListener('fetch', function(event) {
       });
     })
   );
+});
+
+// When the update modal sends a 'skipWaiting' message, call the skipWaiting method.
+self.addEventListener('message', function(event) {
+  if(event.data.action === 'skipWaiting') {
+    self.skipWaiting();
+  }
 });

@@ -4,6 +4,7 @@ module.exports = function Dynamic(options, UI, util) {
 
   options.func = options.func || defaults.blend;
   options.offset = options.offset || defaults.offset;
+  options.blendMode = options.blendMode || defaults.blendMode;
 
   var output;
 
@@ -32,19 +33,84 @@ module.exports = function Dynamic(options, UI, util) {
       callback();
     }
 
+    // see http://docs.gimp.org/en/gimp-concepts-layer-modes.html for other blend modes
+
+    const multiply_mode = function (i, m) {
+      return ~~( (i * m) / 255 );
+    };
+    const divide_mode = function (i, m) {
+      return ~~( (256 * i) / (m + 1) );
+    };
+
+    const overlay_mode = function (i, m) {
+      return ~~( (i / 255) * (i + ((2 * m) / 255) * (255 - i)) );
+    };
+    
+    const screen_mode = function (i, m) {
+      return ~~( 255 - ((255 - m) * (255 - i)) / 255 );
+    };
+    
+    const sof_light_mode = function (i, m) {
+      var Rs = screen_mode(i, m);
+      return ~~( ((((255 - i) * m) + Rs) * i) / 255 );
+    };
+    
+    const color_dodge = function (i, m) {
+      return ~~( (256 * i) / (255 - m + 1) );
+    };
+
+    const burn_mode = function (i, m) {
+      return ~~( 255 - (256 * (255 - i)) / (m + 1));
+    };
+
+    const grain_extract_mode = function (i, m) {
+      return ~~( i - m + 128 );
+    };
+
+    const grain_merge_mode = function (i, m) {
+      return ~~( i + m - 128 );
+    };
+
     getPixels(priorStep.output.src, function(err, pixels) {
       options.firstImagePixels = pixels;
-
       function changePixel(r2, g2, b2, a2, x, y) {
         // blend!
         let p = options.firstImagePixels;
-        return options.func(
-          r2, g2, b2, a2,
-          p.get(x, y, 0),
-          p.get(x, y, 1),
-          p.get(x, y, 2),
-          p.get(x, y, 3)
-        );
+        let r1 = p.get(x, y, 0),
+          g1 = p.get(x, y, 1),
+          b1 = p.get(x, y, 2),
+          a1 = p.get(x, y, 3);
+        if(options.blendMode == 'default')
+          return options.func(
+            r2, g2, b2, a2, r1, g1, b1, a1
+          );
+        else if(options.blendMode == 'Color Dodge'){
+          return [color_dodge(r2, r1), color_dodge(g2, g1), color_dodge(b2, b1), 255];
+        }
+        else if(options.blendMode == 'Multiply'){
+          return [multiply_mode(r2, r1), multiply_mode(g2, g1), multiply_mode(b2, b1), multiply_mode(a2, a1)];
+        }
+        else if(options.blendMode == 'Divide'){
+          return [divide_mode(r2, r1), divide_mode(g2, g1), divide_mode(b2, b1), 255];
+        }
+        else if(options.blendMode == 'Overlay'){
+          return [overlay_mode(r2, r1), overlay_mode(g2, g1), overlay_mode(b2, b1), 255];
+        }
+        else if(options.blendMode == 'Screen'){
+          return [screen_mode(r2, r1), screen_mode(g2, g1), screen_mode(b2, b1), 255];
+        }
+        else if(options.blendMode == 'Soft Light'){
+          return [sof_light_mode(r2, r1), sof_light_mode(g2, g1), sof_light_mode(b2, b1), 255];
+        }
+        else if(options.blendMode == 'Color Burn'){
+          return [burn_mode(r2, r1), burn_mode(g2, g1), burn_mode(b2, b1), 255];
+        }
+        else if(options.blendMode == 'Grain Extract'){
+          return [grain_extract_mode(r2, r1), grain_extract_mode(g2, g1), grain_extract_mode(b2, b1), 255];
+        }
+        else if(options.blendMode == 'Grain Merge'){
+          return [grain_merge_mode(r2, r1), grain_merge_mode(g2, g1), grain_merge_mode(b2, b1), 255];
+        }
       }
 
       function output(image, datauri, mimetype, wasmSuccess) {

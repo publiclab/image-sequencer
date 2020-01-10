@@ -52,6 +52,7 @@ module.exports = function CropModule(options, UI) {
       extraManipulation: extraManipulation,
       format: input.format,
       image: options.image,
+      inBrowser: options.inBrowser,
       callback: callback,
       useWasm:options.useWasm
     });

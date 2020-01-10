@@ -9,7 +9,7 @@ module.exports = function Dynamic(options, UI, util) {
   // This function is called on every draw.
   function draw(input, callback, progressObj) {
 
-    options.offset = parseInt(options.offset) || -2;
+    options.offset = parseInt(options.offset || defaults.offset);
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;

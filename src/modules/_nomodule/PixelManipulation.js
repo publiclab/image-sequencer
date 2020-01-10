@@ -22,7 +22,6 @@ module.exports = function PixelManipulation(image, options) {
   // like input.pixelManipulation(options)
 
   const isGIF = image.src.includes('image/gif');
-  console.log('gif', image.src);
   let numFrames = 1, // Number of frames: 1 for a still image
     frames = [], // Ndarray of pixels of each frame
     perFrameShape, // Width, Height and color chanels of each frame

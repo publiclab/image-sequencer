@@ -1,17 +1,10 @@
-module.exports = function(pixels, options, priorStep){
-
-  var $ = require('jquery'); // To make Blob-analysis work in Node
-  
-  var img = $(priorStep.imgElement);
-  if(Object.keys(img).length === 0){
-    img = $(priorStep.options.step.imgElement);
-  }
-
+module.exports = function(pixels){
   var canvas = document.createElement('canvas');
   canvas.width = pixels.shape[0];
   canvas.height = pixels.shape[1];
   var ctx = canvas.getContext('2d');
-  ctx.drawImage(img[0], 0, 0);
+  ctx.putImageData(new ImageData(new Uint8ClampedArray(pixels.data), pixels.shape[0], pixels.shape[1]), 0, 0);
+  
   let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
 

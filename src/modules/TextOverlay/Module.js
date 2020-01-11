@@ -7,11 +7,9 @@ module.exports = function TextOverlay(options, UI) {
 
     var step = this;
 
-    var priorStep = this.getStep(-1); // get the previous step to add text onto it.
-
     function extraManipulation(pixels) {
       //if (options.step.inBrowser)
-      pixels = require('./TextOverlay')(pixels, options, priorStep);
+      pixels = require('./TextOverlay')(pixels, options);
       return pixels;
     }
 

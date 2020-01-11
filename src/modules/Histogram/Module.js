@@ -18,15 +18,15 @@ module.exports = function Channel(options, UI) {
 
     var step = this, hist = new Array(256).fill(0);
 
-    function changePixel(r, g, b, a) {
-      let pixVal = Math.round((r + g + b) / 3);
-      hist[pixVal]++;
-      return [r, g, b, a];
-    }
-
     function extraManipulation(pixels) {
       // if (!options.inBrowser)
       //     require('fs').writeFileSync('./output/histo.txt', hist.reduce((tot, cur, idx) => `${tot}\n${idx} : ${cur}`, ``));
+      for (let x = 0; x < pixels.shape[0]; x++) {
+        for (let y = 0; y < pixels.shape[1]; y++) {
+          let pixVal = Math.round(pixels.get(x, y, 0) + pixels.get(x, y, 1) + pixels.get(x, y, 2)) / 3;
+          hist[pixVal]++;
+        }
+      }
       var newarray = new Uint8Array(4 * 256 * 256);
       pixels.data = newarray;
       pixels.shape = [256, 256, 4];
@@ -70,7 +70,6 @@ module.exports = function Channel(options, UI) {
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       ui: options.step.ui,
-      changePixel: changePixel,
       extraManipulation: extraManipulation,
       format: input.format,
       image: options.image,

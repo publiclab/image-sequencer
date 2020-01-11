@@ -27,6 +27,7 @@ module.exports = function Blur(options, UI) {
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       ui: options.step.ui,
+      inBrowser: options.inBrowser,
       extraManipulation: extraManipulation,
       format: input.format,
       image: options.image,

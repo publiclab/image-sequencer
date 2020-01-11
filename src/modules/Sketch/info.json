@@ -1,6 +1,7 @@
 {
     "name": "sketch",
     "description": "Converts image to its sketch.",
+    "requires": ["webgl", "browser"],
     "inputs": {
     },
     "docs-link":""

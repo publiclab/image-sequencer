@@ -295,7 +295,6 @@ function DefaultHtmlStepUi(_sequencer, options) {
     $step('img').show();
     $stepAll('.load-spin').hide();
     $step('.load').hide();
-    $stepAll('.download-btn').off('click');
     
     step.imgElement.src = (step.name == 'load-image') ? step.output.src : step.output;
     var imgthumbnail = $step('.img-thumbnail').getDomElem();
@@ -309,7 +308,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       return output.split('/')[1].split(';')[0];
     }
 
-    $stepAll('.download-btn').on('click', () => {
+    $stepAll('.download-btn').unbind().on('click', () => {
 
       var element = document.createElement('a');
       element.setAttribute('href', step.output);

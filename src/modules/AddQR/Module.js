@@ -1,3 +1,4 @@
+const _ = require('lodash');
 module.exports = function AddQR(options, UI) {
 
   var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
@@ -13,34 +14,34 @@ module.exports = function AddQR(options, UI) {
 
     var step = this;
 
-    return getPixels(input.src, function(err, oldPixels) {
-      function changePixel(r, g, b, a) {
-        return [r, g, b, a];
-      }
+    function changePixel(r, g, b, a) {
+      return [r, g, b, a];
+    }
 
-      function extraManipulation(pixels, generateOutput) {
-        if (err) {
-          console.log(err);
-          return;
-        }
-        require('./QR')(options, pixels, oldPixels, generateOutput);
-      }
+    function extraManipulation(pixels, setRenderState, generateOutput) {
+      const oldPixels = _.cloneDeep(pixels);
+      setRenderState(false); // Prevent rendering of final output image until extraManipulation completes.
 
-      function output(image, datauri, mimetype, wasmSuccess) {
-        step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
-      }
-
-      return require('../_nomodule/PixelManipulation.js')(input, {
-        output: output,
-        ui: options.step.ui,
-        changePixel: changePixel,
-        extraManipulation: extraManipulation,
-        format: input.format,
-        image: options.image,
-        inBrowser: options.inBrowser,
-        callback: callback,
-        useWasm:options.useWasm
+      require('./QR')(options, pixels, oldPixels, () => {
+        setRenderState(true); // Allow rendering in the callback.
+        generateOutput();
       });
+    }
+
+    function output(image, datauri, mimetype, wasmSuccess) {
+      step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
+    }
+
+    return require('../_nomodule/PixelManipulation.js')(input, {
+      output: output,
+      ui: options.step.ui,
+      changePixel: changePixel,
+      extraManipulation: extraManipulation,
+      format: input.format,
+      image: options.image,
+      inBrowser: options.inBrowser,
+      callback: callback,
+      useWasm:options.useWasm
     });
   }
 

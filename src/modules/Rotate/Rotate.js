@@ -1,38 +1,81 @@
-module.exports = function Rotate(pixels, pixels2, options, rotate_value, width, height, cos, sin){
-  var imagejs = require('imagejs');
-  var height_half = Math.floor(height / 2);
-  var width_half = Math.floor(width / 2);
-  var dimension = width + height;
+const imagejs = require('imagejs'),
+  ndarray = require('ndarray'),
+  pixelSetter = require('../../util/pixelSetter');
 
-  if (rotate_value % 360 == 0)
-    return pixels;
-  function copyPixel(x1, y1, x2, y2,pixel_set,pixel_get){
-    pixel_set.set(x1, y1, 0, pixel_get.get(x2, y2, 0));
-    pixel_set.set(x1, y1, 1, pixel_get.get(x2, y2, 1));
-    pixel_set.set(x1, y1, 2, pixel_get.get(x2, y2, 2));
-    pixel_set.set(x1, y1, 3, pixel_get.get(x2, y2, 3));
+module.exports = function Rotate(pixels, finalPixels, rotate_value, width, height, cos, sin){
+  const height_half = Math.floor(height / 2),
+    width_half = Math.floor(width / 2);
+  dimension = width + height;
+
+  if (rotate_value % 360 == 0) return pixels;
+
+  function copyPixel(x1, y1, x2, y2, finalPix, initPix) {
+    finalPix.set(x1, y1, 0, initPix.get(x2, y2, 0));
+    finalPix.set(x1, y1, 1, initPix.get(x2, y2, 1));
+    finalPix.set(x1, y1, 2, initPix.get(x2, y2, 2));
+    finalPix.set(x1, y1, 3, initPix.get(x2, y2, 3));
   }
 
-  pixels1 = require('ndarray')(new Uint8Array(4 * dimension * dimension).fill(0), [dimension, dimension, 4]);
-  //copying all the pixels from image to pixels1
-  for (var n = 0; n < pixels.shape[0]; n++){
-    for (var m = 0; m < pixels.shape[1]; m++){
-      copyPixel(n + height_half, m + width_half, n, m,pixels1,pixels);
+  const intermediatePixels = new ndarray(
+    new Uint8Array(4 * dimension * dimension).fill(255),
+    [dimension, dimension, 4]
+  ); // Intermediate ndarray of pixels with a greater size to prevent clipping.
+
+  // Copying all the pixels from image to intermediatePixels
+  for (let x = 0; x < pixels.shape[0]; x++){
+    for (let y = 0; y < pixels.shape[1]; y++){
+      copyPixel(x + height_half, y + width_half, x, y, intermediatePixels, pixels);
     }
   }
-  //rotating pixels1
-  var bitmap = new imagejs.Bitmap({ width: pixels1.shape[0], height: pixels1.shape[1] });
-  bitmap._data.data = pixels1.data;
 
-  var rotated = bitmap.rotate({
+  // Rotating intermediatePixels
+  const bitmap = new imagejs.Bitmap({ width: intermediatePixels.shape[0], height: intermediatePixels.shape[1] });
+  
+  for (let x = 0; x < intermediatePixels.shape[0]; x++) {
+    for (let y = 0; y < intermediatePixels.shape[1]; y++) {
+      let r = intermediatePixels.get(x, y, 0),
+        g = intermediatePixels.get(x, y, 1),
+        b = intermediatePixels.get(x, y, 2),
+        a = intermediatePixels.get(x, y, 3);
+
+      bitmap.setPixel(x, y, r, g, b, a);
+    }
+  }
+
+  const rotated = bitmap.rotate({
     degrees: rotate_value,
   });
-  pixels1.data = rotated._data.data;
-  //cropping extra whitespace
-  for (var n = 0; n < pixels2.shape[0]; n++){
-    for (var m = 0; m < pixels2.shape[1]; m++){
-      copyPixel(n, m, n + Math.floor(dimension / 2 -  Math.abs(width * cos / 2) - Math.abs(height * sin / 2)) - 1, m + Math.floor(dimension / 2 - Math.abs(height * cos / 2) - Math.abs(width * sin / 2)) - 1,pixels2,pixels1);
+
+  for (let x = 0; x < intermediatePixels.shape[0]; x++) {
+    for (let y = 0; y < intermediatePixels.shape[1]; y++) {
+      const {r, g, b, a} = rotated.getPixel(x, y);
+      pixelSetter(x, y, [r, g, b, a], intermediatePixels);
     }
   }
-  return pixels2;
+
+  // Cropping extra whitespace
+  for (let x = 0; x < finalPixels.shape[0]; x++){
+    for (let y = 0; y < finalPixels.shape[1]; y++){
+      copyPixel(
+        x,
+        y,
+        x +
+        Math.floor(
+          dimension / 2 -
+          Math.abs(width * cos / 2) -
+          Math.abs(height * sin / 2)
+        ) - 1,
+        y +
+        Math.floor(
+          dimension / 2 -
+          Math.abs(height * cos / 2) -
+          Math.abs(width * sin / 2)
+        ) - 1,
+        finalPixels,
+        intermediatePixels
+      );
+    }
+  }
+
+  return finalPixels;
 };

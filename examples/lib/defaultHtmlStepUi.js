@@ -50,8 +50,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
                  '</p></div>\
                 </div>\
                 <div class="col-md-8 cal collapse in step-column">\
+                <p style="padding-left:32em"><span ><i class="fa fa-crosshairs fa-sm" aria-hidden="true"></i></span><span class="posx"></span><span class="posy"></span></p>\
                   <div class="load load-spin" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
-                  <p style="padding-left:25em"><span >Cursor Position:</span><span class="posx"></span><span class="posy"></span></p>\
                   <div class="step-image">\
                     <a class="cal collapse in"><img class="img-thumbnail step-thumbnail"/></a>\
                   </div>\

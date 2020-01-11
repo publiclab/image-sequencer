@@ -4,11 +4,10 @@ module.exports = function Dynamic(options, UI, util) {
   options.x = options.x || defaults.x;
   options.y = options.y || defaults.y;
 
-  if(sequencer.getSteps().length < 2)
+  if(options.step.inBrowser && !options.noUI && sequencer.getSteps().length < 2)
     options.offset = -1;
 
-  if (options.step.inBrowser) var ui = require('./Ui.js')(options.step, UI);
-
+  if (options.step.inBrowser && !options.noUI) var ui = require('./Ui.js')(options.step, UI);
 
   var output;
 
@@ -69,7 +68,7 @@ module.exports = function Dynamic(options, UI, util) {
       }
 
       function modifiedCallback() {
-        if (options.step.inBrowser) {
+        if (options.step.inBrowser && !options.noUI) {
           ui.setup();
         }
         callback();

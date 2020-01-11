@@ -1,3 +1,31 @@
+// Generates a 5x5 Gaussian kernel
+function kernelGenerator(sigma = 1) {
+
+  let kernel = [],
+    sum = 0;
+
+  if (sigma == 0) sigma += 0.05;
+
+  const s = 2 * Math.pow(sigma, 2);
+
+  for (let y = -2; y <= 2; y++) {
+    kernel.push([]);
+    for (let x = -2; x <= 2; x++) {
+      let r = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+      kernel[y + 2].push(Math.exp(-(r / s)));
+      sum += kernel[y + 2][x + 2];
+    }
+  }
+
+  for (let x = 0; x < 5; x++){
+    for (let y = 0; y < 5; y++){
+      kernel[y][x] = (kernel[y][x] / sum);
+    }
+  }
+
+  return kernel;
+}
+
 module.exports = exports = function(pixels, blur) {
   const pixelSetter = require('../../util/pixelSetter.js');
 
@@ -34,32 +62,4 @@ module.exports = exports = function(pixels, blur) {
   }
 
   return pixels;
-
-  // Generates a 5x5 Gaussian kernel.
-  function kernelGenerator(sigma = 1) {
-
-    let kernel = [],
-      sum = 0;
-
-    if (sigma == 0) sigma += 0.05;
-
-    const s = 2 * Math.pow(sigma, 2);
-
-    for (let y = -2; y <= 2; y++) {
-      kernel.push([]);
-      for (let x = -2; x <= 2; x++) {
-        let r = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-        kernel[y + 2].push(Math.exp(-(r / s)));
-        sum += kernel[y + 2][x + 2];
-      }
-    }
-
-    for (let x = 0; x < 5; x++){
-      for (let y = 0; y < 5; y++){
-        kernel[y][x] = (kernel[y][x] / sum);
-      }
-    }
-
-    return kernel;
-  }
 };

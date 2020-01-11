@@ -38,11 +38,11 @@ module.exports = (moduleName, options, benchmark, input) => {
     sequencer.run({mode: 'test'}, () => {
       let result = sequencer.steps[1].output.src;
 
-      base64Img.imgSync(result, target, 'result');
-      base64Img.imgSync(benchmark, target, 'benchmark');
+      base64Img.imgSync(result, target, `${moduleName}-result`);
+      base64Img.imgSync(benchmark, target, `${moduleName}-benchmark`);
 
-      result = './test_outputs/result.png';
-      benchmark = './test_outputs/benchmark.png';
+      result = `./test_outputs/${moduleName}-result.png`;
+      benchmark = `./test_outputs/${moduleName}-benchmark.png`;
 
       looksSame(result, benchmark, function(err, res) {
         if (err) console.log(err);

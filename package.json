@@ -5,7 +5,7 @@
   "main": "src/ImageSequencer.js",
   "scripts": {
     "debug": "TEST=true node ./index.js -i ./examples/images/monarch.png -s invert",
-    "test": "TEST=true istanbul cover tape test/core/*.js test/core/ui/user-interface.js test/core/modules/*.js | tap-spec; node test/core/sequencer/benchmark.js; grunt tests; cat ./output/core-tests.js | tape-run --render=\"tap-spec\"",
+    "test": "TEST=true istanbul cover tape test/core/*.js test/core/ui/user-interface.js test/core/modules/*.js | tap-spec; node test/core/sequencer/benchmark.js | tap-spec; node test/core/gifs/gif-test.js | tap-spec; grunt tests; cat ./output/core-tests.js | tape-run --render=\"tap-spec\"",
     "test-ui": "node node_modules/jasmine/bin/jasmine test/ui/spec/*.js",
     "test-ui-2": "node ./node_modules/.bin/jest",
     "setup": "npm i && npm i -g grunt grunt-cli && grunt build $$ npm rebuild --build-from-source",

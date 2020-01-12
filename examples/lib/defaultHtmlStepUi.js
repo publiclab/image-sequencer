@@ -399,9 +399,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
     // Enable the load-image insert-step button when there are steps after load-image
     // The logical operator is `> 2` because the number of steps is found before removing the step, actual logic is `steps.length - 1 > 1` which is later simplified.
     if (_sequencer.steps.length - 1 > 1) $('#load-image .insert-step').prop('disabled', false);
-    else $('#load-image .insert-step').prop('disabled', true);
-
-    $('div[class*=imgareaselect-]').remove();
+    $(step.imgElement).imgAreaSelect({
+      remove: true
+    });
   }
 
   function getPreview() {

@@ -13,7 +13,7 @@
             "default": 0
         },
         "offset": {
-            "type": "float",
+            "type": "integer",
             "desc": "offset to the output of the step on which the output of the last step is overlayed",
             "default": -2,
             "min": -2,

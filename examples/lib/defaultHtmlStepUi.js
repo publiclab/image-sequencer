@@ -276,7 +276,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         });
     });
 
-    $step('.color-picker-target').each(function(i, input) {
+    $stepAll('.color-picker-target').each(function(i, input) {
       $(input)
         .data('initValue', $(input).val())
         .data('hasChangedBefore', false)

@@ -27,8 +27,6 @@ module.exports = function CropModule(options, UI) {
 
     var step = this;
 
-    options.step.input = input.src;
-    
     function extraManipulation(pixels) {
       const newPixels = require('./Crop')(pixels, options, function() {
         // We should do this via event/listener:

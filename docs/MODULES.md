@@ -78,7 +78,7 @@ This module is used for averaging all the pixels of the image.
 
 ## blend-module
 
-This module is used for blending two images.<br /> For More info read: &nbsp; _[wiki](https://en.wikipedia.org/wiki/Blend_modes)_
+This module is used for blending two images. For More info read:  _[wiki](https://en.wikipedia.org/wiki/Blend_modes)_
 
 #### Usage
 

@@ -71,6 +71,7 @@ module.exports = function Dynamic(options, UI, util) {
       return ~~( i + m - 128 );
     };
 
+    
     getPixels(priorStep.output.src, function(err, pixels) {
       options.firstImagePixels = pixels;
       function changePixel(r2, g2, b2, a2, x, y) {
@@ -80,36 +81,25 @@ module.exports = function Dynamic(options, UI, util) {
           g1 = p.get(x, y, 1),
           b1 = p.get(x, y, 2),
           a1 = p.get(x, y, 3);
+
+        const blends = {
+          'Color Dodge': () => [color_dodge(r2, r1), color_dodge(g2, g1), color_dodge(b2, b1), 255],
+          'Multiply': () => [multiply_mode(r2, r1), multiply_mode(g2, g1), multiply_mode(b2, b1), multiply_mode(a2, a1)],
+          'Divide': () => [divide_mode(r2, r1), divide_mode(g2, g1), divide_mode(b2, b1), 255],
+          'Overlay': () => [overlay_mode(r2, r1), overlay_mode(g2, g1), overlay_mode(b2, b1), 255],
+          'Screen': () => [screen_mode(r2, r1), screen_mode(g2, g1), screen_mode(b2, b1), 255],
+          'Soft Light': () => [sof_light_mode(r2, r1), sof_light_mode(g2, g1), sof_light_mode(b2, b1), 255],
+          'Color Burn': () => [burn_mode(r2, r1), burn_mode(g2, g1), burn_mode(b2, b1), 255],
+          'Grain Extract': () => [grain_extract_mode(r2, r1), grain_extract_mode(g2, g1), grain_extract_mode(b2, b1), 255],
+          'Grain Merge': () => [grain_merge_mode(r2, r1), grain_merge_mode(g2, g1), grain_merge_mode(b2, b1), 255]
+        };
+        
         if(options.blendMode == 'default')
           return options.func(
             r2, g2, b2, a2, r1, g1, b1, a1
           );
-        else if(options.blendMode == 'Color Dodge'){
-          return [color_dodge(r2, r1), color_dodge(g2, g1), color_dodge(b2, b1), 255];
-        }
-        else if(options.blendMode == 'Multiply'){
-          return [multiply_mode(r2, r1), multiply_mode(g2, g1), multiply_mode(b2, b1), multiply_mode(a2, a1)];
-        }
-        else if(options.blendMode == 'Divide'){
-          return [divide_mode(r2, r1), divide_mode(g2, g1), divide_mode(b2, b1), 255];
-        }
-        else if(options.blendMode == 'Overlay'){
-          return [overlay_mode(r2, r1), overlay_mode(g2, g1), overlay_mode(b2, b1), 255];
-        }
-        else if(options.blendMode == 'Screen'){
-          return [screen_mode(r2, r1), screen_mode(g2, g1), screen_mode(b2, b1), 255];
-        }
-        else if(options.blendMode == 'Soft Light'){
-          return [sof_light_mode(r2, r1), sof_light_mode(g2, g1), sof_light_mode(b2, b1), 255];
-        }
-        else if(options.blendMode == 'Color Burn'){
-          return [burn_mode(r2, r1), burn_mode(g2, g1), burn_mode(b2, b1), 255];
-        }
-        else if(options.blendMode == 'Grain Extract'){
-          return [grain_extract_mode(r2, r1), grain_extract_mode(g2, g1), grain_extract_mode(b2, b1), 255];
-        }
-        else if(options.blendMode == 'Grain Merge'){
-          return [grain_merge_mode(r2, r1), grain_merge_mode(g2, g1), grain_merge_mode(b2, b1), 255];
+        else {
+          return blends[options.blendMode]();
         }
       }
 

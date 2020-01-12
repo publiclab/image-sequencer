@@ -599,3 +599,17 @@ let sequencer = ImageSequencer() // also for wasm mode i.e. default mode
 let sequencer = ImageSequencer({useWasm:false}) //for non-wasm mode 
 
 ```
+
+## Experimental GIF processing support
+
+ImageSequencer currently can process GIFs but only for most of the modules. Every frame of the GIF is manipulated sequentially (parallel processing would be preferable in the future).
+The final frames are then converted back to a GIF but in the process, the time duration of each frame is lost and defaults to `0.1s`.
+
+Modules that do not work:
+1. ColorBar (Will get fixed upon fixing overlay as this is a meta module which uses overlay)
+2. FisheyeGL
+4. Overlay
+5. Text Overlay (Almost fixed)
+6. Blend
+7. Histogram
+8. WebGL Distort

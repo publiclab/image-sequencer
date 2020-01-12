@@ -1,52 +1,41 @@
-module.exports = function Invert(options, UI) {
-  const pixelSetter = require('../../util/pixelSetter.js');
+const pixelSetter = require('../../util/pixelSetter.js'),
+  pixelManipulation = require('../_nomodule/PixelManipulation');
+
+module.exports = function Gradient(options, UI) {
 
   var output;
 
   // The function which is called on every draw.
   function draw(input, callback) {
-
-    var getPixels = require('get-pixels');
-    var savePixels = require('save-pixels');
-
     var step = this;
-
-    getPixels(input.src, function(err, pixels) {
-
-      if (err) {
-        console.log('Bad Image path');
-        return;
-      }
-
-      var width = pixels.shape[0];
-
-      for (var i = 0; i < pixels.shape[0]; i++) {
-        for (var j = 0; j < pixels.shape[1]; j++) {
-          let val = (i / width) * 255;
-          pixelSetter(i, j, [val, val, val, 255], pixels);
-                
-        }
-      }
-      var chunks = [];
-      var totalLength = 0;
-      var r = savePixels(pixels, input.format, { quality: 100 });
-
-      r.on('data', function(chunk) {
-        totalLength += chunk.length;
-        chunks.push(chunk);
-      });
-
-      r.on('end', function() {
-        var data = Buffer.concat(chunks, totalLength).toString('base64');
-        var datauri = 'data:image/' + input.format + ';base64,' + data;
-        output(input.image, datauri, input.format);
-        callback();
-      });
-    });
 
     function output(image, datauri, mimetype, wasmSuccess) {
       step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
     }
+
+    function extraManipulation(pixels) {
+      const [w, h] = pixels.shape;
+      for (var i = 0; i < w; i++) {
+        for (var j = 0; j < h; j++) {
+          let val = (i / w) * 255;
+          
+          pixelSetter(i, j, [val, val, val, 255], pixels);
+        }
+      }
+
+      return pixels;
+    }
+
+    return pixelManipulation(input, {
+      output,
+      extraManipulation,
+      callback,
+      format: input.format,
+      image: options.image,
+      inBrowser: options.inBrowser,
+      useWasm:options.useWasm
+    });
+
   }
 
   return {

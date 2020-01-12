@@ -18,16 +18,6 @@ module.exports = function Dynamic(options, UI, util) {
 
     var parseCornerCoordinateInputs = require('../../util/ParseInputCoordinates');
 
-    //parse the inputs
-    parseCornerCoordinateInputs(options, {
-      src: input.src,
-      x: { valInp: options.x, type: 'horizontal' },
-      y: { valInp: options.y, type: 'vertical' },
-    }, function(options, input) {
-      options.x = parseInt(input.x.valInp);
-      options.y = parseInt(input.y.valInp);
-    });
-
     // save the pixels of the base image
     var baseStepImage = this.getStep(options.offset).image;
     var baseStepOutput = this.getOutput(options.offset);
@@ -35,6 +25,19 @@ module.exports = function Dynamic(options, UI, util) {
     var getPixels = require('get-pixels');
 
     getPixels(input.src, function(err, pixels) {
+      // parse the inputs
+      parseCornerCoordinateInputs({
+        iw: pixels.shape[0],
+        ih: pixels.shape[1]
+      },
+      {
+        x: { valInp: options.x, type: 'horizontal' },
+        y: { valInp: options.y, type: 'vertical' },
+      }, function(opt, input) {
+        options.x = parseInt(input.x.valInp);
+        options.y = parseInt(input.y.valInp);
+      });
+
       options.secondImagePixels = pixels;
 
       function changePixel(r1, g1, b1, a1, x, y) {

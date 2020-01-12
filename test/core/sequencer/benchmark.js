@@ -42,19 +42,22 @@ function runBenchmarks(sequencer, t) {
   function cb() {
     var end = Date.now();
     console.log('Module ' + mods[0] + ' ran in: ' + (end - global.start) + ' milliseconds');
-    mods.splice(0, 1);
     if (mods.length > 1) { // Last one is test module, we need not benchmark it
       sequencer.steps[global.idx].output.src = image;
       global.idx++;
-      if (mods[0] === 'import-image' || (!!sequencer.modulesInfo(mods[0]).requires && sequencer.modulesInfo(mods[0]).requires.includes('webgl'))) {
+      mods.splice(0, 1);
+
+      while (mods[0] === 'import-image' || mods[0] === 'minify-image' || (!!sequencer.modulesInfo(mods[0]).requires && sequencer.modulesInfo(mods[0]).requires.includes('webgl'))) {
         /* Not currently working for this module, which is for importing a new image */
-        console.log('Bypassing import-image');
+        console.log(`Bypassing ${mods[0]}`);
         mods.splice(0, 1);
       }
+
       sequencer.addSteps(mods[0]);
       global.start = Date.now();
       sequencer.run({ index: global.idx }, cb);
-    } else {
+    }
+    else {
       t.end();
     }
   }

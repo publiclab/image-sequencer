@@ -32,10 +32,6 @@ module.exports = function Sketch(options, UI) {
       
       
       var sketcher = new Sketcher.Sketcher(canvas.width, canvas.height);
-      sketcher.progressUpdate(function (proportion, message) {
-        console.log((Math.round(proportion * 1000) / 10) + '% done - ' + message);
-        // document.title = (Math.round(proportion*1000)/10) + "% done - " + message;
-      });
       sketcher.transformCanvas(canvas).whenReady(function () {
         
         function extraManipulation(pixels){

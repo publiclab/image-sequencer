@@ -19,15 +19,8 @@ var Sketcher = (function () {
     this.edgeBlurAmount = 4;
     this.edgeAmount = 0.5;
     this.cont = null;
-    var progressUpdateFunctions = [];
-    this.progressUpdate = function (callback) {
-      progressUpdateFunctions.push(callback);
-    };
-    this.sendProgressUpdate = function (proportion, message) {
-      for (var i = 0; i < progressUpdateFunctions.length; i++) {
-        progressUpdateFunctions[i](proportion, message);
-      }
-    };
+    
+    
 		
     this.preparationFunctions = [];
     var totalPrepFunctions = 1;
@@ -49,12 +42,10 @@ var Sketcher = (function () {
             thisSketcher.whenReady = function (callback) {
               callback();
             };
-            thisSketcher.progressUpdate = function () {};
-            thisSketcher.progressUpdateFunctions = null;
+            
           } else {
-            var message = thisSketcher.preparationFunctions.shift()();
-            var proportion = 1 - thisSketcher.preparationFunctions.length / totalPrepFunctions;
-            thisSketcher.sendProgressUpdate(proportion, message);
+            thisSketcher.preparationFunctions.shift()();
+      
           }
         }, 10);
       }
@@ -70,7 +61,7 @@ var Sketcher = (function () {
       var imageData = context.getImageData(0, 0, width, height);
       var pixels = imageData.data;
 
-      this.sendProgressUpdate(0, 'Calculating required textures');
+      
       var pixelCodes = {};
       for (var x = 0; x < width; x++) {
         for (var y = 0; y < height; y++) {
@@ -98,10 +89,10 @@ var Sketcher = (function () {
             }
           }
         }
-        console.log(Object.keys(this.requiredColours).length + ' required colour levels');
+        
         if (Object.keys(this.requiredColours).length > this.maxTextures && this.levelSteps > 2) {
           this.levelSteps--;
-          console.log('Reducing to ' + this.levelSteps + ' RGB steps');
+          
           continue;
         }
         break;
@@ -128,10 +119,10 @@ var Sketcher = (function () {
           edges[index * 3 + 2] = pixels[index * 4 + 2];
         }
       }
-      this.sendProgressUpdate(1, 'Calculating edges');
+      
       var edges = this.calculateStandardDeviation(edges, this.edgeBlurAmount);
 
-      this.sendProgressUpdate(1, 'Assembling final image');
+      
       for (var x = 0; x < width; x++) {
         for (var y = 0; y < height; y++) {
           var index = x + y * width;

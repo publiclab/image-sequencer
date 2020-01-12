@@ -10,9 +10,9 @@
     "blendMode": {
       "type": "select",
       "desc": "Name of the Blend Mode to use",
-      "default": "default",
+      "default": "custom",
       "values": [
-        "default",
+        "custom",
         "Multiply",
         "Divide",
         "Overlay",

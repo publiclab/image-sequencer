@@ -94,7 +94,7 @@ module.exports = function Dynamic(options, UI, util) {
           'Grain Merge': () => [grain_merge_mode(r2, r1), grain_merge_mode(g2, g1), grain_merge_mode(b2, b1), 255]
         };
         
-        if(options.blendMode == 'default')
+        if(options.blendMode == 'custom')
           return options.func(
             r2, g2, b2, a2, r1, g1, b1, a1
           );

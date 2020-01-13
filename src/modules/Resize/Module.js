@@ -1,59 +1,71 @@
+const imagejs = require('imagejs'),
+  pixelSetter = require('../../util/pixelSetter'),
+  ndarray = require('ndarray');
 /*
  * Resize the image by given percentage value
  */
 module.exports = function Resize(options, UI) {
 
-  var output;
+  let output;
 
   function draw(input, callback, progressObj) {
 
-    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+    const defaults = require('./../../util/getDefaults.js')(require('./info.json'));
     options.resize = options.resize || defaults.resize;
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;
 
-    var step = this;
-
-    var imagejs = require('imagejs');
-
-    function changePixel(r, g, b, a) {
-      return [r, g, b, a];
-    }
+    const step = this;
 
     function extraManipulation(pixels) {
-      // value above 100% scales up, and below 100% scales down
-      var resize_value = parseInt(options.resize.slice(0, -1));
+      // Value above 100% scales up, and below 100% scales down
+      const resize_value = parseInt(options.resize.slice(0, -1));
 
-      var new_width,
-        new_height;
-
-      new_width = Math.round(pixels.shape[0] * (resize_value / 100));
-      new_height = Math.round(pixels.shape[1] * (resize_value / 100));
-
-      var bitmap = new imagejs.Bitmap({ width: pixels.shape[0], height: pixels.shape[1] });
-      bitmap._data.data = pixels.data;
+      if (resize_value == 100) return pixels;
 
 
-      var resized = bitmap.resize({
-        width: new_width, height: new_height,
+      const new_width = Math.round(pixels.shape[0] * (resize_value / 100)),
+        new_height = Math.round(pixels.shape[1] * (resize_value / 100));
+
+      const bitmap = new imagejs.Bitmap({ width: pixels.shape[0], height: pixels.shape[1] });
+      
+      for (let x = 0; x < pixels.shape[0]; x++) {
+        for (let y = 0; y < pixels.shape[1]; y++) {
+          let r = pixels.get(x, y, 0),
+            g = pixels.get(x, y, 1),
+            b = pixels.get(x, y, 2),
+            a = pixels.get(x, y, 3);
+
+          bitmap.setPixel(x, y, r, g, b, a);
+        }
+      }
+
+      const resized = bitmap.resize({
+        width: new_width,
+        height: new_height,
         algorithm: 'bicubicInterpolation'
       });
 
-      pixels.data = resized._data.data;
-      pixels.shape = [new_width, new_height, 4];
-      pixels.stride[1] = 4 * new_width;
+      const newPix = new ndarray([], [new_width, new_height, 4]);
 
-      return pixels;
+      for (let x = 0; x < new_width; x++) {
+        for (let y = 0; y < new_height; y++) {
+          const {r, g, b, a} = resized.getPixel(x, y);
+          pixelSetter(x, y, [r, g, b, a], newPix);
+        }
+      }
+
+      return newPix;
     }
 
     function output(image, datauri, mimetype, wasmSuccess) {
       step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
     }
+
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       ui: options.step.ui,
-      changePixel: changePixel,
       extraManipulation: extraManipulation,
       format: input.format,
       image: options.image,

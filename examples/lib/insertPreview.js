@@ -41,8 +41,8 @@ function updatePreviews(src, DomNode) {
     'crop': {
       'x': 0,
       'y': 0,
-      'w': '(50%)',
-      'h': '(50%)',
+      'w': '50%',
+      'h': '50%',
       'noUI': true
     }
   };

@@ -3,6 +3,19 @@
     "description": "Converts image to its sketch.",
     "requires": ["webgl", "browser"],
     "inputs": {
+      "channel": {
+        "type": "select",
+        "desc": "Color channel",
+        "default": "grayscale",
+        "values": ["grayscale", "colored"]
+      },
+      "thickness": {
+        "type": "integer",
+        "desc": "Line Thickness",
+        "default": 2,
+        "min": 1,
+        "max": 10,
+      }
     },
     "docs-link":""
   }

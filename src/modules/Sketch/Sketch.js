@@ -1,5 +1,5 @@
 var Sketcher = (function () {
-  function Sketcher(width, height) {
+  function Sketcher(width, height,options) {
     var thisSketcher = this;
     this.width = width;
     this.height = height;
@@ -7,7 +7,7 @@ var Sketcher = (function () {
     this.textureCanvases = null;
     this.textureImageDatas = null;
 
-    this.lineThickness = 1;
+    this.lineThickness = options.thickness;
     this.maxTextures = NaN;
     this.lineLength = Math.sqrt(width * height) * 0.2;
     this.darkeningFactor = 0.1;
@@ -54,7 +54,7 @@ var Sketcher = (function () {
     };
   }
   Sketcher.prototype = {
-    transformCanvas: function (canvas) {
+    transformCanvas: function (canvas,options) {
       var context = canvas.getContext('2d');
       var width = canvas.width;
       var height = canvas.height;
@@ -99,11 +99,11 @@ var Sketcher = (function () {
       }
       var thisSketcher = this;
       this.whenReady(function () {
-        thisSketcher.transformCanvasInner(canvas);
+        thisSketcher.transformCanvasInner(canvas,options);
       });
       return this;
     },
-    transformCanvasInner: function transformCanvasInner(canvas) {
+    transformCanvasInner: function transformCanvasInner(canvas,options) {
       var context = canvas.getContext('2d');
       var width = canvas.width;
       var height = canvas.height;
@@ -130,10 +130,10 @@ var Sketcher = (function () {
           var green = pixels[index * 4 + 1];
           var blue = pixels[index * 4 + 2];
           var rgb = this.getPixel(index, red, green, blue);
-          // if (greyscale) {
-          var value = Math.round((rgb.red + rgb.green + rgb.blue) / 3);
-          rgb.red = rgb.green = rgb.blue = value;
-          // }
+          if (options.channel=='grayscale') {
+            var value = Math.round((rgb.red + rgb.green + rgb.blue) / 3);
+            rgb.red = rgb.green = rgb.blue = value;
+          }
           var edgeFactor = Math.max(0, (255 - edges[x + y * width] * this.edgeAmount) / 255);
           var edgeFactor = Math.min(1, Math.max(0.5, edgeFactor * edgeFactor));
           pixels[index * 4] = Math.round(rgb.red * edgeFactor);

@@ -6,10 +6,14 @@ module.exports = function Sketch(options, UI) {
   function draw(input, callback, progressObj) {
     progressObj.stop(true);
     progressObj.overrideFlag = true;
+
+    var defaults = require('../../util/getDefaults.js')(require('./info.json'));
     
     var step = this;
     var priorStep = this.getStep(-1);
-    // options.Segments = options.Segments || defaults.Segments ;
+    options.channel = options.channel || defaults.channel ;
+    options.thickness = options.thickness || defaults.thickness ;
+
     var Sketcher = require('./Sketch.js');
     var getPixels = require('get-pixels');
     getPixels(priorStep.output.src, function(err, pixels) {
@@ -31,8 +35,8 @@ module.exports = function Sketch(options, UI) {
       context.drawImage(img[0], 0, 0);
       
       
-      var sketcher = new Sketcher.Sketcher(canvas.width, canvas.height);
-      sketcher.transformCanvas(canvas).whenReady(function () {
+      var sketcher = new Sketcher.Sketcher(canvas.width, canvas.height,options);
+      sketcher.transformCanvas(canvas,options).whenReady(function () {
         
         function extraManipulation(pixels){
           context = canvas.getContext('2d');

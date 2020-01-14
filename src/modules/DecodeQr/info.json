@@ -5,7 +5,7 @@
   },
   "outputs": {
     "qrval": {
-      "type": "string"
+      "type": "button"
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#decodeqr-module"

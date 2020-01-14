@@ -14,6 +14,9 @@ function mapHtmlTypes(inputInfo){
   case 'select':
     htmlType = 'select';
     break;
+  case 'button':
+    htmlType = 'button';
+    break;
   case 'percentage':
     htmlType = 'number';
     break;

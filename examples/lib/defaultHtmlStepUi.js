@@ -102,9 +102,15 @@ function DefaultHtmlStepUi(_sequencer, options) {
           }
           html += '</select>';
         }
+        else if (inputDesc.type.toLowerCase() == 'button') {
+          
+          
+          html += '<br><button class="save btn btn-primary btn-lg" name="' + paramName + '">';
+          html += '</button';
+        }
         else {
           let paramVal = step.options[paramName] || inputDesc.default;
-
+          
           if (inputDesc.id == 'color-picker') { // Separate input field for color-picker
             html +=
               '<div id="color-picker" class="input-group colorpicker-component">' +
@@ -336,7 +342,32 @@ function DefaultHtmlStepUi(_sequencer, options) {
         }
       }
       for (var i in outputs) {
-        if (step[i] !== undefined)
+        if(step.name=='decode-qr'){
+          function fallbackCopyTextToClipboard(text) {
+            var textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position="fixed";  //avoid scrolling to bottom
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+          
+            try {
+              var successful = document.execCommand('copy');
+              var msg = successful ? 'successful' : 'unsuccessful';
+              
+            } catch (err) {
+              console.error('Fallback: Oops, unable to copy', err);
+            }
+          
+            document.body.removeChild(textArea);
+          }
+          $step('.save').on('click', () => {
+              fallbackCopyTextToClipboard(step[i]);
+
+          });
+          
+        }
+        else if (step[i] !== undefined)
           $step('div[name="' + i + '"] input')
             .val(step[i]);
       }

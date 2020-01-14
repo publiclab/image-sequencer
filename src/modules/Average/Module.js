@@ -42,7 +42,7 @@ module.exports = function Average(options, UI) {
       // report back and store average in metadata:
       options.step.metadata.averages = sum;
 
-      if(options.step.average === undefined) options.step.average = '';
+      if (options.step.average === undefined) options.step.average = '';
       options.step.average += 'rgba(' + sum.join(', ') + ')';
       return pixels;
     }

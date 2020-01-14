@@ -1,0 +1,6 @@
+{
+  "name": "shadow",
+  "description": "Creates a two sided shadow.",
+  "inputs": {},
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#shadow-module"
+}

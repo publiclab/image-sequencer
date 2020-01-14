@@ -28,8 +28,8 @@ module.exports = function Contrast(options, UI) {
       p *= contrast;
       p += 0.5;
       p *= 255;
-      if (p < 0) p = 0;
-      if (p > 255) p = 255;
+      Math.max(0, p);
+      Math.min(p, 255);
       return p;
     }
 

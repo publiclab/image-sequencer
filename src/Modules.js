@@ -10,7 +10,6 @@ module.exports = {
   'brightness': require('./modules/Brightness'),
   'canvas-resize': require('./modules/CanvasResize'),
   'channel': require('./modules/Channel'),
-  'circular-gradient': require('./modules/CircularGradient'),
   'colorbar': require('./modules/Colorbar'),
   'color-temperature': require('./modules/ColorTemperature'),
   'colormap': require('./modules/Colormap'),

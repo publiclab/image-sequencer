@@ -102,12 +102,6 @@ function DefaultHtmlStepUi(_sequencer, options) {
           }
           html += '</select>';
         }
-        else if (inputDesc.type.toLowerCase() == 'button') {
-          
-          
-          html += '<br><button class="save btn btn-primary btn-lg" name="' + paramName + '">';
-          html += '</button';
-        }
         else {
           let paramVal = step.options[paramName] || inputDesc.default;
           
@@ -358,16 +352,22 @@ function DefaultHtmlStepUi(_sequencer, options) {
         document.body.removeChild(textArea);
       }
       for (var i in outputs) {
-        if(step.name=='decode-qr'){
-          $step('.save').on('click', () => {
-              fallbackCopyTextToClipboard(step[i]);
-
-          });
-          
-        }
-        else if (step[i] !== undefined)
+        if (step[i] !== undefined)
           $step('div[name="' + i + '"] input')
             .val(step[i]);
+
+        if(outputs[i].type.toLowerCase()=='string'){
+          var btn = document.createElement('button');
+          btn.innerHTML = "COPY"
+          btn.className = 'save btn btn-primary';
+          btn.setAttribute("style","margin-top:5px;")
+        
+          $step('div[name="' + i + '"] div.det').append(btn);
+          
+          $step('.save').on('click', () => {
+              fallbackCopyTextToClipboard(step[i]);
+          });
+        }
       }
     }
 

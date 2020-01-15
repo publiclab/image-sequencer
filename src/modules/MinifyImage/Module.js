@@ -82,8 +82,8 @@ module.exports = function MinifyImage(options, UI) {
     }
 
 
-    function output(image, datauri, mimetype, wasmSuccess) {
-      step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
+    function output(datauri, mimetype) {
+      step.output = { src: datauri, format: mimetype};
     }
   }
   return {

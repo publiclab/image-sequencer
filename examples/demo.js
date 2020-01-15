@@ -272,7 +272,6 @@ window.onload = function () {
   */
   function savePDF(imageDataURL) {
     sequencer.getImageDimensions(imageDataURL, function(dimensions) {
-
       if (isGIF(imageDataURL)) {
         // Get the dimensions of the image.
         let pageWidth = dimensions.width;

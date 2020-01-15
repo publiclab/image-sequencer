@@ -46,7 +46,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
               <div class="row step">\
                 <div class="col-md-4 details container-fluid">\
                   <div class="cal collapse in"><p>' +
-                    '<i>' + (step.description || '') + '</i>' +
+                    '<a href="https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#' + step.name + '-module">' + (step.description || '') + '</a>' +
                  '</p></div>\
                 </div>\
                 <div class="col-md-8 cal collapse in step-column">\
@@ -356,14 +356,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
     else $step('.wasm-tooltip').fadeOut();
   }
   /**
-   * @description Updates Dimension of the image 
+   * @description Updates Dimension of the image
    * @param {Object} step  - Current Step
    * @returns {void}
-   *  
+   *
    */
   function updateDimensions(step){
-    _sequencer.getImageDimensions(step.imgElement.src, function (dim) {
-      step.ui.querySelector('.' + step.name).attributes['data-original-title'].value = `<div style="text-align: center"><p>Image Width: ${dim.width}<br>Image Height: ${dim.height}</br></div>`;
+    _sequencer.getImageDimensions(step.imgElement.src, function (dim, isGIF) {
+      step.ui.querySelector('.' + step.name).attributes['data-original-title'].value = `<div style="text-align: center"><p>Image Width: ${dim.width}<br>Image Height: ${dim.height}</br>${isGIF ? `Frames: ${dim.frames}` : ''}</div>`;
     });
   }
 

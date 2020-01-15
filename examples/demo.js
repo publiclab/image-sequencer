@@ -270,23 +270,26 @@ window.onload = function () {
   * @param {string} imageDataURL - The data URL for the image.
   */
   function savePDF(imageDataURL) {
-    sequencer.getImageDimensions(imageDataURL, function(dimensions) {
-      // Get the dimensions of the image.
-      let pageWidth = dimensions.width;
-      let pageHeight = dimensions.height;
+    sequencer.getImageDimensions(imageDataURL, function(dimensions, isGIF) {
+      if (!isGIF) {
+        // Get the dimensions of the image.
+        let pageWidth = dimensions.width;
+        let pageHeight = dimensions.height;
 
-      // Create a new pdf with the same dimensions as the image.
-      const pdf = new jsPDF({
-        orientation: pageHeight > pageWidth ? 'portrait' : 'landscape',
-        unit: 'px',
-        format: [pageHeight, pageWidth]
-      });
+        // Create a new pdf with the same dimensions as the image.
+        const pdf = new jsPDF({
+          orientation: pageHeight > pageWidth ? 'portrait' : 'landscape',
+          unit: 'px',
+          format: [pageHeight, pageWidth]
+        });
 
-      // Add the image to the pdf with dimensions equal to the internal dimensions of the page.
-      pdf.addImage(imageDataURL, 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+        // Add the image to the pdf with dimensions equal to the internal dimensions of the page.
+        pdf.addImage(imageDataURL, 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
 
-      // Save the pdf with the filename specified here:
-      pdf.save('index.pdf');
+        // Save the pdf with the filename specified here:
+        pdf.save('index.pdf');
+      }
+      else console.log('GIFs cannot be converted to PDF');
     });
   }
 

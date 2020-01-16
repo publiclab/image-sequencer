@@ -30,13 +30,13 @@ describe('Overlay Ranged input', () => {
       await page.click('[data-value=\'overlay\']');
       await page.waitForSelector('#add-step-btn');
       await page.click('#add-step-btn');
-      
+
       // Check to see if Second Overlay ranged input is present.
       await page.waitForSelector('input[type=range]');
       // Get the value of ranged input of second Overlay Step.
       const rangeValueAfter = await page.evaluate(() => document.querySelectorAll('input[type=range]')[1].value);
 
-      // Check if second Overlay ranged input has value is -2.
+      // Check if second Overlay ranged input has value -2.
       expect(rangeValueAfter).toEqual('-2');
     } catch (error) {
       console.log(error);

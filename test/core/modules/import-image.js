@@ -4,5 +4,5 @@ const benchmark = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAA
 const path = require('path');
 
 const url = path.join(__dirname, '../images/red.png');
-console.log(url);
+
 testModule('import-image', { url }, benchmark);

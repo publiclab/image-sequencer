@@ -89,10 +89,21 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
       for (var paramName in merged) {
         var isInput = inputs.hasOwnProperty(paramName);
+        if(outputs){
+          isOutput = outputs.hasOwnProperty(paramName)
+          
+        }
         var html = '';
         var inputDesc = isInput ? mapHtmlTypes(inputs[paramName]) : {};
-        if (!isInput) {
-          html += '<span class="output"></span>';
+        if (outputs && isOutput) {
+          if(outputs[paramName].type.toLowerCase()=='string'){
+            let paramVal = step.options[paramName] || inputDesc.default;
+            html += '<span class="output"> ' +
+            paramVal +
+            '</span>';
+          }
+
+          else html += '<span class="output"></span>';
         }
         else if (inputDesc.type.toLowerCase() == 'select') {
 
@@ -361,7 +372,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
           btn.innerHTML = "COPY"
           btn.className = 'save btn btn-primary';
           btn.setAttribute("style","margin-top:5px;")
-        
+          $step('div[name="' + i + '"] div.output')
+            .val(step[i]);
           $step('div[name="' + i + '"] div.det').append(btn);
           
           $step('.save').on('click', () => {

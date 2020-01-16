@@ -46,7 +46,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
               <div class="row step">\
                 <div class="col-md-4 details container-fluid">\
                   <div class="cal collapse in"><p>' +
-                    '<i>' + (step.description || '') + '</i>' +
+                    '<a href="https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#' + step.name + '-module">' + (step.description || '') + '</a>' +
                  '</p></div>\
                 </div>\
                 <div class="col-md-8 cal collapse in step-column">\
@@ -108,7 +108,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
           if (inputDesc.id == 'color-picker') { // Separate input field for color-picker
             html +=
               '<div id="color-picker" class="input-group colorpicker-component">' +
-              '<input class="form-control target" type="' +
+              '<input class="form-control color-picker-target" type="' +
               inputDesc.type +
               '" name="' +
               paramName +
@@ -276,6 +276,21 @@ function DefaultHtmlStepUi(_sequencer, options) {
         });
     });
 
+    $stepAll('.color-picker-target').each(function(i, input) {
+      $(input)
+        .data('initValue', $(input).val())
+        .data('hasChangedBefore', false)
+        .on('input change', function() {
+          $(this)
+            .data('hasChangedBefore',
+              handleInputValueChange(
+                $(this).val(),
+                $(this).data('initValue'),
+                $(this).data('hasChangedBefore')
+              )
+            );
+        });
+    });
 
 
     $('input[type="range"]').on('input', function() {
@@ -296,6 +311,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
     $stepAll('.load-spin').hide();
     $step('.load').hide();
 
+    $stepAll('.download-btn').off('click');
+    
     step.imgElement.src = (step.name == 'load-image') ? step.output.src : step.output;
     var imgthumbnail = $step('.img-thumbnail').getDomElem();
     for (let index = 0; index < step.linkElements.length; index++) {

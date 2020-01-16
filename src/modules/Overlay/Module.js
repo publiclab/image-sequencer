@@ -4,6 +4,11 @@ module.exports = function Dynamic(options, UI, util) {
   options.x = options.x || defaults.x;
   options.y = options.y || defaults.y;
 
+  if(options.step.inBrowser && !options.noUI && sequencer.getSteps().length < 2)
+    options.offset = -1;
+
+  if (options.step.inBrowser && !options.noUI) var ui = require('./Ui.js')(options.step, UI);
+
   var output;
 
   // This function is called on every draw.
@@ -62,6 +67,13 @@ module.exports = function Dynamic(options, UI, util) {
         step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
       }
 
+      function modifiedCallback() {
+        if (options.step.inBrowser && !options.noUI) {
+          ui.setup();
+        }
+        callback();
+      }
+
       // run PixelManipulation on first Image pixels
       return require('../_nomodule/PixelManipulation.js')(baseStepOutput, {
         output: output,
@@ -70,7 +82,7 @@ module.exports = function Dynamic(options, UI, util) {
         format: baseStepOutput.format,
         image: baseStepImage,
         inBrowser: options.inBrowser,
-        callback: callback,
+        callback: modifiedCallback,
         useWasm:options.useWasm
       });
     });

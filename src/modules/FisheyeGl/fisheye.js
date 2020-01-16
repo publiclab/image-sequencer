@@ -12,7 +12,7 @@ module.exports = exports = function (options, pixels, oldPixels, url1,distorter,
 
 
         distorter.setImage(url1, function() {
-            document.getElementById('image-sequencer-canvas').remove();
+            // document.getElementById('image-sequencer-canvas').remove();
             getPixels(distorter.getImage('image/png').src, function (err, qrPixels) {
             // alert(distorter.getImage().src)
             // var link = document.createElement('a');

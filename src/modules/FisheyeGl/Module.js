@@ -15,13 +15,14 @@ module.exports = function DoNothing(options, UI) {
     progressObj.overrideFlag = true;
 
     var step = this;
-
+    var curr = 0;
     function changePixel(r, g, b, a) {
       return [r, g, b, a];
     }
 
     
     function extraManipulation(pixels, setRenderState, generateOutput) {
+      curr++;
       const oldPixels = _.cloneDeep(pixels);
       setRenderState(false); // Prevent rendering of final output image until extraManipulation completes.
       var canvas2 = document.createElement('canvas');
@@ -41,18 +42,18 @@ module.exports = function DoNothing(options, UI) {
               // alert("yo")
               var canvas = document.createElement('canvas');
               canvas.style.display = 'none';
-              canvas.setAttribute('id', 'image-sequencer-canvas');
+              canvas.setAttribute('id', 'image-sequencer-canvas'+curr.toString());
               document.body.append(canvas);
           // }
           // else var canvas = document.querySelector('#image-sequencer-canvas');
 
-          var distorter = FisheyeGl({
-              selector: '#image-sequencer-canvas'
+          var distorter = new FisheyeGl({
+              selector: '#image-sequencer-canvas'+curr.toString()
           });
-          var link = document.createElement('a');
-        link.download = "my-image.png";
-        link.href = canvas.toDataURL();
-        link.click();
+        //   var link = document.createElement('a');
+        // link.download = "my-image.png";
+        // link.href = canvas.toDataURL();
+        // link.click();
 
           // Parse the inputs
           options.a = parseFloat(options.a) || distorter.lens.a;

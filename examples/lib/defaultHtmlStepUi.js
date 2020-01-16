@@ -46,7 +46,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
               <div class="row step">\
                 <div class="col-md-4 details container-fluid">\
                   <div class="cal collapse in"><p>' +
-                    '<i>' + (step.description || '') + '</i>' +
+                    '<a href="https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#' + step.name + '-module">' + (step.description || '') + '</a>' +
                  '</p></div>\
                 </div>\
                 <div class="col-md-8 cal collapse in step-column">\
@@ -296,6 +296,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
     $stepAll('.load-spin').hide();
     $step('.load').hide();
 
+    $stepAll('.download-btn').off('click');
+    
     step.imgElement.src = (step.name == 'load-image') ? step.output.src : step.output;
     var imgthumbnail = $step('.img-thumbnail').getDomElem();
     for (let index = 0; index < step.linkElements.length; index++) {

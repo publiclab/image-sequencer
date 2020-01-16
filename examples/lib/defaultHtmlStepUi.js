@@ -108,7 +108,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
           if (inputDesc.id == 'color-picker') { // Separate input field for color-picker
             html +=
               '<div id="color-picker" class="input-group colorpicker-component">' +
-              '<input class="form-control target" type="' +
+              '<input class="form-control color-picker-target" type="' +
               inputDesc.type +
               '" name="' +
               paramName +
@@ -276,6 +276,21 @@ function DefaultHtmlStepUi(_sequencer, options) {
         });
     });
 
+    $stepAll('.color-picker-target').each(function(i, input) {
+      $(input)
+        .data('initValue', $(input).val())
+        .data('hasChangedBefore', false)
+        .on('input change', function() {
+          $(this)
+            .data('hasChangedBefore',
+              handleInputValueChange(
+                $(this).val(),
+                $(this).data('initValue'),
+                $(this).data('hasChangedBefore')
+              )
+            );
+        });
+    });
 
 
     $('input[type="range"]').on('input', function() {

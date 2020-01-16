@@ -93,6 +93,8 @@ where `options` is an object with the following properties:
 * blendMode: Blending mode to use for blending two images by default it uses the given function
 * func: function used to blend two images (default : function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] })
 
+[More info for different blend modes can be found here](http://docs.gimp.org/en/gimp-concepts-layer-modes.html)
+
 
 ## Blob Analysis
 

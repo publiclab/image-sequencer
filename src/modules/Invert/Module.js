@@ -1,3 +1,4 @@
+const pixelManipulation = require('../_nomodule/PixelManipulation');
 /*
  * Invert the image
  */
@@ -21,7 +22,7 @@ function Invert(options, UI) {
       step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
     }
 
-    return input.pixelManipulation({
+    return pixelManipulation(input, {
       output: output,
       changePixel: changePixel,
       format: input.format,
@@ -40,10 +41,4 @@ function Invert(options, UI) {
     UI: UI
   };
 }
-var info = {
-  'name': 'invert',
-  'description': 'Inverts the image.',
-  'inputs': {
-  }
-};
-module.exports = [Invert, info];
+module.exports = Invert;

@@ -15,7 +15,10 @@
         "offset": {
             "type": "integer",
             "desc": "offset to the output of the step on which the output of the last step is overlayed",
-            "default": -2
+            "default": -2,
+            "min": -2,
+            "max": -1,
+            "step": 1
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#overlay-module"

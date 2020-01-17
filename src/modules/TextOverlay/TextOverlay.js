@@ -10,15 +10,18 @@ module.exports = exports = function(pixels, options, priorstep){
   options.font = options.font || defaults.font;
   options.color = options.color || defaults.color;
   options.size = options.size || defaults.size;
-
+  console.log(priorstep);
   var img = $(priorstep.imgElement);
+  console.log(img[0]);
   if(Object.keys(img).length === 0){
     img = $(priorstep.options.step.imgElement);
   }
-  var canvas = document.createElement('canvas');
-  canvas.width = pixels.shape[0]; //img.width();
-  canvas.height = pixels.shape[1]; //img.height();
-  var ctx = canvas.getContext('2d');
+  const {createCanvas} = require('canvas');
+  console.log(img[0]);
+  const canvas = createCanvas(pixels.shape[0], pixels.shape[1]);
+
+  const ctx = canvas.getContext('2d');
+
   ctx.drawImage(img[0], 0, 0);
   ctx.fillStyle = options.color;
   ctx.font = options.size + 'px ' + options.font;

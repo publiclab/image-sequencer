@@ -5,6 +5,6 @@ const benchmark = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAA
   option = {contrast: 40},
   _option = {contrast: 84};
 
-testModule('contrast', {option}, benchmark);
+testModule('contrast', option, benchmark);
 
 optionsChange('contrast', [option, _option], [benchmark, _benchmark]);

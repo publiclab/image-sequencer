@@ -1,7 +1,6 @@
 const testModule = require('../templates/module-test'),
   benchmark = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAklEQVR4AewaftIAAAApSURBVKXBAQEAAAiDMKR/5xuC7QYjkEgiiSSSSCKJJJJIIokkkkgiiR5YbQIegx78CAAAAABJRU5ErkJggg==',
   _benchmark = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAklEQVR4AewaftIAAAAqSURBVKXBAQEAAAiAIPP/gN7WCGEWjkAiiSSSSCKJJJJIIokkkkgiiSR6tkYBtxzHTB8AAAAASUVORK5CYII=',
-  image = require('../images/IS-QR'),
   options = {
     constantFactor: 0.4,
     kernelValues: '1 0 1 0 1 0 1 0 1'
@@ -12,6 +11,6 @@ const testModule = require('../templates/module-test'),
   },
   optionChange = require('../templates/options-test');
 
-testModule('convolution', options, benchmark, image);
+testModule('convolution', options, benchmark);
 
 optionChange('convolution', [options, _options], [benchmark, _benchmark]);

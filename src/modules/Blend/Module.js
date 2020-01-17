@@ -1,8 +1,8 @@
-module.exports = function Dynamic(options, UI, util) {
+module.exports = function Blend(options, UI, util) {
 
   var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
 
-  options.func = options.func || defaults.blend;
+  options.func = options.blend || defaults.blend;
   options.offset = options.offset || defaults.offset;
 
   var output;
@@ -14,9 +14,6 @@ module.exports = function Dynamic(options, UI, util) {
     progressObj.overrideFlag = true;
 
     var step = this;
-
-    // convert to runnable code:
-    if (typeof options.func === 'string') eval('options.func = ' + options.func);
 
     var getPixels = require('get-pixels');
 
@@ -34,7 +31,8 @@ module.exports = function Dynamic(options, UI, util) {
 
     getPixels(priorStep.output.src, function(err, pixels) {
       options.firstImagePixels = pixels;
-
+      // Convert to runnable code.
+      if (typeof options.func === 'string') eval('options.func = ' + options.func);
       function changePixel(r2, g2, b2, a2, x, y) {
         // blend!
         let p = options.firstImagePixels;
@@ -43,7 +41,9 @@ module.exports = function Dynamic(options, UI, util) {
           p.get(x, y, 0),
           p.get(x, y, 1),
           p.get(x, y, 2),
-          p.get(x, y, 3)
+          p.get(x, y, 3),
+          x,
+          y
         );
       }
 

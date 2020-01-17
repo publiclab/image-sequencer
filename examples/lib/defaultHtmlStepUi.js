@@ -418,7 +418,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
     if (_sequencer.steps.length - 1 > 1) $('#load-image .insert-step').prop('disabled', false);
     else $('#load-image .insert-step').prop('disabled', true);
 
-    $('div[class*=imgareaselect-]').remove();
+    $(step.imgElement).imgAreaSelect({
+      remove: true
+    });
   }
 
   function getPreview() {

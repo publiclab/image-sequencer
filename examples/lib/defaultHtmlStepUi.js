@@ -12,7 +12,8 @@ const intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js'),
   urlHash = require('./urlHash.js'),
   _ = require('lodash'),
   mapHtmlTypes = require('./mapHtmltypes'),
-  scopeQuery = require('./scopeQuery');
+  scopeQuery = require('./scopeQuery'),
+  isGIF = require('../../src/util/isGif');
 
 function DefaultHtmlStepUi(_sequencer, options) {
   options = options || {};
@@ -108,7 +109,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
           if (inputDesc.id == 'color-picker') { // Separate input field for color-picker
             html +=
               '<div id="color-picker" class="input-group colorpicker-component">' +
-              '<input class="form-control target" type="' +
+              '<input class="form-control color-picker-target" type="' +
               inputDesc.type +
               '" name="' +
               paramName +
@@ -276,6 +277,21 @@ function DefaultHtmlStepUi(_sequencer, options) {
         });
     });
 
+    $stepAll('.color-picker-target').each(function(i, input) {
+      $(input)
+        .data('initValue', $(input).val())
+        .data('hasChangedBefore', false)
+        .on('input change', function() {
+          $(this)
+            .data('hasChangedBefore',
+              handleInputValueChange(
+                $(this).val(),
+                $(this).data('initValue'),
+                $(this).data('hasChangedBefore')
+              )
+            );
+        });
+    });
 
 
     $('input[type="range"]').on('input', function() {
@@ -393,8 +409,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
    *
    */
   function updateDimensions(step){
-    _sequencer.getImageDimensions(step.imgElement.src, function (dim, isGIF) {
-      step.ui.querySelector('.' + step.name).attributes['data-original-title'].value = `<div style="text-align: center"><p>Image Width: ${dim.width}<br>Image Height: ${dim.height}</br>${isGIF ? `Frames: ${dim.frames}` : ''}</div>`;
+    _sequencer.getImageDimensions(step.imgElement.src, function (dim) {
+      step.ui.querySelector('.' + step.name).attributes['data-original-title'].value = `<div style="text-align: center"><p>Image Width: ${dim.width}<br>Image Height: ${dim.height}</br>${isGIF(step.output) ? `Frames: ${dim.frames}` : ''}</div>`;
     });
   }
 
@@ -432,7 +448,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
     if (_sequencer.steps.length - 1 > 1) $('#load-image .insert-step').prop('disabled', false);
     else $('#load-image .insert-step').prop('disabled', true);
 
-    $('div[class*=imgareaselect-]').remove();
+    $(step.imgElement).imgAreaSelect({
+      remove: true
+    });
   }
 
   function getPreview() {

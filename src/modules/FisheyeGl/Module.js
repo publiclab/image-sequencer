@@ -39,33 +39,14 @@ module.exports = function DoNothing(options, UI) {
       }
       else {
       
-          var canvas = document.createElement('canvas');
-          canvas.style.display = 'none';
-          canvas.setAttribute('id', 'image-sequencer-canvas'+curr.toString());
-          document.body.append(canvas);
-          
-          var distorter = new FisheyeGl({
-              selector: '#image-sequencer-canvas'+curr.toString()
-          });
+        var canvas = document.createElement('canvas');
+        canvas.style.display = 'none';
+        canvas.setAttribute('id', 'image-sequencer-canvas'+curr.toString());
+        document.body.append(canvas);
         
-
-          // Parse the inputs
-          options.a = parseFloat(options.a) || distorter.lens.a;
-          options.b = parseFloat(options.b) || distorter.lens.b;
-          options.Fx = parseFloat(options.Fx) || distorter.lens.Fx;
-          options.Fy = parseFloat(options.Fy) || distorter.lens.Fy;
-          options.scale = parseFloat(options.scale) || distorter.lens.scale;
-          options.x = parseFloat(options.x) || distorter.fov.x;
-          options.y = parseFloat(options.y) || distorter.fov.y;
-
-          // Set fisheyegl inputs
-          distorter.lens.a = options.a;
-          distorter.lens.b = options.b;
-          distorter.lens.Fx = options.Fx;
-          distorter.lens.Fy = options.Fy;
-          distorter.lens.scale = options.scale;
-          distorter.fov.x = options.x;
-          distorter.fov.y = options.y;
+        var distorter = new FisheyeGl({
+            selector: '#image-sequencer-canvas'+curr.toString()
+        });
       }
       
       require('./fisheye')(options, pixels, oldPixels,url1,distorter,isGif, () => {

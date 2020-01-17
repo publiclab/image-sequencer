@@ -16,6 +16,7 @@ module.exports = function DoNothing(options, UI) {
 
     var step = this;
     var curr = 0;
+    var isGif = input.src.includes('image/gif');
     function changePixel(r, g, b, a) {
       return [r, g, b, a];
     }
@@ -37,23 +38,16 @@ module.exports = function DoNothing(options, UI) {
         require('../_nomodule/gl-context')(input, callback, step, options);
       }
       else {
-      // Create a canvas, if it doesn't already exist.
-          // if (!document.querySelector('#image-sequencer-canvas')) {
-              // alert("yo")
-              var canvas = document.createElement('canvas');
-              canvas.style.display = 'none';
-              canvas.setAttribute('id', 'image-sequencer-canvas'+curr.toString());
-              document.body.append(canvas);
-          // }
-          // else var canvas = document.querySelector('#image-sequencer-canvas');
-
+      
+          var canvas = document.createElement('canvas');
+          canvas.style.display = 'none';
+          canvas.setAttribute('id', 'image-sequencer-canvas'+curr.toString());
+          document.body.append(canvas);
+          
           var distorter = new FisheyeGl({
               selector: '#image-sequencer-canvas'+curr.toString()
           });
-        //   var link = document.createElement('a');
-        // link.download = "my-image.png";
-        // link.href = canvas.toDataURL();
-        // link.click();
+        
 
           // Parse the inputs
           options.a = parseFloat(options.a) || distorter.lens.a;
@@ -73,12 +67,12 @@ module.exports = function DoNothing(options, UI) {
           distorter.fov.x = options.x;
           distorter.fov.y = options.y;
       }
-      // alert("po")
-      require('./fisheye')(options, pixels, oldPixels,url1,distorter, () => {
-        // document.getElementById('image-sequencer-canvas').remove();
+      
+      require('./fisheye')(options, pixels, oldPixels,url1,distorter,isGif, () => {
+        
         setRenderState(true); // Allow rendering in the callback.
         generateOutput();
-        // return pixels
+        
       });
     }
 

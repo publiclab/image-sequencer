@@ -25,20 +25,8 @@ module.exports = exports = function (options, pixels, oldPixels, url1,distorter,
                 
                 for (let x = 0; x < oldPixels.shape[0]; x++) {
                     for (let y = 0; y < oldPixels.shape[1]; y++) {
-                    if(isGif){ //In case of GIF we get a transposed image
-                        pixelSetter(
-                            x,
-                            y,
-                            [
-                            distorted.get(y, x, 0),
-                            distorted.get(y, x, 1),
-                            distorted.get(y, x, 2),
-                            distorted.get(y, x, 3)
-                            ],
-                            pixels
-                        );
-                    }
-                    else{
+                    
+                    
                         pixelSetter(
                             x,
                             y,
@@ -50,7 +38,7 @@ module.exports = exports = function (options, pixels, oldPixels, url1,distorter,
                             ],
                             pixels
                         );
-                    }
+                    
                     }
                 }
 

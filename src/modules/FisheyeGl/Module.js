@@ -22,7 +22,7 @@ module.exports = function DoNothing(options, UI) {
     }
 
     
-    function extraManipulation(pixels, setRenderState, generateOutput) {
+    function extraManipulation(pixels, setRenderState, generateOutput,datauri) {
       curr++;
       const oldPixels = _.cloneDeep(pixels);
       setRenderState(false); // Prevent rendering of final output image until extraManipulation completes.
@@ -32,7 +32,7 @@ module.exports = function DoNothing(options, UI) {
       var ctx2 = canvas2.getContext('2d');
 
       ctx2.putImageData(new ImageData(new Uint8ClampedArray(pixels.data), pixels.shape[0], pixels.shape[1]), 0, 0);
-      var url1 = canvas2.toDataURL();
+      var url1 = datauri;
 
       if (!options.inBrowser) {
         require('../_nomodule/gl-context')(input, callback, step, options);

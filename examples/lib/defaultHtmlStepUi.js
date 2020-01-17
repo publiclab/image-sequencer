@@ -12,7 +12,8 @@ const intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js'),
   urlHash = require('./urlHash.js'),
   _ = require('lodash'),
   mapHtmlTypes = require('./mapHtmltypes'),
-  scopeQuery = require('./scopeQuery');
+  scopeQuery = require('./scopeQuery'),
+  isGIF = require('../../src/util/isGif');
 
 function DefaultHtmlStepUi(_sequencer, options) {
   options = options || {};
@@ -379,8 +380,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
    *
    */
   function updateDimensions(step){
-    _sequencer.getImageDimensions(step.imgElement.src, function (dim, isGIF) {
-      step.ui.querySelector('.' + step.name).attributes['data-original-title'].value = `<div style="text-align: center"><p>Image Width: ${dim.width}<br>Image Height: ${dim.height}</br>${isGIF ? `Frames: ${dim.frames}` : ''}</div>`;
+    _sequencer.getImageDimensions(step.imgElement.src, function (dim) {
+      step.ui.querySelector('.' + step.name).attributes['data-original-title'].value = `<div style="text-align: center"><p>Image Width: ${dim.width}<br>Image Height: ${dim.height}</br>${isGIF(step.output) ? `Frames: ${dim.frames}` : ''}</div>`;
     });
   }
 

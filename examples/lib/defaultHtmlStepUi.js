@@ -79,7 +79,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     step.$step = scopeQuery.scopeSelector(step.ui); // Shorthand methods for scoped DOM queries. Read the docs [CONTRIBUTING.md](https://github.com/publiclab/image-sequencer/blob/main/CONTRIBUTING.md) for more info.
     step.$stepAll = scopeQuery.scopeSelectorAll(step.ui);
     let {$step, $stepAll} = step;
-    
+
     step.linkElements = step.ui.querySelectorAll('a'); // All the anchor tags in the step UI
     step.imgElement = $step('a img.img-thumbnail')[0]; // The output image
 
@@ -127,7 +127,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
               paramVal +
               '" placeholder ="' +
               (inputDesc.placeholder || '');
-              
+
             if (inputDesc.type.toLowerCase() == 'range') {
               html +=
                 '"min="' +
@@ -212,7 +212,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $step('.toggleIcon').toggleClass('rotated');
       $stepAll('.cal').collapse('toggle');
     });
-    
+
     $(step.imgElement).on('mousemove', _.debounce(() => imageHover(step), 150)); // Shows the pixel coordinates on hover
     $(step.imgElement).on('click', (e) => {e.preventDefault(); });
     $stepAll('#color-picker').colorpicker();
@@ -333,7 +333,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       element.setAttribute('download', step.name + '.' + fileExtension(step.imgElement.src));
       element.style.display = 'none';
       document.body.appendChild(element);
-      
+
       element.click();
     });
 
@@ -349,7 +349,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
               .data('initValue', step.options[i]);
           if (inputs[i].type.toLowerCase() === 'select')
             $step('div[name="' + i + '"] select')
-              .val(step.options[i])
+              .val(String(step.options[i]))
               .data('initValue', step.options[i]);
         }
       }
@@ -441,14 +441,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
       notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> ' + msg ;
       notification.id = id;
       notification.classList.add('notification');
-  
+
       $('body').append(notification);
     }
-  
+
     $('#' + id).fadeIn(500).delay(200).fadeOut(500);
   }
-    
-  
+
+
   return {
     getPreview: getPreview,
     onSetup: onSetup,

@@ -78,7 +78,8 @@ This module is used for averaging all the pixels of the image.
 
 ## blend-module
 
-This module is used for blending two images .
+This module is used for blending two images. For More info read:  _[wiki](https://en.wikipedia.org/wiki/Blend_modes)_
+
 #### Usage
 
 ```js
@@ -88,8 +89,12 @@ This module is used for blending two images .
 ```
 
 where `options` is an object with the following properties:
-* offset: step of image with which current image is to be blended(Two steps back is -2, three                steps back is -3 etc; default -2) 
-* func: function used to blend two images (default : function(r1, g1, b1, a1, r2, g2, b2, a2) {            return [ r1, g2, b2, a2 ] })
+* offset: step of image with which current image is to be blended(Two steps back is -2, three steps back is -3 etc; default -2) 
+* blendMode: Blending mode to use for blending two images by default it uses the given function
+* func: function used to blend two images (default : function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] })
+
+[More info for different blend modes can be found here](http://docs.gimp.org/en/gimp-concepts-layer-modes.html)
+
 
 ## Blob Analysis
 

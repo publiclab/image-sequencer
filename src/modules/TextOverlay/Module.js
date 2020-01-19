@@ -7,10 +7,14 @@ module.exports = function TextOverlay(options, UI) {
 
     var step = this;
 
-    function extraManipulation(pixels) {
+    function extraManipulation(pixels, setRenderState, generateOutput, url1) {
       //if (options.step.inBrowser)
-      pixels = require('./TextOverlay')(pixels, options);
-      return pixels;
+      setRenderState(false);
+      pixels = require('./TextOverlay')(pixels, options, url1, () => {
+      
+        setRenderState(true);
+        generateOutput();
+      });
     }
 
     function output(image, datauri, mimetype, wasmSuccess) {

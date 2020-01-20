@@ -17,7 +17,7 @@ module.exports = exports = function(pixels, options, url1, cb){
 
   const canvas = createCanvas(pixels.shape[0], pixels.shape[1]);
   var ctx = canvas.getContext('2d');
-  var image = window.Image;
+  var image = new window.Image();
   image.src = url1;
   image.onload = function(){
     

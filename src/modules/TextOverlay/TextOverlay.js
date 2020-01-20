@@ -10,14 +10,18 @@ module.exports = exports = function(pixels, options, url1, cb){
   options.color = options.color || defaults.color;
   options.size = options.size || defaults.size;
 
-  var canvas = document.createElement('canvas');
-  canvas.width = pixels.shape[0]; //img.width();
-  canvas.height = pixels.shape[1]; //img.height();
+  const {JSDOM} = require('jsdom');
+  const {window} = new JSDOM('<!doctype html><html><body></body></html>', {resources: 'usable'});
+  
+  const { createCanvas, createImageData } = require('canvas');
+
+  const canvas = createCanvas(pixels.shape[0], pixels.shape[1]);
   var ctx = canvas.getContext('2d');
-  var image = new Image;
+  var image = window.Image;
   image.src = url1;
   image.onload = function(){
     
+    // ctx.putImageData(new createImageData(new Uint8ClampedArray(url1.data), url1.shape[0], url1.shape[1]), 0, 0);
     ctx.drawImage(image, 0, 0);
     ctx.fillStyle = options.color;
     ctx.font = options.size + 'px ' + options.font;
@@ -28,8 +32,8 @@ module.exports = exports = function(pixels, options, url1, cb){
         console.log('get-pixels error: ', err);
       }
 
-      
-      
+
+
       for (let x = 0; x < pixels.shape[0]; x++) {
         for (let y = 0; y < pixels.shape[1]; y++) {
           pixelSetter(

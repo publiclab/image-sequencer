@@ -286,10 +286,8 @@ module.exports = function PixelManipulation(image, options) {
       else resolvedFrames++;
 
       if (options.extraManipulation){
-        getDataUri(frames[f], options.format).then(datauri => {
-          frames[f] = options.extraManipulation(framePix, setRenderState, generateOutput,datauri) || framePix; // extraManipulation is used to manipulate each pixel individually.
-          perFrameShape = frames[f].shape;
-        });
+        frames[f] = options.extraManipulation(framePix, setRenderState, generateOutput) || framePix; // extraManipulation is used to manipulate each pixel individually.
+        perFrameShape = frames[f].shape;
       }
       generateOutput();
     }

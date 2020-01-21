@@ -9,7 +9,7 @@ module.exports = function DoNothing(options, UI) {
   gl = require('fisheyegl');
   
 
-  function draw(input, callback,progressObj) {
+  function draw(input, callback, progressObj) {
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;
@@ -22,18 +22,12 @@ module.exports = function DoNothing(options, UI) {
     }
 
     
-    function extraManipulation(pixels, setRenderState, generateOutput,datauri) {
+    function extraManipulation(pixels, setRenderState, generateOutput) {
       curr++;
       const oldPixels = _.cloneDeep(pixels);
+      const getDataUri = require('../../util/getDataUri');
       setRenderState(false); // Prevent rendering of final output image until extraManipulation completes.
-      var canvas2 = document.createElement('canvas');
-      canvas2.width = oldPixels.shape[0]; //img.width();
-      canvas2.height = oldPixels.shape[1]; //img.height();
-      var ctx2 = canvas2.getContext('2d');
-
-      ctx2.putImageData(new ImageData(new Uint8ClampedArray(pixels.data), pixels.shape[0], pixels.shape[1]), 0, 0);
-      var url1 = datauri;
-
+      
       if (!options.inBrowser) {
         require('../_nomodule/gl-context')(input, callback, step, options);
       }
@@ -41,19 +35,20 @@ module.exports = function DoNothing(options, UI) {
       
         var canvas = document.createElement('canvas');
         canvas.style.display = 'none';
-        canvas.setAttribute('id', 'image-sequencer-canvas'+curr.toString());
+        canvas.setAttribute('id', 'image-sequencer-canvas' + curr.toString());
         document.body.append(canvas);
         
         var distorter = new FisheyeGl({
-            selector: '#image-sequencer-canvas'+curr.toString()
+          selector: '#image-sequencer-canvas' + curr.toString()
         });
       }
-      
-      require('./fisheye')(options, pixels, oldPixels,url1,distorter,isGif, () => {
-        
-        setRenderState(true); // Allow rendering in the callback.
-        generateOutput();
-        
+      getDataUri(pixels, input.format).then(dataUrl => {
+        require('./fisheye')(options, pixels, oldPixels, dataUrl, distorter, () => {
+          
+          setRenderState(true); // Allow rendering in the callback.
+          generateOutput();
+          
+        });
       });
     }
 

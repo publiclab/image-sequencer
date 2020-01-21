@@ -99,9 +99,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
         if (outputs && isOutput) {
           if(outputs[paramName].type.toLowerCase()=='string'){
             let paramVal = step.options[paramName] || inputDesc.default;
-            html += '<span class="output"> ' +
+            html += '<p class="output"> ' +
             paramVal +
-            '</span>';
+            '</p>';
           }
 
           else html += '<span class="output"></span>';
@@ -381,23 +381,27 @@ function DefaultHtmlStepUi(_sequencer, options) {
         document.body.removeChild(textArea);
       }
       for (var i in outputs) {
-        if (step[i] !== undefined)
-          $step('div[name="' + i + '"] input')
-            .val(step[i]);
 
-        if(outputs[i].type.toLowerCase()=='string'){
-          var btn = document.createElement('button');
-          btn.innerHTML = "COPY"
-          btn.className = 'save btn btn-primary';
-          btn.setAttribute("style","margin-top:5px;")
-          $step('div[name="' + i + '"] div.output')
-            .val(step[i]);
-          $step('div[name="' + i + '"] div.det').append(btn);
-          
-          $step('.save').on('click', () => {
-              fallbackCopyTextToClipboard(step[i]);
-          });
-        }
+        if (step[i] !== undefined)
+          if(outputs[i].type.toLowerCase()=='string'){
+            $step('div[name="' + i + '"] .save').remove();
+            var btn = document.createElement('button');
+            btn.innerHTML = "COPY"
+            btn.className = 'save btn btn-primary';
+            btn.setAttribute("style","margin-top:5px;")
+            step.ui.querySelector('div[name="' + i + '"] .output').innerHTML=step[i];
+            $step('div[name="' + i + '"] div.det').append(btn);
+            
+            $step('div[name="' + i + '"] .save').on('click', () => {
+                fallbackCopyTextToClipboard(step[i]);
+            });
+          }
+          else {
+            $step('div[name="' + i + '"] input')
+              .val(step[i]);
+          }
+
+        
       }
     }
 

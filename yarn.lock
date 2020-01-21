@@ -3944,10 +3944,10 @@ gl-wiretap@^0.6.2:
   resolved "https://registry.yarnpkg.com/gl-wiretap/-/gl-wiretap-0.6.2.tgz#e4aa19622831088fbaa7e5a18d01768f7a3fb07c"
   integrity sha512-fxy1XGiPkfzK+T3XKDbY7yaqMBmozCGvAFyTwaZA3imeZH83w7Hr3r3bYlMRWIyzMI/lDUvUMM/92LE2OwqFyQ==
 
-gl@^4.4.0:
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/gl/-/gl-4.4.0.tgz#3d448769a9222ba809da4db80dd1f3c4b85498a0"
-  integrity sha512-4FIq5tqiltTsadrLh6DGY4R9+aQwj25OM2WlXEv81N6YN1q1C0qR7ct0SKp1uUJdnBqbKhUJP3zQ1td40AVeJg==
+gl@^4.4.1:
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/gl/-/gl-4.4.1.tgz#515f3d4f3120ef5001fe15ae1f0fea1e04d69e2c"
+  integrity sha512-2ZG8/qUAQ6WRgPzflsiLbx1KBgrKra0T0GJeG6xyxzNYvUOoeFFPIJJZ/e9X089yag+4NcrzD0ql7PfbJCuuqQ==
   dependencies:
     bindings "^1.5.0"
     bit-twiddle "^1.0.2"
@@ -4148,12 +4148,12 @@ gpu-mock.js@^1.1.1:
   integrity sha512-BmoRk9nbMaxkrwzTJp4M0iuwIbzNEXt6tlBZ5+ZYzaGH9VWu5Nhn1Q1CBusCam3d8u3FfVEFf3Ueo8DocUCbUw==
 
 gpu.js@^2.3.1:
-  version "2.4.8"
-  resolved "https://registry.yarnpkg.com/gpu.js/-/gpu.js-2.4.8.tgz#59e980edfdb622b8e5f85ace012214b7d0525911"
-  integrity sha512-V4CAZIR+kV6enLVPGoeZdb4lK4FGGuolDDYNBMAlNzrfDN7OJjl2V9we6bKDTKhV/gwsYmivs0x22qo/Q0zHzA==
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/gpu.js/-/gpu.js-2.6.2.tgz#e5605a7989761ed86c24c516d665898741b70814"
+  integrity sha512-Ond7t6xGUn4bUC/vzI2D8VgBIharso7LIr66ZvLy01JOUkGLQ2DgSUXZ9gix1iSzZ9e6/EQWcBkHDNehUePbFA==
   dependencies:
     acorn "^7.1.0"
-    gl "^4.4.0"
+    gl "^4.4.1"
     gl-wiretap "^0.6.2"
     gpu-mock.js "^1.1.1"
 

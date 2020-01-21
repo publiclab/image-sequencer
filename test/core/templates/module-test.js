@@ -46,7 +46,8 @@ module.exports = (moduleName, options, benchmark, input) => {
 
       looksSame(result, benchmark, function(err, res) {
         if (err) console.log(err);
-
+        if(!res.equal)
+          process.exit();
         t.equal(res.equal, true, `${moduleName} module works correctly`);
         sequencer = null;
         t.end();

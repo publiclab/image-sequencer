@@ -53,7 +53,8 @@ module.exports = (moduleName, options, benchmark, input) => {
         // Check to see if change in option changed the image correctly.
         looksSame(newResult, benchmark[1], function(err, res) {
           if (err) console.log(err);
-
+          if(!res.equal)
+            process.exit();
           t.equal(res.equal, true, `${moduleName} module works correctly when the option is changed to ${options[1][moduleName]}`);
           sequencer = null;
           t.end();

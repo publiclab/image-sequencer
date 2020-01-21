@@ -20,15 +20,3 @@ test('Check Options', function(t) {
   t.equal(sequencer.steps[1].options.height, 500, 'Options are correct');
   t.end();
 });
-
-// Test 3 to check brightness module works as expected
-test('canvas-resize module works correctly', function(t) {
-  sequencer.run({ mode: 'test' }, function(out) {
-    var result = sequencer.steps[1].output.src;
-    require('get-pixels')(result, (err, pix) => {
-      t.equal(pix.shape[0], 500);
-      t.equal(pix.shape[1], 500);
-      t.end();
-    });
-  });
-});

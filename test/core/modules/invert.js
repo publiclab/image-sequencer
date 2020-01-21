@@ -27,46 +27,6 @@ test('Load invert module', function(t) {
   t.end();
 });
 
-test('Inverted image isn\'t identical', function(t) {
-  sequencer.run({ mode: 'test' }, function(out) {
-    var input = sequencer.steps[0].output.src;
-    var output = sequencer.steps[1].output.src;
-    input = DataURItoBuffer(input);
-    output = DataURItoBuffer(output);
-    t.notEqual(input, output, 'Not equal');
-    t.end();
-  });
-});
-
 // test("Twice inverted image is identical to original image", function(t) {
 //   sequencer.addSteps('test','invert');
-//   sequencer.run({ mode: 'test' }, function(out) {
-//     var input = sequencer.steps[0].output.src
-//     var output = sequencer.steps[2].output.src
-//     base64Img.imgSync(input, target, 'input')
-//     base64Img.imgSync(output, target, 'output')
-//     input = './test_outputs/input.png'
-//     output = './test_outputs/output.png'
-//     looksSame(input, output, function(err, res) {
-//       if (err) console.log(err)
-//       t.equal(res.equal, true)
-//       t.end();
-//     });
-//   })
 // });
-
-test('Invert module produces correct output', function(t) {
-  sequencer.run({ mode: 'test' }, function(out) {
-    var result = sequencer.steps[1].output.src;
-    var benchmark = invert;
-    base64Img.imgSync(result, target, 'result');
-    base64Img.imgSync(benchmark, target, 'benchmark');
-    result = './test_outputs/result.png';
-    benchmark = './test_outputs/benchmark.png';
-    looksSame(result, benchmark, function(err, res) {
-      if (err) console.log(err);
-      t.equal(res.equal, true);
-      t.end();
-    });
-  });
-});

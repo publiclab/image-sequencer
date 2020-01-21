@@ -174,21 +174,10 @@ test('getSteps() returns correct array of steps', function(t){
   t.end();
 });
 
-test('run() runs the sequencer and returns output to callback', function(t) {
-  sequencer.run({ mode: 'test' }, function(out) {
-    t.equal(typeof (sequencer.steps[sequencer.steps.length - 1].output), 'object', 'Output is Generated');
-    t.equal(out, sequencer.steps[sequencer.steps.length - 1].output.src, 'Output callback works');
-    t.end();
-  });
-});
 
 test('getStep(offset) returns the step at offset distance relative to current step', function(t) {
   sequencer.addSteps('invert', {});
   sequencer.addSteps('blend', {});
-  sequencer.run({ mode: 'test' }, function(out) {
-    t.equal(!!out, true, 'Blend generates output');
-    t.end();
-  });
 });
 
 test('toCliString() returns the CLI command for the sequence', function(t) {
@@ -202,10 +191,6 @@ test('blend returns different output depending on the set offset', function(t) {
   sequencer.addSteps('blend', {});
   // because we've added blend before, so instead of -3 we set it to -4
   sequencer.addSteps('blend', {'offset': -4});
-  sequencer.run({ mode: 'test' }, function(out) {
-    t.notStrictEqual(out, sequencer.steps[sequencer.steps.length - 2].output.src, 'different offsets give different output');
-    t.end();
-  });
 });
 
 test('replaceImage returns false in NodeJS', function(t) {

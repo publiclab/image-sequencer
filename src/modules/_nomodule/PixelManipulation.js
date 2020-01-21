@@ -4,7 +4,8 @@ const pixelSetter = require('../../util/pixelSetter.js'),
   ndarray = require('ndarray'),
   gifshot = require('gifshot'),
   fs = require('fs'),
-  path = require('path');
+  path = require('path'),
+  getDataUri = require('../../util/getDataUri');
 /*
  * General purpose per-pixel manipulation
  * accepting a changePixel() method to remix a pixel's channels
@@ -45,36 +46,7 @@ module.exports = function PixelManipulation(image, options) {
   }
 
   options = options || {};
-
-  /**
-   * @description Returns the DataURI of an image from its pixels
-   * @param {"ndarray"} pix pixels ndarray of pixels of the image.
-   * @param {String} format Format/MimeType of the image input.
-   * @returns {Promise} Promise with DataURI as parameter in the callback.
-   */
-  const getDataUri = (pix, format) => {
-    return new Promise(resolve => {
-      let chunks = [],
-        totalLength = 0;
-
-      let r = savePixels(pix, format, {
-        quality: 100
-      });
-
-      r.on('data', function (chunk) {
-        totalLength += chunk.length;
-        chunks.push(chunk);
-      });
-
-      r.on('end', function () {
-        let data = Buffer.concat(chunks, totalLength).toString('base64');
-        let datauri = 'data:image/' + format + ';base64,' + data;
-        
-        resolve(datauri);
-      });
-    });
-  };
-
+  
   getPixels(image.src, function (err, pixels) {
     if (err) {
       console.log('get-pixels error: ', err);

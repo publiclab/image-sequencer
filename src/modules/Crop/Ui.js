@@ -59,12 +59,6 @@ module.exports = function CropModuleUi(step, ui) {
     ];
   }
 
-  function remove() {
-    $(imgEl()).imgAreaSelect({
-      remove: true
-    });
-  }
-
   function hide() {
     // then hide the draggable UI
     $(imgEl()).imgAreaSelect({
@@ -92,7 +86,6 @@ module.exports = function CropModuleUi(step, ui) {
 
   return {
     setup: setup,
-    remove: remove,
     hide: hide
   };
 };

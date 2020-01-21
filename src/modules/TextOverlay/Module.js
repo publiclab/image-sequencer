@@ -7,13 +7,16 @@ module.exports = function TextOverlay(options, UI) {
 
     var step = this;
 
-    function extraManipulation(pixels, setRenderState, generateOutput, url1) {
+    function extraManipulation(pixels, setRenderState, generateOutput) {
       //if (options.step.inBrowser)
-      setRenderState(false);
-      pixels = require('./TextOverlay')(pixels, options, url1, () => {
+      const getDataUri = require('../../util/getDataUri');
+      getDataUri(pixels, input.format).then(dataUri => {
+        setRenderState(false);
+        pixels = require('./TextOverlay')(pixels, options, dataUri, () => {
+          setRenderState(true);
+          generateOutput();
+        });
       
-        setRenderState(true);
-        generateOutput();
       });
     }
 

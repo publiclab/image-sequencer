@@ -10,8 +10,11 @@ module.exports = function GridOverlay(options, UI) {
 
     var step = this;
 
-    function extraManipulation(pixels) {
+    function extraManipulation(pixels, setRenderState, generateOutput) {
+      setRenderState(false);
       pixels = require('./GridOverlay')(pixels, options);
+      setRenderState(true);
+      generateOutput();
       return pixels;
     }
 

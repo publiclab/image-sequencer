@@ -15,7 +15,8 @@ module.exports = function Average(options, UI) {
     var step = this;
 
     // do the averaging
-    function extraManipulation(pixels) {
+    function extraManipulation(pixels, setRenderState, generateOutput) {
+      setRenderState(false);
       var i = 0, sum = [0, 0, 0, 0];
       while (i < pixels.data.length) {
         sum[0] += pixels.data[i++];
@@ -44,6 +45,8 @@ module.exports = function Average(options, UI) {
 
       if (options.step.average === undefined) options.step.average = '';
       options.step.average += 'rgba(' + sum.join(', ') + ')';
+      setRenderState(true);
+      generateOutput();
       return pixels;
     }
 

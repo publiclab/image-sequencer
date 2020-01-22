@@ -19,7 +19,8 @@ module.exports = function Rotate(options, UI) {
       return [r, g, b, a];
     }
 
-    function extraManipulation(pixels) {
+    function extraManipulation(pixels, setRenderState, generateOutput) {
+      setRenderState(false);
       const rotate_value = (options.rotate) % 360;
       radians = (Math.PI) * rotate_value / 180,
       width = pixels.shape[0],
@@ -54,6 +55,8 @@ module.exports = function Rotate(options, UI) {
       );
 
       pixels = require('./Rotate')(pixels, finalPixels, rotate_value, width, height, cos, sin);
+      setRenderState(false);
+      generateOutput();
       return pixels;
     }
       

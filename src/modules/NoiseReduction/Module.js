@@ -10,8 +10,11 @@ module.exports = function NoiseReduction(options, UI) {
     var step = this;
     options.method = options.method || defaults.method;
 
-    function extraManipulation(pixels) {
+    function extraManipulation(pixels, setRenderState, generateOutput) {
+      setRenderState(false);
       pixels = require('./NoiseReduction.js')(pixels, options.method);
+      setRenderState(true);
+      generateOutput();
       return pixels;
     }
 

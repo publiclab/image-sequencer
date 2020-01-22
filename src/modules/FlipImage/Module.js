@@ -18,10 +18,13 @@ module.exports = function FlipImage(options, UI) {
     function changePixel(r, g, b, a) {
       return [r, g, b, a];
     }
-    function extraManipulation(pixels) {
+    function extraManipulation(pixels, setRenderState, generateOutput) {
+      setRenderState(false);
       const oldPixels = _.cloneDeep(pixels);
-
-      return require('./flipImage')(oldPixels, pixels, options.Axis);
+      var newPixels = require('./flipImage')(oldPixels, pixels, options.Axis);
+      setRenderState(true);
+      generateOutput();
+      return newPixels;
     }
     
     function output(image, datauri, mimetype, wasmSuccess) {

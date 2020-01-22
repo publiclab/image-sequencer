@@ -9,9 +9,12 @@ module.exports = function PaintBucket(options, UI) {
 
     var step = this;
 
-    function extraManipulation(pixels) {
+    function extraManipulation(pixels, setRenderState, generateOutput) {
+      setRenderState(false);
 
       pixels = require('./PaintBucket')(pixels, options);
+      setRenderState(true);
+      generateOutput();
       return pixels;
 
     }

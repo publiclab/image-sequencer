@@ -10,9 +10,11 @@ module.exports = function BlobAnalysis(options, UI){
   
     var step = this;
 
-    function extraManipulation(pixels){
-  
+    function extraManipulation(pixels, setRenderState, generateOutput){
+      setRenderState(false);
       pixels = require('./BlobAnalysis')(pixels);
+      setRenderState(true);
+      generateOutput();
       return pixels;
     }
   

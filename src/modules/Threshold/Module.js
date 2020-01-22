@@ -18,8 +18,11 @@ module.exports = function ImageThreshold(options, UI) {
       return [r, g, b, a];
     }
 
-    function extraManipulation(pixels) {
+    function extraManipulation(pixels, setRenderState, generateOutput) {
+      setRenderState(false);
       pixels = require('./Threshold')(pixels, options, hist);
+      setRenderState(true);
+      generateOutput();
       return pixels;
     }
 

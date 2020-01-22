@@ -14,8 +14,11 @@ module.exports = function DrawRectangle(options, UI) {
       return [r, g, b, a];
     }
 
-    function extraManipulation(pixels) {
+    function extraManipulation(pixels, setRenderState, generateOutput) {
+      setRenderState(false);
       pixels = require('./DrawRectangle')(pixels, options);
+      setRenderState(true);
+      generateOutput();
       return pixels;
     }
 

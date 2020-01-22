@@ -288,8 +288,10 @@ module.exports = function PixelManipulation(image, options) {
       if (options.extraManipulation){
         frames[f] = options.extraManipulation(framePix, setRenderState, generateOutput) || framePix; // extraManipulation is used to manipulate each pixel individually.
         perFrameShape = frames[f].shape;
-      }
-      generateOutput();
+      }else
+        generateOutput();
+      if(isGIF)
+        generateOutput();
     }
   });
 };

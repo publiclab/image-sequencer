@@ -13,7 +13,8 @@ module.exports = function Gradient(options, UI) {
       step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
     }
 
-    function extraManipulation(pixels) {
+    function extraManipulation(pixels, setRenderState, generateOutput) {
+      setRenderState(false);
       const [w, h] = pixels.shape;
       for (var i = 0; i < w; i++) {
         for (var j = 0; j < h; j++) {
@@ -22,7 +23,8 @@ module.exports = function Gradient(options, UI) {
           pixelSetter(i, j, [val, val, val, 255], pixels);
         }
       }
-
+      setRenderState(true);
+      generateOutput();
       return pixels;
     }
 

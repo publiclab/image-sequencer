@@ -14,8 +14,11 @@ module.exports = function Convolution(options, UI) {
 
     var step = this;
 
-    function extraManipulation(pixels) {
+    function extraManipulation(pixels, setRenderState, generateOutput) {
+      setRenderState(false);
       pixels = require('./Convolution')(pixels, options.constantFactor, options.kernelValues, options.texMode);
+      setRenderState(true);
+      generateOutput();
       return pixels;
     }
 

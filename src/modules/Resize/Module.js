@@ -18,7 +18,12 @@ module.exports = function Resize(options, UI) {
 
     const step = this;
 
-    function extraManipulation(pixels) {
+    function changePixel(r, g, b, a) {
+      return [r, g, b, a];
+    }
+
+    function extraManipulation(pixels, setRenderState, generateOutput) {
+      setRenderState(false);
       // Value above 100% scales up, and below 100% scales down
       const resize_value = parseInt(options.resize.slice(0, -1));
 
@@ -55,7 +60,10 @@ module.exports = function Resize(options, UI) {
           pixelSetter(x, y, [r, g, b, a], newPix);
         }
       }
-
+      if(!input.src.includes('gif')){
+        setRenderState(false);
+        generateOutput();
+      }
       return newPix;
     }
 
@@ -71,7 +79,8 @@ module.exports = function Resize(options, UI) {
       image: options.image,
       inBrowser: options.inBrowser,
       callback: callback,
-      useWasm:options.useWasm
+      useWasm:options.useWasm,
+      changePixel
     });
   }
 

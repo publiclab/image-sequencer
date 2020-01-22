@@ -10,8 +10,11 @@ module.exports = function Dither(options, UI) {
     var step = this;
     options.dither = options.dither || defaults.dither;
 
-    function extraManipulation(pixels) {
+    function extraManipulation(pixels, setRenderState, generateOutput) {
+      setRenderState(false);
       pixels = require('./Dither')(pixels, options.dither);
+      setRenderState(true);
+      generateOutput();
       return pixels;
     }
 

@@ -20,8 +20,8 @@ module.exports = function canvasResize(options, UI) {
 
     var step = this;
 
-    function extraManipulation(pixels) {
-
+    function extraManipulation(pixels, setRenderState, generateOutput) {
+      setRenderState(false);
       let newPixels = require('ndarray')(new Uint8Array(4 * options.width * options.height).fill(0), [options.width, options.height, 4]);
       let iMax = options.width - options.x,
         jMax = options.height - options.y;
@@ -32,6 +32,8 @@ module.exports = function canvasResize(options, UI) {
                 
         }
       }
+      setRenderState(true);
+      generateOutput();
       return newPixels;
     }
 

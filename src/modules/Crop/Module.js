@@ -29,7 +29,8 @@ module.exports = function CropModule(options, UI) {
 
     options.step.input = input.src;
 
-    function extraManipulation(pixels) {
+    function extraManipulation(pixels, setRenderState, generateOutput) {
+      setRenderState(false);
       const newPixels = require('./Crop')(pixels, options, function() {
         // We should do this via event/listener:
         if (ui && ui.hide) ui.hide();
@@ -41,6 +42,10 @@ module.exports = function CropModule(options, UI) {
           ui.setup();
         }
       });
+      setTimeout(() => {
+        setRenderState(true);
+        generateOutput();
+      }, 1000);
       return newPixels;
     }
 

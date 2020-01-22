@@ -16,8 +16,8 @@ module.exports = function ColorTemperature(options, UI) {
 
     var step = this;
 
-    function extraManipulation(pixels) {
-
+    function extraManipulation(pixels, setRenderState, generateOutput) {
+      setRenderState(false);
       let temp = parseInt(options.temperature);
       temp /= 100;
 
@@ -51,7 +51,8 @@ module.exports = function ColorTemperature(options, UI) {
 
         }
       }
-
+      setRenderState(true);
+      generateOutput();
       return pixels;
     }
 

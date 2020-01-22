@@ -12,7 +12,8 @@ const intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js'),
   urlHash = require('./urlHash.js'),
   _ = require('lodash'),
   mapHtmlTypes = require('./mapHtmltypes'),
-  scopeQuery = require('./scopeQuery');
+  scopeQuery = require('./scopeQuery'),
+  isGIF = require('../../src/util/isGif');
 
 function DefaultHtmlStepUi(_sequencer, options) {
   options = options || {};
@@ -78,7 +79,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     step.$step = scopeQuery.scopeSelector(step.ui); // Shorthand methods for scoped DOM queries. Read the docs [CONTRIBUTING.md](https://github.com/publiclab/image-sequencer/blob/main/CONTRIBUTING.md) for more info.
     step.$stepAll = scopeQuery.scopeSelectorAll(step.ui);
     let {$step, $stepAll} = step;
-    
+
     step.linkElements = step.ui.querySelectorAll('a'); // All the anchor tags in the step UI
     step.imgElement = $step('a img.img-thumbnail')[0]; // The output image
 
@@ -108,7 +109,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
           if (inputDesc.id == 'color-picker') { // Separate input field for color-picker
             html +=
               '<div id="color-picker" class="input-group colorpicker-component">' +
-              '<input class="form-control target" type="' +
+              '<input class="form-control color-picker-target" type="' +
               inputDesc.type +
               '" name="' +
               paramName +
@@ -126,7 +127,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
               paramVal +
               '" placeholder ="' +
               (inputDesc.placeholder || '');
-              
+
             if (inputDesc.type.toLowerCase() == 'range') {
               html +=
                 '"min="' +
@@ -211,7 +212,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $step('.toggleIcon').toggleClass('rotated');
       $stepAll('.cal').collapse('toggle');
     });
-    
+
     $(step.imgElement).on('mousemove', _.debounce(() => imageHover(step), 150)); // Shows the pixel coordinates on hover
     $(step.imgElement).on('click', (e) => {e.preventDefault(); });
     $stepAll('#color-picker').colorpicker();
@@ -276,6 +277,21 @@ function DefaultHtmlStepUi(_sequencer, options) {
         });
     });
 
+    $stepAll('.color-picker-target').each(function(i, input) {
+      $(input)
+        .data('initValue', $(input).val())
+        .data('hasChangedBefore', false)
+        .on('input change', function() {
+          $(this)
+            .data('hasChangedBefore',
+              handleInputValueChange(
+                $(this).val(),
+                $(this).data('initValue'),
+                $(this).data('hasChangedBefore')
+              )
+            );
+        });
+    });
 
 
     $('input[type="range"]').on('input', function() {
@@ -317,7 +333,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       element.setAttribute('download', step.name + '.' + fileExtension(step.imgElement.src));
       element.style.display = 'none';
       document.body.appendChild(element);
-      
+
       element.click();
     });
 
@@ -333,7 +349,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
               .data('initValue', step.options[i]);
           if (inputs[i].type.toLowerCase() === 'select')
             $step('div[name="' + i + '"] select')
-              .val(step.options[i])
+              .val(String(step.options[i]))
               .data('initValue', step.options[i]);
         }
       }
@@ -364,8 +380,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
    *
    */
   function updateDimensions(step){
-    _sequencer.getImageDimensions(step.imgElement.src, function (dim, isGIF) {
-      step.ui.querySelector('.' + step.name).attributes['data-original-title'].value = `<div style="text-align: center"><p>Image Width: ${dim.width}<br>Image Height: ${dim.height}</br>${isGIF ? `Frames: ${dim.frames}` : ''}</div>`;
+    _sequencer.getImageDimensions(step.imgElement.src, function (dim) {
+      step.ui.querySelector('.' + step.name).attributes['data-original-title'].value = `<div style="text-align: center"><p>Image Width: ${dim.width}<br>Image Height: ${dim.height}</br>${isGIF(step.output) ? `Frames: ${dim.frames}` : ''}</div>`;
     });
   }
 
@@ -403,7 +419,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
     if (_sequencer.steps.length - 1 > 1) $('#load-image .insert-step').prop('disabled', false);
     else $('#load-image .insert-step').prop('disabled', true);
 
-    $('div[class*=imgareaselect-]').remove();
+    $(step.imgElement).imgAreaSelect({
+      remove: true
+    });
   }
 
   function getPreview() {
@@ -423,14 +441,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
       notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> ' + msg ;
       notification.id = id;
       notification.classList.add('notification');
-  
+
       $('body').append(notification);
     }
-  
+
     $('#' + id).fadeIn(500).delay(200).fadeOut(500);
   }
-    
-  
+
+
   return {
     getPreview: getPreview,
     onSetup: onSetup,

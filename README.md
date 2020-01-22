@@ -613,3 +613,4 @@ Modules that do not work:
 6. Blend
 7. Histogram
 8. WebGL Distort
+9. Mask

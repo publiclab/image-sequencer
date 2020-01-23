@@ -47,7 +47,7 @@ module.exports = function PixelManipulation(image, options) {
 
   options = options || {};
   
-  getPixels(image.src, function (err, pixels) {
+  getPixels(image.src, async function (err, pixels) {
     if (err) {
       console.log('get-pixels error: ', err);
       return;
@@ -55,7 +55,7 @@ module.exports = function PixelManipulation(image, options) {
 
     // There may be a more efficient means to encode an image object,
     // but node modules and their documentation are essentially arcane on this point.
-    function generateOutput() {
+    async function generateOutput() {
       if (!(renderableFrames < numFrames) && !(resolvedFrames < numFrames)) {
 
         if (isGIF) {
@@ -64,44 +64,45 @@ module.exports = function PixelManipulation(image, options) {
           for (let f = 0; f < numFrames; f++) {
             dataPromises.push(getDataUri(frames[f], options.format));
           }
+          
+          var datauris = await Promise.all(dataPromises);
+          // debugger;
+          console.log(datauris);
+          const gifshotOptions = {
+            images: datauris,
+            frameDuration: 1, // Duration of each frame in 1/10 seconds.
+            numFrames: datauris.length,
+            gifWidth: perFrameShape[0],
+            gifHeight: perFrameShape[1]
+          };
 
-          Promise.all(dataPromises).then(datauris => {
-            const gifshotOptions = {
-              images: datauris,
-              frameDuration: 1, // Duration of each frame in 1/10 seconds.
-              numFrames: datauris.length,
-              gifWidth: perFrameShape[0],
-              gifHeight: perFrameShape[1]
-            };
-  
-            const gifshotCb = out => {
-              if (out.error) {
-                console.log('gifshot error: ', out.errorMsg);
-              }
-  
-              if (options.output)
-                options.output(options.image, out.image, 'gif', wasmSuccess);
-              if (options.callback) options.callback();
-            };
+          const gifshotCb = out => {
+            if (out.error) {
+              console.log('gifshot error: ', out.errorMsg);
+            }
 
-            if (options.inBrowser) {
-              gifshot.createGIF(gifshotOptions, gifshotCb);
-            }
-            else {
-              const nodejsGIFShot = eval('require')('./node-gifshot');
-              nodejsGIFShot(gifshotOptions, gifshotCb);
-            }
-          });
+            if (options.output)
+              options.output(options.image, out.image, 'gif', wasmSuccess);
+            if (options.callback) options.callback();
+          };
+
+          if (options.inBrowser) {
+            gifshot.createGIF(gifshotOptions, gifshotCb);
+          }
+          else {
+            const nodejsGIFShot = eval('require')('./node-gifshot');
+            nodejsGIFShot(gifshotOptions, gifshotCb);
+          }
 
         }
         else {
-          getDataUri(frames[0], options.format).then(datauri => {
-            if (options.output)
-              options.output(options.image, datauri, options.format, wasmSuccess);
-            if (options.callback) options.callback();
-          });
+          var datauri = await getDataUri(frames[0], options.format);
+          if (options.output)
+            options.output(options.image, datauri, options.format, wasmSuccess);
+          if (options.callback) options.callback();
         }
       }
+      return new Promise(resolve => resolve);
     }
 
     // Get pixels of each frame
@@ -231,38 +232,36 @@ module.exports = function PixelManipulation(image, options) {
 
         if (options.useWasm) {
           if (options.inBrowser) {
+            try {
 
-            fetch('../../../dist/manipulation.wasm').then(response =>
-              response.arrayBuffer()
-            ).then(bytes =>
-              WebAssembly.instantiate(bytes, imports)
-            ).then(results => {
+              var response = await fetch('../../../dist/manipulation.wasm');
+              var bytes = await response.arrayBuffer();
+              var results  = await WebAssembly.instantiate(bytes, imports);
               results.instance.exports.manipulatePixel(framePix.shape[0], framePix.shape[1], inBrowser, test);
               
               wasmSuccess = true;
               resolvedFrames++;
-              generateOutput();
-            }).catch(err => {
+              await generateOutput();
+            } catch (error) {
               console.log(err);
               console.log('WebAssembly acceleration errored; falling back to JavaScript in PixelManipulation');
               perPixelManipulation();
               
               wasmSuccess = false;
               resolvedFrames++;
-              generateOutput();
-            });
+              await generateOutput();
+            }
           }
           else {
             try{
               const wasmPath = path.join(__dirname, '../../../', 'dist', 'manipulation.wasm');
               const buf = fs.readFileSync(wasmPath);
-              WebAssembly.instantiate(buf, imports).then(results => {
-                results.instance.exports.manipulatePixel(framePix.shape[0], framePix.shape[1], inBrowser, test);
-                
-                wasmSuccess = true;
-                resolvedFrames++;
-                generateOutput();
-              });
+              var results = await WebAssembly.instantiate(buf, imports);
+              results.instance.exports.manipulatePixel(framePix.shape[0], framePix.shape[1], inBrowser, test);
+              
+              wasmSuccess = true;
+              resolvedFrames++;
+              await generateOutput();
             }
             catch(err){
               console.log(err);
@@ -271,7 +270,7 @@ module.exports = function PixelManipulation(image, options) {
               
               wasmSuccess = false;
               resolvedFrames++;
-              generateOutput();
+              await generateOutput();
             }
           }
         }
@@ -280,7 +279,7 @@ module.exports = function PixelManipulation(image, options) {
           
           wasmSuccess = false;
           resolvedFrames++;
-          generateOutput();
+          await generateOutput();
         }
       }
       else resolvedFrames++;
@@ -288,10 +287,8 @@ module.exports = function PixelManipulation(image, options) {
       if (options.extraManipulation){
         frames[f] = options.extraManipulation(framePix, setRenderState, generateOutput) || framePix; // extraManipulation is used to manipulate each pixel individually.
         perFrameShape = frames[f].shape;
-      }else
-        generateOutput();
-      if(isGIF)
-        generateOutput();
+      }
+      await generateOutput();
     }
   });
 };

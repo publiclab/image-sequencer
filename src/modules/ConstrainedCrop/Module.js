@@ -15,6 +15,10 @@ module.exports = function ConstrainedCrop(options, UI) {
       widthRatio = Number(aspectRatio[0]),
       heightRatio = Number(aspectRatio[1]);
 
+    function changePixel(r, g, b, a) {
+      return [r, g, b, a];
+    }
+
     function extraManipulation(pixels, setRenderState, generateOutput) {
       setRenderState(false);
       var width = pixels.shape[0],
@@ -30,10 +34,8 @@ module.exports = function ConstrainedCrop(options, UI) {
       }
       const newPixels = require('../Crop/Crop')(pixels, {'x': startingX, 'y': startingY, 'w': endX - startingX, 'h': endY - startingY}, function() {
       });
-      setTimeout(() => {
-        setRenderState(true);
-        generateOutput();
-      }, 1000);
+      setRenderState(true);
+      generateOutput();
       return newPixels;
     }
 
@@ -49,7 +51,8 @@ module.exports = function ConstrainedCrop(options, UI) {
       image: options.image,
       inBrowser: options.inBrowser,
       callback: callback,
-      useWasm:options.useWasm
+      useWasm:options.useWasm,
+      changePixel
     });
   }
   return {

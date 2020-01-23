@@ -60,10 +60,8 @@ module.exports = function Resize(options, UI) {
           pixelSetter(x, y, [r, g, b, a], newPix);
         }
       }
-      if(!input.src.includes('gif')){
-        setRenderState(false);
-        generateOutput();
-      }
+      setRenderState(false);
+      generateOutput();
       return newPix;
     }
 

@@ -29,6 +29,10 @@ module.exports = function CropModule(options, UI) {
 
     options.step.input = input.src;
 
+    function changePixel(r, g, b, a) {
+      return [r, g, b, a];
+    }
+
     function extraManipulation(pixels, setRenderState, generateOutput) {
       setRenderState(false);
       const newPixels = require('./Crop')(pixels, options, function() {
@@ -42,10 +46,8 @@ module.exports = function CropModule(options, UI) {
           ui.setup();
         }
       });
-      setTimeout(() => {
-        setRenderState(true);
-        generateOutput();
-      }, 1000);
+      setRenderState(true);
+      generateOutput();
       return newPixels;
     }
 
@@ -61,7 +63,8 @@ module.exports = function CropModule(options, UI) {
       image: options.image,
       inBrowser: options.inBrowser,
       callback: callback,
-      useWasm:options.useWasm
+      useWasm:options.useWasm,
+      changePixel
     });
   }
 

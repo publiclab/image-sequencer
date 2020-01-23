@@ -22,18 +22,17 @@ module.exports = function Crop(pixels, options, cb) {
     h;
 
   // Parse the inputs
-  parseCornerCoordinateInputs({iw, ih},
+  const {coord} = parseCornerCoordinateInputs({iw, ih},
     {
       x: { valInp: options.x, type: 'horizontal' },
       y: { valInp: options.y, type: 'vertical' },
       w: { valInp: options.w, type: 'horizontal' },
       h: { valInp: options.h, type: 'vertical' },
-    }, function (opt, coord) {
-      offsetX = Math.floor(coord.x.valInp);
-      offsetY = Math.floor(coord.y.valInp);
-      w = Math.floor(coord.w.valInp);
-      h = Math.floor(coord.h.valInp);
-    });
+    }, function (opt, coord) {});
+  offsetX = Math.floor(coord.x.valInp);
+  offsetY = Math.floor(coord.y.valInp);
+  w = Math.floor(coord.w.valInp);
+  h = Math.floor(coord.h.valInp);
 
   const newPixels = new ndarray([], [w, h, 4]);
 

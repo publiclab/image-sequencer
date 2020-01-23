@@ -20,4 +20,5 @@ module.exports = function parseCornerCoordinateInputs(options, coord, callback) 
 
   Object.keys(coord).forEach(convert);
   callback(options, coord);
+  return {options, coord};
 };

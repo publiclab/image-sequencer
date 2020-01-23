@@ -18,9 +18,6 @@ module.exports = function Resize(options, UI) {
 
     const step = this;
 
-    function changePixel(r, g, b, a) {
-      return [r, g, b, a];
-    }
 
     function extraManipulation(pixels, setRenderState, generateOutput) {
       setRenderState(false);
@@ -78,7 +75,6 @@ module.exports = function Resize(options, UI) {
       inBrowser: options.inBrowser,
       callback: callback,
       useWasm:options.useWasm,
-      changePixel
     });
   }
 

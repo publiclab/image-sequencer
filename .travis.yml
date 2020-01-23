@@ -12,6 +12,10 @@ before_script:
   - ./cc-test-reporter before-build
 script:
   - npm test
+  - npm run benchmark
+  - npm run gif-test
+  - grunt tests
+  - npm run core-tests
   - npm run test-ui
   - npm run test-ui-2
   - grunt build

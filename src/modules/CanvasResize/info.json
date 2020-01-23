@@ -15,13 +15,19 @@
         "x": {
             "type": "integer",
             "desc": "X-cord of the top left corner of the image on the canvas",
-            "default": 500
+            "default": 200
         },
         "y": {
             "type": "float",
             "desc": "Y-cord of the top left corner of the image on the canvas",
-            "default": 500
-        }
+            "default": 200
+        },
+        "color":{
+            "type": "text",
+            "desc": "Select color",
+            "default": "rgba(20,20,20,1)",
+            "id": "color-picker"
+          }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#canvas-resize-module"
 }

@@ -155,7 +155,7 @@ module.exports = function PixelManipulation(image, options) {
               perFrameShape[1] *
               perFrameShape[2]
             ),
-            perFrameShape
+            perFrameShape, [channels, width * channels, 1]
           )
         );
 

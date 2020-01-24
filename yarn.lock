@@ -4383,9 +4383,9 @@ gpu-mock.js@^1.1.1:
   integrity sha512-BmoRk9nbMaxkrwzTJp4M0iuwIbzNEXt6tlBZ5+ZYzaGH9VWu5Nhn1Q1CBusCam3d8u3FfVEFf3Ueo8DocUCbUw==
 
 gpu.js@^2.3.1:
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/gpu.js/-/gpu.js-2.6.2.tgz#e5605a7989761ed86c24c516d665898741b70814"
-  integrity sha512-Ond7t6xGUn4bUC/vzI2D8VgBIharso7LIr66ZvLy01JOUkGLQ2DgSUXZ9gix1iSzZ9e6/EQWcBkHDNehUePbFA==
+  version "2.6.5"
+  resolved "https://registry.yarnpkg.com/gpu.js/-/gpu.js-2.6.5.tgz#74d33c07a31f8163a1ad03652764694ac2a32344"
+  integrity sha512-UF0eiOWY2EvSeRo1KJN8Meepf1nCzEpVEXyHLefbi01jEyRoNhsG6a0d6MRURUKqfx6I9NT6KtkWQ3hw87qvcQ==
   dependencies:
     acorn "^7.1.0"
     gl "^4.4.1"

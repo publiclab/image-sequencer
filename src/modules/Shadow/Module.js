@@ -72,18 +72,18 @@ module.exports = function canvasResize(options, UI) {
       }
       
       else if (options.X_value < 0 && options.Y_value >= 0) {
-        for (var k = 0; k < Math.abs(options.X_value); k++) {
-          for (var l = 0; l < (h + options.Y_value); l++) {
-            let val = 255 - ((k / Math.abs(options.X_value)) * 255);
+        for (var k = 0; k < (w + Math.abs(options.X_value)); k++) {
+          for (var l = h; l < (h + options.Y_value); l++) {
+            let val = ((l - h) / options.Y_value * 255);
             pixelSetter(k, l, [val, val, val, 255], newPixels);
           }
         }
-        for (var k = 0; k < (w + Math.abs(options.X_value)); k++) {
-          for (var l = h; l < (h + options.Y_value); l++) {
-            if (l < (h - ((options.Y_value / options.X_value) * (k - options.X_value))) && k <= options.X_value && l >= h) {
+        for (var k = 0; k < Math.abs(options.X_value); k++) {
+          for (var l = 0; l < (h + options.Y_value); l++) {
+            if (l + (k * (options.Y_value / Math.abs(options.X_value))) - (options.Y_value + h) > 0 && l >= h) {
               continue;
             }
-            let val = ((l - h) / options.Y_value * 255);
+            let val = 255 - ((k / Math.abs(options.X_value)) * 255);
             pixelSetter(k, l, [val, val, val, 255], newPixels);
           }
         }
@@ -94,7 +94,7 @@ module.exports = function canvasResize(options, UI) {
           }
         }
       }
-      
+
       else if (options.X_value >= 0 && options.Y_value < 0) {
         for (var k = w; k < (w + options.X_value); k++) {
           for (var l = 0; l < (h + Math.abs(options.Y_value)); l++) {
@@ -104,7 +104,7 @@ module.exports = function canvasResize(options, UI) {
         }
         for (var k = 0; k < (w + options.X_value); k++) {
           for (var l = 0; l < Math.abs(options.Y_value); l++) {
-            if (l < ((options.Y_value / options.X_value) * (options.X_value + w - k)) && k > w) {
+            if (l >= ((options.X_value / Math.abs(options.Y_value)) * (w + options.X_value - k)) && k >= w) {
               continue;
             }
             let val = 255 - (l / Math.abs(options.Y_value) * 255);

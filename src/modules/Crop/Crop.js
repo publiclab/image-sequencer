@@ -1,18 +1,14 @@
-const ndarray = require('ndarray'),
-  pixelSetter = require('../../util/pixelSetter'),
-  parseCornerCoordinateInputs = require('../../util/ParseInputCoordinates');
+const parseCornerCoordinateInputs = require('../../util/ParseInputCoordinates'),
+  getPixels = require('get-pixels');
+module.exports = function Crop(pixels, options, input, cb) {
+  
 
-module.exports = function Crop(pixels, options, cb) {
   var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
   options.x = options.x || defaults.x;
   options.y = options.y || defaults.y;
 
   options.w = options.w || defaults.w;
   options.h = options.h || defaults.h;
-
-  options.backgroundColor = options.backgroundColor || defaults.backgroundColor;
-
-  const bg = options.backgroundColor.replace('rgba', '').replace('(', '').replace(')', '').split(',');
 
   let iw = pixels.shape[0], // Width of Original Image
     ih = pixels.shape[1], // Height of Original Image
@@ -22,49 +18,50 @@ module.exports = function Crop(pixels, options, cb) {
     h;
 
   // Parse the inputs
-  const {coord} = parseCornerCoordinateInputs({iw, ih},
+  const { coord } = parseCornerCoordinateInputs(
+    { iw, ih },
     {
       x: { valInp: options.x, type: 'horizontal' },
       y: { valInp: options.y, type: 'vertical' },
       w: { valInp: options.w, type: 'horizontal' },
-      h: { valInp: options.h, type: 'vertical' },
-    }, function (opt, coord) {});
+      h: { valInp: options.h, type: 'vertical' }
+    },
+    function(opt, coord) {}
+  );
   offsetX = Math.floor(coord.x.valInp);
   offsetY = Math.floor(coord.y.valInp);
   w = Math.floor(coord.w.valInp);
   h = Math.floor(coord.h.valInp);
 
-  const newPixels = new ndarray([], [w, h, 4]);
+  const getDataUri = require('../../util/getDataUri');
+  getDataUri(pixels, input.format).then(dataUri => {
+    getPixels(dataUri, (err, pix) => {
+      if (err) console.log('get-pixels error: ', err);
 
-  for (let x = 0; x < w; x++) {
-    for (let y = 0; y < h; y++) {
-      pixelSetter(x, y, bg, newPixels); // Set the background color
-    }
-  }
+      const { createCanvas, createImageData } = require('canvas');
 
-  for (
-    let x = 0;
-    x < Math.min(w - 1, offsetX + iw - 1);
-    x++
-  ) {
-    for (
-      let y = 0;
-      y < Math.min(h - 1, offsetY + ih - 1);
-      y++
-    ) {
-      const inputImgX = x + offsetX,
-        inputImgY = y + offsetY;
-      
-      pixelSetter(x, y, [
-        pixels.get(inputImgX, inputImgY, 0),
-        pixels.get(inputImgX, inputImgY, 1),
-        pixels.get(inputImgX, inputImgY, 2),
-        pixels.get(inputImgX, inputImgY, 3)
-      ], newPixels); // Set the background color
-    }
-  }
+      const canvas = createCanvas(w, h);
 
-  if (cb) cb();
+      const ctx = canvas.getContext('2d');
+      ctx.putImageData(
+        new createImageData(
+          new Uint8ClampedArray(pix.data),
+          pix.shape[0],
+          pix.shape[1]
+        ),
+        -offsetX,
+        -offsetY
+      );
 
-  return newPixels;
+      getPixels(canvas.toDataURL(), (err, newPix) => {
+        if (err) console.log('get-pixels error: ', err);
+
+        pixels.data = newPix.data;
+        pixels.shape = newPix.shape;
+        pixels.stride = newPix.stride;
+
+        if(cb) cb();
+      });
+    });
+  });
 };

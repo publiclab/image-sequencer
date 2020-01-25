@@ -5,7 +5,7 @@
         "colormap": {
             "type": "select",
             "desc": "Name of the Colormap",
-            "default": "default",
+            "default": "greyscale",
             "values": [
                 "default",
                 "greyscale",
@@ -16,17 +16,60 @@
         "x": {
             "type": "integer",
             "desc": "X-position of the image on which the new image is overlayed",
-            "default": 0
+            "default": "450"
         },
         "y": {
             "type": "integer",
             "desc": "Y-position of the image on which the new image is overlayed",
-            "default": 0
+            "default": "400"
         },
         "h": {
             "type": "integer",
             "desc": "height of the colorbar",
-            "default": 10
+            "default": 20
+        },
+        "w": {
+            "type": "integer",
+            "desc": "height of the colorbar",
+            "default": 120
+        },
+        "text": {
+            "type": "string",
+            "desc": "Enter the text to overlay.",
+            "default": "1     0     -1"
+        },
+        "xt": {
+            "type": "integer",
+            "desc": "Starting text horizontal position.",
+            "default": "30"
+        },
+        "yt": {
+            "type": "integer",
+            "desc": "Starting text vertical position.",
+            "default": "15"
+        },
+        "font": {
+            "type": "select",
+            "desc": "Select the font style.",
+            "default": "serif",
+            "values": [
+                "serif",
+                "arial",
+                "times",
+                "courier",
+                "Montserrat"
+            ]
+        },
+        "color": {
+            "type": "text",
+            "desc": "Select the text color.",
+            "default": "rgba(255,255,255,1)",
+            "id": "color-picker"
+        },
+        "size": {
+            "type" : "integer",
+            "desc": "Enter the font size in pixels.",
+            "default": "12"
         }
     },
     "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#colorbar-module"

@@ -4,7 +4,8 @@ var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js'),
   DefaultHtmlStepUi = require('./lib/defaultHtmlStepUi.js'),
   urlHash = require('./lib/urlHash.js'),
   insertPreview = require('./lib/insertPreview.js'),
-  versionManagement = require('./lib/versionManagement.js');
+  versionManagement = require('./lib/versionManagement.js'),
+  isGIF = require('../src/util/isGif');
 
 
 window.onload = function () {
@@ -270,8 +271,8 @@ window.onload = function () {
   * @param {string} imageDataURL - The data URL for the image.
   */
   function savePDF(imageDataURL) {
-    sequencer.getImageDimensions(imageDataURL, function(dimensions, isGIF) {
-      if (!isGIF) {
+    sequencer.getImageDimensions(imageDataURL, function(dimensions) {
+      if (isGIF(imageDataURL)) {
         // Get the dimensions of the image.
         let pageWidth = dimensions.width;
         let pageHeight = dimensions.height;

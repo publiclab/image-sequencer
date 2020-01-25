@@ -11,7 +11,7 @@ module.exports = function Channel(options, UI) {
     const pixelSetter = require('../../util/pixelSetter.js');
 
     options.gradient = options.gradient || defaults.gradient;
-    options.gradient = JSON.parse(options.gradient);
+    options.gradient = String(JSON.parse(options.gradient));
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;

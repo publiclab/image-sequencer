@@ -1,6 +1,4 @@
-const pixelManipulation = require('../_nomodule/PixelManipulation'),
-  parseCornerCoordinateInputs = require('../../util/ParseInputCoordinates'),
-  getPixels = require('get-pixels');
+const pixelManipulation = require('../_nomodule/PixelManipulation');
 /*
  * Image Cropping module
  * Usage:
@@ -31,26 +29,23 @@ module.exports = function CropModule(options, UI) {
 
     options.step.input = input.src;
 
-    function extraManipulation(pixels, setRenderState, generateOutput) {
-      require('./Crop')(pixels, options, input, () => {
-        setRenderState(true);
-        generateOutput();
-
+    function extraManipulation(pixels, setRenderState, generateOutput, frames, f) {
+      setRenderState(false);
+      const newPixels = require('./Crop')(pixels, options, function() {
         // We should do this via event/listener:
         if (ui && ui.hide) ui.hide();
 
         // Start custom UI setup (draggable UI)
         // Only once we have an input image
-        if (
-          setupComplete === false &&
-          options.step.inBrowser &&
-          !options.noUI
-        ) {
+        if (setupComplete === false && options.step.inBrowser && !options.noUI) {
           setupComplete = true;
           ui.setup();
         }
       });
-      
+      frames[f] = newPixels;
+      setRenderState(true);
+      generateOutput();
+      return newPixels;
     }
 
     function output(image, datauri, mimetype, wasmSuccess) {
@@ -65,7 +60,7 @@ module.exports = function CropModule(options, UI) {
       image: options.image,
       inBrowser: options.inBrowser,
       callback: callback,
-      useWasm:options.useWasm,
+      useWasm:options.useWasm
     });
   }
 

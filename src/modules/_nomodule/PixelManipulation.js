@@ -55,9 +55,9 @@ module.exports = function PixelManipulation(image, options) {
 
     // There may be a more efficient means to encode an image object,
     // but node modules and their documentation are essentially arcane on this point.
-    function generateOutput() {
+    function generateOutput(_frames) {
       if (!(renderableFrames < numFrames) && !(resolvedFrames < numFrames)) {
-
+        // if(rend){
         if (isGIF) {
           const dataPromises = []; // Array of all DataURI promises
 
@@ -92,15 +92,17 @@ module.exports = function PixelManipulation(image, options) {
               nodejsGIFShot(gifshotOptions, gifshotCb);
             }
           });
-
         }
-        else {
-          getDataUri(frames[0], options.format).then(datauri => {
-            if (options.output)
-              options.output(options.image, datauri, options.format, wasmSuccess);
-            if (options.callback) options.callback();
-          });
-        }
+        // }
+      }
+      if (!(renderableFrames < numFrames) && !(resolvedFrames < numFrames)) {
+        if(_frames)
+          frames = _frames;
+        getDataUri(frames[0], options.format).then(datauri => {
+          if (options.output)
+            options.output(options.image, datauri, options.format, wasmSuccess);
+          if (options.callback) options.callback();
+        });
       }
     }
 
@@ -193,7 +195,7 @@ module.exports = function PixelManipulation(image, options) {
       }
       function extraManipulation(){
         if (options.extraManipulation){
-          frames[f] = options.extraManipulation(framePix, setRenderState, generateOutput) || framePix; // extraManipulation is used to manipulate each pixel individually.
+          frames[f] = options.extraManipulation(framePix, setRenderState, generateOutput, frames, f) || framePix; // extraManipulation is used to manipulate each pixel individually.
           perFrameShape = frames[f].shape;
         }else
           generateOutput();

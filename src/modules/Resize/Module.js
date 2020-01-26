@@ -19,7 +19,7 @@ module.exports = function Resize(options, UI) {
     const step = this;
 
 
-    function extraManipulation(pixels, setRenderState, generateOutput) {
+    function extraManipulation(pixels, setRenderState, generateOutput, frames, f) {
       setRenderState(false);
       // Value above 100% scales up, and below 100% scales down
       const resize_value = parseInt(options.resize.slice(0, -1));
@@ -57,8 +57,11 @@ module.exports = function Resize(options, UI) {
           pixelSetter(x, y, [r, g, b, a], newPix);
         }
       }
-      setRenderState(false);
+
+      frames[f] = newPix;
+      setRenderState(true);
       generateOutput();
+      
       return newPix;
     }
 

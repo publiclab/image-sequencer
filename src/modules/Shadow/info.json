@@ -10,7 +10,7 @@
     "Y_value": {
       "type": "integer",
       "desc": "Y-value",
-      "default": 30
+      "default": 20
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#shadow-module"

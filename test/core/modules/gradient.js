@@ -1,5 +1,5 @@
 const testModule = require('../templates/module-test'),
-  image = require('../images/IS-QR'),
+  image = require('../images/flower'),
   options = {
     gradientType: 'circular'
   };

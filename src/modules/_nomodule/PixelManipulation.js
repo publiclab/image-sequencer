@@ -92,17 +92,15 @@ module.exports = function PixelManipulation(image, options) {
               nodejsGIFShot(gifshotOptions, gifshotCb);
             }
           });
+        } else{
+          if(_frames)
+            frames = _frames;
+          getDataUri(frames[0], options.format).then(datauri => {
+            if (options.output)
+              options.output(options.image, datauri, options.format, wasmSuccess);
+            if (options.callback) options.callback();
+          });
         }
-        // }
-      }
-      if (!(renderableFrames < numFrames) && !(resolvedFrames < numFrames)) {
-        if(_frames)
-          frames = _frames;
-        getDataUri(frames[0], options.format).then(datauri => {
-          if (options.output)
-            options.output(options.image, datauri, options.format, wasmSuccess);
-          if (options.callback) options.callback();
-        });
       }
     }
 

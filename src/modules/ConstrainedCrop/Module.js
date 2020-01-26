@@ -19,7 +19,7 @@ module.exports = function ConstrainedCrop(options, UI) {
       return [r, g, b, a];
     }
 
-    function extraManipulation(pixels, setRenderState, generateOutput) {
+    function extraManipulation(pixels, setRenderState, generateOutput, frames, f) {
       setRenderState(false);
       var width = pixels.shape[0],
         height = pixels.shape[1];
@@ -34,6 +34,7 @@ module.exports = function ConstrainedCrop(options, UI) {
       }
       const newPixels = require('../Crop/Crop')(pixels, {'x': startingX, 'y': startingY, 'w': endX - startingX, 'h': endY - startingY}, function() {
       });
+      frames[f] = newPixels;
       setRenderState(true);
       generateOutput();
       return newPixels;

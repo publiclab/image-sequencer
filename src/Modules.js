@@ -13,6 +13,7 @@ module.exports = {
   'colorbar': require('./modules/Colorbar'),
   'color-temperature': require('./modules/ColorTemperature'),
   'colormap': require('./modules/Colormap'),
+  'constrained-crop': require('./modules/ConstrainedCrop'),
   'contrast': require('./modules/Contrast'),
   'convolution': require('./modules/Convolution'),
   'crop': require('./modules/Crop'),

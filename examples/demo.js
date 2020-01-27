@@ -8,6 +8,29 @@ var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js'),
 
 
 window.onload = function () {
+  const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+  const currentTheme = localStorage.getItem('theme');
+
+  if (currentTheme) {
+    document.documentElement.setAttribute('data-theme', currentTheme);
+
+    if (currentTheme === 'dark') {
+      toggleSwitch.checked = true;
+    }
+  }
+
+  const switchTheme = e => {
+    if (e.target.checked) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+    }
+    else {
+      document.documentElement.setAttribute('data-theme', 'light');
+      localStorage.setItem('theme', 'light');
+    }
+  };
+
+  toggleSwitch.addEventListener('change', switchTheme, false);
   sequencer = ImageSequencer(); // Set the global sequencer variable
   
   options = {
@@ -31,13 +54,13 @@ window.onload = function () {
   };
 
   versionManagement.getLatestVersionNumber(function(versionNumber) {
-    console.log("The latest NPM version number for Image Sequencer (from GitHub) is v" + versionNumber);
+    console.log('The latest NPM version number for Image Sequencer (from GitHub) is v' + versionNumber);
   });
-  console.log("The local version number for Image Sequencer is v" + versionManagement.getLocalVersionNumber());
+  console.log('The local version number for Image Sequencer is v' + versionManagement.getLocalVersionNumber());
 
   function displayVersionNumber() {
-    $('#version-number-text').text("Image Sequencer v" + versionManagement.getLocalVersionNumber());
-    $('#version-number-top-right').text("v" + versionManagement.getLocalVersionNumber());
+    $('#version-number-text').text('Image Sequencer v' + versionManagement.getLocalVersionNumber());
+    $('#version-number-top-right').text('v' + versionManagement.getLocalVersionNumber());
   }
   displayVersionNumber();
 

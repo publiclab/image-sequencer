@@ -1,7 +1,7 @@
 module.exports = function Threshold(pixels, options, histData) {
   var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
    
-  type = options.threshold ;
+  type = options.threshold || defaults.threshold;
   threshold = parseInt(options.input) || defaults.input;
   var lumR = [];
   var lumG = [];

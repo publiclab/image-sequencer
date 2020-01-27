@@ -3,7 +3,10 @@ var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js'),
   intermediateHtmlStepUi = require('./lib/intermediateHtmlStepUi.js'),
   DefaultHtmlStepUi = require('./lib/defaultHtmlStepUi.js'),
   urlHash = require('./lib/urlHash.js'),
-  insertPreview = require('./lib/insertPreview.js');
+  insertPreview = require('./lib/insertPreview.js'),
+  versionManagement = require('./lib/versionManagement.js'),
+  isGIF = require('../src/util/isGif');
+
 
 window.onload = function () {
   sequencer = ImageSequencer(); // Set the global sequencer variable
@@ -27,6 +30,17 @@ window.onload = function () {
       }
     }
   };
+
+  versionManagement.getLatestVersionNumber(function(versionNumber) {
+    console.log('The latest NPM version number for Image Sequencer (from GitHub) is v' + versionNumber);
+  });
+  console.log('The local version number for Image Sequencer is v' + versionManagement.getLocalVersionNumber());
+
+  function displayVersionNumber() {
+    $('#version-number-text').text('Image Sequencer v' + versionManagement.getLocalVersionNumber());
+    $('#version-number-top-right').text('v' + versionManagement.getLocalVersionNumber());
+  }
+  displayVersionNumber();
 
   function refreshOptions(options) {
     // Default options if parameter is empty.
@@ -258,22 +272,25 @@ window.onload = function () {
   */
   function savePDF(imageDataURL) {
     sequencer.getImageDimensions(imageDataURL, function(dimensions) {
-      // Get the dimensions of the image.
-      let pageWidth = dimensions.width;
-      let pageHeight = dimensions.height;
+      if (isGIF(imageDataURL)) {
+        // Get the dimensions of the image.
+        let pageWidth = dimensions.width;
+        let pageHeight = dimensions.height;
 
-      // Create a new pdf with the same dimensions as the image.
-      const pdf = new jsPDF({
-        orientation: pageHeight > pageWidth ? 'portrait' : 'landscape',
-        unit: 'px',
-        format: [pageHeight, pageWidth]
-      });
+        // Create a new pdf with the same dimensions as the image.
+        const pdf = new jsPDF({
+          orientation: pageHeight > pageWidth ? 'portrait' : 'landscape',
+          unit: 'px',
+          format: [pageHeight, pageWidth]
+        });
 
-      // Add the image to the pdf with dimensions equal to the internal dimensions of the page.
-      pdf.addImage(imageDataURL, 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+        // Add the image to the pdf with dimensions equal to the internal dimensions of the page.
+        pdf.addImage(imageDataURL, 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
 
-      // Save the pdf with the filename specified here:
-      pdf.save('index.pdf');
+        // Save the pdf with the filename specified here:
+        pdf.save('index.pdf');
+      }
+      else console.log('GIFs cannot be converted to PDF');
     });
   }
 
@@ -310,8 +327,9 @@ window.onload = function () {
         step.options.step.imgElement.src = reader.result;
       else
         step.imgElement.src = reader.result;
-      
+
       insertPreview.updatePreviews(reader.result, document.querySelector('#addStep'));
+      DefaultHtmlStepUi(sequencer).updateDimensions(step);
     },
     onTakePhoto: function (url) {
       var step = sequencer.steps[0];

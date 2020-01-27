@@ -37,6 +37,7 @@ module.exports = function DoNothing(options, UI) {
       ui: options.step.ui,
       format: input.format,
       image: options.image,
+      inBrowser: options.inBrowser,
       callback: callback,
       useWasm:options.useWasm
     });

@@ -1,3 +1,4 @@
+const pixelManipulation = require('../_nomodule/PixelManipulation');
 /*
  * Image Cropping module
  * Usage:
@@ -26,54 +27,37 @@ module.exports = function CropModule(options, UI) {
 
     var step = this;
 
-    // save the input image;
-    // TODO: this should be moved to module API to persist the input image
     options.step.input = input.src;
-    var parseCornerCoordinateInputs = require('../../util/ParseInputCoordinates');
 
-    //parse the inputs
-    parseCornerCoordinateInputs(options, {
-      src: input.src,
-      x: { valInp: options.x, type: 'horizontal' },
-      y: { valInp: options.y, type: 'vertical' },
-      w: { valInp: options.w, type: 'horizontal' },
-      h: { valInp: options.h, type: 'vertical' },
-    }, function (options, coord) {
-      options.x = parseInt(coord.x.valInp);
-      options.y = parseInt(coord.y.valInp);
-      options.w = coord.w.valInp;
-      options.h = coord.h.valInp;
+    function extraManipulation(pixels) {
+      const newPixels = require('./Crop')(pixels, options, function() {
+        // We should do this via event/listener:
+        if (ui && ui.hide) ui.hide();
+
+        // Start custom UI setup (draggable UI)
+        // Only once we have an input image
+        if (setupComplete === false && options.step.inBrowser && !options.noUI) {
+          setupComplete = true;
+          ui.setup();
+        }
+      });
+      return newPixels;
+    }
+
+    function output(image, datauri, mimetype, wasmSuccess) {
+      step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
+    }
+
+    return pixelManipulation(input, {
+      output: output,
+      ui: options.step.ui,
+      extraManipulation: extraManipulation,
+      format: input.format,
+      image: options.image,
+      inBrowser: options.inBrowser,
+      callback: callback,
+      useWasm:options.useWasm
     });
-
-    require('./Crop')(input, options, function (out, format) {
-
-      // This output is accessible to Image Sequencer
-      step.output = {
-        src: out,
-        format: format
-      };
-
-      // This output is accessible to the UI
-      options.step.output = out;
-
-      // Tell the UI that the step has been drawn
-      UI.onComplete(options.step);
-
-      // we should do this via event/listener:
-      if (ui && ui.hide) ui.hide();
-
-      // start custom UI setup (draggable UI)
-      // only once we have an input image
-      if (setupComplete === false && options.step.inBrowser && !options.noUI) {
-        setupComplete = true;
-        ui.setup();
-      }
-
-      // Tell Image Sequencer that step has been drawn
-      callback();
-
-    });
-
   }
 
   return {

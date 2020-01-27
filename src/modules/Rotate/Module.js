@@ -3,34 +3,57 @@
  */
 module.exports = function Rotate(options, UI) {
 
-  var output;
+  let output;
 
   function draw(input, callback, progressObj) {
 
-    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+    const defaults = require('./../../util/getDefaults.js')(require('./info.json'));
     options.rotate = options.rotate || defaults.rotate;
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;
 
-    var step = this;
-
-    var imagejs = require('imagejs');
+    const step = this;
 
     function changePixel(r, g, b, a) {
       return [r, g, b, a];
     }
 
     function extraManipulation(pixels) {
-      var rotate_value = (options.rotate) % 360;
-      var radians = (Math.PI) * rotate_value / 180;
-      var width = pixels.shape[0];
-      var height = pixels.shape[1];
-      var cos = Math.cos(radians);
-      var sin = Math.sin(radians);
-      //final dimensions after rotation
-      var pixels2 = require('ndarray')(new Uint8Array(4 * (Math.floor(Math.abs(width * cos) + Math.abs(height * sin) + 5) * (Math.floor(Math.abs(width * sin) + Math.abs(height * cos)) + 5))).fill(0), [Math.floor(Math.abs(width * cos) + Math.abs(height * sin)) + 5, Math.floor(Math.abs(width * sin) + Math.abs(height * cos)) + 4, 4]);
-      pixels = require('./Rotate')(pixels, pixels2, options, rotate_value, width, height, cos, sin);
+      const rotate_value = (options.rotate) % 360;
+      radians = (Math.PI) * rotate_value / 180,
+      width = pixels.shape[0],
+      height = pixels.shape[1],
+      cos = Math.cos(radians),
+      sin = Math.sin(radians);
+      // Final dimensions after rotation
+
+      const finalPixels = require('ndarray')(
+        new Uint8Array(
+          4 *
+          (
+            Math.floor(
+              Math.abs(width * cos) +
+              Math.abs(height * sin) +
+              5
+            ) *
+            (
+              Math.floor(
+                Math.abs(width * sin) +
+                Math.abs(height * cos)
+              ) +
+              5
+            )
+          )
+        ).fill(255),
+        [
+          Math.floor(Math.abs(width * cos) + Math.abs(height * sin)) + 5,
+          Math.floor(Math.abs(width * sin) + Math.abs(height * cos)) + 4,
+          4
+        ]
+      );
+
+      pixels = require('./Rotate')(pixels, finalPixels, rotate_value, width, height, cos, sin);
       return pixels;
     }
       

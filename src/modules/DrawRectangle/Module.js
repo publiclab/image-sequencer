@@ -1,7 +1,8 @@
 module.exports = function DrawRectangle(options, UI) {
 
-
-  var output;
+  if (options.step.inBrowser && !options.noUI) var ui = require('./Ui.js')(options.step, UI);
+  var output,
+    setupComplete = false;
 
   function draw(input, callback, progressObj) {
 
@@ -15,7 +16,17 @@ module.exports = function DrawRectangle(options, UI) {
     }
 
     function extraManipulation(pixels) {
-      pixels = require('./DrawRectangle')(pixels, options);
+      pixels = require('./DrawRectangle')(pixels, options, () =>{
+        // We should do this via event/listener:
+        if (ui && ui.hide) ui.hide();
+
+        // Start custom UI setup (draggable UI)
+        // Only once we have an input image
+        if (setupComplete === false && options.step.inBrowser && !options.noUI) {
+          setupComplete = true;
+          ui.setup();
+        }
+      });
       return pixels;
     }
 

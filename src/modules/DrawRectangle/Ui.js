@@ -11,9 +11,6 @@ module.exports = function CropModuleUi(step, ui) {
     let x = 0,
       y = 0;
 
-    inputWidth = Math.floor(imgEl().naturalWidth);
-    inputHeight = Math.floor(imgEl().naturalHeight);
-
     setOptions(x, y, inputWidth, inputHeight);
 
     $(imgEl()).imgAreaSelect({
@@ -24,13 +21,18 @@ module.exports = function CropModuleUi(step, ui) {
       y2: y + inputHeight / 2,
       // when selection is complete
       onSelectEnd: function onSelectEnd(img, selection) {
-        console.log(selection);
-        // assign rectangle values to module UI form inputs:
-        setOptions(
+        var converted = convertToNatural(
           selection.x1,
           selection.y1,
           selection.x2,
           selection.y2
+        );
+        // assign rectangle values to module UI form inputs:
+        setOptions(
+          converted[0],
+          converted[1],
+          converted[2],
+          converted[3]
         );
         $($(imgEl()).parents()[3])
           .find('input')
@@ -49,6 +51,22 @@ module.exports = function CropModuleUi(step, ui) {
   // step.imgSelector is not defined, imgElement is:
   function imgEl() {
     return step.imgElement;
+  }
+
+  function convertToNatural(x1, y1, x2, y2) {
+
+    inputWidth = Math.floor(imgEl().naturalWidth);
+    inputHeight = Math.floor(imgEl().naturalHeight);
+
+    let displayWidth = $(imgEl()).width(),
+      displayHeight = $(imgEl()).height();
+    // return in same order [ x, y, width, height ]:
+    return [
+      Math.floor((x1 / displayWidth) * inputWidth),
+      Math.floor((y1 / displayHeight) * inputHeight),
+      Math.floor((x2 / displayWidth) * inputWidth),
+      Math.floor((y2 / displayHeight) * inputHeight)
+    ];
   }
 
   function setOptions(x1, y1, width, height) {

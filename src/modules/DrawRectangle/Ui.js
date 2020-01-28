@@ -60,6 +60,7 @@ module.exports = function CropModuleUi(step, ui) {
 
     let displayWidth = $(imgEl()).width(),
       displayHeight = $(imgEl()).height();
+      
     // return in same order [ x, y, width, height ]:
     return [
       Math.floor((x1 / displayWidth) * inputWidth),

@@ -120,8 +120,4 @@
   "bin": {
     "sequencer": "./index.js"
   }
-<<<<<<< HEAD
-}
-=======
 } 
->>>>>>> upstream/main

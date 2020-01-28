@@ -17,13 +17,13 @@
       "endX":{
         "type": "integer",
         "desc": "last x position of the rectangle",
-        "default": "width"
+        "default": 10
       },
 
       "endY":{
         "type": "integer",
         "desc": "last y position of the rectangle",
-        "default": "height"
+        "default": 10
       },
 
       "thickness":{

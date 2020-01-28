@@ -1,6 +1,24 @@
 {
     "name": "ndvi-colormap",
     "description": "Sequentially Applies NDVI and Colormap steps",
-    "inputs": {},
+    "inputs": {
+        "filter": {
+            "type": "select",
+            "desc": "Filter color",
+            "default": "red",
+            "values": ["red", "blue"]
+          },
+        "colormap": {
+            "type": "select",
+            "desc": "Name of the Colormap",
+            "default": "default",
+            "values": [
+                "default",
+                "greyscale",
+                "stretched",
+                "fastie"
+            ]
+        }
+    },
     "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#ndvi-colormap-module"
 }

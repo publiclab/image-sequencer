@@ -33,7 +33,7 @@ body > .container-fluid {
 
 .center-align {
   display: flex;
-  justify-content: center;
+  justify-content: left;
   text-align:center;
 }
 
@@ -44,6 +44,11 @@ body > .container-fluid {
 .panel {
   margin-left: 20px;
   margin-right: 20px;
+  min-width:400px;
+}
+
+.mouse {
+  cursor: pointer !important;
 }
 
 .nomargin {
@@ -61,14 +66,25 @@ body > .container-fluid {
   border-radius: 8px;
   text-align: center;
   color: #444;
-}
-
-.hover {
-  background: #eee;
+  min-width:300px;
 }
 
 .dropzone input {
   max-width: 100%;
+}
+
+.import-image-zone {
+  margin: 10px auto 30px auto;
+  max-width: 250px;
+  min-width: 230px;
+}
+
+.import-image-zone input {
+  max-width: 100%;
+}
+
+.hover {
+  background: #eee;
 }
 
 .step {
@@ -103,7 +119,10 @@ body > .container-fluid {
 }
 
 #add-step-btn{
-  margin-left: 10px;
+  width: 100%
+}
+.selectize-input {
+  width: 100%;
 }
 
 #addStep .labels {
@@ -140,7 +159,6 @@ body > .container-fluid {
 #dwnld {
   max-width: 500px;
   margin: 20px auto;
-  margin-left: 5px;
 }
 
 #gif_element {
@@ -244,13 +262,14 @@ a.name-header{
 }
 
 .step-column{
-  display:flex; 
+  display:flex;
   align-content: center;
   justify-content: center;
 }
 
 .trash-container button.btn-xs {
-  margin-top: -5px !important;
+  position: relative;
+  bottom: 7px;
 }
 
 .toggleIcon {
@@ -267,12 +286,84 @@ a.name-header{
   width:100%;
 }
 .save-button{
-  margin-top:20px; 
+  margin-top:20px;
   margin-bottom:0px;
-  align:center; 
+  align:center;
   width:100%;
 }
 
 .toggle {
   cursor: default;
+}
+
+.general-tooltip:hover{
+  text-decoration: none;
+}
+
+.general-tooltip:focus{
+  outline: none;
+}
+
+.general-tooltip:focus-within{
+  outline: none;
+}
+
+.general-tooltip{
+  position: relative;
+  bottom: 7px;
+  font-size: 16px;
+  color: #444;
+}
+
+#version-number-text {
+  text-align: center;
+  padding-top: 100px;
+  color: gray;
+}
+#version-number-top-right {
+  position: fixed;
+  right: 2%;
+  top: 5%;
+  color: lightgray;
+}
+/* Non float rightward alignment*/
+.right {
+  margin-left: auto;
+  display: block;
+}
+
+#update-prompt-modal {
+ visibility: hidden;
+ min-width: 250px;
+ margin-left: -125px;
+ background-color: #333;
+ color: #fff;
+ text-align: center;
+ border-radius: 2px;
+ padding: 16px;
+ position: fixed;
+ z-index: 1000;
+ left: 10%;
+ top: 30px;
+}
+#update-prompt-modal.show {
+ visibility: visible;
+ -webkit-animation: fadein 0.5s;
+ animation: fadein 0.5s;
+}
+@-webkit-keyframes fadein {
+ from {
+   opacity: 0;
+ }
+ to {
+   opacity: 1;
+ }
+}
+@keyframes fadein {
+ from {
+   opacity: 0;
+ }
+ to {
+   opacity: 1;
+ }
 }

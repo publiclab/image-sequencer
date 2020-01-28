@@ -12,7 +12,12 @@ before_script:
   - ./cc-test-reporter before-build
 script:
   - yarn test
-  - yarn run test-ui
+  - yarn benchmark
+  - yarn gif-test
+  - grunt tests
+  - yarn core-tests
+  - yarn test-ui
+  - yarn test-ui-2
   - grunt build
 after_success:
   - bash <(curl -s https://codecov.io/bash)

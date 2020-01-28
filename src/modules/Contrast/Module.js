@@ -15,25 +15,41 @@ module.exports = function Contrast(options, UI) {
 
     var step = this;
 
-    function extraManipulation(pixels) {
-      pixels = require('./Contrast')(pixels, options.contrast);
-      return pixels;
+    let contrast = options.contrast;
+
+    contrast = Number(contrast);
+    if (contrast < -100) contrast = -100;
+    if (contrast > 100) contrast = 100;
+    contrast = (100.0 + contrast) / 100.0;
+    contrast *= contrast;
+
+    function changeContrast(p){
+      p -= 0.5;
+      p *= contrast;
+      p += 0.5;
+      p *= 255;
+      p = Math.max(0, p);
+      p = Math.min(p, 255);
+      return p;
     }
 
-    function output(image, datauri, mimetype) {
+    function changePixel(r, g, b, a) {
+      
+      return [changeContrast(r / 255), changeContrast(g / 255), changeContrast(b / 255), a];
+    }
 
-      // This output is accessible by Image Sequencer
-      step.output = { src: datauri, format: mimetype };
-
+    function output(image, datauri, mimetype, wasmSuccess) {
+      step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
     }
 
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       ui: options.step.ui,
-      extraManipulation: extraManipulation,
+      changePixel: changePixel,
       format: input.format,
       image: options.image,
       callback: callback,
+      inBrowser: options.inBrowser,
       useWasm:options.useWasm
     });
 

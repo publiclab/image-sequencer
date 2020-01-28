@@ -192,7 +192,7 @@ test('getStep(offset) returns the step at offset distance relative to current st
 });
 
 test('toCliString() returns the CLI command for the sequence', function(t) {
-  t.deepEqual(sequencer.toCliString(), 'sequencer -i [PATH] -s "channel channel channel channel invert brightness average brightness invert blend" -d \'{"channel":"green","brightness":"1","offset":-2}\'', 'works correctly');
+  t.deepEqual(sequencer.toCliString(), 'sequencer -i [PATH] -s "channel channel channel channel invert brightness average brightness invert blend" -d \'{"channel":"green","brightness":"1","offset":-2,"blendMode":"custom"}\'', 'works correctly');
   t.end();
 });
 

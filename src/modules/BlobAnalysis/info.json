@@ -1,0 +1,7 @@
+{
+    "name": "Blob Analysis",
+    "description": "Blob/Region identification for microscopic images.",
+    "inputs": {},
+    "requires": ["webgl", "browser"],
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#blob-analysis"
+}

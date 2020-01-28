@@ -7,9 +7,11 @@ module.exports = function Channel(options, UI) {
 
   function draw(input, callback, progressObj) {
 
-    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+    const defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+    const pixelSetter = require('../../util/pixelSetter.js');
+
     options.gradient = options.gradient || defaults.gradient;
-    options.gradient = JSON.parse(options.gradient);
+    options.gradient = String(JSON.parse(options.gradient));
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;
@@ -32,10 +34,8 @@ module.exports = function Channel(options, UI) {
 
       for (let x = 0; x < 256; x++) {
         for (let y = 0; y < 256; y++) {
-          pixels.set(x, y, 0, 255);
-          pixels.set(x, y, 1, 255);
-          pixels.set(x, y, 2, 255);
-          pixels.set(x, y, 3, 255);
+          pixelSetter(x, y, [255, 255, 255, 255], pixels);
+
         }
       }
 
@@ -43,9 +43,8 @@ module.exports = function Channel(options, UI) {
       if (options.gradient) {
         for (let x = 0; x < 256; x++) {
           for (let y = 0; y < 10; y++) {
-            pixels.set(x, 255 - y, 0, x);
-            pixels.set(x, 255 - y, 1, x);
-            pixels.set(x, 255 - y, 2, x);
+            pixelSetter(x, 255 - y, [x, x, x], pixels);
+
           }
         }
       }
@@ -56,20 +55,16 @@ module.exports = function Channel(options, UI) {
         let pixCount = Math.round(convfactor * hist[x]);
 
         for (let y = startY; y < pixCount; y++) {
-          pixels.set(x, 255 - y, 0, 204);
-          pixels.set(x, 255 - y, 1, 255);
-          pixels.set(x, 255 - y, 2, 153);
+          pixelSetter(x, 255 - y, [204, 255, 153], pixels);
+
         }
       }
 
       return pixels;
     }
 
-    function output(image, datauri, mimetype) {
-
-      // This output is accesible by Image Sequencer
-      step.output = { src: datauri, format: mimetype };
-
+    function output(image, datauri, mimetype, wasmSuccess) {
+      step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
     }
 
     return require('../_nomodule/PixelManipulation.js')(input, {

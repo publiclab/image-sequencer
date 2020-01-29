@@ -23,6 +23,7 @@ module.exports = {
   'dynamic': require('./modules/Dynamic'),
   'edge-detect': require('./modules/EdgeDetect'),
   'exposure': require('./modules/Exposure'),
+  'face-detection': require('./modules/FaceDetection'),
   'flip-image': require('./modules/FlipImage'),
   'fisheye-gl': require('./modules/FisheyeGl'),
   'histogram': require('./modules/Histogram'),

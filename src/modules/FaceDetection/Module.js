@@ -13,6 +13,7 @@ module.exports = function FaceDetection(options, UI){
     function extraManipulation(pixels, setRenderState, generateOutput){
       setRenderState(false);
       require('./FaceDetection')(pixels, () => {
+        // alert("yo")
         setRenderState(true);
         generateOutput();
       });

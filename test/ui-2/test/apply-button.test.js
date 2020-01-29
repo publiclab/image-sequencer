@@ -4,11 +4,6 @@ beforeAll(async () => {
   path = fs.realpathSync('file://../examples/index.html');
   await page.goto('file://' + path, {waitUntil: 'domcontentloaded'});
 });
-function delay(time) {
-  return new Promise(function(resolve) {
-    setTimeout(resolve, time);
-  });
-}
 
 describe('Apply Button Works', () => {
   test('Apply Button is clicked', async () => {

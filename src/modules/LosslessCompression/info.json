@@ -1,4 +1,5 @@
 {
   "name": "lossless-compression",
-  "description": "Losslessly Compresses images"
+  "description": "Losslessly Compresses images",
+  "input": {}
 }

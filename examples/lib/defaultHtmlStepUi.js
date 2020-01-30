@@ -11,6 +11,7 @@
 const intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js'),
   urlHash = require('./urlHash.js'),
   _ = require('lodash'),
+  insertPreview = require('./insertPreview.js');
   mapHtmlTypes = require('./mapHtmltypes'),
   scopeQuery = require('./scopeQuery'),
   isGIF = require('../../src/util/isGif');
@@ -364,6 +365,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $('[data-toggle="tooltip"]').tooltip();
       updateDimensions(step);
     });
+
+    if (step.name === 'load-image') insertPreview.updatePreviews(step.output.src, document.querySelector('#addStep'));
+    else insertPreview.updatePreviews(step.output, document.querySelector('#addStep'));  
 
     // Handle the wasm bolt display
 

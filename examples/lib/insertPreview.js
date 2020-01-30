@@ -10,6 +10,7 @@ function generatePreview(previewStepName, customValues, path, DomNode) {
     $(img).css('transform', 'translateX(-20%)');
     $(DomNode.querySelector('.radio-group')).find('.radio').each(function() {
       if ($(this).attr('data-value') === previewStepName) {
+        $(this).find('img').remove();
         $(this).append(img);
       }
     });

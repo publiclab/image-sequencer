@@ -23,29 +23,22 @@ module.exports = function canvasResize(options, UI) {
 
     var step = this;
 
-    function extraManipulation(pixels, setRenderState, generateOutput) {
-      console.log(color);
+    function extraManipulation(pixels, setRenderState, generateOutput, frames, f) {
       setRenderState(false);
-      const getDataUri = require('../../util/getDataUri');
-      getDataUri(pixels, input.format).then(dataUri => {
-        getPixels(dataUri, (err, pix) => {
-          if(err) console.log('get-pixels error: ', err);
-          const { createCanvas, createImageData } = require('canvas');
-          const canvas = createCanvas(options.width, options.height);
-          var ctx = canvas.getContext('2d');
-          ctx.fillStyle = color;
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-          ctx.putImageData(new createImageData(new Uint8ClampedArray(pix.data), pix.shape[0], pix.shape[1]), options.x, options.y);
-          getPixels(canvas.toDataURL(), (err, newPix) => {
-            if(err) console.log('get-pixels error: ', err);
-            pixels.data = newPix.data;
-            pixels.shape = newPix.shape;
-            pixels.stride = newPix.stride;
-            setRenderState(true);
-            generateOutput();
-          });
-        });
-      });
+      let newPixels = require('ndarray')(new Uint8Array(4 * options.width * options.height).fill(0), [options.width, options.height, 4]);
+      let iMax = options.width - options.x,
+        jMax = options.height - options.y;
+      for (let i = 0; i < iMax && i < pixels.shape[0]; i++) {
+        for (let j = 0; j < jMax && j < pixels.shape[1]; j++) {
+          let x = i + options.x, y = j + options.y;
+          pixelSetter(x, y, [pixels.get(i, j, 0), pixels.get(i, j, 1), pixels.get(i, j, 2), pixels.get(i, j, 3)], newPixels);
+                
+        }
+      }
+      frames[f] = newPixels;
+      setRenderState(true);
+      generateOutput();
+      return newPixels;
     }
 
     function output(image, datauri, mimetype, wasmSuccess) {

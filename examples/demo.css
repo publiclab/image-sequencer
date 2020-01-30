@@ -13,14 +13,15 @@
 
 :root {
   --primary-color: #448;
-  --bg-color: #fff;
+  --bg-color: #f8f8fa;
   --text-color: #292922;
 }
 
 [data-theme="dark"] {
   --primary-color: #9A97F3;
-  --bg-color: #121212;
+  --bg-color: #282828;
   --text-color: #fff;
+  --panel-color: #404040;
 }
 
 body {
@@ -28,6 +29,18 @@ body {
   margin: 0 auto 200px;
   max-width: 1000px;
   background: var(--bg-color);
+}
+
+.panel-body {
+  background: var(--panel-color);
+}
+
+.collapse > p > a {
+  color: var(--text-color);
+}
+
+.collapse > label {
+  color: var(--text-color);
 }
 
 footer {
@@ -264,6 +277,13 @@ body > .container-fluid {
 }
 
 @media all and (max-width: 767px) {
+  [data-theme="dark"] {
+    --primary-color: #9A97F3;
+    --bg-color: #000;
+    --text-color: #fff;
+    --panel-color: #404040;
+  }
+
   .center-align {
     justify-content: space-between;
   }

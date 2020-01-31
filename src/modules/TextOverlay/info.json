@@ -30,6 +30,17 @@
                 "Montserrat"
             ]
         },
+        "text_decoration": {
+            "type": "select",
+            "desc": "Select the text decoration style.",
+            "default": "none",
+            "values": [
+                "none",
+                "underline",
+                "overline",
+                "strike"
+            ]
+        },
         "color": {
             "type": "text",
             "desc": "Select the text color.",

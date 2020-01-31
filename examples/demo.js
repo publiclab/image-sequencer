@@ -228,11 +228,15 @@ window.onload = function () {
 
   $('#js-download-gif-framerate-btn').on('click', function (event){
 
+    var loader = require('./images/loader');
+
+    document.querySelector('#gif_element').src = loader;
+
+
     let options = getGifResources();
     gifshot.createGIF(options, function (obj) { // GIF generation
       if (!obj.error) {
         document.querySelector('#gif_element').src = obj.image;
-
       }
     });
   });

@@ -1,5 +1,5 @@
 // hide on save
-module.exports = function CropModuleUi(step, ui) {
+module.exports = function DrawRectangleModuleUi(step, ui) {
   let inputWidth = 0,
     inputHeight = 0;
 

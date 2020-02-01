@@ -3,6 +3,7 @@
 */
 module.exports = {
   'add-qr': require('./modules/AddQR'),
+  'arbitrary-crop': require('./modules/ArbitraryCrop'),
   'average': require('./modules/Average'),
   'blend': require('./modules/Blend'),
   'blob-analysis': require('./modules/BlobAnalysis'),

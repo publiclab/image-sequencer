@@ -59,6 +59,22 @@ module.exports = function ArbitraryCrop(options, UI, util) {
       else return [r, g, b, 0];
     }
 
+    function extraManipulation(pixels) {
+
+      x = Math.min(x1, x2, x3, x4);
+      y = Math.min(y1, y2, y3, y4);
+
+      w = Math.max(x1, x2, x3, x4);
+      h = Math.max(y1, y2, y3, y4);
+
+      newPixels = require('../Crop/Crop')(pixels, {x, y, w, h});
+
+      require('../../util/getDataUri')(newPixels, input.format).then(res => console.log(res));
+
+      return newPixels;
+
+    }
+
     function output(image, datauri, mimetype, wasmSuccess) {
       step.output = {
         src: datauri,
@@ -76,7 +92,8 @@ module.exports = function ArbitraryCrop(options, UI, util) {
       image: options.image,
       inBrowser: options.inBrowser,
       callback: callback,
-      useWasm: options.useWasm
+      useWasm: options.useWasm,
+      extraManipulation
     });
   }
 

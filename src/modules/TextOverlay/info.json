@@ -41,6 +41,11 @@
                 "strike"
             ]
         },
+        "line_width": {
+            "type": "float",
+            "desc": "width of underline, overline or strike",
+            "default": 0
+        },
         "color": {
             "type": "text",
             "desc": "Select the text color.",

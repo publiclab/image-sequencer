@@ -15,6 +15,7 @@
   --primary-color: #448;
   --bg-color: #f8f8fa;
   --text-color: #292922;
+  --panelHead-color: #f5f5f5;
 }
 
 [data-theme="dark"] {
@@ -22,6 +23,7 @@
   --bg-color: #282828;
   --text-color: #fff;
   --panel-color: #404040;
+  --panelHead-color: #191D1E;
 }
 
 body {
@@ -33,6 +35,18 @@ body {
 
 .panel-body {
   background: var(--panel-color);
+}
+
+.panel-default > .panel-heading {
+  background: var(--panelHead-color);
+}
+
+.panel-footer {
+  background: var(--panelHead-color);
+}
+
+.panel-heading > h3 > span {
+  color: var(--text-color);
 }
 
 .collapse > p > a {
@@ -279,9 +293,9 @@ body > .container-fluid {
 @media all and (max-width: 767px) {
   [data-theme="dark"] {
     --primary-color: #9A97F3;
-    --bg-color: #000;
+    --bg-color: #181C1D;
     --text-color: #fff;
-    --panel-color: #404040;
+    --panel-color: #161A1B;
   }
 
   .center-align {

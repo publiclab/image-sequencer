@@ -69,8 +69,6 @@ module.exports = function ArbitraryCrop(options, UI, util) {
 
       newPixels = require('../Crop/Crop')(pixels, {x, y, w, h});
 
-      require('../../util/getDataUri')(newPixels, input.format).then(res => console.log(res));
-
       return newPixels;
 
     }

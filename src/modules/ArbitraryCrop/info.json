@@ -1,6 +1,6 @@
 {
   "name": "arbitrary-crop",
-  "description": "Crops image for any arbitrary quadilateral",
+  "description": "Crops image for any arbitrary quadilateral according to given values, where (x1, y1) are top-left cordinates, (x2, y2) are top-right cordinates, (x3, y3) are bottom-right cordinates, (x4, y4) are bottom-left cordinates",
   "url": "https://github.com/publiclab/image-sequencer/tree/master/MODULES.md",
   "inputs": {
     "x1": {

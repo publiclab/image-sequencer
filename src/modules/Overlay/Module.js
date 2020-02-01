@@ -47,20 +47,29 @@ module.exports = function Dynamic(options, UI, util) {
 
       function changePixel(r1, g1, b1, a1, x, y) {
 
+        var firstImagePixels = [r1, g1, b1, a1];
+
         // overlay
         var p = options.secondImagePixels;
         if (x >= options.x
           && x - options.x < p.shape[0]
           && y >= options.y
-          && y - options.y < p.shape[1])
-          return [
+          && y - options.y < p.shape[1]){
+
+          var secondImagePixels = [
             p.get(x - options.x, y - options.y, 0),
             p.get(x - options.x, y - options.y, 1),
             p.get(x - options.x, y - options.y, 2),
             p.get(x - options.x, y - options.y, 3)
           ];
+          
+          if(secondImagePixels[3] === 0)
+            return firstImagePixels;
+          else
+            return secondImagePixels;
+        }
         else
-          return [r1, g1, b1, a1];
+          return firstImagePixels;
       }
 
       function output(image, datauri, mimetype, wasmSuccess) {

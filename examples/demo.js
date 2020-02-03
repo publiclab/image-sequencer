@@ -232,7 +232,6 @@ window.onload = function () {
 
     document.querySelector('#gif_element').src = loader;
 
-
     let options = getGifResources();
     gifshot.createGIF(options, function (obj) { // GIF generation
       if (!obj.error) {

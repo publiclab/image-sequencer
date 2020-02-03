@@ -10,7 +10,7 @@ module.exports = exports = function(pixels, options, url1, cb){
   options.color = options.color || defaults.color;
   options.size = options.size || defaults.size;
   options.text_decoration = options.text_decoration || defaults.text_decoration;
-  options.line_width = options.line_width || defaults.line_width;
+  options.line_height = options.line_height || defaults.line_height;
 
   var canvas = document.createElement('canvas');
   canvas.width = pixels.shape[0]; //img.width();
@@ -28,7 +28,7 @@ module.exports = exports = function(pixels, options, url1, cb){
     var write = ctx.measureText(options.text);
     ctx.beginPath();
     ctx.strokeStyle = options.color;
-    ctx.lineWidth = options.line_width;
+    ctx.lineWidth = options.line_height;
     var breadth = write.width;
     var fontHeight = Math.floor(write.actualBoundingBoxAscent + write.actualBoundingBoxDescent);
     if (options.text_decoration == 'underline') {

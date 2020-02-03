@@ -683,7 +683,7 @@ where `options` is an object with the following property:
 * options.y : The value at which the overlay should start in y-axis.
 * options.color : It allows to select font style.
 * options.font : It allows to choose from various fonts.
-* options.line_width : set width of underline, overline or strike.
+* options.line_height : set height of underline, overline or strike.
 * options.color : It allows to select color of the text.
 * options.size : It allows to select font size.
 

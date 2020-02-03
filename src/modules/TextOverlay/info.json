@@ -41,7 +41,7 @@
                 "strike"
             ]
         },
-        "line_width": {
+        "line_height": {
             "type": "float",
             "desc": "width of underline, overline or strike",
             "default": 0

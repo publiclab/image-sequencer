@@ -35,7 +35,7 @@ module.exports = function DoNothing(options, UI) {
 
   };
 
-  var warpWebGl = function warpWebGl(id, matrix1, matrix2, download) {
+  var warpWebGl = function warpWebGl(dataURI, matrix1, matrix2, download, cb) {
 
     // try to create a WebGL canvas (will fail if WebGL isn't supported)
     try {
@@ -46,7 +46,7 @@ module.exports = function DoNothing(options, UI) {
     }
 
     // convert the image to a texture
-    var imageEl = document.getElementById(id);
+    // var imageEl = document.getElementById(id);
 
     var image = new Image();
 
@@ -168,13 +168,14 @@ module.exports = function DoNothing(options, UI) {
         // keep non-blob version in case we have to fall back:
         // image.src = canvas.toDataURL('image/png');
         // window.location = canvas.toDataURL('image/png');
-        imageEl.src = burl;
+        // imageEl.src = burl;
+        cb(burl);
 
       }
 
     };
 
-    image.src = imageEl.src;
+    image.src = dataURI;
 
   };
 
@@ -198,36 +199,46 @@ module.exports = function DoNothing(options, UI) {
         require('../_nomodule/gl-context')(input, callback, step, options);
       }
       else {
-        var image = document.createElement('img');
+        // var image = document.createElement('img');
         
         const getDataUri = require('../../util/getDataUri');
+        const getPixels = require('get-pixels'),
+          pixelSetter = require('../../util/pixelSetter.js');
         getDataUri(pixels, input.format).then(dataUri => {
-          image.src = dataUri;
-          image.id = 'img';
-          document.body.appendChild(image);
-          image.onload = () => {
-            warpWebGl(
-              'img',
-              [0, 0, image.naturalWidth, 0, image.naturalWidth, image.naturalHeight, 0, image.naturalHeight], // matrix 1 (before) corner coordinates, NW, NE, SE, SW
-              // [0, 100, 1023, -50, 1223, 867, 100, 767]  // matrix 2 (after) corner coordinates
-              cornerCoordinates
-            );
-            image.onload = () => {
-              var canvas = document.createElement('canvas');
-              canvas.width = image.naturalWidth; // or 'width' if you want a special/scaled size
-              canvas.height = image.naturalHeight; // or 'height' if you want a special/scaled size
-              canvas.getContext('2d').drawImage(image, 0, 0);
-              var link = document.createElement('a');
-              link.download = 'my-image.png';
-              link.href = canvas.toDataURL();
-              link.click();
-              step.output = { src: canvas.toDataURL(), format: input.format };
-              image.remove();
-              callback();
-              setRenderState(true);
-              generateOutput();
-            };
-          };
+          
+          warpWebGl(
+            dataUri,
+            [0, 0, pixels.shape[0], 0, pixels.shape[0], pixels.shape[1], 0, pixels.shape[1]], // matrix 1 (before) corner coordinates, NW, NE, SE, SW
+            // [0, 100, 1023, -50, 1223, 867, 100, 767]  // matrix 2 (after) corner coordinates
+            cornerCoordinates,
+            null,
+            function (burl) {
+              getPixels(burl, function (err, qrPixels) {
+                for (let x = 0; x < pixels.shape[0]; x++) {
+                  for (let y = 0; y < pixels.shape[1]; y++) {
+                    pixelSetter(
+                      x,
+                      y,
+                      [
+                        qrPixels.get(x, y, 0),
+                        qrPixels.get(x, y, 1),
+                        qrPixels.get(x, y, 2),
+                        qrPixels.get(x, y, 3)
+                      ],
+                      pixels
+                    );
+                  }
+                }
+                  
+                setRenderState(true);
+                generateOutput();
+              });
+                
+
+            }
+          );
+            
+          
         });
       }
     }

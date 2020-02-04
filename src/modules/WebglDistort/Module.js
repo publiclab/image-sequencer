@@ -190,35 +190,61 @@ module.exports = function DoNothing(options, UI) {
     var parseDistortCoordinates = require('../../util/parseDistortCoordinates.js');
     var cornerCoordinates = parseDistortCoordinates(options);
 
-    if (!options.inBrowser) {
-      // this.output = input;
-      // callback();
-      require('../_nomodule/gl-context')(input, callback, step, options);
+    function extraManipulation(pixels, setRenderState, generateOutput) {
+      setRenderState(false);
+      if (!options.inBrowser) {
+        // this.output = input;
+        // callback();
+        require('../_nomodule/gl-context')(input, callback, step, options);
+      }
+      else {
+        var image = document.createElement('img');
+        
+        const getDataUri = require('../../util/getDataUri');
+        getDataUri(pixels, input.format).then(dataUri => {
+          image.src = dataUri;
+          image.id = 'img';
+          document.body.appendChild(image);
+          image.onload = () => {
+            warpWebGl(
+              'img',
+              [0, 0, image.naturalWidth, 0, image.naturalWidth, image.naturalHeight, 0, image.naturalHeight], // matrix 1 (before) corner coordinates, NW, NE, SE, SW
+              // [0, 100, 1023, -50, 1223, 867, 100, 767]  // matrix 2 (after) corner coordinates
+              cornerCoordinates
+            );
+            image.onload = () => {
+              var canvas = document.createElement('canvas');
+              canvas.width = image.naturalWidth; // or 'width' if you want a special/scaled size
+              canvas.height = image.naturalHeight; // or 'height' if you want a special/scaled size
+              canvas.getContext('2d').drawImage(image, 0, 0);
+              var link = document.createElement('a');
+              link.download = 'my-image.png';
+              link.href = canvas.toDataURL();
+              link.click();
+              step.output = { src: canvas.toDataURL(), format: input.format };
+              image.remove();
+              callback();
+              setRenderState(true);
+              generateOutput();
+            };
+          };
+        });
+      }
     }
-    else {
-      var image = document.createElement('img');
-      image.onload = () => {
-        warpWebGl(
-          'img',
-          [0, 0, image.naturalWidth, 0, image.naturalWidth, image.naturalHeight, 0, image.naturalHeight], // matrix 1 (before) corner coordinates, NW, NE, SE, SW
-          // [0, 100, 1023, -50, 1223, 867, 100, 767]  // matrix 2 (after) corner coordinates
-          cornerCoordinates
-        );
-        image.onload = () => {
-          var canvas = document.createElement('canvas');
-          canvas.width = image.naturalWidth; // or 'width' if you want a special/scaled size
-          canvas.height = image.naturalHeight; // or 'height' if you want a special/scaled size
-          canvas.getContext('2d').drawImage(image, 0, 0);
+    function output(image, datauri, mimetype, wasmSuccess) {
+      step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
+    }
 
-          step.output = { src: canvas.toDataURL('image/png'), format: 'png' };
-          image.remove();
-          callback();
-        };
-      };
-      image.src = input.src;
-      image.id = 'img';
-      document.body.appendChild(image);
-    }
+    return require('../_nomodule/PixelManipulation.js')(input, {
+      output: output,
+      ui: options.step.ui,
+      extraManipulation: extraManipulation,
+      format: input.format,
+      image: options.image,
+      inBrowser: options.inBrowser,
+      callback: callback,
+      useWasm:options.useWasm
+    });
   }
 
   return {

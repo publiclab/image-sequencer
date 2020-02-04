@@ -43,7 +43,7 @@
         },
         "line_height": {
             "type": "float",
-            "desc": "width of underline, overline or strike",
+            "desc": "height of underline, overline or strike",
             "default": 0
         },
         "color": {

@@ -679,7 +679,7 @@ The modules allows to add text to image in both browser and node environment. We
 ```
 where `options` is an object with the following property:
 * options.text : It allows to enter input text for overlay.
-* options.y : The value at which the overlay should start in x-axis.
+* options.x : The value at which the overlay should start in x-axis.
 * options.y : The value at which the overlay should start in y-axis.
 * options.color : It allows to select font style.
 * options.font : It allows to choose from various fonts.

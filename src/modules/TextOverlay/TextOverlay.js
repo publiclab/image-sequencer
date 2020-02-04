@@ -31,17 +31,23 @@ module.exports = exports = function(pixels, options, url1, cb){
     ctx.lineWidth = options.line_height;
     var breadth = write.width;
     var fontHeight = Math.floor(write.actualBoundingBoxAscent + write.actualBoundingBoxDescent);
+    if (options.text_decoration == 'none') {
+      ctx.lineWidth = 0;
+    }
     if (options.text_decoration == 'underline') {
+      ctx.lineWidth = options.line_height;
       ctx.moveTo(options.x, options.y);
       ctx.lineTo(parseInt(options.x) + parseInt(breadth), options.y);
       ctx.stroke();
     }
     else if (options.text_decoration == 'overline') {
+      ctx.lineWidth = options.line_height;
       ctx.moveTo(options.x, options.y - parseInt(fontHeight));
       ctx.lineTo(parseInt(options.x) + parseInt(breadth), options.y - parseInt(fontHeight));
       ctx.stroke();
     }
     else if (options.text_decoration == 'strike') {
+      ctx.lineWidth = options.line_height;
       ctx.moveTo(options.x, options.y - (parseInt(fontHeight / 3)));
       ctx.lineTo(parseInt(options.x) + parseInt(breadth), options.y - (parseInt(fontHeight / 3)));
       ctx.stroke();

@@ -106,7 +106,7 @@ window.onload = function () {
     if (r)
     {
       window.location.hash = '';
-      location.reload();
+      sequencer.removeAllSteps();
     }
   };
 

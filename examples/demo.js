@@ -254,7 +254,7 @@ window.onload = function () {
       'gifWidth': imgs[0].width,
       'gifHeight': imgs[0].height,
       'images': imgSrcs,
-      'frameDuration': parseInt($('#js-download-gif-framerate').val()),
+      'frameDuration': Math.abs(parseInt($('#js-download-gif-framerate').val())),
     };
 
     return options;

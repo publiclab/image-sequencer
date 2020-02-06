@@ -28,6 +28,7 @@ module.exports = function Dynamic(options, UI, util) {
     var baseStepOutput = this.getOutput(options.offset);
 
     var getPixels = require('get-pixels');
+    const ndarray = require('ndarray');
 
     getPixels(input.src, function(err, pixels) {
       let frames = [];
@@ -36,7 +37,7 @@ module.exports = function Dynamic(options, UI, util) {
       ////////////////////////////////////////////
       const isGIF = input.src.includes('image/gif');
       if (isGIF && pixels != null) {
-        console.log(pixels);
+        // console.log(pixels);
         // const { shape } = pixels;
         // const [
         //   noOfFrames,
@@ -48,7 +49,7 @@ module.exports = function Dynamic(options, UI, util) {
         const width = pixels.shape[1];
         const height = pixels.shape[2];
         const channels = pixels.shape[3];
-        console.log('yooo');
+        // console.log('yooo');
   
         numFrames = noOfFrames;
         renderableFrames = noOfFrames; // Total number of renderable frames (mutable)
@@ -155,10 +156,13 @@ module.exports = function Dynamic(options, UI, util) {
       // }
 
       function extraManipulation(first_pixels, setRenderState, generateOutput) {
+        
         if(pixels != null ){
-          var p = (options.secondImagePixels)[counter];
-          for (let x = 0; x < pixels.shape[0]; x++) {
-            for (let y = 0; y < pixels.shape[1]; y++) {
+          setRenderState(false);
+          var p = frames[counter];
+          counter++;
+          for (let x = 0; x < first_pixels.shape[0]; x++) {
+            for (let y = 0; y <  first_pixels.shape[1]; y++) {
               if (x >= options.x
                     && x - options.x < p.shape[0]
                     && y >= options.y
@@ -177,9 +181,12 @@ module.exports = function Dynamic(options, UI, util) {
               }
             }
           }
-
-          // p = p[counter];
-          return first_pixels;
+          const getDataUri = require('../../util/getDataUri');
+          
+          setRenderState(true);
+          generateOutput();
+          
+          
         }
 
       }

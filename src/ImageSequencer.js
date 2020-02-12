@@ -376,6 +376,20 @@ ImageSequencer = function ImageSequencer(options) {
   }
 
 
+  function reorderSteps(source, dest) {
+    var this_ = (this.name == 'ImageSequencer') ? this : this.sequencer;
+    var args = [];
+    var json_q = {};
+    for (var arg in arguments) { args.push(copy(arguments[arg])); } // Get all the module names from the arguments
+    json_q = formatInput.call(this_, args, '+');
+
+    inputlog.push({ method: 'reorderSteps', json_q: copy(json_q) });
+
+    require('./ReorderSteps')(this_, source, dest);
+    
+    return this;
+  }
+
   return {
     // Literals and objects
     name: 'ImageSequencer',
@@ -415,6 +429,7 @@ ImageSequencer = function ImageSequencer(options) {
     saveSequence: saveSequence,
     loadModules: loadModules,
     getSteps:getSteps,
+    reorderSteps,
 
     // Other functions
     log: log,

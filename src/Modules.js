@@ -33,6 +33,7 @@ module.exports = {
   'minify-image': require('./modules/MinifyImage'),
   // 'invert': require('image-sequencer-invert'),
   'invert': require('./modules/Invert'),
+  'motion-blur': require('./modules/MotionBlur'),
   'ndvi': require('./modules/Ndvi'),
   'ndvi-colormap': require('./modules/NdviColormap'),
   'noise-reduction': require('./modules/NoiseReduction'),

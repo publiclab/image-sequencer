@@ -13,7 +13,6 @@ const kernelx = [
     [ 0, 0, 0],
     [ 1, 2, 1]
   ];
-
   
 module.exports = function(pixels, highThresholdRatio, lowThresholdRatio, useHysteresis) {
   let angles = [], grads = [], strongEdgePixels = [], weakEdgePixels = [], pixelsToBeSupressed = [];

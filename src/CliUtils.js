@@ -19,8 +19,9 @@ function validateSteps(steps, sequencer) {
   // Assume all are valid in the beginning.
   var valid = true;
   steps.forEach(function(step) {
+    console.log(step.name);
     // If any step in the array is not valid (not a property of modulesInfo), set valid to false.
-    if (!sequencer.modulesInfo().hasOwnProperty(step)) {
+    if (!sequencer.modulesInfo().hasOwnProperty(step.name)) {
       valid = false;
     }
   });

@@ -36,6 +36,9 @@ else {
 
   program.steps = sequencer.stringToJSON(program.step);
 
+  var stepNames = [];
+  program.step.split(',').forEach(v => stepNames.push(v.split('{')[0]));
+  
   program.step = program.step.split(' ');
 
   // User must input an image.
@@ -60,7 +63,7 @@ else {
       step.info = sequencer.modulesInfo(step.name);
 
       for (var output in step.info.outputs) {
-        console.log('[' + program.step + ']: ' + output + ' = ' + step[output]);
+        console.log('[' + stepNames + ']: ' + output + ' = ' + step[output]);
       }
     },
     notify: function(msg) {

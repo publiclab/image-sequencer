@@ -6174,9 +6174,9 @@ lines-and-columns@^1.1.6:
   integrity sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
 
 lint-staged@^10.0.3:
-  version "10.0.3"
-  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-10.0.3.tgz#fd27e25c308fb857d9cb44caa5fa845408d07df4"
-  integrity sha512-N071+M0yxKX0u67UOB8emFms29ekzrKoX1UlPcLS615O/rhx3+xRk5so8uU4tjdg4yNsD3ntdPSsuZnUPzblLA==
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-10.1.0.tgz#18785bb005d5ed404f1c1db6563e082f7a7baac2"
+  integrity sha512-WzZ/T+O/aEaaT679sMgI4JqK5mnG69V5KQSouzVsShzZ8wGWte39HT3z61LsxjVNeCf8m/ChhvWJa2wTiQLy5A==
   dependencies:
     chalk "^3.0.0"
     commander "^4.0.1"

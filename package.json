@@ -71,7 +71,7 @@
     "ora": "^4.0.3",
     "pace": "0.0.4",
     "pngquant-bin": "^5.0.2",
-    "puppeteer": "^1.14.0",
+    "puppeteer": "^2.1.1",
     "qrcode": "^1.3.3",
     "readline-sync": "^1.4.7",
     "save-pixels": "~2.3.4",

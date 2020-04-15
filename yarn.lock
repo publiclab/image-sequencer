@@ -681,10 +681,10 @@ acorn@^6.0.1:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-6.1.1.tgz#7d25ae05bb8ad1f9b699108e1094ecd7884adc1f"
   integrity sha512-jPTiwtOxaHNaAPg/dmrJ/beuzLRnXtB0kQPQ8JpotKJgTB6rX6c8mlf315941pyjBSaPg8NHXS9fhP4u17DpGA==
 
-acorn@^7.0.0, acorn@^7.1.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/acorn/-/acorn-7.1.0.tgz#949d36f2c292535da602283586c2477c57eb2d6c"
-  integrity sha512-kL5CuoXA/dgxlBbVrflsflzQ3PAas7RYZB52NOm/6839iVYJgKMJ3cQJD+t2i5+qFa8h3MDpEOJiS64E8JLnSQ==
+acorn@^7.0.0, acorn@^7.1.0, acorn@^7.1.1:
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-7.1.1.tgz#e35668de0b402f359de515c5482a1ab9f89a69bf"
+  integrity sha512-add7dgA5ppRPxCFJoAGfMDi7PIBXq1RtGo7BhbLaxwrXPOmw8gq48Y9ozT01hUKy9byMjlR20EJhu5zlkErEkg==
 
 after@0.8.2:
   version "0.8.2"
@@ -4322,11 +4322,11 @@ gpu-mock.js@^1.1.1:
   integrity sha512-BmoRk9nbMaxkrwzTJp4M0iuwIbzNEXt6tlBZ5+ZYzaGH9VWu5Nhn1Q1CBusCam3d8u3FfVEFf3Ueo8DocUCbUw==
 
 gpu.js@^2.3.1:
-  version "2.6.6"
-  resolved "https://registry.yarnpkg.com/gpu.js/-/gpu.js-2.6.6.tgz#67545b60513cd7a8b74a0050d9bd185a5c1cf6d8"
-  integrity sha512-w/3Sgq6f8UrNcBUcmZqR1oVM8resLYILXDDVxtShnzEclPX8rBCDTeAcK6hZcn7+jfceP3073TP+ZcVKcJlcKw==
+  version "2.9.3"
+  resolved "https://registry.yarnpkg.com/gpu.js/-/gpu.js-2.9.3.tgz#7573712cc7503a10d590483fbfaa9b64cb78f93f"
+  integrity sha512-WsPtqJYwtlS1igVLfc6oR37ZG6VUmuZCL7LLjcJdNwiwHxTdcP7k3RvLGuKDr6uYgwdqPElywa0jBABugjMsPA==
   dependencies:
-    acorn "^7.1.0"
+    acorn "^7.1.1"
     gl "^4.4.1"
     gl-wiretap "^0.6.2"
     gpu-mock.js "^1.1.1"

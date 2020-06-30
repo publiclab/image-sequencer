@@ -39,7 +39,7 @@
     "base64-img": "^1.0.4",
     "bootstrap": "^3.4.1",
     "bootstrap-colorpicker": "^2.5.3",
-    "buffer": "~5.4.0",
+    "buffer": "~5.6.0",
     "commander": "^4.0.1",
     "compressorjs": "^1.0.5",
     "data-uri-to-buffer": "^3.0.0",

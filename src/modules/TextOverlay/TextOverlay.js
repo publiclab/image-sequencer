@@ -10,28 +10,28 @@ module.exports = exports = function(pixels, options, url1, cb){
   options.color = options.color || defaults.color;
   options.size = options.size || defaults.size;
 
-  var canvas = document.createElement('canvas');
-  canvas.width = pixels.shape[0]; //img.width();
-  canvas.height = pixels.shape[1]; //img.height();
-  var ctx = canvas.getContext('2d');
-  var image = new Image;
-  image.src = url1;
-  image.onload = function(){
+  getPixels(url1, (err, pix) => {
+
+    if (err) {
+      console.log('get-pixels error: ', err);
+    }
+
+    const { createCanvas, createImageData } = require('canvas');
+    const canvas = createCanvas(pixels.shape[0], pixels.shape[1]);
+    var ctx = canvas.getContext('2d');
     
-    ctx.drawImage(image, 0, 0);
+    ctx.putImageData(new createImageData(new Uint8ClampedArray(pix.data), pix.shape[0], pix.shape[1]), 0, 0);
     ctx.fillStyle = options.color;
     ctx.font = options.size + 'px ' + options.font;
     ctx.fillText(options.text, options.x, options.y);
-
     getPixels(canvas.toDataURL(), function (err, qrPixels) {
       if (err) {
         console.log('get-pixels error: ', err);
       }
 
-      
-      
-      for (let x = 0; x < pixels.shape[0]; x++) {
-        for (let y = 0; y < pixels.shape[1]; y++) {
+
+      for (let x = 0; x < pix.shape[0]; x++) {
+        for (let y = 0; y < pix.shape[1]; y++) {
           pixelSetter(
             x,
             y,
@@ -47,9 +47,5 @@ module.exports = exports = function(pixels, options, url1, cb){
       }
       if (cb) cb();
     });
-  };
-
-  
-
-  
+  });
 };

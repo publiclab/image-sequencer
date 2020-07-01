@@ -1,7 +1,6 @@
 {
     "name": "text-overlay",
     "description": "Overlay text on image.",
-    "requires": ["webgl", "browser"],
     "inputs": {
         "text": {
             "type": "string",

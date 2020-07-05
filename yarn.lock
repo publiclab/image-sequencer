@@ -1302,10 +1302,10 @@ brorand@^1.0.1:
   resolved "https://registry.yarnpkg.com/brorand/-/brorand-1.1.0.tgz#12c25efe40a45e3c323eb8675a0a0ce57b22371f"
   integrity sha1-EsJe/kCkXjwyPrhnWgoM5XsiNx8=
 
-browser-launcher@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/browser-launcher/-/browser-launcher-1.0.1.tgz#de5e0ed172602e853c40be813c03d2af3a606404"
-  integrity sha512-XLZ96W4jzKOBMcrE7juOusdiIzbZRG3q/sPGh5ytZJSJ7/JndKqoUjfHdiXFzxILidIjsj79rCKUHAIKxJCUCw==
+browser-launcher@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/browser-launcher/-/browser-launcher-2.0.0.tgz#71993694b1fcc670fadefb7aaf0ef52ba8b69d66"
+  integrity sha512-bdmq+JQ+Jy8Bx5PpzvJHKP24iR4DEcbXz3v96YZRhSHuzdmS/fIT6mT+28SQrrwZ+GTTFBixUej+DM18fsl0JA==
   dependencies:
     headless "~0.1.3"
     minimist "0.0.5"
@@ -1337,19 +1337,18 @@ browser-resolve@^1.11.0, browser-resolve@^1.11.3, browser-resolve@^1.7.0:
   dependencies:
     resolve "1.1.7"
 
-browser-run@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/browser-run/-/browser-run-6.0.0.tgz#bb5c065b131789c6ce41830596fad7b6b638864a"
-  integrity sha512-vzYaoi10x9bJcZRLj30Y/j1jSDs3g3wm4R6y0swv5ZoXwxJ+ykSBkizQP1HPiCiH6R4qD2FhvRxj0mYxeXHpCA==
+browser-run@^7.0.1:
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/browser-run/-/browser-run-7.0.2.tgz#11cf1001d1e07a1903cc4a53100131953367566d"
+  integrity sha512-svPk5SVAPOfG4g6Dj0RKTNaJFomtrJu0uJpZtOF+/pNZYYZBf57o0LAshkw4pXD61ZNzeK2JTArKARTxVlnmoQ==
   dependencies:
-    browser-launcher "^1.0.1"
+    browser-launcher "^2.0.0"
     duplexer "^0.1.1"
     ecstatic "^4.1.2"
     electron-stream "^7.0.1"
     enstore "^1.0.1"
     html-inject-script "^1.1.0"
     optimist "^0.6.1"
-    phantomjs-stream "^1.1.1"
     server-destroy "^1.0.1"
     source-map-support "^0.4.0"
     through "^2.3.8"
@@ -7725,13 +7724,6 @@ performance-now@^2.1.0:
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
-phantomjs-stream@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/phantomjs-stream/-/phantomjs-stream-1.1.1.tgz#5650f42028c09e846bc463b82bf4cafc43a3ba2b"
-  integrity sha1-VlD0ICjAnoRrxGO4K/TK/EOjuis=
-  dependencies:
-    stream-read "^1.1.2"
-
 picomatch@^2.0.4:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.2.1.tgz#21bac888b6ed8601f831ce7816e335bc779f0a4a"
@@ -9619,13 +9611,13 @@ tap-spec@^5.0.0:
     tap-out "^2.1.0"
     through2 "^2.0.0"
 
-tape-run@^6.0.0:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/tape-run/-/tape-run-6.0.1.tgz#f017357c094a8c005aecffd7579ac8ef56a3e86c"
-  integrity sha512-j6k5NbHL6Ww2E3uxng7pZPr5uNFWkVuZd1u5ZWW2QunofLl08nASxmzmrj0Tphvtse6rKO9FA1ibruzY2a1IGA==
+tape-run@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/tape-run/-/tape-run-7.0.0.tgz#753d9e7f3e1a621b947cc61717b7527024b5d4c2"
+  integrity sha512-cQytZDcfaHiWcm8PjOXAw8V+HLKvEkFNz0NZRXQA1H/cef6iB2CuqE6TzZlsiwKAomrVQ6xIpuY32RsMmPYQfg==
   dependencies:
     "@juliangruber/tap-finished" "0.0.2"
-    browser-run "^6.0.0"
+    browser-run "^7.0.1"
     optimist "~0.6.1"
     through "~2.3.4"
     throughout "0.0.0"

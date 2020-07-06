@@ -7,7 +7,6 @@ ports:
 
 github:
   prebuilds:
-    main: true
     branches: true
     pullRequests: true
     pullRequestsFromForks: true

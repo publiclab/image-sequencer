@@ -1,5 +1,5 @@
 module.exports = function Dynamic(options, UI) {
-
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
   var output;
 
   // This function is called on every draw.
@@ -10,13 +10,12 @@ module.exports = function Dynamic(options, UI) {
 
     var step = this;
 
-    // start with monochrome, but if options.red, options.green, and options.blue are set, accept them too
-    options.monochrome = options.monochrome || '(R+G+B)/3';
+    options.red = options.red || defaults.red;
+    options.blue = options.blue || defaults.blue;
+    options.green = options.green || defaults.green;
 
     function generator(expression) {
-      var func = 'f = function (r, g, b, a) { var R = r, G = g, B = b, A = a;';
-      func = func + 'return ';
-      func = func + expression + '}';
+      var func = 'f = function (r, g, b, a) { var R = r, G = g, B = b, A = a; return ' + expression + ';}';
       var f;
       eval(func);
       return f;
@@ -25,9 +24,12 @@ module.exports = function Dynamic(options, UI) {
     var channels = ['red', 'green', 'blue', 'alpha'];
 
     channels.forEach(function(channel) {
-      if (options.hasOwnProperty(channel)) options[channel + '_function'] = generator(options[channel]);
-      else if (channel === 'alpha') options['alpha_function'] = function() { return 255; };
-      else options[channel + '_function'] = generator(options.monochrome);
+      if (channel === 'alpha'){
+        options['alpha_function'] = function() { return 255; };
+      }
+      else{
+        options[channel + '_function'] = generator(options[channel]);
+      }
     });
 
     function changePixel(r, g, b, a) {

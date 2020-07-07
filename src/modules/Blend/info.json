@@ -1,17 +1,34 @@
 {
   "name": "blend",
-  "description": "Blend two chosen image steps with the given function. Defaults to using the red channel from image 1 and the green and blue and alpha channels of image 2. Easier to use interfaces coming soon!",
+  "description": "Blend two chosen image steps with the given function. Defaults to using the red channel from image 1 and the green and blue and alpha channels of image 2.",
   "inputs": {
     "offset": {
       "type": "integer",
       "desc": "Choose which image to blend the current image with. Two steps back is -2, three steps back is -3 etc.",
       "default": -2
     },
+    "blendMode": {
+      "type": "select",
+      "desc": "Name of the Blend Mode to use",
+      "default": "custom",
+      "values": [
+        "custom",
+        "Multiply",
+        "Divide",
+        "Overlay",
+        "Screen",
+        "Soft Light",
+        "Color Burn",
+        "Color Dodge",
+        "Grain Extract",
+        "Grain Merge"
+      ]
+    },
     "blend": {
       "type": "string",
       "desc": "Function to use to blend the two images.",
-      "default": "function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] }"
+      "default": "function(r1, g1, b1, a1, r2, g2, b2, a2, x, y) { return [ r2, g2, b2, a2 ] }"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#blend-module"
+  "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#blend-module"
 }

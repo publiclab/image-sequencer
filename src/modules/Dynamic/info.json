@@ -16,11 +16,6 @@
       "type": "string",
       "desc": "Expression to return for blue channel with R, G, B, and A inputs",
       "default": "b"
-    },
-    "monochrome (fallback)": {
-      "type": "string",
-      "desc": "Expression to return with R, G, B, and A inputs; fallback for other channels if none provided",
-      "default": "r + g + b"
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#dynamic-module"

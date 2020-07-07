@@ -13,11 +13,9 @@ const kernelx = [
     [ 0, 0, 0],
     [ 1, 2, 1]
   ];
-
-let pixelsToBeSupressed = [];
-
+  
 module.exports = function(pixels, highThresholdRatio, lowThresholdRatio, useHysteresis) {
-  let angles = [], grads = [], strongEdgePixels = [], weakEdgePixels = [];
+  let angles = [], grads = [], strongEdgePixels = [], weakEdgePixels = [], pixelsToBeSupressed = [];
   
   for (var x = 0; x < pixels.shape[0]; x++) {
     grads.push([]);
@@ -34,8 +32,8 @@ module.exports = function(pixels, highThresholdRatio, lowThresholdRatio, useHyst
       angles.slice(-1)[0].push(result.angle);
     }
   }
-  nonMaxSupress(pixels, grads, angles); // Non Maximum Suppression: Filter fine edges.
-  doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio, grads, strongEdgePixels, weakEdgePixels); // Double Threshold: Categorizes edges into strong and weak edges based on two thresholds.
+  nonMaxSupress(pixels, grads, angles, pixelsToBeSupressed); // Non Maximum Suppression: Filter fine edges.
+  doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio, grads, strongEdgePixels, weakEdgePixels, pixelsToBeSupressed); // Double Threshold: Categorizes edges into strong and weak edges based on two thresholds.
   if(useHysteresis.toLowerCase() == 'true') hysteresis(strongEdgePixels, weakEdgePixels); // Optional Hysteresis (very slow) to minimize edges generated due to noise.
 
   strongEdgePixels.forEach(pixel => preserve(pixels, pixel)); // Makes the strong edges White.
@@ -144,7 +142,7 @@ const removeElem = (arr = [], elem) => { // Removes the specified element from t
 };
 
 // Non Maximum Supression without interpolation.
-function nonMaxSupress(pixels, grads, angles) {
+function nonMaxSupress(pixels, grads, angles, pixelsToBeSupressed) {
   angles = angles.map((arr) => arr.map(convertToDegrees));
 
   for (let x = 0; x < pixels.shape[0]; x++) {
@@ -196,7 +194,7 @@ var convertToDegrees = radians => (radians * 180) / Math.PI;
 var findMaxInMatrix = arr => Math.max(...arr.map(el => el.map(val => val ? val : 0)).map(el => Math.max(...el)));
 
 // Applies the double threshold to the image.
-function doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio, grads, strongEdgePixels, weakEdgePixels) {
+function doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio, grads, strongEdgePixels, weakEdgePixels, pixelsToBeSupressed) {
 
   const highThreshold = findMaxInMatrix(grads) * highThresholdRatio, // High Threshold relative to the strongest edge
     lowThreshold = highThreshold * lowThresholdRatio; // Low threshold relative to high threshold

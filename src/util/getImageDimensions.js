@@ -1,7 +1,6 @@
 const getPixels = require('get-pixels');
 module.exports = function getImageDimensions(img, cb) {
   let dimensions;
-  let isGIF;
   getPixels(img, function(err, pixels) {
     if (pixels.shape.length === 4) {
       const [frames, width, height] = pixels.shape;
@@ -10,8 +9,6 @@ module.exports = function getImageDimensions(img, cb) {
         width,
         height
       };
-
-      isGIF = true;
     }
     else {
       const [width, height] = pixels.shape;
@@ -19,11 +16,9 @@ module.exports = function getImageDimensions(img, cb) {
         width,
         height
       };
-
-      isGIF = false;
     }
 
-    if (cb) cb(dimensions, isGIF);
+    if (cb) cb(dimensions);
   });
 };
   

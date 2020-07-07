@@ -12,11 +12,11 @@ module.exports = exports = function (options, pixels, oldPixels, cb) {
       const width = oldPixels.shape[0],
         height = oldPixels.shape[1];
 
-      const xe = width - options.size, // Starting pixel coordinates
-        ye = height - options.size;
-      
-      for (let x = xe; x < width; x++) {
-        for (let y = ye; y < height; y++) {
+      const xe = Math.min(options.startingX, width - options.size), // Starting pixel coordinates
+        ye = Math.min(options.startingY, height - options.size);
+
+      for (let x = xe; x < Math.min(xe + options.size, width); x++) {
+        for (let y = ye; y < Math.min(ye + options.size, height); y++) {
           pixelSetter(
             x,
             y,

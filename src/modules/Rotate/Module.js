@@ -3,44 +3,63 @@
  */
 module.exports = function Rotate(options, UI) {
 
-  var output;
+  let output;
 
   function draw(input, callback, progressObj) {
 
-    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+    const defaults = require('./../../util/getDefaults.js')(require('./info.json'));
     options.rotate = options.rotate || defaults.rotate;
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;
 
-    var step = this;
-
-    var imagejs = require('imagejs');
+    const step = this;
 
     function changePixel(r, g, b, a) {
       return [r, g, b, a];
     }
 
     function extraManipulation(pixels) {
-      var rotate_value = (options.rotate) % 360;
+      const rotate_value = (options.rotate) % 360;
+      radians = (Math.PI) * rotate_value / 180,
+      width = pixels.shape[0],
+      height = pixels.shape[1],
+      cos = Math.cos(radians),
+      sin = Math.sin(radians);
+      // Final dimensions after rotation
 
-      if (rotate_value % 360 == 0)
-        return pixels;
+      const finalPixels = require('ndarray')(
+        new Uint8Array(
+          4 *
+          (
+            Math.floor(
+              Math.abs(width * cos) +
+              Math.abs(height * sin) +
+              5
+            ) *
+            (
+              Math.floor(
+                Math.abs(width * sin) +
+                Math.abs(height * cos)
+              ) +
+              5
+            )
+          )
+        ).fill(255),
+        [
+          Math.floor(Math.abs(width * cos) + Math.abs(height * sin)) + 5,
+          Math.floor(Math.abs(width * sin) + Math.abs(height * cos)) + 4,
+          4
+        ]
+      );
 
-      var bitmap = new imagejs.Bitmap({ width: pixels.shape[0], height: pixels.shape[1] });
-      bitmap._data.data = pixels.data;
-
-      var rotated = bitmap.rotate({
-        degrees: rotate_value,
-      });
-      pixels.data = rotated._data.data;
-
+      pixels = require('./Rotate')(pixels, finalPixels, rotate_value, width, height, cos, sin);
       return pixels;
     }
+      
 
-    function output(image, datauri, mimetype) {
-      // This output is accesible by Image Sequencer
-      step.output = { src: datauri, format: mimetype };
+    function output(image, datauri, mimetype, wasmSuccess) {
+      step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
     }
 
     return require('../_nomodule/PixelManipulation.js')(input, {

@@ -19,10 +19,8 @@ module.exports = function Convolution(options, UI) {
       return pixels;
     }
 
-    function output(image, datauri, mimetype) {
-
-      step.output = { src: datauri, format: mimetype };
-
+    function output(image, datauri, mimetype, wasmSuccess) {
+      step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
     }
 
     return require('../_nomodule/PixelManipulation.js')(input, {
@@ -31,6 +29,7 @@ module.exports = function Convolution(options, UI) {
       extraManipulation: extraManipulation,
       format: input.format,
       image: options.image,
+      inBrowser: options.inBrowser,
       callback: callback,
       useWasm:options.useWasm
     });

@@ -49,7 +49,7 @@ module.exports = function MinifyImage(options, UI) {
           reader.readAsDataURL(result);
           reader.onloadend = function () {
             base64data = reader.result;
-            output(base64data, input.format);
+            output(null, base64data, input.format, false);
             if (callback) callback();
             return;
           };
@@ -76,19 +76,14 @@ module.exports = function MinifyImage(options, UI) {
         });
         var destPath = __dirname + '/results/test.' + input.format;
         var data = base64Img.base64Sync(destPath);
-        output(data, input.format);
+        output(null, data, input.format, false);
         if (callback) callback();
-      })();
+      })().catch(e => console.log(e));
     }
 
 
-    function output(datauri, mimetype) {
-
-      // This output is accessible by Image Sequencer
-      step.output = {
-        src: datauri,
-        format: mimetype
-      };
+    function output(image, datauri, mimetype, wasmSuccess) {
+      step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
     }
   }
   return {

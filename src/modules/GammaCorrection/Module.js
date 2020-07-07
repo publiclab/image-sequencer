@@ -10,8 +10,7 @@ module.exports = function Gamma(options, UI) {
     var step = this;
 
     var defaults = require('./../../util/getDefaults.js')(require('./info.json')),
-      adjustment = options.adjustment || defaults.adjustment;
-    var val = adjustment / defaults.adjustment;
+      val = options.adjustment || defaults.adjustment;
 
     function changePixel(r, g, b, a) {
 
@@ -22,10 +21,8 @@ module.exports = function Gamma(options, UI) {
       return [r, g, b, a];
     }
 
-    function output(image, datauri, mimetype) {
-
-      step.output = { src: datauri, format: mimetype };
-
+    function output(image, datauri, mimetype, wasmSuccess) {
+      step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
     }
 
     return require('../_nomodule/PixelManipulation.js')(input, {

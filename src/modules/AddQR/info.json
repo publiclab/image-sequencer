@@ -12,6 +12,16 @@
         "type": "string",
         "desc": "input string to generate QR code",
         "default": "https://github.com/publiclab/image-sequencer"
+      },
+      "startingX": {
+        "type": "string",
+        "desc": "X-position (measured from left) from where QR starts",
+        "default": "0"
+      },
+      "startingY": {
+        "type": "string",
+        "desc": "Y-position (measured from top) from where QR starts",
+        "default": "0"
       }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#add-qr-module"

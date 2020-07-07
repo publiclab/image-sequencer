@@ -42,8 +42,8 @@ module.exports = function Average(options, UI) {
       // report back and store average in metadata:
       options.step.metadata.averages = sum;
 
-      // TODO: refactor into a new "display()" method as per https://github.com/publiclab/image-sequencer/issues/242
-      if (options.step.inBrowser && options.step.ui) $(options.step.ui).find('.details').append('<p><b>Averages</b> (r, g, b, a): ' + sum.join(', ') + '</p>');
+      if (options.step.average === undefined) options.step.average = '';
+      options.step.average += 'rgba(' + sum.join(', ') + ')';
       return pixels;
     }
 
@@ -54,6 +54,7 @@ module.exports = function Average(options, UI) {
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       ui: options.step.ui,
+      inBrowser: options.inBrowser,
       extraManipulation: extraManipulation,
       format: input.format,
       image: options.image,

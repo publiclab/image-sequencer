@@ -1,12 +1,15 @@
 module.exports = function ColorTemperature(options, UI) {
   
   const pixelSetter = require('../../util/pixelSetter.js');
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
 
   var output;
 
   function draw(input, callback, progressObj) {
 
-    options.temperature = (options.temperature > '40000') ? '40000' : options.temperature;
+    options.temperature = options.temperature || defaults.temperature;
+    options.temperature = (options.temperature > 40000) ? 40000 : options.temperature;
+    options.temperature = (options.temperature < 0) ? 0 : options.temperature;
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;

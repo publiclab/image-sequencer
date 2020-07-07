@@ -10,11 +10,9 @@ module.exports = function BlobAnalysis(options, UI){
   
     var step = this;
 
-    var priorStep = this.getStep(-1); // Get the previous step to process it
-
     function extraManipulation(pixels){
   
-      pixels = require('./BlobAnalysis')(pixels, options, priorStep);
+      pixels = require('./BlobAnalysis')(pixels);
       return pixels;
     }
   

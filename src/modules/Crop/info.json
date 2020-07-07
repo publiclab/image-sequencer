@@ -16,12 +16,12 @@
     "w": {
       "type": "string",
       "desc": "Width of crop",
-      "default": "(50%)"
+      "default": "100%"
     },
     "h": {
       "type": "string",
       "desc": "Height of crop",
-      "default": "(50%)"
+      "default": "100%"
     },
     "backgroundColor": {
       "type": "text",

@@ -1,10 +1,24 @@
+const getPixels = require('get-pixels');
 module.exports = function getImageDimensions(img, cb) {
-  var getPixels = require('get-pixels');
-  var dimensions = { width: '', height: '' };
+  let dimensions;
   getPixels(img, function(err, pixels) {
-    dimensions.width = pixels.shape[0];
-    dimensions.height = pixels.shape[1];
-    cb(dimensions);
+    if (pixels.shape.length === 4) {
+      const [frames, width, height] = pixels.shape;
+      dimensions = {
+        frames,
+        width,
+        height
+      };
+    }
+    else {
+      const [width, height] = pixels.shape;
+      dimensions = {
+        width,
+        height
+      };
+    }
+
+    if (cb) cb(dimensions);
   });
 };
   

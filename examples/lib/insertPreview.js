@@ -1,3 +1,4 @@
+// Generate downscaled preview images for quick buttons.
 function generatePreview(previewStepName, customValues, path, DomNode) {
   var previewSequencer = ImageSequencer();
   function insertPreview(src) {
@@ -9,6 +10,7 @@ function generatePreview(previewStepName, customValues, path, DomNode) {
     $(img).css('transform', 'translateX(-20%)');
     $(DomNode.querySelector('.radio-group')).find('.radio').each(function() {
       if ($(this).attr('data-value') === previewStepName) {
+        $(this).find('img').remove();
         $(this).append(img);
       }
     });
@@ -40,8 +42,8 @@ function updatePreviews(src, DomNode) {
     'crop': {
       'x': 0,
       'y': 0,
-      'w': '(50%)',
-      'h': '(50%)',
+      'w': '50%',
+      'h': '50%',
       'noUI': true
     }
   };
@@ -52,8 +54,8 @@ function updatePreviews(src, DomNode) {
     var height = img.height;
     var width = img.width;
 
-    let percentage = (80 / height) * 100; //take the min resize value that fits the preview area => (new-width/orig_ht) - '80 as the preview area has 80*80 dimension
-    percentage = Math.max((80 / width) * 100, percentage); // make sure that one dimension doesn't resize greater, leading distorting preview-area fitting
+    let percentage = (80 / height) * 100; // Take the min resize value that fits the preview area => (new-width/orig_ht) - '80 as the preview area has 80*80 dimension.
+    percentage = Math.max((80 / width) * 100, percentage); // Make sure that one dimension doesn't resize greater, leading distorting preview-area fitting.
     percentage = Math.ceil(percentage);
 
     var sequencer = ImageSequencer();

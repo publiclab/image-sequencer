@@ -12,7 +12,8 @@
  */
 
 module.exports = function Colormap(value, options) {
-  options.colormap = options.colormap || colormaps.default;
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+  options.colormap = options.colormap || defaults.colormap;
   // if a lookup table is provided as an array:
   if(typeof(options.colormap) == 'object')
     colormapFunction = colormap(options.colormap);

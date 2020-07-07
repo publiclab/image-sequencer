@@ -22,10 +22,11 @@ module.exports = function ImageThreshold(options, UI) {
       pixels = require('./Threshold')(pixels, options, hist);
       return pixels;
     }
-    function output(image, datauri, mimetype) {
-      // This output is accessible by Image Sequencer
-      step.output = { src: datauri, format: mimetype };
+
+    function output(image, datauri, mimetype, wasmSuccess) {
+      step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
     }
+    
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       ui: options.step.ui,
@@ -33,6 +34,7 @@ module.exports = function ImageThreshold(options, UI) {
       extraManipulation: extraManipulation,
       format: input.format,
       image: options.image,
+      inBrowser: options.inBrowser,
       callback: callback,
       useWasm:options.useWasm
     });

@@ -16,11 +16,6 @@ module.exports = function createMetaModule(mapFunction, moduleOptions) {
       }
     }
 
-    // map inputs to internal step options;
-    // use this to set defaults for internal steps
-    // and to expose internal settings as external meta-module parameters;
-    // it must return a steps object
-    var steps = mapFunction(options);
 
     /* example:
     function mapFunction(opt, _defaults) {
@@ -36,12 +31,18 @@ module.exports = function createMetaModule(mapFunction, moduleOptions) {
     */
 
     // ui: false prevents internal logs
-    var internalSequencer = ImageSequencer({ inBrowser: false, ui: false });
 
     function draw(input, callback) {
 
       var step = this;
 
+      // map inputs to internal step options;
+      // use this to set defaults for internal steps
+      // and to expose internal settings as external meta-module parameters;
+      // it must return a steps object
+      var steps = mapFunction(options);
+
+      var internalSequencer = ImageSequencer({ inBrowser: false, ui: false });
       internalSequencer.loadImage(input.src, function onAddImage() {
         internalSequencer.importJSON(steps);
         internalSequencer.run(function onCallback(internalOutput) {

@@ -8,39 +8,44 @@ List of Module Documentations
 3.  [Blend](#blend-module)
 4.  [Blur](#blur-module)
 5.  [Brightness](#brightness-module)
-6.  [Channel](#channel-module)
-7.  [Colorbar](#colorbar-module)
-8.  [Colormap](#colormap-module)
-9.  [ColorTemperature](#color-temperature)
-10. [Contrast](#contrast-module)
-11. [Convolution](#convolution-module)
-12. [Crop](#crop-module)
-13. [DecodeQr](#decodeQr-module)
-14. [Dither](#dither-module)
-15. [DrawRectangle](#draw-rectangle-module)
-16. [Dynamic](#dynamic-module)
-17. [Edge-Detect](#edge-detect-module)
-18. [FisheyeGl](#fisheyeGl-module)
-19. [FlipImage](#flipimage-module)
-20. [Gamma-Correction](#gamma-correction-module)
-21. [Gradient](#gradient-module)
-22. [Grid-Overlay](#grid-overlay)
-23. [Histogram](#histogram-module)
-24. [Import-image](#import-image-module)
-25. [Invert](#invert-module)
-26. [MinifyImage](#minify-image)
-27. [Ndvi](#ndvi-module)
-28. [Ndvi-Colormap](#ndvi-colormap-module)
-29. [Overlay](#overlay-module)
-30. [PaintBucket](#paint-bucket-module)
-31. [ReplaceColor](#replacecolor-module)
-32. [Resize](#resize-module)
-33. [Rotate](#rotate-module)
-34. [Saturation](#saturation-module)
-35. [Segmented-Colormap](#segmented-colormap-module)
-36. [Text-Overlay](#text-overlay)
-37. [Threshold](#threshold)
-38. [Tint](#tint)
+6.  [Canvas-Resize](#canvas-resize-module)
+7.  [Channel](#channel-module)
+8.  [Colorbar](#colorbar-module)
+9.  [Colormap](#colormap-module)
+10. [ColorTemperature](#color-temperature)
+11. [Contrast](#contrast-module)
+12. [Convolution](#convolution-module)
+13. [Crop](#crop-module)
+14. [DecodeQr](#decodeQr-module)
+15. [Dither](#dither-module)
+16. [DrawRectangle](#draw-rectangle-module)
+17. [Dynamic](#dynamic-module)
+18. [Edge-Detect](#edge-detect-module)
+19. [Exposure](#exposure-module)
+20. [FisheyeGl](#fisheyeGl-module)
+21. [FlipImage](#flipimage-module)
+22. [Gamma-Correction](#gamma-correction-module)
+23. [Gradient](#gradient-module)
+24. [Grid-Overlay](#grid-overlay)
+25. [Histogram](#histogram-module)
+26. [Import-image](#import-image-module)
+27. [Invert](#invert-module)
+28. [MinifyImage](#minify-image)
+29. [Ndvi](#ndvi-module)
+30. [Ndvi-Colormap](#ndvi-colormap-module)
+31. [NoiseReduction](#noise-reduction)
+32. [Overlay](#overlay-module)
+33. [PaintBucket](#paint-bucket-module)
+34. [ReplaceColor](#replacecolor-module)
+35. [Resize](#resize-module)
+36. [Rotate](#rotate-module)
+37. [Saturation](#saturation-module)
+38. [Segmented-Colormap](#segmented-colormap-module)
+39. [Text-Overlay](#text-overlay)
+40. [Threshold](#threshold)
+41. [Tint](#tint)
+42. [WebGL-Distort](#webgl-distort-module)
+43. [White-Balance](#white-balance-module)
 
 
 ## add-qr-module
@@ -73,7 +78,8 @@ This module is used for averaging all the pixels of the image.
 
 ## blend-module
 
-This module is used for blending two images .
+This module is used for blending two images. For More info read:  _[wiki](https://en.wikipedia.org/wiki/Blend_modes)_
+
 #### Usage
 
 ```js
@@ -83,8 +89,12 @@ This module is used for blending two images .
 ```
 
 where `options` is an object with the following properties:
-* offset: step of image with which current image is to be blended(Two steps back is -2, three                steps back is -3 etc; default -2) 
-* func: function used to blend two images (default : function(r1, g1, b1, a1, r2, g2, b2, a2) {            return [ r1, g2, b2, a2 ] })
+* offset: step of image with which current image is to be blended(Two steps back is -2, three steps back is -3 etc; default -2) 
+* blendMode: Blending mode to use for blending two images by default it uses the given function
+* func: function used to blend two images (default : function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] })
+
+[More info for different blend modes can be found here](http://docs.gimp.org/en/gimp-concepts-layer-modes.html)
+
 
 ## Blob Analysis
 
@@ -128,6 +138,24 @@ This module is used for changing the brightness of the image.
 
 where `options` is an object with the following property:
 * brightness : brightness of the image in percentage (0 to 100; default 100)
+
+
+## canvas-resize-module
+
+This module is used for resizing the canvas of the image.
+#### Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('canvas-resize',options)
+           .run()
+```
+
+where `options` is an object with the following property:
+* width: final width of the canvas (default 1000)
+* height: final height of the canvas (default 1000)
+* x: x-coordinate of the top left of the image on the canvas (default 500)
+* y: y-coordinate of the top left of the image on the canvas (default 500)
 
 
 ## channel-module
@@ -326,6 +354,21 @@ where `options` is an object with the following properties:
 * lowThresholdratio : Lower Threshold Ratio ( default : 0.2)
 
 
+## exposure-module
+
+This module is used for changing the exposure of the image.
+#### Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('exposure',options)
+           .run()
+```
+
+where `options` is an object with the following property:
+* exposure: exposure value for the new image (-3 to 4; default 1)
+
+
 ## fisheyeGl-module
 
 This module is used for correcting Fisheye or Lens Distortion
@@ -486,6 +529,21 @@ This module is used for demonstrating ndvi and colormap properties consecutively
            .addSteps('ndvi-colormap',options)
            .run()
 ```
+
+
+## Noise-Reduction
+
+Noise in an image are atypical pixels that are not representing the color or the exposure of the scene correctly. This Noise Reduction module reduces the noise in the image by using either median filtering or mean filtering techniques to change the RGB value of the pixels to create a smoother and fuller image.
+
+#### Usage
+```js
+    sequencer.loadImage('PATH')
+             .addSteps('noise-reduction',options)
+             .run()
+```
+where `options` is an object with the property `method`. `options.method` can be:
+* Median Filtering: Set the RGB value of the pixel to the median RGB pixel value of all adjacent pixels (maximum 8 adjacent pixels and itself)
+* Mean Filtering: Set the RGB value of the pixel to the mean RGB pixel value of all adjacent pixels (maximum 8 adjacent pixels and itself)
 
 
 ## overlay-module
@@ -651,3 +709,38 @@ It adds color tint to an image
 where `options` is an object with the following property:
 * color : RGB values seperated by a space (default "0 0 255")
 * factor : amount of tint (default 0.5)
+
+
+## webgl-distort-module
+
+This module is used for transforming the perspective of images based on corner coordinates.
+#### Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('webgl-distort',options)
+           .run()
+```
+
+where `options` is an object with the following property:
+* nw: top-left corner x and y coordinates separated by a comma (default "0,100")
+* ne: top-right corner x and y coordinates separated by a comma (default "1023,-50")
+* se: bottom-right corner x and y coordinates separated by a comma (default "1223,867")
+* sw: bottom-left corner x and y coordinates separated by a comma (default "100,767")
+
+
+## white-balance-module
+
+This module is used for rendering neutral colors of an image correctly based on the whitest pixel in the image.
+#### Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('white-balance',options)
+           .run()
+```
+
+where `options` is an object with the following property:
+* red: red component of the whitest pixel (default 255)
+* green: green component of the whitest pixel (default 255)
+* blue: blue component of the whitest pixel (default 255)

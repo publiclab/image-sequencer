@@ -7,19 +7,21 @@ module.exports = function TextOverlay(options, UI) {
 
     var step = this;
 
-    var priorStep = this.getStep(-1); // get the previous step to add text onto it.
-
-    function extraManipulation(pixels) {
+    function extraManipulation(pixels, setRenderState, generateOutput) {
       //if (options.step.inBrowser)
-      pixels = require('./TextOverlay')(pixels, options, priorStep);
-      return pixels;
+      const getDataUri = require('../../util/getDataUri');
+      getDataUri(pixels, input.format).then(dataUri => {
+        setRenderState(false);
+        pixels = require('./TextOverlay')(pixels, options, dataUri, () => {
+          setRenderState(true);
+          generateOutput();
+        });
+      
+      });
     }
 
-    function output(image, datauri, mimetype) {
-
-      // This output is accesible by Image Sequencer
-      step.output = { src: datauri, format: mimetype };
-
+    function output(image, datauri, mimetype, wasmSuccess) {
+      step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
     }
 
     return require('../_nomodule/PixelManipulation.js')(input, {

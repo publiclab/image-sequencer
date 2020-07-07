@@ -24,5 +24,6 @@
             "default": 500,
             "id": "y-coord"
         }
-    }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#canvas-resize-module"
 }

@@ -1,8 +1,17 @@
 var urlHash = require('./urlHash.js'),
   insertPreview = require('./insertPreview.js');
 
+/**
+ * @method IntermediateHtmlStepUi
+ * @description Inserts a module selector in between the current sequence
+ * @param {Object} _sequencer Sequencer instance
+ * @param {Object} step Current step variable
+ * @param {Object} options Optional options Object
+ * @returns {Object} Object containing the insertStep function
+ */
 function IntermediateHtmlStepUi(_sequencer, step, options) {
   function stepUI() {
+    // Basic markup for the selector
     return '<div class="row insertDiv collapse">\
           <section class="panel panel-primary .insert-step">\
             <button class="btn btn-default close-insert-box"><i class="fa fa-times" aria-hidden="true"></i> Close</button>\
@@ -55,7 +64,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
                     </select>\
                   <div>\
                   <div class="col-md-4">\
-                    <button class="btn btn-success btn-lg insert-save-btn add-step-btn" name="add">Add Step</button>\
+                    <button class="btn btn-primary btn-lg insert-save-btn add-step-btn" name="add">Add Step</button>\
                   <div>\
                 </div>\
               </div>\
@@ -64,15 +73,13 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
         </div>';
   }
 
-
-  function selectNewStepUi($step) {
-    var insertSelect = $step('.insert-step-select');
-    var m = insertSelect.val();
-    $step('.insertDiv .info').html(_sequencer.modulesInfo(m).description);
-    $step('.insertDiv .add-step-btn').prop('disabled', false);
-  }
-    
-    
+  /**
+   * @method toggleDiv
+   * @description Toggles the module selector dropdown.
+   * @param {Object} $step $step util function
+   * @param {Fucntion} callback Optional callback function
+   * @returns {Null}
+   */
   var toggleDiv = function($step, callback = function(){}){
     $step('.insertDiv').collapse('toggle');
     if ($step('.insert-text').css('display') != 'none'){
@@ -83,13 +90,19 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     }
   };
 
+  /**
+   * @method insertStep
+   * @description Handler to insert selected module in the sequence
+   * @returns {Null}
+   */
   insertStep = function (id) {
-    const $step = step.ui.$step,
-      $stepAll = step.ui.$stepAll;
+    const $step = step.$step,
+      $stepAll = step.$stepAll;
     var modulesInfo = _sequencer.modulesInfo();
     var parser = new DOMParser();
     var addStepUI = stepUI();
     addStepUI = parser.parseFromString(addStepUI, 'text/html').querySelector('div');
+
     if ($step('.insertDiv').length > 0){
       toggleDiv($step);
     }
@@ -100,60 +113,56 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
           addStepUI
         );
       toggleDiv($step, function(){
-        insertPreview.updatePreviews(step.output, '.insertDiv');
+        if (step.name === 'load-image') insertPreview.updatePreviews(step.output.src, $step('.insertDiv').getDomElem());
+        else insertPreview.updatePreviews(step.output, $step('.insertDiv').getDomElem());
       });
     }
 
-    $step('.insertDiv .close-insert-box').off('click').on('click', function(){toggleDiv(function(){});});
-    
+
+    $step('.insertDiv .close-insert-box').off('click').on('click', function(){
+      toggleDiv($step);
+      $step('.insertDiv').removeClass('insertDiv');
+    });
+
     var insertStepSelect = $step('.insert-step-select');
     insertStepSelect.html('');
+
     // Add modules to the insertStep dropdown
     for (var m in modulesInfo) {
-      if (modulesInfo[m] !== undefined)
+      if (modulesInfo[m] && modulesInfo[m].name)
         insertStepSelect.append(
           '<option value="' + m + '">' + modulesInfo[m].name + '</option>'
         );
     }
+
     insertStepSelect.selectize({
       sortField: 'text'
     });
-    $step('.inserDiv .add-step-btn').prop('disabled', true);
-    
-    insertStepSelect.append('<option value="" disabled selected>Select a Module</option>');
-    $step('.insertDiv .radio-group .radio').on('click', function () {
-      $(this).parent().find('.radio').removeClass('selected');
-      $(this).addClass('selected');
-      newStep = $(this).attr('data-value');
-      $step('.insert-step-select').val(newStep);
-      selectNewStepUi($step);
-      insert(id, $step);
-      $(this).removeClass('selected');
+
+    $('.insertDiv .radio-group .radio').on('click', function () {
+      var newStepName = $(this).attr('data-value'); // Get the name of the module to be inserted
+      id = $($step('.insertDiv').parents()[3]).prevAll().length;
+      insert(id, $step, newStepName); // Insert the selected module
     });
-    insertStepSelect.on('change', () => {selectNewStepUi($step);});
-    $step('.insertDiv .add-step-btn').on('click', function () { insert(id, $step); });
+
+    $step('.insertDiv .add-step-btn').on('click', function () {
+      var newStepName = insertStepSelect.val();
+      id = $($step('.insertDiv').parents()[3]).prevAll().length;
+      insert(id, $step, newStepName); });
   };
 
-  function insert(id, $step) {
-
-    options = options || {};
-    var insertStepSelect = $step('.insert-step-select');
-    if (insertStepSelect.val() == 'none') return;
-
-    var newStepName = insertStepSelect.val();
+  /**
+   * @method insert
+   * @description Inserts the specified step at the specified index in the sequence
+   * @param {Number} id Index of the step
+   * @param {Function} $step $step util function
+   * @param {String} newStepName Name of the new step
+   */
+  function insert(id, $step, newStepName) {
     toggleDiv($step);
-    var sequenceLength = 1;
-    if (sequencer.sequences[newStepName]) {
-      sequenceLength = sequencer.sequences[newStepName].length;
-    } else if (sequencer.modules[newStepName][1]['length']) {
-      sequenceLength = sequencer.modules[newStepName][1]['length'];
-    }
-    _sequencer
-      .insertSteps(id + 1, newStepName).run({ index: id });
-
-    // add to URL hash too
+    $step('.insertDiv').removeClass('insertDiv');
+    _sequencer.insertSteps(id + 1, newStepName).run({ index: id });
     urlHash.setUrlHashParameter('steps', _sequencer.toString());
-
   }
 
   return {
@@ -161,4 +170,3 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
   };
 }
 module.exports = IntermediateHtmlStepUi;
-

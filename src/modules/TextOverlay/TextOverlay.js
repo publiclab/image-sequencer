@@ -1,7 +1,6 @@
-module.exports = exports = function(pixels, options, priorstep){
-
-  var $ = require('jquery'); // to make text-overlay work for node.js
-
+const getPixels = require('get-pixels'),
+  pixelSetter = require('../../util/pixelSetter.js');
+module.exports = exports = function(pixels, options, url1, cb){
   var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
 
   options.text = options.text || defaults.text;
@@ -11,20 +10,46 @@ module.exports = exports = function(pixels, options, priorstep){
   options.color = options.color || defaults.color;
   options.size = options.size || defaults.size;
 
-  var img = $(priorstep.imgElement);
-  if(Object.keys(img).length === 0){
-    img = $(priorstep.options.step.imgElement);
-  }
   var canvas = document.createElement('canvas');
   canvas.width = pixels.shape[0]; //img.width();
   canvas.height = pixels.shape[1]; //img.height();
   var ctx = canvas.getContext('2d');
-  ctx.drawImage(img[0], 0, 0);
-  ctx.fillStyle = options.color;
-  ctx.font = options.size + 'px ' + options.font;
-  ctx.fillText(options.text, options.x, options.y);
+  var image = new Image;
+  image.src = url1;
+  image.onload = function(){
+    
+    ctx.drawImage(image, 0, 0);
+    ctx.fillStyle = options.color;
+    ctx.font = options.size + 'px ' + options.font;
+    ctx.fillText(options.text, options.x, options.y);
 
-  var myImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  pixels.data = myImageData.data;
-  return pixels;
+    getPixels(canvas.toDataURL(), function (err, qrPixels) {
+      if (err) {
+        console.log('get-pixels error: ', err);
+      }
+
+      
+      
+      for (let x = 0; x < pixels.shape[0]; x++) {
+        for (let y = 0; y < pixels.shape[1]; y++) {
+          pixelSetter(
+            x,
+            y,
+            [
+              qrPixels.get(x, y, 0),
+              qrPixels.get(x, y, 1),
+              qrPixels.get(x, y, 2),
+              qrPixels.get(x, y, 3)
+            ],
+            pixels
+          );
+        }
+      }
+      if (cb) cb();
+    });
+  };
+
+  
+
+  
 };

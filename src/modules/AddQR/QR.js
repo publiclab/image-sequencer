@@ -1,44 +1,37 @@
-module.exports = exports = function (options, pixels, oldPixels, callback) {
-  const pixelSetter = require('../../util/pixelSetter.js');
+const pixelSetter = require('../../util/pixelSetter.js'),
+  getPixels = require('get-pixels'),
+  QRCode = require('qrcode');
+module.exports = exports = function (options, pixels, oldPixels, cb) {
 
-  var QRCode = require('qrcode');
-  QRCode.toDataURL(options.qrCodeString, function (err, url) {
-    var getPixels = require('get-pixels');
+  QRCode.toDataURL(options.qrCodeString, {width: options.size, scale: 1}, function (error, url) {
     getPixels(url, function (err, qrPixels) {
       if (err) {
-        console.log('Bad image path', image);
+        console.log('get-pixels error: ', err);
       }
 
-      var imagejs = require('imagejs');
-      var bitmap = new imagejs.Bitmap({ width: qrPixels.shape[0], height: qrPixels.shape[1] });
-      bitmap._data.data = qrPixels.data;
-      var resized = bitmap.resize({
-        width: options.size, height: options.size,
-        algorithm: 'bicubicInterpolation'
-      });
-
-      qrPixels.data = resized._data.data;
-      qrPixels.shape = [options.size, options.size, 4];
-      qrPixels.stride[1] = 4 * options.size;
-
-      var width = oldPixels.shape[0],
+      const width = oldPixels.shape[0],
         height = oldPixels.shape[1];
-      var xe = width - options.size,
-        ye = height - options.size;
-      for (var m = 0; m < width; m++) {
-        for (var n = 0; n < height; n++) {
-          if (m >= xe && n >= ye) {
-            pixelSetter(m, n, [qrPixels.get(m - xe, n - ye, 0), qrPixels.get(m - xe, n - ye, 1), qrPixels.get(m - xe, n - ye, 2), qrPixels.get(m - xe, n - ye, 3)], pixels);
-          }
 
-          else {
-            pixelSetter(m, n, [oldPixels.get(m, n, 0), oldPixels.get(m, n, 1), oldPixels.get(m, n, 2), oldPixels.get(m, n, 3)], pixels);
-          }
+      const xe = Math.min(options.startingX, width - options.size), // Starting pixel coordinates
+        ye = Math.min(options.startingY, height - options.size);
 
+      for (let x = xe; x < Math.min(xe + options.size, width); x++) {
+        for (let y = ye; y < Math.min(ye + options.size, height); y++) {
+          pixelSetter(
+            x,
+            y,
+            [
+              qrPixels.get(x - xe, y - ye, 0),
+              qrPixels.get(x - xe, y - ye, 1),
+              qrPixels.get(x - xe, y - ye, 2),
+              qrPixels.get(x - xe, y - ye, 3)
+            ],
+            pixels
+          );
         }
       }
-      callback();
 
+      if(cb) cb();
     });
   });
 };

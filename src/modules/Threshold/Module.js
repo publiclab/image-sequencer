@@ -34,6 +34,7 @@ module.exports = function ImageThreshold(options, UI) {
       extraManipulation: extraManipulation,
       format: input.format,
       image: options.image,
+      inBrowser: options.inBrowser,
       callback: callback,
       useWasm:options.useWasm
     });

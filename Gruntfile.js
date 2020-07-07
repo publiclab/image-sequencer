@@ -2,6 +2,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-uglify-es');
   grunt.loadNpmTasks('grunt-browser-sync');
+  grunt.loadNpmTasks('grunt-text-replace');
 
   require('matchdep')
     .filterDev('grunt-*')
@@ -43,8 +44,26 @@ module.exports = function(grunt) {
         dest: 'dist/image-sequencer-ui.brow.js'
       },
       tests: {
-        src: ['test/core/sequencer/meta-modules.js', 'test/core/sequencer/image-sequencer.js', 'test/core/sequencer/chain.js', 'test/core/sequencer/replace.js', 'test/core/sequencer/import-export.js', 'test/core/sequencer/run.js', 'test/core/sequencer/dynamic-imports.js', 'test/core/util/*.js'],
+        src: ['test/core/sequencer/meta-modules.js',
+              'test/core/sequencer/image-sequencer.js',
+              'test/core/sequencer/chain.js',
+              'test/core/sequencer/replace.js',
+              'test/core/sequencer/import-export.js',
+              'test/core/sequencer/run.js',
+              'test/core/sequencer/dynamic-imports.js',
+              'test/core/util/*.js'],
         dest: './output/core-tests.js'
+      }
+    },
+
+    replace: {
+      version: {
+        src: ['examples/sw.js'],
+        overwrite: true,
+        replacements: [{
+          from: /image-sequencer-static-v.*/g,
+          to: "image-sequencer-static-v<%= pkg.version %>';"
+        }]
       }
     },
 
@@ -78,10 +97,10 @@ module.exports = function(grunt) {
 
   /* Default (development): Watch files and build on change. */
   grunt.registerTask('default', ['watch']);
-  grunt.registerTask('build', ['browserify:core', 'browserify:ui', 'uglify:core', 'uglify:ui']);
-  grunt.registerTask('serve', ['browserify:core', 'browserify:ui', 'browserSync', 'watch']);
+  grunt.registerTask('build', ['browserify:core', 'browserify:ui', 'replace:version', 'uglify:core', 'uglify:ui']);
+  grunt.registerTask('serve', ['browserify:core', 'browserify:ui', 'replace:version', 'browserSync', 'watch']);
   grunt.registerTask('compile', ['browserify:core', 'browserify:ui']);
-  grunt.registerTask('production', ['browserify:prodcore', 'browserify:produi', 'uglify:prodcore', 'uglify:produi']);
+  grunt.registerTask('production', ['browserify:prodcore', 'browserify:produi', 'replace:version', 'uglify:prodcore', 'uglify:produi']);
 
   grunt.registerTask('tests', ['browserify:tests']);
 };

@@ -3,5 +3,11 @@
     "description": "Average all pixel color",
     "inputs": {
     },
+    "outputs": {
+        "average": {
+            "type": "string",
+            "desc": "The average value of all the pixels."
+        }
+    },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#average-module"
 }

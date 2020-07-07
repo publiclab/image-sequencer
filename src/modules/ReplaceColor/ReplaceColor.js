@@ -1,13 +1,14 @@
 module.exports = exports = function(pixels, options){
   const pixelSetter = require('../../util/pixelSetter.js');
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
 
-  var color = options.color || 'rgb(228,86,81)';
+  var color = options.color || defaults.color;
   color = color.substring(color.indexOf('(') + 1, color.length - 1); // extract only the values from rgba(_,_,_,_)
 
-  var replaceColor = options.replaceColor || 'rgb(0,0,255)';
+  var replaceColor = options.replaceColor || defaults.replaceColor;
   replaceColor = replaceColor.substring(replaceColor.indexOf('(') + 1, replaceColor.length - 1); // extract only the values from rgba(_,_,_,_)
 
-  var replaceMethod = options.replaceMethod || 'greyscale';
+  var replaceMethod = options.replaceMethod || defaults.replaceMethod;
   color = color.split(',');
   replaceColor = replaceColor.split(',');
 
@@ -16,7 +17,7 @@ module.exports = exports = function(pixels, options){
     cg = color[1],
     cb = color[2];
 
-  var tolerance = options.tolerance || 50;
+  var tolerance = options.tolerance || defaults.tolerance;
   var maxFactor = (1 + tolerance / 100);
   var minFactor = (1 - tolerance / 100);
 

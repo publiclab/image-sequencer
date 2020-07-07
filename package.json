@@ -55,7 +55,7 @@
     "image-sequencer-invert": "^1.0.0",
     "imagejs": "0.0.9",
     "imagemin": "^7.0.1",
-    "imagemin-jpegtran": "^6.0.0",
+    "imagemin-jpegtran": "^7.0.0",
     "imagemin-pngquant": "^8.0.0",
     "imgareaselect": "git://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2",
     "istanbul": "^0.4.5",

@@ -10,6 +10,7 @@ function generatePreview(previewStepName, customValues, path, DomNode) {
     $(img).css('transform', 'translateX(-20%)');
     $(DomNode.querySelector('.radio-group')).find('.radio').each(function() {
       if ($(this).attr('data-value') === previewStepName) {
+        $(this).find('img').remove();
         $(this).append(img);
       }
     });
@@ -41,8 +42,8 @@ function updatePreviews(src, DomNode) {
     'crop': {
       'x': 0,
       'y': 0,
-      'w': '(50%)',
-      'h': '(50%)',
+      'w': '50%',
+      'h': '50%',
       'noUI': true
     }
   };

@@ -6,7 +6,7 @@ module.exports = function DoNothing(options, UI) {
   var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
 
   var output;
-  var fx = require('./glfx');
+  var fx = require('glfx');
 
   var dataURItoBlob = function dataURItoBlob(dataURI) {
     // convert base64/URLEncoded data component to raw binary data held in a string

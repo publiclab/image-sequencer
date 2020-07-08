@@ -1,0 +1,23 @@
+{
+    "name": "constrained-crop",
+    "description": "Crops an image in a particular aspect-ratio",
+    "inputs": {
+      "startingX": {
+        "type": "integer",
+        "desc": "X-position (measured from left) from where cropping starts",
+        "default": 0
+      },
+      "startingY": {
+        "type": "integer",
+        "desc": "Y-position (measured from top) from where cropping starts",
+        "default": 0
+      },
+      "aspectRatio":{
+        "type": "string",
+        "desc": "Enter aspect ratio in following format width:height",
+        "default": "1:1"
+      }
+    },
+   "docs-link":""
+  }
+  

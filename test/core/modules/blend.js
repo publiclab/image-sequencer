@@ -30,7 +30,7 @@ test('blend module loads with correct options', t => {
 });
 
 test('blend module works correctly', t => {
-  sequencer.run({mode: 'test'}, () => {
+  sequencer.run(() => {
 
     let result = sequencer.steps[2].output.src;
 

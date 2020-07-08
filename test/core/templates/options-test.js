@@ -25,7 +25,7 @@ module.exports = (moduleName, options, benchmark, input) => {
     // Add the step.
     sequencer.addSteps(moduleName, options[0]);
     // Run the ImageSequencer with initial option.
-    sequencer.run({ mode: 'test' }, () => {
+    sequencer.run(() => {
       let result = sequencer.steps[1].output.src;
 
       base64Img.imgSync(result, target, 'result');
@@ -42,7 +42,7 @@ module.exports = (moduleName, options, benchmark, input) => {
       // Change the option of the given module.
       sequencer.steps[1].setOptions(options[1]);
       // Run the ImageSequencer witch changed option.
-      sequencer.run({ mode: 'test' }, () => {
+      sequencer.run(() => {
         let newResult = sequencer.steps[1].output.src;
 
         base64Img.imgSync(newResult, target, 'newResult');

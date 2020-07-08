@@ -2,7 +2,9 @@ Image Sequencer
 ====
 
 [![Code of Conduct](https://img.shields.io/badge/code-of%20conduct-green.svg)](https://publiclab.org/conduct)
+[![npm version](https://badge.fury.io/js/image-sequencer.svg)](https://badge.fury.io/js/image-sequencer)
 [![Build Status](https://travis-ci.org/publiclab/image-sequencer.svg?branch=master)](https://travis-ci.org/publiclab/image-sequencer) [![Maintainability](https://api.codeclimate.com/v1/badges/5906996dd2e90aca6398/maintainability)](https://codeclimate.com/github/publiclab/image-sequencer/maintainability) [![Codecov](https://img.shields.io/codecov/c/github/publiclab/image-sequencer.svg?logo=codecov)](https://codecov.io/gh/publiclab/image-sequencer)
+[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/from-referrer/)
 
 - **Latest Stable Demo**: https://sequencer.publiclab.org
 - **Latest Beta Demo**: https://beta.sequencer.publiclab.org
@@ -70,6 +72,12 @@ In case of a port conflict please run the following
 ```powershell
 npm i -g http-server ; http-server -p 3000
 ```
+
+### Online one-click setup for contributing
+
+Contribute to ImageSequencer using a fully featured online development environment that will automatically: clone the repo, install the dependencies and start the webserver.
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/from-referrer/)
 
 ### Browser
 

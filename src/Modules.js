@@ -11,6 +11,7 @@ module.exports = {
   'canvas-resize': require('./modules/CanvasResize'),
   'channel': require('./modules/Channel'),
   'colorbar': require('./modules/Colorbar'),
+  'color-halftone': require('./modules/ColorHalftone'),
   'color-temperature': require('./modules/ColorTemperature'),
   'colormap': require('./modules/Colormap'),
   'constrained-crop': require('./modules/ConstrainedCrop'),

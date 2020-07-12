@@ -226,7 +226,7 @@ window.onload = function () {
     }
   });
 
-  $('#js-download-gif-framerate-btn').on('click', function (event){
+  $('#js-download-gif-frame-duration-btn').on('click', function (event){
 
     var loader = require('./images/loader');
 
@@ -254,7 +254,7 @@ window.onload = function () {
       'gifWidth': imgs[0].width,
       'gifHeight': imgs[0].height,
       'images': imgSrcs,
-      'frameDuration': Math.abs(parseInt($('#js-download-gif-framerate').val())),
+      'frameDuration': Math.abs(parseInt($('#js-download-gif-frame-duration').val())),
     };
 
     return options;

@@ -48,7 +48,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
               <div class="row step">\
                 <div class="col-md-4 details container-fluid">\
                   <div class="cal collapse in"><p>' +
-                    '<a ' + (step.name === "load-image" || 'href="https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#') + step.name + '-module">' + (step.description || '') + '</a>' +
+                    '<a ' + (step['docs-link'] ? ('href=' + step['docs-link']) : ('href = "#")) + '>' + (step.description || '') + '</a>' +
                  '</p></div>\
                 </div>\
                 <div class="col-md-8 cal collapse in step-column">\

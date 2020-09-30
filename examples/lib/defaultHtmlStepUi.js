@@ -47,9 +47,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
             <div class="panel-body cal collapse in">\
               <div class="row step">\
                 <div class="col-md-4 details container-fluid">\
-                  <div class="cal collapse in"><p>' +
+                  <div class="cal collapse in">' +
                     step['docs-link'] ? ('<a ' + ('href=' + step['docs-link']) + '>' + (step.description || '') + '</a>') : ('<p>' + (step.description) + '</p>') +
-                 '</p></div>\
+                 '</div>\
                 </div>\
                 <div class="col-md-8 cal collapse in step-column">\
                   <div class="load load-spin" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\

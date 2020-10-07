@@ -1,17 +1,17 @@
 #!/usr/bin/env node
-require('./src/ImageSequencer');
+require('../src/ImageSequencer');
 sequencer = ImageSequencer({ ui: true });
-var saveSequence = require('./src/cli/saveSequence.js');
-var test = require('tape');
-var { Command } = require('commander');
+const saveSequence = require('../src/cli/saveSequence.js');
+const test = require('tape');
+const { Command } = require('commander');
 
 
 test('testing save sequence function', function (t) {
   try {
-    var program = new Command();
+    let program = new Command();
     program
       .option('--save-sequence [string]', 'Name space separated with Stringified sequence');
-    
+
     program.parse(['node', 'test', '--save-sequence', '"invert brightness"']);
 
     if (program.saveSequence)
@@ -22,10 +22,10 @@ test('testing save sequence function', function (t) {
     t.true(!error, 'creation fail');
   }
   try {
-    var program = new Command();
+    let program = new Command();
     program
       .option('--save-sequence [string]', 'Name space separated with Stringified sequence');
-    
+
     program.parse(['node', 'test', '--save-sequence']);
 
     if (program.saveSequence)

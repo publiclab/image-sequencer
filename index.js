@@ -23,12 +23,8 @@ program
   .option('-b, --basic', 'Basic mode outputs only final image')
   .option('-c, --config [Object]', 'Options for the step')
   .option('--save-sequence [string]', 'Name space separated with Stringified sequence')
-  .option('--install-module [string]', 'Module name space seaprated npm package name');
-
-program
-  .command('test', ' test maybe ');
-
-program.parse(process.argv);
+  .option('--install-module [string]', 'Module name space seaprated npm package name')
+  .parse(process.argv);
 
 if (program.saveSequence) saveSequence(program, sequencer);
 

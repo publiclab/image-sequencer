@@ -6,9 +6,9 @@
   "scripts": {
     "debug": "TEST=true node ./index.js -i ./examples/images/monarch.png -s invert",
     "test": "TEST=true istanbul cover tape test/core/*.js test/core/ui/user-interface.js test/core/modules/*.js | tap-spec;",
-    "benchmark" : "node test/core/sequencer/benchmark.js | tap-spec;",
-    "gif-test" : "node test/core/gifs/gif-test.js | tap-spec;",
-    "core-tests" : "cat ./output/core-tests.js | tape-run --render=\"tap-spec\"",
+    "benchmark": "node test/core/sequencer/benchmark.js | tap-spec;",
+    "gif-test": "node test/core/gifs/gif-test.js | tap-spec;",
+    "core-tests": "cat ./output/core-tests.js | tape-run --render=\"tap-spec\"",
     "test-all": "npm run test && npm run benchmark && npm run gif-test && grunt tests && npm run core-tests",
     "test-ui": "node node_modules/jasmine/bin/jasmine test/ui/spec/*.js",
     "test-ui-2": "node ./node_modules/.bin/jest",
@@ -107,7 +107,7 @@
     "matchdep": "^2.0.0",
     "tap-spec": "^5.0.0",
     "tape": "^4.9.2",
-    "tape-run": "^7.0.0",
+    "tape-run": "^8.0.0",
     "uglify-es": "^3.3.7"
   },
   "husky": {
@@ -119,4 +119,4 @@
   "bin": {
     "sequencer": "./index.js"
   }
-} 
+}

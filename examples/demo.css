@@ -324,7 +324,7 @@ a.name-header{
   position: fixed;
   right: 2%;
   top: 5%;
-  color: lightgray;
+  color: gray;
 }
 /* Non float rightward alignment*/
 .right {

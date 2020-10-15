@@ -28,7 +28,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
   function selectNewStepUi() {
     var m = $(addStepSel + ' select').val();
     if(!m) m = arguments[0];
-    $(addStepSel + ' .info').html(_sequencer.modulesInfo(m).description);
+    else $(addStepSel + ' .info').html(_sequencer.modulesInfo(m).description);
     $(addStepSel + ' #add-step-btn').prop('disabled', false);
   }
 

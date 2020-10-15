@@ -1,11 +1,22 @@
+
 {
   "name": "resize",
   "description": "Resize image by given percentage value",
   "inputs": {
-    "resize": {
-      "type": "string",
-      "desc": "Percentage value of the resize",
-      "default": "125%"
+    "height": {
+      "type": "integer",
+      "desc": "Percentage value of the resize height",
+      "default": "125"
+    },
+    "width": {
+      "type": "integer",
+      "desc": "Percentage value of the resize width",
+      "default": "125"
+    },
+    "checkbox": {
+      "type": "integer",
+      "desc": "preserve aspect ratio",
+      "default": "0"
     }
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#resize-module"

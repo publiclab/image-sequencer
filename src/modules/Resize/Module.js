@@ -11,7 +11,9 @@ module.exports = function Resize(options, UI) {
   function draw(input, callback, progressObj) {
 
     const defaults = require('./../../util/getDefaults.js')(require('./info.json'));
-    options.resize = options.resize || defaults.resize;
+    options.height = options.height || defaults.height;
+    options.width = options.width || defaults.width;
+    options.checkbox = options.checkbox || defaults.checkbox;
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;
@@ -20,13 +22,18 @@ module.exports = function Resize(options, UI) {
 
     function extraManipulation(pixels) {
       // Value above 100% scales up, and below 100% scales down
-      const resize_value = parseInt(options.resize.slice(0, -1));
+      const resize_height = Number(options.height);
+      const resize_width = Number(options.width);
+      const checkbox = Number(options.checkbox);
 
-      if (resize_value == 100) return pixels;
+      if (resize_height == 100) return pixels;
 
-
-      const new_width = Math.round(pixels.shape[0] * (resize_value / 100)),
-        new_height = Math.round(pixels.shape[1] * (resize_value / 100));
+      if(checkbox == 1){
+        var new_width = Math.round(pixels.shape[0] * (resize_width / 100)),
+          new_height = Math.round(pixels.shape[1] * (resize_height / 100));
+      }
+      var new_width = Math.round(pixels.shape[0] * (resize_height / 100)),
+        new_height = Math.round(pixels.shape[1] * (resize_height / 100));
 
       const bitmap = new imagejs.Bitmap({ width: pixels.shape[0], height: pixels.shape[1] });
       

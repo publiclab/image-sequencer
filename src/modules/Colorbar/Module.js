@@ -6,7 +6,7 @@ module.exports = require('../../util/createMetaModule.js')(
       { 'name': 'gradient', 'options': {} },
       { 'name': 'colormap', 'options': { colormap: options.colormap || defaults.colormap } },
       { 'name': 'crop', 'options': { 'y': 0, 'w': '100%', 'h': options.h || defaults.h } },
-      { 'name': 'overlay', 'options': { 'x': options.x || defaults.h, 'y': options.y || defaults.y, 'offset': -4 } }
+      { 'name': 'overlay', 'options': { 'x': options.x || defaults.x, 'y': options.y || defaults.y, 'offset': -4 }  }
     ];
   }, {
     infoJson: require('./info.json')

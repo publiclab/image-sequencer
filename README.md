@@ -620,8 +620,7 @@ The final frames are then converted back to a GIF but in the process, the time d
 Modules that do not work:
 1. ColorBar (Will get fixed upon fixing overlay as this is a meta module which uses overlay)
 2. FisheyeGL
-4. Overlay
-5. Text Overlay (Almost fixed)
-6. Blend
-7. Histogram
-8. WebGL Distort
+3. Overlay
+4. Blend
+5. Histogram
+6. WebGL Distort

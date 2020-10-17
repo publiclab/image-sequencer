@@ -1,8 +1,8 @@
 sudo: required
 language: node_js
 node_js:
-  - '8'
   - '10'
+  - '12'
 env:
   - CXX=g++-4.8
 before_script:

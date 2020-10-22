@@ -1,7 +1,6 @@
-#!/usr/bin/env node
-require('../src/ImageSequencer');
+require('../../src/ImageSequencer');
 sequencer = ImageSequencer({ ui: true });
-const saveSequence = require('../src/cli/saveSequence.js');
+const saveSequence = require('../../src/cli/saveSequence.js');
 const test = require('tape');
 const { Command } = require('commander');
 
@@ -36,5 +35,4 @@ test('testing save sequence function', function (t) {
     t.true(1, 'creation fail');
   }
   t.end();
-  process.exit(1);
 });

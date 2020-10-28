@@ -1,0 +1,117 @@
+#!/bin/bash
+set -e # So that nothing wrong is published
+
+warn() {
+  echo -e "\033[1;31m
+------IMPORTANT------
+  THIS SCRIPT IS NOT MEANT TO BE USED DIRECTLY, PLEASE NEWLY CLONE THE REPO IN A SEPARATE DIRECTORY AND USE THE SCRIPT THERE.
+  USING THIS SCRIPT IN YOUR MAIN CLONE MAY DELETE YOUR LOCAL CHANGES.
+  This script is made to be reusable: If you want to manually update the demo, \
+  use the interactive script \`update-demo\`. This script can also be used in a github action.
+
+  You can set the 4th argument to anything to bypass this warning. \
+  Setting the 4th argument means that the first 3 arguments are also set which means that you know what you are doing (I assume).
+------IMPORTANT------
+\033[0m"
+
+  echo -ne "Do you still want to continue? [Y/n]: "
+  read -e yN
+
+  case $yN in
+    [yY][eE][sS] | [yY])
+    ;;
+    *)
+      exit 0
+    ;;
+  esac
+}
+
+# --- Constants ---
+deps="jquery bootstrap imgareaselect gifshot downloadjs selectize font-awesome bootstrap-colorpicker jspdf opencv.js/opencv.js" # A list of node_module dependencies to force commit
+# --- Constants ---
+
+# --- Arguments ---
+# $1: Repo(to use as upstream) url in the form username/repo (default: publiclab/image-sequencer) NOTE: Github only
+# $2: Branch to pull from eg: main or stable (default: stable)
+# $3: CNAME URL (default: none)
+# $4: Set the fourth argument to anything to bypass the warning.
+
+if [[ "$1" != "" ]];
+then
+  repo=$1
+else
+  repo="publiclab/image-sequencer"
+fi
+
+if [[ "$2" != "" ]];
+then
+  branch=$2
+else
+  branch="stable"
+fi
+
+if [[ "$3" != "" ]];
+then
+  CNAMEURL=$3
+else
+  CNAMEURL=""
+fi
+# --- Arguments ---
+
+# --- Main Script ---
+if [[ "$4" == "" ]]; # Set a 4th argument to anything to bypass this warning.
+then
+  warn
+fi
+
+git checkout gh-pages
+git remote add upstream https://github.com/$repo
+git fetch upstream
+
+git reset --hard upstream/$branch
+
+echo -e "Running setup script."
+npm run setup
+
+echo -e "Building dist files."
+grunt production
+
+if [ ! -f CNAME ];
+then
+  echo -e "Creating CNAME"
+  touch CNAME
+fi
+
+echo $CNAMEURL > CNAME
+
+echo -e "Removing unnecessary files."
+rm -R docs/
+rm -R test/
+rm CONTRIBUTING.md
+rm index.js
+
+echo -e "Copying important files from src/"
+cp src/ui/prepareDynamic.js prepareDynamic.js
+
+echo "Removing src/"
+rm -R src/
+mkdir -p src/ui/
+mv prepareDynamic.js src/ui/prepareDynamic.js
+
+echo -e "git add dist and node_modules dependencies."
+git add .
+
+for dep in $deps; # Force add node_modules dependencies
+do
+  git add -f node_modules/$dep
+done
+
+git add -f dist/image-sequencer.js
+git add -f dist/image-sequencer-ui.js
+
+echo -e "committing and pusing."
+git commit --no-verify -m "update"
+git push -f
+
+exit 0
+# --- Main Script ---

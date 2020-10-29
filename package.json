@@ -12,8 +12,9 @@
     "test-all": "npm run test && npm run benchmark && npm run gif-test && grunt tests && npm run core-tests",
     "test-ui": "node node_modules/jasmine/bin/jasmine test/ui/spec/*.js",
     "test-ui-2": "node ./node_modules/.bin/jest",
+    "test-cli": "node test/cli/*.js | tap-spec",
     "setup": "npm i && npm i -g grunt grunt-cli && npm rebuild --build-from-source && grunt build",
-    "start": "grunt serve"
+    "start": "grunt serve" 
   },
   "lint-staged": {
     "*.js": [

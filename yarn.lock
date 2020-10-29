@@ -6335,9 +6335,9 @@ jsbn@~0.1.0:
   integrity sha1-peZUwuWi3rXyAdls77yoDA7y9RM=
 
 jsdom@^16.2.2, jsdom@^16.3.0:
-  version "16.3.0"
-  resolved "https://registry.yarnpkg.com/jsdom/-/jsdom-16.3.0.tgz#75690b7dac36c67be49c336dcd7219bbbed0810c"
-  integrity sha512-zggeX5UuEknpdZzv15+MS1dPYG0J/TftiiNunOeNxSl3qr8Z6cIlQpN0IdJa44z9aFxZRIVqRncvEhQ7X5DtZg==
+  version "16.4.0"
+  resolved "https://registry.yarnpkg.com/jsdom/-/jsdom-16.4.0.tgz#36005bde2d136f73eee1a830c6d45e55408edddb"
+  integrity sha512-lYMm3wYdgPhrl7pDcRmvzPhhrGVBeVhPIqeHjzeiHN3DFmD1RBpbExbi8vU7BJdH8VAZYovR8DMt0PNNDM7k8w==
   dependencies:
     abab "^2.0.3"
     acorn "^7.1.1"
@@ -6737,9 +6737,9 @@ longest@^1.0.0:
   integrity sha1-MKCy2jj3N3DoKUoNIuZiXtd9AJc=
 
 looks-same@^7.0.0:
-  version "7.2.2"
-  resolved "https://registry.yarnpkg.com/looks-same/-/looks-same-7.2.2.tgz#319d5c604e474846096633c7bf7262a68d5c5832"
-  integrity sha512-I8WvkX68SMfjmKpRIhIQW8U4p4VyWCnkLeRl/tzMIgMjnF+6JeWZqwZgFuMH7djm4VoGTQlyFZY5GFvN88nugg==
+  version "7.2.3"
+  resolved "https://registry.yarnpkg.com/looks-same/-/looks-same-7.2.3.tgz#ded12be01b7848591a32694a8fba48b41baba55c"
+  integrity sha512-e67WnUOWLpLC0+4iOsbtMx1eUBgyx7NDUOq8esSxaSO63YTwrmoppkia+9w9oR1W+QLTw4eTKHv2pVLkGdkVrw==
   dependencies:
     color-diff "^1.1.0"
     concat-stream "^1.6.2"

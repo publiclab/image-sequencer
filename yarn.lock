@@ -4263,9 +4263,9 @@ gensync@^1.0.0-beta.1:
   integrity sha512-r8EC6NO1sngH/zdD9fiRDLdcgnbayXah+mLgManTaIZJqEC1MZstmnox8KpnI2/fxQwrp5OpCOYWLp4rBl4Jcg==
 
 geotiff@^1.0.0-beta.6:
-  version "1.0.0-beta.13"
-  resolved "https://registry.yarnpkg.com/geotiff/-/geotiff-1.0.0-beta.13.tgz#bd167c8ae3bf3b3d5c3b99f47dd0c1ef60dbf304"
-  integrity sha512-B2H3sbM4PeuKrY/UVOZjzVdqHwHAuOCKhhkV1Xcj3CFnaDAoxJSEEVKNiziOrguv0pHyANJkyK0TSnPngHhjYg==
+  version "1.0.0-beta.14"
+  resolved "https://registry.yarnpkg.com/geotiff/-/geotiff-1.0.0-beta.14.tgz#dd73843af5994544d0a95e1f9d448aa4664d5b58"
+  integrity sha512-Y0OKqXNUKBbWfMaz7RwjlWGypVIl2x7AM4EWbVBtE8LSjEJueQrQ16CNGw3js54MdBSIHi/mnGAtldBLaL5nrw==
   dependencies:
     pako "^1.0.11"
     threads "^1.3.1"

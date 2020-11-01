@@ -43,6 +43,7 @@ module.exports = {
   'resize': require('./modules/Resize'),
   'rotate': require('./modules/Rotate'),
   'saturation': require('./modules/Saturation'),
+  'sketch': require('./modules/Sketch'),
   'text-overlay': require('./modules/TextOverlay'),
   'threshold': require('./modules/Threshold'),
   'tint': require('./modules/Tint'),

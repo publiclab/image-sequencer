@@ -23,7 +23,9 @@ jobs:
     - name: "Jasmine UI tests (mocked browser env)"
       script: npm run test-ui
     - name: "jest-puppeteer UI tests (full browser env)"
-      script: npm run test-ui-2
+      script: npm run test-ui-2    
+    - name: "CLI tests"
+      script: npm run test-cli
     - name: "Grunt build test of dev environment"
       script: grunt build
 after_success:

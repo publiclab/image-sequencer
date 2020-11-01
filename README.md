@@ -10,6 +10,10 @@ Image Sequencer
 - **Latest Beta Demo**: https://beta.sequencer.publiclab.org
 - **Stable Branch**: https://github.com/publiclab/image-sequencer/tree/stable/
 
+Begin running (and contributing to) this codebase immediately with [GitPod](https://gitpod.io) (this also opens the latest `main` branch code):
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/publiclab/image-sequencer)
+
 ## Why
 
 Image Sequencer is different from other image processing systems because it's _non-destructive_: instead of modifying the original image, it **creates a new image at each step in a sequence**. This is because it:
@@ -616,8 +620,7 @@ The final frames are then converted back to a GIF but in the process, the time d
 Modules that do not work:
 1. ColorBar (Will get fixed upon fixing overlay as this is a meta module which uses overlay)
 2. FisheyeGL
-4. Overlay
-5. Text Overlay (Almost fixed)
-6. Blend
-7. Histogram
-8. WebGL Distort
+3. Overlay
+4. Blend
+5. Histogram
+6. WebGL Distort

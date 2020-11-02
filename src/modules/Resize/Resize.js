@@ -2,7 +2,7 @@ const imagejs = require('imagejs'),
   pixelSetter = require('../../util/pixelSetter'),
   ndarray = require('ndarray');
 module.exports = function Resize(pixels, options) {
-  const resize_value = parseInt(options.resize.slice(0, -1));
+  const resize_value = parseFloat(options.resize);
 
   if (resize_value == 100) return pixels;
 

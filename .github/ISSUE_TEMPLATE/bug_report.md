@@ -1,3 +1,10 @@
+---
+name: Bug report 🐞
+about: Help us identify and fix a bug!
+title: ''
+labels: bug
+---
+
 ### Please describe the problem (or idea)
 
 > What happened just before the problem occurred? Or what problem could this idea solve?
@@ -10,13 +17,13 @@
 
 ### Please show us where to look
 
-https://beta.sequencer.publiclab.org
+Paste in a full URL, starting with:
 
+> https://beta.sequencer.publiclab.org/
 
-### What's your PublicLab.org username?
+If you can share a screenshot or a GIF that is EXTRA helpful! 💖
 
-> This can help us diagnose the issue:
-
+If you can see a version number in the upper right, please note that!
 
 
 ### Browser, version, and operating system

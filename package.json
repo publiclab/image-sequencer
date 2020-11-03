@@ -69,7 +69,7 @@
     "lodash": "^4.17.11",
     "ndarray": "^1.0.18",
     "opencv.js": "^1.2.1",
-    "ora": "^4.0.3",
+    "ora": "^5.1.0",
     "pace": "0.0.4",
     "pngquant-bin": "^6.0.0",
     "puppeteer": "^1.14.0",

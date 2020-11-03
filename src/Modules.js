@@ -31,6 +31,7 @@ module.exports = {
   'gradient': require('./modules/Gradient'),
   'grid-overlay': require('./modules/GridOverlay'),
   'import-image': require('./modules/ImportImage'),
+  'matcher': require('./modules/Matcher'),
   'minify-image': require('./modules/MinifyImage'),
   // 'invert': require('image-sequencer-invert'),
   'invert': require('./modules/Invert'),

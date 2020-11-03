@@ -73,4 +73,3 @@ function LoadImage(ref, name, src, main_callback) {
 }
 
 module.exports = LoadImage;
-

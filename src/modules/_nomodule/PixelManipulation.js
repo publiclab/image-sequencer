@@ -57,7 +57,6 @@ module.exports = function PixelManipulation(image, options) {
     // but node modules and their documentation are essentially arcane on this point.
     function generateOutput(_frames) {
       if (!(renderableFrames < numFrames) && !(resolvedFrames < numFrames)) {
-        // if(rend){
         if (isGIF) {
           const dataPromises = []; // Array of all DataURI promises
 

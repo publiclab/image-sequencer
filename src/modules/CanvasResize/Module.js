@@ -2,7 +2,6 @@ const ndarray = require('ndarray');
 /*
 * Changes the Canvas Size
 */
-const getPixels = require('get-pixels');
 module.exports = function canvasResize(options, UI) {
 
   var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
@@ -25,7 +24,7 @@ module.exports = function canvasResize(options, UI) {
 
     function extraManipulation(pixels, setRenderState, generateOutput, frames, f) {
       setRenderState(false);
-      let newPixels = require('ndarray')(new Uint8Array(4 * options.width * options.height).fill(0), [options.width, options.height, 4]);
+      let newPixels = ndarray(new Uint8Array(4 * options.width * options.height).fill(0), [options.width, options.height, 4]);
       let iMax = options.width - options.x,
         jMax = options.height - options.y;
       for (let i = 0; i < iMax && i < pixels.shape[0]; i++) {

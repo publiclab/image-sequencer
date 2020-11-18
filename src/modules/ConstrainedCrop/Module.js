@@ -15,9 +15,6 @@ module.exports = function ConstrainedCrop(options, UI) {
       widthRatio = Number(aspectRatio[0]),
       heightRatio = Number(aspectRatio[1]);
 
-    function changePixel(r, g, b, a) {
-      return [r, g, b, a];
-    }
 
     function extraManipulation(pixels, setRenderState, generateOutput, frames, f) {
       setRenderState(false);

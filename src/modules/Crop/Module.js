@@ -34,7 +34,7 @@ module.exports = function CropModule(options, UI) {
 
       // We should do this via event/listener:
       if (ui && ui.hide) ui.hide();
-      
+
       const newPixels = require('./Crop')(pixels, options, function() {
         
         // Start custom UI setup (draggable UI)

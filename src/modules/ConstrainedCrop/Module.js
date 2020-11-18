@@ -50,7 +50,6 @@ module.exports = function ConstrainedCrop(options, UI) {
       inBrowser: options.inBrowser,
       callback: callback,
       useWasm:options.useWasm,
-      changePixel
     });
   }
   return {

@@ -1,6 +1,3 @@
-const imagejs = require('imagejs'),
-  pixelSetter = require('../../util/pixelSetter'),
-  ndarray = require('ndarray');
 /*
  * Resize the image by given percentage value
  */

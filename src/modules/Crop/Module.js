@@ -31,10 +31,12 @@ module.exports = function CropModule(options, UI) {
 
     function extraManipulation(pixels, setRenderState, generateOutput, frames, f) {
       setRenderState(false);
-      const newPixels = require('./Crop')(pixels, options, function() {
-        // We should do this via event/listener:
-        if (ui && ui.hide) ui.hide();
 
+      // We should do this via event/listener:
+      if (ui && ui.hide) ui.hide();
+      
+      const newPixels = require('./Crop')(pixels, options, function() {
+        
         // Start custom UI setup (draggable UI)
         // Only once we have an input image
         if (setupComplete === false && options.step.inBrowser && !options.noUI) {

@@ -27,9 +27,14 @@ module.exports = function edgeDetect(options, UI) {
     }
 
     // Extra Manipulation function used as an enveloper for applying gaussian blur and Convolution
-    function extraManipulation(pixels) {
+    function extraManipulation(pixels, setRenderState, generateOutput, frames, f) {
+      setRenderState(false);
       const blurPixels = Blur(pixels, options.blur);
-      return require('./EdgeUtils')(blurPixels, options.highThresholdRatio, options.lowThresholdRatio, options.hysteresis);
+      var newPixels = require('./EdgeUtils')(blurPixels, options.highThresholdRatio, options.lowThresholdRatio, options.hysteresis);
+      frames[f] = newPixels;
+      setRenderState(true);
+      generateOutput();
+      return newPixels;
     }
 
     function output(image, datauri, mimetype, wasmSuccess) {

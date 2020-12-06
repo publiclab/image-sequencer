@@ -15,8 +15,8 @@ module.exports = function Balance(options, UI) {
 
     var step = this;
 
-    function extraManipulation(pixels) {
-
+    function extraManipulation(pixels, setRenderState, generateOutput) {
+      setRenderState(false);
       var i = 0;
       var red_factor = 255 / options.red;
       var green_factor = 255 / options.green;
@@ -28,7 +28,8 @@ module.exports = function Balance(options, UI) {
         pixels.data[i + 2] = Math.min(255, pixels.data[i + 2] * blue_factor);
         i += 4;
       }
-
+      setRenderState(true);
+      generateOutput();
       return pixels;
     }
 

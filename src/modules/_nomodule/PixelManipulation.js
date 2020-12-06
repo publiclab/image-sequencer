@@ -55,9 +55,8 @@ module.exports = function PixelManipulation(image, options) {
 
     // There may be a more efficient means to encode an image object,
     // but node modules and their documentation are essentially arcane on this point.
-    function generateOutput() {
+    function generateOutput(_frames) {
       if (!(renderableFrames < numFrames) && !(resolvedFrames < numFrames)) {
-
         if (isGIF) {
           const dataPromises = []; // Array of all DataURI promises
 
@@ -92,9 +91,9 @@ module.exports = function PixelManipulation(image, options) {
               nodejsGIFShot(gifshotOptions, gifshotCb);
             }
           });
-
-        }
-        else {
+        } else{
+          if(_frames)
+            frames = _frames;
           getDataUri(frames[0], options.format).then(datauri => {
             if (options.output)
               options.output(options.image, datauri, options.format, wasmSuccess);
@@ -191,105 +190,114 @@ module.exports = function PixelManipulation(image, options) {
         frames[f] = options.preProcess(framePix, setRenderState) || framePix; // Allow for preprocessing of framePix.
         perFrameShape = frames[f].shape;
       }
-
-      if (options.changePixel) {
-
-        /* Allows for Flexibility
-        if per pixel manipulation is not required */
-        const imports = {
-          env: {
-            consoleLog: console.log,
-            perform: function (x, y) {
-              let pixel = options.changePixel( // changePixel function is run over every pixel.
-                framePix.get(x, y, 0),
-                framePix.get(x, y, 1),
-                framePix.get(x, y, 2),
-                framePix.get(x, y, 3),
-                x,
-                y
-              );
-
-              pixelSetter(x, y, pixel, framePix);
-
+      function extraManipulation(){
+        if (options.extraManipulation){
+          frames[f] = options.extraManipulation(framePix, setRenderState, generateOutput, frames, f) || framePix; // extraManipulation is used to manipulate each pixel individually.
+          perFrameShape = frames[f].shape;
+        }else
+          generateOutput();
+      }
+  
+      function changepixels(){
+        if (options.changePixel) {
+  
+          /* Allows for Flexibility
+          if per pixel manipulation is not required */
+          const imports = {
+            env: {
+              consoleLog: console.log,
+              perform: function (x, y) {
+                let pixel = options.changePixel( // changePixel function is run over every pixel.
+                  framePix.get(x, y, 0),
+                  framePix.get(x, y, 1),
+                  framePix.get(x, y, 2),
+                  framePix.get(x, y, 3),
+                  x,
+                  y
+                );
+  
+                pixelSetter(x, y, pixel, framePix);
+  
+              }
+            }
+          };
+  
+          /**
+           * @description Pure JS pixelmanipulation fallback when WASM is not working.
+           */
+          function perPixelManipulation() {
+            for (var x = 0; x < framePix.shape[0]; x++) {
+              for (var y = 0; y < framePix.shape[1]; y++) {
+                imports.env.perform(x, y);
+              }
             }
           }
-        };
-
-        /**
-         * @description Pure JS pixelmanipulation fallback when WASM is not working.
-         */
-        function perPixelManipulation() {
-          for (var x = 0; x < framePix.shape[0]; x++) {
-            for (var y = 0; y < framePix.shape[1]; y++) {
-              imports.env.perform(x, y);
-            }
-          }
-        }
-
-        const inBrowser = (options.inBrowser) ? 1 : 0;
-        const test = (process.env.TEST) ? 1 : 0;
-
-        if (options.useWasm) {
-          if (options.inBrowser) {
-
-            fetch('../../../dist/manipulation.wasm').then(response =>
-              response.arrayBuffer()
-            ).then(bytes =>
-              WebAssembly.instantiate(bytes, imports)
-            ).then(results => {
-              results.instance.exports.manipulatePixel(framePix.shape[0], framePix.shape[1], inBrowser, test);
-              
-              wasmSuccess = true;
-              resolvedFrames++;
-              generateOutput();
-            }).catch(err => {
-              console.log(err);
-              console.log('WebAssembly acceleration errored; falling back to JavaScript in PixelManipulation');
-              perPixelManipulation();
-              
-              wasmSuccess = false;
-              resolvedFrames++;
-              generateOutput();
-            });
-          }
-          else {
-            try{
-              const wasmPath = path.join(__dirname, '../../../', 'dist', 'manipulation.wasm');
-              const buf = fs.readFileSync(wasmPath);
-              WebAssembly.instantiate(buf, imports).then(results => {
+  
+          const inBrowser = (options.inBrowser) ? 1 : 0;
+          const test = (process.env.TEST) ? 1 : 0;
+  
+          if (options.useWasm) {
+            if (options.inBrowser) {
+  
+              fetch('../../../dist/manipulation.wasm').then(response =>
+                response.arrayBuffer()
+              ).then(bytes =>
+                WebAssembly.instantiate(bytes, imports)
+              ).then(results => {
                 results.instance.exports.manipulatePixel(framePix.shape[0], framePix.shape[1], inBrowser, test);
                 
                 wasmSuccess = true;
                 resolvedFrames++;
-                generateOutput();
+                extraManipulation();
+              }).catch(err => {
+                console.log(err);
+                console.log('WebAssembly acceleration errored; falling back to JavaScript in PixelManipulation');
+                perPixelManipulation();
+                
+                wasmSuccess = false;
+                resolvedFrames++;
+                extraManipulation();
               });
             }
-            catch(err){
-              console.log(err);
-              console.log('WebAssembly acceleration errored; falling back to JavaScript in PixelManipulation');
-              perPixelManipulation();
-              
-              wasmSuccess = false;
-              resolvedFrames++;
-              generateOutput();
+            else {
+              try{
+                const wasmPath = path.join(__dirname, '../../../', 'dist', 'manipulation.wasm');
+                const buf = fs.readFileSync(wasmPath);
+                WebAssembly.instantiate(buf, imports).then(results => {
+                  results.instance.exports.manipulatePixel(framePix.shape[0], framePix.shape[1], inBrowser, test);
+                  
+                  wasmSuccess = true;
+                  resolvedFrames++;
+                  extraManipulation();
+                });
+              }
+              catch(err){
+                console.log(err);
+                console.log('WebAssembly acceleration errored; falling back to JavaScript in PixelManipulation');
+                perPixelManipulation();
+                
+                wasmSuccess = false;
+                resolvedFrames++;
+                extraManipulation();
+              }
             }
+          }
+          else {
+            perPixelManipulation();
+            
+            wasmSuccess = false;
+            resolvedFrames++;
+            extraManipulation();
           }
         }
         else {
-          perPixelManipulation();
-          
-          wasmSuccess = false;
           resolvedFrames++;
-          generateOutput();
+          extraManipulation();
         }
       }
-      else resolvedFrames++;
 
-      if (options.extraManipulation){
-        frames[f] = options.extraManipulation(framePix, setRenderState, generateOutput) || framePix; // extraManipulation is used to manipulate each pixel individually.
-        perFrameShape = frames[f].shape;
-      }
-      generateOutput();
+      changepixels();
+
     }
   });
 };

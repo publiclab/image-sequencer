@@ -15,11 +15,8 @@ module.exports = function Rotate(options, UI) {
 
     const step = this;
 
-    function changePixel(r, g, b, a) {
-      return [r, g, b, a];
-    }
-
-    function extraManipulation(pixels) {
+    function extraManipulation(pixels, setRenderState, generateOutput, frames, f) {
+      setRenderState(false);
       const rotate_value = (options.rotate) % 360;
       radians = (Math.PI) * rotate_value / 180,
       width = pixels.shape[0],
@@ -54,6 +51,10 @@ module.exports = function Rotate(options, UI) {
       );
 
       pixels = require('./Rotate')(pixels, finalPixels, rotate_value, width, height, cos, sin);
+
+      frames[f] = pixels;
+      setRenderState(true);
+      generateOutput();
       return pixels;
     }
       
@@ -65,7 +66,6 @@ module.exports = function Rotate(options, UI) {
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       ui: options.step.ui,
-      changePixel: changePixel,
       extraManipulation: extraManipulation,
       format: input.format,
       image: options.image,

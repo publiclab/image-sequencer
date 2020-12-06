@@ -1,5 +1,5 @@
 var urlHash = require('./urlHash.js');
-   insertPreview = require('./insertPreview.js');
+insertPreview = require('./insertPreview.js');
 function DefaultHtmlSequencerUi(_sequencer, options) {
 
   options = options || {};
@@ -35,9 +35,9 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
   function removeStepUi() {
     var index = $(removeStepSel).index(this) + 1;
     // If last step is removed.
-    if(sequencer.steps.length==index+1){
-      console.log("inside")
-      insertPreview.updatePreviews(sequencer.steps[index-1].output.src, document.querySelector('#addStep'));
+    if(sequencer.steps.length == index + 1){
+      console.log('inside');
+      insertPreview.updatePreviews(sequencer.steps[index - 1].output.src, document.querySelector('#addStep'));
     }
     sequencer.removeSteps(index).run({ index: index - 1 });
     // remove from URL hash too

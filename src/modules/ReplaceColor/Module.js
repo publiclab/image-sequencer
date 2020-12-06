@@ -13,8 +13,11 @@ module.exports = function ReplaceColor(options, UI) {
       return [r, g, b, a];
     }
 
-    function extraManipulation(pixels) {
+    function extraManipulation(pixels, setRenderState, generateOutput) {
+      setRenderState(false);
       pixels = require('./ReplaceColor')(pixels, options);
+      setRenderState(true);
+      generateOutput();
       return pixels;
     }
 

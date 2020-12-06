@@ -16,7 +16,8 @@ module.exports = function Gradient(options, UI) {
       step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
     }
 
-    function extraManipulation(pixels) {
+    function extraManipulation(pixels, setRenderState, generateOutput) {
+      setRenderState(false);
       const [w, h] = pixels.shape;
       if (options.gradientType === 'linear') {
         for (var i = 0; i < w; i++) {
@@ -38,7 +39,8 @@ module.exports = function Gradient(options, UI) {
           }
         }
       }
-
+      setRenderState(true);
+      generateOutput();
       return pixels;
     }
 

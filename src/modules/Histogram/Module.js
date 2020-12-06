@@ -24,7 +24,8 @@ module.exports = function Channel(options, UI) {
       return [r, g, b, a];
     }
 
-    function extraManipulation(pixels) {
+    function extraManipulation(pixels, setRenderState, generateOutput) {
+      setRenderState(false);
       // if (!options.inBrowser)
       //     require('fs').writeFileSync('./output/histo.txt', hist.reduce((tot, cur, idx) => `${tot}\n${idx} : ${cur}`, ``));
       var newarray = new Uint8Array(4 * 256 * 256);
@@ -59,7 +60,8 @@ module.exports = function Channel(options, UI) {
 
         }
       }
-
+      setRenderState(true);
+      generateOutput();
       return pixels;
     }
 

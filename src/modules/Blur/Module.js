@@ -15,8 +15,11 @@ module.exports = function Blur(options, UI) {
 
     var step = this;
 
-    function extraManipulation(pixels) {
+    function extraManipulation(pixels, setRenderState, generateOutput) {
+      setRenderState(false);
       pixels = require('./Blur')(pixels, options.blur);
+      setRenderState(true);
+      generateOutput();
       return pixels;
     }
 

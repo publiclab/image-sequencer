@@ -15,12 +15,12 @@
         "x": {
             "type": "integer",
             "desc": "X-cord of the top left corner of the image on the canvas",
-            "default": 500
+            "default": 200
         },
         "y": {
             "type": "float",
             "desc": "Y-cord of the top left corner of the image on the canvas",
-            "default": 500
+            "default": 200
         }
     },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#canvas-resize-module"

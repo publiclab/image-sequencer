@@ -18,7 +18,9 @@ module.exports = function canvasResize(options, UI) {
 
     var step = this;
 
-    function extraManipulation(pixels) {
+    function extraManipulation(pixels, setRenderState, generateOutput, frames, f) {
+      setRenderState(false);
+
       let [w, h] = pixels.shape;
       let newPixels = require('ndarray')(new Uint8Array(4 * (w + Math.abs(options.X_value)) * (h + Math.abs(options.Y_value))).fill(0), [(w + Math.abs(options.X_value)), (h + Math.abs(options.Y_value)), 4]);
       let iMax = w,
@@ -118,6 +120,9 @@ module.exports = function canvasResize(options, UI) {
           }
         }
       }
+      frames[f] = newPixels;
+      setRenderState(true);
+      generateOutput();
       return newPixels;
     }
 

@@ -107,7 +107,7 @@
     "looks-same": "^7.0.0",
     "matchdep": "^2.0.0",
     "tap-spec": "^5.0.0",
-    "tape": "^4.9.2",
+    "tape": "^5.1.0",
     "tape-run": "^8.0.0",
     "uglify-es": "^3.3.7"
   },

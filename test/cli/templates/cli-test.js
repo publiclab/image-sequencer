@@ -26,8 +26,6 @@ module.exports = (args) => {
 
   const parseOptions = ['node', 'test', ...args];
 
-  console.log(parseOptions);
-
   program.parse(parseOptions);
 
   return program;

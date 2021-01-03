@@ -2,7 +2,7 @@ require('../../src/ImageSequencer');
 sequencer = ImageSequencer({ ui: true });
 const saveSequence = require('../../src/cli/saveSequence.js');
 const test = require('tape');
-const cliTest = require('./templates/cli-test');
+const { cliTest } = require('./templates/cli-test');
 
 test('testing save sequence function', function (t) {
   try {

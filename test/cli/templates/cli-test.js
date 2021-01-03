@@ -1,4 +1,3 @@
-const { parseOptions } = require('commander');
 const { Command } = require('commander');
 
 /**
@@ -7,7 +6,7 @@ const { Command } = require('commander');
  * @param {string[]} args Array of arguements to by parsed via commander
  */
 
-module.exports = (args) => {
+exports.cliTest = (args) => {
   let program = new Command();
   program
     .option('-i, --image [PATH/URL]', 'Input image URL')

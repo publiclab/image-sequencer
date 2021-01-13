@@ -8,5 +8,5 @@ runs:
       export DISPLAY=':99.0' # for tape-run 
       Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 & # for tape-run
     shell: bash
-  - run: npm run setup
+  - run: npm install
     shell: bash

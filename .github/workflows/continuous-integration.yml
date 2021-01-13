@@ -1,7 +1,7 @@
 name: continuous-integration
 on: [pull_request]
 jobs:
-  test-runner:
+  setup-environment:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v2
@@ -16,20 +16,60 @@ jobs:
        export DISPLAY=':99.0' # for tape-run 
        Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 & # for tape-run 
     - run: npm run setup
+
+  base-tests:
+    runs-on: ubuntu-18.04
+    needs: setup-environment
+    steps:
     - name: "Base istanbul/tape node tests"
       run: npm test
+
+  benchmark-tests:
+    runs-on: ubuntu-18.04
+    needs: setup-environment
+    steps:
     - name: "Benchmark tests"
       run: npm run benchmark
+
+  gif-tests:
+    runs-on: ubuntu-18.04
+    needs: setup-environment
+    steps:
     - name: "Gif tests"
       run: npm run gif-test
+
+  browserify-core-tests:
+    runs-on: ubuntu-18.04
+    needs: setup-environment
+    steps:
     - name: "Browserify core tests and run"
       run: grunt tests && npm run core-tests
+
+  jsmine-ui-tests:
+    runs-on: ubuntu-18.04
+    needs: setup-environment
+    steps:
     - name: "Jasmine UI tests (mocked browser env)"
       run: npm run test-ui
+
+  jest-ui-tests:
+    runs-on: ubuntu-18.04
+    needs: setup-environment
+    steps:
     - name: "jest-puppeteer UI tests (full browser env)"
       run: npm run test-ui-2    
+
+  cli-tests:
+    runs-on: ubuntu-18.04
+    needs: setup-environment
+    steps:
     - name: "CLI tests"
       run: npm run test-cli
+
+  grunt-build-test:
+    runs-on: ubuntu-18.04
+    needs: setup-environment
+    steps:
     - name: "Grunt build test of dev environment"
       run: grunt build
 

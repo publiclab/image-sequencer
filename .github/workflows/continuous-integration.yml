@@ -10,7 +10,19 @@ jobs:
       with:
         node-version: '12'
         check-latest: true
-    - uses: ./.github/workflows/setup-environment
+    - name: Cache node modules
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-node-modules
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+    - name: Install Dependencies
+      run: npm install
     - name: "Base istanbul/tape node tests"
       run: npm test
 
@@ -23,7 +35,19 @@ jobs:
       with:
         node-version: '12'
         check-latest: true
-    - uses: ./.github/workflows/setup-environment
+    - name: Cache node modules
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-node-modules
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+    - name: Install Dependencies
+      run: npm install
     - name: "Benchmark tests"
       run: npm run benchmark
 
@@ -36,7 +60,19 @@ jobs:
       with:
         node-version: '12'
         check-latest: true
-    - uses: ./.github/workflows/setup-environment
+    - name: Cache node modules
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-node-modules
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+    - name: Install Dependencies
+      run: npm install
     - name: "Gif tests"
       run: npm run gif-test
 
@@ -49,7 +85,19 @@ jobs:
       with:
         node-version: '12'
         check-latest: true
-    - uses: ./.github/workflows/setup-environment
+    - name: Cache node modules
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-node-modules
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+    - name: Install Dependencies
+      run: npm install
     - name: "Browserify core tests and run"
       run: grunt tests && npm run core-tests
 
@@ -62,7 +110,19 @@ jobs:
       with:
         node-version: '12'
         check-latest: true
-    - uses: ./.github/workflows/setup-environment
+    - name: Cache node modules
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-node-modules
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+    - name: Install Dependencies
+      run: npm install
     - name: "Jasmine UI tests (mocked browser env)"
       run: npm run test-ui
 
@@ -75,7 +135,19 @@ jobs:
       with:
         node-version: '12'
         check-latest: true
-    - uses: ./.github/workflows/setup-environment
+    - name: Cache node modules
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-node-modules
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+    - name: Install Dependencies
+      run: npm install
     - name: "jest-puppeteer UI tests (full browser env)"
       run: npm run test-ui-2    
 
@@ -88,7 +160,19 @@ jobs:
       with:
         node-version: '12'
         check-latest: true
-    - uses: ./.github/workflows/setup-environment
+    - name: Cache node modules
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-node-modules
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+    - name: Install Dependencies
+      run: npm install
     - name: "CLI tests"
       run: npm run test-cli
 
@@ -101,7 +185,19 @@ jobs:
       with:
         node-version: '12'
         check-latest: true
-    - uses: ./.github/workflows/setup-environment
+    - name: Cache node modules
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-node-modules
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+    - name: Install Dependencies
+      run: npm install
     - name: "Grunt build test of dev environment"
       run: grunt build
 

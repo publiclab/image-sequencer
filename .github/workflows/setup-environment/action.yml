@@ -1,7 +1,0 @@
-name: "Setup Test Environment"
-description: "Install Prerequisites and dependencies for running Image Sequencer Tests"
-runs:
-  using: "composite"
-  steps:
-  - run: npm install
-    shell: bash

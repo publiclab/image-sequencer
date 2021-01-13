@@ -17,12 +17,28 @@ jobs:
   benchmark-tests:
     runs-on: ubuntu-18.04
     steps:
+    - uses: actions/checkout@v2
+    - name: Setup node
+        uses: actions/setup-node@v2
+      with:
+        node-version: '12'
+        check-latest: true
+    - uses: ./.github/workflows/setup-environment
+    steps:
     - uses: ./.github/workflows/setup-environment
     - name: "Benchmark tests"
       run: npm run benchmark
 
   gif-tests:
     runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup node
+        uses: actions/setup-node@v2
+      with:
+        node-version: '12'
+        check-latest: true
+    - uses: ./.github/workflows/setup-environment
     steps:
     - uses: ./.github/workflows/setup-environment
     - name: "Gif tests"
@@ -31,12 +47,28 @@ jobs:
   browserify-core-tests:
     runs-on: ubuntu-18.04
     steps:
+    - uses: actions/checkout@v2
+    - name: Setup node
+        uses: actions/setup-node@v2
+      with:
+        node-version: '12'
+        check-latest: true
+    - uses: ./.github/workflows/setup-environment
+    steps:
     - uses: ./.github/workflows/setup-environment
     - name: "Browserify core tests and run"
       run: grunt tests && npm run core-tests
 
   jsmine-ui-tests:
     runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup node
+        uses: actions/setup-node@v2
+      with:
+        node-version: '12'
+        check-latest: true
+    - uses: ./.github/workflows/setup-environment
     steps:
     - uses: ./.github/workflows/setup-environment
     - name: "Jasmine UI tests (mocked browser env)"
@@ -45,6 +77,14 @@ jobs:
   jest-ui-tests:
     runs-on: ubuntu-18.04
     steps:
+    - uses: actions/checkout@v2
+    - name: Setup node
+        uses: actions/setup-node@v2
+      with:
+        node-version: '12'
+        check-latest: true
+    - uses: ./.github/workflows/setup-environment
+    steps:
     - uses: ./.github/workflows/setup-environment
     - name: "jest-puppeteer UI tests (full browser env)"
       run: npm run test-ui-2    
@@ -52,12 +92,28 @@ jobs:
   cli-tests:
     runs-on: ubuntu-18.04
     steps:
+    - uses: actions/checkout@v2
+    - name: Setup node
+        uses: actions/setup-node@v2
+      with:
+        node-version: '12'
+        check-latest: true
+    - uses: ./.github/workflows/setup-environment
+    steps:
     - uses: ./.github/workflows/setup-environment
     - name: "CLI tests"
       run: npm run test-cli
 
   grunt-build-test:
     runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup node
+        uses: actions/setup-node@v2
+      with:
+        node-version: '12'
+        check-latest: true
+    - uses: ./.github/workflows/setup-environment
     steps:
     - uses: ./.github/workflows/setup-environment
     - name: "Grunt build test of dev environment"

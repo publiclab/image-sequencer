@@ -1,75 +1,65 @@
 name: continuous-integration
 on: [pull_request]
 jobs:
-  setup-environment:
+  base-tests:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v2
     - name: Setup node
-      uses: actions/setup-node@v2
+        uses: actions/setup-node@v2
       with:
         node-version: '12'
         check-latest: true
-    - name: Install prerequisites
-      run: | 
-       sudo apt-get install -y build-essential libxi-dev libglu1-mesa-dev libglew-dev pkg-config libglu1-mesa-dev freeglut3-dev mesa-common-dev libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev  xserver-xorg-dev libxext-dev g++-4.8 xvfb
-       export DISPLAY=':99.0' # for tape-run 
-       Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 & # for tape-run 
-    - run: npm run setup
-
-  base-tests:
-    runs-on: ubuntu-18.04
-    needs: setup-environment
-    steps:
+    - uses: ./.github/workflows/setup-environment
     - name: "Base istanbul/tape node tests"
       run: npm test
 
   benchmark-tests:
     runs-on: ubuntu-18.04
-    needs: setup-environment
     steps:
+    - uses: ./.github/workflows/setup-environment
     - name: "Benchmark tests"
       run: npm run benchmark
 
   gif-tests:
     runs-on: ubuntu-18.04
-    needs: setup-environment
     steps:
+    - uses: ./.github/workflows/setup-environment
     - name: "Gif tests"
       run: npm run gif-test
 
   browserify-core-tests:
     runs-on: ubuntu-18.04
-    needs: setup-environment
     steps:
+    - uses: ./.github/workflows/setup-environment
     - name: "Browserify core tests and run"
       run: grunt tests && npm run core-tests
 
   jsmine-ui-tests:
     runs-on: ubuntu-18.04
-    needs: setup-environment
     steps:
+    - uses: ./.github/workflows/setup-environment
     - name: "Jasmine UI tests (mocked browser env)"
       run: npm run test-ui
 
   jest-ui-tests:
     runs-on: ubuntu-18.04
-    needs: setup-environment
     steps:
+    - uses: ./.github/workflows/setup-environment
     - name: "jest-puppeteer UI tests (full browser env)"
       run: npm run test-ui-2    
 
   cli-tests:
     runs-on: ubuntu-18.04
-    needs: setup-environment
     steps:
+    - uses: ./.github/workflows/setup-environment
     - name: "CLI tests"
       run: npm run test-cli
 
   grunt-build-test:
     runs-on: ubuntu-18.04
-    needs: setup-environment
     steps:
+    - uses: ./.github/workflows/setup-environment
     - name: "Grunt build test of dev environment"
       run: grunt build
 

@@ -136,7 +136,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
                 '"max="' +
                 inputDesc.max +
                 '"step="' +
-                (inputDesc.step ? inputDesc.step : 1) + '">' + '<span>' + paramVal + '</span>';
+                inputDesc.step + '">' + '<span>' + paramVal + '</span>';
 
             }
             else html += '">';

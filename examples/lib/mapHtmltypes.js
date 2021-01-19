@@ -7,6 +7,7 @@ function mapHtmlTypes(inputInfo){
   switch(inputInfo.type.toLowerCase()){
   case 'integer':
     htmlType = inputInfo.min != undefined ? 'range' : 'number';
+    if (htmlType === 'range') inputInfo.step = inputInfo.step || 1; // default range step size for integer
     break;
   case 'string':
     htmlType = 'text';
@@ -19,6 +20,7 @@ function mapHtmlTypes(inputInfo){
     break;
   case 'float':
     htmlType = inputInfo.min != undefined ? 'range' : 'text';
+    if (htmlType === 'range') inputInfo.step = inputInfo.step || 0.1; // default range step size for float
     break;
   default:
     htmlType = 'text';

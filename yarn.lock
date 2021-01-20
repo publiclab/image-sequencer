@@ -1438,10 +1438,10 @@ bluebird@*:
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.3.tgz#7d01c6f9616c9a51ab0f8c549a79dfe6ec33efa7"
   integrity sha512-/qKPUQlaW1OyR51WeCPBvRnAlnZFUJkCSG5HzGnuIqhgyJtF+T94lFnn33eiazjRm2LAHVy2guNnaq48X9SJuw==
 
-blueimp-canvas-to-blob@^3.16.0:
-  version "3.17.0"
-  resolved "https://registry.yarnpkg.com/blueimp-canvas-to-blob/-/blueimp-canvas-to-blob-3.17.0.tgz#d796e72aa1fd37f9471e0396e64d323956564a23"
-  integrity sha512-LcuVZZtKtE4yUrLb0IQA7ndMm19gooDTrzvjjkvmQ1MhkFlSzTw+8Ftp+/ckfGeP2UDQvDsPyy8mIT69itAqbg==
+blueimp-canvas-to-blob@^3.28.0:
+  version "3.28.0"
+  resolved "https://registry.yarnpkg.com/blueimp-canvas-to-blob/-/blueimp-canvas-to-blob-3.28.0.tgz#c8ab4dc6bb08774a7f273798cdf94b0776adf6c8"
+  integrity sha512-5q+YHzgGsuHQ01iouGgJaPJXod2AzTxJXmVv90PpGrRxU7G7IqgPqWXz+PBmt3520jKKi6irWbNV87DicEa7wg==
 
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   version "4.11.9"
@@ -2446,12 +2446,12 @@ component-inherit@0.0.3:
   integrity sha1-ZF/ErfWLcrZJ1crmUTVhnbJv8UM=
 
 compressorjs@^1.0.5:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/compressorjs/-/compressorjs-1.0.6.tgz#75c55e2c3d797afeaa3084bd0cbf03e8374e4b6d"
-  integrity sha512-HgaDx4AGCjJOyOt08JsGO9VLJIHwy8guZDU1OG2jtuz77MG8PQr+reKt5J6aYZCajVIKXsFXJreZeEmk6lXFmA==
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/compressorjs/-/compressorjs-1.0.7.tgz#67cd0b3b9ac97540515b22b334dc32eb92b730b1"
+  integrity sha512-ca+H8CGrn0LG103//VQmXBbNdvzvHiW26LGdWncp4RmLNbNQjaaFWIUxMN9++hbhGobLtofkHoxzzXGisNyD3w==
   dependencies:
-    blueimp-canvas-to-blob "^3.16.0"
-    is-blob "^2.0.1"
+    blueimp-canvas-to-blob "^3.28.0"
+    is-blob "^2.1.0"
 
 concat-map@0.0.1:
   version "0.0.1"
@@ -5594,10 +5594,10 @@ is-binary-path@^1.0.0:
   dependencies:
     binary-extensions "^1.0.0"
 
-is-blob@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/is-blob/-/is-blob-2.0.1.tgz#7fde57ef8782a154bc0f3bdcaa0ffdccb6c33767"
-  integrity sha512-SmqVJYMnAeqrKLcwq6TXu1rpAg3yipVlMZIqR5u510rxoOzJGW9GQY6g+WtWkcc44pjbWAuxzZDCkbgf5e6r0Q==
+is-blob@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/is-blob/-/is-blob-2.1.0.tgz#e36cd82c90653f1e1b930f11baf9c64216a05385"
+  integrity sha512-SZ/fTft5eUhQM6oF/ZaASFDEdbFVe89Imltn9uZr03wdKMcWNVYSMjQPFtg05QuNkt5l5c135ElvXEQG0rk4tw==
 
 is-buffer@^1.0.2, is-buffer@^1.1.0, is-buffer@^1.1.5:
   version "1.1.6"

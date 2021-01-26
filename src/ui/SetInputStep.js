@@ -66,10 +66,17 @@ function setInputStepInit() {
         options.onTakePhoto(canvas.toDataURL());
       });
 
+      document.getElementById('close').addEventListener('click', function () {
+        stopCapture();
+      });
+
       function stopStream(stream) {
         stream.getVideoTracks().forEach(function (track) {
           track.stop();
         });
+      }
+
+      function stopCapture() {
         document.getElementById('video').style.display = 'none';
         document.getElementById('capture').style.display = 'none';
         document.getElementById('close').style.display = 'none';

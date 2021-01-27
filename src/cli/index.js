@@ -1,12 +1,12 @@
-require('./src/ImageSequencer');
+require('../ImageSequencer');
 sequencer = ImageSequencer({ ui: true });
 var fs = require('fs');
 var program = require('commander');
-var utils = require('./src/CliUtils');
+var utils = require('../CliUtils');
 
-var saveSequence = require('./src/cli/saveSequence.js');
-var installModule = require('./src/cli/installModule.js');
-var sequencerSteps = require('./src/cli/sequencerSteps.js');
+var saveSequence = require('./saveSequence.js');
+var installModule = require('./installModule.js');
+var sequencerSteps = require('./sequencerSteps.js');
 
 function exit(message) {
   console.error(message);

@@ -1,5 +1,5 @@
 const test = require('tape');
-const cli = require('../../cli');
+const cli = require('../../src/cli');
 
 test('testing save sequence function', function (t) {
   try {

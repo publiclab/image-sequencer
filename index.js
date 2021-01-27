@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-var cli = require('./cli');
+var cli = require('./src/cli');
 
 cli(process.argv);

@@ -12,8 +12,7 @@ function exit(message) {
   console.error(message);
   process.exit(1);
 }
-
-module.exports = function (args) {
+function cli(args) {
   program
     .version('0.1.0')
     .option('-i, --image [PATH/URL]', 'Input image URL')
@@ -87,4 +86,6 @@ module.exports = function (args) {
 
   }
 
-};
+}
+
+module.exports = cli;

@@ -13,26 +13,7 @@ function exit(message) {
   process.exit(1);
 }
 
-function parseSteps(program) {
-  // Parse step into an array to allow for multiple steps.
-  if (!program.step) exit('No steps passed');
-  program.step = program.step.split(' ');
-
-  // User must input an image.
-  if (!program.image) exit('Can\'t read file.');
-
-  // User must input an image.
-  fs.access(program.image, function (err) {
-    if (err) exit('Can\'t read file.');
-  });
-
-  // User must input a step. If steps exist, check that every step is a valid step.
-  if (!program.step || !utils.validateSteps(program.step, sequencer))
-    exit('Please ensure all steps are valid.');
-
-  // If there's no user defined output directory, select a default directory.
-  program.output = program.output || './output/';
-
+function executeSteps(program) {
   // Set sequencer to log module outputs, if any.
   sequencer.setUI({
     onComplete: function (step) {
@@ -66,6 +47,29 @@ function parseSteps(program) {
 
     sequencerSteps(program, sequencer, outputFilename);
   });
+}
+
+function parseSteps(program) {
+  // Parse step into an array to allow for multiple steps.
+  if (!program.step) exit('No steps passed');
+  program.step = program.step.split(' ');
+
+  // User must input an image.
+  if (!program.image) exit('Can\'t read file.');
+
+  // User must input an image.
+  fs.access(program.image, function (err) {
+    if (err) exit('Can\'t read file.');
+  });
+
+  // User must input a step. If steps exist, check that every step is a valid step.
+  if (!program.step || !utils.validateSteps(program.step, sequencer))
+    exit('Please ensure all steps are valid.');
+
+  // If there's no user defined output directory, select a default directory.
+  program.output = program.output || './output/';
+
+  executeSteps(program);
 }
 
 function cli(args) {

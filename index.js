@@ -33,6 +33,12 @@ else if (program.installModule) installModule(program, sequencer);
 else {
   // Parse step into an array to allow for multiple steps.
   if (!program.step) exit('No steps passed');
+
+  program.steps = sequencer.stringToJSON(program.step);
+
+  var stepNames = [];
+  program.step.split(',').forEach(v => stepNames.push(v.split('{')[0]));
+  
   program.step = program.step.split(' ');
 
   // User must input an image.
@@ -44,7 +50,7 @@ else {
   });
 
   // User must input a step. If steps exist, check that every step is a valid step.
-  if (!program.step || !(utils.validateSteps(program.step, sequencer)))
+  if (!program.steps || !(utils.validateSteps(program.steps, sequencer)))
     exit('Please ensure all steps are valid.');
 
   // If there's no user defined output directory, select a default directory.
@@ -57,7 +63,7 @@ else {
       step.info = sequencer.modulesInfo(step.name);
 
       for (var output in step.info.outputs) {
-        console.log('[' + program.step + ']: ' + output + ' = ' + step[output]);
+        console.log('[' + stepNames + ']: ' + output + ' = ' + step[output]);
       }
     },
     notify: function(msg) {

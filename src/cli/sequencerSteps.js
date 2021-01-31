@@ -9,13 +9,13 @@ module.exports = function (program, sequencer, outputFilename) {
     if (program.basic)
       console.log('Basic mode is enabled, outputting only final image');
 
-    // Iterate through the steps and retrieve their inputs.
-    program.step.forEach(function(step) {
-      var options = Object.assign({}, sequencer.modulesInfo(step).inputs);
+
+    program.steps.forEach(function(step) {
+      var options = Object.assign({}, sequencer.modulesInfo(step.name).inputs);
 
       // If inputs exists, print to console.
       if (Object.keys(options).length) {
-        console.log('[' + step + ']: Inputs');
+        console.log('[' + step.name + ']: Inputs');
       }
 
       // If inputs exists, print them out with descriptions.
@@ -23,30 +23,17 @@ module.exports = function (program, sequencer, outputFilename) {
         // The array below creates a variable number of spaces. This is done with (length + 1).
         // The extra 4 that makes it (length + 5) is to account for the []: characters
         console.log(
-          new Array(step.length + 5).join(' ') +
+          new Array(step.name.length + 5).join(' ') +
           input +
           ': ' +
           options[input].desc
         );
       });
 
-      if (program.config) {
-        try {
-          var config = JSON.parse(program.config);
-          console.log('The parsed options object: ', config);
-        } catch (e) {
-          console.error(
-            '\x1b[31m%s\x1b[0m',
-            'Options(Config) is not a not valid JSON Fallback activate'
-          );
-          program.config = false;
-          console.log(e);
-        }
-      }
-      if (program.config && utils.validateConfig(config, options)) {
+      if (Object.keys(step.options).length > 0) {
         console.log('Now using Options object');
         Object.keys(options).forEach(function(input) {
-          options[input] = config[input];
+          options[input] = step.options[input];
         });
       } else {
         // If inputs exist, iterate through them and prompt for values.
@@ -66,7 +53,7 @@ module.exports = function (program, sequencer, outputFilename) {
         });
       }
       // Add the step and its inputs to the sequencer.
-      sequencer.addSteps(step, options);
+      sequencer.addSteps(step.name, options);
     });
 
     var spinnerObj = { succeed: () => { }, stop: () => { } };

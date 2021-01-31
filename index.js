@@ -22,11 +22,19 @@ program
   .option('-o, --output [PATH]', 'Directory where output will be stored.')
   .option('-b, --basic', 'Basic mode outputs only final image')
   .option('-c, --config [Object]', 'Options for the step')
+  .option('-l, --list', 'To list all the avaliable modules.')
   .option('--save-sequence [string]', 'Name space separated with Stringified sequence')
   .option('--install-module [string]', 'Module name space seaprated npm package name')
   .parse(process.argv);
 
-if (program.saveSequence) saveSequence(program, sequencer);
+if(program.list) {
+  var infoList = sequencer.modulesInfo();
+  for(var iL in infoList) {
+    console.log('\x1b[36m' + infoList[iL]['name'] + '\x1b[0m : \x1b[33m' + infoList[iL]['description'] + '\x1b[0m');
+  }
+}
+
+else if (program.saveSequence) saveSequence(program, sequencer);
 
 else if (program.installModule) installModule(program, sequencer);
 

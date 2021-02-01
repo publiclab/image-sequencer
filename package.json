@@ -14,7 +14,7 @@
     "test-ui-2": "node ./node_modules/.bin/jest",
     "test-cli": "node test/cli/*.js | tap-spec",
     "setup": "npm i && npm i -g grunt grunt-cli && npm rebuild --build-from-source && grunt build",
-    "start": "grunt serve" 
+    "start": "grunt serve"
   },
   "lint-staged": {
     "*.js": [
@@ -106,6 +106,7 @@
     "lint-staged": "^10.0.3",
     "looks-same": "^7.0.0",
     "matchdep": "^2.0.0",
+    "resemblejs": "^3.2.5",
     "tap-spec": "^5.0.0",
     "tape": "^4.9.2",
     "tape-run": "^8.0.0",

@@ -51,20 +51,47 @@ function setInputStepInit() {
         video.onloadedmetadata = function(e) {
           video.play();
         };
+
+        document.getElementById('capture').addEventListener('click', function(stream){
+          context.drawImage(video, 0, 0, 400, 300);
+          options.onTakePhoto(canvas.toDataURL());
+        });
+
         document.getElementById('close').addEventListener('click', function () {
           stopStream(stream);
         });
       }
       function handleError(error) {
         console.log('navigator.getUserMedia error: ', error);
+
+        // when user dismissed the camera access (includes closing of prompt which requests for camera access)
+        if(error.message == 'Permission denied' || error.message == 'NotAllowedError' || error.message == 'PermissionDismissedError'){
+          document.getElementById('capture').addEventListener('click', function(e) {
+            alert('Enable camera access in order to take picture');
+          });
+        }
+        
+        // when user don't have webcam to use.
+        if(error.message == 'NotFoundError' || error.message == 'DevicesNotFoundError'){
+          alert('You do not have appropriate devices to use this Functionality');
+        }
+
+        // when webcam is already used by some other application
+        if(error.message == 'NotReadableError' || error.message == 'TrackStartError' || error.message == 'Concurrent mic process limit'){
+          alert('Your webcam is already in use by some other application');
+        }
+
+        // when some of the requested constraints can't be satisfied like high frame rate or high resolution
+        if(error.message == 'OverconstrainedError' || error.message == 'ConstraintNotSatisfiedError'){
+          console.log('Requested Constraints can not be satisfied ', error);
+        }
       }
       navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError);
-  
-
-      document.getElementById('capture').addEventListener('click', function(stream){
-        context.drawImage(video, 0, 0, 400, 300);
-        options.onTakePhoto(canvas.toDataURL());
+      
+      document.getElementById('close').addEventListener('click', function() {
+        video.style.display = 'none';
       });
+
 
       function stopStream(stream) {
         stream.getVideoTracks().forEach(function (track) {

@@ -118,8 +118,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
               paramVal + '">' + '<span class="input-group-addon"><i></i></span>' +
               '</div>';
           }
-          else if(inputDesc.id === 'coordinates-input'){
-            html = '<div><button name="' + paramName + '" id="' + inputDesc.id + '" >\
+          else if(inputDesc.type === 'button'){
+            html = '<div><button name="' + paramName + '" type="' + inputDesc.type + '" >\
             <i class="fa fa-crosshairs"></i></button>\
             <span>click to select coordinates</span>\
             </div>';
@@ -409,7 +409,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     let customXCoord = '20'; //default x coordinate
     let customYCoord = '20'; //default y coordinate
 
-    const customButton = $('#coordinates-input');
+    const customButton = $('button[name="Custom-Coordinates"]');
       img.click(function(e) {
           customXCoord = e.offsetX;
           customYCoord = e.offsetY;

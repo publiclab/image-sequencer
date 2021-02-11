@@ -41,7 +41,7 @@
     "bootstrap": "^3.4.1",
     "bootstrap-colorpicker": "^2.5.3",
     "buffer": "~6.0.2",
-    "commander": "^6.2.0",
+    "commander": "^7.0.0",
     "compressorjs": "^1.0.5",
     "data-uri-to-buffer": "^3.0.0",
     "downloadjs": "^1.4.7",

@@ -1,7 +1,7 @@
 require('../ImageSequencer');
 sequencer = ImageSequencer({ ui: true });
 var fs = require('fs');
-var program = require('commander');
+var { Command } = require('commander');
 var utils = require('../CliUtils');
 
 var saveSequence = require('./saveSequence.js');
@@ -73,6 +73,9 @@ function parseSteps(program) {
 }
 
 function cli(args) {
+
+  let program = new Command();
+
   program
     .version('0.1.0')
     .option('-i, --image [PATH/URL]', 'Input image URL')
@@ -90,9 +93,10 @@ function cli(args) {
     )
     .parse(args);
 
-  if (program.saveSequence) saveSequence(program, sequencer);
-  else if (program.installModule) installModule(program, sequencer);
-  else parseSteps(program);
+  const options = program.opts();
+  if (options.saveSequence) saveSequence(options, sequencer);
+  else if (options.installModule) installModule(options, sequencer);
+  else parseSteps(options);
 }
 
 module.exports = cli;

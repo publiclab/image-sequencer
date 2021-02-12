@@ -1,6 +1,6 @@
 var setupCache = function() {
   let newWorker; // When sw.js is changed, this is the new service worker generated.
-
+  
   // Toggle a CSS class to display a popup prompting the user to fetch a new version.
   function showUpdateModal() {
     $('#update-prompt-modal').addClass('show');

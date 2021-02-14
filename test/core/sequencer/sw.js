@@ -1,28 +1,9 @@
-var sw = require('../../examples/sw');
+var setUpCache = new require('../../../examples/lib/cache')();
 var test = require('tape');
 
-function SWInstallation(registration){
-    return new Promise((resolve, reject) => {
-      let newWorker = registration.installing;
-  
-      if (!newWorker) {
-        return reject(new Error('error in installing service worker'));
-      }
-  
-      function checkState(e){
-        if (e.target.state === 'activated') {
-          newWorker.removeEventList('statechange',checkState);
-          return resolve();
-        }
-  
-        if (e.target.state === 'redundant') {
-          newWorker.removeEventListener('statechange',checkState);
-  
-          return reject(new Error('installing new service worker now became redundant'));
-        }
-      };
-  
-      newWorker.addEventListener('statechange',checkState);
+function SWInstallation(){
+    return new Promise(() => {
+      return setupCache();
     });
 }
 
@@ -38,27 +19,11 @@ function UnRegisterSW(){
         });
     }
     
-    function clearCaches() {
-        return caches.keys()
-        .then(function(cache) {
-          return Promise.all(cache.map(function(cacheItem) {
-            return caches.delete(cacheItem);
-          }));
-        });
-    };
-    
     return Promise.all([
         unregister(),
-        clearCaches(),
+        setUpCache.clearCache()
     ]);
 }  
-
-function InstallSw(){
-  return navigator.serviceWorker.register(sw)
-  .then(reg => {
-    return SWInstallation(reg);
-  })
-}
 
 test('Register service worker',function(t) {
 
@@ -67,6 +32,6 @@ test('Register service worker',function(t) {
     })
 
     t.test('install service worker',function(st) {
-      st.equal(InstallSw(),true,'successfully installed new worker')
+      st.equal(SWInstallation(),true,'successfully installed new service worker')
     });
 });

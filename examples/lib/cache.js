@@ -1,3 +1,5 @@
+const { reject } = require("lodash");
+
 var setupCache = function() {
   let newWorker; // When sw.js is changed, this is the new service worker generated.
   
@@ -22,6 +24,11 @@ var setupCache = function() {
         registration.addEventListener('updatefound', () => {
           // When sw.js has been changed, get a reference to the new service worker.
           newWorker = registration.installing;
+
+          if(!newWorker){
+            return reject(new Error('error in installing service worker'));
+          }
+
           newWorker.addEventListener('statechange', () => {
             // Check if service worker state has changed.
             switch(newWorker.state) {
@@ -33,10 +40,14 @@ var setupCache = function() {
                     e.preventDefault();
                     console.log('New Service Worker Installed Successfully');
                     location.reload();
+                    return resolve();
                   })
                 }
                 // No updates available; do nothing.
                 break;
+
+              case 'redundant':
+                return reject(new Error('installing new service worker now became redundant'));
             }
           })
         })
@@ -64,14 +75,19 @@ var setupCache = function() {
     });
   }
 
-  $('#clear-cache').click(function() {
+  const clearCache = () => {
     if ('serviceWorker' in navigator) {
-      caches.keys().then(function(cacheNames) {
-        cacheNames.forEach(function(cacheName) {
-          caches.delete(cacheName);
-        });
+      return caches.keys()
+        .then(function(cache) {
+          return Promise.all(cache.map(function(cacheItem) {
+            return caches.delete(cacheItem);
+        }));
       });
     }
+  }
+
+  $('#clear-cache').click(function() {
+    clearCache();
     location.reload();
   });
 

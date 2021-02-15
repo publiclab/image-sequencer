@@ -121,7 +121,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
               paramVal + '">' + '<span class="input-group-addon"><i></i></span>' +
               '</div>';
           }
-          else { // Non color-picker input types
+          else if(inputDesc.type === 'button'){
+            html = '<div><button name="' + paramName + '" type="' + inputDesc.type + '" >\
+            <i class="fa fa-crosshairs"></i></button>\
+            <span>click to select coordinates</span>\
+            </div>';
+          }
+          else { // Non color-picker input types and other than a button
+
             html =
               '<input class="form-control target" type="' +
               inputDesc.type +
@@ -401,6 +408,19 @@ function DefaultHtmlStepUi(_sequencer, options) {
   function imageHover(step){
 
     var img = $(step.imgElement);
+
+    let customXCoord = '20'; //default x coordinate
+    let customYCoord = '20'; //default y coordinate
+
+    const customButton = $('button[name="Custom-Coordinates"]');
+      img.click(function(e) {
+          customXCoord = e.offsetX;
+          customYCoord = e.offsetY;
+          customButton.click(function() {
+            $('input[name="x"]').val(customXCoord);
+            $('input[name="y"]').val(customYCoord);
+          })
+      });
 
     img.mousemove(function(e) {
       var canvas = document.createElement('canvas');

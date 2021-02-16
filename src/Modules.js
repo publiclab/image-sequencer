@@ -33,6 +33,7 @@ module.exports = {
   'import-image': require('./modules/ImportImage'),
   'mask': require('./modules/Mask'),
   'minify-image': require('./modules/MinifyImage'),
+  'lossless-compress-image': require('./modules/LosslessCompression'),
   // 'invert': require('image-sequencer-invert'),
   'invert': require('./modules/Invert'),
   'ndvi': require('./modules/Ndvi'),

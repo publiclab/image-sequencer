@@ -1,0 +1,6 @@
+{
+  "name": "lossless-compression",
+  "description": "Losslessly Compresses images",
+  "input": {},
+  "docs-link": "https://www.npmjs.com/package/compress-images"
+}

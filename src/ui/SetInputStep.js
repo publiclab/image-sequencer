@@ -52,9 +52,10 @@ function setInputStepInit() {
           video.play();
         };
 
-        document.getElementById('capture').addEventListener('click', function(stream){
+        document.getElementById('capture').addEventListener('click', function(){
           context.drawImage(video, 0, 0, 400, 300);
           options.onTakePhoto(canvas.toDataURL());
+          setTimeout(stopStream(stream),1); // wait for 1 second before closing webcam so that image loads properly
         });
 
         document.getElementById('close').addEventListener('click', function () {

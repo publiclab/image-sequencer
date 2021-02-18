@@ -43,6 +43,7 @@ function LoadImage(ref, name, src, main_callback) {
     else if (ref.options.inBrowser) {
       
       let notifyBox = document.getElementById('notify-box');
+      let closePopUP = document.getElementById('close-popup');
       if(src.indexOf('images/') !== 0  && src.indexOf('./images/') !== 0 && checkForError(src)){
 
         if(notifyBox){
@@ -50,13 +51,17 @@ function LoadImage(ref, name, src, main_callback) {
           notifyBox.classList.add('show');
         }
 
-        document.getElementById('close-popup').addEventListener('click',function(){
-          notifyBox.classList.remove('show');
-          notifyBox.classList.add('hide');
-          if(document.querySelector('button.remove'))
-            document.querySelector('button.remove').click(); // Remove the step due to redundant processing.
-          location.reload();
-        });
+        if(closePopUP){
+          closePopUP.addEventListener('click',function(){
+            if(notifyBox){
+              notifyBox.classList.remove('show');
+              notifyBox.classList.add('hide');
+            }
+            if(document.querySelector('button.remove'))
+              document.querySelector('button.remove').click(); // Remove the step due to redundant processing.
+            location.reload();
+          });
+        }
       }
       else{
         var ext = src.split('.').pop();

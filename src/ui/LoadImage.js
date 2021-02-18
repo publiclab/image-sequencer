@@ -44,8 +44,11 @@ function LoadImage(ref, name, src, main_callback) {
       
       let notifyBox = document.getElementById('notify-box');
       if(src.indexOf('images/') !== 0  && src.indexOf('./images/') !== 0 && checkForError(src)){
-        notifyBox.classList.remove('hide');
-        notifyBox.classList.add('show');
+
+        if(notifyBox){
+          notifyBox.classList.remove('hide');
+          notifyBox.classList.add('show');
+        }
 
         document.getElementById('close-popup').addEventListener('click',function(){
           notifyBox.classList.remove('show');

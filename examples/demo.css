@@ -333,7 +333,7 @@ a.name-header{
   display: block;
 }
 
-#update-prompt-modal {
+#update-prompt-modal,#notify-box {
  visibility: hidden;
  min-width: 250px;
  margin-left: -125px;
@@ -347,7 +347,18 @@ a.name-header{
  left: 10%;
  top: 30px;
 }
-#update-prompt-modal.show {
+
+#notify-box {
+  width:34vw;
+  padding:18px;
+  border-radius:8px;
+  margin-left:0.8rem;
+  text-align:left;
+  color:#333;
+  background:#c3c3c3;
+}
+
+#update-prompt-modal.show,#notify-box {
  visibility: visible;
  -webkit-animation: fadein 0.5s;
  animation: fadein 0.5s;

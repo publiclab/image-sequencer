@@ -29,6 +29,7 @@ function LoadImage(ref, name, src, main_callback) {
       var image = document.createElement('img');
       var canvas = document.createElement('canvas');
       var context = canvas.getContext('2d');
+      
       image.onload = function() {
         canvas.width = image.naturalWidth;
         canvas.height = image.naturalHeight;
@@ -36,6 +37,8 @@ function LoadImage(ref, name, src, main_callback) {
         datauri = canvas.toDataURL(ext);
         callback(datauri, step);
       };
+      image.crossOrigin = 'Anonymous';
+      // Allow to access remote images
       image.src = src;
     }
     else {

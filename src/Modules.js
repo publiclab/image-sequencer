@@ -33,7 +33,8 @@ module.exports = {
   'import-image': require('./modules/ImportImage'),
   'mask': require('./modules/Mask'),
   'minify-image': require('./modules/MinifyImage'),
-  // 'invert': require('image-sequencer-invert'),
+  // 'invert': require('image-sequencer-invert'), this code imports the invert module from a different repository altogether (using a require statement)
+  // Which is a powerful feature of ImageSequencer, the modules are independent of the rest of the library's source.
   'invert': require('./modules/Invert'),
   'ndvi': require('./modules/Ndvi'),
   'ndvi-colormap': require('./modules/NdviColormap'),

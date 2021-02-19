@@ -333,7 +333,7 @@ a.name-header{
   display: block;
 }
 
-#update-prompt-modal,#notify-box {
+#update-prompt-modal,.notify-box {
  visibility: hidden;
  min-width: 250px;
  margin-left: -125px;
@@ -348,7 +348,7 @@ a.name-header{
  top: 30px;
 }
 
-#notify-box {
+.notify-box {
   width:34vw;
   padding:18px;
   border-radius:8px;
@@ -358,7 +358,17 @@ a.name-header{
   background:#c3c3c3;
 }
 
-#update-prompt-modal.show,#notify-box {
+/* Bootstrap class for display none remove it after updating to version v4 */
+.d-none {
+  display:none;
+}
+
+/* Bootstrap class for display block remove it after updating to version v4 */
+.d-block {
+  display:block;
+}
+
+#update-prompt-modal.show,.notify-box {
  visibility: visible;
  -webkit-animation: fadein 0.5s;
  animation: fadein 0.5s;

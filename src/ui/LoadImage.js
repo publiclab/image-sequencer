@@ -42,20 +42,20 @@ function LoadImage(ref, name, src, main_callback) {
     }
     else if (ref.options.inBrowser) {
       
-      let notifyBox = document.getElementById('notify-box');
+      let notifyBox = document.querySelector('div.notify-box');
       let closePopUP = document.getElementById('close-popup');
       if(src.indexOf('images/') !== 0  && src.indexOf('./images/') !== 0 && checkForError(src)){
 
         if(notifyBox){
-          notifyBox.classList.remove('hide');
-          notifyBox.classList.add('show');
+          notifyBox.classList.remove('d-none');
+          notifyBox.classList.add('d-block');
         }
 
         if(closePopUP){
           closePopUP.addEventListener('click',function(){
             if(notifyBox){
-              notifyBox.classList.remove('show');
-              notifyBox.classList.add('hide');
+              notifyBox.classList.remove('d-block');
+              notifyBox.classList.add('d-none');
             }
             if(document.querySelector('button.remove'))
               document.querySelector('button.remove').click(); // Remove the step due to redundant processing.

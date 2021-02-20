@@ -1,5 +1,3 @@
-const { reject } = require("lodash");
-
 var setupCache = function() {
   let newWorker; // When sw.js is changed, this is the new service worker generated.
   
@@ -21,34 +19,38 @@ var setupCache = function() {
     // Register the service worker.
     navigator.serviceWorker.register('sw.js', { scope: '/examples/' })
       .then(function(registration) {
-        registration.addEventListener('updatefound', () => {
-          // When sw.js has been changed, get a reference to the new service worker.
-          newWorker = registration.installing;
 
-          if(!newWorker){
-            return reject(new Error('error in installing service worker'));
-          }
+          return new Promise(function(resolve,reject){
 
-          newWorker.addEventListener('statechange', () => {
-            // Check if service worker state has changed.
-            switch(newWorker.state) {
-              case 'installed':
-                if(navigator.serviceWorker.controller) {
-                  // New service worker available; prompt the user to update.
-                  showUpdateModal();
-                  $('#reload').on('click',(e) => {
-                    e.preventDefault();
-                    console.log('New Service Worker Installed Successfully');
-                    location.reload();
-                    return resolve();
-                  })
-                }
-                // No updates available; do nothing.
-                break;
+            registration.addEventListener('updatefound', () => {
+              // When sw.js has been changed, get a reference to the new service worker.
+              newWorker = registration.installing;
 
-              case 'redundant':
-                return reject(new Error('installing new service worker now became redundant'));
-            }
+              if(!newWorker){
+                return reject(new Error('error in installing service worker'));
+              }
+
+            newWorker.addEventListener('statechange', () => {
+              // Check if service worker state has changed.
+              switch(newWorker.state) {
+                case 'installed':
+                  if(navigator.serviceWorker.controller) {
+                    // New service worker available; prompt the user to update.
+                    showUpdateModal();
+                    $('#reload').on('click',(e) => {
+                      e.preventDefault();
+                      console.log('New Service Worker Installed Successfully');
+                      location.reload();
+                      return resolve();
+                    })
+                  }
+                  // No updates available; do nothing.
+                  break;
+
+                case 'redundant':
+                  return reject(new Error('installing new service worker now became redundant'));
+              }
+            })
           })
         })
       }).catch(err => {

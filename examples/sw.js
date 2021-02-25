@@ -1,6 +1,14 @@
 const staticCacheName = 'image-sequencer-static-v3.6.0';
-self.addEventListener('install', function() {
-  console.log('Attempting to install service worker');
+self.addEventListener('install', function(e) {
+  e.waitUntil(
+    caches.open(staticCacheName).then(function(cache) {
+      console.log('Attempting to install service worker');
+      return cache.addAll([
+        '/',
+        '/examples/offline.html'
+      ]);
+    })
+  );
 });
 
 self.addEventListener('activate', function(e) {
@@ -32,9 +40,15 @@ self.addEventListener('fetch', function(event) {
             return response;
         })
       })
-    .catch(function(err) {
+      .catch(function(err) {
       // Now the request has been failed so show cached data.
-        return caches.match(event.request);
+        return caches.match(event.request).then(function(res){
+          if (res === undefined) { 
+            // Display offline page
+            return caches.match('offline.html');
+          }
+          return res;
+        });
     })
   )
 });

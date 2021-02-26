@@ -24,6 +24,9 @@ module.exports = (moduleName, options, benchmark, input) => {
     sequencer.loadImages(input || red);
     // Add the step.
     sequencer.addSteps(moduleName, options[0]);
+
+    t.plan(2);
+
     // Run the ImageSequencer with initial option.
     sequencer.run(() => {
       let result = sequencer.steps[1].output.src;
@@ -56,7 +59,6 @@ module.exports = (moduleName, options, benchmark, input) => {
 
           t.equal(res.equal, true, `${moduleName} module works correctly when the option is changed to ${JSON.stringify(options[1])}`);
           sequencer = null;
-          t.end();
         });
       });
     });

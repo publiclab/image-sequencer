@@ -109,7 +109,7 @@
     "matchdep": "^2.0.0",
     "resemblejs": "^3.2.5",
     "tap-spec": "^5.0.0",
-    "tape": "^4.9.2",
+    "tape": "^5.2.0",
     "tape-run": "^8.0.0",
     "uglify-es": "^3.3.7"
   },

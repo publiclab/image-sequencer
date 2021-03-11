@@ -78,7 +78,8 @@ body > .container-fluid {
 }
 
 .hover {
-  background: #eee;
+  border: 4px dashed #888888;
+  background: #F0F0F0;
 }
 
 .step {

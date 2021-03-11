@@ -114,10 +114,10 @@ function setInputStepInit() {
     dropzone[0].addEventListener('drop', handleFile, false);
  
     dropzone.on('dragover', function onDragover(e) {
-      e.stopPropagation();
+      dropzone.addClass('hover');
       e.preventDefault();
-      e.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
-    }, false);
+      e.stopPropagation();
+    });
  
     dropzone.on('dragenter', function onDragEnter(e) {
       dropzone.addClass('hover');
@@ -125,6 +125,11 @@ function setInputStepInit() {
  
     dropzone.on('dragleave', function onDragLeave(e) {
       dropzone.removeClass('hover');
+    });
+
+    dropzone.on('drop', function onDrop(e) {
+      dropzone.removeClass('hover');
+      e.preventDefault();
     });
 
   };

@@ -58,9 +58,18 @@
 
   <div id="update-prompt-modal">A new version of image sequencer is available. Click <a href="#" id="reload">here</a> to update.</div>
 
+  <div class="notify-box d-none">
+    <strong>Failed To Load Image</strong>
+    <button type="button" class="ml-2 mb-1 close" id="close-popup"><span>&times;</span></button>
+    <div class="notify-msg">
+      Can not Load Image Due to CORS Error Learn more about this 
+      <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors" target="_blank">here</a>
+    </div>
+  </div>
+
   <div class="container-fluid">
 
-    <header class="text-center" style="min-width: 450px">
+    <header class="text-center">
       <h1><a href="/" target='_blank' class="name-header">Image Sequencer</a></h1>
       <p>
         A pure JavaScript sequential image processing system, inspired by storyboards. Instead of modifying the original
@@ -218,7 +227,7 @@
           <h2>Need Help?</h2>
           <p>
             <a class="btn btn-default" href="https://github.com/publiclab/image-sequencer/issues">Ask a question</a>
-            <a class="btn btn-default" href="https://publiclab.org/chat">Ask in our chatroom</a>
+            <a class="btn btn-default" href="https://gitter.im/publiclab/image-sequencer"  target="_blank">Ask in our chatroom </a>
           </p>
         </div>
         <div class="col-md-6">
@@ -232,7 +241,7 @@
         </div>
       </div>
       <div class="row">
-        <p id="version-number-text">Unable to load version number</p>
+        <p id="version-number-text">Loading Version Number</p>
       </div>
     </footer>
 

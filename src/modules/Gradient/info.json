@@ -1,6 +1,13 @@
 {
     "name": "gradient",
     "description": "Gives a gradient of the image",
-    "inputs": {},
+    "inputs": {
+      "gradientType": {
+        "type": "select",
+        "desc": "Choose between linear or circular gradient",
+        "default": "linear",
+        "values": ["linear", "circular"]
+      }
+    },
     "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#gradient-module"
 }

@@ -11,8 +11,10 @@
 const intermediateHtmlStepUi = require('./intermediateHtmlStepUi.js'),
   urlHash = require('./urlHash.js'),
   _ = require('lodash'),
+  insertPreview = require('./insertPreview.js');
   mapHtmlTypes = require('./mapHtmltypes'),
-  scopeQuery = require('./scopeQuery');
+  scopeQuery = require('./scopeQuery'),
+  isGIF = require('../../src/util/isGif');
 
 function DefaultHtmlStepUi(_sequencer, options) {
   options = options || {};
@@ -22,6 +24,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
   function onSetup(step, stepOptions) {
     if (step.options && step.options.description)
       step.description = step.options.description;
+    
+    let stepDocsLink = '';
+    if (step.moduleInfo) stepDocsLink = step.moduleInfo['docs-link'] || '';
 
     step.ui = // Basic UI markup for the step
       '\
@@ -46,7 +51,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
               <div class="row step">\
                 <div class="col-md-4 details container-fluid">\
                   <div class="cal collapse in"><p>' +
-                    '<i>' + (step.description || '') + '</i>' +
+                    '<a href="' + stepDocsLink + '">' + (step.description || '') + '</a>' +
                  '</p></div>\
                 </div>\
                 <div class="col-md-8 cal collapse in step-column">\
@@ -78,7 +83,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     step.$step = scopeQuery.scopeSelector(step.ui); // Shorthand methods for scoped DOM queries. Read the docs [CONTRIBUTING.md](https://github.com/publiclab/image-sequencer/blob/main/CONTRIBUTING.md) for more info.
     step.$stepAll = scopeQuery.scopeSelectorAll(step.ui);
     let {$step, $stepAll} = step;
-    
+
     step.linkElements = step.ui.querySelectorAll('a'); // All the anchor tags in the step UI
     step.imgElement = $step('a img.img-thumbnail')[0]; // The output image
 
@@ -108,7 +113,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
           if (inputDesc.id == 'color-picker') { // Separate input field for color-picker
             html +=
               '<div id="color-picker" class="input-group colorpicker-component">' +
-              '<input class="form-control target" type="' +
+              '<input class="form-control color-picker-target" type="' +
               inputDesc.type +
               '" name="' +
               paramName +
@@ -116,7 +121,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
               paramVal + '">' + '<span class="input-group-addon"><i></i></span>' +
               '</div>';
           }
-          else { // Non color-picker input types
+          else if(inputDesc.type === 'button'){
+            html = '<div><button name="' + paramName + '" type="' + inputDesc.type + '" >\
+            <i class="fa fa-crosshairs"></i></button>\
+            <span>click to select coordinates</span>\
+            </div>';
+          }
+          else { // Non color-picker input types and other than a button
+
             html =
               '<input class="form-control target" type="' +
               inputDesc.type +
@@ -126,7 +138,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
               paramVal +
               '" placeholder ="' +
               (inputDesc.placeholder || '');
-              
+
             if (inputDesc.type.toLowerCase() == 'range') {
               html +=
                 '"min="' +
@@ -134,7 +146,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
                 '"max="' +
                 inputDesc.max +
                 '"step="' +
-                (inputDesc.step ? inputDesc.step : 1) + '">' + '<span>' + paramVal + '</span>';
+                inputDesc.step + '">' + '<span>' + paramVal + '</span>';
 
             }
             else html += '">';
@@ -211,7 +223,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $step('.toggleIcon').toggleClass('rotated');
       $stepAll('.cal').collapse('toggle');
     });
-    
+
     $(step.imgElement).on('mousemove', _.debounce(() => imageHover(step), 150)); // Shows the pixel coordinates on hover
     $(step.imgElement).on('click', (e) => {e.preventDefault(); });
     $stepAll('#color-picker').colorpicker();
@@ -276,6 +288,21 @@ function DefaultHtmlStepUi(_sequencer, options) {
         });
     });
 
+    $stepAll('.color-picker-target').each(function(i, input) {
+      $(input)
+        .data('initValue', $(input).val())
+        .data('hasChangedBefore', false)
+        .on('input change', function() {
+          $(this)
+            .data('hasChangedBefore',
+              handleInputValueChange(
+                $(this).val(),
+                $(this).data('initValue'),
+                $(this).data('hasChangedBefore')
+              )
+            );
+        });
+    });
 
 
     $('input[type="range"]').on('input', function() {
@@ -296,6 +323,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
     $stepAll('.load-spin').hide();
     $step('.load').hide();
 
+    $stepAll('.download-btn').off('click');
+    
     step.imgElement.src = (step.name == 'load-image') ? step.output.src : step.output;
     var imgthumbnail = $step('.img-thumbnail').getDomElem();
     for (let index = 0; index < step.linkElements.length; index++) {
@@ -343,7 +372,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
               .data('initValue', step.options[i]);
           if (inputs[i].type.toLowerCase() === 'select')
             $step('div[name="' + i + '"] select')
-              .val(step.options[i])
+              .val(String(step.options[i]))
               .data('initValue', step.options[i]);
         }
       }
@@ -358,6 +387,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $('[data-toggle="tooltip"]').tooltip();
       updateDimensions(step);
     });
+
+    if (step.name === 'load-image') insertPreview.updatePreviews(step.output.src, document.querySelector('#addStep'));
+    else insertPreview.updatePreviews(step.output, document.querySelector('#addStep'));  
 
     // Handle the wasm bolt display
 
@@ -374,8 +406,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
    *
    */
   function updateDimensions(step){
-    _sequencer.getImageDimensions(step.imgElement.src, function (dim, isGIF) {
-      step.ui.querySelector('.' + step.name).attributes['data-original-title'].value = `<div style="text-align: center"><p>Image Width: ${dim.width}<br>Image Height: ${dim.height}</br>${isGIF ? `Frames: ${dim.frames}` : ''}</div>`;
+    _sequencer.getImageDimensions(step.imgElement.src, function (dim) {
+      step.ui.querySelector('.' + step.name).attributes['data-original-title'].value = `<div style="text-align: center"><p>Image Width: ${dim.width}<br>Image Height: ${dim.height}</br>${isGIF(step.output) ? `Frames: ${dim.frames}` : ''}</div>`;
     });
   }
 
@@ -388,6 +420,19 @@ function DefaultHtmlStepUi(_sequencer, options) {
   function imageHover(step){
 
     var img = $(step.imgElement);
+
+    let customXCoord = '20'; //default x coordinate
+    let customYCoord = '20'; //default y coordinate
+
+    const customButton = $('button[name="Custom-Coordinates"]');
+      img.click(function(e) {
+          customXCoord = e.offsetX;
+          customYCoord = e.offsetY;
+          customButton.click(function() {
+            $('input[name="x"]').val(customXCoord);
+            $('input[name="y"]').val(customYCoord);
+          })
+      });
 
     img.mousemove(function(e) {
       var canvas = document.createElement('canvas');
@@ -413,7 +458,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
     if (_sequencer.steps.length - 1 > 1) $('#load-image .insert-step').prop('disabled', false);
     else $('#load-image .insert-step').prop('disabled', true);
 
-    $('div[class*=imgareaselect-]').remove();
+    $(step.imgElement).imgAreaSelect({
+      remove: true
+    });
   }
 
   function getPreview() {
@@ -433,14 +480,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
       notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> ' + msg ;
       notification.id = id;
       notification.classList.add('notification');
-  
+
       $('body').append(notification);
     }
-  
+
     $('#' + id).fadeIn(500).delay(200).fadeOut(500);
   }
-    
-  
+
+
   return {
     getPreview: getPreview,
     onSetup: onSetup,

@@ -6,10 +6,12 @@ describe('HTML Types Mapping Function', function() {
     expect(mapHtmlTypes({type: 'percentage'})).toEqual({type: 'number'});
 
     expect(mapHtmlTypes({type: 'integer'})).toEqual({type: 'number'});
-    expect(mapHtmlTypes({type: 'integer', min: 20, max: 100})).toEqual({type: 'range', min: 20, max: 100});
+    expect(mapHtmlTypes({type: 'integer', min: 20, max: 100})).toEqual({type: 'range', min: 20, max: 100, step: 1});
+    expect(mapHtmlTypes({type: 'float', min: 20, max: 100})).toEqual({type: 'range', min: 20, max: 100, step: 0.1}); // should default to step = 1
 
     expect(mapHtmlTypes({type: 'float'})).toEqual({type: 'text'});
-    expect(mapHtmlTypes({type: 'float', min: 20, max: 100})).toEqual({type: 'range', min: 20, max: 100});
+    expect(mapHtmlTypes({type: 'float', min: 20, max: 100})).toEqual({type: 'range', min: 20, max: 100, step: 0.1});
+    expect(mapHtmlTypes({type: 'float', min: 20, max: 100})).toEqual({type: 'range', min: 20, max: 100, step: 0.1}); // should default to step = 0.1
   });
 
   it('maps text type', function() {

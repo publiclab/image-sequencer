@@ -339,12 +339,24 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     $stepAll('.download-btn').on('click', () => {
 
+      function dataURLtoBlob(dataurl) {
+        let arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+          bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while(n--){
+          u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], {type:mime});
+      }
+      
       var element = document.createElement('a');
-      element.setAttribute('href', step.output);
+      
       element.setAttribute('download', step.name + '.' + fileExtension(step.imgElement.src));
       element.style.display = 'none';
       document.body.appendChild(element);
-
+      var blob = dataURLtoBlob(step.output);
+      var objurl = URL.createObjectURL(blob);
+      element.setAttribute('href', objurl);
+      
       element.click();
     });
 

@@ -58,6 +58,15 @@
 
   <div id="update-prompt-modal">A new version of image sequencer is available. Click <a href="#" id="reload">here</a> to update.</div>
 
+  <div class="notify-box d-none">
+    <strong>Failed To Load Image</strong>
+    <button type="button" class="ml-2 mb-1 close" id="close-popup"><span>&times;</span></button>
+    <div class="notify-msg">
+      Can not Load Image Due to CORS Error Learn more about this 
+      <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors" target="_blank">here</a>
+    </div>
+  </div>
+
   <div class="container-fluid">
 
     <header class="text-center">
@@ -66,7 +75,7 @@
         A pure JavaScript sequential image processing system, inspired by storyboards. Instead of modifying the original
         image, it
         creates a new image at each step in a sequence.
-        <a href="https://github.com/publiclab/image-sequencer/blob/main/README.md">Learn more</a>
+        <a href="https://publiclab.org/image-sequencer">Learn more</a>
       </p>
       <p>
         Open Source
@@ -232,7 +241,7 @@
         </div>
       </div>
       <div class="row">
-        <p id="version-number-text">Unable to load version number</p>
+        <p id="version-number-text">Loading Version Number</p>
       </div>
     </footer>
 

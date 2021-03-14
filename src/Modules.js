@@ -46,6 +46,7 @@ module.exports = {
   'rotate': require('./modules/Rotate'),
   'saturation': require('./modules/Saturation'),
   'shadow': require('./modules/Shadow'),
+  'sharpen': require('./modules/Sharpen'),
   'text-overlay': require('./modules/TextOverlay'),
   'threshold': require('./modules/Threshold'),
   'tint': require('./modules/Tint'),

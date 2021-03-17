@@ -172,8 +172,8 @@ body > .container-fluid {
 
 #move-up {
   position: fixed;
-  bottom: 50px;
-  right: 40px;
+  bottom: 30px;
+  right: 20px;
   z-index: 550;
   display: none;
   background:transparent;
@@ -181,9 +181,15 @@ body > .container-fluid {
 }
 
 #move-up i {
-  font-size:60px;
+  font-size:50px;
   opacity:0.7;
   color:#BABABA;
+}
+
+@media (max-width: 768px), (max-height 700px) {
+  #move-up {
+    display: none !important; /* !important is used to override the jQuery style */
+  }
 }
 
 .btn-circle{

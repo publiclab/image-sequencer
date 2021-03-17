@@ -2,7 +2,7 @@
     "name": "sharpen",
     "description": "Applies a sharpening filter given by the intensity value",
     "inputs": {
-        "sharpen": {
+        "sharpenStrength": {
             "type": "float",
             "desc": "Amount of sharpening (More sharpening gives more detail, but may lead to overexposure)",
             "default": 1,
@@ -11,5 +11,5 @@
             "step": 0.05
         }
     },
-    "docs-link":"#"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#sharpen-module"
 }

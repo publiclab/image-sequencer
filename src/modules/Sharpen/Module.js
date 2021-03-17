@@ -3,20 +3,20 @@
 */
 module.exports = function Sharpen(options, UI) {
 
-  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
-  options.sharpen = options.sharpen || defaults.sharpen;
-  options.sharpen = parseFloat(options.sharpen); //returns a float
-  var output;
+  let defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+  options.sharpenStrength = options.sharpenStrength || defaults.sharpenStrength;
+  options.sharpenStrength = parseFloat(options.sharpenStrength); //returns a float
+  let output;
   
   function draw(input, callback, progressObj) {
   
     progressObj.stop(true);
     progressObj.overrideFlag = true;
   
-    var step = this;
+    let step = this;
   
     function extraManipulation(pixels) {
-      pixels = require('./Sharpen')(pixels, options.sharpen);
+      pixels = require('./Sharpen')(pixels, options.sharpenStrength);
       return (pixels);
     }
   

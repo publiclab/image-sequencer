@@ -1,7 +1,11 @@
 // Generates a 3x3 convolution sharpening kernel
-function kernelGenerator(strength = 1) { //default value of strength set to 1
+function kernelGenerator(strength = 1) { //default value of sharpeningStrength set to 1
 
-  let kernel = [[0, -1 * strength, 0], [-1 * strength, 5 * strength, -1 * strength], [0, -1 * strength, 0]];
+  let kernel = [
+    [0, -1 * strength, 0],
+    [-1 * strength, 5 * strength, -1 * strength],
+    [0, -1 * strength, 0]
+  ];
   return kernel;
 }
 

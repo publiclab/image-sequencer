@@ -2480,9 +2480,9 @@ commander@^6.2.0:
   integrity sha512-zP4jEKbe8SHzKJYQmq8Y9gYjtO/POJLgIdKgV7B9qNmABVFVc+ctqSX6iXh4mCpJfRBOabiZ2YKPg8ciDw6C+Q==
 
 commander@^7.0.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-7.1.0.tgz#f2eaecf131f10e36e07d894698226e36ae0eb5ff"
-  integrity sha512-pRxBna3MJe6HKnBGsDyMv8ETbptw3axEdYHoqNh7gu5oDcew8fs0xnivZGm06Ogk8zGAJ9VX+OPEr2GXEQK4dg==
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-7.2.0.tgz#a36cb57d0b501ce108e4d20559a150a391d97ab7"
+  integrity sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw==
 
 commander@~2.13.0:
   version "2.13.0"
@@ -6292,9 +6292,9 @@ isurl@^1.0.0-alpha5:
     is-object "^1.0.1"
 
 jasmine-core@^3.3.0, jasmine-core@~3.7.0:
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-3.7.0.tgz#33da871fef5595e9aa43d0f50e009b5fe35f7ef2"
-  integrity sha512-jmeRIgxS/abz8afk9NKJ1yP7n93aZdRaHDWtTHJBlYu6fhbzvErjiO3mMlSSrJefVk1a+26JlABrHS2iBH8Azw==
+  version "3.7.1"
+  resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-3.7.1.tgz#0401327f6249eac993d47bbfa18d4e8efacfb561"
+  integrity sha512-DH3oYDS/AUvvr22+xUBW62m1Xoy7tUlY1tsxKEJvl5JeJ7q8zd1K5bUwiOxdH+erj6l2vAMM3hV25Xs9/WrmuQ==
 
 jasmine-jquery@^2.1.1:
   version "2.1.1"

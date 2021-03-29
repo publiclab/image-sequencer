@@ -4574,9 +4574,9 @@ gensync@^1.0.0-beta.2:
   integrity sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==
 
 geotiff@^1.0.0-beta.6:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/geotiff/-/geotiff-1.0.0.tgz#491697e9ad951e46fb7c13bd2350ab4fcf61a872"
-  integrity sha512-k44RzfJ9ONhB9CYG5NgaSXA1auxr3n6V7ijAEgKFLk/gBuWcRA7IiuF1ab/pxJdfRtdAKOxjoyRNIfCCByAv1w==
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/geotiff/-/geotiff-1.0.1.tgz#0bfbf962a1be316efe5fa4cf053aa1cb1c33b277"
+  integrity sha512-tEHfQQOSjzxkUHFpB/FBWi5SAmAnkR3xIGYLFTXc6OmECCs2d5lAfttS4hdPJjLyhGElqH5xb8cS3gSiYUlDvw==
   dependencies:
     "@petamoriken/float16" "^1.0.7"
     content-type-parser "^1.0.2"

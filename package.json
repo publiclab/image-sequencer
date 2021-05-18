@@ -104,7 +104,7 @@
     "jasmine-spec-reporter": "^7.0.0",
     "jest": "^26.1.0",
     "jest-puppeteer": "^5.0.3",
-    "lint-staged": "^10.0.3",
+    "lint-staged": "^11.0.0",
     "looks-same": "^7.0.0",
     "matchdep": "^2.0.0",
     "resemblejs": "^3.2.5",

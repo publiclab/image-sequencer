@@ -39,7 +39,7 @@
     "atob": "^2.1.2",
     "base64-img": "^1.0.4",
     "bootstrap": "^3.4.1",
-    "bootstrap-colorpicker": "^2.5.3",
+    "bootstrap-colorpicker": "^3.3.0",
     "buffer": "~6.0.2",
     "commander": "^7.0.0",
     "compressorjs": "^1.0.5",

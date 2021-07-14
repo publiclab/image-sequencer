@@ -25,6 +25,7 @@
   <script src="../node_modules/jquery/dist/jquery.min.js"></script>
   <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="../src/ui/prepareDynamic.js"></script>
+  <script src="../src/ui/toggleTheme.js"></script>
   <script src="../dist/image-sequencer.js" charset="utf-8"></script>
   <script src="../dist/image-sequencer-ui.js" charset="utf-8"></script>
   <script src="../node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script>
@@ -55,8 +56,18 @@
   <link href="../node_modules/imgareaselect/distfiles/css/imgareaselect-default.css" rel="stylesheet">
   <link href="./selectize.default.css" rel="stylesheet">
   <link rel="stylesheet" href="demo.css">
+  <link rel="stylesheet" href="theme.css">
 
   <div id="update-prompt-modal">A new version of image sequencer is available. Click <a href="#" id="reload">here</a> to update.</div>
+
+  <div>
+    <input type="checkbox" id="theme-toggler"/>
+    <label class="label" for="theme-toggler">
+      <i class="fa fa-sun-o"></i>
+      <i class="fa fa-moon-o"></i>
+      <div class="slider"></div>
+    </label>
+  </div>
 
   <div class="notify-box d-none">
     <strong>Failed To Load Image</strong>
@@ -232,7 +243,7 @@
         </div>
         <div class="col-md-6">
           <h2>Improve this tool</h2>
-          <p>
+          <p class="text-muted">
             This is an open source toolkit which you can help improve on Github
           </p>
           <p>

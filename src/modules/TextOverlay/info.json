@@ -34,6 +34,22 @@
                 "Montserrat"
             ]
         },
+        "text_decoration": {
+            "type": "select",
+            "desc": "Select the text decoration style.",
+            "default": "none",
+            "values": [
+                "none",
+                "underline",
+                "overline",
+                "strike"
+            ]
+        },
+        "line_height": {
+            "type": "float",
+            "desc": "height of underline, overline or strike",
+            "default": 3
+        },
         "color": {
             "type": "text",
             "desc": "Select the text color.",

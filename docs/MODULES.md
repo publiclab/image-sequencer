@@ -684,7 +684,7 @@ where `options` is an object with the property `sharpenStrength`, which can be s
 
 ## Text Overlay
 
-The modules allows to add text to image in both browser and node environment. We have the options to modify the font-size and also support few font-styles. The text color can also be modified.
+The modules allows to add text to image in both browser and node environment. We have the options to modify the font-size, set text-decoration and also support few font-styles. The text color can also be modified.
 #### Usage
 
 ```js
@@ -692,8 +692,15 @@ The modules allows to add text to image in both browser and node environment. We
            .addSteps('grid-overlay',options)
            .run()
 ```
-The options can take various attributes like,
-var options = { text : 'Hello World', size : '12'};
+where `options` is an object with the following property:
+* options.text : It allows to enter input text for overlay.
+* options.x : The value at which the overlay should start in x-axis.
+* options.y : The value at which the overlay should start in y-axis.
+* options.color : It allows to select font style.
+* options.font : It allows to choose from various fonts.
+* options.line_height : set height of underline, overline or strike.
+* options.color : It allows to select color of the text.
+* options.size : It allows to select font size.
 
 
 ## Threshold 

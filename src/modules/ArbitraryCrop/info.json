@@ -1,0 +1,48 @@
+{
+  "name": "arbitrary-crop",
+  "description": "Crops image for any arbitrary quadilateral according to given values, where (x1, y1) are top-left cordinates, (x2, y2) are top-right cordinates, (x3, y3) are bottom-right cordinates, (x4, y4) are bottom-left cordinates",
+  "url": "https://github.com/publiclab/image-sequencer/tree/master/MODULES.md",
+  "inputs": {
+    "x1": {
+      "type": "integer",
+      "desc": "Cordinate x1 of quadilateral",
+      "default": 100
+    },
+    "y1": {
+      "type": "integer",
+      "desc": "Cordinate y1 of quadilateral",
+      "default": 100
+    },
+    "x2": {
+      "type": "integer",
+      "desc": "Cordinate x2 of quadilateral",
+      "default": 200
+    },
+    "y2": {
+      "type": "integer",
+      "desc": "Cordinate y2 of quadilateral",
+      "default": 100
+    },
+    "x3": {
+      "type": "integer",
+      "desc": "Cordinate x3 of quadilateral",
+      "default": 100
+    },
+    "y3": {
+      "type": "integer",
+      "desc": "Cordinate y3 of quadilateral",
+      "default": 200
+    },
+    "x4": {
+      "type": "integer",
+      "desc": "Cordinate x4 of quadilateral",
+      "default": 200
+    },
+    "y4": {
+      "type": "integer",
+      "desc": "Cordinate y4 of quadilateral",
+      "default": 200
+    }
+  },
+  "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+}

@@ -445,7 +445,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
       var xPos = e.pageX - offset.left;
       var yPos = e.pageY - offset.top;
       var myData = context.getImageData(xPos, yPos, 1, 1);
-      img[0].title = 'rgb: ' + myData.data[0] + ',' + myData.data[1] + ',' + myData.data[2];//+ rgbdata;
+      if(step.name !== 'ndvi')
+        img[0].title = 'rgb: ' + myData.data[0] + ',' + myData.data[1] + ',' + myData.data[2];//+ rgbdata;
     });
   }
 

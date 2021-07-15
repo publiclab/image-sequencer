@@ -1,63 +1,72 @@
 /*
 * Resolves Fisheye Effect
 */
+const _ = require('lodash');
 module.exports = function DoNothing(options, UI) {
 
   var output;
+  getPixels = require('get-pixels');
+  gl = require('fisheyegl');
+  
 
-  var gl = require('fisheyegl');
+  function draw(input, callback, progressObj) {
 
-  function draw(input, callback) {
+    progressObj.stop(true);
+    progressObj.overrideFlag = true;
 
     var step = this;
-
-    if (!options.inBrowser) {
-      require('../_nomodule/gl-context')(input, callback, step, options);
+    var curr = 0;
+    var isGif = input.src.includes('image/gif');
+    function changePixel(r, g, b, a) {
+      return [r, g, b, a];
     }
-    else {
-      // Create a canvas, if it doesn't already exist.
-      if (!document.querySelector('#image-sequencer-canvas')) {
+
+    
+    function extraManipulation(pixels, setRenderState, generateOutput) {
+      curr++;
+      const oldPixels = _.cloneDeep(pixels);
+      const getDataUri = require('../../util/getDataUri');
+      setRenderState(false); // Prevent rendering of final output image until extraManipulation completes.
+      
+      if (!options.inBrowser) {
+        require('../_nomodule/gl-context')(input, callback, step, options);
+      }
+      else {
+      
         var canvas = document.createElement('canvas');
         canvas.style.display = 'none';
-        canvas.setAttribute('id', 'image-sequencer-canvas');
+        canvas.setAttribute('id', 'image-sequencer-canvas' + curr.toString());
         document.body.append(canvas);
+        
+        var distorter = new FisheyeGl({
+          selector: '#image-sequencer-canvas' + curr.toString()
+        });
       }
-      else var canvas = document.querySelector('#image-sequencer-canvas');
-
-      distorter = FisheyeGl({
-        selector: '#image-sequencer-canvas'
+      getDataUri(pixels, input.format).then(dataUrl => {
+        require('./fisheye')(options, pixels, oldPixels, dataUrl, distorter, () => {
+          
+          setRenderState(true); // Allow rendering in the callback.
+          generateOutput();
+          
+        });
       });
-
-      // Parse the inputs
-      options.a = parseFloat(options.a) || distorter.lens.a;
-      options.b = parseFloat(options.b) || distorter.lens.b;
-      options.Fx = parseFloat(options.Fx) || distorter.lens.Fx;
-      options.Fy = parseFloat(options.Fy) || distorter.lens.Fy;
-      options.scale = parseFloat(options.scale) || distorter.lens.scale;
-      options.x = parseFloat(options.x) || distorter.fov.x;
-      options.y = parseFloat(options.y) || distorter.fov.y;
-
-      // Set fisheyegl inputs
-      distorter.lens.a = options.a;
-      distorter.lens.b = options.b;
-      distorter.lens.Fx = options.Fx;
-      distorter.lens.Fy = options.Fy;
-      distorter.lens.scale = options.scale;
-      distorter.fov.x = options.x;
-      distorter.fov.y = options.y;
-
-      // generate fisheyegl output
-      distorter.setImage(input.src, function() {
-
-        // this output is accessible to Image Sequencer
-        step.output = { src: canvas.toDataURL(), format: input.format };
-
-        // Tell Image Sequencer and UI that step has been drawn
-        callback();
-
-      });
-
     }
+
+    function output(image, datauri, mimetype, wasmSuccess) {
+      step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
+    }
+
+    return require('../_nomodule/PixelManipulation.js')(input, {
+      output: output,
+      ui: options.step.ui,
+      changePixel: changePixel,
+      extraManipulation: extraManipulation,
+      format: input.format,
+      image: options.image,
+      inBrowser: options.inBrowser,
+      callback: callback,
+      useWasm:options.useWasm
+    });
   }
 
   return {

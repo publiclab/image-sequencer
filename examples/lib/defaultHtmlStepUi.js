@@ -94,10 +94,21 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
       for (var paramName in merged) {
         var isInput = inputs.hasOwnProperty(paramName);
+        if(outputs){
+          isOutput = outputs.hasOwnProperty(paramName)
+          
+        }
         var html = '';
         var inputDesc = isInput ? mapHtmlTypes(inputs[paramName]) : {};
-        if (!isInput) {
-          html += '<span class="output"></span>';
+        if (outputs && isOutput) {
+          if(outputs[paramName].type.toLowerCase()=='string'){
+            let paramVal = step.options[paramName] || inputDesc.default;
+            html += '<p class="output"> ' +
+            paramVal +
+            '</p>';
+          }
+
+          else html += '<span class="output"></span>';
         }
         else if (inputDesc.type.toLowerCase() == 'select') {
 
@@ -109,7 +120,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
         }
         else {
           let paramVal = step.options[paramName] || inputDesc.default;
-
+          
           if (inputDesc.id == 'color-picker') { // Separate input field for color-picker
             html +=
               '<div id="color-picker" class="input-group colorpicker-component">' +
@@ -376,10 +387,44 @@ function DefaultHtmlStepUi(_sequencer, options) {
               .data('initValue', step.options[i]);
         }
       }
+      function fallbackCopyTextToClipboard(text) {
+        var textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position="fixed";  //avoid scrolling to bottom
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+      
+        try {
+          var successful = document.execCommand('copy');
+        } catch (err) {
+          console.error('Fallback: Oops, unable to copy', err);
+        }
+      
+        document.body.removeChild(textArea);
+      }
       for (var i in outputs) {
+
         if (step[i] !== undefined)
-          $step('div[name="' + i + '"] input')
-            .val(step[i]);
+          if(outputs[i].type.toLowerCase()=='string'){
+            $step('div[name="' + i + '"] .save').remove();
+            var btn = document.createElement('button');
+            btn.innerHTML = "COPY"
+            btn.className = 'save btn btn-primary';
+            btn.setAttribute("style","margin-top:5px;")
+            step.ui.querySelector('div[name="' + i + '"] .output').innerHTML=step[i];
+            $step('div[name="' + i + '"] div.det').append(btn);
+            
+            $step('div[name="' + i + '"] .save').on('click', () => {
+                fallbackCopyTextToClipboard(step[i]);
+            });
+          }
+          else {
+            $step('div[name="' + i + '"] input')
+              .val(step[i]);
+          }
+
+        
       }
     }
 

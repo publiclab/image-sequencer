@@ -226,6 +226,20 @@ window.onload = function () {
     }
   });
 
+  $('#js-download-gif-frame-duration-btn').on('click', function (event){
+
+    var loader = require('./images/loader');
+
+    document.querySelector('#gif_element').src = loader;
+
+    let options = getGifResources();
+    gifshot.createGIF(options, function (obj) { // GIF generation
+      if (!obj.error) {
+        document.querySelector('#gif_element').src = obj.image;
+      }
+    });
+  });
+
   function getGifResources() {
     // Returns an object with specific gif options
     let imgs = document.getElementsByClassName('step-thumbnail');
@@ -240,7 +254,7 @@ window.onload = function () {
       'gifWidth': imgs[0].width,
       'gifHeight': imgs[0].height,
       'images': imgSrcs,
-      'frameDuration': 7,
+      'frameDuration': Math.abs(parseInt($('#js-download-gif-frame-duration').val())),
     };
 
     return options;

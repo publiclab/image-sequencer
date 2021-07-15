@@ -376,6 +376,16 @@ ImageSequencer = function ImageSequencer(options) {
   }
 
 
+  function removeAllSteps() {
+
+    var this_ = (this.name == 'ImageSequencer') ? this : this.sequencer;
+
+    inputlog.push({ method: 'removeAllSteps', json_q: '' });
+
+    removeSteps(this_.steps.map((v, i) => i));
+    this_.run();
+  }
+
   return {
     // Literals and objects
     name: 'ImageSequencer',
@@ -415,6 +425,7 @@ ImageSequencer = function ImageSequencer(options) {
     saveSequence: saveSequence,
     loadModules: loadModules,
     getSteps:getSteps,
+    removeAllSteps,
 
     // Other functions
     log: log,

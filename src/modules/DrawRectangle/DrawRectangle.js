@@ -1,4 +1,4 @@
-module.exports = exports = function(pixels, options){
+module.exports = exports = function(pixels, options, cb){
   var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
   const pixelSetter = require('../../util/pixelSetter.js');
 
@@ -30,5 +30,6 @@ module.exports = exports = function(pixels, options){
   drawSide(ex, oy, ex, ey); // Right
   drawSide(ox, oy, ex, oy); // Top
   drawSide(ox, ey, ex, ey); // Bottom
+  if(cb) cb();
   return pixels;
 };

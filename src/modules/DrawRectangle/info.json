@@ -1,6 +1,6 @@
 {
     "name": "draw-rectangle",
-    "description": "It draws a rectangle on the image",
+    "description": "It draws a rectangle on the image. Draw a rectangle by dragging cursor on the image",
     "inputs": {
   		"startingX":{
   			"type": "integer",

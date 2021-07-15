@@ -1,0 +1,16 @@
+name: Publish sequencer.publiclab.org demo
+
+on:
+  push:
+    branches:
+      - stable
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Merge upstream
+        run: |
+          git config --global user.name 'jywarren'
+          git config --global user.email 'jeff@unterbahn.com'
+          ./scripts/update-gh-pages 'publiclab/image-sequencer' 'stable' 'sequencer.publiclab.org' 'bypass-warning'

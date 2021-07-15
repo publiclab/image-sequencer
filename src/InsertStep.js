@@ -35,7 +35,7 @@ function InsertStep(ref, index, name, o) {
       ID: o.number,
       inBrowser: ref.options.inBrowser,
       ui: ref.options.ui,
-      options: o
+      options: o_
     };
     var UI = ref.events;
 

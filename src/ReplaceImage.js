@@ -2,7 +2,6 @@
 // Works only in the browser.
 function ReplaceImage(ref, selector, steps, options) {
   if(!ref.options.inBrowser) return false; // This isn't for Node.js
-  var tempSequencer = ImageSequencer({ui: false});
   var this_ = ref;
   if (window.hasOwnProperty('$')) var input = $(selector);
   else var input = document.querySelectorAll(selector);
@@ -41,15 +40,21 @@ function ReplaceImage(ref, selector, steps, options) {
     else make(url);
 
     function make(url) {
+
+      var tempSequencer = ImageSequencer({ui: false});
       tempSequencer.loadImage(url, function(){
-        // this.addSteps(steps).run({stop:function(){}},function(out){
-        var sequence = this.addSteps(steps);
+
+        tempSequencer.addSteps(steps);
+
         if (ref.detectStringSyntax(steps))
-          sequence = this.stringToSteps(steps);
-        sequence.run({stop:function(){}}, function(out){
+          tempSequencer.stringToSteps(steps);
+
+        tempSequencer.run({stop:function(){}}, function(out){
           img.src = out;
         });
+        
       });
+      
     }
   }
 

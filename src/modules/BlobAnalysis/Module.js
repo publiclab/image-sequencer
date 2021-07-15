@@ -10,9 +10,15 @@ module.exports = function BlobAnalysis(options, UI){
   
     var step = this;
 
-    function extraManipulation(pixels){
-  
-      pixels = require('./BlobAnalysis')(pixels);
+    function extraManipulation(pixels, setRenderState, generateOutput){
+      setRenderState(false);
+      if (!options.inBrowser) {
+        require('../_nomodule/gl-context')(input, callback, step, options);
+      } else{
+        pixels = require('./BlobAnalysis')(pixels);
+        setRenderState(true);
+        generateOutput();
+      }
       return pixels;
     }
   

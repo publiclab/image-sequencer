@@ -15,19 +15,21 @@ module.exports = function runInBrowserContext(input, callback, step, options) {
             is not available otherwise */
       page.goto('https://google.com').then(() => {
         page.addScriptTag({ path: require('path').join(__dirname, '../../../dist/image-sequencer.js') }).then(() => {
-          page.evaluate((options) => {
-            return new Promise((resolve, reject) => {
-              var sequencer = ImageSequencer();
-              sequencer.loadImage(options.input.src);
-              sequencer.addSteps(options.modOptions.step, options.modOptions);
-              sequencer.run(function cb(out) {
-                resolve(sequencer.steps[1].output.src);
+          page.addScriptTag({path: require('path').join(__dirname, '../../../node_modules/opencv.js/opencv.js')}).then(() => {
+            page.evaluate((options) => {
+              return new Promise((resolve, reject) => {
+                var sequencer = ImageSequencer();
+                sequencer.loadImage(options.input.src);
+                sequencer.addSteps(options.modOptions.step, options.modOptions);
+                sequencer.run(function cb(out) {
+                  resolve(sequencer.steps[1].output.src);
+                });
               });
-            });
-          }, obj).then(el => {
-            browser.close().then(() => {
-              step.output = { src: el, format: input.format };
-              callback();
+            }, obj).then(el => {
+              browser.close().then(() => {
+                step.output = { src: el, format: input.format };
+                callback();
+              });
             });
           });
         });

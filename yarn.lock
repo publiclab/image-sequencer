@@ -6928,15 +6928,15 @@ joi@^17.3.0:
     "@sideway/formula" "^3.0.0"
     "@sideway/pinpoint" "^2.0.0"
 
-jpeg-js@0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/jpeg-js/-/jpeg-js-0.0.4.tgz#06aaf47efec7af0b1924a59cd695a6d2b5ed870e"
-  integrity sha1-Bqr0fv7HrwsZJKWc1pWm0rXthw4=
-
 jpeg-js@0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/jpeg-js/-/jpeg-js-0.1.1.tgz#2a5ff19636fe27e3b665ad9423475cb6b698698d"
   integrity sha1-Kl/xljb+J+O2Za2UI0dctraYaY0=
+
+jpeg-js@^0.3.2:
+  version "0.3.7"
+  resolved "https://registry.yarnpkg.com/jpeg-js/-/jpeg-js-0.3.7.tgz#471a89d06011640592d314158608690172b1028d"
+  integrity sha512-9IXdWudL61npZjvLuVe/ktHiA41iE8qFyLB+4VDTblEsWBzeg8WQTlktdUK4CdncUqtUgUg0bbOmTE2bKBKaBQ==
 
 jpeg-js@^0.4.1:
   version "0.4.3"
@@ -9711,13 +9711,13 @@ sanitize-filename@^1.6.2:
     truncate-utf8-bytes "^1.0.0"
 
 save-pixels@~2.3.4:
-  version "2.3.4"
-  resolved "https://registry.yarnpkg.com/save-pixels/-/save-pixels-2.3.4.tgz#49d349c06b8d7c0127dbf0da24b44aca5afb59fe"
-  integrity sha1-SdNJwGuNfAEn2/DaJLRKylr7Wf4=
+  version "2.3.5"
+  resolved "https://registry.yarnpkg.com/save-pixels/-/save-pixels-2.3.5.tgz#5f2fb7f845a3a27fd230d66bc4abce19c8b076a5"
+  integrity sha512-KJrlGCp1+fT9UD0Bux3MyFVQ54ieB+5+By/8u971BS2IQuiUctcKYMghudu/yAJebhqMK3B/Epi9vqy8QVNIUA==
   dependencies:
     contentstream "^1.0.0"
     gif-encoder "~0.4.1"
-    jpeg-js "0.0.4"
+    jpeg-js "^0.3.2"
     ndarray "^1.0.18"
     ndarray-ops "^1.2.2"
     pngjs-nozlib "^1.0.0"

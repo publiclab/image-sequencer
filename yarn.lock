@@ -4727,12 +4727,12 @@ get-own-enumerable-property-symbols@^3.0.0:
   integrity sha512-CIJYJC4GGF06TakLg8z4GQKvDsx9EMspVxOYih7LerEL/WosUnFIww45CGfxfeKHqlg3twgUrYRT1O3WQqjGCg==
 
 get-pixels@~3.3.0:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/get-pixels/-/get-pixels-3.3.2.tgz#3f62fb8811932c69f262bba07cba72b692b4ff03"
-  integrity sha512-6ar+8yPxRd1pskEcl2GSEu1La0+xYRjjnkby6AYiRDDwZ0tJbPQmHnSeH9fGLskT8kvR0OukVgtZLcsENF9YKQ==
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/get-pixels/-/get-pixels-3.3.3.tgz#71e2dfd4befb810b5478a61c6354800976ce01c7"
+  integrity sha512-5kyGBn90i9tSMUVHTqkgCHsoWoR+/lGbl4yC83Gefyr0HLIhgSWEx/2F/3YgsZ7UpYNuM6pDhDK7zebrUJ5nXg==
   dependencies:
     data-uri-to-buffer "0.0.3"
-    jpeg-js "^0.3.2"
+    jpeg-js "^0.4.1"
     mime-types "^2.0.1"
     ndarray "^1.0.13"
     ndarray-pack "^1.1.1"
@@ -6938,10 +6938,10 @@ jpeg-js@0.1.1:
   resolved "https://registry.yarnpkg.com/jpeg-js/-/jpeg-js-0.1.1.tgz#2a5ff19636fe27e3b665ad9423475cb6b698698d"
   integrity sha1-Kl/xljb+J+O2Za2UI0dctraYaY0=
 
-jpeg-js@^0.3.2:
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/jpeg-js/-/jpeg-js-0.3.4.tgz#dc2ba501ee3d58b7bb893c5d1fab47294917e7e7"
-  integrity sha512-6IzjQxvnlT8UlklNmDXIJMWxijULjqGrzgqc0OG7YadZdvm7KPQ1j0ehmQQHckgEWOfgpptzcnWgESovxudpTA==
+jpeg-js@^0.4.1:
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/jpeg-js/-/jpeg-js-0.4.3.tgz#6158e09f1983ad773813704be80680550eff977b"
+  integrity sha512-ru1HWKek8octvUHFHvE5ZzQ1yAsJmIvRdGWvSoKV52XKyuyYA437QWDttXT8eZXDSbuMpHlLzPDZUPd6idIz+Q==
 
 jpegtran-bin@^5.0.0, jpegtran-bin@^5.0.2:
   version "5.0.2"

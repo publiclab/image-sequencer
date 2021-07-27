@@ -47,7 +47,12 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
   }
 
   function addStepUi() {
-    if ($(addStepSel + ' select').val() == 'none') return;
+    
+    if ($(addStepSel + ' select').val() == ''){
+      alert('Please Select a Step to Proceed');
+      return;
+    }
+
     var newStepName;
     if(typeof arguments[0] !== 'string')
       newStepName = $(addStepSel + ' select option').html().toLowerCase().split(' ').join('-');

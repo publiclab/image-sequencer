@@ -78,7 +78,8 @@ body > .container-fluid {
 }
 
 .hover {
-  background: #eee;
+  border: 4px dashed #888888;
+  background: #F0F0F0;
 }
 
 .step {
@@ -171,8 +172,8 @@ body > .container-fluid {
 
 #move-up {
   position: fixed;
-  bottom: 50px;
-  right: 40px;
+  bottom: 30px;
+  right: 20px;
   z-index: 550;
   display: none;
   background:transparent;
@@ -180,9 +181,15 @@ body > .container-fluid {
 }
 
 #move-up i {
-  font-size:60px;
+  font-size:50px;
   opacity:0.7;
   color:#BABABA;
+}
+
+@media (max-width: 768px), (max-height 700px) {
+  #move-up {
+    display: none !important; /* !important is used to override the jQuery style */
+  }
 }
 
 .btn-circle{
@@ -333,21 +340,47 @@ a.name-header{
   display: block;
 }
 
-#update-prompt-modal {
+#update-prompt-modal,.notify-box {
  visibility: hidden;
  min-width: 250px;
  margin-left: -125px;
  background-color: #333;
  color: #fff;
  text-align: center;
- border-radius: 2px;
+ border-radius: 8px;
  padding: 16px;
  position: fixed;
  z-index: 1000;
  left: 10%;
  top: 30px;
 }
-#update-prompt-modal.show {
+
+#update-prompt-modal {
+  width: 30vw;
+  margin: 0.2rem;
+}
+
+.notify-box {
+  width:34vw;
+  padding:18px;
+  border-radius:8px;
+  margin-left:0.8rem;
+  text-align:left;
+  color:#333;
+  background:#c3c3c3;
+}
+
+/* Bootstrap class for display none remove it after updating to version v4 */
+.d-none {
+  display:none;
+}
+
+/* Bootstrap class for display block remove it after updating to version v4 */
+.d-block {
+  display:block;
+}
+
+#update-prompt-modal.show,.notify-box {
  visibility: visible;
  -webkit-animation: fadein 0.5s;
  animation: fadein 0.5s;

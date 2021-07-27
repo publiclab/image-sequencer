@@ -41,11 +41,12 @@ List of Module Documentations
 36. [Rotate](#rotate-module)
 37. [Saturation](#saturation-module)
 38. [Segmented-Colormap](#segmented-colormap-module)
-39. [Text-Overlay](#text-overlay)
-40. [Threshold](#threshold)
-41. [Tint](#tint)
-42. [WebGL-Distort](#webgl-distort-module)
-43. [White-Balance](#white-balance-module)
+39. [Sharpen](#sharpening-module)
+40. [Text-Overlay](#text-overlay)
+41. [Threshold](#threshold)
+42. [Tint](#tint)
+43. [WebGL-Distort](#webgl-distort-module)
+44. [White-Balance](#white-balance-module)
 
 
 ## add-qr-module
@@ -665,6 +666,20 @@ where `options` is an object with the property `colormap`. `options.colormap` ca
 * "fastie" : [[0, [255, 255, 255], [0, 0, 0]], [0.167, [0, 0, 0], [255, 255, 255]], [0.33, [255, 255, 255], [0, 0, 0]], [0.5, [0, 0, 0], [140, 140, 255]], [0.55, [140, 140, 255], [0, 255, 0]], [0.63, [0, 255, 0], [255, 255, 0]], [0.75, [255, 255, 0], [255, 0, 0]], [0.95, [255, 0, 0], [255, 0, 255]]]
 
 * A custom array.
+
+
+## sharpen-module
+
+This module is used to sharpen the pixels of the image using a 3x3 convolution filter.
+#### Usage
+
+```js
+  sequencer.loadImage('PATH')
+           .addSteps('sharpen',options)
+           .run()
+```
+
+where `options` is an object with the property `sharpenStrength`, which can be set to achieve the desired level of sharpening on the image.
 
 
 ## Text Overlay

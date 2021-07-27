@@ -22,6 +22,9 @@ function mapHtmlTypes(inputInfo){
     htmlType = inputInfo.min != undefined ? 'range' : 'text';
     if (htmlType === 'range') inputInfo.step = inputInfo.step || 0.1; // default range step size for float
     break;
+  case 'coordinate-input':
+    htmlType = 'button';
+    break;
   default:
     htmlType = 'text';
     break;

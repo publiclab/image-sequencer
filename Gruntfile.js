@@ -44,7 +44,14 @@ module.exports = function(grunt) {
         dest: 'dist/image-sequencer-ui.brow.js'
       },
       tests: {
-        src: ['test/core/sequencer/meta-modules.js', 'test/core/sequencer/image-sequencer.js', 'test/core/sequencer/chain.js', 'test/core/sequencer/replace.js', 'test/core/sequencer/import-export.js', 'test/core/sequencer/run.js', 'test/core/sequencer/dynamic-imports.js', 'test/core/util/*.js'],
+        src: ['test/core/sequencer/meta-modules.js',
+              'test/core/sequencer/image-sequencer.js',
+              'test/core/sequencer/chain.js',
+              'test/core/sequencer/replace.js',
+              'test/core/sequencer/import-export.js',
+              'test/core/sequencer/run.js',
+              'test/core/sequencer/dynamic-imports.js',
+              'test/core/util/*.js'],
         dest: './output/core-tests.js'
       }
     },

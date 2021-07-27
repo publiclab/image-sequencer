@@ -16,7 +16,6 @@ module.exports = function edgeDetect(options, UI) {
 
   // The function which is called on every draw.
   function draw(input, callback, progressObj) {
-
     progressObj.stop(true);
     progressObj.overrideFlag = true;
 

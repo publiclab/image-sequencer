@@ -51,20 +51,48 @@ function setInputStepInit() {
         video.onloadedmetadata = function(e) {
           video.play();
         };
+
+        document.getElementById('capture').addEventListener('click', function(){
+          context.drawImage(video, 0, 0, 400, 300);
+          options.onTakePhoto(canvas.toDataURL());
+          setTimeout(stopStream(stream),1); // wait for 1 second before closing webcam so that image loads properly
+        });
+
         document.getElementById('close').addEventListener('click', function () {
           stopStream(stream);
         });
       }
       function handleError(error) {
         console.log('navigator.getUserMedia error: ', error);
+
+        // when user dismissed the camera access (includes closing of prompt which requests for camera access)
+        if(error.message == 'Permission denied' || error.message == 'NotAllowedError' || error.message == 'PermissionDismissedError'){
+          document.getElementById('capture').addEventListener('click', function(e) {
+            alert('Enable camera access in order to take picture');
+          });
+        }
+        
+        // when user don't have webcam to use.
+        if(error.message == 'NotFoundError' || error.message == 'DevicesNotFoundError'){
+          alert('You do not have appropriate devices to use this Functionality');
+        }
+
+        // when webcam is already used by some other application
+        if(error.message == 'NotReadableError' || error.message == 'TrackStartError' || error.message == 'Concurrent mic process limit'){
+          alert('Your webcam is already in use by some other application');
+        }
+
+        // when some of the requested constraints can't be satisfied like high frame rate or high resolution
+        if(error.message == 'OverconstrainedError' || error.message == 'ConstraintNotSatisfiedError'){
+          console.log('Requested Constraints can not be satisfied ', error);
+        }
       }
       navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError);
-  
-
-      document.getElementById('capture').addEventListener('click', function(stream){
-        context.drawImage(video, 0, 0, 400, 300);
-        options.onTakePhoto(canvas.toDataURL());
+      
+      document.getElementById('close').addEventListener('click', function() {
+        video.style.display = 'none';
       });
+
 
       function stopStream(stream) {
         stream.getVideoTracks().forEach(function (track) {
@@ -86,10 +114,10 @@ function setInputStepInit() {
     dropzone[0].addEventListener('drop', handleFile, false);
  
     dropzone.on('dragover', function onDragover(e) {
-      e.stopPropagation();
+      dropzone.addClass('hover');
       e.preventDefault();
-      e.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
-    }, false);
+      e.stopPropagation();
+    });
  
     dropzone.on('dragenter', function onDragEnter(e) {
       dropzone.addClass('hover');
@@ -97,6 +125,11 @@ function setInputStepInit() {
  
     dropzone.on('dragleave', function onDragLeave(e) {
       dropzone.removeClass('hover');
+    });
+
+    dropzone.on('drop', function onDrop(e) {
+      dropzone.removeClass('hover');
+      e.preventDefault();
     });
 
   };

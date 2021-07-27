@@ -1,0 +1,17 @@
+{
+  "name": "shadow",
+  "description": "Creates a two sided shadow.",
+  "inputs": {
+    "X_value": {
+      "type": "integer",
+      "desc": "X-value",
+      "default": 20
+    },
+    "Y_value": {
+      "type": "integer",
+      "desc": "Y-value",
+      "default": 20
+    }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#shadow-module"
+}

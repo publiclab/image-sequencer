@@ -1,15 +1,17 @@
 module.exports = function Dynamic(options, UI, util) {
 
-  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+  const defaults = require('./../../util/getDefaults.js')(require('./info.json'));
   options.x = options.x || defaults.x;
   options.y = options.y || defaults.y;
 
   if(options.step.inBrowser && !options.noUI && sequencer.getSteps().length < 2)
     options.offset = -1;
 
-  if (options.step.inBrowser && !options.noUI) var ui = require('./Ui.js')(options.step, UI);
+  let ui;
 
-  var output;
+  if (options.step.inBrowser && !options.noUI)  ui = require('./Ui.js')(options.step, UI);
+
+  let output;
 
   // This function is called on every draw.
   function draw(input, callback, progressObj) {
@@ -19,15 +21,15 @@ module.exports = function Dynamic(options, UI, util) {
     progressObj.stop(true);
     progressObj.overrideFlag = true;
 
-    var step = this;
+    const step = this;
 
-    var parseCornerCoordinateInputs = require('../../util/ParseInputCoordinates');
+    const parseCornerCoordinateInputs = require('../../util/ParseInputCoordinates');
 
     // save the pixels of the base image
-    var baseStepImage = this.getStep(options.offset).image;
-    var baseStepOutput = this.getOutput(options.offset);
+    const baseStepImage = this.getStep(options.offset).image;
+    const baseStepOutput = this.getOutput(options.offset);
 
-    var getPixels = require('get-pixels');
+    const getPixels = require('get-pixels');
 
     getPixels(input.src, function(err, pixels) {
       // parse the inputs
@@ -47,20 +49,29 @@ module.exports = function Dynamic(options, UI, util) {
 
       function changePixel(r1, g1, b1, a1, x, y) {
 
+        const firstImagePixels = [r1, g1, b1, a1];
+
         // overlay
-        var p = options.secondImagePixels;
+        const p = options.secondImagePixels;
         if (x >= options.x
           && x - options.x < p.shape[0]
           && y >= options.y
-          && y - options.y < p.shape[1])
-          return [
+          && y - options.y < p.shape[1]){
+
+          const secondImagePixels = [
             p.get(x - options.x, y - options.y, 0),
             p.get(x - options.x, y - options.y, 1),
             p.get(x - options.x, y - options.y, 2),
             p.get(x - options.x, y - options.y, 3)
           ];
+          
+          if(secondImagePixels[3] === 0)
+            return firstImagePixels;
+          else
+            return secondImagePixels;
+        }
         else
-          return [r1, g1, b1, a1];
+          return firstImagePixels;
       }
 
       function output(image, datauri, mimetype, wasmSuccess) {

@@ -11,6 +11,7 @@ module.exports = {
   'canvas-resize': require('./modules/CanvasResize'),
   'channel': require('./modules/Channel'),
   'colorbar': require('./modules/Colorbar'),
+  'color-halftone': require('./modules/ColorHalftone'),
   'color-temperature': require('./modules/ColorTemperature'),
   'colormap': require('./modules/Colormap'),
   'constrained-crop': require('./modules/ConstrainedCrop'),
@@ -30,8 +31,10 @@ module.exports = {
   'gradient': require('./modules/Gradient'),
   'grid-overlay': require('./modules/GridOverlay'),
   'import-image': require('./modules/ImportImage'),
+  'mask': require('./modules/Mask'),
   'minify-image': require('./modules/MinifyImage'),
-  // 'invert': require('image-sequencer-invert'),
+  // 'invert': require('image-sequencer-invert'), this code imports the invert module from a different repository altogether (using a require statement)
+  // Which is a powerful feature of ImageSequencer, the modules are independent of the rest of the library's source.
   'invert': require('./modules/Invert'),
   'motion-blur': require('./modules/MotionBlur'),
   'ndvi': require('./modules/Ndvi'),
@@ -43,6 +46,8 @@ module.exports = {
   'resize': require('./modules/Resize'),
   'rotate': require('./modules/Rotate'),
   'saturation': require('./modules/Saturation'),
+  'shadow': require('./modules/Shadow'),
+  'sharpen': require('./modules/Sharpen'),
   'text-overlay': require('./modules/TextOverlay'),
   'threshold': require('./modules/Threshold'),
   'tint': require('./modules/Tint'),

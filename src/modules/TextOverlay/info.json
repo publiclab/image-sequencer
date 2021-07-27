@@ -8,6 +8,10 @@
             "desc": "Enter the text to overlay.",
             "default": "Lorem ipsum"
         },
+        "Custom-Coordinates": {
+            "type": "coordinate-input",
+            "desc": "Click to fill Coordinates"
+        },
         "x": {
             "type": "integer",
             "desc": "Starting text horizontal position.",

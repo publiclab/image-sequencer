@@ -1,0 +1,18 @@
+image:
+  file: .gitpod.dockerfile
+tasks:
+  - init: npm run setup
+    command: npm start
+ports:
+  - port: 3000
+    onOpen: open-preview
+
+github:
+  prebuilds:
+    branches: true
+    pullRequests: true
+    pullRequestsFromForks: true
+    addCheck: true
+    addComment: true
+    addBadge: false
+    addLabel: false

@@ -4,22 +4,27 @@
 
 # Comment to be posted to on first time issues
 newIssueWelcomeComment: |
-  Thanks for opening your first issue here! Please follow the issue template to help us help you 👍🎉😄
-  If you have screenshots to share demonstrating the issue, that's really helpful! 📸 You can [make a gif](https://www.cockos.com/licecap/) too!
+ Thanks for opening your first issue here! This space is [protected by our Code of Conduct](https://publiclab.org/conduct) - and we're here to help.
+ Please follow the issue template to help us help you 👍🎉😄
+ If you have screenshots to share demonstrating the issue, that's really helpful! 📸 You can [make a gif](https://www.cockos.com/licecap/) too!
+ Don't forget to join our [PublicLab Gitter channel](https://gitter.im/publiclab/publiclab) and our [ImageSequencer Gitter Channel](https://gitter.im/publiclab/image-sequencer) for some brainstorming discussions. 
 # Configuration for new-pr-welcome - https://github.com/behaviorbot/new-pr-welcome
 
 # Comment to be posted to on PRs from first time contributors in your repository
 newPRWelcomeComment: |
- Thanks for opening this pull request!
+ Thanks for opening this pull request! This space is [protected by our Code of Conduct](https://publiclab.org/conduct).
  There may be some errors, **but don't worry!** We're here to help! 👍🎉😄
+ Also please refer (https://github.com/publiclab/image-sequencer/blob/main/README.md) for installation help.
 # Configuration for first-pr-merge - https://github.com/behaviorbot/first-pr-merge
 
 # Comment to be posted to on pull requests merged by a first time user
 firstPRMergeComment: |
  Congrats on merging your first pull request! 🙌🎉⚡️ 
- Your code will be published to https://beta.sequencer.publiclab.org in a day or two. 
- In the meantime, can you tell us your Twitter handle so we can thank you properly?
- Now that you've completed this, you can help someone else take their first step!
+ Your code will be published to https://beta.sequencer.publiclab.org in a day or two. Please test out your work on this testing server and report back with a comment that all has gone well!
+ In the meantime, can you tell us your Twitter handle so we can thank you properly also do join our weekly check-in to share your this week goal and the awesome work you did 😃. 
+ Please find the link **pinned in the issue section**
+ Now that you've completed this, you can help someone else take their first step! Try looking at this list of `first-timers-only` issues, and see if someone else is waiting for feedback, or even stuck! 😕
+ People often get stuck at the same steps, so you might be able to help someone get unstuck, or help lead them to some documentation that'd help. Reach out and be encouraging and friendly! 😄 🎉  
  See: [Public Lab's coding community!](https://code.publiclab.org)
 
 # It is recommended to include as many gifs and emojis as possible

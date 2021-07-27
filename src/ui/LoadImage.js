@@ -7,6 +7,22 @@ function LoadImage(ref, name, src, main_callback) {
     };
     return image;
   }
+
+  // function to check whether a image can be fetched from external source or not
+  function checkForError(image_url) {
+    return fetch(image_url).then(function(res) {
+      if(res)
+        return false;
+      else 
+        return true;
+    }).catch(function(err) {
+      if(err)
+        console.log('Error occured because of image URL ',err);
+
+      return true;
+    });
+  }
+
   function CImage(src, step, callback) {
     var datauri;
     if (src.match(/^data:/i)) {
@@ -25,18 +41,42 @@ function LoadImage(ref, name, src, main_callback) {
       });
     }
     else if (ref.options.inBrowser) {
-      var ext = src.split('.').pop();
-      var image = document.createElement('img');
-      var canvas = document.createElement('canvas');
-      var context = canvas.getContext('2d');
-      image.onload = function() {
-        canvas.width = image.naturalWidth;
-        canvas.height = image.naturalHeight;
-        context.drawImage(image, 0, 0);
-        datauri = canvas.toDataURL(ext);
-        callback(datauri, step);
-      };
-      image.src = src;
+      
+      let notifyBox = document.querySelector('div.notify-box');
+      let closePopUP = document.getElementById('close-popup');
+      if(src.indexOf('images/') !== 0  && src.indexOf('./images/') !== 0 && checkForError(src)){
+
+        if(notifyBox){
+          notifyBox.classList.remove('d-none');
+          notifyBox.classList.add('d-block');
+        }
+
+        if(closePopUP){
+          closePopUP.addEventListener('click',function(){
+            if(notifyBox){
+              notifyBox.classList.remove('d-block');
+              notifyBox.classList.add('d-none');
+            }
+            if(document.querySelector('button.remove'))
+              document.querySelector('button.remove').click(); // Remove the step due to redundant processing.
+            location.reload();
+          });
+        }
+      }
+      else{
+        var ext = src.split('.').pop();
+        var image = document.createElement('img');
+        var canvas = document.createElement('canvas');
+        var context = canvas.getContext('2d');
+        image.onload = function() {
+          canvas.width = image.naturalWidth;
+          canvas.height = image.naturalHeight;
+          context.drawImage(image, 0, 0);
+          datauri = canvas.toDataURL(ext);
+          callback(datauri, step);
+        };
+        image.src = src;
+      }
     }
     else {
       datauri = require('urify')(src);

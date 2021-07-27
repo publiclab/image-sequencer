@@ -1,0 +1,18 @@
+{
+    "name": "mask",
+    "description": "Masks two images according to their Alpha values",
+    "inputs": {
+      "offset": {
+        "type": "integer",
+        "desc": "Choose which image to mask the current image with. Two steps back is -2, three steps back is -3 etc.",
+        "default": -2
+      },
+      "resize": {
+        "type": "string",
+        "desc": "Percentage value by which first image is to be resized",
+        "default": "125%"
+      }
+    },
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  }
+  

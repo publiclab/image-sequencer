@@ -17,6 +17,7 @@ Most contribution (we imagine) would be in the form of API-compatible modules, w
 * [Ideas](#Contribution-ideas)
 * [Grunt Tasks](#grunt-tasks)
 * [UI Helper Methods](#ui-helper-methods)
+* [Scripts](#scripts)
 
 ****
 
@@ -374,7 +375,7 @@ module.exports =
 We are now using `eslint` and `husky` to help lint and format our code each time we commit. Eslint defines coding standards and helps in cleaning up the code. To run eslint for checking errors globally or within a specific file run:
 
 ```
-npx eslint . 
+npx eslint .
 
 npx eslint <file path>
 ```
@@ -412,15 +413,15 @@ The following command is used for running the tasks: `grunt [task-name]`. Here `
 
 The method returns a scoped `jQuery` object which only searches for elements inside a given scope (a DOM element).
 
-To use the method, 
+To use the method,
 * import the `scopeSelector` and `scopeSelectorAll` methods from `lib/scopeQuery.js`
 * call the methods with scope as a parameter
-	
+
 ```js
 var scopeQuery = require('./scopeQuery');
 
 var $step = scopeQuery.scopeSelector(scope),
-    $stepAll = scopeQuery.scopeSelectorAll(scope);	
+    $stepAll = scopeQuery.scopeSelectorAll(scope);
 ```
 This will return an object with a constructor which returns a `jQuery` object (from inside the scope) but with new `elem` and `elemAll` methods.
 
@@ -433,7 +434,7 @@ This will return an object with a constructor which returns a `jQuery` object (f
 #### Example
 
 ```js
-//The scope is a div element with id=“container“ and there are three divs in it 
+//The scope is a div element with id=“container“ and there are three divs in it
 //with ids „1“, „2“, and „3“, and all of them have a „child“ class attribute
 
 var $step = require('./scopeQuery').scopeSelector(document.getElementById('container'));
@@ -458,3 +459,23 @@ The following code can be used
 $step('query').show().hide();
 $stepAll('q2').show().hide();
 ```
+
+## Scripts
+The following shell scripts are present in the `scripts/` directory.
+
+- `update-gh-pages`: This script can be used to update the `gh-pages` branch of this repo or a fork.
+ This script is not meant to be used directly as it runs in the current working directory.
+ If you run it on your primary local clone, it can **delete** the local changes. This script is made to be used in a github action
+ or in a temporary directory via another script, such as `update-demo`.
+
+  Arguments:
+  1. Repo(to use as upstream) url in the form username/repo (default: publiclab/image-sequencer) NOTE: Github only
+  2. Branch to pull from eg: main or stable (default: stable)
+  3. CNAME URL (default: none)
+  4. Set the fourth argument to anything to bypass the warning. You will have to set this argument if you want to run this script in another script without needing
+  user interaction, such as in a github action.
+
+- `update-demo`: A safe, interactive script that can be used to update the `gh-pages` branch of any image-sequencer fork.
+ This script is safe to use directly because it separately clones the repo in a temporary directory.
+
+  Arguments: None since it is a an *interactive* script, ie it asks the user for input.

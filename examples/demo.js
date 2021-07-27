@@ -340,6 +340,7 @@ window.onload = function () {
       else
         step.imgElement.src = url;
       insertPreview.updatePreviews(url, document.querySelector('#addStep'));
+      DefaultHtmlStepUi(sequencer).updateDimensions(step);
     }
   });
 

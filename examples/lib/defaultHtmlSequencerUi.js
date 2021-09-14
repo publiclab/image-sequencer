@@ -17,7 +17,6 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
   // look up needed steps from Url Hash:
   function importStepsFromUrlHash() {
     var hash = urlHash.getUrlHashParameter('steps');
-
     if (hash) {
       _sequencer.importString(hash);
       _sequencer.run({ index: 0 });
@@ -27,8 +26,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
 
   function selectNewStepUi() {
     var m = $(addStepSel + ' select').val();
-    if(!m) m = arguments[0];
-    else $(addStepSel + ' .info').html(_sequencer.modulesInfo(m).description);
+    if(m) $(addStepSel + ' .info').html(_sequencer.modulesInfo(m).description);
     $(addStepSel + ' #add-step-btn').prop('disabled', false);
   }
 

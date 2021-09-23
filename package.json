@@ -103,7 +103,7 @@
     "jasmine-jquery": "^2.1.1",
     "jasmine-spec-reporter": "^7.0.0",
     "jest": "^27.0.1",
-    "jest-puppeteer": "^5.0.3",
+    "jest-puppeteer": "^6.0.0",
     "lint-staged": "^11.0.0",
     "looks-same": "^7.0.0",
     "matchdep": "^2.0.0",

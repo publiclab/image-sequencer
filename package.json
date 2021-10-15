@@ -92,7 +92,7 @@
     "grunt": "^1.0.3",
     "grunt-browser-sync": "^2.2.0",
     "grunt-browserify": "^5.0.0",
-    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-concat": "^2.0.0",
     "grunt-contrib-uglify-es": "^3.3.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-text-replace": "^0.4.0",

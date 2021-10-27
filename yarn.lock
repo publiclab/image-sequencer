@@ -1575,10 +1575,10 @@ bluebird@*:
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.3.tgz#7d01c6f9616c9a51ab0f8c549a79dfe6ec33efa7"
   integrity sha512-/qKPUQlaW1OyR51WeCPBvRnAlnZFUJkCSG5HzGnuIqhgyJtF+T94lFnn33eiazjRm2LAHVy2guNnaq48X9SJuw==
 
-blueimp-canvas-to-blob@^3.28.0:
-  version "3.28.0"
-  resolved "https://registry.yarnpkg.com/blueimp-canvas-to-blob/-/blueimp-canvas-to-blob-3.28.0.tgz#c8ab4dc6bb08774a7f273798cdf94b0776adf6c8"
-  integrity sha512-5q+YHzgGsuHQ01iouGgJaPJXod2AzTxJXmVv90PpGrRxU7G7IqgPqWXz+PBmt3520jKKi6irWbNV87DicEa7wg==
+blueimp-canvas-to-blob@^3.29.0:
+  version "3.29.0"
+  resolved "https://registry.yarnpkg.com/blueimp-canvas-to-blob/-/blueimp-canvas-to-blob-3.29.0.tgz#d965f06cb1a67fdae207a2be56683f55ef531466"
+  integrity sha512-0pcSSGxC0QxT+yVkivxIqW0Y4VlO2XSDPofBAqoJ1qJxgH9eiUDLv50Rixij2cDuEfx4M6DpD9UGZpRhT5Q8qg==
 
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.11.9:
   version "4.12.0"
@@ -2568,11 +2568,11 @@ component-inherit@0.0.3:
   integrity sha1-ZF/ErfWLcrZJ1crmUTVhnbJv8UM=
 
 compressorjs@^1.0.5:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/compressorjs/-/compressorjs-1.0.7.tgz#67cd0b3b9ac97540515b22b334dc32eb92b730b1"
-  integrity sha512-ca+H8CGrn0LG103//VQmXBbNdvzvHiW26LGdWncp4RmLNbNQjaaFWIUxMN9++hbhGobLtofkHoxzzXGisNyD3w==
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/compressorjs/-/compressorjs-1.1.1.tgz#54c147cf37fb38828b08c48646d0258d52faf050"
+  integrity sha512-SysRuUPfmUNoq+RviE0iMFVUmoX2q/x+7PkEPUmk6NGkd85hDrmvujx0Qtp8UCGA6KMe5kuodsylPQcNaLf60w==
   dependencies:
-    blueimp-canvas-to-blob "^3.28.0"
+    blueimp-canvas-to-blob "^3.29.0"
     is-blob "^2.1.0"
 
 concat-map@0.0.1:
@@ -3753,9 +3753,9 @@ eslint-visitor-keys@^3.0.0:
   integrity sha512-mJOZa35trBTb3IyRmo8xmKBZlxf+N7OnUl4+ZhJHs/r+0770Wh/LEACE2pqMGMe27G/4y8P2bYGk4J70IC5k1Q==
 
 eslint@^8.0.0:
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-8.0.1.tgz#3610e7fe4a05c2154669515ca60835a76a19f700"
-  integrity sha512-LsgcwZgQ72vZ+SMp4K6pAnk2yFDWL7Ti4pJaRvsZ0Hsw2h8ZjUIW38a9AFn2cZXdBMlScMFYYgsSp4ttFI/0bA==
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-8.1.0.tgz#00f1f7dbf4134f26588e6c9f2efe970760f64664"
+  integrity sha512-JZvNneArGSUsluHWJ8g8MMs3CfIEzwaLx9KyH4tZ2i+R2/rPWzL8c0zg3rHdwYVpN/1sB9gqnjHwz9HoeJpGHw==
   dependencies:
     "@eslint/eslintrc" "^1.0.3"
     "@humanwhocodes/config-array" "^0.6.0"
@@ -6407,15 +6407,10 @@ isurl@^1.0.0-alpha5:
     has-to-string-tag-x "^1.2.0"
     is-object "^1.0.1"
 
-jasmine-core@^3.3.0:
+jasmine-core@^3.3.0, jasmine-core@~3.10.0:
   version "3.10.0"
   resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-3.10.0.tgz#1e3e4053d954eb6d0bfbb3eb859bb21a5655de45"
   integrity sha512-XWGaJ25RUdOQnjGiLoQa9QG/R4u1e9Bk4uhLdn9F4JCBco84L4SKM52bxci4vWTSUzhmhuHNAkAHFN/6Cox9wQ==
-
-jasmine-core@~3.9.0:
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-3.9.0.tgz#09a3c8169fe98ec69440476d04a0e4cb4d59e452"
-  integrity sha512-Tv3kVbPCGVrjsnHBZ38NsPU3sDOtNa0XmbG2baiyJqdb5/SPpDO6GVwJYtUryl6KB4q1Ssckwg612ES9Z0dreQ==
 
 jasmine-jquery@^2.1.1:
   version "2.1.1"
@@ -6430,12 +6425,12 @@ jasmine-spec-reporter@^7.0.0:
     colors "1.4.0"
 
 jasmine@^3.4.0:
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/jasmine/-/jasmine-3.9.0.tgz#286c4f9f88b69defc24acf3989af5533d5c6a0e6"
-  integrity sha512-JgtzteG7xnqZZ51fg7N2/wiQmXon09szkALcRMTgCMX4u/m17gVJFjObnvw5FXkZOWuweHPaPRVB6DI2uN0wVA==
+  version "3.10.0"
+  resolved "https://registry.yarnpkg.com/jasmine/-/jasmine-3.10.0.tgz#acd3cd560a9d20d8fdad6bd2dd05867d188503f3"
+  integrity sha512-2Y42VsC+3CQCTzTwJezOvji4qLORmKIE0kwowWC+934Krn6ZXNQYljiwK5st9V3PVx96BSiDYXSB60VVah3IlQ==
   dependencies:
     glob "^7.1.6"
-    jasmine-core "~3.9.0"
+    jasmine-core "~3.10.0"
 
 jest-changed-files@^27.2.5:
   version "27.2.5"

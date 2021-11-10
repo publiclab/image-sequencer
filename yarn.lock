@@ -8888,6 +8888,15 @@ pngquant-bin@^6.0.0:
     execa "^4.0.0"
     logalot "^2.0.0"
 
+pngquant-bin@^7.0.1:
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/pngquant-bin/-/pngquant-bin-7.0.1.tgz#89c9e1956cd38138a78eb83afdd95a64a659d573"
+  integrity sha512-WsWRTzsbhDU4hVPKfEsTyiRs36a6ypkr5/UJuHMdqAXrNZ/t84QzWfmDc19TLxqrnlIL7nOywKqMVFwVBUXgxg==
+  dependencies:
+    bin-build "^3.0.0"
+    bin-wrapper "^4.0.1"
+    execa "^5.1.1"
+
 portscanner@2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/portscanner/-/portscanner-2.1.1.tgz#eabb409e4de24950f5a2a516d35ae769343fbb96"

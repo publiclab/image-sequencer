@@ -1,4 +1,5 @@
-const timeout = process.env.SLOWMO ? 30000 : 10000;
+jest.setTimeout(10000);
+
 const fs = require('fs');
 beforeAll(async () => {
   path = fs.realpathSync('file://../examples/index.html');
@@ -31,5 +32,5 @@ describe('Add step dropdown', ()=>{
     expect(Length).toBe(1);
     expect(LengthChanged).toBe(2);
 
-  }, timeout);
+  });
 });

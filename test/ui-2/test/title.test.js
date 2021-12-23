@@ -1,4 +1,5 @@
-const timeout = process.env.SLOWMO ? 30000 : 10000;
+jest.setTimeout(10000);
+
 const fs = require('fs');
 beforeAll(async () => {
   path = fs.realpathSync('file://../examples/index.html');
@@ -10,5 +11,5 @@ describe('Title of the page', () => {
     const title = await page.title();
     expect(title).toBe('Image Sequencer');
         
-  }, timeout);
+  });
 });

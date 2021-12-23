@@ -1,4 +1,5 @@
-const timeout = process.env.SLOWMO ? 30000 : 10000;
+jest.setTimeout(10000);
+
 const fs = require('fs');
 beforeAll(async () => {
   path = fs.realpathSync('file://../examples/index.html');
@@ -8,7 +9,6 @@ beforeAll(async () => {
 describe('Apply Button Works', () => {
   test('Apply Button is clicked', async () => {
     await page.waitForSelector('.step');
-
   
     await page.click('[data-value=\'resize\']');
     const Length1 = await page.evaluate(() => document.querySelectorAll('.step').length);
@@ -29,7 +29,5 @@ describe('Apply Button Works', () => {
     const src2 = await page.evaluate(() => document.querySelectorAll('.step img')[1].src);
     //Expect default and new image to be changed
     expect(src1).not.toEqual(src2);
-    
-    
-  }, timeout);
+  });
 });

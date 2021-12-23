@@ -1,4 +1,5 @@
-const timeout = process.env.SLOWMO ? 30000 : 10000;
+jest.setTimeout(10000);
+
 const fs = require('fs');
 beforeAll(async () => {
   path = fs.realpathSync('file://../examples/index.html');
@@ -42,5 +43,5 @@ describe('Overlay Ranged input', () => {
       console.log(error);
     }
    
-  }, timeout);
+  });
 });

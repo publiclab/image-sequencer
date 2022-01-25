@@ -56,7 +56,7 @@
     "gpu.js": "^2.3.1",
     "imgareaselect": "git+https://git@github.com/jywarren/imgareaselect.git#v1.0.0-rc.2",
     "image-sequencer-invert": "^1.0.0",
-    "imagejs": "0.0.9",
+    "imagejs": "git+https://git@github.com/glennjones/imagejs.git#1119a31e6eabc87563bc573cd62c11bd487ce8a9",
     "imagemin": "^7.0.1",
     "imagemin-jpegtran": "^7.0.0",
     "imagemin-pngquant": "^9.0.1",

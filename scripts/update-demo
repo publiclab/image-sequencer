@@ -1,0 +1,26 @@
+#!/bin/bash
+
+scriptsDir=$(realpath $(dirname $0))
+
+echo -ne "Enter the repo to push to in the form username/repo (required): "
+read -e pushRepo
+
+echo -ne "Enter repo URL to pull from (upstream) in the form username/repo (default: publiclab/image-sequencer): "
+read -e repoInput
+
+echo -ne "Enter branch name (default: stable): "
+read -e branchInput
+
+echo -ne "Enter CNAME URL(default: none): "
+read -e cnameUrlInput
+
+tempDir=$(mktemp -d)
+pushd $tempDir > /dev/null
+
+git clone https://github.com/$pushRepo
+pushd image-sequencer > /dev/null
+
+$scriptsDir/update-gh-pages "$repoInput" "$branchInput" "$cnameUrlInput" "no warn"
+
+popd > /dev/null
+popd > /dev/null

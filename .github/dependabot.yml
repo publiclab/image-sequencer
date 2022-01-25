@@ -1,0 +1,25 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: jest-puppeteer
+    versions:
+    - 5.0.1
+    - 5.0.2
+  - dependency-name: geotiff
+    versions:
+    - 1.0.2
+  - dependency-name: "@babel/core"
+    versions:
+    - 7.13.13
+  - dependency-name: puppeteer
+    versions:
+    - 5.2.1
+    - 7.1.0
+  - dependency-name: tape
+    versions:
+    - 5.1.1

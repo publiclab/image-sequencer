@@ -24,6 +24,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
   function onSetup(step, stepOptions) {
     if (step.options && step.options.description)
       step.description = step.options.description;
+    
+    let stepDocsLink = '';
+    if (step.moduleInfo) stepDocsLink = step.moduleInfo['docs-link'] || '';
 
     step.ui = // Basic UI markup for the step
       '\
@@ -48,7 +51,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
               <div class="row step">\
                 <div class="col-md-4 details container-fluid">\
                   <div class="cal collapse in"><p>' +
-                    '<a href="https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#' + step.name + '-module">' + (step.description || '') + '</a>' +
+                    '<a href="' + stepDocsLink + '">' + (step.description || '') + '</a>' +
                  '</p></div>\
                 </div>\
                 <div class="col-md-8 cal collapse in step-column">\
@@ -118,7 +121,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
               paramVal + '">' + '<span class="input-group-addon"><i></i></span>' +
               '</div>';
           }
-          else { // Non color-picker input types
+          else if(inputDesc.type === 'button'){
+            html = '<div><button name="' + paramName + '" type="' + inputDesc.type + '" >\
+            <i class="fa fa-crosshairs"></i></button>\
+            <span>click to select coordinates</span>\
+            </div>';
+          }
+          else { // Non color-picker input types and other than a button
+
             html =
               '<input class="form-control target" type="' +
               inputDesc.type +
@@ -136,7 +146,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
                 '"max="' +
                 inputDesc.max +
                 '"step="' +
-                (inputDesc.step ? inputDesc.step : 1) + '">' + '<span>' + paramVal + '</span>';
+                inputDesc.step + '">' + '<span>' + paramVal + '</span>';
 
             }
             else html += '">';
@@ -329,12 +339,24 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     $stepAll('.download-btn').on('click', () => {
 
+      function dataURLtoBlob(dataurl) {
+        let arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+          bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while(n--){
+          u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], {type:mime});
+      }
+      
       var element = document.createElement('a');
-      element.setAttribute('href', step.output);
+      
       element.setAttribute('download', step.name + '.' + fileExtension(step.imgElement.src));
       element.style.display = 'none';
       document.body.appendChild(element);
-
+      var blob = dataURLtoBlob(step.output);
+      var objurl = URL.createObjectURL(blob);
+      element.setAttribute('href', objurl);
+      
       element.click();
     });
 
@@ -398,6 +420,19 @@ function DefaultHtmlStepUi(_sequencer, options) {
   function imageHover(step){
 
     var img = $(step.imgElement);
+
+    let customXCoord = '20'; //default x coordinate
+    let customYCoord = '20'; //default y coordinate
+
+    const customButton = $('button[name="Custom-Coordinates"]');
+      img.click(function(e) {
+          customXCoord = e.offsetX;
+          customYCoord = e.offsetY;
+          customButton.click(function() {
+            $('input[name="x"]').val(customXCoord);
+            $('input[name="y"]').val(customYCoord);
+          })
+      });
 
     img.mousemove(function(e) {
       var canvas = document.createElement('canvas');

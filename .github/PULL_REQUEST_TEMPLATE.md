@@ -5,7 +5,8 @@ Make sure these boxes are checked before your pull request (PR) is ready to be r
 * [ ] tests pass -- look for a green checkbox ✔️ a few minutes after opening your PR -- or run tests locally with `npm run test-all`
 * [ ] code is in uniquely-named feature branch and has no merge conflicts
 * [ ] PR is descriptively titled
-* [ ] ask `@publiclab/is-reviewers` for help, in a comment below
+* [ ] ask `@publiclab/is-reviewers` for help, in a comment below 
+* [ ] at least 2 reviews required for getting pull request merged
 * [ ] Insert-step functionality is working correct as expected.
 > We're happy to help you get this ready -- don't be afraid to ask for help, and **don't be discouraged** if your tests fail at first!
 

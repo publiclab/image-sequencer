@@ -13,10 +13,10 @@ const kernelx = [
     [ 0, 0, 0],
     [ 1, 2, 1]
   ];
-  
+
 module.exports = function(pixels, highThresholdRatio, lowThresholdRatio, useHysteresis) {
   let angles = [], grads = [], strongEdgePixels = [], weakEdgePixels = [], pixelsToBeSupressed = [];
-  
+
   for (var x = 0; x < pixels.shape[0]; x++) {
     grads.push([]);
     angles.push([]);
@@ -110,10 +110,13 @@ function sobelFilter(pixels, x, y) {
  * @returns {Number} Category number of the given angle
  */
 function categorizeAngle(angle){
-  if ((angle >= -22.5 && angle <= 22.5) || (angle < -157.5 && angle >= -180)) return 1;
-  else if ((angle >= 22.5 && angle <= 67.5) || (angle < -112.5 && angle >= -157.5)) return 2;
-  else if ((angle >= 67.5 && angle <= 112.5) || (angle < -67.5 && angle >= -112.5)) return 3;
-  else if ((angle >= 112.5 && angle <= 157.5) || (angle < -22.5 && angle >= -67.5)) return 4;
+  const pi = Math.PI;
+  angle = angle > 0 ? angle : pi - Math.abs(angle); // Diagonally flip the angle if it is negative (since edge remains the same)
+
+  if (angle <= pi / 8 || angle > 7 * pi / 8) return 1;
+  else if (angle > pi / 8 && angle <= 3 * pi / 8) return 2;
+  else if (angle > 3 * pi / 8 && angle <= 5 * pi / 8) return 3;
+  else if (angle > 5 * pi / 8 && angle <= 7 * pi / 8) return 4;
 
   /* Category Map
   * 1 => E-W
@@ -143,8 +146,6 @@ const removeElem = (arr = [], elem) => { // Removes the specified element from t
 
 // Non Maximum Supression without interpolation.
 function nonMaxSupress(pixels, grads, angles, pixelsToBeSupressed) {
-  angles = angles.map((arr) => arr.map(convertToDegrees));
-
   for (let x = 0; x < pixels.shape[0]; x++) {
     for (let y = 0; y < pixels.shape[1]; y++) {
 
@@ -157,7 +158,7 @@ function nonMaxSupress(pixels, grads, angles, pixelsToBeSupressed) {
             pixelsToBeSupressed.push([x, y]);
           }
           break;
-          
+
         case 2:
           if (!((grads[x][y] >= grads[x + 1][y + 1]) && (grads[x][y] >= grads[x - 1][y - 1]))){
             pixelsToBeSupressed.push([x, y]);
@@ -180,15 +181,6 @@ function nonMaxSupress(pixels, grads, angles, pixelsToBeSupressed) {
     }
   }
 }
-
-
-/**
- * @method convertToDegrees
- * @description Converts the given angle(in radians) to degrees.
- * @param {Number} radians Angle in radians
- * @returns {Number} Angle in degrees
- */
-var convertToDegrees = radians => (radians * 180) / Math.PI;
 
 // Finds the max value in a 2d array like grads.
 var findMaxInMatrix = arr => Math.max(...arr.map(el => el.map(val => val ? val : 0)).map(el => Math.max(...el)));

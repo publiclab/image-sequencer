@@ -9,7 +9,7 @@ test('convolve works with 1x1 array', t => {
       [1, 1, 1]
     ],
     expectedOut = [
-      [9]
+      new Float32Array([9])
     ];
 
   const out = convolve([array], kernel);
@@ -34,10 +34,10 @@ test('convolve works with 3x4 array', t => {
       [1, 1, 1]
     ],
     expectedOut = [
-      [12, 19, 26],
-      [13, 20, 27],
-      [13, 20, 27],
-      [13, 19, 25]
+      new Float32Array([12, 19, 26]),
+      new Float32Array([13, 20, 27]),
+      new Float32Array([13, 20, 27]),
+      new Float32Array([13, 19, 25])
     ];
 
   const out = convolve([array], kernel);
@@ -68,16 +68,16 @@ test('convolve works with multiple 3x4 arrays', t => {
       [1, 1, 1]
     ],
     expectedOut1 = [
-      [12, 19, 26],
-      [13, 20, 27],
-      [13, 20, 27],
-      [13, 19, 25]
+      new Float32Array([12, 19, 26]),
+      new Float32Array([13, 20, 27]),
+      new Float32Array([13, 20, 27]),
+      new Float32Array([13, 19, 25])
     ],
     expectedOut2 = [
-      [14, 19, 24],
-      [12, 13, 14],
-      [15, 12,  9],
-      [16, 13, 10]
+      new Float32Array([14, 19, 24]),
+      new Float32Array([12, 13, 14]),
+      new Float32Array([15, 12,  9]),
+      new Float32Array([16, 13, 10])
     ];
 
   const out = convolve([array1, array2], kernel);

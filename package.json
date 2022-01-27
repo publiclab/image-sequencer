@@ -49,7 +49,7 @@
     "expr-eval": "^2.0.2",
     "fisheyegl": "^0.1.2",
     "font-awesome": "~4.7.0",
-    "geotiff": "^1.0.0-beta.6",
+    "geotiff": "^2.0.0",
     "get-pixels": "~3.3.0",
     "gifshot": "^0.4.5",
     "glfx": "0.0.4",

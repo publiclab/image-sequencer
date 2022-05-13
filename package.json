@@ -61,7 +61,7 @@
     "imagemin-pngquant": "^9.0.1",
     "istanbul": "^0.4.5",
     "jasmine": "^4.0.2",
-    "jpegtran-bin": "^6.0.1",
+    "jpegtran-bin": "^7.0.0",
     "jquery": "^3.3.1",
     "jsdom": "^19.0.0",
     "jspdf": "^2.1.1",

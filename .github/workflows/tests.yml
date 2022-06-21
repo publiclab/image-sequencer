@@ -8,7 +8,7 @@ jobs:
     - name: Setup node
       uses: actions/setup-node@v2
       with:
-        node-version: '12'
+        node-version: '14'
         check-latest: true
     - name: Cache node modules
       uses: actions/cache@v2
@@ -33,7 +33,7 @@ jobs:
     - name: Setup node
       uses: actions/setup-node@v2
       with:
-        node-version: '12'
+        node-version: '14'
         check-latest: true
     - name: Cache node modules
       uses: actions/cache@v2
@@ -58,7 +58,7 @@ jobs:
     - name: Setup node
       uses: actions/setup-node@v2
       with:
-        node-version: '12'
+        node-version: '14'
         check-latest: true
     - name: Cache node modules
       uses: actions/cache@v2
@@ -83,7 +83,7 @@ jobs:
     - name: Setup node
       uses: actions/setup-node@v2
       with:
-        node-version: '12'
+        node-version: '14'
         check-latest: true
     - name: Cache node modules
       uses: actions/cache@v2
@@ -109,7 +109,7 @@ jobs:
     - name: Setup node
       uses: actions/setup-node@v2
       with:
-        node-version: '12'
+        node-version: '14'
         check-latest: true
     - name: Cache node modules
       uses: actions/cache@v2
@@ -134,7 +134,7 @@ jobs:
     - name: Setup node
       uses: actions/setup-node@v2
       with:
-        node-version: '12'
+        node-version: '14'
         check-latest: true
     - name: Cache node modules
       uses: actions/cache@v2
@@ -159,7 +159,7 @@ jobs:
     - name: Setup node
       uses: actions/setup-node@v2
       with:
-        node-version: '12'
+        node-version: '14'
         check-latest: true
     - name: Cache node modules
       uses: actions/cache@v2
@@ -184,7 +184,7 @@ jobs:
     - name: Setup node
       uses: actions/setup-node@v2
       with:
-        node-version: '12'
+        node-version: '14'
         check-latest: true
     - name: Cache node modules
       uses: actions/cache@v2

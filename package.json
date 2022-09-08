@@ -38,7 +38,7 @@
   "dependencies": {
     "atob": "^2.1.2",
     "base64-img": "^1.0.4",
-    "bootstrap": "^3.4.1",
+    "bootstrap": "^5.2.1",
     "bootstrap-colorpicker": "^2.5.3",
     "buffer": "~6.0.2",
     "commander": "^9.0.0",

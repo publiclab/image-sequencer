@@ -43,7 +43,7 @@
     "buffer": "~6.0.2",
     "commander": "^9.0.0",
     "compressorjs": "^1.0.5",
-    "data-uri-to-buffer": "^3.0.0",
+    "data-uri-to-buffer": "^4.0.1",
     "downloadjs": "^1.4.7",
     "eslint": "^8.0.0",
     "expr-eval": "^2.0.2",

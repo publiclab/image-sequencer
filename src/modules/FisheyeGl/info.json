@@ -43,14 +43,16 @@
       "desc": "FOV x parameter",
       "default": 1.5,
       "min": 0,
-      "max": 20
+      "max": 20,
+      "id": "x-coord"
     },
     "y": {
       "type": "float",
       "desc": "FOV y parameter",
       "default": 1.5,
       "min": 0,
-      "max": 20
+      "max": 20,
+      "id": "y-coord"
     },
     "fragmentSrc": {
       "type": "PATH",

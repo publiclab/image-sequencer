@@ -1,0 +1,6 @@
+{
+    "name": "Face Detection",
+    "description": "Detect faces in given image",
+    "inputs": {},
+    "docs-link":""
+}

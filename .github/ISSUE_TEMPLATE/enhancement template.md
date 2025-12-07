@@ -1,4 +1,5 @@
 # New Enhancement Request
+Please use the Bug Report or Feature Request templates above
 
 Describe your enhancement
 

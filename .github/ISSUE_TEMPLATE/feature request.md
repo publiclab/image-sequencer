@@ -1,22 +1,18 @@
-# New Feature Request
+---
+name: Feature request
+about: Suggest an idea for improving Image Sequencer
+title: "[Feature]: "
+labels: enhancement
+---
 
-Describe your feature
+### Problem
+Describe the problem or limitation you are facing.
 
+### Proposed Solution
+Describe the feature or change you would like to see.
 
+### Alternatives Considered
+Describe any alternative approaches you have thought about.
 
-
-
-
- What does your feature do?
-
- Upload Screenshot of your implementation/feature
- 
- ### Please show us where to look
- Paste in a full URL, starting with:
- ### Problem it can solve
- Your help makes Public Lab better! We *deeply* appreciate your helping refine and improve this site.
-
-To learn how to write really great issues, which increases the chances they'll be resolved, see:
-
-https://publiclab.org/wiki/developers#Contributing+for+non-coders
-### Thank you :)
+### Additional Context
+Add mockups, references, or extra context here.

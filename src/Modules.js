@@ -51,5 +51,6 @@ module.exports = {
   'threshold': require('./modules/Threshold'),
   'tint': require('./modules/Tint'),
   'webgl-distort': require('./modules/WebglDistort'),
-  'white-balance': require('./modules/WhiteBalance')
+  'white-balance': require('./modules/WhiteBalance'),
+  'edgeenhance': require('./modules/EdgeEnhance')
 };

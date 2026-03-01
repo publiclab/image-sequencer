@@ -1,0 +1,7 @@
+{
+  "name": "Edge Enhance",
+  "description": "Enhances edges in the image using a convolution kernel for improved definition.",
+  "url": "https://github.com/publiclab/image-sequencer",
+  "inputs": {},
+  "outputs": {}
+}
